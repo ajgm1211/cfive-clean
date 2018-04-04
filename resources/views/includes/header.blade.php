@@ -6,7 +6,7 @@
                 <div class="m-stack m-stack--ver m-stack--general">
                     <div class="m-stack__item m-stack__item--middle m-brand__logo">
                         <a href="/" class="m-brand__logo-wrapper">
-                            <img alt="" src="logo.png"/>
+                            <img alt="" src="/logo.png"/>
                         </a>
                     </div>
 

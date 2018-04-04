@@ -15,6 +15,15 @@ Route::get('/', function () {
     return view('admin');
 });
 
+
+// Grupo de rutas para administrar Usuarios  Admin / Empresas
+Route::group(['prefix' => 'users'], function () {
+    Route::get('home', function () {
+        return view('users/index');
+    });
+
+});
+
 Route::get('/companies', function () {
     return view('companies');
 });
