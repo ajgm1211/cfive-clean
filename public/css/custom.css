@@ -30,3 +30,7 @@ h3.m-subheader__title{
 .m-dropdown__body span {
     color: #222 !important;
 }
+
+.m-menu__arrow--adjust {
+    color:#061D2C !important;
+}

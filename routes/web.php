@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('admin');
 });
+
+Route::get('/companies', function () {
+    return view('companies');
+});
