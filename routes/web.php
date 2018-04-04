@@ -18,10 +18,9 @@ Route::get('/', function () {
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::group(['prefix' => 'users'], function () {
-    Route::get('home', function () {
-        return view('users/index');
-    });
-
+    
+     Route::get('home', 'UsersController@data')->name('datatable.table');
+  
 });
 
 Route::get('/companies', function () {
