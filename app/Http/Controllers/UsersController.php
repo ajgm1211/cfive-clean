@@ -84,13 +84,23 @@ class UsersController extends Controller
     {
         //
     }
+    
+    public function datahtml(){
+   
+        $user = new User();
+        $data = $user->all();
 
-    public function data() {
+        return view('users/indexhtml', ['arreglo' => $data]);
+    
+    
+    }
+
+    public function datajson() {
 
         $user = new User();
      
         $response = User::all('name', 'lastname', 'email', 'rol')->toJson();
-        return view('users/index')->with('url', $response);
+        return view('users/indexjson')->with('url', $response);
        
     }
     

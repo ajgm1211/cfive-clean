@@ -18,8 +18,8 @@ Route::get('/', function () {
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::group(['prefix' => 'users'], function () {
-    
-     Route::get('home', 'UsersController@data')->name('datatable.table');
+     Route::resource('users', 'UsersController'); // recibe dos parametros el primero el nombre  el segundo es el 
+     Route::get('home', 'UsersController@datahtml')->name('datatable.table');
   
 });
 

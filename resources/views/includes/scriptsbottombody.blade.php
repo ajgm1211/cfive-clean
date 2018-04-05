@@ -9,7 +9,7 @@
 <!--end::Page Vendors -->
 <!--begin::Page Snippets -->
 <script src="/assets/app/js/dashboard.js" type="text/javascript"></script>
-<!--<script src="/assets/demo/default/custom/components/datatables/base/data-local_1.js" type="text/javascript"></script>--->
+<script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/validation/form-controls.js" type="text/javascript"></script>
 <!--end::Page Snippets -->
 
