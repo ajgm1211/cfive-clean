@@ -29,7 +29,9 @@
     </span>
 </div>
 <div class="form-group m-form__group">
-
+    {!! Form::label('rol', 'rol') !!}<br>
+    
+   {!! Form::select('rol', array('S' =>'Seleccione','admin' => 'Administrator', 'company' => 'Company')); !!}<br>
     <span class="m-form__help">
         Please select this rol
     </span>

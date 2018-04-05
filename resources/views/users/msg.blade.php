@@ -2,12 +2,11 @@
 <div class="m-portlet">
 
     <!--begin::Form-->
-    {!! Form::open(['route' => 'users.store']) !!}
+    {!! Form::open(['route' => 'delete-user']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-                @include('users.partials.form_users')
-
+               are you sure you want to delete the user?
 
             </div>
         </div>

@@ -18,9 +18,11 @@ Route::get('/', function () {
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::group(['prefix' => 'users'], function () {
-     Route::resource('users', 'UsersController'); // recibe dos parametros el primero el nombre  el segundo es el 
-     Route::get('home', 'UsersController@datahtml')->name('datatable.table');
-  
+    Route::resource('users', 'UsersController'); // recibe dos parametros el primero el nombre  el segundo es el 
+    Route::get('home', 'UsersController@datahtml')->name('users.home');
+    Route::get('add', 'UsersController@add')->name('users.add');
+    Route::get('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
+
 });
 
 Route::get('/companies', function () {

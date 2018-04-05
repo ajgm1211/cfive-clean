@@ -1,8 +1,9 @@
 
+
 <div class="m-portlet">
 
     <!--begin::Form-->
-    {!! Form::open(['route' => 'users.store']) !!}
+   {!! Form::model($user, ['route' => ['users.update', $user], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
@@ -23,4 +24,6 @@
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
+
+
 

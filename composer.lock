@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c664c262b698ee3e390a0db14501d17",
-    "content-hash": "e740eb2f4ddef1348211ca5e41df10d9",
+    "hash": "38943bf271778f685d806c9345bc55f2",
+    "content-hash": "4b4533128ef75ff65eb4ac53dcaf01c7",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -453,6 +453,60 @@
                 }
             ],
             "time": "2015-04-20 18:58:01"
+        },
+        {
+            "name": "laracasts/flash",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laracasts/flash.git",
+                "reference": "10cd420ab63fd0796bf5e1e5b99f87636d2f4333"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laracasts/flash/zipball/10cd420ab63fd0796bf5e1e5b99f87636d2f4333",
+                "reference": "10cd420ab63fd0796bf5e1e5b99f87636d2f4333",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "^6.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laracasts\\Flash\\FlashServiceProvider"
+                    ],
+                    "aliases": {
+                        "Flash": "Laracasts\\Flash\\Flash"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Laracasts\\Flash": "src/"
+                },
+                "files": [
+                    "src/Laracasts/Flash/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeffrey Way",
+                    "email": "jeffrey@laracasts.com"
+                }
+            ],
+            "description": "Easy flash notifications",
+            "time": "2017-06-22 19:01:19"
         },
         {
             "name": "laravel/framework",
@@ -2293,16 +2347,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v8.4.2",
+            "version": "v8.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "eab6cc583ae778d056c5caf21b70db803d956e14"
+                "reference": "9a87175e5ca02627aec98ec767fce5f5cbc98177"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/eab6cc583ae778d056c5caf21b70db803d956e14",
-                "reference": "eab6cc583ae778d056c5caf21b70db803d956e14",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/9a87175e5ca02627aec98ec767fce5f5cbc98177",
+                "reference": "9a87175e5ca02627aec98ec767fce5f5cbc98177",
                 "shasum": ""
             },
             "require": {
@@ -2360,7 +2414,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-03-28 16:31:13"
+            "time": "2018-04-05 14:51:57"
         }
     ],
     "packages-dev": [
