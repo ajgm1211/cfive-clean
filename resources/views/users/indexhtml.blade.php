@@ -81,7 +81,7 @@
                     </div>
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal(0)">
+                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
@@ -131,11 +131,11 @@
                             @endif
                         </td>
                         <td>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal({{  $arr->id }})" title="Edit ">
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                 <i class="la la-edit"></i>
                             </a>
-                      
-                            <a href="{{ route('delete-user', ['user_id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " data-toggle="modal" data-target="#m_modal_5">
+
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
                                 <i class="la la-eraser"></i>
                             </a>
 
@@ -152,7 +152,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLongTitle">
-                            Usuario
+                                Usuario
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">
@@ -161,7 +161,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            Esta seguro que desea eliminar
+                          
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -173,10 +173,10 @@
                 </div>
             </div>
 
-          
-           
+
+
+        </div>
     </div>
-</div>
 </div>
 </div>
 @endsection
@@ -185,27 +185,36 @@
 @parent
 <script>
 
-function AbrirModal(id){
+    function AbrirModal(action,id){
 
-    if(id != "0"){
-        var url = '{{ route("users.edit", ":id") }}';
-        url = url.replace(':id', id);
-       
-
-        $('.modal-body').load(url,function(){
-            $('#m_modal_5').modal({show:true});
-        });
-    }else{
-        var url = '{{ route("users.add") }}';
+        if(action == "edit"){
+            var url = '{{ route("users.edit", ":id") }}';
+            url = url.replace(':id', id);
 
 
-        $('.modal-body').load(url,function(){
-            $('#m_modal_5').modal({show:true});
-        });
+            $('.modal-body').load(url,function(){
+                $('#m_modal_5').modal({show:true});
+            });
+        }if(action == "add"){
+            var url = '{{ route("users.add") }}';
+
+
+            $('.modal-body').load(url,function(){
+                $('#m_modal_5').modal({show:true});
+            });
+
+        }
+        if(action == "delete"){
+            var url = '{{ route("users.msg", ":id") }}';
+            url = url.replace(':id', id);
+
+            $('.modal-body').load(url,function(){
+                $('#m_modal_5').modal({show:true});
+            });
+
+        }
 
     }
-
-}
 </script>
 
 @stop

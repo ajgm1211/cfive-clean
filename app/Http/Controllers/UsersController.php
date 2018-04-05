@@ -108,7 +108,8 @@ class UsersController extends Controller
     }
     public function destroyUser(Request $request,$id)
     {
-        $user = self::destroy($id);
+          
+         $user = self::destroy($id);
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -117,9 +118,9 @@ class UsersController extends Controller
 
     }
 
-    public function destroymsg()
+    public function destroymsg($id)
     {
-        return view('users.msg');
+        return view('users/message' ,['userid' => $id]);
 
     }
 
