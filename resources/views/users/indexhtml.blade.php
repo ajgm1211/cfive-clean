@@ -37,6 +37,21 @@
 
         @endif
 
+        <!--
+<div ng-app="">
+
+
+<button ng-click="showme=true">Mostrar</button>
+<button ng-click="showme=false">Ocultar</button> 
+
+<div class="wrapper">
+<p ng-hide="showme">Esto debe aparecer</p>
+<h2 ng-show="showme">Contenido oculto</h2>
+</div>
+
+</div>    
+-->
+
         <div class="m-portlet__body">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
@@ -124,10 +139,12 @@
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->lastname }}</td>
                         <td>{{ $arr->email }}</td>
-                        <td>@if($arr->rol == "admin")
+                        <td>@if($arr->type == "admin")
                             1 
-                            @else
+                            @elseif($arr->type == "company")
                             2
+                            @else
+                            3
                             @endif
                         </td>
                         <td>
@@ -161,7 +178,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                          
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">

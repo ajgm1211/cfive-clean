@@ -29,10 +29,53 @@
     </span>
 </div>
 <div class="form-group m-form__group">
-    {!! Form::label('rol', 'rol') !!}<br>
-    
-   {!! Form::select('rol', array('S' =>'Seleccione','admin' => 'Administrator', 'company' => 'Company')); !!}<br>
+    {!! Form::label('type', 'Type') !!}<br>
+
+    Administrator: {!! Form::radio('type', 'admin',true,['onclick' => 'change(1)']) !!} &nbsp;
+    Company: {!! Form::radio('type', 'company',null,['onclick' => 'change(2)']) !!} &nbsp;
+    Sub-User: {!! Form::radio('type', 'subuser',null,['onclick' => 'change(3)']) !!}<br>  
+
+
     <span class="m-form__help">
-        Please select this rol
+        Please select this type
     </span>
 </div>
+
+
+<div id="divCompany" class="form-group m-form__group"  style="display:none">
+    {!! Form::label('name_company', 'Name Company') !!}<br>
+    {!! Form::text('name_company', null, ['class' => 'form-control m-input','id'=>'txtCompany']) !!}
+    <span class="m-form__help">
+        Please enter name of company
+    </span>
+</div>
+
+
+
+<div id="divSubuser" style="display:none">
+
+
+    <div    class="form-group m-form__group"  >
+        {!! Form::label('Company', 'Company') !!}<br>
+        {{ Form::select('id_company', $companyall) }}
+        <span class="m-form__help">
+            Please enter position
+        </span>
+    </div>
+
+
+    <div    class="form-group m-form__group" >
+        {!! Form::label('position', 'Position') !!}<br>
+        {!! Form::text('position', null, ['class' => 'form-control m-input','id'=>'txtSubuser']) !!}
+        <span class="m-form__help">
+            Please enter position
+        </span>
+    </div>
+
+
+</div>
+
+
+
+
+

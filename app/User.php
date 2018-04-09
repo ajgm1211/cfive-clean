@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','lastname', 'email', 'rol'
+        'name','lastname', 'email', 'type','name_company','position',
     ];
 
     /**
@@ -26,4 +26,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function userpivot(){
+        return $this->belongsTo('App\UserPivot');
+    }
+
+
 }

@@ -24,3 +24,4 @@
     <!--end::Form-->
 </div>
 
+<script src="/js/users.js"></script>

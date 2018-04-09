@@ -22,6 +22,7 @@ var DatatableHtmlTableDemo = function() {
                         var status = {
                             1: {'title': 'admin', 'state': 'primary'},
                             2: {'title': 'company', 'state': 'accent'},
+                            3: {'title': 'subuser', 'state': 'warning'},
                         };
                         return '<span class="m-badge m-badge--' + status[row.Type].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
                             status[row.Type].state + '">' +

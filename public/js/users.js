@@ -1,23 +1,39 @@
 
-function AbrirModal(id){
+function change(id){
+    // entidades div
+    var divC = document.getElementById("divCompany");
+    var divSub = document.getElementById("divSubuser");
+    // campos de texto de los diferentes tipos de usuarios
+    var txtC = document.getElementById("txtCompany");
+    var txtSub = document.getElementById("txtSubuser");
+    if(id == '1'){
 
-    if(id != "0"){
-        var url = '{{ route("users.edit", ":id") }}';
-        url = url.replace(':id', id);
-        $('.modal-body').val = 'TEst';
+        divC.style.display = "none"; 
+        divSub.style.display = "none"; 
 
-        $('.modal-body').load(url,function(){
-            $('#m_modal_5').modal({show:true});
-        });
-    }else{
-        var url = '{{ route("users.add") }}';
+        txtC.required = false;
+        txtSub.required = false;
+
+    }
+    if(id == '2'){
+
+        divC.style.display = "block"; 
+        divSub.style.display = "none"; 
+
+        txtC.required = true;
+
+    }
+    if(id == '3'){
 
 
-        $('.modal-body').load(url,function(){
-            $('#m_modal_5').modal({show:true});
-        });
+        divC.style.display = "none"; 
+        divSub.style.display = "block";
+
+        txtSub.required = true;
 
     }
 
+
+
+
 }
-</script>

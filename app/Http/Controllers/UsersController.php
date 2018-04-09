@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\UserPivot;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
 
@@ -39,7 +40,25 @@ class UsersController extends Controller
     {
         $usuario = new User($request->all());
         $usuario->password = bcrypt($usuario->password);
+
+
+
         $usuario->save();
+
+        if($usuario->type == "subuser"){
+
+            /* $id_company = $usuario->type;
+            $usuario->userpivot()->save($usuario->id, $usuario->id_company]);*/
+
+           /* $userpivot = new UserPivot();
+            $userpivot->company_id = $usuario->company_id;
+            $userpivot->user_id($usuario->id);
+            //$userpivot->user()->associate($usuario);
+
+            $userpivot->save();*/
+
+
+        }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this user.');
@@ -60,7 +79,10 @@ class UsersController extends Controller
 
     public function add()
     {
-        return view('users.add');
+
+        $user = new User();
+        $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
+        return view('users.add',compact('companyall'));
     }
 
 
@@ -73,7 +95,8 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('users.edit', compact('user'));
+        $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
+        return view('users.edit', compact('user','companyall'));
     }
 
     /**
@@ -108,8 +131,8 @@ class UsersController extends Controller
     }
     public function destroyUser(Request $request,$id)
     {
-          
-         $user = self::destroy($id);
+
+        $user = self::destroy($id);
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
