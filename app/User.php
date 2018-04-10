@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','lastname', 'email', 'type','name_company','position',
+       'id','name','lastname', 'email', 'type','name_company','position',
     ];
 
     /**
@@ -27,8 +27,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function userpivot(){
-        return $this->belongsTo('App\UserPivot');
+    public function subuser(){
+        
+        return $this->hasOne('App\Subuser');
+        
+          
+       
     }
 
 

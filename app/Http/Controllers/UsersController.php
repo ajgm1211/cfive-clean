@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\UserPivot;
+use App\Subuser;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
 
@@ -38,24 +38,20 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+
         $usuario = new User($request->all());
         $usuario->password = bcrypt($usuario->password);
-
 
 
         $usuario->save();
 
         if($usuario->type == "subuser"){
 
-            /* $id_company = $usuario->type;
-            $usuario->userpivot()->save($usuario->id, $usuario->id_company]);*/
 
-           /* $userpivot = new UserPivot();
-            $userpivot->company_id = $usuario->company_id;
-            $userpivot->user_id($usuario->id);
-            //$userpivot->user()->associate($usuario);
-
-            $userpivot->save();*/
+            $subuser = new Subuser();
+            $subuser->company_id = $request->id_company;
+            $subuser->user()->associate($usuario);
+            $subuser->save();
 
 
         }

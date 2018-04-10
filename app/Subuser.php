@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserPivot extends Model
+class Subuser extends Model
 {
-    protected $table    = "users_pivot";
+    protected $table    = "subuser";
     protected $fillable = ['id', 'user_id', 'company_id'];
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->belongsTo('App\User');
     }
 }
