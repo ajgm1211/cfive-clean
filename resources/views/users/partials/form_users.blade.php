@@ -28,6 +28,9 @@
         Please enter your password
     </span>
 </div>
+
+
+@if( Auth::user()->type == 'admin'   )
 <div class="form-group m-form__group">
     {!! Form::label('type', 'Type') !!}<br>
 
@@ -40,6 +43,21 @@
         Please select this type
     </span>
 </div>
+@endif
+
+
+@if( Auth::user()->type == 'company'   )
+<div class="form-group m-form__group">
+    {!! Form::label('type', 'Type') !!}<br>
+
+    Sub-User: {!! Form::radio('type', 'subuser',true) !!}<br>  
+
+
+    <span class="m-form__help">
+        Please select this type
+    </span>
+</div>
+@endif
 
 
 <div id="divCompany" class="form-group m-form__group"  style="display:none">
@@ -50,11 +68,11 @@
     </span>
 </div>
 
-
+@if( Auth::user()->type == 'admin'   )
 
 <div id="divSubuser" style="display:none">
 
-    @if( Auth::user()->type == 'admin'   )
+
     <div    class="form-group m-form__group"  >
         {!! Form::label('Company', 'Company') !!}<br>
         {{ Form::select('id_company', $companyall,$valorSelect) }}
@@ -62,7 +80,7 @@
             Please enter position
         </span>
     </div>
-    @endif
+
 
 
     <div    class="form-group m-form__group" >
@@ -75,7 +93,36 @@
 
 
 </div>
+@endif
 
+
+@if( Auth::user()->type == 'company')
+<div id="divSubuser" style="display:block">
+
+
+    <div    class="form-group m-form__group"  >
+        {!! Form::label('Company', 'Company') !!}<br>
+        {{ Form::select('company', $companyall, Auth::user()->id ,['disabled' => 'true','id'=>'txtSubuser']) }}
+        {{ Form::hidden('id_company', Auth::user()->id) }}
+
+        <span class="m-form__help">
+            Please enter position
+        </span>
+    </div>
+
+
+
+    <div    class="form-group m-form__group" >
+        {!! Form::label('position', 'Position') !!}<br>
+        {!! Form::text('position', null, ['class' => 'form-control m-input','id'=>'txtSubuser']) !!}
+        <span class="m-form__help">
+            Please enter position
+        </span>
+    </div>
+
+
+</div>
+@endif
 
 
 
