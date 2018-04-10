@@ -7,6 +7,7 @@ use App\User;
 use App\Subuser;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -170,10 +171,20 @@ class UsersController extends Controller
 
     public function datahtml(){
 
-        $user = new User();
-        $data = $user->all();
+        if(Auth::user()->type == 'admin' ){
+            $user = new User();
+            $data = $user->all();
+        }
+        if(Auth::user()->type == 'company' ){
 
-        return view('users/indexhtml', ['arreglo' => $data]);
+            $data =  User::whereHas('subuser', function($q)
+                                    {
+                                        $q->where('company_id', '=', 3);
+                                    })->get();
+        }
+
+        
+          return view('users/indexhtml', ['arreglo' => $data]);
 
 
     }
