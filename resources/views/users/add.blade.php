@@ -1,4 +1,9 @@
-
+<!-- En caso de ser Subusuario precargamos el combo de editar con el valor correspondiente -->
+@if(isset($datosSubuser))
+{{ $valorSelect = $datosSubuser->id }}
+@else
+{{ $valorSelect = '' }}
+@endif
 <div class="m-portlet">
 
     <!--begin::Form-->

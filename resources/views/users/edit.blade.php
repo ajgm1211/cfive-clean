@@ -1,4 +1,4 @@
-
+<!-- Condiciones para mostrar o no los bloques que se necesitan -->
 @if($user->type == 'admin')
 {!! $load = '1' !!}
 @elseif($user->type == 'company')
@@ -8,6 +8,12 @@
 @endif
 
 
+<!-- En caso de ser Subusuario precargamos el combo de editar con el valor correspondiente -->
+@if(isset($datosSubuser))
+{{ $valorSelect = $datosSubuser->id }}
+@else
+{{ $valorSelect = '' }}
+@endif
 
 <div class="m-portlet">
 

@@ -91,7 +91,17 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
+        // Condicion para cagar la compañia del subusuario
+        if($user->type == "subuser"){
+
+            $subuser = Subuser::find($user->subuser->id);
+            $datosSubuser = User::find($subuser->company_id);
+            return view('users.edit', compact('user','companyall','datosSubuser'));
+        }
+
+
         return view('users.edit', compact('user','companyall'));
     }
 
@@ -106,6 +116,16 @@ class UsersController extends Controller
     {
         $requestForm = $request->all();
         $user = User::find($id);
+
+        if($user->type == "subuser"){
+
+            $subuser = Subuser::find($user->subuser->id);
+            $subuser->company_id  =  $request->id_company;
+            $subuser->update();
+
+        }
+
+
         $user->update($requestForm);
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -122,6 +142,11 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+        if($user->type == "subuser"){
+
+            $subuser = Subuser::find($user->subuser->id);
+            $subuser->delete();
+        }
         $user->delete();
         return $user;
     }

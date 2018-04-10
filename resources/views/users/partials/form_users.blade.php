@@ -54,14 +54,15 @@
 
 <div id="divSubuser" style="display:none">
 
-
+    @if( Auth::user()->type == 'admin'   )
     <div    class="form-group m-form__group"  >
         {!! Form::label('Company', 'Company') !!}<br>
-        {{ Form::select('id_company', $companyall) }}
+        {{ Form::select('id_company', $companyall,$valorSelect) }}
         <span class="m-form__help">
             Please enter position
         </span>
     </div>
+    @endif
 
 
     <div    class="form-group m-form__group" >
