@@ -179,7 +179,7 @@ class UsersController extends Controller
 
             $data =  User::whereHas('subuser', function($q)
                                     {
-                                        $q->where('company_id', '=', 3);
+                                        $q->where('company_id', '=', Auth::user()->id);
                                     })->get();
         }
 
