@@ -31,6 +31,17 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
 
+Route::group(['prefix' => 'surcharges'], function () {
+
+    Route::get('add', 'SurchargesController@add')->name('surcharges.add');
+    Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
+    Route::put('delete-surcharge/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharge']);
+
+});
+Route::resource('surcharges', 'SurchargesController'); 
+
+
+
 Route::get('/companies', function () {
     return view('companies');
 });

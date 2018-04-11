@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-       'id','name','lastname', 'email', 'type','name_company','position',
+        'id','name','lastname', 'email', 'type','name_company','position',
     ];
 
     /**
@@ -28,11 +28,14 @@ class User extends Authenticatable
     ];
 
     public function subuser(){
-        
+
         return $this->hasOne('App\Subuser');
-        
-          
-       
+
+    }
+    public function surcharges(){
+
+        return $this->hasMany('App\Surcharge');
+
     }
 
 
