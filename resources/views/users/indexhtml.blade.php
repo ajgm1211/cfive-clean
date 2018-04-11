@@ -142,7 +142,7 @@
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->lastname }}</td>
                         <td>{{ $arr->email }}</td>
-                       <td>@if($arr->type == "admin")
+                        <td>@if($arr->type == "admin")
                             1 
                             @elseif($arr->type == "company")
                             2
@@ -204,6 +204,7 @@
 
 @section('js')
 @parent
+<script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
 <script>
 
     function AbrirModal(action,id){
