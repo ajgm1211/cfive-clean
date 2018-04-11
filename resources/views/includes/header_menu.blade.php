@@ -3,28 +3,28 @@
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-text">
-												New Quote
-											</span>
+                    New Quote
+                </span>
             </a>
         </li>
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-text">
-												Quotes
-											</span>
+                    Quotes
+                </span>
             </a>
         </li>
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">
-												<span class="m-menu__link-wrap">
-													<span class="m-menu__link-text">
-														Clients
-													</span>
-												</span>
-											</span>
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Clients
+                        </span>
+                    </span>
+                </span>
                 <i class="m-menu__hor-arrow la la-angle-down"></i>
                 <i class="m-menu__ver-arrow la la-angle-right"></i>
             </a>
@@ -35,16 +35,16 @@
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Companies
-														</span>
+                                Companies
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Contacs
-														</span>
+                                Contacs
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -55,12 +55,12 @@
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">
-												<span class="m-menu__link-wrap">
-													<span class="m-menu__link-text">
-														Pricing
-													</span>
-												</span>
-											</span>
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Pricing
+                        </span>
+                    </span>
+                </span>
                 <i class="m-menu__hor-arrow la la-angle-down"></i>
                 <i class="m-menu__ver-arrow la la-angle-right"></i>
             </a>
@@ -71,40 +71,40 @@
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Sea Rates
-														</span>
+                                Sea Rates
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Ports Surcharges
-														</span>
+                                Ports Surcharges
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Air Rates
-														</span>
+                                Air Rates
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Airports Surcharges
-														</span>
+                                Airports Surcharges
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-map"></i>
                             <span class="m-menu__link-text">
-															Pricing Levels
-														</span>
+                                Pricing Levels
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -113,12 +113,12 @@
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">
-												<span class="m-menu__link-wrap">
-													<span class="m-menu__link-text">
-														Settings
-													</span>
-												</span>
-											</span>
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Settings
+                        </span>
+                    </span>
+                </span>
                 <i class="m-menu__hor-arrow la la-angle-down"></i>
                 <i class="m-menu__ver-arrow la la-angle-right"></i>
             </a>
@@ -129,44 +129,54 @@
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-															Terms & Conditions
-														</span>
+                                Terms & Conditions
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-map"></i>
                             <span class="m-menu__link-text">
-															Surcharges
-														</span>
+                                Surcharges
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-map"></i>
                             <span class="m-menu__link-text">
-															Users
-														</span>
+                                Users
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-map"></i>
                             <span class="m-menu__link-text">
-															Emails
-														</span>
+                                Emails
+                            </span>
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="header/actions.html" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-map"></i>
                             <span class="m-menu__link-text">
-															Branding
-														</span>
+                                Branding
+                            </span>
                         </a>
                     </li>
                 </ul>
             </div>
+        </li>
+
+        <li class="m-menu__item" >
+            <a  href="{{ url('users/logout') }}" class="m-menu__link">
+                <span class="m-menu__link-text">
+                    Logout
+                </span>
+            </a>
         </li>
     </ul>
+    
+     
 </div>

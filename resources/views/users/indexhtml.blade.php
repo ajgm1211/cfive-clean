@@ -126,6 +126,9 @@
                             Type
                         </th>
                         <th title="Field #5">
+                            Name Company
+                        </th>
+                        <th title="Field #6">
                             Options
                         </th>
 
@@ -139,7 +142,7 @@
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->lastname }}</td>
                         <td>{{ $arr->email }}</td>
-                        <td>@if($arr->type == "admin")
+                       <td>@if($arr->type == "admin")
                             1 
                             @elseif($arr->type == "company")
                             2
@@ -147,6 +150,7 @@
                             3
                             @endif
                         </td>
+                        <td>{{ $arr->name_company }}</td>
                         <td>
                             <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                 <i class="la la-edit"></i>

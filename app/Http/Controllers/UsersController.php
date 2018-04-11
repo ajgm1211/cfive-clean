@@ -92,7 +92,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-
+        // colocar donde el id sea diferente de 
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
         // Condicion para cagar la compañia del subusuario
         if($user->type == "subuser"){
@@ -174,6 +174,7 @@ class UsersController extends Controller
         if(Auth::user()->type == 'admin' ){
             $user = new User();
             $data = $user->all();
+
         }
         if(Auth::user()->type == 'company' ){
 
@@ -183,8 +184,7 @@ class UsersController extends Controller
                                     })->get();
         }
 
-        
-          return view('users/indexhtml', ['arreglo' => $data]);
+        return view('users/indexhtml', ['arreglo' => $data]);
 
 
     }
@@ -196,6 +196,10 @@ class UsersController extends Controller
         $response = User::all('name', 'lastname', 'email', 'rol')->toJson();
         return view('users/indexjson')->with('url', $response);
 
+    }
+    public function logout(Request $request) {
+        Auth::logout();
+        return redirect('/login');
     }
 
 

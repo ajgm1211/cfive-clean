@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-      return redirect('users/home');
+    return redirect('users/home');
 });
 
 
@@ -28,10 +28,8 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
-
+    Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
-
-
 
 Route::get('/companies', function () {
     return view('companies');
