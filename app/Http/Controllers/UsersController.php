@@ -93,7 +93,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         // colocar donde el id sea diferente de 
-        $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
+        $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->where('id', '!=', $id)->pluck('name_company', 'id');
         // Condicion para cagar la compañia del subusuario
         if($user->type == "subuser"){
 

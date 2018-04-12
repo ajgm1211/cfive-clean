@@ -35,7 +35,7 @@ Route::group(['prefix' => 'surcharges'], function () {
 
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
-    Route::put('delete-surcharge/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharge']);
+    Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
 
 });
 Route::resource('surcharges', 'SurchargesController'); 

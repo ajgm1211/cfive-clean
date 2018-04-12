@@ -32,6 +32,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Subuser');
 
     }
+    public function contracts(){
+
+        return $this->hasMany('App\Contract');
+
+    }
     public function surcharges(){
 
         return $this->hasMany('App\Surcharge');

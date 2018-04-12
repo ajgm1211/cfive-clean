@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Lista de Surcharges 
+                        List  Surcharges 
                     </h3>
                 </div>
             </div>

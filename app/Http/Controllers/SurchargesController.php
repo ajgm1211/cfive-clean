@@ -63,7 +63,13 @@ class SurchargesController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $requestForm = $request->all();
+        $surcharges = Surcharge::find($id);
+        $surcharges->update($requestForm);
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You upgrade has been success ');
+        return redirect()->action('SurchargesController@index');
     }
 
 
@@ -80,8 +86,7 @@ class SurchargesController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully delete ');
-        return view('surcharges/index');
-
+        return redirect()->action('SurchargesController@index');
     }
     public function destroymsg($id)
     {

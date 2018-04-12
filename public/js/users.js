@@ -37,6 +37,7 @@ function change(id){
         divC.style.display = "none"; 
         divSub.style.display = "block";
         txtSub.required = true;
+        txtC.value="";
 
     }
 
