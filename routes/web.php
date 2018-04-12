@@ -32,7 +32,7 @@ Route::group(['prefix' => 'users'], function () {
 });
 
 
-Route::resource('surcharges', 'SurchargesController'); 
+
 Route::group(['prefix' => 'surcharges'], function () {
 
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
@@ -40,17 +40,17 @@ Route::group(['prefix' => 'surcharges'], function () {
     Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
 
 });
+Route::resource('surcharges', 'SurchargesController'); 
 
 
-Route::resource('contracts', 'ContractsController'); 
 Route::group(['prefix' => 'contracts'], function () {
 
     Route::get('add', 'ContractsController@add')->name('contracts.add');
-    Route::get('msg/{contract_id}', 'ContractsController@destroymsg')->name('contracts.msg');
+    Route::get('msg-/{contract_id}', 'ContractsController@destroymsg')->name('contracts.msg');
     Route::put('delete-contracts/{contract_id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'delete-contracts']);
 
 });
-
+Route::resource('contracts', 'ContractsController'); 
 
 
 Route::get('/companies', function () {

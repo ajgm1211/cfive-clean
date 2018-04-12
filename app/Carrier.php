@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Courier extends Model
+class Carrier extends Model
 {
-    protected $table    = "couriers";
+    protected $table    = "carriers";
     protected $fillable = ['id', 'name'];
     public function contract()
     {

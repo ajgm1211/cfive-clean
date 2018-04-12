@@ -72,10 +72,10 @@
                                                 All
                                             </option>
                                             <option value="1">
-                                                Admin
+                                                Publish
                                             </option>
                                             <option value="2">
-                                                Company
+                                                Drafts
                                             </option>
                                         </select>
                                     </div>
@@ -100,7 +100,7 @@
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
-                                    Add User
+                                    Add Contract
                                 </span>
                             </span>
                         </button>
@@ -128,13 +128,13 @@
                         <th title="Field #5">
                             Destiny
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #6">
                             Validation
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #7">
                             Status
                         </th>
-                        <th title="Field #6">
+                        <th title="Field #8">
                             Options
                         </th>
 
@@ -146,15 +146,17 @@
 
                     <tr>
                         <td>{{ $arr->name }}</td>
-                        <td>{{ $arr->lastname }}</td>
-                        <td>{{ $arr->email }}</td>
+                        <td>{{ $arr->number }}</td>
+                        <td>{{ $arr->carrier->name }}</td>
+                        <td>{{ $arr->country_origin->name }}</td>
+                        <td>{{ $arr->country_destiny->name }}</td>
+                        <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
                         <td>@if($arr->status == "publish")
                             1 
                             @else
                             2
                             @endif
                         </td>
-                        <td>{{ $arr->name_company }}</td>
                         <td>
                             <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                 <i class="la la-edit"></i>

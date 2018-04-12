@@ -1,17 +1,12 @@
-<!-- En caso de ser Subusuario precargamos el combo de editar con el valor correspondiente -->
-@if(isset($datosSubuser))
-{{ $valorSelect = $datosSubuser->id }}
-@else
-{{ $valorSelect = '' }}
-@endif
+
 <div class="m-portlet">
 
     <!--begin::Form-->
-    {!! Form::open(['route' => 'users.store']) !!}
+    {!! Form::open(['route' => 'contracts.store']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-                @include('users.partials.form_users')
+                @include('contracts.partials.form_contracts')
 
 
             </div>
@@ -25,8 +20,12 @@
             </div>
         </div>
     </div>
+
+
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
 
-<script src="/js/users.js"></script>
+
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>

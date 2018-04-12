@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Contract extends Model
 {
     protected $table    = "contracts";
+    
+    
+    protected $fillable = ['id', 'name','number','user_id','carrier_id','origin_country','destiny_country','validity','expire','status'];
+    public function carrier(){
 
-    protected $fillable = ['id', 'name', 'number','validity','expire','status'];
-    public function courier(){
-
-        return $this->belongsTo('App\Courier');
+        return $this->belongsTo('App\Carrier');
 
     }
     public function country_origin(){

@@ -8,6 +8,9 @@ var BootstrapDaterangepicker = function () {
         $('#m_daterangepicker_1, #m_daterangepicker_1_modal').daterangepicker({
             buttonClasses: 'm-btn btn',
             applyClass: 'btn-primary',
+              locale: {
+                format: 'YYYY/MM/DD'
+            },
             cancelClass: 'btn-secondary'
         });
 
