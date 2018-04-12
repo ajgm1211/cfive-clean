@@ -19,15 +19,15 @@ class CreateContracts extends Migration
             $table->string('number')->unique();
             $table->integer('user_id')->unsigned();
             $table->integer('courier_id')->unsigned();
-            $table->integer('origin_countrie')->unsigned();
-            $table->integer('destiny_countrie')->unsigned();
+            $table->integer('origin_country')->unsigned();
+            $table->integer('destiny_country')->unsigned();
             $table->date('validity');
             $table->date('expire');
             $table->enum('status',['publish','draft'])->default('draft');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('courier_id')->references('id')->on('couriers');
-            $table->foreign('origin_countrie')->references('id')->on('countries');
-            $table->foreign('destiny_countrie')->references('id')->on('countries');
+            $table->foreign('origin_country')->references('id')->on('countries');
+            $table->foreign('destiny_country')->references('id')->on('countries');
             $table->timestamps();
         });
     }

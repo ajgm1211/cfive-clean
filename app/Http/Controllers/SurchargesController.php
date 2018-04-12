@@ -16,11 +16,7 @@ class SurchargesController extends Controller
     public function index()
     {
 
-        $data = $surcharge = Surcharge::with('user')->get();
-
-
-
-
+        $data = Surcharge::with('user')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
     public function add()

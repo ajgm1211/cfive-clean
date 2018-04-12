@@ -11,12 +11,17 @@ class Contract extends Model
     protected $fillable = ['id', 'name', 'number','validity','expire','status'];
     public function courier(){
 
-        return $this->hasOne('App\Courier');
+        return $this->belongsTo('App\Courier');
 
     }
-    public function countrie(){
+    public function country_origin(){
+        return $this->belongsTo('App\Country','origin_country');
 
-        return $this->hasOne('App\Countrie');
+
+    }
+    public function country_destiny(){
+        return $this->belongsTo('App\Country','destiny_country');
+
 
     }
 }

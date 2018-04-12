@@ -10,6 +10,6 @@ class Courier extends Model
     protected $fillable = ['id', 'name'];
     public function contract()
     {
-        return $this->belongsTo('App\Contract');
+         return $this->hasOne('App\Contract');
     }
 }
