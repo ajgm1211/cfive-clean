@@ -95,22 +95,24 @@
                         </div>
                     </div>
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
+                        <a href="{{ route('contracts.add') }}">
 
-                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
-                            <span>
-                                <i class="la la-user"></i>
+
+                            <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                 <span>
-                                    Add Contract
+                                    <i class="la la-user"></i>
+                                    <span>
+                                        Add Contract
+                                    </span>
                                 </span>
-                            </span>
-                        </button>
-
+                            </button>
+                        </a>
 
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                     </div>
                 </div>
             </div>
-            <table class="m-datatable" id="html_table" width="100%">
+            <table class="m-datatable"  id="html_table" >
                 <thead>
                     <tr>
                         <th title="Field #1">
@@ -123,18 +125,30 @@
                             Courier
                         </th>
                         <th title="Field #4">
-                            Origin
+                            Origin Port
                         </th>
                         <th title="Field #5">
-                            Destiny
+                            Destiny Port
                         </th>
-                        <th title="Field #6">
+                        <th title="Field #6" >
+                            20'
+                        </th>
+                        <th title="Field #7" >
+                            40'
+                        </th>
+                        <th title="Field #8" >
+                            40'HC
+                        </th>
+                        <th title="Field #9">
                             Validation
                         </th>
-                        <th title="Field #7">
+                        <th title="Field #10">
+                            Currency
+                        </th>
+                        <th title="Field #11">
                             Status
                         </th>
-                        <th title="Field #8">
+                        <th title="Field #12">
                             Options
                         </th>
 
@@ -144,12 +158,17 @@
 
                     @foreach ($arreglo as $arr)
 
+                    @foreach ($arreglo->flatMap->rates as $rates)
                     <tr>
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->number }}</td>
-                        <td>{{ $arr->carrier->name }}</td>
-                        <td>{{ $arr->country_origin->name }}</td>
-                        <td>{{ $arr->country_destiny->name }}</td>
+                        <td>{{ $rates->carrier->name }}</td>
+                        <td>{{$rates->port_origin->name  }}</td>
+                        <td>{{$rates->port_destiny->name  }}</td>
+                        <td>{{$rates->twuenty  }}</td>
+                        <td>{{$rates->forty  }}</td>
+                        <td>{{$rates->fortyhc  }}</td>
+                        <td>{{$rates->currency  }}</td>
                         <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
                         <td>@if($arr->status == "publish")
                             1 
@@ -169,12 +188,13 @@
                         </td>
                     </tr>
                     @endforeach
+                    @endforeach
                 </tbody>
             </table>
 
 
 
-            <div class="modal fade" id="m_modal_4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -221,14 +241,14 @@
 
 
             $('.modal-body').load(url,function(){
-                $('#').modal({show:true});
+                $('#m_select2_modal').modal({show:true});
             });
         }if(action == "add"){
             var url = '{{ route("contracts.add") }}';
 
 
             $('.modal-body').load(url,function(){
-                $('#m_modal_4').modal({show:true});
+                $('#m_select2_modal').modal({show:true});
             });
 
         }
@@ -237,12 +257,12 @@
             url = url.replace(':id', id);
 
             $('.modal-body').load(url,function(){
-                $('#m_modal_4').modal({show:true});
+                $('#m_select2_modal').modal({show:true});
             });
 
         }
 
-    }
+    }       
 </script>
 
 @stop

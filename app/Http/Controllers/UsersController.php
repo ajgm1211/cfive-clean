@@ -81,8 +81,13 @@ class UsersController extends Controller
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
         return view('users.add',compact('companyall'));
     }
-
-
+    public function resetPass($client)
+    {
+        
+        $user = User::find($client);
+        $token = app('auth.password.broker')->createToken($client);
+        \Mail::to($user->email)->send(new \App\Mail\Client($data,$token));
+    }
     /**
      * Show the form for editing the specified resource.
      *

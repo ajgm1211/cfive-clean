@@ -1,8 +1,10 @@
-
+@php
+$validation_expire = 'Please enter validation date';
+@endphp
 <div class="m-portlet">
 
     <!--begin::Form-->
-    {!! Form::open(['route' => 'contracts.store']) !!}
+    {!! Form::open(['route' => 'contracts.store','class' => 'form-group m-form__group']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
@@ -25,7 +27,6 @@
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
-
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>

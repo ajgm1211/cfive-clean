@@ -10,9 +10,32 @@ var DatatableHtmlTableDemo = function() {
             data: {
                 saveState: {cookie: false},
             },
+            
+			layout: {
+				theme: 'default',
+				class: '',
+				scroll: true,
+				footer: false
+			},
+
+			sortable: true,
+
+			filterable: false,
+
+			pagination: true,
+
             search: {
                 input: $('#generalSearch'),
             },
+            toolbar: {
+				// toolbar items
+				items: {
+					// pagination
+					pagination: {
+						pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+					}
+				}
+			},
             columns: [
                 {
                     field: 'Status',

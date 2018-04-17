@@ -159,7 +159,12 @@
                             <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
                                 <i class="la la-eraser"></i>
                             </a>
+                            @if( Auth::user()->type == 'company'   )
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Reset "  >
+                                <i class="la la-eraser"></i>
+                            </a>
 
+                            @endif
                         </td>
                     </tr>
                     @endforeach

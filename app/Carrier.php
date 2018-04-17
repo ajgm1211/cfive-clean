@@ -8,8 +8,8 @@ class Carrier extends Model
 {
     protected $table    = "carriers";
     protected $fillable = ['id', 'name'];
-    public function contract()
+    public function rate()
     {
-         return $this->hasOne('App\Contract');
+        return $this->hasOne('App\Rate');
     }
 }

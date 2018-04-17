@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Contract;
 use App\Country;
 use App\Carrier;
+use App\Harbor;
+use App\Rate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 class ContractsController extends Controller
 {
     /**
@@ -16,10 +19,18 @@ class ContractsController extends Controller
      */
     public function index()
     {
-        $data =  Contract::with('country_origin','country_destiny','carrier')->get();
 
-        //dd($data);
-        return view('contracts/index', ['arreglo' => $data]);
+        $contracts = Contract::with('rates')->get();
+        //echo $contracts->name;
+
+      /*  foreach ($contracts as $arr) {
+            foreach ($contracts->flatMap->rates as $rates) {
+                echo $arr->name;
+                echo $rates->carrier->name;
+            }
+        }
+*/
+        return view('contracts/index', ['arreglo' => $contracts]);
     }
 
     /**
@@ -33,11 +44,14 @@ class ContractsController extends Controller
 
         $objcountry = new Country();
         $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+
+        $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
 
 
-        return view('contracts.add',compact('country','carrier'));
+        return view('contracts.addT',compact('country','carrier','harbor'));
     }
 
     public function create()
@@ -54,14 +68,49 @@ class ContractsController extends Controller
     public function store(Request $request)
     {
 
-       
+
         $contract = new Contract($request->all());
         $contract->user_id =Auth::user()->id;
-        $validation = explode('-',$request->validation_expire);
+        $validation = explode('/',$request->validation_expire);
         $contract->validity = $validation[0];
         $contract->expire = $validation[1];
         $contract->save();
-        return redirect()->action('ContractsController@index');
+
+        $details = $request->input('origin_id');
+        foreach($details as $key => $value)
+        {
+            if(!empty($request->input('twuenty.'.$key))) {
+
+
+                $rates = new Rate();
+                $rates->origin_port = $request->input('origin_id.'.$key);
+                $rates->destiny_port = $request->input('destiny_id.'.$key);
+                $rates->carrier_id = $request->input('carrier_id.'.$key);
+                $rates->twuenty = $request->input('twuenty.'.$key);
+                $rates->forty = $request->input('forty.'.$key);
+                $rates->fortyhc = $request->input('fortyhc.'.$key);
+                $rates->currency = $request->input('currency.'.$key);
+                $rates->contract()->associate($contract);
+                $rates->save();
+
+            }
+        }
+
+
+
+        /* 
+
+
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this user.');
+        return redirect('users/home');
+
+
+
+
+        return redirect()->action('ContractsController@index');*/
 
     }
 
@@ -84,7 +133,12 @@ class ContractsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $contracts = Contract::find($id);
+        $objcountry = new Country();
+        $objcarrier = new Carrier();
+        $country = $objcountry->all()->pluck('name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        return view('contracts.edit', compact('contracts','country','carrier'));
     }
 
     /**

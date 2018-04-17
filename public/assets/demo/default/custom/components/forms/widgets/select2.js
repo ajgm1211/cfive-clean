@@ -151,23 +151,40 @@ var Select2 = function() {
         $('#m_select2_modal').on('shown.bs.modal', function () {
             // basic
             $('#m_select2_1_modal').select2({
-                placeholder: "Select a state"
+                placeholder: "Select a state",
+                minimumResultsForSearch: Infinity
             });
 
             // nested
             $('#m_select2_2_modal').select2({
-                placeholder: "Select a state"
+                placeholder: "Select a state",
+                minimumResultsForSearch: Infinity
             });
 
             // multi select
             $('#m_select2_3_modal').select2({
                 placeholder: "Select a state",
+                minimumResultsForSearch: Infinity
+            });
+
+
+            $('#m_select2_5_modal').select2({
+                placeholder: "Select a state",
+                minimumResultsForSearch: Infinity
+            });
+            
+            $('#m_select2_6_modal').select2({
+                
+                
+                placeholder: "Select a state",
+                minimumResultsForSearch: Infinity
             });
 
             // basic
             $('#m_select2_4_modal').select2({
                 placeholder: "Select a state",
-                allowClear: true
+                minimumResultsForSearch: Infinity
+               
             }); 
         });
     }
