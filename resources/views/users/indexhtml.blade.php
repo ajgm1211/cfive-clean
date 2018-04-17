@@ -160,8 +160,9 @@
                                 <i class="la la-eraser"></i>
                             </a>
                             @if( Auth::user()->type == 'company'   )
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Reset "  >
-                                <i class="la la-eraser"></i>
+                
+                            <a href="{{url('users/reset-password/'.$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Reset "  >
+                                <i class="la la-key"></i>
                             </a>
 
                             @endif

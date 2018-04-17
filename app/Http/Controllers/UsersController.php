@@ -8,6 +8,9 @@ use App\Subuser;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Password;
+
 
 class UsersController extends Controller
 {
@@ -81,12 +84,14 @@ class UsersController extends Controller
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
         return view('users.add',compact('companyall'));
     }
-    public function resetPass($client)
+    public function resetPass($user)
     {
-        
-        $user = User::find($client);
-        $token = app('auth.password.broker')->createToken($client);
-        \Mail::to($user->email)->send(new \App\Mail\Client($data,$token));
+
+        $user = User::find($user);
+        //Password::sendResetLink(['email' => $user->email]);
+        $response = \Password::sendResetLink(['email' => $user->email ] , function (Message $message) {
+            $message->subject($this->getEmailSubject());
+        });
     }
     /**
      * Show the form for editing the specified resource.
@@ -175,8 +180,8 @@ class UsersController extends Controller
     }
 
     public function datahtml(){
-
-        if(Auth::user()->type == 'admin' ){
+        // temporal
+        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $user = new User();
             $data = $user->all();
 

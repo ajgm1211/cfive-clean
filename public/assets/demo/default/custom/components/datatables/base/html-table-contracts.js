@@ -9,33 +9,37 @@ var DatatableHtmlTableDemo = function() {
         var datatable = $('.m-datatable').mDatatable({
             data: {
                 saveState: {cookie: false},
+                pageSize: 5,
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
             },
-            
-			layout: {
-				theme: 'default',
-				class: '',
-				scroll: true,
-				footer: false
-			},
 
-			sortable: true,
+            layout: {
+                theme: 'default',
+                class: '',
+                scroll: true,
+                footer: false
+            },
 
-			filterable: false,
+            sortable: true,
 
-			pagination: true,
+            filterable: false,
+
+            pagination: true,
 
             search: {
                 input: $('#generalSearch'),
             },
             toolbar: {
-				// toolbar items
-				items: {
-					// pagination
-					pagination: {
-						pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
-					}
-				}
-			},
+                // toolbar items
+                items: {
+                    // pagination
+                    pagination: {
+                        pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+                    }
+                }
+            },
             columns: [
                 {
                     field: 'Status',

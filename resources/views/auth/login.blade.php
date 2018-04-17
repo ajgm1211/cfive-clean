@@ -89,7 +89,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         </div>
                                         <div class="m-login__form-action">
                                             <button type="submit" id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
-                                                   {{ __('Login')  }}
+                                                {{ __('Login')  }}
                                             </button>
                                         </div>
                                     </form>
@@ -163,7 +163,16 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <a href="javascript:;" id="m_login_signup" class="m-link m-link--focus m-login__account-link">
                                     Sign Up
                                 </a>
+
+                                <div class="m-login__head">
+                                    <span class="m-login__account-msg">
+                                        {{   __('Forgot Your Password?')  }}
+                                    </span>
+                              
+                                    <a class="m-link m-link--focus m-login__account-link" href=" {{ route('password.request')}} ">Forgot</a>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
