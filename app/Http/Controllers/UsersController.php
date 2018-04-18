@@ -61,7 +61,7 @@ class UsersController extends Controller
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully add this user.');
+        $request->session()->flash('message.content', 'You successfully added this user.');
         return redirect('users/home');
     }
 
@@ -84,7 +84,7 @@ class UsersController extends Controller
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
         return view('users.add',compact('companyall'));
     }
-    public function resetPass($user)
+    public function resetPass(Request $request,$user)
     {
 
         $user = User::find($user);
@@ -92,6 +92,10 @@ class UsersController extends Controller
         $response = \Password::sendResetLink(['email' => $user->email ] , function (Message $message) {
             $message->subject($this->getEmailSubject());
         });
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'The email has been sent successfully ');
+        return redirect('users/home');
     }
     /**
      * Show the form for editing the specified resource.

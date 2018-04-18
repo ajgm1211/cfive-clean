@@ -2,11 +2,11 @@
 
 
     <!--begin::Form-->
-    {!! Form::open(['route' => ['delete-user', $userid],'method' => 'PUT']) !!}
+    {!! Form::open(['route' => ['delete-rates', $rate_id],'method' => 'PUT']) !!}
    
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-               are you sure you want to delete the user?
+               are you sure you want to delete this rate?
 
             </div>
         </div>

@@ -23,7 +23,7 @@ class ContractsController extends Controller
         $contracts = Contract::with('rates')->get();
         //echo $contracts->name;
 
-      /*  foreach ($contracts as $arr) {
+        /*  foreach ($contracts as $arr) {
             foreach ($contracts->flatMap->rates as $rates) {
                 echo $arr->name;
                 echo $rates->carrier->name;
@@ -96,21 +96,11 @@ class ContractsController extends Controller
             }
         }
 
-
-
-        /* 
-
-
-
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully add this user.');
-        return redirect('users/home');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
 
-
-
-
-        return redirect()->action('ContractsController@index');*/
+        return redirect()->action('ContractsController@index');
 
     }
 
@@ -161,6 +151,25 @@ class ContractsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $rate = Rate::find($id);
+        $rate->delete();
+        return $rate;
+    }
+    public function destroyRates(Request $request,$id)
+    {
+
+        $rates = self::destroy($id);
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully delete the rate ');
+        return redirect()->action('ContractsController@index');
+
+    }
+
+    public function destroymsg($id)
+    {
+        return view('contracts/message' ,['rate_id' => $id]);
+
     }
 }
