@@ -19,24 +19,27 @@ function cancel(id){
 
 }
 
-function save(){
+function save(id,idval){
 
     var origin = $("#twuenty"+id).val();
 
-    alert(origin);
-    /*  $.ajax({
-                type: 'PUT',
-                url: 'posts/' + id,
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'id': $("#id_edit").val(),
-                    'title': $('#title_edit').val(),
-                    'content': $('#content_edit').val()
-                },
-                success: function(data) {
-                    $('.errorTitle').addClass('hidden');
-                    $('.errorContent').addClass('hidden');
-                });*/
+
+    $.ajax({
+        type: 'GET',
+        url: '../updateRate/' + idval,
+        data: {
+            'origin_port': $("#origin"+id).val(),
+            'destiny_port': $("#destiny"+id).val(),
+            'carrier_id': $("#carrier"+id).val(),
+            'twuenty': $("#twuenty"+id).val()
+        },
+        success: function(data) {
+            $("#save"+id).attr('hidden','true');
+            $("#cancel"+id).attr('hidden','true');
+            $("#edit"+id).removeAttr('hidden');
+             $("#tr"+id+" select, #tr"+id+" input").prop('disabled', true);
+        }
+    });
 
     //$("#tr"+id+" input, tr.statuscheck select, tr.statuscheck textarea").prop('disabled', false);
 

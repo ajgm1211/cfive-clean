@@ -51,6 +51,7 @@ Route::group(['prefix' => 'contracts'], function () {
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
     Route::put('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+    Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
     
 });
 Route::resource('contracts', 'ContractsController'); 

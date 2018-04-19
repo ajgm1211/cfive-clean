@@ -114,19 +114,19 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     @foreach ($contracts->rates as $rates)
 
                                     <tr id='tr{{++$loop->index}}' disabled='true'>
-                                        <td>{{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'custom-select form-control', 'disabled' => 'true']) }} </td>
-                                        <td>{{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'custom-select form-control' ,'disabled' => 'true' ]) }}</td>
-                                        <td>{{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}</td>
-                                        <td>{!! Form::text('twuenty[]', $rates->twuenty , ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control input-small','disabled' => 'true' ]) !!} </td>
-                                        <td>{{$rates->forty  }}</td>
-                                        <td>{{$rates->fortyhc  }}</td>
-                                        <td>{{$rates->currency  }}</td>
-                                        <td>      
+                                        <td class="col-sm-2">{{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'custom-select form-control', 'disabled' => 'true']) }} </td>
+                                        <td class="col-sm-2"> {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'custom-select form-control' ,'disabled' => 'true' ]) }}</td>
+                                        <td class="col-sm-2">{{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}</td>
+                                        <td class="col-sm-2">{!! Form::text('twuenty[]', $rates->twuenty , ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input','disabled' => 'true' ]) !!} </td>
+                                        <td class="col-sm-2"> {{$rates->forty  }}</td>
+                                        <td class="col-sm-2">{{$rates->fortyhc  }}</td>
+                                        <td class="col-sm-1">{{$rates->currency  }}</td>
+                                        <td class="col-sm-1">      
                                             <a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                                 <i class="la la-edit"></i>
                                             </a>
 
-                                            <a  id='save{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                            <a  id='save{{$loop->index}}' onclick="save({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
                                                 <i class="la la-save"></i>
                                             </a>
                                               <a  id='cancel{{$loop->index}}' onclick="cancel({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
@@ -200,6 +200,14 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 
 
     });
+</script>
+    <script>
+    /
+    var config = {
+        routes: [
+            { zone: "{{ URL::to('zone') }}" }
+        ]
+    };
 </script>
 <script src="/js/rates.js"></script>
 <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>

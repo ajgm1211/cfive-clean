@@ -147,6 +147,9 @@ class UsersController extends Controller
         $request->session()->flash('message.content', 'You upgrade has been success ');
         return redirect()->route('users.home');
     }
+    
+    
+    
 
     /**
      * Remove the specified resource from storage.

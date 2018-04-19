@@ -26,7 +26,7 @@ class ContractsController extends Controller
         /* foreach ($contracts as $arr) {
             foreach ($arr->rates as $rates) {
                 echo $arr->name."  ".$rates->port_origin->name."<br>";
-                
+
             }
         }*/
 
@@ -167,7 +167,7 @@ class ContractsController extends Controller
         $contract->validity = $validation[0];
         $contract->expire = $validation[1];
         $contract->update($requestForm);
-    
+
         $details = $request->input('origin_id');
         foreach($details as $key => $value)
         {
@@ -193,6 +193,19 @@ class ContractsController extends Controller
         $request->session()->flash('message.content', 'You successfully update this contract.');
 
         return redirect()->action('ContractsController@index');
+
+
+    }
+
+
+
+    public function updateRates(Request $request, $id)
+    {
+        //dd("imi here");
+        $requestForm = $request->all();
+        
+        $rate = Rate::find($id);
+        $rate->update($requestForm);
 
 
     }
