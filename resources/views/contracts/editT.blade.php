@@ -118,7 +118,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td class="col-sm-2"> {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'custom-select form-control' ,'disabled' => 'true' ]) }}</td>
                                         <td class="col-sm-2">{{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}</td>
                                         <td class="col-sm-2">{!! Form::text('twuenty[]', $rates->twuenty , ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input','disabled' => 'true' ]) !!} </td>
-                                        <td class="col-sm-2"> {{$rates->forty  }}</td>
+                                        <td class="col-sm-2"> <span id='spanforty{{$loop->index}}'> {{$rates->forty  }} </span></td>
                                         <td class="col-sm-2">{{$rates->fortyhc  }}</td>
                                         <td class="col-sm-1">{{$rates->currency  }}</td>
                                         <td class="col-sm-1">      
