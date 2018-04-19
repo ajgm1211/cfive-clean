@@ -10,7 +10,7 @@ var BootstrapDaterangepicker = function () {
             applyClass: 'btn-primary',
               locale: {
                 format: 'YYYY-MM-DD',
-                  separator: '/',
+                  separator: ' / ',
             },
             cancelClass: 'btn-secondary'
         });

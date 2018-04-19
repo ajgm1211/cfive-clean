@@ -10,9 +10,7 @@ var DatatableHtmlTableDemo = function() {
             data: {
                 saveState: {cookie: false},
                 pageSize: 5,
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
+                
             },
 
             layout: {
@@ -24,7 +22,7 @@ var DatatableHtmlTableDemo = function() {
 
             sortable: true,
 
-            filterable: false,
+            filterable: true,
 
             pagination: true,
 

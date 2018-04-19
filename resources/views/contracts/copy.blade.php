@@ -7,9 +7,10 @@
 @section('title', 'Contracts')
 @section('content')
 @php
-$validation_expire = 'Please enter validation date';
+$validation_expire = $contracts->validity ." / ". $contracts->expire ;
 @endphp
 <div class="m-content">
+
 
     <!--Begin::Main Portlet-->
     <div class="m-portlet m-portlet--full-height">
@@ -36,9 +37,10 @@ $validation_expire = 'Please enter validation date';
             </div>
         </div>
         <div class="m-portlet__body">
-            {!! Form::open(['route' => 'contracts.store','class' => 'form-group m-form__group']) !!}
-            @include('contracts.partials.form_contractsT')
 
+
+            {!! Form::model($contracts, ['route' => ['contracts.update', $contracts], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
+            @include('contracts.partials.form_contractsT')
             <div class="m-portlet m-portlet--tabs">
                 <div class="m-portlet__head">
                     <div class="m-portlet__head-tools">
@@ -67,7 +69,7 @@ $validation_expire = 'Please enter validation date';
                 <div class="m-portlet__body">
                     <div class="tab-content">
                         <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
-                            <a  id="sample_editable_1_new" class="">
+                            <a  id="new" class="">
 
                                 <button type="button" class="btn btn-brand">
                                     Add New
@@ -108,18 +110,20 @@ $validation_expire = 'Please enter validation date';
                                 </thead>
                                 <tbody>
 
-                                    <tr   id='tr_clone'  >
-                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
-                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>-</td>
-
+                                    @foreach ($contracts->rates as $rates)
+                                    <tr>
+                                        <td>{{$rates->port_origin->name  }}</td>
+                                        <td>{{$rates->port_destiny->name  }}</td>
+                                        <td>{{ $rates->carrier->name }}</td>
+                                        <td>{{$rates->twuenty  }}</td>
+                                        <td>{{$rates->forty  }}</td>
+                                        <td>{{$rates->fortyhc  }}</td>
+                                        <td>{{$rates->currency  }}</td>
+                                        <td>Options</td>
                                     </tr>
+
+                                    @endforeach
 
                                     <tr   id='tclone' hidden="true" >
                                         <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
@@ -130,28 +134,12 @@ $validation_expire = 'Please enter validation date';
                                         <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
                                         <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
                                         <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input']) !!}</td>
-                                        <td>  <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="s" >
+                                        <td>  <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" onclick="s" >
                                             <i class="la la-eraser"></i>
                                             </a>
                                         </td>
 
                                     </tr>
-
-                                    <!--  <tr>
-<td>fgdfgfdg</td>
-<td>fgdfgfdg</td>
-<td>fgdfgfdg</td>
-
-<td>{fgdfgfdg</td>
-<td>fgdfgfdg</td>
-<td> {fgdfgfdg</td>
-<td>fgdfgfdg</td>
-<td>opciones</td>
-
-
-</tr>-->
-
-
                             </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
@@ -189,38 +177,21 @@ $validation_expire = 'Please enter validation date';
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 
-
 <script>
 
-    $("#sample_editable_1_new").on("click", function() {
+    $("#new").on("click", function() {
 
-         var $template = $('#tclone');
-       // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
+        var $template = $('#tclone');
+        // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
         $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
 
 
     });
 </script>
-<!--
-<script>
 
-/*  $(document).ready(function() {
-
-
-$('#sample_editable_1').DataTable();
-} );*/
-
-</script>-->
-
-
-
-<!--
 <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
--->
-
-
 
 @stop

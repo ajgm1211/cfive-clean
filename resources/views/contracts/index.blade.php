@@ -32,9 +32,6 @@
             </div>
         </div>
 
-
-
-
         @endif
 
         <!--
@@ -158,7 +155,7 @@
 
                     @foreach ($arreglo as $arr)
 
-                    @foreach ($arreglo->flatMap->rates as $rates)
+                    @foreach ($arr->rates as $rates)
                     <tr>
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->number }}</td>
@@ -168,8 +165,8 @@
                         <td>{{$rates->twuenty  }}</td>
                         <td>{{$rates->forty  }}</td>
                         <td>{{$rates->fortyhc  }}</td>
-                        <td>{{$rates->currency  }}</td>
                         <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
+                        <td>{{$rates->currency  }}</td>
                         <td>@if($arr->status == "publish")
                             1 
                             @else
@@ -177,11 +174,11 @@
                             @endif
                         </td>
                         <td>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
+                            <a href="{{ route("contracts.edit", $arr->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $rates->id }})" >
                                 <i class="la la-eraser"></i>
                             </a>
 

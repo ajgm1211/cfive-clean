@@ -21,15 +21,15 @@ class ContractsController extends Controller
     {
 
         $contracts = Contract::with('rates')->get();
-        //echo $contracts->name;
-
-        /*  foreach ($contracts as $arr) {
-            foreach ($contracts->flatMap->rates as $rates) {
-                echo $arr->name;
-                echo $rates->carrier->name;
+        //$contracts->rates;
+        //dd($contracts);
+        /* foreach ($contracts as $arr) {
+            foreach ($arr->rates as $rates) {
+                echo $arr->name."  ".$rates->port_origin->name."<br>";
+                
             }
-        }
-*/
+        }*/
+
         return view('contracts/index', ['arreglo' => $contracts]);
     }
 
@@ -123,13 +123,33 @@ class ContractsController extends Controller
      */
     public function edit($id)
     {
+        // $contracts = Contract::with('rates')->get();
+        $contracts = Contract::find($id);
+        $contracts->rates;
+        $objcountry = new Country();
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+
+        $harbor = $objharbor->all()->pluck('name','id');
+        $country = $objcountry->all()->pluck('name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        //$objcountry = new Country();
+        //$objcarrier = new Carrier();
+        //$country = $objcountry->all()->pluck('name','id');
+        //$carrier = $objcarrier->all()->pluck('name','id');
+
+        return view('contracts.editT', compact('contracts','harbor','country','carrier'));
+    }
+    /*
+    public function edit($id)
+    {
         $contracts = Contract::find($id);
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         return view('contracts.edit', compact('contracts','country','carrier'));
-    }
+    }*/
 
     /**
      * Update the specified resource in storage.
@@ -140,7 +160,41 @@ class ContractsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $requestForm = $request->all();
+        $contract = Contract::find($id);
+        $validation = explode('/',$request->validation_expire);
+        $contract->validity = $validation[0];
+        $contract->expire = $validation[1];
+        $contract->update($requestForm);
+    
+        $details = $request->input('origin_id');
+        foreach($details as $key => $value)
+        {
+            if(!empty($request->input('twuenty.'.$key))) {
+
+
+                $rates = new Rate();
+                $rates->origin_port = $request->input('origin_id.'.$key);
+                $rates->destiny_port = $request->input('destiny_id.'.$key);
+                $rates->carrier_id = $request->input('carrier_id.'.$key);
+                $rates->twuenty = $request->input('twuenty.'.$key);
+                $rates->forty = $request->input('forty.'.$key);
+                $rates->fortyhc = $request->input('fortyhc.'.$key);
+                $rates->currency = $request->input('currency.'.$key);
+                $rates->contract()->associate($contract);
+                $rates->save();
+
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully update this contract.');
+
+        return redirect()->action('ContractsController@index');
+
+
     }
 
     /**
