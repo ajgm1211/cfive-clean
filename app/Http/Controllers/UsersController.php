@@ -147,9 +147,9 @@ class UsersController extends Controller
         $request->session()->flash('message.content', 'You upgrade has been success ');
         return redirect()->route('users.home');
     }
-    
-    
-    
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -183,6 +183,11 @@ class UsersController extends Controller
     public function destroymsg($id)
     {
         return view('users/message' ,['userid' => $id]);
+
+    }
+    public function resetmsg($id)
+    {
+        return view('users/messagereset' ,['userid' => $id]);
 
     }
 

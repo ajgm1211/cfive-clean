@@ -27,7 +27,8 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
-    Route::get('reset-password/{user_id}', 'UsersController@resetPass')->name('users.password');
+    Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
+    Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
@@ -52,7 +53,7 @@ Route::group(['prefix' => 'contracts'], function () {
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
     Route::put('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
     Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
-    
+
 });
 Route::resource('contracts', 'ContractsController'); 
 

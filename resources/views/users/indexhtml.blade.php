@@ -160,8 +160,8 @@
                                 <i class="la la-eraser"></i>
                             </a>
                             @if( (Auth::user()->type == 'company') ||  (Auth::user()->type == 'admin')  )
-                
-                            <a href="{{url('users/reset-password/'.$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Reset "  >
+
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Reset " onclick="AbrirModal('reset',{{  $arr->id }})"  >
                                 <i class="la la-key"></i>
                             </a>
 
@@ -234,6 +234,15 @@
         }
         if(action == "delete"){
             var url = '{{ route("users.msg", ":id") }}';
+            url = url.replace(':id', id);
+
+            $('.modal-body').load(url,function(){
+                $('#m_modal_5').modal({show:true});
+            });
+
+        }
+        if(action == "reset"){
+            var url = '{{ route("users.msgreset", ":id") }}';
             url = url.replace(':id', id);
 
             $('.modal-body').load(url,function(){

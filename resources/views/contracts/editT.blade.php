@@ -117,102 +117,102 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td class="col-sm-2">{{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'custom-select form-control', 'disabled' => 'true']) }} </td>
                                         <td class="col-sm-2"> {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'custom-select form-control' ,'disabled' => 'true' ]) }}</td>
                                         <td class="col-sm-2">{{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}</td>
-                                        <td class="col-sm-2">{!! Form::text('twuenty[]', $rates->twuenty , ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input','disabled' => 'true' ]) !!} </td>
+                                        <td class="col-sm-2"><span id='spantwuenty{{$loop->index}}'> {{$rates->twuenty  }} </span></td>
                                         <td class="col-sm-2"> <span id='spanforty{{$loop->index}}'> {{$rates->forty  }} </span></td>
-                                        <td class="col-sm-2">{{$rates->fortyhc  }}</td>
-                                        <td class="col-sm-1">{{$rates->currency  }}</td>
-                                        <td class="col-sm-1">      
-                                            <a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                                                <i class="la la-edit"></i>
-                                            </a>
+                                        <td class="col-sm-2"><span id='spanfortyhc{{$loop->index}}'>{{$rates->fortyhc  }} </span> </td>
+                                            <td class="col-sm-1">{{$rates->currency  }}</td>
+                                            <td class="col-sm-1">      
+                                                <a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                                    <i class="la la-edit"></i>
+                                                </a>
 
-                                            <a  id='save{{$loop->index}}' onclick="save({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
-                                                <i class="la la-save"></i>
-                                            </a>
-                                              <a  id='cancel{{$loop->index}}' onclick="cancel({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
-                                                <i class="la la-reply"></i>
-                                            </a>
+                                                <a  id='save{{$loop->index}}' onclick="save({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                    <i class="la la-save"></i>
+                                                </a>
+                                                <a  id='cancel{{$loop->index}}' onclick="cancel({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                    <i class="la la-reply"></i>
+                                                </a>
 
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            </tr>
 
-                                    @endforeach
+                                            @endforeach
 
-                                    <tr   id='tclone' hidden="true" >
-                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                                            <tr   id='tclone' hidden="true" >
+                                                <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                                                <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                                                <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
-                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
-                                        <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
-                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                                        <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input']) !!}</td>
-                                        <td>  <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" onclick="s" >
-                                            <i class="la la-eraser" ></i>
-                                            </a>
-                                        </td>
+                                                <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
+                                                <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
+                                                <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                                                <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input']) !!}</td>
+                                                <td>  <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" onclick="s" >
+                                                    <i class="la la-eraser" ></i>
+                                                    </a>
+                                                </td>
 
-                                    </tr>
+                                            </tr>
                             </table>
+                                </div>
+                            <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
+                                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                            </div>
+                            <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged
+                            </div>
                         </div>
-                        <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                        </div>
-                        <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged
-                        </div>
-                    </div>
-                    <div class="m-portlet__foot m-portlet__foot--fit">
-                        <div class="m-form__actions m-form__actions">
-                            {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-                            <a class="btn btn-success" href="{{url()->previous()}}">
-                                Cancel
-                            </a>
+                        <div class="m-portlet__foot m-portlet__foot--fit">
+                            <div class="m-form__actions m-form__actions">
+                                {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+                                <a class="btn btn-success" href="{{url()->previous()}}">
+                                    Cancel
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+
+            {!! Form::close() !!}
+            <!--end: Form Wizard-->
         </div>
-
-
-
-
-        {!! Form::close() !!}
-        <!--end: Form Wizard-->
+        <!--End::Main Portlet-->
     </div>
-    <!--End::Main Portlet-->
-</div>
 
-@endsection
+    @endsection
 
-@section('js')
-@parent
+    @section('js')
+    @parent
 
-<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 
-<script>
-
-    $("#new").on("click", function() {
-
-        var $template = $('#tclone');
-        // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
-        $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
-
-
-    });
-</script>
     <script>
-    /
-    var config = {
-        routes: [
-            { zone: "{{ URL::to('zone') }}" }
-        ]
-    };
-</script>
-<script src="/js/rates.js"></script>
-<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
-<script src="/assets/plugins/datatable.js" type="text/javascript"></script>
-<script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
-<script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
 
-@stop
+        $("#new").on("click", function() {
+
+            var $template = $('#tclone');
+            // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
+            $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
+
+
+        });
+    </script>
+    <script>
+        /
+        var config = {
+            routes: [
+                { zone: "{{ URL::to('zone') }}" }
+            ]
+        };
+    </script>
+    <script src="/js/rates.js"></script>
+    <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
+
+    @stop
