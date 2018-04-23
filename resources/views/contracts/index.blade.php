@@ -166,7 +166,7 @@
                         <td>{{$rates->forty  }}</td>
                         <td>{{$rates->fortyhc  }}</td>
                         <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
-                        <td>{{$rates->currency  }}</td>
+                        <td>{{$rates->currency->alphacode  }}</td>
                         <td>@if($arr->status == "publish")
                             1 
                             @else

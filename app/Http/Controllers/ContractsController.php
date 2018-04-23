@@ -8,6 +8,7 @@ use App\Country;
 use App\Carrier;
 use App\Harbor;
 use App\Rate;
+use App\Currency;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 class ContractsController extends Controller
@@ -45,13 +46,15 @@ class ContractsController extends Controller
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
+        $objcurrency = new Currency();
 
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
 
 
-        return view('contracts.addT',compact('country','carrier','harbor'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency'));
     }
 
     public function create()
@@ -89,7 +92,7 @@ class ContractsController extends Controller
                 $rates->twuenty = $request->input('twuenty.'.$key);
                 $rates->forty = $request->input('forty.'.$key);
                 $rates->fortyhc = $request->input('fortyhc.'.$key);
-                $rates->currency = $request->input('currency.'.$key);
+                $rates->currency_id = $request->input('currency_id.'.$key);
                 $rates->contract()->associate($contract);
                 $rates->save();
 
@@ -124,21 +127,25 @@ class ContractsController extends Controller
     public function edit($id)
     {
         // $contracts = Contract::with('rates')->get();
+
+
         $contracts = Contract::find($id);
         $contracts->rates;
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
+        $objcurrency = new Currency();
 
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
         //$objcountry = new Country();
         //$objcarrier = new Carrier();
         //$country = $objcountry->all()->pluck('name','id');
         //$carrier = $objcarrier->all()->pluck('name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency'));
     }
     /*
     public function edit($id)
@@ -181,7 +188,7 @@ class ContractsController extends Controller
                 $rates->twuenty = $request->input('twuenty.'.$key);
                 $rates->forty = $request->input('forty.'.$key);
                 $rates->fortyhc = $request->input('fortyhc.'.$key);
-                $rates->currency = $request->input('currency.'.$key);
+                $rates->currency_id = $request->input('currency_id.'.$key);
                 $rates->contract()->associate($contract);
                 $rates->save();
 
@@ -203,7 +210,7 @@ class ContractsController extends Controller
     {
         //dd("imi here");
         $requestForm = $request->all();
-        
+
         $rate = Rate::find($id);
         $rate->update($requestForm);
 

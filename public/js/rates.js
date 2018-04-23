@@ -67,3 +67,17 @@ function save(id,idval){
     //$("#tr"+id+" input, tr.statuscheck select, tr.statuscheck textarea").prop('disabled', false);
 
 }
+
+$("#new").on("click", function() {
+
+    var $template = $('#tclone');
+    // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
+    $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
+
+
+});
+
+$(document).on('click', '.remove', function () {
+     $(this).closest('tr').remove();
+});
+

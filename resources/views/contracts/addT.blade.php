@@ -116,7 +116,7 @@ $validation_expire = 'Please enter validation date';
                                         <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' => 'required']) !!} </td>
                                         <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' => 'required']) !!} </td>
                                         <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input','required' => 'required']) !!}</td>
+                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>-</td>
 
                                     </tr>
@@ -129,7 +129,7 @@ $validation_expire = 'Please enter validation date';
                                         <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
                                         <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
                                         <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                                        <td>{!! Form::text('currency[]', null, ['placeholder' => 'Please enter the Currency','class' => 'form-control m-input']) !!}</td>
+                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>  <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="s" >
                                             <i class="la la-eraser"></i>
                                             </a>
@@ -194,8 +194,8 @@ $validation_expire = 'Please enter validation date';
 
     $("#sample_editable_1_new").on("click", function() {
 
-         var $template = $('#tclone');
-       // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
+        var $template = $('#tclone');
+        // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
         $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
 
 
