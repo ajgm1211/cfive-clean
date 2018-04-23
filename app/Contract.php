@@ -16,4 +16,9 @@ class Contract extends Model
         return $this->hasMany('App\Rate');
 
     }
+    public function localcharges(){
+
+        return $this->hasMany('App\LocalCharge');
+
+    }
 }

@@ -9,6 +9,7 @@ use App\Carrier;
 use App\Harbor;
 use App\Rate;
 use App\Currency;
+use App\LocalCharge;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 class ContractsController extends Controller
@@ -80,6 +81,8 @@ class ContractsController extends Controller
         $contract->save();
 
         $details = $request->input('origin_id');
+        $detailscharges = $request->input('type');
+        // For Each de los rates 
         foreach($details as $key => $value)
         {
             if(!empty($request->input('twuenty.'.$key))) {
@@ -95,6 +98,26 @@ class ContractsController extends Controller
                 $rates->currency_id = $request->input('currency_id.'.$key);
                 $rates->contract()->associate($contract);
                 $rates->save();
+
+            }
+        }
+         // For Each de los localcharge
+
+        foreach($detailscharges as $key2 => $value)
+        {
+            if(!empty($request->input('validsince.'.$key2))) {
+                $localcharge = new LocalCharge();
+                $localcharge->type = $request->input('type.'.$key2);
+                $localcharge->port = $request->input('port_id.'.$key2);
+                $localcharge->changetype = $request->input('changetype.'.$key2);
+                $localcharge->carrier_id = $request->input('carrier_id.'.$key2);
+                $localcharge->validsince = $request->input('validsince.'.$key2);
+                $localcharge->validto = $request->input('validto.'.$key2);
+                $localcharge->calculationtype = $request->input('calculationtype.'.$key2);
+                $localcharge->ammount = $request->input('ammount.'.$key2);
+                $localcharge->currency_id = $request->input('currency_id.'.$key2);
+                $localcharge->contract()->associate($contract);
+                $localcharge->save();
 
             }
         }
@@ -131,6 +154,7 @@ class ContractsController extends Controller
 
         $contracts = Contract::find($id);
         $contracts->rates;
+        $contracts->localcharges;
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
@@ -147,18 +171,7 @@ class ContractsController extends Controller
 
         return view('contracts.editT', compact('contracts','harbor','country','carrier','currency'));
     }
-    /*
-    public function edit($id)
-    {
-        $contracts = Contract::find($id);
-        $objcountry = new Country();
-        $objcarrier = new Carrier();
-        $country = $objcountry->all()->pluck('name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        return view('contracts.edit', compact('contracts','country','carrier'));
-    }*/
-
-    /**
+       /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

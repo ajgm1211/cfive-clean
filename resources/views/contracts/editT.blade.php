@@ -150,14 +150,102 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"  >
                                             <i class="la la-eraser" ></i>
                                             </a>
-                                            
                                         </td>
-
                                     </tr>
                             </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                            <a  id="newL" class="">
+
+                                <button type="button" class="btn btn-brand">
+                                    Add New
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </a>
+                            <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th title="Field #1">
+                                            Type
+                                        </th>
+                                        <th title="Field #2">
+                                            Ports
+                                        </th>
+                                        <th title="Field #3">
+                                            Change type
+                                        </th>
+                                        <th title="Field #4">
+                                            Carrier
+                                        </th>
+                                        <th title="Field #5">
+                                            Valid since
+                                        </th>
+                                        <th title="Field #6">
+                                            Valid to 
+                                        </th>
+                                        <th title="Field #7">
+                                            Calculation <br>type
+                                        </th>
+                                        <th title="Field #8">
+                                            Ammount
+                                        </th>
+                                        <th title="Field #9">
+                                            Currency
+                                        </th>
+                                        <th title="Field #10">
+                                            Options
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($contracts->localcharges as $localcharges)
+                                    <tr id='tr_l{{++$loop->index}}'>
+                                        <td>
+                                            {{ Form::select('type[]',['1' => 'DTHS','2' => 'ISPS'],$localcharges->type,['class'=>'custom-select form-control' ,'disabled' => 'true']) }}
+                                        </td>
+                                        <td>{{ Form::select('port_id[]', $harbor,$localcharges->port,['class'=>'custom-select form-control ','disabled' => 'true']) }}</td>
+                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],$localcharges->changetype,['class'=>'custom-select form-control','disabled' => 'true']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id[]', $carrier,$localcharges->carrier_id,['class'=>'custom-select form-control','disabled' => 'true']) }}</td>
+
+                                        <td>{!! $localcharges->validsince !!} </td>
+                                        <td>{!! $localcharges->validto !!} </td>
+                                        <td> {!! $localcharges->calculationtype !!}</td>
+                                        <td> {!! $localcharges->ammount !!}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['class'=>'custom-select form-control' ,'disabled' => 'true']) }}</td>
+                                        <td>
+                                            <a  id='edit_l{{$loop->index}}' onclick="display_l({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+
+                                            <a  id='save_l{{$loop->index}}' onclick="save_l({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_l{{$loop->index}}' onclick="cancel_l({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i class="la la-reply"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    <tr   id='tclone2' hidden="true" >
+                                        <td>
+                                            {{ Form::select('type[]',['1' => 'DTHS','2' => 'ISPS'],null,['class'=>'custom-select form-control']) }}
+                                        </td>
+                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+
+                                        <td>{!! Form::text('validsince[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input']) !!} </td>
+                                        <td>{!! Form::text('validto[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
+                                        <td> {!! Form::text('calculationtype[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                            <i class="la la-eraser"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged

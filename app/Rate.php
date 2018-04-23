@@ -16,7 +16,6 @@ class Rate extends Model
     public function port_origin(){
         return $this->belongsTo('App\Harbor','origin_port');
 
-
     }
     public function port_destiny(){
         return $this->belongsTo('App\Harbor','destiny_port');
