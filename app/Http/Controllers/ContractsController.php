@@ -29,7 +29,6 @@ class ContractsController extends Controller
 
             }
         }*/
-
         return view('contracts/index', ['arreglo' => $contracts]);
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSurcharges extends Migration
+class CreateSurchargesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateSurcharges extends Migration
      */
     public function up()
     {
-        Schema::create('surcharge', function (Blueprint $table) {
+        Schema::create('surcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('description');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateSurcharges extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('subchargers');
     }
 }
