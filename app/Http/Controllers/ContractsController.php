@@ -9,7 +9,9 @@ use App\Carrier;
 use App\Harbor;
 use App\Rate;
 use App\Currency;
+use App\CalculationType;
 use App\LocalCharge;
+use App\Surcharge;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 class ContractsController extends Controller
@@ -48,14 +50,18 @@ class ContractsController extends Controller
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
         $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
 
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $surcharge = $objsurcharge->all()->pluck('name','id');
 
 
-        return view('contracts.addT',compact('country','carrier','harbor','currency'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge'));
     }
 
     public function create()
@@ -101,21 +107,19 @@ class ContractsController extends Controller
 
             }
         }
-         // For Each de los localcharge
+        // For Each de los localcharge
 
         foreach($detailscharges as $key2 => $value)
         {
-            if(!empty($request->input('validsince.'.$key2))) {
+            if(!empty($request->input('ammount.'.$key2))) {
                 $localcharge = new LocalCharge();
-                $localcharge->type = $request->input('type.'.$key2);
+                $localcharge->surcharge_id = $request->input('type.'.$key2);
                 $localcharge->port = $request->input('port_id.'.$key2);
                 $localcharge->changetype = $request->input('changetype.'.$key2);
-                $localcharge->carrier_id = $request->input('carrier_id.'.$key2);
-                $localcharge->validsince = $request->input('validsince.'.$key2);
-                $localcharge->validto = $request->input('validto.'.$key2);
-                $localcharge->calculationtype = $request->input('calculationtype.'.$key2);
+                $localcharge->carrier_id = $request->input('localcarrier_id.'.$key2);
+                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $localcharge->ammount = $request->input('ammount.'.$key2);
-                $localcharge->currency_id = $request->input('currency_id.'.$key2);
+                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
                 $localcharge->save();
 
@@ -159,19 +163,19 @@ class ContractsController extends Controller
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
         $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
 
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
-        //$objcountry = new Country();
-        //$objcarrier = new Carrier();
-        //$country = $objcountry->all()->pluck('name','id');
-        //$carrier = $objcarrier->all()->pluck('name','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $surcharge = $objsurcharge->all()->pluck('name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge'));
     }
-       /**
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -189,6 +193,8 @@ class ContractsController extends Controller
         $contract->update($requestForm);
 
         $details = $request->input('origin_id');
+        $detailscharges = $request->input('type');
+        // for each rates 
         foreach($details as $key => $value)
         {
             if(!empty($request->input('twuenty.'.$key))) {
@@ -207,6 +213,26 @@ class ContractsController extends Controller
 
             }
         }
+        
+         // For Each de los localcharge
+
+        foreach($detailscharges as $key2 => $value)
+        {
+            if(!empty($request->input('ammount.'.$key2))) {
+                $localcharge = new LocalCharge();
+                $localcharge->surcharge_id = $request->input('type.'.$key2);
+                $localcharge->port = $request->input('port_id.'.$key2);
+                $localcharge->changetype = $request->input('changetype.'.$key2);
+                $localcharge->carrier_id = $request->input('localcarrier_id.'.$key2);
+                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
+                $localcharge->ammount = $request->input('ammount.'.$key2);
+                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+                $localcharge->contract()->associate($contract);
+                $localcharge->save();
+
+            }
+        }
+        
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -227,8 +253,19 @@ class ContractsController extends Controller
         $rate = Rate::find($id);
         $rate->update($requestForm);
 
+    }
+
+    public function updateLocalChar(Request $request, $id)
+    {
+        //dd("imi here");
+        $requestForm = $request->all();
+
+        $localC = LocalCharge::find($id);
+        $localC->update($requestForm);
+
 
     }
+
 
     /**
      * Remove the specified resource from storage.

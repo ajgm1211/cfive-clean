@@ -161,12 +161,6 @@ $validation_expire = 'Please enter validation date';
                                         <th title="Field #4">
                                             Carrier
                                         </th>
-                                        <th title="Field #5">
-                                            Valid since
-                                        </th>
-                                        <th title="Field #6">
-                                            Valid to 
-                                        </th>
                                         <th title="Field #7">
                                             Calculation type
                                         </th>
@@ -183,32 +177,25 @@ $validation_expire = 'Please enter validation date';
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            {{ Form::select('type[]',['1' => 'DTHS','2' => 'ISPS'],null,['class'=>'custom-select form-control']) }}
-                                        </td>
+                                    <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
-                                        <td>{!! Form::text('validsince[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td>{!! Form::text('validto[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td> {!! Form::text('calculationtype[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
+                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>-</td>
 
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
-                                        <td>
-                                            {{ Form::select('type[]',['1' => 'DTHS','2' => 'ISPS'],null,['class'=>'custom-select form-control']) }}
-                                        </td>
+                                        <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
-                                        <td>{!! Form::text('validsince[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input']) !!} </td>
-                                        <td>{!! Form::text('validto[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
-                                        <td> {!! Form::text('calculationtype[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+
+                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >

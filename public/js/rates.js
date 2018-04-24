@@ -64,51 +64,66 @@ function save(id,idval){
         }
     });
 
-    //$("#tr"+id+" input, tr.statuscheck select, tr.statuscheck textarea").prop('disabled', false);
-
 }
 
 function display_l(id){
 
-    $("#tr_l"+id+" select, #trl"+id+" input").prop('disabled', false);
+    $("#tr_l"+id+" .val").attr('hidden','true');
+    $("#tr_l"+id+" .in").removeAttr('hidden');
+    $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', false);
 
     $("#save_l"+id).removeAttr('hidden');
     $("#cancel_l"+id).removeAttr('hidden');
     $("#edit_l"+id).attr('hidden','true');
 
-    /*var twuenty = $("#spantwuenty"+id).html();
-    $("#spantwuenty"+id).html("<input type='text' name = 'twuenty[]'  class='form-control m-input' id ='twuenty"+id+"' value ='"+twuenty+"' >");
-
-    var forty = $("#spanforty"+id).html();
-    $("#spanforty"+id).html("<input  name = 'forty[]'  type='text' class='form-control m-input' id ='forty"+id+"' value ='"+forty+"' >");
-
-    var fortyhc = $("#spanfortyhc"+id).html();
-    $("#spanfortyhc"+id).html("<input name = 'fortyhc[]' type='text' class='form-control m-input' id ='fortyhc"+id+"' value ='"+fortyhc+"' >");
-
-    $("#save"+id).removeAttr('hidden');
-    $("#cancel"+id).removeAttr('hidden');
-    $("#edit"+id).attr('hidden','true');*/
 }
 
 function cancel_l(id){
 
-    $("#tr_l"+id+" select, #tr"+id+" input").prop('disabled', true);
+    $("#tr_l"+id+" .val").removeAttr('hidden');
+    $("#tr_l"+id+" .in").attr('hidden','true');
+    $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
+
     $("#save_l"+id).attr('hidden','true');
     $("#cancel_l"+id).attr('hidden','true');
     $("#edit_l"+id).removeAttr('hidden');
 
-    /*   var twuenty = $("#twuenty"+id).val();
-    $("#spantwuenty"+id).html(twuenty);
+}
 
-    var forty = $("#forty"+id).val();
-    $("#spanforty"+id).html(forty);
+function save_l(id,idval){
 
-    var fortyhc = $("#fortyhc"+id).val();
-    $("#spanfortyhc"+id).html(fortyhc);
+    $.ajax({
+        type: 'GET',
+        url: '../updateLocalCharge/' + idval,
+        data: {
+            'type' : $("#type"+id).val(),
+            'port' : $("#port"+id).val(),
+            'changetype' : $("#changetype"+id).val(),
+            'carrier_id' : $("#localcarrier"+id).val(),
+            'calculationtype_id' : $("#calculationtype"+id).val(),
+            'ammount' : $("#ammount"+id).val(),
+            'currency_id' : $("#localcurrency"+id).val()
 
-    $("#save"+id).attr('hidden','true');
-    $("#cancel"+id).attr('hidden','true');
-    $("#edit"+id).removeAttr('hidden');*/
+        },
+        success: function(data) {
+            $("#save_l"+id).attr('hidden','true');
+            $("#cancel_l"+id).attr('hidden','true');
+            $("#edit_l"+id).removeAttr('hidden');
+
+            $("#tr_l"+id+" .val").removeAttr('hidden');
+            $("#tr_l"+id+" .in").attr('hidden','true');
+            $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
+
+            $("#divtype"+id).html($("#type"+id+" option:selected").text());
+            $("#divport"+id).html($("#port"+id+" option:selected").text());
+            $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
+            $("#divcarrier"+id).html($("#localcarrier"+id+" option:selected").text());
+            $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
+            $("#divammount"+id).html($("#ammount"+id).val());
+            $("#divcurrency"+id).html($("#localcurrency"+id+" option:selected").text());
+
+        }
+    });
 
 }
 
@@ -123,7 +138,7 @@ $("#new").on("click", function() {
 $("#newL").on("click", function() {
 
 
-    $("#tclone2").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_2");
+    $("#tclone2").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
 
 });
 

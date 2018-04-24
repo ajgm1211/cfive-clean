@@ -12,4 +12,12 @@ class Surcharge extends Model
     {
         return $this->belongsTo('App\User');
     }
+    
+    public function localcharge()
+    {
+
+        return $this->hasOne('App\LocalCharge');
+    }
+    
+    
 }
