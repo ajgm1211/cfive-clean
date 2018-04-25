@@ -213,8 +213,8 @@ class ContractsController extends Controller
 
             }
         }
-        
-         // For Each de los localcharge
+
+        // For Each de los localcharge
 
         foreach($detailscharges as $key2 => $value)
         {
@@ -232,7 +232,7 @@ class ContractsController extends Controller
 
             }
         }
-        
+
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -278,6 +278,14 @@ class ContractsController extends Controller
         $rate = Rate::find($id);
         $rate->delete();
         return $rate;
+    }
+
+    public function destroyLocalCharges($id)
+    {
+
+        $local = LocalCharge::find($id);
+        $local->delete();
+
     }
     public function destroyRates(Request $request,$id)
     {

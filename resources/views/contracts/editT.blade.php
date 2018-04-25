@@ -164,6 +164,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             <a  id='save{{$loop->index}}' onclick="save({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
                                                 <i class="la la-save"></i>
                                             </a>
+
                                             <a  id='cancel{{$loop->index}}' onclick="cancel({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
                                                 <i class="la la-reply"></i>
                                             </a>
@@ -279,8 +280,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             <a  id='save_l{{$loop->index}}' onclick="save_l({{$loop->index}},{{$localcharges->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
                                                 <i class="la la-save"></i>
                                             </a>
+                                            <a  id='remove_l{{$loop->index}}'  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" hidden="true">
+                                                <i id='rm_l{{$localcharges->id}}' class="la la-times-circle"></i>
+                                            </a>
+                                            
                                             <a  id='cancel_l{{$loop->index}}' onclick="cancel_l({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
-                                                <i class="la la-reply"></i>
+                                                <i  class="la la-reply"></i>
                                             </a>
                                         </td>
                                     </tr>

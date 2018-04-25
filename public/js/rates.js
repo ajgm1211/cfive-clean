@@ -67,6 +67,7 @@ function display_l(id){
 
     $("#save_l"+id).removeAttr('hidden');
     $("#cancel_l"+id).removeAttr('hidden');
+    $("#remove_l"+id).removeAttr('hidden');
     $("#edit_l"+id).attr('hidden','true');
 
 }
@@ -79,6 +80,7 @@ function cancel_l(id){
 
     $("#save_l"+id).attr('hidden','true');
     $("#cancel_l"+id).attr('hidden','true');
+    $("#remove_l"+id).attr('hidden','true');
     $("#edit_l"+id).removeAttr('hidden');
 
 }
@@ -99,8 +101,15 @@ function save_l(id,idval){
 
         },
         success: function(data) {
+
+            swal(
+                'Updated!',
+                'Your file has been updated.',
+                'success'
+            )
             $("#save_l"+id).attr('hidden','true');
             $("#cancel_l"+id).attr('hidden','true');
+            $("#remove_l"+id).attr('hidden','true');
             $("#edit_l"+id).removeAttr('hidden');
 
             $("#tr_l"+id+" .val").removeAttr('hidden');
@@ -139,3 +148,37 @@ $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });
 
+$(document).on('click', '.m_sweetalert_demo_8', function (e) {
+    var res = $("i",this).attr('id'); 
+
+    var theElement = $(this);
+    var idval = res.substr(4);
+
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+
+            $.ajax({
+                type: 'get',
+                url: '../deleteLocalCharge/' + idval,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+
+                }
+            });
+
+        }
+
+    });
+
+});
