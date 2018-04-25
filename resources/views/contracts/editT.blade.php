@@ -233,13 +233,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td>
                                             <div id="divtype{{$loop->index}}"  class="val">{!! $localcharges->surcharge->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('type[]', $surcharge,$localcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'custom-select form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('type[]', $surcharge,$localcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
                                             </div>
                                         </td>
                                         <td>
                                             <div id="divport{{$loop->index}}"  class="val">{!! $localcharges->ports->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('port_id[]', $harbor,$localcharges->port,['id' => 'port'.$loop->index ,'class'=>'custom-select form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('port_id[]', $harbor,$localcharges->port,['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
                                             </div>
                                         </td>
                                         <td>
@@ -247,20 +247,20 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             <div id="divchangetype{{$loop->index}}"  class="val">{!! $localcharges->changetype !!}</div>
                                             <div class="in" hidden="true">
 
-                                                {{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],$localcharges->changetype,['id' => 'changetype'.$loop->index ,'class'=>'custom-select form-control','disabled' => 'true']) }}
+                                                {{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],$localcharges->changetype,['id' => 'changetype'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
                                         <td>
                                             <div id="divcarrier{{$loop->index}}"  class="val">{!! $localcharges->carrier->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('localcarrier_id[]', $carrier,$localcharges->carrier_id,['id' => 'localcarrier'.$loop->index ,'class'=>'custom-select form-control','disabled' => 'true']) }}
+                                                {{ Form::select('localcarrier_id[]', $carrier,$localcharges->carrier_id,['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
 
                                         <td>   
                                             <div id="divcalculation{{$loop->index}}"  class="val">{!! $localcharges->calculationtype->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('calculationtype[]', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype'.$loop->index ,'class'=>'custom-select form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('calculationtype[]', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
                                             </div> 
                                         <td> 
                                             <div id="divammount{{$loop->index}}" class="val"> {!! $localcharges->ammount !!} </div>
@@ -269,7 +269,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td>
                                             <div id="divcurrency{{$loop->index}}"  class="val"> {!! $localcharges->currency->alphacode !!} </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'custom-select form-control' ,'disabled' => 'true']) }}
+                                                {{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'m-select2-general form-control' ,'disabled' => 'true']) }}
                                             </div> 
                                         </td>
                                         <td>
@@ -283,16 +283,16 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             <a  id='remove_l{{$loop->index}}'  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" hidden="true">
                                                 <i id='rm_l{{$localcharges->id}}' class="la la-times-circle"></i>
                                             </a>
-                                            
+
                                             <a  id='cancel_l{{$loop->index}}' onclick="cancel_l({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
                                                 <i  class="la la-reply"></i>
                                             </a>
                                         </td>
                                     </tr>
                                     @endforeach
-                                    <tr   id='tclone2' hidden="true" >
+                                    <tr   id='tclone2' hidden="true"  >
                                         <td>
-                                            {{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}
+                                            {{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}
                                         </td>
                                         <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
@@ -334,6 +334,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 @parent
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+
 
 <script src="/js/rates.js"></script>
 <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>

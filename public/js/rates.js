@@ -91,7 +91,7 @@ function save_l(id,idval){
         type: 'GET',
         url: '../updateLocalCharge/' + idval,
         data: {
-            'type' : $("#type"+id).val(),
+            'surcharge_id' : $("#type"+id).val(),
             'port' : $("#port"+id).val(),
             'changetype' : $("#changetype"+id).val(),
             'carrier_id' : $("#localcarrier"+id).val(),
@@ -139,8 +139,12 @@ $("#new").on("click", function() {
 
 $("#newL").on("click", function() {
 
+   var $template = $('#tclone2');
+    
+    $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
+    $myClone.find("select").select2();
+    $("#sample_editable_1").append($myClone);
 
-    $("#tclone2").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
 
 });
 
@@ -182,3 +186,10 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
     });
 
 });
+
+$('.m-select2-general').select2({
+    placeholder: "Select an option"
+});
+
+
+

@@ -193,7 +193,7 @@ class ContractsController extends Controller
         $contract->update($requestForm);
 
         $details = $request->input('origin_id');
-        $detailscharges = $request->input('type');
+        $detailscharges = $request->input('ammount');
         // for each rates 
         foreach($details as $key => $value)
         {
