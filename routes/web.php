@@ -53,4 +53,10 @@ Route::group(['prefix' => 'companies'], function () {
 });
 Route::resource('companies', 'CompanyController');
 
+Route::group(['prefix' => 'prices'], function () {
+    Route::get('add', 'PriceController@add')->name('prices.add');
+    Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
+});
+Route::resource('prices', 'PriceController');
+
 Auth::routes();

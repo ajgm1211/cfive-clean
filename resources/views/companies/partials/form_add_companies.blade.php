@@ -1,4 +1,4 @@
-<div>
+<div class="form-group m-form__group">
     {!! Form::label('business_name', 'Business Name') !!}
     {!! Form::text('business_name', null, ['placeholder' => 'Please enter a business name','class' => 'form-control m-input','required' => 'required']) !!}
 </div>
