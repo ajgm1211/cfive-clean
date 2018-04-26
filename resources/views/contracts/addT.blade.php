@@ -67,7 +67,7 @@ $validation_expire = 'Please enter validation date';
                 <div class="m-portlet__body">
                     <div class="tab-content">
                         <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
-                            <a  id="sample_editable_1_new" class="">
+                            <a  id="new" class="">
 
                                 <button type="button" class="btn btn-brand">
                                     Add New
@@ -109,21 +109,21 @@ $validation_expire = 'Please enter validation date';
                                 <tbody>
 
                                     <tr   id='tr_clone'  >
-                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control']) }}</td>
+                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
+                                        <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
 
                                         <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' => 'required']) !!} </td>
                                         <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' => 'required']) !!} </td>
                                         <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
                                         <td>-</td>
 
                                     </tr>
 
                                     <tr   id='tclone' hidden="true" >
-                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'col-sm-10 form-control']) }}</td>
+                                        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control']) }}</td>
                                         <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
                                         <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
@@ -177,27 +177,26 @@ $validation_expire = 'Please enter validation date';
                                 </thead>
                                 <tbody>
                                     <tr>
-                                    <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                                    <td>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'m-select2-general form-control']) }}</td>
 
-                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>-</td>
 
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
-                                        <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
+                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'form-control']) }}</td>
+                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'form-control']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'m-select2-general  form-control']) }}</td>
 
-
-                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'form-control']) }}</td>
                                         <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                             <i class="la la-eraser"></i>
                                             </a>
@@ -237,27 +236,6 @@ $validation_expire = 'Please enter validation date';
 @parent
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+<script src="/js/addcontracts.js"></script>
 
-
-<script>
-
-    $("#sample_editable_1_new").on("click", function() {
-
-        var $template = $('#tclone');
-        // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
-        $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
-
-    });
-
-    $("#new2").on("click", function() {
-
-        var $template = $('#tclone2');
-        $("#tclone2").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_2");
-        //$clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
-
-    });
-    $(document).on('click', '.remove', function () {
-        $(this).closest('tr').remove();
-    });
-</script>
 @stop

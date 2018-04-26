@@ -12,12 +12,17 @@ class Surcharge extends Model
     {
         return $this->belongsTo('App\User');
     }
-    
+
     public function localcharge()
     {
 
         return $this->hasOne('App\LocalCharge');
     }
-    
-    
+    public function globalcharge()
+    {
+
+        return $this->hasOne('App\GlobalCharge');
+    }
+
+
 }

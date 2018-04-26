@@ -13,4 +13,9 @@ class Currency extends Model
 
         return $this->hasOne('App\Rate');
     }
+    public function globalcharge()
+    {
+
+        return $this->hasOne('App\GlobalCharge');
+    }
 }

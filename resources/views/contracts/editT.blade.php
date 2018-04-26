@@ -117,19 +117,19 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td class="col-sm-2">
                                             <div id='divoriginport{{$loop->index}}' class='val'>{{$rates->port_origin->name}}</div>
                                             <div class='in' hidden="true">
-                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'custom-select form-control', 'disabled' => 'true']) }} 
+                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true']) }} 
                                             </div>
                                         </td>
                                         <td class="col-sm-2"> 
                                             <div  id='divdestinyport{{$loop->index}}' class='val'>   {{$rates->port_destiny->name}} </div>
                                             <div class='in' hidden="true">  
-                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'custom-select form-control' ,'disabled' => 'true' ]) }}
+                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ]) }}
                                             </div>
                                         </td>
                                         <td class="col-sm-2">
                                             <div id='divcarrier{{$loop->index}}' class='val'>  {{$rates->carrier->name }} </div>
                                             <div class='in' hidden="true"> 
-                                                {{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}
+                                                {{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
                                         <td class="col-sm-2">
@@ -153,7 +153,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         <td class="col-sm-2">
                                             <div id='divalphacode{{$loop->index}}' class='val'> {{$rates->currency->alphacode}}   </div>
                                             <div class='in' hidden="true">
-                                                {{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'custom-select form-control','disabled' => 'true']) }}
+                                                {{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
                                         <td class="col-sm-1">      

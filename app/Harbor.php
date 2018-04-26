@@ -8,16 +8,12 @@ class Harbor extends Model
 {
     protected $table    = "harbors";
     protected $fillable = ['id', 'name', 'code','country_id'];
-    /*
-    public function port_origin(){
-          return $this->hasOne('App\Rate','origin_country');
 
+    public function globalcharge()
+    {
 
+        return $this->hasOne('App\GlobalCharge');
     }
-    public function port_destiny(){
-         return $this->hasOne('App\Rate','destiny_country');
-
-    }*/
 
     public function localcharge()
     {
