@@ -38,6 +38,9 @@
 
         @endif
         <div class="m-portlet__body">
+
+            {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
+           
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
@@ -169,7 +172,19 @@
                     </td>
                 </tr>
             </table>
+            <div class="m-portlet__foot m-portlet__foot--fit">
+                <div id="buttons" hidden="true" class="m-form__actions m-form__actions">
+                    {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+                    <a class="cancel btn btn-success">
+                        Cancel
+                    </a>
+                </div>
+            </div>
+
+            {!! Form::close() !!}
         </div>
+
+
     </div>
 </div>
 </div>

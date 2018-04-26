@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\GlobalCharge;
 use App\Carrier;
 use App\Harbor;
@@ -53,7 +54,51 @@ class GlobalChargesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $detailscharges = $request->input('type');
+        foreach($detailscharges as $key2 => $value)
+        {
+
+            // verificar si esto puede ser mas seguro
+            if(!empty($request->input('ammount.'.$key2))) {
+                $global = new GlobalCharge();
+
+                $global->surcharge_id = $request->input('type.'.$key2);
+                $global->port = $request->input('port_id.'.$key2);
+                $global->changetype = $request->input('changetype.'.$key2);
+                $global->carrier_id = $request->input('localcarrier_id.'.$key2);
+                $global->calculationtype_id = $request->input('calculationtype.'.$key2);
+                $global->ammount = $request->input('ammount.'.$key2);
+                $global->currency_id = $request->input('localcurrency_id.'.$key2);
+                $global->user_id = Auth::user()->id; ;
+                $global->save();
+
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+
+        return redirect()->action('GlobalChargesController@index');
+    }
+
+
+    public function updateGlobalChar(Request $request, $id)
+    {
+
+        $requestForm = $request->all();
+
+        $global = GlobalCharge::find($id);
+        $global->update($requestForm);
+
+
+    }
+    public function destroyGlobalCharges($id)
+    {
+
+        $global = GlobalCharge::find($id);
+        $global->delete();
+
     }
 
     /**

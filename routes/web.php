@@ -47,11 +47,11 @@ Route::resource('surcharges', 'SurchargesController');
 
 
 
-Route::group(['prefix' => 'GlobalChargesController'], function () {
+Route::group(['prefix' => 'globalcharges'], function () {
 
     Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
-    Route::get('msg/{globalcharge_id}', 'GlobalChargesController@destroymsg')->name('globalcharges.msg');
-    Route::put('delete-globalcharges/{globalcharge_id}', ['uses' => 'GlobalChargesController@destroySubcharge', 'as' => 'delete-globalcharges']);
+    Route::get('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
+    Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
 
 
 });
