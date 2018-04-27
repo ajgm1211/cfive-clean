@@ -136,29 +136,14 @@ var SnippetLogin = function() {
 
             if (!form.valid()) {
                 return;
+            }else{
+            form.submit();
+            
             }
 
+            
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
-
-            form.ajaxSubmit({
-                url: '',
-                success: function(response, status, xhr, $form) {
-                    // similate 2s delay
-                    setTimeout(function() {
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                        form.clearForm();
-                        form.validate().resetForm();
-
-                        // display signup form
-                        displaySignInForm();
-                        var signInForm = login.find('.m-login__signin form');
-                        signInForm.clearForm();
-                        signInForm.validate().resetForm();
-
-                        showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please check your email.');
-                    }, 2000);
-                }
-            });
+           
         });
     }
 
