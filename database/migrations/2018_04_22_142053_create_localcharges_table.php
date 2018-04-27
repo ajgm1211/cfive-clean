@@ -23,7 +23,7 @@ class CreateLocalchargesTable extends Migration
             $table->integer('calculationtype_id')->unsigned();
             $table->double('ammount');
             $table->integer('currency_id')->unsigned();
-            $table->foreign('surcharge_id')->references('id')->on('surcharge');
+            $table->foreign('surcharge_id')->references('id')->on('surcharges');
             $table->foreign('port')->references('id')->on('harbors');
             $table->foreign('carrier_id')->references('id')->on('carriers');
             $table->foreign('contract_id')->references('id')->on('contracts');

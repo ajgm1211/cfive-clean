@@ -20,7 +20,7 @@ Route::get('/home', function () {
 });
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
-Route::group(['prefix' => 'users'], function () {
+Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::resource('users', 'UsersController'); 
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('add', 'UsersController@add')->name('users.add');
@@ -31,16 +31,15 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
 
-Route::group(['prefix' => 'surcharges'], function () {
+Route::group(['prefix' => 'surcharges', 'middleware' => ['auth']], function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
 });
-Route::resource('surcharges', 'SurchargesController'); 
+Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
 
-
-Route::group(['prefix' => 'globalcharges'], function () {
+Route::group(['prefix' => 'globalcharges', 'middleware' => ['auth']], function () {
 
     Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
     Route::get('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
@@ -48,9 +47,9 @@ Route::group(['prefix' => 'globalcharges'], function () {
 
 
 });
-Route::resource('globalcharges', 'GlobalChargesController'); 
+Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
-Route::group(['prefix' => 'contracts'], function () {
+Route::group(['prefix' => 'contracts', 'middleware' => ['auth']], function () {
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
@@ -59,18 +58,18 @@ Route::group(['prefix' => 'contracts'], function () {
     Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
     Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
 });
-Route::resource('contracts', 'ContractsController');
+Route::resource('contracts', 'ContractsController')->middleware('auth');
 
-Route::group(['prefix' => 'companies'], function () {
+Route::group(['prefix' => 'companies', 'middleware' => ['auth']], function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
 });
-Route::resource('companies', 'CompanyController');
+Route::resource('companies', 'CompanyController')->middleware('auth');
 
-Route::group(['prefix' => 'prices'], function () {
+Route::group(['prefix' => 'prices', 'middleware' => ['auth']], function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
 });
-Route::resource('prices', 'PriceController');
+Route::resource('prices', 'PriceController')->middleware('auth');
 
 Auth::routes();
