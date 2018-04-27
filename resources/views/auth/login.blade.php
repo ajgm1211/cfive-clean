@@ -59,6 +59,16 @@ License: You must have a valid license purchased only from themeforest(the above
                                             Sign In To Admin
                                         </h3>
                                     </div>
+                                    @if (session('status'))
+                                    <div class="alert alert-success">
+                                        {{ session('status') }}
+                                    </div>
+                                    @endif
+                                    @if (session('warning'))
+                                    <div class="alert alert-warning">
+                                        {{ session('warning') }}
+                                    </div>
+                                    @endif
                                     <form  class="m-login__form m-form" role="form" action="{{ route('login') }} " method="post" class="">
                                         {{ csrf_field()  }}
                                         <div class="form-group m-form__group">
@@ -128,9 +138,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
                                         <div class="m-login__form-action">
-                                       		<button type="submit" id="" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
-												Sign Up
-											</button>
+                                            <button type="submit" id="" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                                Sign Up
+                                            </button>
                                             <button id="m_login_signup_cancel" class="btn btn-outline-focus  m-btn m-btn--pill m-btn--custom">
                                                 Cancel
                                             </button>

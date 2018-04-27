@@ -29,6 +29,7 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('logout', 'UsersController@logout')->name('users.logout');
+    Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 });
 
 Route::group(['prefix' => 'surcharges', 'middleware' => ['auth']], function () {
@@ -77,5 +78,6 @@ Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
     Route::get('delete/{contact_id}', 'ContactController@delete')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
+
 
 Auth::routes();
