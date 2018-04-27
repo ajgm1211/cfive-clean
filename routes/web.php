@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return redirect('users/home');
 });
-
+Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::resource('users', 'UsersController'); 
@@ -29,7 +29,6 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('logout', 'UsersController@logout')->name('users.logout');
-    Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 });
 
 Route::group(['prefix' => 'surcharges', 'middleware' => ['auth']], function () {

@@ -66,13 +66,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
         $user = User::create([
             'name' => $data['name'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'lastname' => $data['lastname'],
             'name_company' => $data['company'],
+
         ]);
 
         $verifyUser = VerifyUser::create([
@@ -83,7 +84,6 @@ class RegisterController extends Controller
         \Mail::to($user->email)->send(new VerifyMail($user));
         return $user;
     }
-
     public function verifyUser($token)
     {
         $verifyUser = VerifyUser::where('token', $token)->first();
@@ -92,6 +92,7 @@ class RegisterController extends Controller
             if(!$user->verified) {
                 $verifyUser->user->verified = 1;
                 $verifyUser->user->save();
+                VerifyUser::where('token', $token)->delete();
                 $status = "Your e-mail is verified. You can now login.";
             }else{
                 $status = "Your e-mail is already verified. You can now login.";
