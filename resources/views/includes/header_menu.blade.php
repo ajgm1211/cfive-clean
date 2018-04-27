@@ -40,7 +40,7 @@
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
+                        <a  href="{{route('contacts.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Contacs
@@ -51,8 +51,14 @@
             </div>
         </li>
 
-
-        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+        <li class="m-menu__item" >
+            <a  href="{{ route('prices.index') }}" class="m-menu__link">
+                <span class="m-menu__link-text">
+                    Prices
+                </span>
+            </a>
+        </li>
+        <!--<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -109,7 +115,7 @@
                     </li>
                 </ul>
             </div>
-        </li>
+        </li>-->
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">

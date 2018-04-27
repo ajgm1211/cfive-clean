@@ -72,4 +72,10 @@ Route::group(['prefix' => 'prices', 'middleware' => ['auth']], function () {
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
+Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
+    Route::get('add', 'ContactController@add')->name('contacts.add');
+    Route::get('delete/{contact_id}', 'ContactController@delete')->name('contacts.delete');
+});
+Route::resource('contacts', 'ContactController')->middleware('auth');
+
 Auth::routes();

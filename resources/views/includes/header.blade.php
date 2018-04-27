@@ -18,8 +18,8 @@
                 <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
                     <i class="la la-close"></i>
                 </button>
-                @include('includes.header_menu')
-                <!-- END: Horizontal Menu -->								<!-- BEGIN: Topbar -->
+            @include('includes.header_menu')
+            <!-- END: Horizontal Menu -->								<!-- BEGIN: Topbar -->
                 <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                     <div class="m-stack__item m-topbar__nav-wrapper">
                         <ul class="m-topbar__nav m-nav m-nav--inline">
