@@ -107,12 +107,19 @@ License: You must have a valid license purchased only from themeforest(the above
                                             Enter your details to create your account:
                                         </div>
                                     </div>
-                                    <form class="m-login__form m-form" >
+                                    <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
+                                        @csrf
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="Fullname" name="fullname">
+                                            <input class="form-control m-input" type="text" placeholder="Name" name="name">
+                                        </div>
+                                        <div class="form-group m-form__group">
+                                            <input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" autocomplete="off">
                                         </div>
                                         <div class="form-group m-form__group">
                                             <input class="form-control m-input" type="text" placeholder="Email" name="email" autocomplete="off">
+                                        </div>
+                                        <div class="form-group m-form__group">
+                                            <input class="form-control m-input" type="text" placeholder="Name of Company" name="company" autocomplete="off">
                                         </div>
                                         <div class="form-group m-form__group">
                                             <input class="form-control m-input" type="password" placeholder="Password" name="password">
@@ -135,9 +142,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
                                         <div class="m-login__form-action">
-                                            <button id="m_login_signup_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
-                                                Sign Up
-                                            </button>
+                                       		<button id="m_login_signup_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+												Sign Up
+											</button>
                                             <button id="m_login_signup_cancel" class="btn btn-outline-focus  m-btn m-btn--pill m-btn--custom">
                                                 Cancel
                                             </button>
@@ -168,7 +175,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <span class="m-login__account-msg">
                                         {{   __('Forgot Your Password?')  }}
                                     </span>
-                              
+
                                     <a class="m-link m-link--focus m-login__account-link" href=" {{ route('password.request')}} ">Forgot</a>
                                 </div>
                             </div>
@@ -194,6 +201,8 @@ License: You must have a valid license purchased only from themeforest(the above
         <!--begin::Base Scripts -->
         <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
         <script src="/assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
+        <script src="/assets/snippets/pages/user/login.js" type="text/javascript"></script>
+
         <!--end::Base Scripts -->
         <!--begin::Page Snippets -->
 
