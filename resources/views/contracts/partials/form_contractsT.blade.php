@@ -16,12 +16,8 @@
             <div class="row">
                 {!! Form::label('status', 'Status') !!}<br>
                 {{ Form::select('status',['1' => 'Publish','2' => 'Draft'],null,['class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
-
             </div>
         </div>
     </div>
-
-
-
 </div>
 

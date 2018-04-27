@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subuser extends Model
 {
-    protected $table    = "subuser";
+    protected $table    = "subusers";
     protected $fillable = ['id', 'user_id', 'company_id'];
     public function user()
     {

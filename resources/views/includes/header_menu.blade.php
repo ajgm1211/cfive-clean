@@ -32,7 +32,7 @@
                 <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
+                        <a  href="{{route('companies.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Companies

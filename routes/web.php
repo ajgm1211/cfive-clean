@@ -19,8 +19,6 @@ Route::get('/home', function () {
     return redirect('users/home');
 });
 
-
-
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::group(['prefix' => 'users'], function () {
     Route::resource('users', 'UsersController'); 
@@ -33,15 +31,10 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
 
-
-
 Route::group(['prefix' => 'surcharges'], function () {
-
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
-
-
 });
 Route::resource('surcharges', 'SurchargesController'); 
 
@@ -57,9 +50,7 @@ Route::group(['prefix' => 'globalcharges'], function () {
 });
 Route::resource('globalcharges', 'GlobalChargesController'); 
 
-
 Route::group(['prefix' => 'contracts'], function () {
-
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
@@ -67,13 +58,19 @@ Route::group(['prefix' => 'contracts'], function () {
     Route::get('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
     Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
     Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
-
 });
-Route::resource('contracts', 'ContractsController'); 
+Route::resource('contracts', 'ContractsController');
 
-
-Route::get('/companies', function () {
-    return view('companies');
+Route::group(['prefix' => 'companies'], function () {
+    Route::get('add', 'CompanyController@add')->name('companies.add');
+    Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
 });
+Route::resource('companies', 'CompanyController');
+
+Route::group(['prefix' => 'prices'], function () {
+    Route::get('add', 'PriceController@add')->name('prices.add');
+    Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
+});
+Route::resource('prices', 'PriceController');
 
 Auth::routes();

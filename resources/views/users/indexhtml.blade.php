@@ -226,11 +226,9 @@
         }if(action == "add"){
             var url = '{{ route("users.add") }}';
 
-
             $('.modal-body').load(url,function(){
                 $('#m_modal_5').modal({show:true});
             });
-
         }
         if(action == "delete"){
             var url = '{{ route("users.msg", ":id") }}';

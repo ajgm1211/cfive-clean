@@ -1,10 +1,10 @@
-2<?php
+<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSurcharges extends Migration
+class CreateCountriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateSurcharges extends Migration
      */
     public function up()
     {
-        Schema::create('surcharge', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('code');
             $table->string('name');
-            $table->string('description');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('continent');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateSurcharges extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('countries');
     }
 }
