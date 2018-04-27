@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 use App\User;
+use App\VerifyUser;
+use App\Mail\VerifyMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-
+use Illuminate\Http\Request;
 
 
 class RegisterController extends Controller
@@ -65,8 +67,8 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
 
-        // dd($data);
-     $user = User::create([
+        $user = User::create([
+
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -74,15 +76,38 @@ class RegisterController extends Controller
             'name_company' => $data['company'],
 
         ]);
-/*
+
         $verifyUser = VerifyUser::create([
             'user_id' => $user->id,
             'token' => str_random(40)
         ]);
 
-        Mail::to($user->email)->send(new VerifyMail($user));*/
-        dd($user);
-        
-      //  return $user;
+        \Mail::to($user->email)->send(new VerifyMail($user));
+        return $user;
     }
+    public function verifyUser($token)
+    {
+        $verifyUser = VerifyUser::where('token', $token)->first();
+        if(isset($verifyUser) ){
+            $user = $verifyUser->user;
+            if(!$user->verified) {
+                $verifyUser->user->verified = 1;
+                $verifyUser->user->save();
+                $status = "Your e-mail is verified. You can now login.";
+            }else{
+                $status = "Your e-mail is already verified. You can now login.";
+            }
+        }else{
+            return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+        }
+
+        return redirect('/login')->with('status', $status);
+    }
+    // @overwrite
+    protected function registered(Request $request, $user)
+    {
+        $this->guard()->logout();
+        return redirect('/login')->with('status', 'We sent you an activation code. Check your email and click on the link to verify.');
+    }
+
 }

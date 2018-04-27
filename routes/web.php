@@ -31,6 +31,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('logout', 'UsersController@logout')->name('users.logout');
+    Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 });
 
 
@@ -75,5 +76,6 @@ Route::resource('contracts', 'ContractsController');
 Route::get('/companies', function () {
     return view('companies');
 });
+
 
 Auth::routes();
