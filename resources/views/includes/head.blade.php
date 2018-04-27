@@ -1,32 +1,34 @@
 <head>
     <meta charset="utf-8" />
-    <title>QuickQuote | Admin </title>
+    <title>
+        @yield('title')
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <meta content="Preview page of Metronic Admin Theme #3 for dashboard & statistics" name="description" />
-    <meta content="" name="author" />
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <!-- BEGIN PAGE LEVEL PLUGINS -->
-    <link href="Metronic/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
-    <!-- END PAGE LEVEL PLUGINS -->
-    <!-- BEGIN THEME GLOBAL STYLES -->
-    <link href="Metronic/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
-    <link href="Metronic/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
-    <!-- END THEME GLOBAL STYLES -->
-    <!-- BEGIN THEME LAYOUT STYLES -->
-    <link href="Metronic/assets/layouts/layout3/css/layout.css" rel="stylesheet" type="text/css" />
-    <link href="Metronic/assets/layouts/layout3/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
-    <link href="Metronic/assets/layouts/layout3/css/custom.css" rel="stylesheet" type="text/css" />
-    <!-- END THEME LAYOUT STYLES -->
-    <link rel="shortcut icon" href="favicon.ico" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--begin::Web font -->
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: {"families":["Poppins:300,400,500,600,700","Roboto:300,400,500,600,700"]},
+            active: function() {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <!--end::Web font -->
+    <!--begin::Base Styles -->
+    <!--begin::Page Vendors -->
+    
+    
+    @section('css')
+    <link href="/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendors -->
+    <link href="/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
+    
+    <!--end::Base Styles -->
+    <link rel="shortcut icon" href="/assets/demo/default/media/img/logo/favicon.ico" />
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    @show
 </head>
-<!-- END HEAD -->
