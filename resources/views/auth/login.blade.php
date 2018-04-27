@@ -88,7 +88,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                             @endif
                                         </div>
                                         <div class="m-login__form-action">
-                                            <button type="submit" id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                            <button type="submit"  class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
                                                 {{ __('Login')  }}
                                             </button>
                                         </div>
