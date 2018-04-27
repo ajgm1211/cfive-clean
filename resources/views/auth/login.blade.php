@@ -88,7 +88,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                             @endif
                                         </div>
                                         <div class="m-login__form-action">
-                                            <button type="submit" id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                            <button type="submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
                                                 {{ __('Login')  }}
                                             </button>
                                         </div>
@@ -125,7 +125,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <input class="form-control m-input" type="password" placeholder="Password" name="password">
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="rpassword">
+                                            <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="password_confirmation">
                                         </div>
                                         <div class="row form-group m-form__group m-login__form-sub">
                                             <div class="col m--align-left">
@@ -142,7 +142,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
                                         <div class="m-login__form-action">
-                                       		<button id="m_login_signup_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                       		<button type="submit" id="" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
 												Sign Up
 											</button>
                                             <button id="m_login_signup_cancel" class="btn btn-outline-focus  m-btn m-btn--pill m-btn--custom">
