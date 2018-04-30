@@ -25,4 +25,11 @@ class Harbor extends Model
 
         return $this->hasOne('App\Rate');
     }
+    public function globalcharport()
+    {
+
+        return $this->hasMany('App\GlobalCharPort');
+    }
+
+
 }

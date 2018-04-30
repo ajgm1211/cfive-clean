@@ -38,4 +38,19 @@ class GlobalCharge extends Model
         return $this->belongsTo('App\Surcharge');
 
     }
+    public function globalcharport(){
+
+        return $this->hasMany('App\GlobalCharPort','globalcharge_id');
+
+    }
+    public function globalcharcarrier(){
+
+        return $this->hasMany('App\GlobalCharCarrier','globalcharge_id');
+
+    }
+    public function globalCharPortCarriers(){
+
+        return $this->hasMany('App\GlobalCharPortCarrier','port');
+
+    }
 }

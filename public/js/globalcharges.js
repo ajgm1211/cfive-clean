@@ -4,6 +4,7 @@ function display_l(id){
     $("#tr_l"+id+" .in").removeAttr('hidden');
     $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', false);
 
+
     $("#save_l"+id).removeAttr('hidden');
     $("#cancel_l"+id).removeAttr('hidden');
     $("#remove_l"+id).removeAttr('hidden');
@@ -72,11 +73,17 @@ function save_l(id,idval){
 
 $("#new").on("click", function() {
 
+
+
     $('#buttons').removeAttr('hidden');
     var $template = $('#globalclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
     $myClone.addClass('closetr');
     $myClone.find("select").select2();
+
+    $ids = $( ".port" ).length;
+    $myClone.find(".port").attr('name', 'port_id'+$ids+'[]');
+    $myClone.find(".carrier").attr('name', 'localcarrier'+$ids+'[]');
     $("#sample_editable_1").append($myClone);
     // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
     // $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
