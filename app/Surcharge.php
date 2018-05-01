@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Surcharge extends Model
 {
-    protected $table    = "surcharge";
+    protected $table    = "surcharges";
     protected $fillable = ['id', 'name', 'description'];
     public function user()
     {

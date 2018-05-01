@@ -228,40 +228,40 @@
             </div>
         </div>
     </div>
-            @endsection
+@endsection
 
-            @section('js')
-                @parent
-                <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-                <script src="/js/addcontracts.js"></script>
-                <script>
+@section('js')
+    @parent
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+    <script src="/js/addcontracts.js"></script>
+    <script>
 
-                    $("#sample_editable_1_new").on("click", function() {
+        $("#sample_editable_1_new").on("click", function() {
 
-                        var $template = $('#tclone');
-                        // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
-                        $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
-
-
-                    });
-                </script>
-                <!--
-                <script>
-
-                /*  $(document).ready(function() {
+            var $template = $('#tclone');
+            // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
+            $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
 
 
-                $('#sample_editable_1').DataTable();
-                } );*/
+        });
+    </script>
+    <!--
+    <script>
 
-                </script>-->
+    /*  $(document).ready(function() {
+
+
+    $('#sample_editable_1').DataTable();
+    } );*/
+
+    </script>-->
 
 
 
-                <!--
-                <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
-                <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
-                <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
-                <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
-                -->
+    <!--
+    <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
+    <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
+    -->
 @stop

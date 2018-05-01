@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Prices')
+@section('title', 'Price Levels')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
-            <div class="m-portlet__head">
+            <!--<div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
                         <h3 class="m-portlet__head-text">
@@ -11,7 +11,7 @@
                         </h3>
                     </div>
                 </div>
-            </div>
+            </div>-->
             @if(Session::has('message.nivel'))
                 <div class="col-md-12">
                     <br>
@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
                             <div class="form-group m-form__group row align-items-center">
-                                <div class="col-md-4">
+                                <!--<div class="col-md-4">
                                     <div class="m-form__group m-form__group--inline">
                                         <div class="m-form__label">
                                             <label class="m-label m-label--single">
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="d-md-none m--margin-bottom-10"></div>
-                                </div>
+                                </div>-->
                                 <div class="col-md-4">
                                     <div class="m-input-icon m-input-icon--left">
                                         <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -70,17 +70,17 @@
 
                             <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                                 <span>
-                                    <i class="la la-user"></i>
                                     <span>
-                                        Add New
+                                        Add Price
                                     </span>
+                                    <i class="la la-plus"></i>
                                 </span>
                             </button>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
                         </div>
                     </div>
                 </div>
-                <table class="m-datatable"  id="html_table" >
+                <table class="m-datatable text-center"  id="html_table" >
                     <thead>
                     <tr>
                         <th title="Field #1">
@@ -90,7 +90,7 @@
                             Description
                         </th>
                         <th title="Field #3">
-                            Clients
+                            Companies
                         </th>
                         <th title="Field #4">
                             20'
@@ -111,7 +111,13 @@
                         <tr>
                             <td>{{$price->name }}</td>
                             <td>{{$price->description }}</td>
-                            <td>--</td>
+                            <td>
+                                @foreach($price->company as $company)
+                                    <ul>
+                                        <li>{{$company->business_name}}</li>
+                                    </ul>
+                                @endforeach
+                            </td>
                             <td>{{$price->type_20}}</td>
                             <td>{{$price->type_40}}</td>
                             <td>{{$price->type_40_hc}}</td>

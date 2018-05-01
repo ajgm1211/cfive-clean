@@ -19,8 +19,8 @@
         <div class="m-portlet__foot m-portlet__foot--fit">
             <br>
             <div class="m-form__actions m-form__actions">
-                {!! Form::submit('Confirm', ['class'=> 'btn btn-danger btn-sm']) !!}
-                <button class="btn btn-warning btn-sm" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                {!! Form::submit('Confirm', ['class'=> 'btn btn-danger']) !!}
+                <button class="btn btn-warning" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">Cancel</span>
                 </button>
             </div>

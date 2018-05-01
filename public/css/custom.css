@@ -9,8 +9,19 @@
 
 #m_header_nav span {
     color:#fff;
+    font-size: 11px;
 }
-
+.btn{
+    border-radius: 0px !important;
+}
+.btn-primary{
+    background-color: #FF5F48 !important;
+    border: 1px solid #FF5F48 !important;
+}
+.btn-success{
+    background-color: #061D2C !important;
+    border: 1px solid #061D2C !important;
+}
 .m-menu__hor-arrow {
     color: #fff !important;
 }

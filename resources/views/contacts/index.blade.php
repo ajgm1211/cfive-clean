@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Contacts')
+@section('title', 'Companies | Contacts')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
-            <div class="m-portlet__head">
+            <!--<div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
                         <h3 class="m-portlet__head-text">
@@ -11,7 +11,7 @@
                         </h3>
                     </div>
                 </div>
-            </div>
+            </div>-->
             @if(Session::has('message.nivel'))
                 <div class="col-md-12">
                     <br>
@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
                             <div class="form-group m-form__group row align-items-center">
-                                <div class="col-md-4">
+                                <!--<div class="col-md-4">
                                     <div class="m-form__group m-form__group--inline">
                                         <div class="m-form__label">
                                             <label class="m-label m-label--single">
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="d-md-none m--margin-bottom-10"></div>
-                                </div>
+                                </div>-->
                                 <div class="col-md-4">
                                     <div class="m-input-icon m-input-icon--left">
                                         <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -70,10 +70,10 @@
 
                             <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                                 <span>
-                                    <i class="la la-user"></i>
                                     <span>
-                                        Add New
+                                        Add Contact
                                     </span>
+                                    <i class="la la-plus"></i>
                                 </span>
                             </button>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
@@ -88,6 +88,9 @@
                         </th>
                         <th title="Field #2">
                             Last Name
+                        </th>
+                        <th title="Field #4">
+                            Company
                         </th>
                         <th title="Field #3">
                             Email
@@ -105,6 +108,7 @@
                         <tr>
                             <td>{{$contact->first_name }}</td>
                             <td>{{$contact->last_name }}</td>
+                            <td>{{$contact->company->business_name}}</td>
                             <td>{{$contact->email }}</td>
                             <td>{{$contact->phone}}</td>
                             <td>

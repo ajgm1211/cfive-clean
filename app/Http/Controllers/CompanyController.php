@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Price;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -20,7 +21,8 @@ class CompanyController extends Controller
 
     public function add()
     {
-        return view('companies.add');
+        $prices = Price::all()->pluck('name','id');
+        return view('companies.add', compact('prices'));
     }
 
     public function store(Request $request)
@@ -36,8 +38,8 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company = Company::find($id);
-
-        return view('companies.edit', compact('company'));
+        $prices = Price::all()->pluck('name','id');
+        return view('companies.edit', compact('company','prices'));
     }
 
     public function update(Request $request, $id)

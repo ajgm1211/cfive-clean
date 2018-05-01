@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contact;
+use App\Company;
 
 class ContactController extends Controller
 {
@@ -15,12 +16,14 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = Contact::all();
-        return view('contacts/index', ['contacts' => $contacts]);
+        $companies = Company::all()->pluck('id','name');
+        return view('contacts/index', ['contacts' => $contacts,'companies'=>$companies]);
     }
 
     public function add()
     {
-        return view('contacts.add');
+        $companies = Company::all()->pluck('business_name','id');
+        return view('contacts.add', ['companies'=>$companies]);
     }
 
     public function store(Request $request)
@@ -36,8 +39,8 @@ class ContactController extends Controller
     public function edit($id)
     {
         $contact = Contact::find($id);
-
-        return view('contacts.edit', compact('contact'));
+        $companies = Company::all()->pluck('business_name','id');
+        return view('contacts.edit', compact('contact','companies'));
     }
 
     public function update(Request $request, $id)

@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Companies')
+@section('title', 'Companies | List')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
-            <div class="m-portlet__head">
+            <!--<div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
                         <h3 class="m-portlet__head-text">
@@ -11,7 +11,7 @@
                         </h3>
                     </div>
                 </div>
-            </div>
+            </div>-->
             @if(Session::has('message.nivel'))
                 <div class="col-md-12">
                     <br>
@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
                             <div class="form-group m-form__group row align-items-center">
-                                <div class="col-md-4">
+                                <!--<div class="col-md-4">
                                     <div class="m-form__group m-form__group--inline">
                                         <div class="m-form__label">
                                             <label class="m-label m-label--single">
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="d-md-none m--margin-bottom-10"></div>
-                                </div>
+                                </div>-->
                                 <div class="col-md-4">
                                     <div class="m-input-icon m-input-icon--left">
                                         <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -74,6 +74,7 @@
                                     <span>
                                         Add Company
                                     </span>
+                                    <i class="la la-plus"></i>
                                 </span>
                             </button>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
@@ -95,6 +96,12 @@
                         <th title="Field #4">
                             Address
                         </th>
+                        <th title="Field #5">
+                            Associated Contacts
+                        </th>
+                        <th title="Field #6">
+                            Associated Price Level
+                        </th>
                         <th title="Field #12">
                             Options
                         </th>
@@ -108,10 +115,18 @@
                             <td>{{$company->email }}</td>
                             <td>{{$company->address  }}</td>
                             <td>
-                                <button onclick="AbrirModal('edit',{{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                @foreach($company->contact as $contact)
+                                    <ul>
+                                        <li>{{$contact->first_name}} {{$contact->last_name}}</li>
+                                    </ul>
+                                @endforeach
+                            </td>
+                            <td>{{$company->price->name  }}</td>
+                            <td>
+                                <button onclick="AbrirModal('edit',{{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
                                     <i class="la la-edit"></i>
                                 </button>
-                                <button onclick="AbrirModal('delete',{{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <button onclick="AbrirModal('delete',{{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                                     <i class="la la-eraser"></i>
                                 </button>
                             </td>
