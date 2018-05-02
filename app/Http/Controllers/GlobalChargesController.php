@@ -24,16 +24,11 @@ class GlobalChargesController extends Controller
     {
 
         $global =  GlobalCharge::whereHas('user', function($q)
-                                        {
-                                            $q->where('user_id', '=', Auth::user()->id);
-                                        })->with('GlobalCharPort','GlobalCharCarrier')->get();
+                                          {
+                                              $q->where('user_id', '=', Auth::user()->id);
+                                          })->with('globalcharport.ports','GlobalCharCarrier.carrier')->get();
 
-       /* foreach($global as $test){
-            
-             echo $test->globalcharcarrier->pluck('carrier_id');
-           echo $test->globalcharport->pluck('port');
-        
-        }*/
+
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
         $objcurrency = new Currency();
@@ -76,11 +71,8 @@ class GlobalChargesController extends Controller
 
             if(!empty($request->input('ammount.'.$key2))) {
                 $global = new GlobalCharge();
-
                 $global->surcharge_id = $request->input('type.'.$key2);
-                $global->port = "1"; //$request->input('port_id.'.$key2);
                 $global->changetype = $request->input('changetype.'.$key2);
-                $global->carrier_id = "1";// $request->input('localcarrier_id.'.$key2);
                 $global->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $global->ammount = $request->input('ammount.'.$key2);
                 $global->currency_id = $request->input('localcurrency_id.'.$key2);
@@ -88,8 +80,8 @@ class GlobalChargesController extends Controller
                 $global->save();
 
                 // Detalles de puertos y carriers
-                $totalCarrier = count($request->input('localcarrier'.$contador));
-                $totalport =  count($request->input('port_id'.$contador));
+                //$totalCarrier = count($request->input('localcarrier'.$contador));
+                //$totalport =  count($request->input('port_id'.$contador));
                 $detailport = $request->input('port_id'.$contador);
                 $detailcarrier = $request->input('localcarrier'.$contador);
 
@@ -137,80 +129,107 @@ class GlobalChargesController extends Controller
                         }
                     }*/
 
-            
+
                 $contador++;
+            }
+
         }
-    
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+
+        return redirect()->action('GlobalChargesController@index');
     }
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
 
-    return redirect()->action('GlobalChargesController@index');
-}
+    public function updateGlobalChar(Request $request, $id)
+    {
 
 
-public function updateGlobalChar(Request $request, $id)
-{
+        $global = GlobalCharge::find($id);
+        $global->surcharge_id = $request->input('surcharge_id');
+        $global->changetype = $request->input('changetype');
+        $global->calculationtype_id = $request->input('calculationtype_id');
+        $global->ammount = $request->input('ammount');
+        $global->currency_id = $request->input('currency_id');
 
-    $requestForm = $request->all();
 
-    $global = GlobalCharge::find($id);
-    $global->update($requestForm);
+        $port = $request->input('port');
+        $carrier = $request->input('carrier_id');
+        $deleteCarrier = GlobalCharCarrier::where("globalcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort->delete();
+        foreach($port as $key2)
+        {
+            $detailport = new GlobalCharPort();
+            $detailport->port = $key2;
+            $detailport->globalcharge_id = $id;
+            $detailport->save();
+        }
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new GlobalCharCarrier();
+            $detailcarrier->carrier_id = $key;
+            $detailcarrier->globalcharge_id = $id;
+            $detailcarrier->save();
+        }
 
+        $global->update();
+        echo $request;
 
-}
-public function destroyGlobalCharges($id)
-{
+    }
+    public function destroyGlobalCharges($id)
+    {
 
-    $global = GlobalCharge::find($id);
-    $global->delete();
+        $global = GlobalCharge::find($id);
+        $global->delete();
 
-}
+    }
 
-/**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-public function show($id)
-{
-    //
-}
+    public function show($id)
+    {
+        //
+    }
 
-/**
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-public function edit($id)
-{
-    //
-}
+    public function edit($id)
+    {
+        //
+    }
 
-/**
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-public function update(Request $request, $id)
-{
-    //
-}
+    public function update(Request $request, $id)
+    {
+        //
+    }
 
-/**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-public function destroy($id)
-{
-    //
-}
+    public function destroy($id)
+    {
+        //
+    }
 }

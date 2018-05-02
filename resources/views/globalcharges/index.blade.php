@@ -6,6 +6,8 @@
 @section('title', 'Global Charges')
 @section('content')
 
+
+
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
@@ -40,7 +42,7 @@
         <div class="m-portlet__body">
 
             {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
-           
+
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
@@ -93,20 +95,25 @@
                 <tbody>
 
                     @foreach ($global as $globalcharges)
-      
                     
+            
+
                     <tr id='tr_l{{++$loop->index}}'>
                         <td>
                             <div id="divtype{{$loop->index}}"  class="val">{!! $globalcharges->surcharge->name !!}</div>
                             <div class="in" hidden="true">
-                                {{ Form::select('type[]', $surcharge,$globalcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
+                                {{ Form::select('type[]', $surcharge,$globalcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
                             </div>
                         </td>
                         <td>
-                            <div id="divport{{$loop->index}}"  class="val">{!! $globalcharges->ports->name !!}</div>
+                            <div id="divport{{$loop->index}}"  class="val">
+
+                                {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('ports')->pluck('name') ) !!} 
+                            </div>
+                         
                             <div class="in" hidden="true">
                                 {{ Form::select('port_id[]', $harbor,
-                                null,['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
+                                $globalcharges->globalcharport->pluck('port'),['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
                         <td>
@@ -118,12 +125,15 @@
                             </div>
                         </td>
                         <td>
-                            <div id="divcarrier{{$loop->index}}"  class="val">{!! $globalcharges->carrier->name !!}</div>
+                            <div id="divcarrier{{$loop->index}}"  class="val">
+
+                                {!! str_replace(["[","]","\""], ' ', $globalcharges->GlobalCharCarrier->pluck('carrier')->pluck('name') ) !!}
+
+                            </div>
                             <div class="in" hidden="true">
-                                {{ Form::select('localcarrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('id'),['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
+                                {{ Form::select('localcarrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('carrier_id'),['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
-
                         <td>   
                             <div id="divcalculation{{$loop->index}}"  class="val">{!! $globalcharges->calculationtype->name !!}</div>
                             <div class="in" hidden="true">

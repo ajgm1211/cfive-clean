@@ -11,6 +11,7 @@ class GlobalCharCarrier extends Model
 
     public function globalcharge()
     {
+
         return $this->belongsTo('App\GlobalCharge','globalcharge_id');
     }
     public function carrier(){

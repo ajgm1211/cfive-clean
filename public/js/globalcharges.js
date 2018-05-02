@@ -27,6 +27,8 @@ function cancel_l(id){
 
 function save_l(id,idval){
 
+
+
     $.ajax({
         type: 'GET',
         url: 'globalcharges/updateGlobalCharge/' + idval,
@@ -42,6 +44,7 @@ function save_l(id,idval){
         },
         success: function(data) {
 
+
             swal(
                 'Updated!',
                 'Your local charge has been updated.',
@@ -55,16 +58,36 @@ function save_l(id,idval){
             $("#tr_l"+id+" .val").removeAttr('hidden');
             $("#tr_l"+id+" .in").attr('hidden','true');
             $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
+            var selText ="";
+            var porText = "";
 
+            $("#localcarrier"+id+" option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                    selText += $this.text()+ ", ";
+
+                }
+            });
+            $("#port"+id+" option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                    porText += $this.text()+ ", ";
+
+                }
+            });
             $("#divtype"+id).html($("#type"+id+" option:selected").text());
-            $("#divport"+id).html($("#port"+id+" option:selected").text());
+            $("#divport"+id).html(porText);
             $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
-            $("#divcarrier"+id).html($("#localcarrier"+id+" option:selected").text());
+            $("#divcarrier"+id).html(selText);
             $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
             $("#divammount"+id).html($("#ammount"+id).val());
             $("#divcurrency"+id).html($("#localcurrency"+id+" option:selected").text());
 
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
         }
+
     });
 
 }
@@ -128,6 +151,13 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
+    $i = 1;
+    $('.closetr').each(function () {
+
+        var res = $(".port",this).removeAttr('name').attr('name', 'port_id'+$i+'[]');
+        var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier'+$i+'[]');
+        $i++;
+    });
 });
 
 $(document).on('click', '.cancel', function () {
