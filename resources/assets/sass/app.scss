@@ -68,7 +68,7 @@ h3.m-subheader__title{
   font-weight: 600 !important;
 }
 .btn-primary{
-  background-color: #FF5F48 !important;
+  background-color: $color-orange !important;
   border: 1px solid #FF5F48 !important;
 }
 .btn-success{
@@ -87,4 +87,30 @@ h3.m-subheader__title{
 
 .m-datatable > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size .btn.dropdown-toggle:focus, .m-datatable > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size .btn.dropdown-toggle:hover, .m-datatable > .m-datatable__pager > .m-datatable__pager-info .m-datatable__pager-size.show > .btn.dropdown-toggle{
   background-color: #FF5F48 !important;
+}
+
+//--- Tabs customize ---
+
+.nav-tabs .nav-link {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  /* border-top-left-radius: 0.25rem; */
+  /* border-top-right-radius: 0.25rem; */
+}
+
+.m-tabs-line.m-tabs-line--success.nav.nav-tabs .nav-link:hover, .m-tabs-line.m-tabs-line--success.nav.nav-tabs .nav-link.active, .m-tabs-line.m-tabs-line--success a.m-tabs__link:hover, .m-tabs-line.m-tabs-line--success a.m-tabs__link.active {
+  color: $color-orange !important;
+  border-bottom: 3px solid $color-orange !important;
+  font-weight: bold !important;
+}
+
+.m-portlet .m-portlet__head {
+  background-color: #b5b5b5 !important;
+  height: 40px !important;
+}
+.m-portlet .m-portlet__head .m-portlet__head-caption .m-portlet__head-title .m-portlet__head-text {
+  font-size: 1rem !important;
+  color: #000 !important;
+  text-align: center !important;
 }

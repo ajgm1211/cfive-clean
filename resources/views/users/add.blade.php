@@ -14,9 +14,10 @@
             </div>
         </div>
         <div class="m-portlet__foot m-portlet__foot--fit">
+            <br>
             <div class="m-form__actions m-form__actions">
-                {!! Form::submit('Save', ['class'=> 'btn btn-primary  btn-sm']) !!}
-                <a class="btn btn-success btn-sm" href="{{url()->previous()}}">
+                {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+                <a class="btn btn-success" href="{{url()->previous()}}">
                     Cancel
                 </a>
             </div>

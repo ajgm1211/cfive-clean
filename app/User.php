@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id','name','lastname', 'password', 'email', 'type','name_company','position',
+        'id','name','lastname', 'password', 'email', 'type','name_company','position','verified','access'
     ];
 
     /**
@@ -45,5 +45,14 @@ class User extends Authenticatable
     public function verifyUser()
     {
         return $this->hasOne('App\VerifyUser');
+    }
+
+    public function getVerifiedAttribute()
+    {
+        if($this->attributes['verified']==1){
+            return $this->attributes['verified']='Active';
+        }else{
+            return $this->attributes['verified']='Inactive';
+        }
     }
 }

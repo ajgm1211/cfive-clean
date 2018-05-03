@@ -28,6 +28,7 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
+    Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
     Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
 

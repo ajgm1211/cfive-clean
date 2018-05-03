@@ -68,14 +68,14 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                            <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                            <a href="{{route('prices.add')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>
                                         Add Price
                                     </span>
                                     <i class="la la-plus"></i>
                                 </span>
-                            </button>
+                            </a>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
                         </div>
                     </div>
@@ -92,15 +92,15 @@
                         <th title="Field #3">
                             Companies
                         </th>
-                        <th title="Field #4">
-                            20'
-                        </th>
-                        <th title="Field #5">
-                            40'
-                        </th>
-                        <th title="Field #6">
-                            40' HC
-                        </th>
+                        <!-- <th title="Field #4">
+                             20'
+                         </th>
+                         <th title="Field #5">
+                             40'
+                         </th>
+                         <th title="Field #6">
+                             40' HC
+                         </th>-->
                         <th title="Field #7">
                             Options
                         </th>
@@ -118,9 +118,9 @@
                                     </ul>
                                 @endforeach
                             </td>
-                            <td>{{$price->type_20}}</td>
+                            <!--<td>{{$price->type_20}}</td>
                             <td>{{$price->type_40}}</td>
-                            <td>{{$price->type_40_hc}}</td>
+                            <td>{{$price->type_40_hc}}</td>-->
                             <td>
                                 <button onclick="AbrirModal('edit',{{$price->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
@@ -143,6 +143,7 @@
 @section('js')
     @parent
     <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
     <script>
         function AbrirModal(action,id){
             if(action == "edit"){
@@ -165,5 +166,9 @@
                 });
             }
         }
+
+        $(document).ready(function() {
+            $('#select-2').select2();
+        });
     </script>
 @stop

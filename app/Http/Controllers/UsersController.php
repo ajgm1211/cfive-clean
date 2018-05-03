@@ -69,7 +69,6 @@ class UsersController extends Controller
 
     }
 
-
     public function add()
     {
         $user = new User();
@@ -78,7 +77,6 @@ class UsersController extends Controller
     }
     public function resetPass(Request $request,$user)
     {
-
         $user = User::find($user);
         //Password::sendResetLink(['email' => $user->email]);
         $response = \Password::sendResetLink(['email' => $user->email ] , function (Message $message) {
@@ -175,7 +173,6 @@ class UsersController extends Controller
     public function resetmsg($id)
     {
         return view('users/messagereset' ,['userid' => $id]);
-
     }
 
     public function datahtml(){
@@ -202,6 +199,26 @@ class UsersController extends Controller
         $response = User::all('name', 'lastname', 'email', 'rol')->toJson();
         return view('users/indexjson')->with('url', $response);
 
+    }
+
+    public function activate(Request $request,$id) {
+        $user=User::find($id);
+        //dd(json_encode($user));
+        if($user->verified=='Active'){
+            $user->verified=0;
+            $user->update();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'User has been disabled successfully!');
+            return redirect()->route('users.home');
+        }else{
+            $user->verified=1;
+            $user->update();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'User has been activated successfully!');
+            return redirect()->route('users.home');
+        }
     }
 
     public function logout(Request $request) {

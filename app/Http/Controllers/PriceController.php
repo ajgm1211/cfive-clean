@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use App\Price;
 use Illuminate\Http\Request;
 
@@ -10,12 +11,15 @@ class PriceController extends Controller
     public function index()
     {
         $prices = Price::all();
-        return view('prices/index', ['prices' => $prices]);
+        $companies = Company::all()->pluck('business_name','id');
+        return view('prices/index', ['prices' => $prices,'companies' => $companies]);
     }
 
     public function add()
     {
-        return view('prices.add');
+        $prices = Price::all();
+        $companies = Company::all()->pluck('business_name','id');
+        return view('prices.add', ['prices' => $prices,'companies' => $companies]);
     }
 
     public function store(Request $request)
