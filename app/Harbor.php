@@ -15,11 +15,6 @@ class Harbor extends Model
         return $this->hasOne('App\GlobalCharge');
     }
 
-    public function localcharge()
-    {
-
-        return $this->hasOne('App\LocalCharge');
-    }
     public function rate()
     {
 

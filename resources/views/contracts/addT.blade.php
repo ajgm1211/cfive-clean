@@ -178,9 +178,9 @@ $validation_expire = 'Please enter validation date';
                                 <tbody>
                                     <tr>
                                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('port_id1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
 
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
@@ -190,14 +190,14 @@ $validation_expire = 'Please enter validation date';
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
-                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'form-control']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control port' ,'multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'form-control']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'m-select2-general  form-control']) }}</td>
+                                        <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple']) }}</td>
 
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'form-control']) }}</td>
-                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the ammount','class' => 'form-control m-input']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'form-control']) }}</td>
-                                        <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                        <td>  <a  class="removeL m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                             <i class="la la-eraser"></i>
                                             </a>
                                         </td>

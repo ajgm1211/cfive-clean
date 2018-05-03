@@ -17,9 +17,13 @@ class Contract extends Model
 
     }
     public function localcharges(){
-
+ //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
         return $this->hasMany('App\LocalCharge');
 
+
+        
+        
+        
     }
 
 }

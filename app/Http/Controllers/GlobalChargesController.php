@@ -100,36 +100,6 @@ class GlobalChargesController extends Controller
                     $detailport->globalcharge()->associate($global);
                     $detailport->save();
                 }
-
-
-                /*
-                if($totalport >= $totalCarrier ){
-                    foreach($detailport as $p => $value)
-                    {
-
-                        foreach($detailcarrier as $c => $value)
-                        {
-                            $globalportcarr = new GlobalCharPortCarrier();
-                            $globalportcarr->port = $request->input('port_id'.$contador.'.'.$p);
-                            $globalportcarr->carrier_id =$request->input('localcarrier'.$contador.'.'.$c);
-                            $globalportcarr->globalcharge()->associate($global);
-                            $globalportcarr->save();
-                        }
-                    }
-                }else{
-                    foreach($detailcarrier as $c => $value)
-                    {
-                        foreach($detailport as $p => $value)
-                        {
-                            $globalportcarr = new GlobalCharPortCarrier();
-                            $globalportcarr->port = $request->input('port_id'.$contador.'.'.$p);
-                            $globalportcarr->carrier_id =$request->input('localcarrier'.$contador.'.'.$c);
-                            $globalportcarr->globalcharge()->associate($global);
-                            $globalportcarr->save();
-                        }
-                    }*/
-
-
                 $contador++;
             }
 
