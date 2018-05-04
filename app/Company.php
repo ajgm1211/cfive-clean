@@ -17,4 +17,14 @@ class Company extends Model
     {
         return $this->belongsTo('App\Price');
     }
+
+    public function company_price()
+    {
+        return $this->hasMany('App\CompanyPrice');
+    }
+
+    public function price_name()
+    {
+        return $this->hasManyThrough('App\Price','App\CompanyPrice','company_id','id','id','price_id');
+    }
 }

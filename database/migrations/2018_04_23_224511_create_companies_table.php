@@ -19,9 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->string('phone');
             $table->string('address',200);
             $table->string('email');
-            $table->integer('associated_contacts')->nullable();
             $table->integer('associated_quotes')->nullable();
-            $table->integer('associated_price_level')->nullable();
             $table->timestamps();
         });
     }

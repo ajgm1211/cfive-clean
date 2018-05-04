@@ -141,14 +141,16 @@
                                                             <span>Freight rate markup</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
+                                                            <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                            <input type="text" class="form-control" name="freight_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="freight_markup_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -192,14 +194,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="1" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="fixed_markup_2" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -216,14 +220,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="1" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="fixed_markup_2_2" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -268,14 +274,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="inland_fixed_markup" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -292,14 +300,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -348,14 +358,16 @@
                                                             <span>Freight rate markup</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
+                                                            <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                            <input type="text" class="form-control" name="freight_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="freight_markup_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -399,14 +411,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="2" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -423,14 +437,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="2" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -475,14 +491,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -499,14 +517,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="destination_exp_amount" name="inland_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -555,14 +575,16 @@
                                                             <span>Freight rate markup</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="3" name="freight_type[]"/>
+                                                            <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                            <input type="text" class="form-control" name="freight_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="freight_markup_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -606,14 +628,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="3" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="destination_exp_amount" name="local_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -630,14 +654,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="3" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                            <input type="text" class="form-control" name="local_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="local_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -682,14 +708,16 @@
                                                             <span>Import</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -706,14 +734,16 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <input type="text" class="form-control" name="percent_markup"/>
+                                                            <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                            <input type="text" class="form-control" name="inland_percent_markup[]"/>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="destination_exp_amount[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default destination_exp_amount_currency" name="destination_currency[]">
+                                                                        <select class="btn btn-default" name="inland_currency[]">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>

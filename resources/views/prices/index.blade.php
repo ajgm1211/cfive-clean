@@ -112,7 +112,7 @@
                             <td>{{$price->name }}</td>
                             <td>{{$price->description }}</td>
                             <td>
-                                @foreach($price->company as $company)
+                                @foreach($price->company_name as $company)
                                     <ul>
                                         <li>{{$company->business_name}}</li>
                                     </ul>
