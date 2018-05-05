@@ -60,7 +60,7 @@ class PriceController extends Controller
             if ((isset($input['freight_markup_currency'])) && (count($input['freight_markup_currency']) > 0)) {
                 $freight_markup->currency = $input['freight_markup_currency'][$key];
             }
-            $freight_markup->type = $input['freight_type'][$key];
+            $freight_markup->price_type_id = $input['freight_type'][$key];
             $freight_markup->price_id = $price->id;
             $freight_markup->save();
         }
@@ -74,8 +74,8 @@ class PriceController extends Controller
             if ((isset($input['local_fixed_markup'])) && (count($input['local_fixed_markup']) > 0)) {
                 $local_markup->fixed_markup = $input['local_fixed_markup'][$key];
             }
-            $local_markup->type = $input['local_type'][$key];
-            $local_markup->subtype = $input['subtype'][$key];
+            $local_markup->price_type_id = $input['local_type'][$key];
+            $local_markup->price_subtype_id = $input['subtype'][$key];
             $local_markup->currency = $input['local_currency'][$key];
             $local_markup->price_id = $price->id;
             $local_markup->save();
@@ -90,8 +90,8 @@ class PriceController extends Controller
             if ((isset($input['inland_fixed_markup'])) && (count($input['inland_fixed_markup']) > 0)) {
                 $inland_markup->fixed_markup = $input['inland_fixed_markup'][$key];
             }
-            $inland_markup->type = $input['inland_type'][$key];
-            $inland_markup->subtype = $input['subtype_2'][$key];
+            $inland_markup->price_type_id = $input['inland_type'][$key];
+            $inland_markup->price_subtype_id = $input['subtype_2'][$key];
             $inland_markup->currency = $input['inland_currency'][$key];
             $inland_markup->price_id = $price->id;
             $inland_markup->save();

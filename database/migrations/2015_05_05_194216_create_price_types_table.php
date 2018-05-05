@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFreightFclPricesTable extends Migration
+class CreatePriceTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateFreightFclPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('freight_fcl_prices', function (Blueprint $table) {
+        Schema::create('price_types', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreateFreightFclPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('freight_fcl_prices');
+        Schema::dropIfExists('price_types');
     }
 }

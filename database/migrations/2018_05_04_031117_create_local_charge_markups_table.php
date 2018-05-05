@@ -18,8 +18,10 @@ class CreateLocalChargeMarkupsTable extends Migration
             $table->string('percent_markup')->nullable();
             $table->string('fixed_markup')->nullable();
             $table->string('currency')->nullable();
-            $table->string('subtype');
-            $table->string('type');
+            $table->integer('price_subtype_id')->unsigned();
+            $table->foreign('price_subtype_id')->references('id')->on('price_subtypes');
+            $table->integer('price_type_id')->unsigned();
+            $table->foreign('price_type_id')->references('id')->on('price_types');
             $table->integer('price_id')->unsigned();
             $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
             $table->timestamps();

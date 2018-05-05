@@ -125,6 +125,15 @@
                                                 </div>
                                                 <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                     <div class="row">
+                                                        <div class="col-md-12">
+                                                            <select class="form-control" id="type_freight_markup_1">
+                                                                <option value="1">Percent Markup</option>
+                                                                <option value="2">Fixed Markup</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row">
                                                         <div class="col-md-3">
                                                             <span><b>Freight Charges</b></span>
                                                         </div>
@@ -143,14 +152,14 @@
                                                         <div class="col-md-3">
                                                             <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
                                                             <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
-                                                            <input type="text" class="form-control" name="freight_percent_markup[]"/>
+                                                            <input type="text" class="form-control" id="freight_percent_markup_1" name="freight_percent_markup[]"/>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 hide">
                                                             <div class="input-group">
-                                                                <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="..." disabled="true">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" name="freight_markup_currency[]">
+                                                                        <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]" disabled="true">
                                                                             <option value="usd">USD</option>
                                                                             <option value="clp">CLP</option>
                                                                             <option value="ars">ARS</option>
@@ -200,7 +209,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="fixed_markup_2" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="fixed_markup_2" name="local_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -226,7 +235,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="fixed_markup_2_2" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="fixed_markup_2_2" name="local_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -280,7 +289,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="inland_fixed_markup" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="inland_fixed_markup" name="inland_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -306,7 +315,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -364,7 +373,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="freight_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="freight_markup_currency[]">
@@ -417,7 +426,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -443,7 +452,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -497,7 +506,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -523,7 +532,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="inland_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="destination_exp_amount" name="inland_fixed_markup[]" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -581,7 +590,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="freight_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="freight_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="freight_markup_currency[]">
@@ -634,7 +643,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="destination_exp_amount" name="local_fixed_markup[]" min="1" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="destination_exp_amount" name="local_fixed_markup[]" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -660,7 +669,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="local_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="local_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="local_currency[]">
@@ -714,7 +723,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -740,7 +749,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="input-group">
-                                                                <input type="number" id="" name="inland_fixed_markup[]" min="1" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                <input type="number" id="" name="inland_fixed_markup[]" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" name="inland_currency[]">
@@ -809,6 +818,17 @@
 
         $(document).ready(function() {
             $('#select-2').select2();
+        });
+        $(document).on('change', '#type_freight_markup_1', function (e) {
+            if($(this).val()==1){
+                $("#freight_fixed_markup_1").prop('disabled', true);
+                $("#freight_markup_currency_1").prop('disabled', true);
+                $("#freight_percent_markup_1").prop('disabled', false);
+            }else{
+                $("#freight_fixed_markup_1").prop('disabled', false);
+                $("#freight_markup_currency_1").prop('disabled', false);
+                $("#freight_percent_markup_1").prop('disabled', true);
+            }
         });
     </script>
 @stop

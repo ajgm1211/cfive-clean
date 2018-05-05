@@ -18,7 +18,8 @@ class CreateFreightMarkupsTable extends Migration
             $table->string('percent_markup')->nullable();
             $table->string('fixed_markup')->nullable();
             $table->string('currency')->nullable();
-            $table->string('type');
+            $table->integer('price_type_id')->unsigned();
+            $table->foreign('price_type_id')->references('id')->on('price_types');
             $table->integer('price_id')->unsigned();
             $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
             $table->timestamps();

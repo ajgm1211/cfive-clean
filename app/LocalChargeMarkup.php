@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocalChargeMarkup extends Model
 {
-    protected $fillable = ['percent_markup', 'fixed_markup','currency','subtype','type','price_id'];
+    protected $fillable = ['percent_markup', 'fixed_markup','currency','price_subtype_id','price_type_id','price_id'];
 
     public function price()
     {

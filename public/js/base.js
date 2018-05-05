@@ -160,40 +160,53 @@ $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });
 
+$(document).on('change', '#type_freight_markup_1', function (e) {
+    if($(this).val()==1){
+        $("#freight_fixed_markup_1").prop('disabled', true);
+        $("#freight_markup_currency_1").prop('disabled', true);
+        $("#freight_percent_markup_1").prop('disabled', false);
+    }else{
+        $("#freight_fixed_markup_1").prop('disabled', false);
+        $("#freight_markup_currency_1").prop('disabled', false);
+        $("#freight_percent_markup_1").prop('disabled', true);
+    }
+});
+
 $(document).on('click', '.m_sweetalert_demo_8', function (e) {
-    var res = $("i",this).attr('id'); 
+        var res = $("i",this).attr('id');
 
-    var theElement = $(this);
-    var idval = res.substr(4);
+        var theElement = $(this);
+        var idval = res.substr(4);
 
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function(result) {
+            if (result.value) {
 
-            $.ajax({
-                type: 'get',
-                url: '../deleteLocalCharge/' + idval,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                    $(theElement).closest('tr').remove();
+                $.ajax({
+                    type: 'get',
+                    url: '../deleteLocalCharge/' + idval,
+                    success: function(data) {
+                        swal(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('tr').remove();
 
-                }
-            });
+                    }
+                });
 
-        }
+            }
+
+        });
 
     });
-
-});
+}
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
