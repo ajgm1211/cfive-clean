@@ -172,41 +172,89 @@ $(document).on('change', '#type_freight_markup_1', function (e) {
     }
 });
 
+$(document).on('change', '#type_freight_markup_2', function (e) {
+    if($(this).val()==1){
+        $("#freight_fixed_markup_2").prop('disabled', true);
+        $("#freight_markup_currency_2").prop('disabled', true);
+        $("#freight_percent_markup_2").prop('disabled', false);
+    }else{
+        $("#freight_fixed_markup_2").prop('disabled', false);
+        $("#freight_markup_currency_2").prop('disabled', false);
+        $("#freight_percent_markup_2").prop('disabled', true);
+    }
+});
+
+$(document).on('change', '#type_local_markup_1', function (e) {
+    if($(this).val()==1){
+        $("#local_fixed_markup_1").prop('disabled', true);
+        $("#local_markup_currency_1").prop('disabled', true);
+        $("#local_fixed_markup_1_2").prop('disabled', true);
+        $("#local_markup_currency_1_2").prop('disabled', true);
+        $("#local_percent_markup_1_2").prop('disabled', false);
+        $("#local_percent_markup_1").prop('disabled', false);
+    }else{
+        $("#local_fixed_markup_1").prop('disabled', false);
+        $("#local_markup_currency_1").prop('disabled', false);
+        $("#local_fixed_markup_1_2").prop('disabled', false);
+        $("#local_markup_currency_1_2").prop('disabled', false);
+        $("#local_percent_markup_1_2").prop('disabled', true);
+        $("#local_percent_markup_1").prop('disabled', true);
+
+    }
+});
+
+$(document).on('change', '#type_inland_markup_1', function (e) {
+    if($(this).val()==1){
+        $("#inland_fixed_markup_1").prop('disabled', true);
+        $("#inland_currency_markup_1").prop('disabled', true);
+        $("#inland_fixed_markup_1_2").prop('disabled', true);
+        $("#inland_currency_markup_1_2").prop('disabled', true);
+        $("#inland_percent_markup_1_2").prop('disabled', false);
+        $("#inland_percent_markup_1").prop('disabled', false);
+    }else{
+        $("#inland_fixed_markup_1").prop('disabled', false);
+        $("#inland_currency_markup_1").prop('disabled', false);
+        $("#inland_fixed_markup_1_2").prop('disabled', false);
+        $("#inland_currency_markup_1_2").prop('disabled', false);
+        $("#inland_percent_markup_1_2").prop('disabled', true);
+        $("#inland_percent_markup_1").prop('disabled', true);
+    }
+});
+
 $(document).on('click', '.m_sweetalert_demo_8', function (e) {
-        var res = $("i",this).attr('id');
+    var res = $("i",this).attr('id');
 
-        var theElement = $(this);
-        var idval = res.substr(4);
+    var theElement = $(this);
+    var idval = res.substr(4);
 
-        swal({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!'
-        }).then(function(result) {
-            if (result.value) {
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
 
-                $.ajax({
-                    type: 'get',
-                    url: '../deleteLocalCharge/' + idval,
-                    success: function(data) {
-                        swal(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                        $(theElement).closest('tr').remove();
+            $.ajax({
+                type: 'get',
+                url: '../deleteLocalCharge/' + idval,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
 
-                    }
-                });
+                }
+            });
 
-            }
-
-        });
+        }
 
     });
-}
+
+});
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"

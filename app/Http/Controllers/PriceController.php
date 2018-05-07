@@ -49,7 +49,7 @@ class PriceController extends Controller
 
         //dd(json_encode($type));
         //Store Freight Markups
-        foreach ($input['subtype_3'] as $key => $item) {
+        foreach ($input['freight_type'] as $key => $item) {
             $freight_markup = new FreightMarkup();
             if ((isset($input['freight_percent_markup'])) && (count($input['freight_percent_markup']) > 0)) {
                 $freight_markup->percent_markup = $input['freight_percent_markup'][$key];
