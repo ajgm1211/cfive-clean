@@ -162,64 +162,166 @@ $(document).on('click', '.remove', function () {
 
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){
-        $("#freight_fixed_markup_1").prop('disabled', true);
-        $("#freight_markup_currency_1").prop('disabled', true);
-        $("#freight_percent_markup_1").prop('disabled', false);
+        $(".freight_fixed_markup_1").hide();
+        $("#freight_fixed_markup_1").val(0);
+        $(".freight_percent_markup_1").show();
     }else{
-        $("#freight_fixed_markup_1").prop('disabled', false);
-        $("#freight_markup_currency_1").prop('disabled', false);
-        $("#freight_percent_markup_1").prop('disabled', true);
+        $(".freight_fixed_markup_1").show();
+        $(".freight_percent_markup_1").hide();
+        $("#freight_percent_markup_1").val(0);
     }
 });
 
 $(document).on('change', '#type_freight_markup_2', function (e) {
     if($(this).val()==1){
-        $("#freight_fixed_markup_2").prop('disabled', true);
-        $("#freight_markup_currency_2").prop('disabled', true);
-        $("#freight_percent_markup_2").prop('disabled', false);
+        $(".freight_fixed_markup_2").hide();
+        $("#freight_fixed_markup_2").val(0);
+        $(".freight_percent_markup_2").show();
     }else{
-        $("#freight_fixed_markup_2").prop('disabled', false);
-        $("#freight_markup_currency_2").prop('disabled', false);
-        $("#freight_percent_markup_2").prop('disabled', true);
+        $(".freight_fixed_markup_2").show();
+        $(".freight_percent_markup_2").hide();
+        $("#freight_percent_markup_2").val(0);
+    }
+});
+
+$(document).on('change', '#type_freight_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".freight_fixed_markup_3").hide();
+        $("#freight_fixed_markup_3").val(0);
+        $(".freight_percent_markup_3").show();
+    }else{
+        $(".freight_fixed_markup_3").show();
+        $(".freight_percent_markup_3").hide();
+        $("#freight_percent_markup_3").val(0);
     }
 });
 
 $(document).on('change', '#type_local_markup_1', function (e) {
     if($(this).val()==1){
-        $("#local_fixed_markup_1").prop('disabled', true);
-        $("#local_markup_currency_1").prop('disabled', true);
-        $("#local_fixed_markup_1_2").prop('disabled', true);
-        $("#local_markup_currency_1_2").prop('disabled', true);
-        $("#local_percent_markup_1_2").prop('disabled', false);
-        $("#local_percent_markup_1").prop('disabled', false);
+        $(".local_fixed_markup_1").hide();
+        $(".local_fixed_markup_1_2").hide();
+        $("#local_fixed_markup_1").val(0);
+        $("#local_fixed_markup_1_2").val(0);
+        $(".local_percent_markup_1").show();
+        $(".local_percent_markup_1_2").show();
     }else{
-        $("#local_fixed_markup_1").prop('disabled', false);
-        $("#local_markup_currency_1").prop('disabled', false);
-        $("#local_fixed_markup_1_2").prop('disabled', false);
-        $("#local_markup_currency_1_2").prop('disabled', false);
-        $("#local_percent_markup_1_2").prop('disabled', true);
-        $("#local_percent_markup_1").prop('disabled', true);
-
+        $(".local_fixed_markup_1").show();
+        $(".local_fixed_markup_1_2").show();
+        $(".local_percent_markup_1").hide();
+        $(".local_percent_markup_1_2").hide();
+        $("#local_percent_markup_1").val(0);
+        $("#local_percent_markup_1_2").val(0);
     }
 });
 
 $(document).on('change', '#type_inland_markup_1', function (e) {
     if($(this).val()==1){
-        $("#inland_fixed_markup_1").prop('disabled', true);
-        $("#inland_currency_markup_1").prop('disabled', true);
-        $("#inland_fixed_markup_1_2").prop('disabled', true);
-        $("#inland_currency_markup_1_2").prop('disabled', true);
-        $("#inland_percent_markup_1_2").prop('disabled', false);
-        $("#inland_percent_markup_1").prop('disabled', false);
+        $(".inland_fixed_markup_1").hide();
+        $(".inland_fixed_markup_1_2").hide();
+        $(".inland_percent_markup_1").show();
+        $(".inland_percent_markup_1_2").show();
+        $("#inland_fixed_markup_1").val(0);
+        $("#inland_fixed_markup_1_2").val(0);
     }else{
-        $("#inland_fixed_markup_1").prop('disabled', false);
-        $("#inland_currency_markup_1").prop('disabled', false);
-        $("#inland_fixed_markup_1_2").prop('disabled', false);
-        $("#inland_currency_markup_1_2").prop('disabled', false);
-        $("#inland_percent_markup_1_2").prop('disabled', true);
-        $("#inland_percent_markup_1").prop('disabled', true);
+        $(".inland_fixed_markup_1").show();
+        $(".inland_fixed_markup_1_2").show();
+        $(".inland_percent_markup_1").hide();
+        $(".inland_percent_markup_1_2").hide();
+        $("#inland_percent_markup_1").val(0);
+        $("#inland_percent_markup_1_2").val(0);
     }
 });
+
+$(document).on('change', '#type_local_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_2").hide();
+        $(".local_fixed_markup_2_2").hide();
+        $(".local_percent_markup_2").show();
+        $(".local_percent_markup_2_2").show();
+        $("#local_fixed_markup_2").val('0');
+        $("#local_fixed_markup_2_2").val('0');
+    }else{
+        $(".local_fixed_markup_2").show();
+        $(".local_fixed_markup_2_2").show();
+        $(".local_percent_markup_2").hide();
+        $(".local_percent_markup_2_2").hide();
+        $("#local_percent_markup_2").val('0');
+        $("#local_percent_markup_2_2").val('0');
+    }
+});
+
+$(document).on('change', '#type_inland_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".inland_fixed_markup_2").hide();
+        $(".inland_fixed_markup_2_2").hide();
+        $(".inland_percent_markup_2").show();
+        $(".inland_percent_markup_2_2").show();
+        $("#inland_fixed_markup_2").val(0);
+        $("#inland_fixed_markup_2_2").val(0);
+    }else{
+        $(".inland_fixed_markup_2").show();
+        $(".inland_fixed_markup_2_2").show();
+        $(".inland_percent_markup_2").hide();
+        $(".inland_percent_markup_2_2").hide();
+        $("#inland_percent_markup_2").val(0);
+        $("#inland_percent_markup_2_2").val(0);
+    }
+});
+
+$(document).on('change', '#type_local_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_2").hide();
+        $(".local_fixed_markup_2_2").hide();
+        $(".local_percent_markup_2").show();
+        $(".local_percent_markup_2_2").show();
+        $("#local_fixed_markup_2").val('0');
+        $("#local_fixed_markup_2_2").val('0');
+    }else{
+        $(".local_fixed_markup_2").show();
+        $(".local_fixed_markup_2_2").show();
+        $(".local_percent_markup_2").hide();
+        $(".local_percent_markup_2_2").hide();
+        $("#local_percent_markup_2").val('0');
+        $("#local_percent_markup_2_2").val('0');
+    }
+});
+
+$(document).on('change', '#type_local_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_3").hide();
+        $(".local_fixed_markup_3_2").hide();
+        $(".local_percent_markup_3").show();
+        $(".local_percent_markup_3_2").show();
+        $("#local_fixed_markup_3").val('0');
+        $("#local_fixed_markup_3_2").val('0');
+    }else{
+        $(".local_fixed_markup_3").show();
+        $(".local_fixed_markup_3_2").show();
+        $(".local_percent_markup_3").hide();
+        $(".local_percent_markup_3_2").hide();
+        $("#local_percent_markup_3").val('0');
+        $("#local_percent_markup_3_2").val('0');
+    }
+});
+
+$(document).on('change', '#type_inland_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".inland_fixed_markup_3").hide();
+        $(".inland_fixed_markup_3_2").hide();
+        $(".inland_percent_markup_3").show();
+        $(".inland_percent_markup_3_2").show();
+        $("#inland_fixed_markup_3").val(0);
+        $("#inland_fixed_markup_3_2").val(0);
+    }else{
+        $(".inland_fixed_markup_3").show();
+        $(".inland_fixed_markup_3_2").show();
+        $(".inland_percent_markup_3").hide();
+        $(".inland_percent_markup_3_2").hide();
+        $("#inland_percent_markup_3").val(0);
+        $("#inland_percent_markup_3_2").val(0);
+    }
+});
+
 
 $(document).on('click', '.m_sweetalert_demo_8', function (e) {
     var res = $("i",this).attr('id');
