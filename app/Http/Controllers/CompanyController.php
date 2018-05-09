@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\CompanyPrice;
 use App\Price;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class CompanyController extends Controller
 {
@@ -27,7 +29,16 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        Company::create($request->all());
+        $input = Input::all();
+
+        $company=Company::create($request->all());
+
+        if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
+            $company_price = new CompanyPrice();
+            $company_price->company_id=$company->id;
+            $company_price->price_id=$input['price_id'];
+            $company_price->save();
+        }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -44,8 +55,14 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
+        $input = Input::all();
         $company = Company::find($id);
         $company->update($request->all());
+        if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
+            $company_price = CompanyPrice::where('company_id',$company->id)->first();
+            $company_price->price_id=$input['price_id'];
+            $company_price->update();
+        }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register updated successfully!');
