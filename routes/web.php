@@ -73,6 +73,18 @@ Route::group(['prefix' => 'contracts'], function () {
 Route::resource('contracts', 'ContractsController'); 
 
 
+Route::group(['prefix' => 'inlands'], function () {
+
+    Route::get('add', 'InlandsController@add')->name('inland.add');
+    //Route::get('updateIland/{id}', ['uses' => 'InlandsController@updateGlobalChar', 'as' => 'update-inland']);
+    //Route::get('deleteInland/{id}', ['uses' => 'InlandsController@destroyGlobalCharges', 'as' => 'delete-inland']);
+
+
+});
+Route::resource('inlands', 'InlandsController'); 
+
+
+
 Route::get('/companies', function () {
     return view('companies');
 });
