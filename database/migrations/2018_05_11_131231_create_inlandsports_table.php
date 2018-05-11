@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIrelandsportsTable extends Migration
+class CreateInlandsportsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateIrelandsportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('irelandsports', function (Blueprint $table) {
+        Schema::create('inlandsports', function (Blueprint $table) {
             $table->integer('port')->unsigned();
-            $table->integer('ireland_id')->unsigned();
+            $table->integer('inland_id')->unsigned();
             $table->foreign('port')->references('id')->on('harbors');
-            $table->foreign('ireland_id')->references('id')->on('irelands')->onDelete('cascade');
+            $table->foreign('inland_id')->references('id')->on('inlands')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateIrelandsportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('irelandsports');
+        Schema::dropIfExists('inlandsports');
     }
 }

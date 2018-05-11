@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Harbor;
-use App\Ireland;
-use App\IrelandPort;
-use App\IrelandDetail;
+use App\Inland;
+use App\InlandPort;
+use App\InlandDetail;
 
 class InlandsController extends Controller
 {
@@ -17,12 +17,15 @@ class InlandsController extends Controller
      */
     public function index()
     {
+        $data = Inland::with('inlandports.ports')->get();
+        return view('inland/index', ['arreglo' => $data]);
+    }
+
+    public function add(){
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
         return view('inland/add', compact('harbor'));
-
-
     }
 
     /**
@@ -43,70 +46,66 @@ class InlandsController extends Controller
      */
     public function store(Request $request)
     {
-      //  dd($request);
-        $ireland = new Ireland();
-        $ireland->provider = $request->input('name');
-        $ireland->type = $request->input('status');
+        //  dd($request);
+        $inland = new Inland();
+        $inland->provider = $request->input('name');
+        $inland->type = $request->input('status');
         $validation = explode('/',$request->validation_expire);
-        $ireland->validity = $validation[0];
-        $ireland->expire = $validation[1];
-        $ireland->save();
+        $inland->validity = $validation[0];
+        $inland->expire = $validation[1];
+        $inland->save();
         $ports = $request->input('irelandports');
         $detailstwuenty =  $request->input('lowertwuenty');
         $detailsforty =  $request->input('lowerforty');
         $detailsfortyhc =  $request->input('lowerfortyhc');
         foreach($ports as $p => $value)
         {
-            $irelandport = new IrelandPort();
-            $irelandport->port = $request->input('irelandports.'.$p);
-            $irelandport->ireland()->associate($ireland);
-            $irelandport->save();
+            $inlandport = new InlandPort();
+            $inlandport->port = $request->input('irelandports.'.$p);
+            $inlandport->inland()->associate($inland);
+            $inlandport->save();
         }
         foreach($detailstwuenty as $t => $value)
         {
             if(!empty($request->input('ammounttwuenty.'.$t))) {
-                $irelandtwuenty = new IrelandDetail();
-                $irelandtwuenty->lower = $request->input('lowertwuenty.'.$t);
-                $irelandtwuenty->upper = $request->input('uppertwuenty.'.$t);
-                $irelandtwuenty->ammount = $request->input('ammounttwuenty.'.$t);
-                $irelandtwuenty->type = 'twuenty';
-                $irelandtwuenty->currency_id = $request->input('currencytwuenty.'.$t);
-                $irelandtwuenty->ireland()->associate($ireland);
-                $irelandtwuenty->save();
+                $inlandtwuenty = new InlandDetail();
+                $inlandtwuenty->lower = $request->input('lowertwuenty.'.$t);
+                $inlandtwuenty->upper = $request->input('uppertwuenty.'.$t);
+                $inlandtwuenty->ammount = $request->input('ammounttwuenty.'.$t);
+                $inlandtwuenty->type = 'twuenty';
+                $inlandtwuenty->currency_id = $request->input('currencytwuenty.'.$t);
+                $inlandtwuenty->inland()->associate($inland);
+                $inlandtwuenty->save();
             }
         }
         foreach($detailsforty as $t => $value)
         {
             if(!empty($request->input('ammountforty.'.$t))) {
-                $irelandforty= new IrelandDetail();
-                $irelandforty->lower = $request->input('lowerforty.'.$t);
-                $irelandforty->upper = $request->input('upperforty.'.$t);
-                $irelandforty->ammount = $request->input('ammountforty.'.$t);
-                $irelandforty->type = 'forty';
-                $irelandforty->currency_id = $request->input('currencyforty.'.$t);
-                $irelandforty->ireland()->associate($ireland);
-                $irelandforty->save();
+                $inlandforty= new InlandDetail();
+                $inlandforty->lower = $request->input('lowerforty.'.$t);
+                $inlandforty->upper = $request->input('upperforty.'.$t);
+                $inlandforty->ammount = $request->input('ammountforty.'.$t);
+                $inlandforty->type = 'forty';
+                $inlandforty->currency_id = $request->input('currencyforty.'.$t);
+                $inlandforty->inland()->associate($inland);
+                $inlandforty->save();
             }
         }
 
         foreach($detailsfortyhc as $t => $value)
         {
             if(!empty($request->input('ammountfortyhc.'.$t))) {
-                $irelandfortyhc = new IrelandDetail();
-                $irelandfortyhc->lower = $request->input('lowerfortyhc.'.$t);
-                $irelandfortyhc->upper = $request->input('upperfortyhc.'.$t);
-                $irelandfortyhc->ammount = $request->input('ammountfortyhc.'.$t);
-                $irelandfortyhc->type = 'fortyhc';
-                $irelandfortyhc->currency_id = $request->input('currencyfortyhc.'.$t);
-                $irelandfortyhc->ireland()->associate($ireland);
-                $irelandfortyhc->save();
+                $inlandfortyhc = new InlandDetail();
+                $inlandfortyhc->lower = $request->input('lowerfortyhc.'.$t);
+                $inlandfortyhc->upper = $request->input('upperfortyhc.'.$t);
+                $inlandfortyhc->ammount = $request->input('ammountfortyhc.'.$t);
+                $inlandfortyhc->type = 'fortyhc';
+                $inlandfortyhc->currency_id = $request->input('currencyfortyhc.'.$t);
+                $inlandfortyhc->inland()->associate($inland);
+                $inlandfortyhc->save();
             }
         }
 
-
-
-
-        // dd($request);
     }
 
     /**
@@ -126,9 +125,29 @@ class InlandsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function edit($id)
     {
-        //
+        $inland = Inland::with('inlandports.ports','inlanddetails.currency')->get()->find($id);
+
+
+        $objharbor = new Harbor();
+        $harbor = $objharbor->all()->pluck('name','id');
+        return view('inland/edit', compact('harbor','inland'));
+
+    }
+
+    public function updateDetails(Request $request,$id){
+
+        $requestForm = $request->all();
+        $inland = InlandDetail::find($id);
+        $inland->update($requestForm);
+    }
+    public function deleteDetails($id){
+
+  
+        $inland = InlandDetail::find($id);
+        $inland->delete();
     }
 
     /**

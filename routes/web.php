@@ -75,9 +75,9 @@ Route::resource('contracts', 'ContractsController');
 
 Route::group(['prefix' => 'inlands'], function () {
 
-    Route::get('add', 'InlandsController@add')->name('inland.add');
-    //Route::get('updateIland/{id}', ['uses' => 'InlandsController@updateGlobalChar', 'as' => 'update-inland']);
-    //Route::get('deleteInland/{id}', ['uses' => 'InlandsController@destroyGlobalCharges', 'as' => 'delete-inland']);
+    Route::get('add', 'InlandsController@add')->name('inlands.add');
+    Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
+    Route::get('deleteDetails/{id}', ['uses' => 'InlandsController@deleteDetails', 'as' => 'delete-inland']);
 
 
 });

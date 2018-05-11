@@ -1,88 +1,61 @@
-function display_l(id){
+function display_twuenty(id){
 
-    $("#tr_l"+id+" .val").attr('hidden','true');
-    $("#tr_l"+id+" .in").removeAttr('hidden');
-    $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', false);
+    $("#tr_twuenty"+id+" .val").attr('hidden','true');
+    $("#tr_twuenty"+id+" .in").removeAttr('hidden');
+    $("#tr_twuenty"+id+" .in input , #tr_twuenty"+id+" .in select ").prop('disabled', false);
 
 
-    $("#save_l"+id).removeAttr('hidden');
-    $("#cancel_l"+id).removeAttr('hidden');
-    $("#remove_l"+id).removeAttr('hidden');
-    $("#edit_l"+id).attr('hidden','true');
-
-}
-
-function cancel_l(id){
-
-    $("#tr_l"+id+" .val").removeAttr('hidden');
-    $("#tr_l"+id+" .in").attr('hidden','true');
-    $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
-
-    $("#save_l"+id).attr('hidden','true');
-    $("#cancel_l"+id).attr('hidden','true');
-    $("#remove_l"+id).attr('hidden','true');
-    $("#edit_l"+id).removeAttr('hidden');
+    $("#save_twuenty"+id).removeAttr('hidden');
+    $("#cancel_twuenty"+id).removeAttr('hidden');
+    $("#remove_twuenty"+id).removeAttr('hidden');
+    $("#edit_twuenty"+id).attr('hidden','true');
 
 }
 
-function save_l(id,idval){
+function cancel_twuenty(id){
 
+    $("#tr_twuenty"+id+" .val").removeAttr('hidden');
+    $("#tr_twuenty"+id+" .in").attr('hidden','true');
+    $("#tr_twuenty"+id+" .in input , #tr_twuenty"+id+" .in select ").prop('disabled', true);
 
+    $("#save_twuenty"+id).attr('hidden','true');
+    $("#cancel_twuenty"+id).attr('hidden','true');
+    $("#remove_twuenty"+id).attr('hidden','true');
+    $("#edit_twuenty"+id).removeAttr('hidden');
 
+}
+
+function save_twuenty(id,idval){
+   
     $.ajax({
         type: 'GET',
-        url: 'globalcharges/updateGlobalCharge/' + idval,
+        url: '../updateDetails/' + idval,
         data: {
-            'surcharge_id' : $("#type"+id).val(),
-            'port' : $("#port"+id).val(),
-            'changetype' : $("#changetype"+id).val(),
-            'carrier_id' : $("#localcarrier"+id).val(),
-            'calculationtype_id' : $("#calculationtype"+id).val(),
-            'ammount' : $("#ammount"+id).val(),
-            'currency_id' : $("#localcurrency"+id).val()
-
+            'lower' : $("#lowertwuenty"+id).val(),
+            'upper' : $("#uppertwuenty"+id).val(),
+            'ammount' : $("#ammounttwuenty"+id).val(),
+            'currency_id' : $("#currencytwuenty"+id).val()
         },
         success: function(data) {
-
-
             swal(
                 'Updated!',
-                'Your local charge has been updated.',
+                'Your Inland has been updated.',
                 'success'
             )
-            $("#save_l"+id).attr('hidden','true');
-            $("#cancel_l"+id).attr('hidden','true');
-            $("#remove_l"+id).attr('hidden','true');
-            $("#edit_l"+id).removeAttr('hidden');
+            $("#save_twuenty"+id).attr('hidden','true');
+            $("#cancel_twuenty"+id).attr('hidden','true');
+            $("#remove_twuenty"+id).attr('hidden','true');
+            $("#edit_twuenty"+id).removeAttr('hidden');
 
-            $("#tr_l"+id+" .val").removeAttr('hidden');
-            $("#tr_l"+id+" .in").attr('hidden','true');
-            $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
-            var selText ="";
-            var porText = "";
+            $("#tr_twuenty"+id+" .val").removeAttr('hidden');
+            $("#tr_twuenty"+id+" .in").attr('hidden','true');
+            $("#tr_twuenty"+id+" .in input , #tr_twuenty"+id+" .in select ").prop('disabled', true);
 
-            $("#localcarrier"+id+" option:selected").each(function () {
-                var $this = $(this);
-                if ($this.length) {
-                    selText += $this.text()+ ", ";
-
-                }
-            });
-            $("#port"+id+" option:selected").each(function () {
-                var $this = $(this);
-                if ($this.length) {
-                    porText += $this.text()+ ", ";
-
-                }
-            });
-            $("#divtype"+id).html($("#type"+id+" option:selected").text());
-            $("#divport"+id).html(porText);
-            $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
-            $("#divcarrier"+id).html(selText);
-            $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
-            $("#divammount"+id).html($("#ammount"+id).val());
-            $("#divcurrency"+id).html($("#localcurrency"+id+" option:selected").text());
-
+            $("#divlowertwuenty"+id).html($("#lowertwuenty"+id).val());
+            $("#divuppertwuenty"+id).html($("#uppertwuenty"+id).val());
+ 
+           var ammount = $("#ammounttwuenty"+id).val()+"/"+$("#currencytwuenty"+id+" option:selected").text();
+            $("#divammounttwuenty"+id).html(ammount);
         },
         error: function (request, status, error) {
             alert(request.responseText);
@@ -95,7 +68,7 @@ function save_l(id,idval){
 
 
 $("#newtwuenty").on("click", function() {
- 
+
     var $template = $('#twuentyclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
     $myClone.find(".sel").addClass('col-lg-4'); 
@@ -121,7 +94,6 @@ $("#newfortyhc").on("click", function() {
 
 $(document).on('click', '.m_sweetalert_demo_8', function (e) {
     var res = $("i",this).attr('id'); 
-
     var theElement = $(this);
     var idval = res.substr(4);
 
@@ -136,7 +108,7 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 
             $.ajax({
                 type: 'get',
-                url: 'globalcharges/deleteGlobalCharge/' + idval,
+                  url: '../deleteDetails/' + idval,
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -159,14 +131,6 @@ $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 
 });
-
-$(document).on('click', '.cancel', function () {
-    $('.closetr').closest('tr').remove();
-    $('#buttons').attr('hidden','true');
-});
-
-
-
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
