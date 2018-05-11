@@ -227,14 +227,18 @@ class InlandsController extends Controller
         return redirect()->action('InlandsController@index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function deleteInland(Request $request,$id)
+    {
+        $inland = Inland::find($id);
+        $inland->delete();
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully deleted this Inland.');
+        return redirect()->action('InlandsController@index');
+    }
     public function destroy($id)
     {
-        //
+        $inland = Inland::find($id);
+        $inland->delete();
     }
 }

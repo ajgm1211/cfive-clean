@@ -78,6 +78,8 @@ Route::group(['prefix' => 'inlands'], function () {
     Route::get('add', 'InlandsController@add')->name('inlands.add');
     Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
     Route::get('deleteDetails/{id}', ['uses' => 'InlandsController@deleteDetails', 'as' => 'delete-inland']);
+    Route::get('deleteInland/{id}', ['uses' => 'InlandsController@deleteInland', 'as' => 'delete-inland']);
+
 
 
 });

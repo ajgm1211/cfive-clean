@@ -130,7 +130,7 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="deleteInland({{  $arr->id }})" >
                                 <i class="la la-eraser"></i>
                             </a>
 
@@ -147,6 +147,7 @@
 
 @section('js')
 @parent
+<script src="/js/inlands.js"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-ireland.js" type="text/javascript"></script>
 
 @stop

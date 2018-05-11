@@ -270,6 +270,53 @@ $(document).on('click', '.remove', function () {
 
 });
 
+function deleteInland(idval){
+
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+
+            $.ajax({
+                type: 'GET',
+                url: 'inlands/deleteInland/' + idval,
+                async: false, 
+                success: function(data) {
+
+                    swal({
+                        title: 'Deleted',
+                        text: "Your file has been deleted.",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Ok!'
+                    }).then(function(result) {
+                        if (result.value) {
+                            window.location = "";
+                        }
+
+                    });   
+
+
+
+
+
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+
+        }
+
+    });
+
+
+}
+
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
