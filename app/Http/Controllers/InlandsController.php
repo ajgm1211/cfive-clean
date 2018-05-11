@@ -105,7 +105,10 @@ class InlandsController extends Controller
                 $inlandfortyhc->save();
             }
         }
-
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this Inland.');
+        return redirect()->action('InlandsController@index');
     }
 
     /**
@@ -145,7 +148,6 @@ class InlandsController extends Controller
     }
     public function deleteDetails($id){
 
-  
         $inland = InlandDetail::find($id);
         $inland->delete();
     }
@@ -159,7 +161,70 @@ class InlandsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inland = Inland::find($id);
+        $inland->provider = $request->input('provider');
+        $inland->type = $request->input('type');
+        $validation = explode('/',$request->validation_expire);
+        $inland->validity = $validation[0];
+        $inland->expire = $validation[1];
+        $inland->update();
+        $ports = $request->input('inlandport');
+        $detailstwuenty =  $request->input('lowertwuenty');
+        $detailsforty =  $request->input('lowerforty');
+        $detailsfortyhc =  $request->input('lowerfortyhc');
+        $inlandport = InlandPort::where("inland_id",$id);
+        $inlandport->delete();
+        foreach($ports as $p => $value)
+        {
+            $inlandport = new InlandPort();
+            $inlandport->port = $request->input('inlandport.'.$p);
+            $inlandport->inland()->associate($inland);
+            $inlandport->save();
+        }
+        foreach($detailstwuenty as $t => $value)
+        {
+            if(!empty($request->input('ammounttwuenty.'.$t))) {
+                $inlandtwuenty = new InlandDetail();
+                $inlandtwuenty->lower = $request->input('lowertwuenty.'.$t);
+                $inlandtwuenty->upper = $request->input('uppertwuenty.'.$t);
+                $inlandtwuenty->ammount = $request->input('ammounttwuenty.'.$t);
+                $inlandtwuenty->type = 'twuenty';
+                $inlandtwuenty->currency_id = $request->input('currencytwuenty.'.$t);
+                $inlandtwuenty->inland()->associate($inland);
+                $inlandtwuenty->save();
+            }
+        }
+        foreach($detailsforty as $t => $value)
+        {
+            if(!empty($request->input('ammountforty.'.$t))) {
+                $inlandforty= new InlandDetail();
+                $inlandforty->lower = $request->input('lowerforty.'.$t);
+                $inlandforty->upper = $request->input('upperforty.'.$t);
+                $inlandforty->ammount = $request->input('ammountforty.'.$t);
+                $inlandforty->type = 'forty';
+                $inlandforty->currency_id = $request->input('currencyforty.'.$t);
+                $inlandforty->inland()->associate($inland);
+                $inlandforty->save();
+            }
+        }
+
+        foreach($detailsfortyhc as $t => $value)
+        {
+            if(!empty($request->input('ammountfortyhc.'.$t))) {
+                $inlandfortyhc = new InlandDetail();
+                $inlandfortyhc->lower = $request->input('lowerfortyhc.'.$t);
+                $inlandfortyhc->upper = $request->input('upperfortyhc.'.$t);
+                $inlandfortyhc->ammount = $request->input('ammountfortyhc.'.$t);
+                $inlandfortyhc->type = 'fortyhc';
+                $inlandfortyhc->currency_id = $request->input('currencyfortyhc.'.$t);
+                $inlandfortyhc->inland()->associate($inland);
+                $inlandfortyhc->save();
+            }
+        }
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully updated this Inland.');
+        return redirect()->action('InlandsController@index');
     }
 
     /**
