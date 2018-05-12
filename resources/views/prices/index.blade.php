@@ -118,13 +118,10 @@
                                     </ul>
                                 @endforeach
                             </td>
-                            <!--<td>{{$price->type_20}}</td>
-                            <td>{{$price->type_40}}</td>
-                            <td>{{$price->type_40_hc}}</td>-->
                             <td>
-                                <button onclick="AbrirModal('edit',{{$price->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <a href="{{route('prices.edit',$price->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
-                                </button>
+                                </a>
                                 <button onclick="AbrirModal('delete',{{$price->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
                                     <i class="la la-eraser"></i>
                                 </button>

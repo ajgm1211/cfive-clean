@@ -22,4 +22,14 @@ class Price extends Model
     {
         return $this->hasManyThrough('App\Company','App\CompanyPrice','price_id','id','id','company_id');
     }
+
+    public function freight_markup()
+    {
+        return $this->hasMany('App\FreightMarkup');
+    }
+
+    public function local_markup()
+    {
+        return $this->hasMany('App\LocalChargeMarkup');
+    }
 }
