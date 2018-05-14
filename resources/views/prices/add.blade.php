@@ -213,7 +213,7 @@
                                                         </div>
                                                         <div class="col-md-6 local_percent_markup_1">
                                                             <input type="hidden" class="form-control" value="1" name="local_type[]"/>
-                                                            <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                            <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="text" class="form-control"  id="local_percent_markup_1" value="0" name="local_percent_markup_import[]"/>
                                                         </div>
                                                         <div class="col-md-6 local_fixed_markup_1" style="display: none;">
@@ -238,7 +238,6 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 local_percent_markup_1_2">
-                                                            <input type="hidden" class="form-control" value="1" name="local_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="text" class="form-control" id="local_percent_markup_1_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
@@ -327,7 +326,6 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 inland_percent_markup_1_2">
-                                                            <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="text" class="form-control" id="inland_percent_markup_1_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>
@@ -482,7 +480,6 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 local_percent_markup_2_2" >
-                                                            <input type="hidden" class="form-control" value="2" name="local_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="text" class="form-control" id="local_percent_markup_2_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
@@ -571,7 +568,6 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 inland_percent_markup_2_2">
-                                                            <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="text" class="form-control" id="inland_percent_markup_2_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>
@@ -701,6 +697,7 @@
                                                         </div>
                                                         <div class="col-md-6 local_percent_markup_3">
                                                             <input type="hidden" class="form-control" value="3" name="local_type[]"/>
+                                                            <input type="hidden" class="form-control" value="3" name="local_type_import[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype[]"/>
                                                             <input type="text" class="form-control" id="local_percent_markup_3" value="0" name="local_percent_markup_import[]"/>
                                                         </div>
@@ -726,7 +723,7 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 local_percent_markup_3_2">
-                                                            <input type="hidden" class="form-control" value="3" name="local_type[]"/>
+
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="text" class="form-control" id="local_percent_markup_3_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
@@ -815,7 +812,6 @@
                                                             <span>Export</span>
                                                         </div>
                                                         <div class="col-md-6 inland_percent_markup_3_2">
-                                                            <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="text" class="form-control" id="inland_percent_markup_3_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>

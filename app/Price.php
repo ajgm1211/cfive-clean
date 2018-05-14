@@ -32,4 +32,9 @@ class Price extends Model
     {
         return $this->hasMany('App\LocalChargeMarkup');
     }
+
+    public function inland_markup()
+    {
+        return $this->hasMany('App\InlandChargeMarkup');
+    }
 }

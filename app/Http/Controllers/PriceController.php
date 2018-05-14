@@ -67,17 +67,17 @@ class PriceController extends Controller
         //Store Local Charges values
         foreach ($input['local_type'] as $key => $item) {
             $local_markup = new LocalChargeMarkup();
-            if ((isset($input['local_percent_markup_import'])) && (count($input['local_percent_markup_import']) > 0)) {
+            if ((isset($input['local_percent_markup_import'][$key]))) {
                 $local_markup->percent_markup_import = $input['local_percent_markup_import'][$key];
             }
-            if ((isset($input['local_fixed_markup_import'])) && (count($input['local_fixed_markup_import']) > 0)) {
+            if ((isset($input['local_fixed_markup_import'][$key]))) {
                 $local_markup->fixed_markup_import = $input['local_fixed_markup_import'][$key];
                 $local_markup->currency_import = $input['local_currency_import'][$key];
             }
-            if ((isset($input['local_percent_markup_export'])) && (count($input['local_percent_markup_export']) > 0)) {
+            if ((isset($input['local_percent_markup_export'][$key]))) {
                 $local_markup->percent_markup_export = $input['local_percent_markup_export'][$key];
             }
-            if ((isset($input['local_fixed_markup_export'])) && (count($input['local_fixed_markup_export']) > 0)) {
+            if ((isset($input['local_fixed_markup_export'][$key]))) {
                 $local_markup->fixed_markup_export = $input['local_fixed_markup_export'][$key];
                 $local_markup->currency_export = $input['local_currency_export'][$key];
             }
@@ -89,17 +89,17 @@ class PriceController extends Controller
         //Store Inland Charges values
         foreach ($input['inland_type'] as $key => $item) {
             $inland_markup = new InlandChargeMarkup();
-            if ((isset($input['inland_percent_markup_import'])) && (count($input['inland_percent_markup_import']) > 0)) {
+            if ((isset($input['inland_percent_markup_import'][$key]))) {
                 $inland_markup->percent_markup_import = $input['inland_percent_markup_import'][$key];
             }
-            if ((isset($input['inland_fixed_markup_import'])) && (count($input['inland_fixed_markup_import']) > 0)) {
+            if ((isset($input['inland_fixed_markup_import'][$key]))) {
                 $inland_markup->fixed_markup_import = $input['inland_fixed_markup_import'][$key];
                 $inland_markup->currency_import = $input['inland_currency_import'][$key];
             }
-            if ((isset($input['inland_percent_markup_export'])) && (count($input['inland_percent_markup_export']) > 0)) {
+            if ((isset($input['inland_percent_markup_export'][$key]))) {
                 $inland_markup->percent_markup_export = $input['inland_percent_markup_export'][$key];
             }
-            if ((isset($input['inland_fixed_markup_export'])) && (count($input['inland_fixed_markup_export']) > 0)) {
+            if ((isset($input['inland_fixed_markup_export'][$key]))) {
                 $inland_markup->fixed_markup_export = $input['inland_fixed_markup_export'][$key];
                 $inland_markup->currency_export = $input['inland_currency_export'][$key];
             }
@@ -148,7 +148,7 @@ class PriceController extends Controller
             CompanyPrice::where('price_id',$price->id)->delete();
         }
 
-        //dd(json_encode($type));
+        FreightMarkup::where('price_id',$price->id)->delete();
         //Store Freight Markups
         foreach ($input['freight_type'] as $key => $item) {
             $freight_markup = new FreightMarkup();
@@ -166,34 +166,48 @@ class PriceController extends Controller
             $freight_markup->save();
         }
 
+        LocalChargeMarkup::where('price_id',$price->id)->delete();
         //Store Local Charges values
-        foreach ($input['subtype'] as $key => $item) {
+        foreach ($input['local_type'] as $key => $item) {
             $local_markup = new LocalChargeMarkup();
-            if ((isset($input['local_percent_markup'])) && (count($input['local_percent_markup']) > 0)) {
-                $local_markup->percent_markup = $input['local_percent_markup'][$key];
+            if ((isset($input['local_percent_markup_import'][$key]))) {
+                $local_markup->percent_markup_import = $input['local_percent_markup_import'][$key];
             }
-            if ((isset($input['local_fixed_markup'])) && (count($input['local_fixed_markup']) > 0)) {
-                $local_markup->fixed_markup = $input['local_fixed_markup'][$key];
+            if ((isset($input['local_fixed_markup_import'][$key]))) {
+                $local_markup->fixed_markup_import = $input['local_fixed_markup_import'][$key];
+                $local_markup->currency_import = $input['local_currency_import'][$key];
+            }
+            if ((isset($input['local_percent_markup_export'][$key]))) {
+                $local_markup->percent_markup_export = $input['local_percent_markup_export'][$key];
+            }
+            if ((isset($input['local_fixed_markup_export'][$key]))) {
+                $local_markup->fixed_markup_export = $input['local_fixed_markup_export'][$key];
+                $local_markup->currency_export = $input['local_currency_export'][$key];
             }
             $local_markup->price_type_id = $input['local_type'][$key];
-            $local_markup->price_subtype_id = $input['subtype'][$key];
-            $local_markup->currency = $input['local_currency'][$key];
             $local_markup->price_id = $price->id;
             $local_markup->save();
         }
 
+        InlandChargeMarkup::where('price_id',$price->id)->delete();
         //Store Inland Charges values
-        foreach ($input['subtype_2'] as $key => $item) {
+        foreach ($input['inland_type'] as $key => $item) {
             $inland_markup = new InlandChargeMarkup();
-            if ((isset($input['inland_percent_markup'])) && (count($input['inland_percent_markup']) > 0)) {
-                $inland_markup->percent_markup = $input['inland_percent_markup'][$key];
+            if ((isset($input['inland_percent_markup_import'][$key]))) {
+                $inland_markup->percent_markup_import = $input['inland_percent_markup_import'][$key];
             }
-            if ((isset($input['inland_fixed_markup'])) && (count($input['inland_fixed_markup']) > 0)) {
-                $inland_markup->fixed_markup = $input['inland_fixed_markup'][$key];
+            if ((isset($input['inland_fixed_markup_import'][$key]))) {
+                $inland_markup->fixed_markup_import = $input['inland_fixed_markup_import'][$key];
+                $inland_markup->currency_import = $input['inland_currency_import'][$key];
+            }
+            if ((isset($input['inland_percent_markup_export'][$key]))) {
+                $inland_markup->percent_markup_export = $input['inland_percent_markup_export'][$key];
+            }
+            if ((isset($input['inland_fixed_markup_export'][$key]))) {
+                $inland_markup->fixed_markup_export = $input['inland_fixed_markup_export'][$key];
+                $inland_markup->currency_export = $input['inland_currency_export'][$key];
             }
             $inland_markup->price_type_id = $input['inland_type'][$key];
-            $inland_markup->price_subtype_id = $input['subtype_2'][$key];
-            $inland_markup->currency = $input['inland_currency'][$key];
             $inland_markup->price_id = $price->id;
             $inland_markup->save();
         }
