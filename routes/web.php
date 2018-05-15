@@ -86,6 +86,18 @@ Route::group(['prefix' => 'inlands'], function () {
 Route::resource('inlands', 'InlandsController'); 
 
 
+Route::group(['prefix' => 'quotes'], function () {
+
+    Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
+ //   Route::get('updateDetails/{id}', ['uses' => 'QuoteController@updateDetails', 'as' => 'updateDetails']);
+//    Route::get('deleteDetails/{id}', ['uses' => 'QuoteController@deleteDetails', 'as' => 'delete-inland']);
+  //  Route::get('deleteInland/{id}', ['uses' => 'QuoteController@deleteInland', 'as' => 'delete-inland']);
+
+
+
+});
+Route::resource('quotes', 'QuoteController'); 
+
 
 Route::get('/companies', function () {
     return view('companies');

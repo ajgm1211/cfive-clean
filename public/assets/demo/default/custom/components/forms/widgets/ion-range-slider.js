@@ -1,11 +1,14 @@
 //== Class definition
 
 var IONRangeSlider = function () {
-    
+
     //== Private functions
     var demos = function () {
         // basic demo
-        $('#m_slider_1').ionRangeSlider();
+        $('#m_slider_1').ionRangeSlider({
+            min: 1,
+            max: 10000,
+        });
 
         // min & max values
         $('#m_slider_2').ionRangeSlider({
