@@ -127,8 +127,8 @@
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
                         Rates 
-                 
-                     </h3>
+
+                    </h3>
                 </div>
             </div>
 
@@ -162,7 +162,7 @@
                     @foreach ($arreglo as $key => $arr)
                     @php
                     $subtotalRate = 0;
-                 
+
                     @endphp
                     <tr>
                         <td>
@@ -189,7 +189,7 @@
                         </td>
                         <td>     
                             <span class="m-widget5__info-date m--font-info">
-                                {{ $arr->contract->validity}} -  {{$arr->contract->expire}}
+                                {{ $formulario->date }}
                             </span>
                         </td>
                         <td>           
@@ -197,7 +197,7 @@
                                 <div class="m-widget5__item">
                                     <div class="m-widget5__stats1">
                                         <span class="m-widget5__number">{{$arr->currency->alphacode  }} {{ $sub[$key] }}    
-                                         
+
                                         </span><br>
                                         <button type="button" class="btn m-btn--square  btn-primary m-btn--wide">Select</button><br>
 
@@ -212,7 +212,7 @@
                             <hr>
                             <table class="table m-table m-table--head-separator-primary">
                                 <tr>
-                                    <th>Cost</th>
+                                    <th>Carrier</th>
                                     <th>Detail  </th>
                                     <th>Units</th>
                                     <th>Price per Unit</th>
@@ -222,7 +222,7 @@
                                 @if($formulario->twuenty !=null)
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
-                                    <td>Per Container</td>
+                                    <td>Per Container 20'</td>
                                     <td>{{ $formulario->twuenty  }}</td>
                                     <td>{{ $arr->twuenty  }} {{ $arr->currency->alphacode  }}</td>
                                     <td>{{ $formulario->twuenty *  $arr->twuenty   }} {{ $arr->currency->alphacode  }}</td>
@@ -238,7 +238,7 @@
                                 @if($formulario->forty !=null)
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
-                                    <td>Per Container</td>
+                                    <td>Per Container 40' </td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $arr->forty  }} {{ $arr->currency->alphacode  }}</td>
                                     <td>{{ $formulario->forty *  $arr->forty   }} {{ $arr->currency->alphacode  }}</td>
@@ -253,7 +253,7 @@
                                 @if($formulario->fortyhc !=null)
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
-                                    <td>Per Container</td>
+                                    <td>Per Container 40HC'</td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $arr->fortyhc  }} {{ $arr->currency->alphacode  }}</td>
                                     <td>{{ $formulario->fortyhc *  $arr->fortyhc   }} {{ $arr->currency->alphacode  }}</td>
@@ -274,6 +274,64 @@
                                 <td colspan='6'>No data available</td>
 
                                 @endif
+                            </table>
+                        </td>
+                    </tr>
+                    <tr id="origin{{$loop->index}}" hidden="true">
+                        <td colspan="6">
+                            <b>Destination Charges</b>
+                            <hr>
+                            <table class="table m-table m-table--head-separator-primary">
+                                <tr>
+                                    <th>Carrier</th>
+                                    <th>Detail  </th>
+                                    <th>Units</th>
+                                    <th>Price per Unit</th>
+                                    <th>Ammount</th>
+                                    <th>Total Ammount</th>
+                                </tr>
+                                @if($formulario->twuenty !=null)
+                                @foreach($localTwuenty as $originTwuenty)
+                                @if($originTwuenty->changetype == "destination")
+                                @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
+                                @if($carrierTwuenty->carrier_id == $arr->carrier->id )
+                                <tr>
+                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Per Container 20'</td>
+                                    <td>{{ $formulario->twuenty  }}</td>
+                                    <td>{{ $originTwuenty->ammount  }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                    <td>{{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                    <td>
+                                        {{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }} 
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+
+                                @if($formulario->forty !=null)
+                                @foreach($localForty as $originForty)
+                                @if($originForty->changetype == "destination")
+                                @foreach($originForty->localcharcarriers as $carrierForty)
+                                @if($carrierForty->carrier_id == $arr->carrier->id )
+                                <tr>
+                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Per Container 40'</td>
+                                    <td>{{ $formulario->forty  }}</td>
+                                    <td>{{ $originForty->ammount  }} {{ $originForty->currency->alphacode  }}</td>
+                                    <td>{{ $formulario->forty *  $originForty->ammount   }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                    <td>
+                                        {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }} 
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+
                             </table>
                         </td>
                     </tr>

@@ -151,7 +151,7 @@
                                             {!! Form::label('pick', 'Pick up date') !!}<br>
                                             <div class="input-group date">
                                                 {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input']) !!}
-                                              
+
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">
                                                         <i class="la la-calendar-check-o"></i>
@@ -164,11 +164,11 @@
                                     <div class="row"> 
                                         <div class="col-md-4">            
                                             {!! Form::label('origin', 'Origin Port') !!}<br>
-                                            {{ Form::select('originport',$harbor,null,['class'=>'m-select2-general form-control']) }}
+                                            {{ Form::select('originport[]',$harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
                                         </div>
                                         <div class="col-md-4">
                                             {!! Form::label('destiny', 'Destiny Port') !!}<br>
-                                            {{ Form::select('destinyport',$harbor,null,['class'=>'m-select2-general form-control']) }}
+                                            {{ Form::select('destinyport[]',$harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
                                         </div>
 
                                     </div>  <br>
