@@ -159,6 +159,34 @@ $("#newL").on("click", function() {
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });
+$(document).on('click', '#delete-contact', function () {
+    var id = $(this).attr('data-contact-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/contacts/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('li').remove();
+                }
+            });
+
+        }
+
+    });
+});
 
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){

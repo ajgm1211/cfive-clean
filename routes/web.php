@@ -63,6 +63,7 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 Route::group(['prefix' => 'companies', 'middleware' => ['auth']], function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
+    Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
@@ -75,7 +76,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 
 Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
-    Route::get('delete/{contact_id}', 'ContactController@delete')->name('contacts.delete');
+    Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
 

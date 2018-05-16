@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CompanyPrice;
+use App\Contact;
 use App\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -25,6 +26,14 @@ class CompanyController extends Controller
     {
         $prices = Price::all()->pluck('name','id');
         return view('companies.add', compact('prices'));
+    }
+
+    public function show($id)
+    {
+        $company = Company::find($id);
+        $companies = Company::all();
+        $prices = Price::all()->pluck('name','id');
+        return view('companies.show', compact('company','companies','contacts','prices'));
     }
 
     public function store(Request $request)
@@ -66,7 +75,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register updated successfully!');
-        return redirect()->route('companies.index');
+        return redirect()->back();
     }
 
     public function delete($id)
