@@ -237,9 +237,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             </div>
                                         </td>
                                         <td>
-                                            <div id="divport{{$loop->index}}"  class="val">{!! $localcharges->ports->name !!}</div>
+                                            <div id="divport{{$loop->index}}"  class="val">   
+                                                           {!! str_replace(["[","]","\""], ' ', $localcharges->localcharports->pluck('ports')->pluck('name') ) !!}
+                                            </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('port_id[]', $harbor,$localcharges->port,['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('port_id[]', $harbor,$localcharges->localcharports->pluck('port'),['id' => 'port'.$loop->index ,'class'=>'m-select2-general  form-control ','disabled' => 'true','multiple' => 'multiple']) }}
                                             </div>
                                         </td>
                                         <td>
@@ -251,9 +253,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             </div>
                                         </td>
                                         <td>
-                                            <div id="divcarrier{{$loop->index}}"  class="val">{!! $localcharges->carrier->name !!}</div>
+                                            <div id="divcarr{{$loop->index}}"  class="val">
+                                                {!! str_replace(["[","]","\""], ' ', $localcharges->localcharcarriers->pluck('carrier')->pluck('name') ) !!}
+                                            </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('localcarrier_id[]', $carrier,$localcharges->carrier_id,['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
+                                                {{ Form::select('localcarrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
                                             </div>
                                         </td>
 
@@ -290,13 +294,17 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         </td>
                                     </tr>
                                     @endforeach
-                                    <tr   id='tclone2' hidden="true"  >
+                                   
+                                </tbody>
+                            </table>
+                            <table hidden="true">
+                             <tr   id='tclone2' hidden="true"  >
                                         <td>
                                             {{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}
                                         </td>
-                                        <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
 
                                         <td>  {{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control ']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
@@ -306,7 +314,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             </a>
                                         </td>
                                     </tr>
-                                </tbody>
+                            
                             </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
@@ -336,7 +344,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 
 
-<script src="/js/rates.js"></script>
+<script src="/js/editcontracts.js"></script>
 <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>

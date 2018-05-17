@@ -6,6 +6,8 @@
 @section('title', 'Global Charges')
 @section('content')
 
+
+
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
@@ -40,7 +42,7 @@
         <div class="m-portlet__body">
 
             {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
-           
+
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
@@ -93,6 +95,9 @@
                 <tbody>
 
                     @foreach ($global as $globalcharges)
+                    
+            
+
                     <tr id='tr_l{{++$loop->index}}'>
                         <td>
                             <div id="divtype{{$loop->index}}"  class="val">{!! $globalcharges->surcharge->name !!}</div>
@@ -101,9 +106,14 @@
                             </div>
                         </td>
                         <td>
-                            <div id="divport{{$loop->index}}"  class="val">{!! $globalcharges->ports->name !!}</div>
+                            <div id="divport{{$loop->index}}"  class="val">
+
+                                {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('ports')->pluck('name') ) !!} 
+                            </div>
+                         
                             <div class="in" hidden="true">
-                                {{ Form::select('port_id[]', $harbor,$globalcharges->port,['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
+                                {{ Form::select('port_id[]', $harbor,
+                                $globalcharges->globalcharport->pluck('port'),['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
                         <td>
@@ -115,12 +125,15 @@
                             </div>
                         </td>
                         <td>
-                            <div id="divcarrier{{$loop->index}}"  class="val">{!! $globalcharges->carrier->name !!}</div>
+                            <div id="divcarrier{{$loop->index}}"  class="val">
+
+                                {!! str_replace(["[","]","\""], ' ', $globalcharges->GlobalCharCarrier->pluck('carrier')->pluck('name') ) !!}
+
+                            </div>
                             <div class="in" hidden="true">
-                                {{ Form::select('localcarrier_id[]', $carrier,$globalcharges->carrier_id,['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
+                                {{ Form::select('localcarrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('carrier_id'),['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
-
                         <td>   
                             <div id="divcalculation{{$loop->index}}"  class="val">{!! $globalcharges->calculationtype->name !!}</div>
                             <div class="in" hidden="true">
@@ -160,9 +173,9 @@
             <table hidden="true">
                 <tr  id='globalclone' hidden="true" >
                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
-                    <td>{{ Form::select('port_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
-                    <td>{{ Form::select('localcarrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+                    <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
                     <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
                     <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>

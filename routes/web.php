@@ -78,11 +78,21 @@ Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
     Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
+
 Route::resource('contacts', 'ContactController')->middleware('auth');
+
+Route::group(['prefix' => 'inlands'], function () {
+    Route::get('add', 'InlandsController@add')->name('inlands.add');
+    Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
+    Route::get('deleteDetails/{id}', ['uses' => 'InlandsController@deleteDetails', 'as' => 'delete-inland']);
+    Route::get('deleteInland/{id}', ['uses' => 'InlandsController@deleteInland', 'as' => 'delete-inland']);
+});
+Route::resource('inlands', 'InlandsController');
 
 Route::group(['prefix' => 'quotes', 'middleware' => ['auth']], function () {
     Route::get('add', 'QuoteController@add')->name('quotes.add');
     Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.delete');
+    Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
 });
 Route::resource('quotes', 'QuoteController');
 

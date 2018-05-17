@@ -18,4 +18,16 @@ class Carrier extends Model
 
         return $this->hasOne('App\GlobalCharge');
     }
+
+    public function globalcharcarrier()
+    {
+
+        return $this->hasMany('App\GlobalCharPortCarrier');
+    }
+    
+        public function globalcharport()
+    {
+
+        return $this->hasMany('App\GlobalCharPortCarrier');
+    }
 }

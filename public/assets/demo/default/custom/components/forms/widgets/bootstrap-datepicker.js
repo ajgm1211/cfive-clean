@@ -1,7 +1,7 @@
 //== Class definition
 
 var BootstrapDatepicker = function () {
-    
+
     //== Private functions
     var demos = function () {
         // minimum setup
@@ -11,6 +11,10 @@ var BootstrapDatepicker = function () {
             templates: {
                 leftArrow: '<i class="la la-angle-left"></i>',
                 rightArrow: '<i class="la la-angle-right"></i>'
+            },
+            locale: {
+                format: 'YYYY-MM-DD',
+
             }
         });
 
@@ -28,10 +32,12 @@ var BootstrapDatepicker = function () {
         $('#m_datepicker_2, #m_datepicker_2_validate').datepicker({
             todayHighlight: true,
             orientation: "bottom left",
+              format: 'yyyy-m-d',
             templates: {
                 leftArrow: '<i class="la la-angle-left"></i>',
                 rightArrow: '<i class="la la-angle-right"></i>'
-            }
+            },
+  
         });
 
         // input group layout for modal demo
@@ -112,7 +118,7 @@ var BootstrapDatepicker = function () {
             }
         });
 
-         // inline picker
+        // inline picker
         $('#m_datepicker_6').datepicker({
             todayHighlight: true,
             templates: {

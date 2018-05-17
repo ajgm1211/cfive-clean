@@ -12,6 +12,8 @@ use App\Currency;
 use App\CalculationType;
 use App\LocalCharge;
 use App\Surcharge;
+use App\LocalCharCarrier;
+use App\LocalCharPort;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 class ContractsController extends Controller
@@ -88,6 +90,7 @@ class ContractsController extends Controller
         $details = $request->input('origin_id');
         $detailscharges = $request->input('type');
         // For Each de los rates 
+        $contador = 1;
         foreach($details as $key => $value)
         {
             if(!empty($request->input('twuenty.'.$key))) {
@@ -103,7 +106,6 @@ class ContractsController extends Controller
                 $rates->currency_id = $request->input('currency_id.'.$key);
                 $rates->contract()->associate($contract);
                 $rates->save();
-
             }
         }
         // For Each de los localcharge
@@ -113,14 +115,29 @@ class ContractsController extends Controller
             if(!empty($request->input('ammount.'.$key2))) {
                 $localcharge = new LocalCharge();
                 $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->port = $request->input('port_id.'.$key2);
                 $localcharge->changetype = $request->input('changetype.'.$key2);
-                $localcharge->carrier_id = $request->input('localcarrier_id.'.$key2);
                 $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $localcharge->ammount = $request->input('ammount.'.$key2);
                 $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
-                $localcharge->save();
+                $localcharge->save();    
+                $detailport = $request->input('port_id'.$contador);
+                $detailcarrier = $request->input('localcarrier_id'.$contador);
+                foreach($detailcarrier as $c => $value)
+                {
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+                }
+                foreach($detailport as $p => $value)
+                {
+                    $detailport = new LocalCharPort();
+                    $detailport->port = $request->input('port_id'.$contador.'.'.$p);
+                    $detailport->localcharge()->associate($localcharge);
+                    $detailport->save();
+                }
+                $contador++;
 
             }
         }
@@ -155,9 +172,10 @@ class ContractsController extends Controller
         // $contracts = Contract::with('rates')->get();
 
 
-        $contracts = Contract::find($id);
-        $contracts->rates;
-        $contracts->localcharges;
+        $contracts = Contract::with('rates','localcharges.localcharports','localcharges.localcharcarriers')->get()->find($id);
+
+
+
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
@@ -193,6 +211,7 @@ class ContractsController extends Controller
 
         $details = $request->input('origin_id');
         $detailscharges = $request->input('ammount');
+        $contador = 1;
         // for each rates 
         foreach($details as $key => $value)
         {
@@ -220,16 +239,33 @@ class ContractsController extends Controller
             if(!empty($request->input('ammount.'.$key2))) {
                 $localcharge = new LocalCharge();
                 $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->port = $request->input('port_id.'.$key2);
                 $localcharge->changetype = $request->input('changetype.'.$key2);
-                $localcharge->carrier_id = $request->input('localcarrier_id.'.$key2);
                 $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $localcharge->ammount = $request->input('ammount.'.$key2);
                 $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
                 $localcharge->save();
+                $detailport = $request->input('port_id'.$contador);
+                $detailcarrier = $request->input('localcarrier_id'.$contador);
+                foreach($detailcarrier as $c => $value)
+                {
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+                }
+                foreach($detailport as $p => $value)
+                {
+                    $detailport = new LocalCharPort();
+                    $detailport->port = $request->input('port_id'.$contador.'.'.$p);
+                    $detailport->localcharge()->associate($localcharge);
+                    $detailport->save();
+                }
+                $contador++;
 
             }
+
+
         }
 
 
@@ -256,15 +292,34 @@ class ContractsController extends Controller
 
     public function updateLocalChar(Request $request, $id)
     {
-        //dd("imi here");
-        $requestForm = $request->all();
 
+        $requestForm = $request->all();
         $localC = LocalCharge::find($id);
         $localC->update($requestForm);
 
+        $port = $request->input('port');
+        $carrier = $request->input('carrier_id');
+        $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort = LocalCharPort::where("localcharge_id",$id);
+        $deletePort->delete();
+        
+        foreach($port as $key2)
+        {
+            $detailport = new LocalCharPort();
+            $detailport->port = $key2;
+            $detailport->localcharge_id = $id;
+            $detailport->save();
+        }
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new LocalCharCarrier();
+            $detailcarrier->carrier_id = $key;
+            $detailcarrier->localcharge_id = $id;
+            $detailcarrier->save();
+        }
 
     }
-
 
     /**
      * Remove the specified resource from storage.
