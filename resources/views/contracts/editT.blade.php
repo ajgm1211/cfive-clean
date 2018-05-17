@@ -294,7 +294,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         </td>
                                     </tr>
                                     @endforeach
-                                    <tr   id='tclone2' hidden="true"  >
+                                   
+                                </tbody>
+                            </table>
+                            <table hidden="true">
+                             <tr   id='tclone2' hidden="true"  >
                                         <td>
                                             {{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}
                                         </td>
@@ -310,7 +314,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             </a>
                                         </td>
                                     </tr>
-                                </tbody>
+                            
                             </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">

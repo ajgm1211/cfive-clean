@@ -49,7 +49,7 @@ class QuoteController extends Controller
                 $subtotal = ($data->twuenty * $request->input('twuenty')) + $subtotal;
                 $carrier[] = $data->carrier_id;
 
-                $localTwuenty = LocalCharge::where('calculationtype_id','=','2')->whereHas('localcharcarriers', function($q) use($carrier) {
+                $localTwuenty = LocalCharge::where('calculationtype_id','=','2')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrier) {
                     $q->whereIn('carrier_id', $carrier);
                 })->whereHas('localcharports', function($q) {
                     $q->whereIn('port', [1,2]);
@@ -61,7 +61,7 @@ class QuoteController extends Controller
                 $subtotal = ($data->forty * $request->input('forty')) + $subtotal;
 
                 $carrierForty[] = $data->carrier_id;                
-                $localForty = LocalCharge::where('calculationtype_id','=','1')->whereHas('localcharcarriers', function($q) use($carrierForty) {
+                $localForty = LocalCharge::where('calculationtype_id','=','1')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrierForty) {
                     $q->whereIn('carrier_id', $carrierForty);
                 })->whereHas('localcharports', function($q) {
                     $q->whereIn('port', [1,2]);
@@ -73,7 +73,7 @@ class QuoteController extends Controller
                 $sub[] =   $subtotal;
 
                 $carrierFortyHc[] = $data->carrier_id;                
-                $localFortyHc = LocalCharge::where('calculationtype_id','=','3')->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
+                $localFortyHc = LocalCharge::where('calculationtype_id','=','3')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
                     $q->whereIn('carrier_id', $carrierFortyHc);
                 })->whereHas('localcharports', function($q) {
                     $q->whereIn('port', [1,2]);
@@ -81,7 +81,7 @@ class QuoteController extends Controller
             }
 
         }
-       // dd($localFortyHc);
+
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
         return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc'));
