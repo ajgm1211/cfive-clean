@@ -80,5 +80,10 @@ Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
 
+Route::group(['prefix' => 'quotes', 'middleware' => ['auth']], function () {
+    Route::get('add', 'QuoteController@add')->name('quotes.add');
+    Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.delete');
+});
+Route::resource('quotes', 'QuoteController');
 
 Auth::routes();

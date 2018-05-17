@@ -13,6 +13,11 @@ class Company extends Model
         return $this->hasMany('App\Contact');
     }
 
+    public function quote()
+    {
+        return $this->hasMany('App\Quote');
+    }
+
     public function company_price()
     {
         return $this->hasOne('App\CompanyPrice');

@@ -188,6 +188,35 @@ $(document).on('click', '#delete-contact', function () {
     });
 });
 
+$(document).on('click', '#delete-quote', function () {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/quotes/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                }
+            });
+
+        }
+
+    });
+});
+
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){
         $(".freight_fixed_markup_1").hide();

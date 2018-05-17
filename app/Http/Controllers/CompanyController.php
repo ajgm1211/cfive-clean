@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\CompanyPrice;
 use App\Contact;
+use App\Quote;
 use App\Price;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -33,7 +34,8 @@ class CompanyController extends Controller
         $company = Company::find($id);
         $companies = Company::all();
         $prices = Price::all()->pluck('name','id');
-        return view('companies.show', compact('company','companies','contacts','prices'));
+        $quotes = Quote::where('company_id',$id)->get();
+        return view('companies.show', compact('company','companies','contacts','prices','quotes'));
     }
 
     public function store(Request $request)

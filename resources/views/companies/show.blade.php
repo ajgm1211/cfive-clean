@@ -109,35 +109,48 @@
                             <thead>
                             <tr>
                                 <th title="Field #1">
-                                    Business Name
+                                    Status
                                 </th>
                                 <th title="Field #2">
-                                    Phone
+                                    Client
                                 </th>
                                 <th title="Field #3">
-                                    Email
+                                    Created
                                 </th>
                                 <th title="Field #4">
-                                    Address
+                                    Owner
                                 </th>
                                 <th title="Field #5">
-                                    Associated Contacts
+                                    Origin
+                                </th>
+                                <th title="Field #6">
+                                    Destination
+                                </th>
+                                <th title="Field #7">
+                                    Ammount
+                                </th>
+                                <th title="Field #8">
+                                    Options
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($companies as $company)
+                            @foreach ($quotes as $quote)
                                 <tr>
-                                    <td>{{$company->business_name }}</td>
-                                    <td>{{$company->created_at }}</td>
-                                    <td>{{$company->email }}</td>
-                                    <td>{{$company->address  }}</td>
+                                    <td>{{$quote->status_id }}</td>
+                                    <td>{{$quote->company->business_name }}</td>
+                                    <td>{{$quote->created_at }}</td>
+                                    <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
+                                    <td>{{$quote->origin_country->name }}</td>
+                                    <td>{{$quote->destination_country->name }}</td>
+                                    <td>{{$quote->ammount }}</td>
                                     <td>
-                                        @foreach($company->contact as $contact)
-                                            <ul>
-                                                <li>{{$contact->first_name}} {{$contact->last_name}}</li>
-                                            </ul>
-                                        @endforeach
+                                        <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                            <i class="la la-edit"></i>
+                                        </a>
+                                        <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
+                                            <i class="la la-eraser"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
