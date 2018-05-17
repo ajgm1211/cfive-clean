@@ -134,7 +134,7 @@
 
         </div>
         <div class="m-portlet__body">
-            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1">
+            <table  class="table m-table m-table--head-separator-primary" id="sample_editable_1">
                 <thead>
                     <tr>
                         <th title="Field #1">
@@ -164,10 +164,10 @@
                     $subtotalRate = 0;
 
                     @endphp
-                    <tr>
+                    <tr id="principal{{$loop->iteration}}">
                         <td>
                             Details <br>
-                            <a  id='display_l{{++$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
                                 <i  class="la la-plus"></i>
                             </a>
                         </td>
@@ -206,7 +206,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr id="detail{{$loop->index}}" hidden="true">
+                    <tr id="detail{{$loop->iteration}}"  hidden="true">
                         <td colspan="6">
                             <b>Freight Charges</b>
                             <hr>
@@ -277,7 +277,86 @@
                             </table>
                         </td>
                     </tr>
-                    <tr id="origin{{$loop->index}}" hidden="true">
+                    <tr id="origin{{$loop->iteration}}" hidden="true"  >
+                        <td colspan="6">
+                            <b>Origin Charges</b>
+                            <hr>
+                            <table  class="table m-table m-table--head-separator-primary">
+                                <tr>
+                                    <th>Carrier</th>
+                                    <th>Detail  </th>
+                                    <th>Units</th>
+                                    <th>Price per Unit</th>
+                                    <th>Ammount</th>
+                                    <th>Total Ammount</th>
+                                </tr>
+                                @if($formulario->twuenty !=null)
+                                    @foreach($localTwuenty as $originTwuenty)
+                                        @if($originTwuenty->changetype == "origin")
+                                            @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
+                                                @if($carrierTwuenty->carrier_id == $arr->carrier->id )
+                                                    <tr>
+                                                        <td>{{$arr->carrier->name  }}</td>
+                                                        <td>Per Container 20'</td>
+                                                        <td>{{ $formulario->twuenty  }}</td>
+                                                        <td>{{ $originTwuenty->ammount  }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                                        <td>{{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                                        <td>
+                                                            {{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }} 
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                                
+                                @if($formulario->forty !=null)
+                                    @foreach($localForty as $originForty)
+                                        @if($originForty->changetype == "origin")
+                                            @foreach($originForty->localcharcarriers as $carrierForty)
+                                                @if($carrierForty->carrier_id == $arr->carrier->id )
+                                                    <tr>
+                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Per Container 40'</td>
+                                    <td>{{ $formulario->forty  }}</td>
+                                    <td>{{ $originForty->ammount  }} {{ $originForty->currency->alphacode  }}</td>
+                                    <td>{{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }}</td>
+                                    <td>
+                                        {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }} 
+                                    </td>
+                                </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                                                   
+                                @if($formulario->fortyhc !=null)
+                                    @foreach($localFortyHc as $originFortyHc)
+                                        @if($originFortyHc->changetype == "origin")
+                                            @foreach($originFortyHc->localcharcarriers as $carrierFortyHc)
+                                                @if($carrierFortyHc->carrier_id == $arr->carrier->id )
+                                                    <tr>
+                                                        <td>{{$arr->carrier->name  }}</td>
+                                                        <td>Per Container 40HC'</td>
+                                                        <td>{{ $formulario->fortyhc  }}</td>
+                                                        <td>{{ $originFortyHc->ammount  }} {{ $originFortyHc->currency->alphacode  }}</td>
+                                                        <td>{{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}</td>
+                                                        <td>
+                                                            {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }} 
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+
+                            </table>
+                        </td>
+                    </tr> 
+                    <tr id="destination{{$loop->iteration}}" hidden="true" >
                         <td colspan="6">
                             <b>Destination Charges</b>
                             <hr>
@@ -291,11 +370,11 @@
                                     <th>Total Ammount</th>
                                 </tr>
                                 @if($formulario->twuenty !=null)
-                                @foreach($localTwuenty as $originTwuenty)
-                                @if($originTwuenty->changetype == "destination")
-                                @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
-                                @if($carrierTwuenty->carrier_id == $arr->carrier->id )
-                                <tr>
+                                    @foreach($localTwuenty as $originTwuenty)
+                                        @if($originTwuenty->changetype == "destination")
+                                            @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
+                                                @if($carrierTwuenty->carrier_id == $arr->carrier->id )
+                                                    <tr>
                                     <td>{{$arr->carrier->name  }}</td>
                                     <td>Per Container 20'</td>
                                     <td>{{ $formulario->twuenty  }}</td>
@@ -305,36 +384,58 @@
                                         {{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }} 
                                     </td>
                                 </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
                                 @endif
-                                @endforeach
-                                @endif
-                                @endforeach
-                                @endif
-
+                                
                                 @if($formulario->forty !=null)
-                                @foreach($localForty as $originForty)
-                                @if($originForty->changetype == "destination")
-                                @foreach($originForty->localcharcarriers as $carrierForty)
-                                @if($carrierForty->carrier_id == $arr->carrier->id )
-                                <tr>
+                                    @foreach($localForty as $originForty)
+                                        @if($originForty->changetype == "destination")
+                                            @foreach($originForty->localcharcarriers as $carrierForty)
+                                                @if($carrierForty->carrier_id == $arr->carrier->id )
+                                                    <tr>
                                     <td>{{$arr->carrier->name  }}</td>
                                     <td>Per Container 40'</td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $originForty->ammount  }} {{ $originForty->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->forty *  $originForty->ammount   }} {{ $originTwuenty->currency->alphacode  }}</td>
+                                    <td>{{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }}</td>
                                     <td>
                                         {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }} 
                                     </td>
                                 </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
                                 @endif
-                                @endforeach
-                                @endif
-                                @endforeach
+                                                   
+                                @if($formulario->fortyhc !=null)
+                                    @foreach($localFortyHc as $originFortyHc)
+                                        @if($originFortyHc->changetype == "destination")
+                                            @foreach($originFortyHc->localcharcarriers as $carrierFortyHc)
+                                                @if($carrierFortyHc->carrier_id == $arr->carrier->id )
+                                                    <tr>
+                                                        <td>{{$arr->carrier->name  }}</td>
+                                                        <td>Per Container 40HC'</td>
+                                                        <td>{{ $formulario->fortyhc  }}</td>
+                                                        <td>{{ $originFortyHc->ammount  }} {{ $originFortyHc->currency->alphacode  }}</td>
+                                                        <td>{{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}</td>
+                                                        <td>
+                                                            {{ $formulario->forty *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }} 
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
                                 @endif
 
                             </table>
                         </td>
                     </tr>
+                 
 
                     @endforeach
                 </tbody>

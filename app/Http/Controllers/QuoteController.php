@@ -59,26 +59,32 @@ class QuoteController extends Controller
             }
             if(!empty($request->input('forty'))) {
                 $subtotal = ($data->forty * $request->input('forty')) + $subtotal;
-               
+
                 $carrierForty[] = $data->carrier_id;                
                 $localForty = LocalCharge::where('calculationtype_id','=','1')->whereHas('localcharcarriers', function($q) use($carrierForty) {
                     $q->whereIn('carrier_id', $carrierForty);
                 })->whereHas('localcharports', function($q) {
                     $q->whereIn('port', [1,2]);
-
                 })->with('localcharports.ports')->get();
 
             }
             if(!empty($request->input('fortyhc'))) {
                 $subtotal = ($data->fortyhc * $request->input('fortyhc')) + $subtotal;
+                $sub[] =   $subtotal;
+
+                $carrierFortyHc[] = $data->carrier_id;                
+                $localFortyHc = LocalCharge::where('calculationtype_id','=','3')->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
+                    $q->whereIn('carrier_id', $carrierFortyHc);
+                })->whereHas('localcharports', function($q) {
+                    $q->whereIn('port', [1,2]);
+                })->with('localcharports.ports')->get();
             }
-            $sub[] =   $subtotal;
 
         }
-        
+       // dd($localFortyHc);
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty'));
+        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc'));
 
 
     }

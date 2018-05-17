@@ -7,6 +7,7 @@ $('.m-select2-general').select2({
 function display(id){
     var elemento = $("#detail"+id);
     var origin = $("#origin"+id);
+    var destination = $("#destination"+id);
 
     if(elemento.attr('hidden')){
 
@@ -23,6 +24,14 @@ function display(id){
 
     }else{
         $("#origin"+id).attr('hidden','true');
+    }
+
+    if(destination.attr('hidden')){
+
+        $("#destination"+id).removeAttr('hidden');
+
+    }else{
+        $("#destination"+id).attr('hidden','true');
     }
 
 }
