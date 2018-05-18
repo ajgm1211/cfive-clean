@@ -92,12 +92,12 @@
 
 
 
-                <!--div class="modal fade" id="m_modal_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal fade" id="m_modal_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">
-                                    Usuario
+                                    Terms & conditions
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">
@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     </div>
-                </div-->
+                </div>
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@
                     $('#m_modal_5').modal({show:true});
                 });
             }if(action == "add"){
-                var url = '{{ route("users.add") }}';
+                var url = '{{ route("terms.add") }}';
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
                 });

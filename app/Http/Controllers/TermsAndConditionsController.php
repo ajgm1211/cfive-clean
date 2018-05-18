@@ -26,6 +26,12 @@ class TermsAndConditionsController extends Controller
         //
     }
 
+    public function add()
+    {
+        
+        return view('terms.add');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -35,6 +41,8 @@ class TermsAndConditionsController extends Controller
     public function store(Request $request)
     {
         //
+
+        return redirect('users/home');
     }
 
     /**
