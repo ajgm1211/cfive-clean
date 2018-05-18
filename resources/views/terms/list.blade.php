@@ -40,30 +40,6 @@
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
                             <div class="form-group m-form__group row align-items-center">
-
-                                <!--div class="col-md-4">
-                                    <div class="m-form__group m-form__group--inline">
-                                        <div class="m-form__label">
-                                            <label class="m-label m-label--single">
-                                                Rol:
-                                            </label>
-                                        </div>
-                                        <div class="m-form__control">
-                                            <select class="form-control m-bootstrap-select" id="m_form_type">
-                                                <option value="">
-                                                    All
-                                                </option>
-                                                <option value="1">
-                                                    Admin
-                                                </option>
-                                                <option value="2">
-                                                    Company
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="d-md-none m--margin-bottom-10"></div>
-                                </div-->
                                 <div class="col-md-4">
                                     <div class="m-input-icon m-input-icon--left">
                                         <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
