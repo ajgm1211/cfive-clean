@@ -79,12 +79,20 @@ class QuoteController extends Controller
                     $q->whereIn('port', [1,2]);
                 })->with('localcharports.ports')->get();
             }
+            // PER SHIPTMENT 
+            
+              $carrierShip[] = $data->carrier_id;
+              $shipment = LocalCharge::where('calculationtype_id','=','6')->whereHas('localcharcarriers', function($q) use($carrierShip) {
+                    $q->whereIn('carrier_id', $carrierShip);
+                })->whereHas('localcharports', function($q) {
+                    $q->whereIn('port', [1,2]);
+                })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
 
         }
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc'));
+        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment'));
 
 
     }

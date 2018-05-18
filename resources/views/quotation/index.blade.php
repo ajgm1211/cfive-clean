@@ -299,7 +299,7 @@
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
                                     <td>Container 20 '</td>
-                                      <td>{{$originTwuenty->calculationtype->name }} </td>
+                                    <td>{{$originTwuenty->calculationtype->name }} </td>
                                     <td>{{ $formulario->twuenty  }}</td>
                                     <td>{{ $originTwuenty->ammount  }} {{ $originTwuenty->currency->alphacode  }}</td>
                                     <td>{{ $formulario->twuenty *  $originTwuenty->ammount   }} {{ $originTwuenty->currency->alphacode  }}</td>
@@ -321,12 +321,26 @@
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
                                     <td>Container 40'</td>
-                                     <td>{{$originForty->calculationtype->name }} </td>
+                                    <td>{{$originForty->calculationtype->name }} </td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $originForty->ammount  }} {{ $originForty->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }}</td>
                                     <td>
-                                        {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }} 
+                                        @if(($originForty->calculationtype->code == "40") || ($originForty->calculationtype->code == "CONT"))
+                                        {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode }}
+                                        @endif
+                                        @if($originForty->calculationtype->code == "TEU")                             
+                                        {{ $formulario->forty *  $originForty->ammount * 2   }}
+                                        {{ $originForty->currency->alphacode  }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(($originForty->calculationtype->code == "40") || ($originForty->calculationtype->code == "CONT") )
+                                        {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode }}
+                                        @endif
+                                        @if($originForty->calculationtype->code == "TEU")                             
+                                        {{ $formulario->forty *  $originForty->ammount * 2   }}
+                                        {{ $originForty->currency->alphacode  }}
+                                        @endif
                                     </td>
                                 </tr>
                                 @endif
@@ -343,12 +357,26 @@
                                 <tr>
                                     <td>{{$arr->carrier->name  }}</td>
                                     <td>Container 40HC'</td>
-                                   <td>{{$originFortyHc->calculationtype->name }} </td>
+                                    <td>{{$originFortyHc->calculationtype->name }} </td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $originFortyHc->ammount  }} {{ $originFortyHc->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}</td>
                                     <td>
-                                        {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }} 
+                                        @if(($originFortyHc->calculationtype->code == "40HC") || ($originFortyHc->calculationtype->code == "CONT"))
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode }}
+                                        @endif
+                                        @if($originFortyHc->calculationtype->code == "TEU")                             
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
+                                        {{ $originFortyHc->currency->alphacode  }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(($originFortyHc->calculationtype->code == "40HC")|| ($originFortyHc->calculationtype->code == "CONT"))
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode }}
+                                        @endif
+                                        @if($originFortyHc->calculationtype->code == "TEU")                             
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
+                                        {{ $originFortyHc->currency->alphacode  }}
+                                        @endif
                                     </td>
                                 </tr>
                                 @endif
@@ -357,6 +385,24 @@
                                 @endforeach
                                 @endif
 
+                                <!-- PER SHIPMENT -->
+                                @foreach($shipment as $shipmentorig)
+                                @if($shipmentorig->changetype == "origin")
+                                @foreach($shipmentorig->localcharcarriers as $carriership)
+                                @if($carriership->carrier_id == $arr->carrier->id )
+                                <tr>
+                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Shipment</td>
+                                    <td>{{$shipmentorig->calculationtype->name }} </td>
+                                    <td>-</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @endif
+                                @endforeach
                             </table>
                         </td>
                     </tr> 
@@ -408,10 +454,10 @@
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $originForty->ammount  }} {{ $originForty->currency->alphacode  }}</td>
                                     <td>
-                                        @if($originForty->calculationtype->id == 1)
+                                        @if(($originForty->calculationtype->code == "40") || ($originForty->calculationtype->code == "CONT"))
                                         {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }}
                                         @endif
-                                        @if($originForty->calculationtype->id == 4)                             
+                                        @if($originForty->calculationtype->code == "TEU")                             
                                         {{ $formulario->forty *  $originForty->ammount * 2   }}
                                         {{ $originForty->currency->alphacode  }}
                                         @endif
@@ -419,10 +465,10 @@
 
                                     </td>
                                     <td>
-                                        @if($originForty->calculationtype->id == 1)
+                                        @if(($originForty->calculationtype->code == "40") || ($originForty->calculationtype->code == "CONT") )
                                         {{ $formulario->forty *  $originForty->ammount   }} {{ $originForty->currency->alphacode  }}
                                         @endif
-                                        @if($originForty->calculationtype->id == 4)                             
+                                        @if($originForty->calculationtype->code == "TEU")                             
                                         {{ $formulario->forty *  $originForty->ammount * 2   }}
                                         {{ $originForty->currency->alphacode  }}
                                         @endif
@@ -447,23 +493,23 @@
                                     <td>{{ $originFortyHc->ammount  }} {{ $originFortyHc->currency->alphacode  }}</td>
                                     <td>
 
-                                        @if($originForty->calculationtype->id == 3)
-                                          {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}
+                                        @if(($originFortyHc->calculationtype->code == "40HC")  || ($originFortyHc->calculationtype->code == "CONT"))
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}
                                         @endif
-                                        @if($originForty->calculationtype->id == 4)                             
-                                            {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
-                                            {{ $originFortyHc->currency->alphacode  }}
+                                        @if($originFortyHc->calculationtype->code == "TEU")                             
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
+                                        {{ $originFortyHc->currency->alphacode  }}
                                         @endif
 
-                                      
+
                                     </td>
                                     <td>
-                                        @if($originForty->calculationtype->id == 3)
-                                          {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}
+                                        @if(($originFortyHc->calculationtype->code == "40HC") || ($originFortyHc->calculationtype->code == "CONT"))
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount   }} {{ $originFortyHc->currency->alphacode  }}
                                         @endif
-                                        @if($originForty->calculationtype->id == 4)                             
-                                            {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
-                                            {{ $originFortyHc->currency->alphacode  }}
+                                        @if($originFortyHc->calculationtype->code == "TEU")                             
+                                        {{ $formulario->fortyhc *  $originFortyHc->ammount * 2   }}
+                                        {{ $originFortyHc->currency->alphacode  }}
                                         @endif
                                     </td>
                                 </tr>
@@ -472,7 +518,24 @@
                                 @endif
                                 @endforeach
                                 @endif
-
+                                <!-- PER SHIPMENT -->
+                                @foreach($shipment as $shipmentorig)
+                                @if($shipmentorig->changetype == "destination")
+                                @foreach($shipmentorig->localcharcarriers as $carriership)
+                                @if($carriership->carrier_id == $arr->carrier->id )
+                                <tr>
+                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Shipment</td>
+                                    <td>{{$shipmentorig->calculationtype->name }} </td>
+                                    <td>-</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                    <td>{{ $shipmentorig->ammount  }} {{ $shipmentorig->currency->alphacode  }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @endif
+                                @endforeach
                             </table>
                         </td>
                     </tr>
