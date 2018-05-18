@@ -21,7 +21,7 @@ class CreateGlobalchargesTable extends Migration
             $table->integer('calculationtype_id')->unsigned();
             $table->double('ammount');
             $table->integer('currency_id')->unsigned();
-            $table->foreign('surcharge_id')->references('id')->on('surcharge');
+            $table->foreign('surcharge_id')->references('id')->on('surcharges');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('calculationtype_id')->references('id')->on('calculationtype');
             $table->foreign('currency_id')->references('id')->on('currency');

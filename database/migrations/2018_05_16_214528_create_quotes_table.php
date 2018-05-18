@@ -16,12 +16,25 @@ class CreateQuotesTable extends Migration
         Schema::create('quotes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('owner');
-            $table->string('origin');
-            $table->string('destination');
-            $table->string('ammount');
+            $table->string('incoterm');
+            $table->date('validity')->nullable();
+            $table->date('pick_up_date');
+            $table->string('origin_address')->nullable();
+            $table->string('destination_address')->nullable();
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->integer('status_id')->unsigned();
+            $table->integer('origin_harbor_id')->unsigned();
+            $table->foreign('origin_harbor_id')->references('id')->on('harbors');
+            $table->integer('destination_harbor_id')->unsigned();
+            $table->foreign('destination_harbor_id')->references('id')->on('harbors');
+            $table->integer('status_id')->unsigned()->nullable();
+            $table->integer('price_id')->unsigned();
+            $table->foreign('price_id')->references('id')->on('prices');
+            $table->integer('type')->unsigned();
+            $table->string('qty_20')->nullable();
+            $table->string('qty_40')->nullable();
+            $table->string('qty_40_hc')->nullable();
+            $table->string('delivery_type')->nullable();
             $table->timestamps();
         });
     }

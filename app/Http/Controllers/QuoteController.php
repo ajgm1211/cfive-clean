@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\Country;
+use App\Price;
 use App\Quote;
 
 use Illuminate\Http\Request;
@@ -24,10 +25,15 @@ class QuoteController extends Controller
     {
         /* $data = Contract::with('rates')->get();
         return view('quotation/index', ['arreglo' => $data]);*/
+        $quotes = Quote::all();
+        $companies = Company::all()->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('business_name','id');
+        $countries = Country::all()->pluck('name','id');
+        return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]);
 
-        $objharbor = new Harbor();
+        /*$objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/new', compact('harbor'));
+        return view('quotation/new', compact('harbor'));*/
 
     }
     public function listRate(Request $request)
@@ -95,7 +101,12 @@ class QuoteController extends Controller
      */
     public function create()
     {
-        //
+        $quotes = Quote::all();
+        $companies = Company::all()->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('name','id');
+        $countries = Country::all()->pluck('name','id');
+        $prices = Price::all()->pluck('name','id');
+        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices]);
     }
 
     /**

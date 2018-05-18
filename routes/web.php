@@ -90,7 +90,6 @@ Route::group(['prefix' => 'inlands'], function () {
 Route::resource('inlands', 'InlandsController');
 
 Route::group(['prefix' => 'quotes', 'middleware' => ['auth']], function () {
-    Route::get('add', 'QuoteController@add')->name('quotes.add');
     Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.delete');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
 });

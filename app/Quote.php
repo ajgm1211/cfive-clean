@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quote extends Model
 {
-    protected $fillable = ['owner', 'company_id','origin','destination','ammount','status_id'];
+    protected $fillable = ['owner','incoterm','validity','origin_address','destination_address','company_id','origin_harbor_id',
+        'destination_harbor_id','price_id','qty_20','qty_40','qty_40_hc','status_id','pick_up_date','delivery_type','type'];
 
     public function company()
     {
@@ -18,13 +19,18 @@ class Quote extends Model
         return $this->belongsTo('App\User','owner','id');
     }
 
-    public function origin_country()
+    public function price()
     {
-        return $this->belongsTo('App\Country','origin','id');
+        return $this->belongsTo('App\Price');
     }
 
-    public function destination_country()
+    public function origin_harbor()
     {
-        return $this->belongsTo('App\Country','destination','id');
+        return $this->hasOne('App\Harbor','id','origin_harbor_id');
+    }
+
+    public function destination_harbor()
+    {
+        return $this->hasOne('App\Harbor','id','destination_harbor_id');
     }
 }

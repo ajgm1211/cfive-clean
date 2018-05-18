@@ -68,7 +68,7 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                            <a href="#" data-toggle="modal" data-target="#addQuoteModal" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <a href="{{route('quotes.create')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>
                                         Add Quote
@@ -102,9 +102,6 @@
                             Destination
                         </th>
                         <th title="Field #7">
-                            Ammount
-                        </th>
-                        <th title="Field #8">
                             Options
                         </th>
                     </tr>
@@ -113,12 +110,15 @@
                     @foreach ($quotes as $quote)
                         <tr>
                             <td>{{$quote->status_id }}</td>
-                            <td>{{$quote->company->business_name }}</td>
+                            @if(isset($quote->company))
+                                <td>{{$quote->company->business_name }}</td>
+                            @else
+                                <td>---</td>
+                            @endif
                             <td>{{$quote->created_at }}</td>
                             <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
-                            <td>{{$quote->origin_country->name }}</td>
-                            <td>{{$quote->destination_country->name }}</td>
-                            <td>{{$quote->ammount }}</td>
+                            <td>{{$quote->origin_harbor->name }}</td>
+                            <td>{{$quote->destination_harbor->name }}</td>
                             <td>
                                 <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
@@ -135,7 +135,6 @@
         </div>
     </div>
     @include('quotes.partials.quotesModal');
-    @include('quotes.partials.quotesEditModal');
 @endsection
 
 @section('js')
