@@ -381,6 +381,18 @@ $(document).on('click', '.addButton', function (e) {
 $(document).on('click', '.removeButton', function (e) {
     var $row = $(this).closest('.row').remove();
 });
+$(document).on('click', '.addButtonDestination', function (e) {
+    var $template = $('#destination_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
+
+$(document).on('click', '.removeButtonDestination', function (e) {
+    var $row = $(this).closest('.row').remove();
+});
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
         $(".inland_fixed_markup_3").hide();

@@ -388,13 +388,13 @@
                                                         <hr>
                                                         <div class="form-group m-form__group row">
                                                             <div class="col-md-12">
-                                                                <div class='row'>
+                                                                <div class="row">
                                                                     <div class="col-md-3">
                                                                         <label>
                                                                             Description:
                                                                         </label>
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control origin_exp_description" id="origin_exp_description" name="origin_exp_description[]" placeholder="Description"/>
+                                                                            <input type="text" class="form-control origin_exp_description" id="origin_exp_description" name="origin_exp_description[]"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
@@ -411,7 +411,57 @@
                                                                         </label>
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="origin_exp_amount" name="origin_exp_amount[]" min="1" step="0.01" class="origin_exp_amount form-control" placeholder="Ammount" aria-label="...">
+                                                                                <input type="number" id="origin_exp_amount" name="origin_exp_amount[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+                                                                                <div class="input-group-btn">
+                                                                                    <div class="btn-group">
+                                                                                        <select class="btn btn-default origin_exp_amount_currency" name="origin_currency[]">
+                                                                                            <option value="usd">USD</option>
+                                                                                            <option value="clp">CLP</option>
+                                                                                            <option value="ars">ARS</option>
+                                                                                            <option value="eur">EUR</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2 conversion" >
+                                                                        <label>
+                                                                            Total Ammount:
+                                                                        </label>
+                                                                        <div class="m-bootstrap-touchspin-brand">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+                                                                                    <input type="text" name="origin_exp_amount_usd[]"  class="origin_exp_amount_clp form-control" aria-label="...">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class='row hide' id="destination_ammounts">
+                                                                    <div class="col-md-3">
+                                                                        <label>
+                                                                            Description:
+                                                                        </label>
+                                                                        <div class="m-bootstrap-touchspin-brand">
+                                                                            <input type="text" class="form-control origin_exp_description" id="origin_exp_description" name="origin_exp_description[]"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>
+                                                                            Detail:
+                                                                        </label>
+                                                                        <div class="m-bootstrap-touchspin-brand">
+                                                                            <input id="origin_exp_quantity" name="origin_exp_quantity[]" class="origin_exp_quantity form-control" type="text"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label>
+                                                                            Ammount:
+                                                                        </label>
+                                                                        <div class="m-bootstrap-touchspin-brand">
+                                                                            <div class="input-group">
+                                                                                <input type="number" id="origin_exp_amount" name="origin_exp_amount[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default origin_exp_amount_currency" name="origin_currency[]">
@@ -442,7 +492,7 @@
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="">
-                                                                                    <a href="#" class="btn" style="vertical-align: middle">
+                                                                                    <a href="#" class="btn removeButtonDestination">
                                                                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                     </a>
                                                                                 </div>
@@ -464,7 +514,7 @@
                                                                     <div class="col-md-1">
                                                                         <div class="form-group">
                                                                             <span>
-                                                                                <a href="#" class="btn" style="vertical-align: middle">
+                                                                                <a href="#" class="btn addButtonDestination" style="vertical-align: middle">
                                                                                     <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                 </a>
                                                                             </span>
