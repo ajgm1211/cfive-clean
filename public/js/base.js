@@ -360,7 +360,27 @@ $(document).on('change', '#type_local_markup_3', function (e) {
         $("#local_percent_markup_3_2").val('0');
     }
 });
+$(document).on('click', '#create-quote', function (e) {
+    $(this).hide();
+    $("#create-quote-back").show();
+});
+$(document).on('click', '#create-quote-back', function (e) {
+    $(this).hide();
+    $("#create-quote").show();
+});
 
+$(document).on('click', '.addButton', function (e) {
+    var $template = $('#freight_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
+
+$(document).on('click', '.removeButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+});
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
         $(".inland_fixed_markup_3").hide();

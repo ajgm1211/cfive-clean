@@ -124,7 +124,7 @@ class QuoteController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
-        return redirect()->back();
+        return redirect()->route('quotes.index');
     }
 
     /**

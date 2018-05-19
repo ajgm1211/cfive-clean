@@ -10529,3 +10529,7 @@ h3.m-subheader__title {
   border-color: #8b131b !important;
 }
 
+.hide {
+  display: none !important;
+}
+
