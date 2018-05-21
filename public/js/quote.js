@@ -8,6 +8,7 @@ function display(id){
     var elemento = $("#detail"+id);
     var origin = $("#origin"+id);
     var destination = $("#destination"+id);
+    var global = $("#global"+id);
 
     if(elemento.attr('hidden')){
 
@@ -32,6 +33,13 @@ function display(id){
 
     }else{
         $("#destination"+id).attr('hidden','true');
+    }
+        if(global.attr('hidden')){
+
+        $("#global"+id).removeAttr('hidden');
+
+    }else{
+        $("#global"+id).attr('hidden','true');
     }
 
 }

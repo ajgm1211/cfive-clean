@@ -9,6 +9,9 @@ use App\Harbor;
 use App\LocalCharge;
 use App\LocalCharCarrier;
 use App\LocalCharPort;
+use App\GlobalCharge;
+use App\GlobalCharPort;
+use App\GlobalCharCarrier;
 class QuoteController extends Controller
 {
     /**
@@ -34,6 +37,8 @@ class QuoteController extends Controller
 
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
+
+
         $date =  $request->input('date');
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
                                       {
@@ -45,54 +50,87 @@ class QuoteController extends Controller
 
         foreach($arreglo as $data){
             $subtotal = 0;
-            if(!empty($request->input('twuenty'))) {
+            $merge = array($data->origin_port,$data->destiny_port);
+
+            if($request->input('twuenty') != "0") {
                 $subtotal = ($data->twuenty * $request->input('twuenty')) + $subtotal;
                 $carrier[] = $data->carrier_id;
 
-                $localTwuenty = LocalCharge::where('calculationtype_id','=','2')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrier) {
+                $localTwuenty = LocalCharge::whereIn('calculationtype_id',[2,4,5])->whereHas('localcharcarriers', function($q) use($carrier) {
                     $q->whereIn('carrier_id', $carrier);
-                })->whereHas('localcharports', function($q) {
-                    $q->whereIn('port', [1,2]);
-
+                })->whereHas('localcharports', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
                 })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
 
+                // Global charges twuenty 
+
+                $globalTwuenty = GlobalCharge::whereIn('calculationtype_id',[2,4,5])->whereHas('globalcharcarrier', function($q) use($carrier) {
+                    $q->whereIn('carrier_id', $carrier);
+                })->whereHas('globalcharport', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
+                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+
             }
-            if(!empty($request->input('forty'))) {
+            if($request->input('forty') != "0") {
                 $subtotal = ($data->forty * $request->input('forty')) + $subtotal;
 
                 $carrierForty[] = $data->carrier_id;                
-                $localForty = LocalCharge::where('calculationtype_id','=','1')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrierForty) {
+                $localForty = LocalCharge::whereIn('calculationtype_id',[1,4,5])->whereHas('localcharcarriers', function($q) use($carrierForty) {
                     $q->whereIn('carrier_id', $carrierForty);
-                })->whereHas('localcharports', function($q) {
-                    $q->whereIn('port', [1,2]);
+                })->whereHas('localcharports', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
                 })->with('localcharports.ports')->get();
 
+                // Global charges forty 
+
+                $globalForty = GlobalCharge::whereIn('calculationtype_id',[1,4,5])->whereHas('globalcharcarrier', function($q) use($carrierForty) {
+                    $q->whereIn('carrier_id', $carrierForty);
+                })->whereHas('globalcharport', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
+                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+
             }
-            if(!empty($request->input('fortyhc'))) {
+            if($request->input('fortyhc') != "0") {
                 $subtotal = ($data->fortyhc * $request->input('fortyhc')) + $subtotal;
-                $sub[] =   $subtotal;
+
 
                 $carrierFortyHc[] = $data->carrier_id;                
-                $localFortyHc = LocalCharge::where('calculationtype_id','=','3')->orWhere('calculationtype_id','=','4')->orWhere('calculationtype_id','=','5')->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
+                $localFortyHc = LocalCharge::whereIn('calculationtype_id',[3,4,5])->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
                     $q->whereIn('carrier_id', $carrierFortyHc);
-                })->whereHas('localcharports', function($q) {
-                    $q->whereIn('port', [1,2]);
+                })->whereHas('localcharports', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
                 })->with('localcharports.ports')->get();
+
+                // GLobal Charges
+                $globalFortyHc = GlobalCharge::whereIn('calculationtype_id',[3,4,5])->whereHas('globalcharcarrier', function($q) use($carrierFortyHc) {
+                    $q->whereIn('carrier_id', $carrierFortyHc);
+                })->whereHas('globalcharport', function($q) use($merge) {
+                    $q->whereIn('port', $merge);
+                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+
             }
-            // PER SHIPTMENT 
-            
-              $carrierShip[] = $data->carrier_id;
-              $shipment = LocalCharge::where('calculationtype_id','=','6')->whereHas('localcharcarriers', function($q) use($carrierShip) {
-                    $q->whereIn('carrier_id', $carrierShip);
-                })->whereHas('localcharports', function($q) {
-                    $q->whereIn('port', [1,2]);
-                })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
+            // PER SHIPTMENT LOCAL
+            $sub[] =   $subtotal;
+            $carrierShip[] = $data->carrier_id;
+            $shipment = LocalCharge::where('calculationtype_id','=','6')->whereHas('localcharcarriers', function($q) use($carrierShip) {
+                $q->whereIn('carrier_id', $carrierShip);
+            })->whereHas('localcharports', function($q) use($merge) {
+                $q->whereIn('port', $merge);
+            })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
+
+            // PER SHIPMENT GLOBAL 
+            $globalshipment = GlobalCharge::where('calculationtype_id','=','6')->whereHas('globalcharcarrier', function($q) use($carrierShip) {
+                $q->whereIn('carrier_id', $carrierShip);
+            })->whereHas('globalcharport', function($q) use($merge) {
+                $q->whereIn('port', $merge);
+            })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
 
         }
 
+
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment'));
+        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment'));
 
 
     }
