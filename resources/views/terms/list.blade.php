@@ -152,7 +152,7 @@
         function AbrirModal(action,id){
 
             if(action == "edit"){
-                var url = '{{ route("users.edit", ":id") }}';
+                var url = '{{ route("terms.edit", ":id") }}';
                 url = url.replace(':id', id);
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});

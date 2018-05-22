@@ -22,8 +22,8 @@ class TermsAndConditionsController extends Controller
         $objHarbor = new Harbor;
         $harbor = $objHarbor->all()->pluck('name', 'id');
 
-        
-        //$harbor->dd();
+        $var = compact('data', 'harbor');
+        //dd($var);
         return view('terms.list', compact('data', 'harbor'));
     }
 
@@ -53,7 +53,7 @@ class TermsAndConditionsController extends Controller
     {
         //
 
-        return redirect('users/home');
+        //return redirect('users/home');
     }
 
     /**
@@ -75,7 +75,9 @@ class TermsAndConditionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $term = TermAndCondition::find($id);
+
+        $term->dd();
     }
 
     /**
