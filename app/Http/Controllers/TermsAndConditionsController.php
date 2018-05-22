@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\TermAndCondition;
+use App\Harbor;
 
 class TermsAndConditionsController extends Controller
 {
