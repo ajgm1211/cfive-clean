@@ -72,15 +72,15 @@
                     <thead>
                     <tr>
                         <th title="Field #1">
-                            Actions
+                            Name
                         </th>
-                        <th title="Field #3">
+                        <th title="Field #2">
                             Ports
                         </th>
-                        <th title="Field #4">
+                        <th title="Field #3">
                             Export
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #4">
                             Import
                         </th>
                         <th title="Field #5">
@@ -90,15 +90,18 @@
                     </tr>
                     </thead>
                     <tbody> 
-                        @foreach ($array as $arr)
+                        @foreach ($data as $arr)
                             <tr>
-                                <td>Edit</td>
+                                <td>{{ $arr->name }}</td>
                                 <td>{{ $arr->port }}</td>
                                 <td>{{ $arr->export }}</td>
                                 <td>{{ $arr->import }}</td>
                                 <td>
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                         <i class="la la-edit"></i>
+                                    </a>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
+                                    <i class="la la-eraser"></i>
                                     </a>
                                 </td>
                             </tr>

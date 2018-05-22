@@ -19,9 +19,12 @@ class TermsAndConditionsController extends Controller
 
         $terms = TermAndCondition::All();
         $data = $terms->where('user_id', Auth::user()->id);
+        $objHarbor = new Harbor;
+        $harbor = $objHarbor->all()->pluck('name', 'id');
 
-        //$data->dd();
-        return view('terms.list', ['array' => $data]);
+        
+        //$harbor->dd();
+        return view('terms.list', compact('data', 'harbor'));
     }
 
     /**
