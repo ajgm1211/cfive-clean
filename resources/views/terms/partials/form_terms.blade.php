@@ -8,6 +8,11 @@
 
 </div>
 
+<div class="form-group m-form__group"  >
+    {!! Form::label('Port', 'Port') !!}<br>
+    {{ Form::select('id', $array, ['class'=>'form-control']) }}
+</div>
+
 <div class="form-group m-form__group">
     {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control m-input','required' => 'required']) !!}
 
