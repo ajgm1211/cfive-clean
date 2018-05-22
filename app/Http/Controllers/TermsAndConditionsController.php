@@ -15,6 +15,10 @@ class TermsAndConditionsController extends Controller
      */
     public function index()
     {
+
+        $terms = TermAndCondition::All();
+
+        $terms->dd();
         return view('terms.list');
     }
 
