@@ -3,11 +3,6 @@
     
 </div>
 
-<div class="form-group m-form__group">
-    {!! Form::text('port', null, ['placeholder' => 'Please enter the port name','class' => 'form-control m-input','required' => 'required']) !!}
-
-</div>
-
 <div class="form-group m-form__group"  >
     {!! Form::label('Port', 'Port') !!}<br>
     {{ Form::select('id', $array, ['class'=>'form-control']) }}
