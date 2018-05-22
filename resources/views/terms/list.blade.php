@@ -83,10 +83,27 @@
                         <th title="Field #5">
                             Import
                         </th>
+                        <th title="Field #5">
+                            Actions
+                        </th>
 
                     </tr>
                     </thead>
-                    <tbody> </tbody>
+                    <tbody> 
+                        @foreach ($array as $arr)
+                            <tr>
+                                <td>Edit</td>
+                                <td>{{ $arr->port }}</td>
+                                <td>{{ $arr->export }}</td>
+                                <td>{{ $arr->import }}</td>
+                                <td>
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
+                                        <i class="la la-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                     
                 </table>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\TermAndCondition;
 use App\Harbor;
@@ -17,9 +18,10 @@ class TermsAndConditionsController extends Controller
     {
 
         $terms = TermAndCondition::All();
+        $data = $terms->where('user_id', Auth::user()->id);
 
-        $terms->dd();
-        return view('terms.list');
+        //$data->dd();
+        return view('terms.list', ['array' => $data]);
     }
 
     /**
