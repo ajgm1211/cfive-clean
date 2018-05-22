@@ -55,9 +55,19 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        dd($request);
-        return redirect('users/home');
+        $term = new TermAndCondition();
+        $term->name = $request->name;
+        $term->port = 1;
+        $term->user_id = Auth::user()->id;
+        $term->import = $request->import;
+        $term->export = $request->export;
+        $term->save();
+
+        //dd($term);
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully added new term.');
+        return redirect('terms/list');
     }
 
     /**
