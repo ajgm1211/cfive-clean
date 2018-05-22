@@ -54,14 +54,14 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                            <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                            <a href="http://localhost:8000/terms/add" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="{{ route("terms.add") }}">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
                                     Add New
                                 </span>
                             </span>
-                            </button>
+                            </a>
 
 
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
