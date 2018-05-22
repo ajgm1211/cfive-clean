@@ -29,6 +29,6 @@ class Harbor extends Model
     }
 
     public function terms(){
-        return hasOne('App\TermAndCondition');
+        return hasMany('App\TermAndCondition');
     }
 }

@@ -21,9 +21,11 @@ class TermsAndConditionsController extends Controller
         $data = $terms->where('user_id', Auth::user()->id);
         $objHarbor = new Harbor;
         $harbor = $objHarbor->all()->pluck('name', 'id');
+        $harbor = Harbor::find($data[0]->port);
+        
 
         $var = compact('data', 'harbor');
-        //dd($var);
+        //dd($data);
         return view('terms.list', compact('data', 'harbor'));
     }
 
@@ -53,7 +55,7 @@ class TermsAndConditionsController extends Controller
     {
         //
 
-        //return redirect('users/home');
+        return redirect('users/home');
     }
 
     /**
