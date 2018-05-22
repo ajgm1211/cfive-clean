@@ -41,8 +41,10 @@ class TermsAndConditionsController extends Controller
 
     public function add()
     {
-        
-        return view('terms.add');
+        $harbor = Harbor::all();
+        $data = $harbor->pluck('name');
+        //dd($data);
+        return view('terms.add', ['array' => $data]);
     }
 
     /**
@@ -54,7 +56,7 @@ class TermsAndConditionsController extends Controller
     public function store(Request $request)
     {
         //
-
+        dd($request);
         return redirect('users/home');
     }
 

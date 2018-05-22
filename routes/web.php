@@ -33,6 +33,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
 });
 
 Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
+    Route::resource('terms', 'TermsAndConditionsController');
     Route::get('list', 'TermsAndConditionsController@index')->name('terms.list');
     Route::get('add', 'TermsAndConditionsController@add')->name('terms.add');
     Route::get('edit', 'TermsAndConditionsController@edit')->name('terms.edit');
