@@ -451,5 +451,74 @@ $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
 
+$(document).on('change', '#delivery_type', function (e) {
+    if($(this).val()==1){
+        $("#origin_address_label").hide();
+        $("#destination_address_label").hide();
+        $("#origin_harbor_label").show();
+        $("#destination_harbor_label").show();
+    }
+    if($(this).val()==2){
+        $("#origin_address_label").hide();
+        $("#origin_harbor_label").show();
+        $("#destination_address_label").show();
+        $("#destination_harbor_label").hide();
+    }
+    if($(this).val()==3){
+        $("#origin_address_label").show();
+        $("#origin_harbor_label").hide();
+        $("#destination_harbor_label").show();
+        $("#destination_address_label").hide();
+    }
+    if($(this).val()==4){
+        $("#origin_address_label").show();
+        $("#destination_address_label").show();
+        $("#origin_harbor_label").hide();
+        $("#destination_harbor_label").hide();
+    }
+});
+
+$(document).on('click', '#create-quote', function (e) {
+    var origin_harbor=$("#origin_harbor").val();
+    var qty_20='';
+    if($(".qty_20").val()>0){
+        qty_20=$(".qty_20").val();
+    }else{
+        qty_20='';
+    }
+
+    var qty_40=$(".qty_40").val();
+    var qty_40_hc=$(".qty_40_hc").val();
+    var destination_harbor=$("#destination_harbor").val();
+    $.ajax({
+        type: 'get',
+        url: 'get/harbor/id/' + origin_harbor,
+        success: function(data) {
+            $("#origin_input").html(data.name);
+        }
+    });
+    $.ajax({
+        type: 'get',
+        url: 'get/harbor/id/' + destination_harbor,
+        success: function(data) {
+            $("#destination_input").html(data.name);
+        }
+    });
+    if(qty_20!='' || qty_20>0){
+        $("#cargo_details_20").html(qty_20);
+        $("#cargo_details_20_p").removeClass('hide');
+    }else{
+        $("#cargo_details_20_p").addClass('hide');
+    }
+    if(qty_40!=''){
+        $("#cargo_details_40").html(qty_40);
+        $("#cargo_details_40_p").removeClass('hide');
+    }
+    if(qty_40_hc!=''){
+        $("#cargo_details_40_hc").html(qty_40_hc);
+        $("#cargo_details_40_hc_p").removeClass('hide');
+    }
+});
+
 
 

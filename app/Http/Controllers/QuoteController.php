@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\Country;
+use App\DestinationAmmount;
+use App\DestinationAmount;
+use App\FreightAmmount;
 use App\Price;
 use App\Quote;
 
@@ -14,6 +17,8 @@ use App\Harbor;
 use App\LocalCharge;
 use App\LocalCharCarrier;
 use App\LocalCharPort;
+use Illuminate\Support\Facades\Input;
+
 class QuoteController extends Controller
 {
     /**
@@ -118,8 +123,61 @@ class QuoteController extends Controller
     public function store(Request $request)
     {
 
+        $input = Input::all();
         $request->request->add(['owner' => \Auth::id()]);
-        Quote::create($request->all());
+        $quote=Quote::create($request->all());
+
+        if($input['freight_ammount_description']!=[null]) {
+            $freight_ammount_description = array_values( array_filter($input['freight_ammount_description']) );
+            $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
+            $freight_ammount_arr = array_values( array_filter($input['freight_ammount']) );
+            $freight_ammount_currency = array_values( array_filter($input['freight_ammount_currency']) );
+            $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
+            foreach ($freight_ammount_description as $key => $item) {
+                $freight_ammount = new FreightAmmount();
+                $freight_ammount->quote_id = $quote->id;
+                if ((isset($freight_ammount_description[$key])) && (!empty($freight_ammount_description[$key]))) {
+                    $freight_ammount->cost = $freight_ammount_description[$key];
+                }
+                if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
+                    $freight_ammount->detail = $freight_ammount_detail[$key];
+                }
+                if ((isset($freight_ammount_arr[$key])) && ($freight_ammount_arr[$key]) != '') {
+                    $freight_ammount->ammount = $freight_ammount_arr[$key];
+                    $freight_ammount->currency_id = $freight_ammount_currency[$key];
+                }
+                if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
+                    $freight_ammount->total_ammount = $freight_total_ammount[$key];
+                }
+                $freight_ammount->save();
+            }
+        }
+
+        if($input['destination_ammount_description']!=[null]) {
+            $destination_ammount_description = array_values( array_filter($input['destination_ammount_description']) );
+            $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
+            $destination_ammount_arr = array_values( array_filter($input['destination_ammount']) );
+            $destination_ammount_currency = array_values( array_filter($input['destination_ammount_currency']) );
+            $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
+            foreach ($destination_ammount_description as $key => $item) {
+                $destination_ammount = new DestinationAmmount();
+                $destination_ammount->quote_id = $quote->id;
+                if ((isset($destination_ammount_description[$key])) && (!empty($destination_ammount_description[$key]))) {
+                    $destination_ammount->cost = $destination_ammount_description[$key];
+                }
+                if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
+                    $destination_ammount->detail = $destination_ammount_detail[$key];
+                }
+                if ((isset($destination_ammount_arr[$key])) && (!empty($destination_ammount_arr[$key]))) {
+                    $destination_ammount->ammount = $destination_ammount_arr[$key];
+                    $destination_ammount->currency_id = $destination_ammount_currency[$key];
+                }
+                if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
+                    $destination_ammount->total_ammount = $destination_total_ammount[$key];
+                }
+                $destination_ammount->save();
+            }
+        }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -180,5 +238,11 @@ class QuoteController extends Controller
         $quote->delete();
 
         return $quote;
+    }
+
+    public function getHarborName($id)
+    {
+        $harbor = Harbor::findOrFail($id);
+        return $harbor;
     }
 }

@@ -117,8 +117,16 @@
                             @endif
                             <td>{{$quote->created_at }}</td>
                             <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
-                            <td>{{$quote->origin_harbor->name }}</td>
-                            <td>{{$quote->destination_harbor->name }}</td>
+                            @if($quote->origin_harbor)
+                                <td>{{$quote->origin_harbor->name }}</td>
+                            @else
+                                <td>{{$quote->origin_address }}</td>
+                            @endif
+                            @if($quote->destination_harbor)
+                                <td>{{$quote->destination_harbor->name }}</td>
+                            @else
+                                <td>{{$quote->destination_address }}</td>
+                            @endif
                             <td>
                                 <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>

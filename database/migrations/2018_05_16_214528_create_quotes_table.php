@@ -23,12 +23,12 @@ class CreateQuotesTable extends Migration
             $table->string('destination_address')->nullable();
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->integer('origin_harbor_id')->unsigned();
+            $table->integer('origin_harbor_id')->unsigned()->nullable();
             $table->foreign('origin_harbor_id')->references('id')->on('harbors');
-            $table->integer('destination_harbor_id')->unsigned();
+            $table->integer('destination_harbor_id')->unsigned()->nullable();
             $table->foreign('destination_harbor_id')->references('id')->on('harbors');
             $table->integer('status_id')->unsigned()->nullable();
-            $table->integer('price_id')->unsigned();
+            $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices');
             $table->integer('type')->unsigned();
             $table->string('qty_20')->nullable();

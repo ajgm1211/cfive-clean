@@ -91,6 +91,7 @@ Route::resource('inlands', 'InlandsController');
 
 Route::group(['prefix' => 'quotes', 'middleware' => ['auth']], function () {
     Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.delete');
+    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
 });
 Route::resource('quotes', 'QuoteController');
