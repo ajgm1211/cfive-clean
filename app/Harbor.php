@@ -25,5 +25,10 @@ class Harbor extends Model
         return $this->hasMany('App\GlobalCharPort');
     }
 
+        return $this->hasOne('App\Rate');
+    }
 
+    public function terms(){
+        return hasOne('App\TermAndCondition');
+    }
 }
