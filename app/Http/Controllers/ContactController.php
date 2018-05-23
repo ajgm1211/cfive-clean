@@ -33,7 +33,7 @@ class ContactController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
-        return redirect()->route('contacts.index');
+        return redirect()->back();
     }
 
     public function edit($id)
@@ -64,9 +64,9 @@ class ContactController extends Controller
         $company = Contact::find($id);
         $company->delete();
 
-        $request->session()->flash('message.nivel', 'success');
+        /*$request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register deleted successfully!');
-        return redirect()->route('contacts.index');
+        $request->session()->flash('message.content', 'Register deleted successfully!');*/
+        return $company;
     }
 }

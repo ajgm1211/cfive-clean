@@ -20,7 +20,7 @@ Route::get('/home', function () {
 });
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
-Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
+Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController'); 
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('add', 'UsersController@add')->name('users.add');
@@ -29,28 +29,23 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth']], function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
-    Route::get('logout', 'UsersController@logout')->name('users.logout');
 });
 
-Route::group(['prefix' => 'surcharges', 'middleware' => ['auth']], function () {
+Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
     Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
-
-Route::group(['prefix' => 'globalcharges', 'middleware' => ['auth']], function () {
-
+Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
     Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
     Route::get('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
     Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
-
-
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
-Route::group(['prefix' => 'contracts', 'middleware' => ['auth']], function () {
+Route::middleware(['auth'])->prefix('contracts')->group(function () {
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
@@ -61,54 +56,44 @@ Route::group(['prefix' => 'contracts', 'middleware' => ['auth']], function () {
 });
 Route::resource('contracts', 'ContractsController')->middleware('auth');
 
-Route::group(['prefix' => 'companies', 'middleware' => ['auth']], function () {
+Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
+    Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
-Route::group(['prefix' => 'prices', 'middleware' => ['auth']], function () {
+Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
 
-Route::group(['prefix' => 'inlands'], function () {
+Route::middleware(['auth'])->prefix('contacts')->group(function () {
+    Route::get('add', 'ContactController@add')->name('contacts.add');
+    Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
+});
 
+Route::resource('contacts', 'ContactController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('inlands')->group(function () {
     Route::get('add', 'InlandsController@add')->name('inlands.add');
     Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
     Route::get('deleteDetails/{id}', ['uses' => 'InlandsController@deleteDetails', 'as' => 'delete-inland']);
     Route::get('deleteInland/{id}', ['uses' => 'InlandsController@deleteInland', 'as' => 'delete-inland']);
-
-
-
 });
-Route::resource('inlands', 'InlandsController'); 
+Route::resource('inlands', 'InlandsController')->middleware('auth');
 
-
-Route::group(['prefix' => 'quotes'], function () {
-
+Route::middleware(['auth'])->prefix('quotes')->group(function () {
+    Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
+    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+    Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
+    Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
-    //   Route::get('updateDetails/{id}', ['uses' => 'QuoteController@updateDetails', 'as' => 'updateDetails']);
-    //    Route::get('deleteDetails/{id}', ['uses' => 'QuoteController@deleteDetails', 'as' => 'delete-inland']);
-    //  Route::get('deleteInland/{id}', ['uses' => 'QuoteController@deleteInland', 'as' => 'delete-inland']);
-
-
 
 });
-Route::resource('quotes', 'QuoteController'); 
+Route::resource('quotes', 'QuoteController')->middleware('auth');
 
+Auth::routes();
 
-/*Route::get('/companies', function () {
-    return view('companies');*/
-
-    Route::group(['prefix' => 'contacts', 'middleware' => ['auth']], function () {
-        Route::get('add', 'ContactController@add')->name('contacts.add');
-        Route::get('delete/{contact_id}', 'ContactController@delete')->name('contacts.delete');
-
-    });
-    Route::resource('contacts', 'ContactController')->middleware('auth');
-
-
-    Auth::routes();

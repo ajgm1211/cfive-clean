@@ -159,67 +159,258 @@ $("#newL").on("click", function() {
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });
+$(document).on('click', '#delete-contact', function () {
+    var id = $(this).attr('data-contact-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/contacts/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('li').remove();
+                }
+            });
+
+        }
+
+    });
+});
+
+$(document).on('click', '#delete-quote', function () {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'quotes.destroy/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                }
+            });
+
+        }
+
+    });
+});
 
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){
-        $("#freight_fixed_markup_1").prop('disabled', true);
-        $("#freight_markup_currency_1").prop('disabled', true);
-        $("#freight_percent_markup_1").prop('disabled', false);
+        $(".freight_fixed_markup_1").hide();
+        $("#freight_fixed_markup_1").val(0);
+        $(".freight_percent_markup_1").show();
     }else{
-        $("#freight_fixed_markup_1").prop('disabled', false);
-        $("#freight_markup_currency_1").prop('disabled', false);
-        $("#freight_percent_markup_1").prop('disabled', true);
+        $(".freight_fixed_markup_1").show();
+        $(".freight_percent_markup_1").hide();
+        $("#freight_percent_markup_1").val(0);
     }
 });
 
 $(document).on('change', '#type_freight_markup_2', function (e) {
     if($(this).val()==1){
-        $("#freight_fixed_markup_2").prop('disabled', true);
-        $("#freight_markup_currency_2").prop('disabled', true);
-        $("#freight_percent_markup_2").prop('disabled', false);
+        $(".freight_fixed_markup_2").hide();
+        $("#freight_fixed_markup_2").val(0);
+        $(".freight_percent_markup_2").show();
     }else{
-        $("#freight_fixed_markup_2").prop('disabled', false);
-        $("#freight_markup_currency_2").prop('disabled', false);
-        $("#freight_percent_markup_2").prop('disabled', true);
+        $(".freight_fixed_markup_2").show();
+        $(".freight_percent_markup_2").hide();
+        $("#freight_percent_markup_2").val(0);
+    }
+});
+
+$(document).on('change', '#type_freight_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".freight_fixed_markup_3").hide();
+        $("#freight_fixed_markup_3").val(0);
+        $(".freight_percent_markup_3").show();
+    }else{
+        $(".freight_fixed_markup_3").show();
+        $(".freight_percent_markup_3").hide();
+        $("#freight_percent_markup_3").val(0);
     }
 });
 
 $(document).on('change', '#type_local_markup_1', function (e) {
     if($(this).val()==1){
-        $("#local_fixed_markup_1").prop('disabled', true);
-        $("#local_markup_currency_1").prop('disabled', true);
-        $("#local_fixed_markup_1_2").prop('disabled', true);
-        $("#local_markup_currency_1_2").prop('disabled', true);
-        $("#local_percent_markup_1_2").prop('disabled', false);
-        $("#local_percent_markup_1").prop('disabled', false);
+        $(".local_fixed_markup_1").hide();
+        $(".local_fixed_markup_1_2").hide();
+        $("#local_fixed_markup_1").val(0);
+        $("#local_fixed_markup_1_2").val(0);
+        $(".local_percent_markup_1").show();
+        $(".local_percent_markup_1_2").show();
     }else{
-        $("#local_fixed_markup_1").prop('disabled', false);
-        $("#local_markup_currency_1").prop('disabled', false);
-        $("#local_fixed_markup_1_2").prop('disabled', false);
-        $("#local_markup_currency_1_2").prop('disabled', false);
-        $("#local_percent_markup_1_2").prop('disabled', true);
-        $("#local_percent_markup_1").prop('disabled', true);
-
+        $(".local_fixed_markup_1").show();
+        $(".local_fixed_markup_1_2").show();
+        $(".local_percent_markup_1").hide();
+        $(".local_percent_markup_1_2").hide();
+        $("#local_percent_markup_1").val(0);
+        $("#local_percent_markup_1_2").val(0);
     }
 });
 
 $(document).on('change', '#type_inland_markup_1', function (e) {
     if($(this).val()==1){
-        $("#inland_fixed_markup_1").prop('disabled', true);
-        $("#inland_currency_markup_1").prop('disabled', true);
-        $("#inland_fixed_markup_1_2").prop('disabled', true);
-        $("#inland_currency_markup_1_2").prop('disabled', true);
-        $("#inland_percent_markup_1_2").prop('disabled', false);
-        $("#inland_percent_markup_1").prop('disabled', false);
+        $(".inland_fixed_markup_1").hide();
+        $(".inland_fixed_markup_1_2").hide();
+        $(".inland_percent_markup_1").show();
+        $(".inland_percent_markup_1_2").show();
+        $("#inland_fixed_markup_1").val(0);
+        $("#inland_fixed_markup_1_2").val(0);
     }else{
-        $("#inland_fixed_markup_1").prop('disabled', false);
-        $("#inland_currency_markup_1").prop('disabled', false);
-        $("#inland_fixed_markup_1_2").prop('disabled', false);
-        $("#inland_currency_markup_1_2").prop('disabled', false);
-        $("#inland_percent_markup_1_2").prop('disabled', true);
-        $("#inland_percent_markup_1").prop('disabled', true);
+        $(".inland_fixed_markup_1").show();
+        $(".inland_fixed_markup_1_2").show();
+        $(".inland_percent_markup_1").hide();
+        $(".inland_percent_markup_1_2").hide();
+        $("#inland_percent_markup_1").val(0);
+        $("#inland_percent_markup_1_2").val(0);
     }
 });
+
+$(document).on('change', '#type_local_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_2").hide();
+        $(".local_fixed_markup_2_2").hide();
+        $(".local_percent_markup_2").show();
+        $(".local_percent_markup_2_2").show();
+        $("#local_fixed_markup_2").val('0');
+        $("#local_fixed_markup_2_2").val('0');
+    }else{
+        $(".local_fixed_markup_2").show();
+        $(".local_fixed_markup_2_2").show();
+        $(".local_percent_markup_2").hide();
+        $(".local_percent_markup_2_2").hide();
+        $("#local_percent_markup_2").val('0');
+        $("#local_percent_markup_2_2").val('0');
+    }
+});
+
+$(document).on('change', '#type_inland_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".inland_fixed_markup_2").hide();
+        $(".inland_fixed_markup_2_2").hide();
+        $(".inland_percent_markup_2").show();
+        $(".inland_percent_markup_2_2").show();
+        $("#inland_fixed_markup_2").val(0);
+        $("#inland_fixed_markup_2_2").val(0);
+    }else{
+        $(".inland_fixed_markup_2").show();
+        $(".inland_fixed_markup_2_2").show();
+        $(".inland_percent_markup_2").hide();
+        $(".inland_percent_markup_2_2").hide();
+        $("#inland_percent_markup_2").val(0);
+        $("#inland_percent_markup_2_2").val(0);
+    }
+});
+
+$(document).on('change', '#type_local_markup_2', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_2").hide();
+        $(".local_fixed_markup_2_2").hide();
+        $(".local_percent_markup_2").show();
+        $(".local_percent_markup_2_2").show();
+        $("#local_fixed_markup_2").val('0');
+        $("#local_fixed_markup_2_2").val('0');
+    }else{
+        $(".local_fixed_markup_2").show();
+        $(".local_fixed_markup_2_2").show();
+        $(".local_percent_markup_2").hide();
+        $(".local_percent_markup_2_2").hide();
+        $("#local_percent_markup_2").val('0');
+        $("#local_percent_markup_2_2").val('0');
+    }
+});
+
+$(document).on('change', '#type_local_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".local_fixed_markup_3").hide();
+        $(".local_fixed_markup_3_2").hide();
+        $(".local_percent_markup_3").show();
+        $(".local_percent_markup_3_2").show();
+        $("#local_fixed_markup_3").val('0');
+        $("#local_fixed_markup_3_2").val('0');
+    }else{
+        $(".local_fixed_markup_3").show();
+        $(".local_fixed_markup_3_2").show();
+        $(".local_percent_markup_3").hide();
+        $(".local_percent_markup_3_2").hide();
+        $("#local_percent_markup_3").val('0');
+        $("#local_percent_markup_3_2").val('0');
+    }
+});
+$(document).on('click', '#create-quote', function (e) {
+    $(this).hide();
+    $("#create-quote-back").show();
+});
+$(document).on('click', '#create-quote-back', function (e) {
+    $(this).hide();
+    $("#create-quote").show();
+});
+
+$(document).on('click', '.addButton', function (e) {
+    var $template = $('#freight_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
+
+$(document).on('click', '.removeButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+});
+$(document).on('click', '.addButtonDestination', function (e) {
+    var $template = $('#destination_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
+
+$(document).on('click', '.removeButtonDestination', function (e) {
+    var $row = $(this).closest('.row').remove();
+});
+$(document).on('change', '#type_inland_markup_3', function (e) {
+    if($(this).val()==1){
+        $(".inland_fixed_markup_3").hide();
+        $(".inland_fixed_markup_3_2").hide();
+        $(".inland_percent_markup_3").show();
+        $(".inland_percent_markup_3_2").show();
+        $("#inland_fixed_markup_3").val(0);
+        $("#inland_fixed_markup_3_2").val(0);
+    }else{
+        $(".inland_fixed_markup_3").show();
+        $(".inland_fixed_markup_3_2").show();
+        $(".inland_percent_markup_3").hide();
+        $(".inland_percent_markup_3_2").hide();
+        $("#inland_percent_markup_3").val(0);
+        $("#inland_percent_markup_3_2").val(0);
+    }
+});
+
 
 $(document).on('click', '.m_sweetalert_demo_8', function (e) {
     var res = $("i",this).attr('id');
@@ -258,6 +449,97 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
+});
+
+$(document).on('change', '#delivery_type', function (e) {
+    if($(this).val()==1){
+        $("#origin_address_label").hide();
+        $("#destination_address_label").hide();
+    }
+    if($(this).val()==2){
+        $("#origin_address_label").hide();
+        $("#destination_address_label").show();
+    }
+    if($(this).val()==3){
+        $("#origin_address_label").show();
+        $("#destination_address_label").hide();
+    }
+    if($(this).val()==4){
+        $("#origin_address_label").show();
+        $("#destination_address_label").show();
+    }
+});
+
+$(document).on('click', '#create-quote', function (e) {
+    var origin_harbor=$("#origin_harbor").val();
+    var qty_20='';
+    if($(".qty_20").val()>0){
+        qty_20=$(".qty_20").val();
+    }else{
+        qty_20='';
+    }
+
+    var qty_40=$(".qty_40").val();
+    var qty_40_hc=$(".qty_40_hc").val();
+    var destination_harbor=$("#destination_harbor").val();
+    $.ajax({
+        type: 'get',
+        url: 'get/harbor/id/' + origin_harbor,
+        success: function(data) {
+            $("#origin_input").html(data.name);
+        }
+    });
+    $.ajax({
+        type: 'get',
+        url: 'get/harbor/id/' + destination_harbor,
+        success: function(data) {
+            $("#destination_input").html(data.name);
+        }
+    });
+    if(qty_20!='' || qty_20>0){
+        $("#cargo_details_20").html(qty_20);
+        $("#cargo_details_20_p").removeClass('hide');
+    }else{
+        $("#cargo_details_20_p").addClass('hide');
+    }
+    if(qty_40!=''){
+        $("#cargo_details_40").html(qty_40);
+        $("#cargo_details_40_p").removeClass('hide');
+    }
+    if(qty_40_hc!=''){
+        $("#cargo_details_40_hc").html(qty_40_hc);
+        $("#cargo_details_40_hc_p").removeClass('hide');
+    }
+});
+$( document ).ready(function() {
+    $( "select[name='company_id']" ).on('change', function() {
+        var company_id = $(this).val();
+        if(company_id) {
+            $.ajax({
+                url: "company/contact/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="client"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="client"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+            $.ajax({
+                url: "company/price/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="price_id"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+        }else{
+            $('select[name="client"]').empty();
+            $('select[name="price_id"]').empty();
+        }
+    });
 });
 
 

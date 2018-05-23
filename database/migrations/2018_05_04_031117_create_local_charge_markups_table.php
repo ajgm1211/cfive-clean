@@ -15,11 +15,12 @@ class CreateLocalChargeMarkupsTable extends Migration
     {
         Schema::create('local_charge_markups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('percent_markup')->nullable();
-            $table->string('fixed_markup')->nullable();
-            $table->string('currency')->nullable();
-            $table->integer('price_subtype_id')->unsigned();
-            $table->foreign('price_subtype_id')->references('id')->on('price_subtypes');
+            $table->string('percent_markup_import')->nullable()->default(0);
+            $table->string('fixed_markup_import')->nullable()->default(0);
+            $table->string('percent_markup_export')->nullable()->default(0);
+            $table->string('fixed_markup_export')->nullable()->default(0);
+            $table->string('currency_import')->nullable();
+            $table->string('currency_export')->nullable();
             $table->integer('price_type_id')->unsigned();
             $table->foreign('price_type_id')->references('id')->on('price_types');
             $table->integer('price_id')->unsigned();

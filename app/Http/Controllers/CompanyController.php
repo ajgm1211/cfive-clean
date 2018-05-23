@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\CompanyPrice;
+use App\Contact;
+use App\Quote;
 use App\Price;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class CompanyController extends Controller
 {
@@ -25,9 +30,27 @@ class CompanyController extends Controller
         return view('companies.add', compact('prices'));
     }
 
+    public function show($id)
+    {
+        $company = Company::find($id);
+        $companies = Company::all();
+        $prices = Price::all()->pluck('name','id');
+        $quotes = Quote::where('company_id',$id)->get();
+        return view('companies.show', compact('company','companies','contacts','prices','quotes'));
+    }
+
     public function store(Request $request)
     {
-        Company::create($request->all());
+        $input = Input::all();
+
+        $company=Company::create($request->all());
+
+        if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
+            $company_price = new CompanyPrice();
+            $company_price->company_id=$company->id;
+            $company_price->price_id=$input['price_id'];
+            $company_price->save();
+        }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -44,12 +67,18 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
+        $input = Input::all();
         $company = Company::find($id);
         $company->update($request->all());
+        if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
+            $company_price = CompanyPrice::where('company_id',$company->id)->first();
+            $company_price->price_id=$input['price_id'];
+            $company_price->update();
+        }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register updated successfully!');
-        return redirect()->route('companies.index');
+        return redirect()->back();
     }
 
     public function delete($id)
@@ -67,5 +96,18 @@ class CompanyController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register deleted successfully!');
         return redirect()->route('companies.index');
+    }
+
+    public function getCompanyPrice($id){
+        $company = CompanyPrice::where('company_id',$id)->first();
+        $prices = Price::where('id',$company->price_id)->pluck('name','id');
+
+        return $prices;
+    }
+
+    public function getCompanyContact($id){
+        $contacts = Contact::where('company_id',$id)->pluck('first_name','id');
+
+        return $contacts;
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Price Levels')
+@section('title', 'Quotes')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
@@ -68,10 +68,10 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                            <a href="{{route('prices.add')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <a href="{{route('quotes.create')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>
-                                        Add Price
+                                        Add Quote
                                     </span>
                                     <i class="la la-plus"></i>
                                 </span>
@@ -84,45 +84,54 @@
                     <thead>
                     <tr>
                         <th title="Field #1">
-                            Name
+                            Status
                         </th>
                         <th title="Field #2">
-                            Description
+                            Client
                         </th>
                         <th title="Field #3">
-                            Companies
+                            Created
                         </th>
-                        <!-- <th title="Field #4">
-                             20'
-                         </th>
-                         <th title="Field #5">
-                             40'
-                         </th>
-                         <th title="Field #6">
-                             40' HC
-                         </th>-->
+                        <th title="Field #4">
+                            Owner
+                        </th>
+                        <th title="Field #5">
+                            Origin
+                        </th>
+                        <th title="Field #6">
+                            Destination
+                        </th>
                         <th title="Field #7">
                             Options
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($prices as $price)
+                    @foreach ($quotes as $quote)
                         <tr>
-                            <td>{{$price->name }}</td>
-                            <td>{{$price->description }}</td>
+                            <td>{{$quote->status_id }}</td>
+                            @if(isset($quote->company))
+                                <td>{{$quote->company->business_name }}</td>
+                            @else
+                                <td>---</td>
+                            @endif
+                            <td>{{$quote->created_at }}</td>
+                            <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
+                            @if($quote->origin_harbor)
+                                <td>{{$quote->origin_harbor->name }}</td>
+                            @else
+                                <td>{{$quote->origin_address }}</td>
+                            @endif
+                            @if($quote->destination_harbor)
+                                <td>{{$quote->destination_harbor->name }}</td>
+                            @else
+                                <td>{{$quote->destination_address }}</td>
+                            @endif
                             <td>
-                                @foreach($price->company_name as $company)
-                                    <ul>
-                                        <li>{{$company->business_name}}</li>
-                                    </ul>
-                                @endforeach
-                            </td>
-                            <td>
-                                <a href="{{route('prices.edit',$price->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                 </a>
-                                <button onclick="AbrirModal('delete',{{$price->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
+                                <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
                                     <i class="la la-eraser"></i>
                                 </button>
                             </td>
@@ -133,8 +142,7 @@
             </div>
         </div>
     </div>
-    @include('prices.partials.pricesModal');
-    @include('prices.partials.deletePricesModal');
+    @include('quotes.partials.quotesModal');
 @endsection
 
 @section('js')
@@ -144,19 +152,14 @@
     <script>
         function AbrirModal(action,id){
             if(action == "edit"){
-                var url = '{{ route("prices.edit", ":id") }}';
+                var url = '{{ route("quotes.edit", ":id") }}';
                 url = url.replace(':id', id);
-                $('.modal-body').load(url,function(){
-                    $('#priceModal').modal({show:true});
-                });
-            }if(action == "add"){
-                var url = '{{ route("prices.add") }}';
                 $('.modal-body').load(url,function(){
                     $('#priceModal').modal({show:true});
                 });
             }
             if(action == "delete"){
-                var url = '{{ route("prices.delete", ":id") }}';
+                var url = '{{ route("quotes.destroy", ":id") }}';
                 url = url.replace(':id', id);
                 $('.modal-body').load(url,function(){
                     $('#deletePriceModal').modal({show:true});
@@ -165,7 +168,8 @@
         }
 
         $(document).ready(function() {
-            $('#select-2').select2();
+            $('#select-origin--2').select2();
+            $('#select-destination--2').select2();
         });
     </script>
 @stop
