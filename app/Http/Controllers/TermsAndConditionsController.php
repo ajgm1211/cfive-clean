@@ -26,6 +26,7 @@ class TermsAndConditionsController extends Controller
         $len = sizeof($data);
         for($i = 0; $i < $len; $i++){
             $data[$i]->port = $tabla->where('id', $data[$i]->port)->pluck('name');
+            
         }
         
         return view('terms.list', compact('data', 'harbor'));
