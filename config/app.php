@@ -162,6 +162,8 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
+        GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
+  
 
     ],
 
@@ -214,6 +216,8 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'GoogleMaps' => GoogleMaps\Facade\GoogleMapsFacade::class,
+       
     ],
 
 ];

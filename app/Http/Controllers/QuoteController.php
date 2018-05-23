@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection as Collection;
 use App\Contract;
 use App\Rate;
 use App\Harbor;
@@ -12,6 +13,7 @@ use App\LocalCharPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
+use GoogleMaps;
 class QuoteController extends Controller
 {
     /**
@@ -22,8 +24,6 @@ class QuoteController extends Controller
     public function index()
     {
 
-        /* $data = Contract::with('rates')->get();
-        return view('quotation/index', ['arreglo' => $data]);*/
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
@@ -37,6 +37,25 @@ class QuoteController extends Controller
 
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
+
+      /*  $origin = '39.871867, 20.004541';
+        $destination = '39.921515, 20.040148';
+
+        $response = GoogleMaps::load('directions')
+            ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+
+            ])->get();
+        $var = json_decode($response);
+
+        foreach($var->routes as $resp) {
+            foreach($resp->legs as $dist) {
+                dd($dist->distance->text);
+            }
+        }*/
 
 
         $date =  $request->input('date');
