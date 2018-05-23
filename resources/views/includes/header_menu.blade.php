@@ -32,7 +32,7 @@
                 <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
+                        <a  href="{{route('companies.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Companies
@@ -40,7 +40,7 @@
                         </a>
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
+                        <a  href="{{route('contacts.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Contacs
@@ -51,8 +51,195 @@
             </div>
         </li>
 
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+            <a  href="#" class="m-menu__link m-menu__toggle">
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Freight Charges
+                        </span>
+                    </span>
+                </span>
+                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                <i class="m-menu__ver-arrow la la-angle-right"></i>
+            </a>
+            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                <ul class="m-menu__subnav">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight FCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight LCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Air Freight
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+            <a  href="#" class="m-menu__link m-menu__toggle">
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Local Charges
+                        </span>
+                    </span>
+                </span>
+                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                <i class="m-menu__ver-arrow la la-angle-right"></i>
+            </a>
+            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                <ul class="m-menu__subnav">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight FCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight LCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Air Freight
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+            <a  href="#" class="m-menu__link m-menu__toggle">
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Inland
+                        </span>
+                    </span>
+                </span>
+                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                <i class="m-menu__ver-arrow la la-angle-right"></i>
+            </a>
+            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                <ul class="m-menu__subnav">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight FCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Sea Freight LCL
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Air Freight
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+            <a  href="#" class="m-menu__link m-menu__toggle">
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Settings
+                        </span>
+                    </span>
+                </span>
+                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                <i class="m-menu__ver-arrow la la-angle-right"></i>
+            </a>
+            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                <ul class="m-menu__subnav">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{ route('prices.index') }}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Price levels
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Terms & Conditions
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Email templates
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Surchargers list
+                            </span>
+                        </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{ route('users.home') }}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Users
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <!--<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="#" class="m-menu__link m-menu__toggle">
                 <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -109,65 +296,7 @@
                     </li>
                 </ul>
             </div>
-        </li>
-        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-            <a  href="#" class="m-menu__link m-menu__toggle">
-                <span class="m-menu__link-title">
-                    <span class="m-menu__link-wrap">
-                        <span class="m-menu__link-text">
-                            Settings
-                        </span>
-                    </span>
-                </span>
-                <i class="m-menu__hor-arrow la la-angle-down"></i>
-                <i class="m-menu__ver-arrow la la-angle-right"></i>
-            </a>
-            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                <ul class="m-menu__subnav">
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
-                            <span class="m-menu__link-text">
-                                Terms & Conditions
-                            </span>
-                        </a>
-                    </li>
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-map"></i>
-                            <span class="m-menu__link-text">
-                                Surcharges
-                            </span>
-                        </a>
-                    </li>
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-map"></i>
-                            <span class="m-menu__link-text">
-                                Users
-                            </span>
-                        </a>
-                    </li>
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-map"></i>
-                            <span class="m-menu__link-text">
-                                Emails
-                            </span>
-                        </a>
-                    </li>
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="header/actions.html" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-map"></i>
-                            <span class="m-menu__link-text">
-                                Branding
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        </li>-->
 
         <li class="m-menu__item" >
             <a  href="{{ url('users/logout') }}" class="m-menu__link">

@@ -29,6 +29,7 @@
     
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="/assets/demo/default/media/img/logo/favicon.ico" />
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    <!--<link href="{{ asset('css/custom.css') }}" rel="stylesheet" />-->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     @show
 </head>

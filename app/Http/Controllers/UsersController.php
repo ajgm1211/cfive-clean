@@ -42,22 +42,15 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-
         $usuario = new User($request->all());
         $usuario->password = bcrypt($usuario->password);
-
-
         $usuario->save();
 
         if($usuario->type == "subuser"){
-
-
             $subuser = new Subuser();
             $subuser->company_id = $request->id_company;
             $subuser->user()->associate($usuario);
             $subuser->save();
-
-
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -76,17 +69,14 @@ class UsersController extends Controller
 
     }
 
-
     public function add()
     {
-
         $user = new User();
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
         return view('users.add',compact('companyall'));
     }
     public function resetPass(Request $request,$user)
     {
-
         $user = User::find($user);
         //Password::sendResetLink(['email' => $user->email]);
         $response = \Password::sendResetLink(['email' => $user->email ] , function (Message $message) {
@@ -110,7 +100,6 @@ class UsersController extends Controller
         $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->where('id', '!=', $id)->pluck('name_company', 'id');
         // Condicion para cagar la compañia del subusuario
         if($user->type == "subuser"){
-
             $subuser = Subuser::find($user->subuser->id);
             $datosSubuser = User::find($subuser->company_id);
             return view('users.edit', compact('user','companyall','datosSubuser'));
@@ -140,16 +129,12 @@ class UsersController extends Controller
 
         }
 
-
         $user->update($requestForm);
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');
         return redirect()->route('users.home');
     }
-
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -188,7 +173,6 @@ class UsersController extends Controller
     public function resetmsg($id)
     {
         return view('users/messagereset' ,['userid' => $id]);
-
     }
 
     public function datahtml(){
@@ -199,16 +183,13 @@ class UsersController extends Controller
 
         }
         if(Auth::user()->type == 'company' ){
-
             $data =  User::whereHas('subuser', function($q)
-                                    {
-                                        $q->where('company_id', '=', Auth::user()->id);
-                                    })->get();
+            {
+                $q->where('company_id', '=', Auth::user()->id);
+            })->get();
         }
 
         return view('users/indexhtml', ['arreglo' => $data]);
-
-
     }
 
     public function datajson() {
@@ -219,11 +200,29 @@ class UsersController extends Controller
         return view('users/indexjson')->with('url', $response);
 
     }
+
+    public function activate(Request $request,$id) {
+        $user=User::find($id);
+        //dd(json_encode($user));
+        if($user->verified=='Active'){
+            $user->verified=0;
+            $user->update();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'User has been disabled successfully!');
+            return redirect()->route('users.home');
+        }else{
+            $user->verified=1;
+            $user->update();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'User has been activated successfully!');
+            return redirect()->route('users.home');
+        }
+    }
+
     public function logout(Request $request) {
         Auth::logout();
         return redirect('/login');
     }
-
-
-
 }

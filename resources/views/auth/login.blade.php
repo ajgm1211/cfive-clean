@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <!--
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
@@ -103,10 +93,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </button>
                                         </div>
                                     </form>
-
-
-
-
                                 </div>
                                 <div class="m-login__signup">
                                     <div class="m-login__head">
@@ -120,7 +106,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
                                         @csrf
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="Name" name="name">
+                                            <input class="form-control m-input" type="text" placeholder="First Name" name="name">
                                         </div>
                                         <div class="form-group m-form__group">
                                             <input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" autocomplete="off">
