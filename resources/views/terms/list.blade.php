@@ -97,7 +97,7 @@
                                 <td>{{ $arr->export }}</td>
                                 <td>{{ $arr->import }}</td>
                                 <td>
-                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
+                                    <a href="http://localhost:8000/terms/edit{{ $arr->id }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                         <i class="la la-edit"></i>
                                     </a>
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
@@ -164,16 +164,8 @@
                 });
             }
             if(action == "delete"){
-                var url = '{{ route("users.msg", ":id") }}';
-                url = url.replace(':id', id);
-                $('.modal-body').load(url,function(){
-                    $('#m_modal_5').modal({show:true});
-                });
-
-            }
-            if(action == "reset"){
-                var url = '{{ route("users.msgreset", ":id") }}';
-                url = url.replace(':id', id);
+                var url = '{{ route("terms.msg", "id") }}';
+                url = url.replace('id', id);
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
                 });

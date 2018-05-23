@@ -105,10 +105,12 @@ class UsersController extends Controller
         if($user->type == "subuser"){
             $subuser = Subuser::find($user->subuser->id);
             $datosSubuser = User::find($subuser->company_id);
+            $var = compact($user, $companyall, $datosSubuser);
+            dd($datosSubuser);
             return view('users.edit', compact('user','companyall','datosSubuser'));
         }
 
-
+        
         return view('users.edit', compact('user','companyall'));
     }
 

@@ -21,11 +21,13 @@ class TermsAndConditionsController extends Controller
         $data = $terms->where('user_id', Auth::user()->id);
         $objHarbor = new Harbor;
         $harbor = $objHarbor->all()->pluck('name', 'id');
-        $harbor = Harbor::find($data[0]->port);
-        
 
-        $var = compact('data', 'harbor');
-        //dd($data);
+        $tabla = Harbor::All();
+        $len = sizeof($data);
+        for($i = 0; $i < $len; $i++){
+            $data[$i]->port = $tabla->where('id', $data[$i]->port)->pluck('name');
+        }
+        
         return view('terms.list', compact('data', 'harbor'));
     }
 
@@ -89,8 +91,12 @@ class TermsAndConditionsController extends Controller
     public function edit($id)
     {
         $term = TermAndCondition::find($id);
+        $harbor = Harbor::all();
+        $array = $harbor->pluck('name');
 
-        $term->dd();
+        //dd($term);
+        //return view('terms.edit', ['array' => $data])->with('terms', $term);
+        return view('terms.edit', compact('array', 'term'));
     }
 
     /**
@@ -102,7 +108,14 @@ class TermsAndConditionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $requestForm = $request->all();
+        $term = TermAndCondition::find($id);
+
+        $term->update($requestForm);
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You upgrade has been success ');
+        return redirect()->route('terms.list');
     }
 
     /**
@@ -113,6 +126,24 @@ class TermsAndConditionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $term = TermAndCondition::find($id);
+        $term->delete();
+        return $term;
+    }
+
+    public function destroyTerm(Request $request,$id){
+        $term = self::destroy($id);
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully delete : '.$term->name);
+        return redirect()->route('terms.list');
+
+    }
+
+    public function destroymsg($id)
+    {
+        return view('terms/message' ,['id' => $id]);
+
     }
 }
