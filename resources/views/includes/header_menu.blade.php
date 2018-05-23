@@ -9,7 +9,7 @@
         </li>
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-            <a  href="#" class="m-menu__link m-menu__toggle">
+            <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                 <span class="m-menu__link-text">
                     Quotes
                 </span>
@@ -297,15 +297,15 @@
                 </ul>
             </div>
         </li>-->
-
-        <li class="m-menu__item" >
-            <a  href="{{ url('users/logout') }}" class="m-menu__link">
+        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+            <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <span class="m-menu__link-text">
                     Logout
                 </span>
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
         </li>
     </ul>
-    
-     
 </div>

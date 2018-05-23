@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFreightAmmountsTable extends Migration
+class CreateOriginAmmountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateFreightAmmountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('freight_ammounts', function (Blueprint $table) {
+        Schema::create('origin_ammounts', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('charge');
+            $table->string('charge');
             $table->string('detail');
             $table->integer('units');
             $table->float('price_per_unit');
@@ -36,6 +36,6 @@ class CreateFreightAmmountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('freight_ammounts');
+        Schema::dropIfExists('origin_ammounts');
     }
 }

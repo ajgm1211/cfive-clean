@@ -27,7 +27,7 @@ class CreateQuotesTable extends Migration
             $table->foreign('origin_harbor_id')->references('id')->on('harbors');
             $table->integer('destination_harbor_id')->unsigned()->nullable();
             $table->foreign('destination_harbor_id')->references('id')->on('harbors');
-            $table->integer('status_id')->unsigned()->nullable();
+            $table->integer('status_id')->unsigned()->nullable()->default(1);
             $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices');
             $table->integer('type')->unsigned();

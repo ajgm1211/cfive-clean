@@ -7,6 +7,7 @@ use App\CompanyPrice;
 use App\Contact;
 use App\Quote;
 use App\Price;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -95,5 +96,18 @@ class CompanyController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register deleted successfully!');
         return redirect()->route('companies.index');
+    }
+
+    public function getCompanyPrice($id){
+        $company = CompanyPrice::where('company_id',$id)->first();
+        $prices = Price::where('id',$company->price_id)->pluck('name','id');
+
+        return $prices;
+    }
+
+    public function getCompanyContact($id){
+        $contacts = Contact::where('company_id',$id)->pluck('first_name','id');
+
+        return $contacts;
     }
 }

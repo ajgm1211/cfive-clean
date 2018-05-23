@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class DestinationAmmount extends Model
 {
-    protected $fillable = ['cost','detail','ammount','total_ammount','currency_id','quote_id'];
+    protected $fillable = ['charge','detail','units','price_per_unit','markup','currency_id','total_ammount','total_ammount_2','quote_id'];
 }

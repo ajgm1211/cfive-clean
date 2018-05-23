@@ -159,7 +159,7 @@
                 });
             }
             if(action == "delete"){
-                var url = '{{ route("quotes.delete", ":id") }}';
+                var url = '{{ route("quotes.destroy", ":id") }}';
                 url = url.replace(':id', id);
                 $('.modal-body').load(url,function(){
                     $('#deletePriceModal').modal({show:true});

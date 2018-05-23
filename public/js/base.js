@@ -201,7 +201,7 @@ $(document).on('click', '#delete-quote', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: '/quotes/delete/' + id,
+                url: 'quotes.destroy/' + id,
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -455,26 +455,18 @@ $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
         $("#origin_address_label").hide();
         $("#destination_address_label").hide();
-        $("#origin_harbor_label").show();
-        $("#destination_harbor_label").show();
     }
     if($(this).val()==2){
         $("#origin_address_label").hide();
-        $("#origin_harbor_label").show();
         $("#destination_address_label").show();
-        $("#destination_harbor_label").hide();
     }
     if($(this).val()==3){
         $("#origin_address_label").show();
-        $("#origin_harbor_label").hide();
-        $("#destination_harbor_label").show();
         $("#destination_address_label").hide();
     }
     if($(this).val()==4){
         $("#origin_address_label").show();
         $("#destination_address_label").show();
-        $("#origin_harbor_label").hide();
-        $("#destination_harbor_label").hide();
     }
 });
 
@@ -518,6 +510,36 @@ $(document).on('click', '#create-quote', function (e) {
         $("#cargo_details_40_hc").html(qty_40_hc);
         $("#cargo_details_40_hc_p").removeClass('hide');
     }
+});
+$( document ).ready(function() {
+    $( "select[name='company_id']" ).on('change', function() {
+        var company_id = $(this).val();
+        if(company_id) {
+            $.ajax({
+                url: "company/contact/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="client"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="client"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+            $.ajax({
+                url: "company/price/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="price_id"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+        }else{
+            $('select[name="client"]').empty();
+            $('select[name="price_id"]').empty();
+        }
+    });
 });
 
 

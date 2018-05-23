@@ -15,10 +15,16 @@ class CreateDestinationAmmountsTable extends Migration
     {
         Schema::create('destination_ammounts', function (Blueprint $table) {
             $table->increments('id');
-			$table->string('cost');
+            $table->string('charge');
             $table->string('detail');
-            $table->float('ammouunt');
+            $table->integer('units');
+            $table->float('price_per_unit');
+            $table->float('markup');
+            $table->integer('currency_id');
             $table->float('total_ammount');
+            $table->float('total_ammount_2')->nullable();
+            $table->integer('quote_id')->unsigned();
+            $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');
             $table->timestamps();
         });
     }
