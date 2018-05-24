@@ -23,8 +23,7 @@ class TermsAndConditionsController extends Controller
         $harbor = $objHarbor->all()->pluck('name', 'id');
 
         $tabla = Harbor::All();
-        $len = sizeof($data);
-        for($i = 0; $i < $len; $i++){
+        for($i = 0; $i < sizeof($data); $i++){
             $data[$i]->port = $tabla->where('id', $data[$i]->port)->pluck('name');
             
         }
