@@ -7,6 +7,7 @@ use App\Country;
 use App\DestinationAmmount;
 use App\DestinationAmount;
 use App\FreightAmmount;
+use App\OriginAmmount;
 use App\OriginAmount;
 use App\Price;
 use App\Quote;
@@ -136,12 +137,12 @@ class QuoteController extends Controller
             $origin_total_units = array_values( array_filter($input['origin_ammount_units']) );
             $origin_total_ammount = array_values( array_filter($input['origin_total_ammount']) );
             $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
-            $origin_total_markup = array_values( array_filter($input['$origin_total_markup']) );
+            $origin_total_markup = array_values( array_filter($input['origin_ammount_markup']) );
             foreach ($origin_ammount_charge as $key => $item) {
-                $origin_ammount = new OriginAmount();
+                $origin_ammount = new OriginAmmount();
                 $origin_ammount->quote_id = $quote->id;
-                if ((isset($origin_ammount_description[$key])) && (!empty($origin_ammount_description[$key]))) {
-                    $origin_ammount->charge = $origin_ammount_description[$key];
+                if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
+                    $origin_ammount->charge = $origin_ammount_charge[$key];
                 }
                 if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
                     $origin_ammount->detail = $origin_ammount_detail[$key];
@@ -150,9 +151,9 @@ class QuoteController extends Controller
                     $origin_ammount->units = $origin_total_units[$key];
                 }
                 if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
-                    $origin_ammount->units = $origin_total_markup[$key];
+                    $origin_ammount->markup = $origin_total_markup[$key];
                 }
-                if ((isset($origin_ammount_arr[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
+                if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
                     $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
                     $origin_ammount->currency_id = $origin_ammount_currency[$key];
                 }
@@ -174,12 +175,12 @@ class QuoteController extends Controller
             $freight_total_units = array_values( array_filter($input['freight_ammount_units']) );
             $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
             $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
-            $freight_total_markup = array_values( array_filter($input['$freight_total_markup']) );
+            $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
             foreach ($freight_ammount_charge as $key => $item) {
                 $freight_ammount = new FreightAmmount();
                 $freight_ammount->quote_id = $quote->id;
-                if ((isset($freight_ammount_description[$key])) && (!empty($freight_ammount_description[$key]))) {
-                    $freight_ammount->charge = $freight_ammount_description[$key];
+                if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
+                    $freight_ammount->charge = $freight_ammount_charge[$key];
                 }
                 if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
                     $freight_ammount->detail = $freight_ammount_detail[$key];
@@ -188,9 +189,9 @@ class QuoteController extends Controller
                     $freight_ammount->units = $freight_total_units[$key];
                 }
                 if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
-                    $freight_ammount->units = $freight_total_markup[$key];
+                    $freight_ammount->markup = $freight_total_markup[$key];
                 }
-                if ((isset($freight_ammount_arr[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
+                if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
                     $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
                     $freight_ammount->currency_id = $freight_ammount_currency[$key];
                 }

@@ -369,6 +369,14 @@ $(document).on('click', '#create-quote-back', function (e) {
     $("#create-quote").show();
 });
 
+$(document).on('click', '.addButtonOrigin', function (e) {
+    var $template = $('#origin_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
         $clone = $template
@@ -541,6 +549,85 @@ $( document ).ready(function() {
         }
     });
 });
+
+$(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency", function() {
+    var sum = 0;
+    var total_amount = 0;
+    $(".origin_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.origin_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                total_amount = quantity * $(this).val();
+                $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_origin_ammount").val(sum);
+            $("#sub_total_origin").html(" "+sum + " USD");
+            $("#total_origin_ammount").change();
+        });
+    });
+});
+
+$(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency", function() {
+    var sum = 0;
+    var total_amount = 0;
+    $(".freight_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.freight_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                total_amount = quantity * $(this).val();
+                $(this).closest('.row').find('.freight_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.freight_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_freight_ammount").val(sum);
+            $("#sub_total_freight").html(" "+sum + " USD");
+            $("#total_freight_ammount").change();
+        });
+    });
+});
+
+$(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency", function() {
+    var sum = 0;
+    var total_amount = 0;
+    $(".destination_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.destination_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                total_amount = quantity * $(this).val();
+                $(this).closest('.row').find('.destination_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.destination_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_destination_ammount").val(sum);
+            $("#sub_total_destination").html(" "+sum + " USD");
+            $("#total_destination_ammount").change();
+        });
+    });
+});
+
 
 
 

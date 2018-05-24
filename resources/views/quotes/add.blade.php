@@ -315,13 +315,13 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
@@ -343,7 +343,7 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
@@ -369,16 +369,16 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
-                                                                                        <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                        <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
                                                                                             <option value="">Currency</option>
                                                                                             <option value="1">USD</option>
                                                                                             <option value="2">CLP</option>
@@ -397,7 +397,7 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
@@ -417,6 +417,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+                                                                                    <input type="hidden" id="total_origin_ammount" name="total_origin_ammount" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                         </div>
@@ -454,7 +455,7 @@
                                                                 <div class="row">
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control" id="freight_ammount_description" name="freight_ammount_description[]"/>
+                                                                            <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
@@ -464,13 +465,13 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
+                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
+                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
@@ -494,14 +495,14 @@
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
+                                                                                    <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
+                                                                            <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -518,13 +519,13 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
+                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
+                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
@@ -548,7 +549,7 @@
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
+                                                                                    <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -576,7 +577,8 @@
                                                                         <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;
+                                                                                    <input type="hidden" id="total_freight_ammount" name="total_freight_ammount" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                         </div>
@@ -624,13 +626,13 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
@@ -652,7 +654,7 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
@@ -678,13 +680,13 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
                                                                                         <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
@@ -706,7 +708,7 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
+                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number" min="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
@@ -736,7 +738,8 @@
                                                                         <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp
+                                                                                    <input type="hidden" id="total_destination_ammount" name="total_destination_ammount" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                         </div>
