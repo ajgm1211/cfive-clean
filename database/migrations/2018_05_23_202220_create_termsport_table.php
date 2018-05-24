@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class TermsAndConditions extends Migration
+class CreateTermsportTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class TermsAndConditions extends Migration
      */
     public function up()
     {
-        Schema::create('termsAndConditions', function (Blueprint $table) {
+        Schema::create('termsport', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->integer('user_id')->unsigned();
-            $table->string('import');
-            $table->string('export');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('port_id')->unsigned();
+            $table->integer('term_id')->unsigned();
+            $table->foreign('port_id')->references('id')->on('harbors');
+            $table->foreign('term_id')->references('id')->on('termsAndConditions');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class TermsAndConditions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('termsAndConditions');
+        Schema::dropIfExists('termsport');
     }
 }

@@ -31,4 +31,8 @@ class Harbor extends Model
     public function terms(){
         return hasMany('App\TermAndCondition');
     }
+
+    public function termport(){
+        return hasMany('App\TermsPort');
+    }
 }
