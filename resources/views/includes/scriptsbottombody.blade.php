@@ -13,7 +13,7 @@
 <script src="/assets/demo/default/custom/components/forms/validation/form-controls.js" type="text/javascript"></script>
 
 <script src="/assets/demo/default/custom/components/forms/wizard/wizard.js" type="text/javascript"></script>
-<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+
 
 <!--end::Page Snippets -->
 

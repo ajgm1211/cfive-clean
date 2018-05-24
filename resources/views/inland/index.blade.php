@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Ireland')
+@section('title', 'Inlands')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">

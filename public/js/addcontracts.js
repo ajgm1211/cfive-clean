@@ -15,7 +15,7 @@ $("#new2").on("click", function() {
     $myClone.find("select").select2();
     $ids = $( ".port" ).length;
     $ids = $ids + 1;
-    alert($ids);
+
     $myClone.find(".port").attr('name', 'port_id'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier_id'+$ids+'[]');
 

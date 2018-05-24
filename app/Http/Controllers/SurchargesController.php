@@ -15,17 +15,7 @@ class SurchargesController extends Controller
      */
     public function index()
     {
-        $distanceMatrix = new GoogleDistanceMatrix('YOUR API KEY');
-        $distance = $distanceMatrix
-            ->addOrigin('Van Bronckhorststraat 94, 5961SM Horst, The Netherlands')
-            ->addDestination('Maistraße 10, 80337 München, Deutschland')
-            ->setMode(GoogleDistanceMatrix::MODE_DRIVING)
-            ->setLanguage('nl-NL')
-            ->setUnits(GoogleDistanceMatrix::UNITS_METRIC)
-            ->setAvoid(GoogleDistanceMatrix::AVOID_FERRIES)
-            ->sendRequest();
-        
-        dd($distance);
+       
         $data = Surcharge::with('user')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
