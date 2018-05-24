@@ -5,7 +5,7 @@
 
 <div class="form-group m-form__group"  >
     {!! Form::label('Port', 'Port') !!}<br>
-    {{ Form::select('name[]', $array, null, ['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+    {{ Form::select('ports[]', $array, null, ['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
 </div>
 
 <div class="form-group m-form__group">

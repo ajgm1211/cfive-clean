@@ -93,7 +93,7 @@
                         @foreach ($data as $arr)
                             <tr>
                                 <td>{{ $arr->name }}</td>
-                                <td>{{ $arr->port }}</td>
+                                <td>{{ $arr->user_id }}</td>
                                 <td>{{ $arr->export }}</td>
                                 <td>{{ $arr->import }}</td>
                                 <td>
