@@ -107,9 +107,7 @@ class TermsAndConditionsController extends Controller
         $term = TermAndCondition::find($id);
         $harbor = Harbor::all();
         $array = $harbor->pluck('name');
-
-        //dd($term);
-        //return view('terms.edit', ['array' => $data])->with('terms', $term);
+        
         return view('terms.edit', compact('array', 'term'));
     }
 
