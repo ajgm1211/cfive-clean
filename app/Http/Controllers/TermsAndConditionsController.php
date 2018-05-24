@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\TermAndCondition;
 use App\Harbor;
+use App\TermsPort;
 
 class TermsAndConditionsController extends Controller
 {
@@ -19,16 +20,20 @@ class TermsAndConditionsController extends Controller
 
         $terms = TermAndCondition::All();
         $data = $terms->where('user_id', Auth::user()->id);
-        $objHarbor = new Harbor;
-        $harbor = $objHarbor->all()->pluck('name', 'id');
-
-        $tabla = Harbor::All();
-        for($i = 0; $i < sizeof($data); $i++){
-            $data[$i]->port = $tabla->where('id', $data[$i]->port)->pluck('name');
-            
-        }
         
-        return view('terms.list', compact('data', 'harbor'));
+        $tabla = Harbor::All();
+        $terms_port = TermsPort::All();
+        $aux = '';
+        for($i = 0; $i < sizeof($data); $i++){
+            $var = $terms_port->where('term_id', $data[$i]->id)->pluck('port_id');
+            for($j = 0; $j < sizeof($var); $j++){
+                $data[$i]->user_id = $aux . $tabla->where('id', $var[$j])->pluck('name');
+                $aux = $data[$i]->user_id;
+            }
+            $aux = '';
+        }
+
+        return view('terms.list', compact('data'));
     }
 
     /**
@@ -57,14 +62,23 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
+
         $term = new TermAndCondition();
         $term->name = $request->name;
-        $term->port = $request->id + 1;
         $term->user_id = Auth::user()->id;
         $term->import = $request->import;
         $term->export = $request->export;
         $term->save();
-
+        
+        $ports = $request->ports;
+        
+        for($i = 0; $i < sizeof($ports); $i++){
+            $termsport = new TermsPort();
+            $termsport->port_id = $ports[$i] + 1;
+            $termsport->term()->associate($term);
+            $termsport->save();
+        }
+        
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully added new term.');
