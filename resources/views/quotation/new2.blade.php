@@ -180,7 +180,7 @@
                                                                 </div>
                                                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                                     <label>Origin address</label>
-                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                                                 </div>
                                                             </div>
                                                             <br>
@@ -774,6 +774,7 @@
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>
+<script src="/js/base.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>

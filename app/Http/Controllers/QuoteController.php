@@ -22,6 +22,7 @@ use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
 use GoogleMaps;
+use App\Inland;
 use Illuminate\Support\Facades\Input;
 
 class QuoteController extends Controller
@@ -63,26 +64,79 @@ class QuoteController extends Controller
     {
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
+        $delivery_type = $request->input('delivery_type');
+  /*
+        if($delivery_type == "2"){
+            $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
+                $q->whereIn('port', $destiny_port);
+            })->with('inlandports.ports','inlanddetails.currency')->get();
 
-        /*  $origin = '39.871867, 20.004541';
-        $destination = '39.921515, 20.040148';
+            foreach($inlands as $inlandsValue){
+                foreach($inlandsValue->inlandports as $ports){
+                    if (in_array($ports->ports->id, $destiny_port )) {
+                        $origin =  $ports->ports->coordinates;
+                        $destination = $request->input('destination_address');
+                        $response = GoogleMaps::load('directions')
+                            ->setParam([
+                                'origin'          => $origin,
+                                'destination'     => $destination,
+                                'mode' => 'driving' ,
+                                'language' => 'es',
 
-        $response = GoogleMaps::load('directions')
-            ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
+                            ])->get();
+                        $var = json_decode($response);
+                        foreach($var->routes as $resp) {
+                            foreach($resp->legs as $dist) {
+                                $km = explode(" ",$dist->distance->text);
+                                $distance[] = array("port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] );
+                            }
+                        }
 
-            ])->get();
-        $var = json_decode($response);
+                    }
+                }
 
-        foreach($var->routes as $resp) {
-            foreach($resp->legs as $dist) {
-                dd($dist->distance->text);
+
+                $collection = Collection::make($distance);
+
+                $distancia = "72";
+
+                foreach($inlandsValue->inlanddetails as $details){
+
+                    if($details->type == 'twuenty'){
+
+                        foreach($collection as $key2 =>  $value){
+                            echo $value["port_name"];echo "<br>";
+                            echo $value["km"];echo "<br>";
+
+                            if($distancia>= $details->lower && $distancia <= $details->upper){
+                                echo "im here";
+                                $monto = $request->input('twuenty') * $details->ammount;
+                                echo "lower ".$details->lower;
+                                echo "<br>";
+                                echo "up ".$details->upper;
+                                echo "<br>"; echo "<br>";
+
+                            }
+
+
+                        }
+                        dd($collection);
+
+                        if($distancia >= $details->lower && $distancia <= $details->upper){
+
+                            $monto = $request->input('twuenty') * $details->ammount;
+                            echo "lower ".$details->lower;
+                            echo "<br>";
+                            echo "up ".$details->upper;
+                            echo "<br>"; echo "<br>";
+
+                        }
+                    }
+
+                }
+                dd($inlands);
             }
         }*/
-
 
         $date =  $request->input('date');
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
