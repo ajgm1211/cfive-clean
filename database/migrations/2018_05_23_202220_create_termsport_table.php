@@ -17,8 +17,8 @@ class CreateTermsportTable extends Migration
             $table->increments('id');
             $table->integer('port_id')->unsigned();
             $table->integer('term_id')->unsigned();
-            $table->foreign('port_id')->references('id')->on('harbors');
-            $table->foreign('term_id')->references('id')->on('termsAndConditions');
+            $table->foreign('port_id')->references('id')->on('harbors')->onDelete('cascade');
+            $table->foreign('term_id')->references('id')->on('termsAndConditions')->onDelete('cascade');
             $table->timestamps();
         });
     }
