@@ -53,8 +53,8 @@
                             </div>
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-
-                            <a href="http://localhost:8000/terms/add" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="{{ route("terms.add") }}">
+                        
+                            <a href="{{ route('terms.add') }}" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="{{ route("terms.add") }}">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
@@ -96,7 +96,7 @@
                                 <td>{{ $arr->user_id }}</td>
                                 <td>{{ $arr->export }}</td>
                                 <td>{{ $arr->import }}</td>
-                                <td>
+                                <td> 
                                     <a href="http://localhost:8000/terms/edit{{ $arr->id }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                         <i class="la la-edit"></i>
                                     </a>
