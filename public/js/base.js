@@ -386,9 +386,6 @@ $(document).on('click', '.addButton', function (e) {
             .insertAfter($template);
 });
 
-$(document).on('click', '.removeButton', function (e) {
-    var $row = $(this).closest('.row').remove();
-});
 $(document).on('click', '.addButtonDestination', function (e) {
     var $template = $('#destination_ammounts'),
         $clone = $template
@@ -397,9 +394,17 @@ $(document).on('click', '.addButtonDestination', function (e) {
             .removeAttr('id')
             .insertAfter($template);
 });
-
+$(document).on('click', '.removeOriginButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+    $(".origin_price_per_unit").change();
+});
+$(document).on('click', '.removeButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+    $(".freight_price_per_unit").change();
+});
 $(document).on('click', '.removeButtonDestination', function (e) {
     var $row = $(this).closest('.row').remove();
+    $(".destination_price_per_unit").change();
 });
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
@@ -550,9 +555,10 @@ $( document ).ready(function() {
     });
 });
 
-$(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency", function() {
+$(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
     var sum = 0;
     var total_amount = 0;
+    var markup = 0;
     $(".origin_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('.row').find('.origin_ammount_units').val();
@@ -562,7 +568,11 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
                 }else{
                     total_amount = quantity * $(this).val();
                 }*/
+                markup = $(this).closest('.row').find('.origin_ammount_markup').val();
                 total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
                 $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
             }else{
                 total_amount = 0;
@@ -576,9 +586,10 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
     });
 });
 
-$(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency", function() {
+$(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
     var sum = 0;
     var total_amount = 0;
+    var markup = 0;
     $(".freight_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('.row').find('.freight_ammount_units').val();
@@ -588,7 +599,11 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
                 }else{
                     total_amount = quantity * $(this).val();
                 }*/
+                markup = $(this).closest('.row').find('.freight_ammount_markup').val();
                 total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
                 $(this).closest('.row').find('.freight_total_ammount').val(total_amount);
             }else{
                 total_amount = 0;
@@ -602,9 +617,10 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
     });
 });
 
-$(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency", function() {
+$(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
     var sum = 0;
     var total_amount = 0;
+    var markup = 0;
     $(".destination_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('.row').find('.destination_ammount_units').val();
@@ -614,7 +630,11 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
                 }else{
                     total_amount = quantity * $(this).val();
                 }*/
+                markup = $(this).closest('.row').find('.destination_ammount_markup').val();
                 total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
                 $(this).closest('.row').find('.destination_total_ammount').val(total_amount);
             }else{
                 total_amount = 0;

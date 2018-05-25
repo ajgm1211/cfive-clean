@@ -128,7 +128,7 @@
                                 <td>{{$quote->destination_address }}</td>
                             @endif
                             <td>
-                                <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <a href="{{route('quotes.edit',$quote->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                 </a>
                                 <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
