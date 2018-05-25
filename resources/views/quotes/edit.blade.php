@@ -8,7 +8,7 @@
                 <button class="btn btn-primary btn-block">Save</button>
             </div>
             <div class="col-md-1">
-                <button class="btn btn-primary btn-block">PDF</button>
+                <a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
             </div>
             <div class="col-md-2">
                 <button class="btn btn-primary btn-block">Schedules</button>
@@ -229,7 +229,7 @@
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Price level</label>
-                                                                    {{ Form::select('price_id',[],$quote->price_id,['class'=>'m-select2-general form-control']) }}
+                                                                    {{ Form::select('price_id',$prices,$quote->price_id,['class'=>'m-select2-general form-control']) }}
                                                                 </div>
 
                                                             </div>
@@ -269,20 +269,6 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <!--<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
-                                                                        <div class="m-portlet__head">
-                                                                            <div class="m-portlet__head-caption">
-                                                                                <div class="m-portlet__head-title">
-                                                                                    <h5 class="m-portlet__head-text">
-                                                                                        Destination
-                                                                                    </h5>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="m-portlet__body">
-                                                                            <span id="destination_input"></span>
-                                                                        </div>
-                                                                    </div>-->
                                                                     <div class="panel panel-default">
                                                                         <div class="panel-heading"><b>Destination</b></div>
                                                                         <div class="panel-body">
@@ -449,8 +435,8 @@
                                                                     <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
-                                                                                    <input type="hidden" id="total_origin_ammount" name="total_origin_ammount" class="form-control"/>
+                                                                                    Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
+                                                                                    <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value="{{$quote->sub_total_origin}}" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -511,9 +497,9 @@
                                                                                     <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
                                                                                         <option value="">Currency</option>
                                                                                         <option value="1" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
-                                                                                        <option value="2" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>CLP</option>
-                                                                                        <option value="3" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>ARS</option>
-                                                                                        <option value="4" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>EUR</option>
+                                                                                        <option value="2" {!! $freight_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
+                                                                                        <option value="3" {!! $freight_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
+                                                                                        <option value="4" {!! $freight_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
@@ -612,8 +598,8 @@
                                                                     <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;
-                                                                                    <input type="hidden" id="total_freight_ammount" name="total_freight_ammount" class="form-control"/>
+                                                                                    Sub-Total: <span id="sub_total_freight">{{$quote->sub_total_freight}}</span>&nbsp;
+                                                                                    <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value="{{$quote->sub_total_freight}}"  class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -674,9 +660,9 @@
                                                                                     <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
                                                                                         <option value="">Currency</option>
                                                                                         <option value="1" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
-                                                                                        <option value="2" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>CLP</option>
-                                                                                        <option value="3" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>ARS</option>
-                                                                                        <option value="4" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>EUR</option>
+                                                                                        <option value="2" {!! $destination_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
+                                                                                        <option value="3" {!! $destination_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
+                                                                                        <option value="4" {!! $destination_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
@@ -775,8 +761,8 @@
                                                                     <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp
-                                                                                    <input type="hidden" id="total_destination_ammount" name="total_destination_ammount" class="form-control"/>
+                                                                                    Sub-Total: <span id="sub_total_destination">{{$quote->sub_total_destination}}</span>&nbsp
+                                                                                    <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value="{{$quote->sub_total_destination}}" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -788,6 +774,13 @@
                                                                                     <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                 </a>
                                                                             </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group text-right">
+                                                                        <h3><b>Total:</b> <span id="total">{{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }}</span></h3>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -820,6 +813,7 @@
 
 @section('js')
     @parent
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
     <script src="/js/quote.js"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>

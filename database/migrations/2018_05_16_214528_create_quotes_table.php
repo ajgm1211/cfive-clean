@@ -18,7 +18,7 @@ class CreateQuotesTable extends Migration
             $table->string('owner');
             $table->string('incoterm');
             $table->date('validity')->nullable();
-            $table->date('modality');
+            $table->integer('modality');
             $table->date('pick_up_date');
             $table->string('origin_address')->nullable();
             $table->string('destination_address')->nullable();

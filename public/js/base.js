@@ -534,7 +534,7 @@ $( document ).ready(function() {
                 success: function(data) {
                     $('select[name="client"]').empty();
                     $.each(data, function(key, value) {
-                        $('select[name="client"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
                 }
             });
@@ -648,6 +648,20 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
     });
 });
 
-
-
-
+$(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_ammount, #total_destination_ammount", function() {
+    var total_origin=$("#total_origin_ammount").val();
+    var total_freight=$("#total_freight_ammount").val();
+    var total_destination=$("#total_destination_ammount").val();
+    if(total_origin>0){
+        total_origin=parseFloat(total_origin);
+    }
+    if(total_freight>0){
+        total_freight=parseFloat(total_freight);
+    }
+    if(total_destination>0){
+        total_destination=parseFloat(total_destination);
+    }
+    var sum = 0;
+    sum = total_origin + +total_freight + +total_destination;
+    $("#total").html(" "+sum + " USD");
+});

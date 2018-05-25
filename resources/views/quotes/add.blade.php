@@ -189,7 +189,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-4" id="origin_harbor_label">
                                                                     <label>Origin port</label>
-                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor']) }}
+                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor']) }}
                                                                 </div>
                                                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                                     <label>Origin address</label>
@@ -200,7 +200,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-4" id="destination_harbor_label">
                                                                     <label>Destination port</label>
-                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor']) }}
+                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor']) }}
                                                                 </div>
                                                                 <div class="col-md-8" id="destination_address_label" style="display: none;">
                                                                     <label>Destination address</label>
@@ -245,20 +245,6 @@
                                                         <div class="col-md-12">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <!--<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
-                                                                        <div class="m-portlet__head">
-                                                                            <div class="m-portlet__head-caption">
-                                                                                <div class="m-portlet__head-title">
-                                                                                    <h5 class="m-portlet__head-text">
-                                                                                        Origin
-                                                                                    </h5>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="m-portlet__body">
-                                                                            <span id="origin_input"></span>
-                                                                        </div>
-                                                                    </div>-->
                                                                     <div class="panel panel-default">
                                                                         <div class="panel-heading"><b>Origin</b></div>
                                                                         <div class="panel-body">
@@ -267,20 +253,6 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
-                                                                    <!--<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
-                                                                        <div class="m-portlet__head">
-                                                                            <div class="m-portlet__head-caption">
-                                                                                <div class="m-portlet__head-title">
-                                                                                    <h5 class="m-portlet__head-text">
-                                                                                        Destination
-                                                                                    </h5>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="m-portlet__body">
-                                                                            <span id="destination_input"></span>
-                                                                        </div>
-                                                                    </div>-->
                                                                     <div class="panel panel-default">
                                                                         <div class="panel-heading"><b>Destination</b></div>
                                                                         <div class="panel-body">
@@ -444,7 +416,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
-                                                                                    <input type="hidden" id="total_origin_ammount" name="total_origin_ammount" class="form-control"/>
+                                                                                    <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -605,7 +577,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;
-                                                                                    <input type="hidden" id="total_freight_ammount" name="total_freight_ammount" class="form-control"/>
+                                                                                    <input type="hidden" id="total_freight_ammount" name="sub_total_freight" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -766,7 +738,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp
-                                                                                    <input type="hidden" id="total_destination_ammount" name="total_destination_ammount" class="form-control"/>
+                                                                                    <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
                                                                     </div>
@@ -778,6 +750,13 @@
                                                                                     <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                 </a>
                                                                             </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group text-right">
+                                                                        <h3><b>Total:</b> <span id="total"></span> </h3>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -810,6 +789,7 @@
 
 @section('js')
     @parent
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
     <script src="/js/quote.js"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
