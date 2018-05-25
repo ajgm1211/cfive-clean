@@ -15,8 +15,8 @@ class SurchargesController extends Controller
      */
     public function index()
     {
-
-        $data = Surcharge::with('user')->get();
+       
+        $data = Surcharge::where('user_id','=',Auth::user()->id)->with('user')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
     public function add()

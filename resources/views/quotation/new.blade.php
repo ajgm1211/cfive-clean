@@ -103,7 +103,7 @@
                                                 20' :
                                             </label>
                                             <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('twuenty', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => '20 ','class' => 'col-lg-12 form-control']) !!}
+                                                {!! Form::text('twuenty', 0, ['id' => 'm_touchspin_2_1' ,'placeholder' => '20 ','class' => 'col-lg-12 form-control']) !!}
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -111,7 +111,7 @@
                                                 40' :
                                             </label>
                                             <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('forty', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => '40 ','class' => 'col-lg-12 form-control']) !!}
+                                                {!! Form::text('forty', 0, ['id' => 'm_touchspin_2_1' ,'placeholder' => '40 ','class' => 'col-lg-12 form-control']) !!}
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -119,7 +119,7 @@
                                                 40' HC :
                                             </label>
                                             <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('fortyhc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => '40hc ','class' => 'col-lg-12 form-control']) !!}
+                                                {!! Form::text('fortyhc', 0, ['id' => 'm_touchspin_2_1' ,'placeholder' => '40hc ','class' => 'col-lg-12 form-control']) !!}
 
                                             </div>
                                         </div>

@@ -69,6 +69,7 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
+
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
     Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
@@ -91,7 +92,9 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+    Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
 Auth::routes();
+

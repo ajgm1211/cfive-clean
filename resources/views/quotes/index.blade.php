@@ -3,15 +3,6 @@
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
-            <!--<div class="m-portlet__head">
-                <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                        <h3 class="m-portlet__head-text">
-                            Price levels
-                        </h3>
-                    </div>
-                </div>
-            </div>-->
             @if(Session::has('message.nivel'))
                 <div class="col-md-12">
                     <br>
@@ -37,23 +28,6 @@
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
                             <div class="form-group m-form__group row align-items-center">
-                                <!--<div class="col-md-4">
-                                    <div class="m-form__group m-form__group--inline">
-                                        <div class="m-form__label">
-                                            <label class="m-label m-label--single">
-                                                Status:
-                                            </label>
-                                        </div>
-                                        <div class="m-form__control">
-                                            <select class="form-control m-bootstrap-select" id="m_form_type">
-                                                <option value="">
-                                                    All
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="d-md-none m--margin-bottom-10"></div>
-                                </div>-->
                                 <div class="col-md-4">
                                     <div class="m-input-icon m-input-icon--left">
                                         <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -67,14 +41,21 @@
                             </div>
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-
-                            <a href="{{route('quotes.create')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <a href="{{route('quotes.automatic')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <span>
                                 <span>
-                                    <span>
-                                        Add Quote
-                                    </span>
-                                    <i class="la la-plus"></i>
+                                    Automatic Quote
                                 </span>
+                                <i class="la la-plus"></i>
+                            </span>
+                            </a>
+                            <a href="{{route('quotes.create')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <span>
+                                <span>
+                                    Add Quote
+                                </span>
+                                <i class="la la-plus"></i>
+                            </span>
                             </a>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
                         </div>

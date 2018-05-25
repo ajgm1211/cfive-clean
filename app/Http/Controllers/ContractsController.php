@@ -26,7 +26,7 @@ class ContractsController extends Controller
     public function index()
     {
 
-        $contracts = Contract::with('rates')->get();
+        $contracts = Contract::where('user_id','=',Auth::user()->id)->with('rates')->get();
         //$contracts->rates;
         //dd($contracts);
         /* foreach ($contracts as $arr) {
@@ -59,7 +59,7 @@ class ContractsController extends Controller
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
-        $surcharge = $objsurcharge->all()->pluck('name','id');
+        $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
 
         return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge'));
@@ -188,7 +188,7 @@ class ContractsController extends Controller
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
-        $surcharge = $objsurcharge->all()->pluck('name','id');
+        $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
         return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge'));
     }

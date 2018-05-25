@@ -7,7 +7,7 @@ use App\Harbor;
 use App\Inland;
 use App\InlandPort;
 use App\InlandDetail;
-
+use App\Currency;
 class InlandsController extends Controller
 {
     /**
@@ -25,7 +25,9 @@ class InlandsController extends Controller
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('inland/add', compact('harbor'));
+        $objcurrency = new Currency();
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        return view('inland/add', compact('harbor','currency'));
     }
 
     /**
@@ -132,11 +134,12 @@ class InlandsController extends Controller
     public function edit($id)
     {
         $inland = Inland::with('inlandports.ports','inlanddetails.currency')->get()->find($id);
-
+        $objcurrency = new Currency();
+        $currency = $objcurrency->all()->pluck('alphacode','id');
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('inland/edit', compact('harbor','inland'));
+        return view('inland/edit', compact('harbor','inland','currency'));
 
     }
 
