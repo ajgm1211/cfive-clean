@@ -164,6 +164,8 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
+        Barryvdh\Elfinder\ElfinderServiceProvider::class,
+
         Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 

@@ -27,7 +27,7 @@ class TermsAndConditionsController extends Controller
         for($i = 0; $i < sizeof($data); $i++){
             $var = $terms_port->where('term_id', $data[$i]->id)->pluck('port_id');
             for($j = 0; $j < sizeof($var); $j++){
-                $data[$i]->user_id = $aux . $tabla->where('id', $var[$j])->pluck('name');
+                $data[$i]->user_id = $aux . trim($tabla->where('id', $var[$j])->pluck('name'), "[..]");
                 $aux = $data[$i]->user_id;
             }
             $aux = '';
