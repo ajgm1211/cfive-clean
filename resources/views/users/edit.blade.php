@@ -34,7 +34,7 @@
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-                @include('users.partials.form_users')
+                           @include('users.partials.form_users', array('type'=>'edit'))
 
 
             </div>
