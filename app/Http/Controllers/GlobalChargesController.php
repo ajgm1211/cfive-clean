@@ -38,7 +38,7 @@ class GlobalChargesController extends Controller
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
-        $surcharge = $objsurcharge->all()->pluck('name','id');
+        $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
         return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge'));
     }
