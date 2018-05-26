@@ -105,10 +105,20 @@ class TermsAndConditionsController extends Controller
     public function edit($id)
     {
         $term = TermAndCondition::find($id);
+        $table_terms_port = TermsPort::All();
+        $harbor = Harbor::All();
+        $termsport = $table_terms_port->where('term_id', $term->id)->pluck('port_id');
+        $cnt = 0;
+        foreach($termsport as $tp){
+            $ports[$cnt++] = $harbor->where('id', $tp)->pluck('name');
+        }
+        
         $harbor = Harbor::all();
         $array = $harbor->pluck('name');
         
-        return view('terms.edit', compact('array', 'term'));
+        //dd($ports);
+
+        return view('terms.edit', compact('array', 'term', 'ports'));
     }
 
     /**
@@ -122,8 +132,22 @@ class TermsAndConditionsController extends Controller
     {
         $requestForm = $request->all();
         $term = TermAndCondition::find($id);
-
-        $term->update($requestForm);
+        $termsPort = TermsPort::All();
+        $ports = $termsPort->where('term_id', $id)->pluck('port_id')->toArray();
+        $newPorts = $requestForm['ports'];
+        $nps = [];
+        foreach($newPorts as $np){
+            array_push($nps, $np + 1);     
+        }
+        
+        
+        $var = array_diff($ports, $nps);
+        dd($var);
+        
+        $term->name = $request->name;
+        $term->import = $request->import;
+        $term->export = $request->export;
+        $term->save();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');

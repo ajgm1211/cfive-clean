@@ -1,8 +1,7 @@
-
-@section('styles')
+<!-- tinyMCE styles -->
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
-@endsection
+<!--end styles -->
 
 <div class="form-group m-form__group">
     {!! Form::text('name', null, ['placeholder' => 'Please enter the term name','class' => 'form-control m-input','required' => 'required']) !!}
@@ -23,8 +22,7 @@
     {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','required' => 'required']) !!}
 </div>
 
-
-@section('scripts')
+<!-- tinyMCE script config -->
 <script>
   var editor_config = {
     path_absolute : "/",
@@ -72,5 +70,5 @@
 <script>
   {!! \File::get(base_path('vendor/barryvdh/laravel-elfinder/resources/assets/js/standalonepopup.min.js')) !!}
 </script>
-@endsection
+<!-- end tinyMCE scripts config -->
 
