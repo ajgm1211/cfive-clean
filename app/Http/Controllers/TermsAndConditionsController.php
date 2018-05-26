@@ -136,17 +136,19 @@ class TermsAndConditionsController extends Controller
         $ports = $termsPort->where('term_id', $id)->pluck('port_id')->toArray();
         $newPorts = $requestForm['ports'];
         $nps = [];
+        
         foreach($newPorts as $np){
             array_push($nps, $np + 1);     
         }
-        
-        
+
         $var = array_diff($ports, $nps);
-        dd($var);
+        //dd($var);
+
         
-        $term->name = $request->name;
-        $term->import = $request->import;
-        $term->export = $request->export;
+        $term->name = $requestForm['name'];
+        $term->import = $requestForm['import'];
+        $term->export = $requestForm['export'];
+        //dd($term);
         $term->save();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
