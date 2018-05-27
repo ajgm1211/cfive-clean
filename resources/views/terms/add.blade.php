@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Add new term & condition')
-
 @section('content')
-
-
 <div class="m-portlet">
     <!--begin::Form-->
     {!! Form::open(['route' => 'terms.store']) !!}
@@ -26,6 +23,5 @@
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
-
 @endsection
 
