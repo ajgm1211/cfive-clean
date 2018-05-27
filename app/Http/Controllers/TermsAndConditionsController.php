@@ -71,13 +71,20 @@ class TermsAndConditionsController extends Controller
         $term->save();
         
         $ports = $request->ports;
+
+        foreach($ports as $i){
+            $termsport = new TermsPort();
+            $termsport->port_id = $i + 1;
+            $termsport->term()->associate($term);
+            $termsport->save();
+        }
         
-        for($i = 0; $i < sizeof($ports); $i++){
+        /*for($i = 0; $i < sizeof($ports); $i++){
             $termsport = new TermsPort();
             $termsport->port_id = $ports[$i] + 1;
             $termsport->term()->associate($term);
             $termsport->save();
-        }
+        }*/
         
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -150,14 +157,12 @@ class TermsAndConditionsController extends Controller
         }
         if(!$diff){
             $diff = array_diff($nps, $ports);;
-            //dd($diff);
             foreach($diff as $i){
                 $newTermsPort = new TermsPort();
                 $newTermsPort->port_id = $i;
                 $newTermsPort->term()->associate($term);
                 $newTermsPort->save();
             }
-            //dd($newTermsPort);
         }
 
         $term->name = $requestForm['name'];
