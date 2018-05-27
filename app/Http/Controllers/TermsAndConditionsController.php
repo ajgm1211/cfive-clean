@@ -116,7 +116,6 @@ class TermsAndConditionsController extends Controller
         $harbor = Harbor::all();
         $array = $harbor->pluck('name');
         
-        //dd($ports);
 
         return view('terms.edit', compact('array', 'term', 'ports'));
     }
@@ -133,7 +132,8 @@ class TermsAndConditionsController extends Controller
         $requestForm = $request->all();
         $term = TermAndCondition::find($id);
         $termsPort = TermsPort::All();
-        $ports = $termsPort->where('term_id', $id)->pluck('port_id')->toArray();
+        $ports = $termsPort->where('term_id', $id)->pluck('port_id', 'id')->toArray();
+        
         $newPorts = $requestForm['ports'];
         $nps = [];
         
@@ -141,14 +141,29 @@ class TermsAndConditionsController extends Controller
             array_push($nps, $np + 1);     
         }
 
-        $var = array_diff($ports, $nps);
-        //dd($var);
+        $diff = array_diff($ports, $nps);
+        while ($i = current($diff)) {
+            $idTermsPort = key($diff);
+            $del = TermsPort::find($idTermsPort);
+            $del->delete();
+            next($diff);
+        }
+        if(!$diff){
+            $diff = array_diff($nps, $ports);;
+            //dd($diff);
+            foreach($diff as $i){
+                $newTermsPort = new TermsPort();
+                $newTermsPort->port_id = $i;
+                $newTermsPort->term()->associate($term);
+                $newTermsPort->save();
+            }
+            //dd($newTermsPort);
+        }
 
-        
         $term->name = $requestForm['name'];
         $term->import = $requestForm['import'];
         $term->export = $requestForm['export'];
-        //dd($term);
+    
         $term->save();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
