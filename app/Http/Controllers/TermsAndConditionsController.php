@@ -27,8 +27,8 @@ class TermsAndConditionsController extends Controller
         for($i = 0; $i < sizeof($data); $i++){
             $var = $terms_port->where('term_id', $data[$i]->id)->pluck('port_id');
             for($j = 0; $j < sizeof($var); $j++){
-                $data[$i]->user_id = $aux . trim($tabla->where('id', $var[$j])->pluck('name'), "[..]");
-                $aux = $data[$i]->user_id;
+                $data[$i]->user_id = $aux . trim($tabla->where('id', $var[$j])->pluck('name'), '[".."]');
+                $aux = $data[$i]->user_id . ', ';
             }
             $aux = '';
         }
@@ -49,9 +49,9 @@ class TermsAndConditionsController extends Controller
     public function add()
     {
         $harbor = Harbor::all();
-        $data = $harbor->pluck('name');
-        //dd($data);
-        return view('terms.add', ['array' => $data]);
+        $array = $harbor->pluck('name');
+
+        return view('terms.add', compact('array'));
     }
 
     /**
@@ -62,7 +62,6 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
-
         $term = new TermAndCondition();
         $term->name = $request->name;
         $term->user_id = Auth::user()->id;
@@ -78,13 +77,6 @@ class TermsAndConditionsController extends Controller
             $termsport->term()->associate($term);
             $termsport->save();
         }
-        
-        /*for($i = 0; $i < sizeof($ports); $i++){
-            $termsport = new TermsPort();
-            $termsport->port_id = $ports[$i] + 1;
-            $termsport->term()->associate($term);
-            $termsport->save();
-        }*/
         
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -120,7 +112,6 @@ class TermsAndConditionsController extends Controller
             $ports[$cnt++] = $harbor->where('id', $tp)->pluck('name');
         }
         
-        $harbor = Harbor::all();
         $array = $harbor->pluck('name');
         
 
