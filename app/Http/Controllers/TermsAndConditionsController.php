@@ -113,7 +113,6 @@ class TermsAndConditionsController extends Controller
         }
         
         $array = $harbor->pluck('name');
-        
 
         return view('terms.edit', compact('array', 'term', 'ports'));
     }
