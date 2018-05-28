@@ -40,6 +40,9 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
     Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
     Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
 });
+Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
+    
+});
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
