@@ -193,7 +193,7 @@
                                                                 </div>
                                                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                                     <label>Origin address</label>
-                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                                                 </div>
                                                             </div>
                                                             <br>
@@ -796,5 +796,26 @@
     <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+    <script>
+        /*** GOOGLE MAPS API ***/
 
+        var autocomplete;
+        function initAutocomplete() {
+            var geocoder = new google.maps.Geocoder();
+            var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+            var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+            //autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+        function codeAddress(address) {
+            var geocoder;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    alert(results[0].geometry.location);
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+    </script>
 @stop
