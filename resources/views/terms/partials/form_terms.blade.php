@@ -14,12 +14,12 @@
 </div>
 
 <div class="form-group m-form__group">
-    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input','required' => 'required']) !!}
+    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input']) !!}
 
 </div>
 
 <div class="form-group m-form__group">
-    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','required' => 'required']) !!}
+    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input']) !!}
 </div>
 
 <!-- tinyMCE script config -->
