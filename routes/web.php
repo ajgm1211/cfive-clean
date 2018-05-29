@@ -46,6 +46,7 @@ Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function 
     Route::get('edit{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
     Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
     Route::get('msg/{id}', 'EmailsTemplateController@destroymsg')->name('emails-template.msg');
+    Route::get('show/{id}', 'EmailsTemplateController@show')->name('emails-template.show');
     Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
     
 });
