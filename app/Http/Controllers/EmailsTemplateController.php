@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\EmailTemplate;
+use App\User;
 
 class EmailsTemplateController extends Controller
 {
@@ -13,7 +16,16 @@ class EmailsTemplateController extends Controller
      */
     public function index()
     {
-        //
+        $template = EmailTemplate::All();
+        $data = $template->where('user_id', Auth::user()->id);
+
+        foreach($data as $i){
+            $user = User::find(Auth::user()->id);    
+            $i->user_id = $user->name;
+        }
+        //dd($data);
+
+        return view('emails-template.list', compact('data'));
     }
 
     /**
@@ -26,6 +38,11 @@ class EmailsTemplateController extends Controller
         //
     }
 
+    public function add(){
+
+        return view('emails-template.add');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -34,7 +51,16 @@ class EmailsTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $template = new EmailTemplate();
+        $template->name = $request->name;
+        $template->subject = $request->subject;
+        $template->menssage = $request->menssage;
+        $template->user_id = Auth::user()->id;
+        $template->save();
+
+        return redirect('mail-templates/list');
+        
     }
 
     /**
