@@ -117,7 +117,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">
-                                    Terms & conditions
+                                    Emails Templates
                                 </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">
@@ -152,19 +152,19 @@
         function AbrirModal(action,id){
 
             if(action == "edit"){
-                var url = '{{ route("terms.edit", ":id") }}';
+                var url = '{{ route("emails-template.edit", ":id") }}';
                 url = url.replace(':id', id);
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
                 });
             }if(action == "add"){
-                var url = '{{ route("terms.add") }}';
+                var url = '{{ route("emails-template.add") }}';
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
                 });
             }
             if(action == "delete"){
-                var url = '{{ route("terms.msg", "id") }}';
+                var url = '{{ route("emails-template.msg", "id") }}';
                 url = url.replace('id', id);
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});

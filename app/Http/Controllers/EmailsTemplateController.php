@@ -116,6 +116,24 @@ class EmailsTemplateController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $template = EmailTemplate::find($id);
+        $template->delete();
+        return $template;
+    }
+
+    public function destroyTemplate(Request $request,$id){
+        $template = self::destroy($id);
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully delete : '.$template->name);
+        return redirect()->route('emails-template.list');
+
+    }
+
+    public function destroymsg($id)
+    {
+        return view('mail-template/message' ,['id' => $id]);
+
     }
 }
