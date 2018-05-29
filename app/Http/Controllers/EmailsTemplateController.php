@@ -133,7 +133,7 @@ class EmailsTemplateController extends Controller
 
     public function destroymsg($id)
     {
-        return view('mail-template/message' ,['id' => $id]);
+        return view('emails-template.message' ,['id' => $id]);
 
     }
 }
