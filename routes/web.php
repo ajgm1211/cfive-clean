@@ -43,6 +43,7 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
     Route::resource('mail-templates', 'EmailsTemplateController');
     Route::get('list', 'EmailsTemplateController@index')->name('emails-template.list');
+    Route::get('edit{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
     Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
     
 });
