@@ -66,7 +66,7 @@ class QuoteController extends Controller
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
 
-        if($delivery_type == "2"){
+        if($delivery_type == "2" || $delivery_type == "4" ){
             $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
                 $q->whereIn('port', $destiny_port);
             })->with('inlandports.ports','inlanddetails.currency')->get();
@@ -129,15 +129,86 @@ class QuoteController extends Controller
             }//foreach inlands
             if(!empty($data)){
                 $collection = Collection::make($data);
-               // dd($collection); //  completo 
+                // dd($collection); //  completo 
                 $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
                     $test = $item->where('monto', $item->min('monto'))->first(); 
                     return $test;
                 });
-                 // dd($inlandDestiny); // filtraor por el minimo 
+                // dd($inlandDestiny); // filtraor por el minimo 
             }
 
         }
+        if($delivery_type == "3" || $delivery_type == "4" ){
+            $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
+                $q->whereIn('port', $origin_port);
+            })->with('inlandports.ports','inlanddetails.currency')->get();
+
+            foreach($inlands as $inlandsValue){
+
+                foreach($inlandsValue->inlandports as $ports){
+                    $monto = 0;
+                    $temporal = 0;
+                    if (in_array($ports->ports->id, $origin_port )) {
+                        $origin = $request->input('origin_address');
+                        $destination =  $ports->ports->coordinates;
+                        $response = GoogleMaps::load('directions')
+                            ->setParam([
+                                'origin'          => $origin,
+                                'destination'     => $destination,
+                                'mode' => 'driving' ,
+                                'language' => 'es',
+
+                            ])->get();
+                        $var = json_decode($response);
+                        foreach($var->routes as $resp) {
+                            foreach($resp->legs as $dist) {
+                                $km = explode(" ",$dist->distance->text);
+
+                                foreach($inlandsValue->inlanddetails as $details){
+                                    if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('twuenty') * $details->ammount;
+                                        }
+                                    }
+                                    if($details->type == 'forty' && $request->input('forty') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('forty') * $details->ammount;
+
+                                        }
+                                    }
+                                    if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('fortyhc') * $details->ammount;
+
+                                        }
+                                    }
+
+                                }
+                                if($monto > 0){
+                                    $dataOrig[] = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door');
+                                }
+                            }
+                        }
+                    } // if ports
+                }// foreach ports
+            }//foreach inlands
+            
+      
+            if(!empty($dataOrig)){
+                $collectionOrig = Collection::make($dataOrig);
+                // dd($collection); //  completo 
+                $inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
+                    $test = $item->where('monto', $item->min('monto'))->first(); 
+                    return $test;
+                });
+                // dd($inlandOrigin); // filtraor por el minimo 
+            }
+
+        }
+        
         $date =  $request->input('date');
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
         {
@@ -229,7 +300,7 @@ class QuoteController extends Controller
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment','inlandDestiny'));
+        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment','inlandDestiny','inlandOrigin'));
 
     }
 

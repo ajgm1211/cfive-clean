@@ -800,7 +800,7 @@
                             </table>
                         </td>
                     </tr>
-                    @if(!empty($inlandDestiny))
+                    @if((!empty($inlandDestiny)) || (!empty($inlandOrigin)))
                     <tr id="inlands{{$loop->iteration}}" hidden="true" >
                         <td colspan="6">
                             <b>Inlands Charges</b>
@@ -813,30 +813,34 @@
                                     <th>Port Name</th>
                                     <th>Total Ammount</th>
                                 </tr>
-
-                                @foreach($inlandDestiny as $inlandDest)
-
-                                <tr>
-                                    <th>{{ $inlandDest['provider'] }}</th>
-                                    <th>{{ $inlandDest['type'] }}</th>
-                                    <th>{{ $inlandDest['km'] }} KM</th>
-                                    <th>{{ $inlandDest['port_name'] }}</th>
-                                    <th>{{ $inlandDest['monto'] }}</th>
-                                </tr>
-                                @php
-                                $inl = 'true';
-                                @endphp
-                                @endforeach
-
-                                @if($inl == 'false')
-                                <tr><td colspan="7" align='center'><b> Inland  is not available</b> </td></tr>
+                                @if(!empty($inlandDestiny))
+                                    @foreach($inlandDestiny as $inlandDest)
+                                        <tr>
+                                            <th>{{ $inlandDest['provider'] }}</th>
+                                            <th>{{ $inlandDest['type'] }}</th>
+                                            <th>{{ $inlandDest['km'] }} KM</th>
+                                            <th>{{ $inlandDest['port_name'] }}</th>
+                                            <th>{{ $inlandDest['monto'] }}</th>
+                                        </tr>
+                                     @endforeach
                                 @endif
+                                  @if(!empty($inlandOrigin))
+                                    @foreach($inlandOrigin as $inlandOrig)
+                                        <tr>
+                                            <th>{{ $inlandOrig['provider'] }}</th>
+                                            <th>{{ $inlandOrig['type'] }}</th>
+                                            <th>{{ $inlandOrig['km'] }} KM</th>
+                                            <th>{{ $inlandOrig['port_name'] }}</th>
+                                            <th>{{ $inlandOrig['monto'] }}</th>
+                                        </tr>
+                                     @endforeach
+                                    @endif
                             </table>
                         </td>
                     </tr>
                     @endif
-
                     @endforeach
+                   
                 </tbody>
             </table>
         </div>
