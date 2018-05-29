@@ -97,7 +97,7 @@
                                 <td>{!! strip_tags( $arr->menssage ) !!}</td>
                                 <td>{{ $arr->user_id }}</td>
                                 <td> 
-                                    <a href="{{ route('terms.edit', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
+                                    <a href="{{ route('emails-template.edit', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                         <i class="la la-edit"></i>
                                     </a>
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >

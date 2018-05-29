@@ -23,7 +23,6 @@ class EmailsTemplateController extends Controller
             $user = User::find(Auth::user()->id);    
             $i->user_id = $user->name;
         }
-        //dd($data);
 
         return view('emails-template.list', compact('data'));
     }
@@ -82,7 +81,9 @@ class EmailsTemplateController extends Controller
      */
     public function edit($id)
     {
-        //
+        $template = EmailTemplate::find($id);
+
+        return view('emails-template.edit', compact('template'));
     }
 
     /**
@@ -94,7 +95,17 @@ class EmailsTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $requestForm = $request->all();
+        $template = EmailTemplate::find($id);
+        $template->name = $requestForm['name'];
+        $template->subject = $requestForm['subject'];
+        $template->menssage = $requestForm['menssage'];
+        
+        $template->save();
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You upgrade has been success ');
+        return redirect()->route('emails-template.list');
     }
 
     /**
