@@ -18,7 +18,7 @@ class CreateCurrencyTable extends Migration
             $table->string('name')->nullable();
             $table->string('alphacode')->nullable();
             $table->double('rates')->nullable();
-
+            $table->timestamps();
         });
     }
 

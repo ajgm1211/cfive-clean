@@ -18,7 +18,7 @@ class HarborsTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-            'name' => 'Durres (Durazzo)',
+                'name' => 'Durres (Durazzo)',
                 'code' => 'AL DRZ',
                 'country_id' => 6,
                 'created_at' => NULL,
