@@ -65,14 +65,17 @@ class QuoteController extends Controller
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
-  /*
+
         if($delivery_type == "2"){
             $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
                 $q->whereIn('port', $destiny_port);
             })->with('inlandports.ports','inlanddetails.currency')->get();
 
             foreach($inlands as $inlandsValue){
+
                 foreach($inlandsValue->inlandports as $ports){
+                    $monto = 0;
+                    $temporal = 0;
                     if (in_array($ports->ports->id, $destiny_port )) {
                         $origin =  $ports->ports->coordinates;
                         $destination = $request->input('destination_address');
@@ -88,56 +91,53 @@ class QuoteController extends Controller
                         foreach($var->routes as $resp) {
                             foreach($resp->legs as $dist) {
                                 $km = explode(" ",$dist->distance->text);
-                                $distance[] = array("port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] );
+
+                                foreach($inlandsValue->inlanddetails as $details){
+                                    if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('twuenty') * $details->ammount;
+
+                                            //  echo $monto;
+                                            //echo '<br>';
+
+                                        }
+                                    }
+                                    if($details->type == 'forty' && $request->input('forty') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('forty') * $details->ammount;
+
+                                        }
+                                    }
+                                    if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
+                                        $distancia = intval($km[0]);  
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('fortyhc') * $details->ammount;
+
+                                        }
+                                    }
+
+                                }
+                                if($monto > 0){
+                                    $data[] = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door');
+                                }
                             }
                         }
-
-                    }
-                }
-
-
-                $collection = Collection::make($distance);
-
-                $distancia = "72";
-
-                foreach($inlandsValue->inlanddetails as $details){
-
-                    if($details->type == 'twuenty'){
-
-                        foreach($collection as $key2 =>  $value){
-                            echo $value["port_name"];echo "<br>";
-                            echo $value["km"];echo "<br>";
-
-                            if($distancia>= $details->lower && $distancia <= $details->upper){
-                                echo "im here";
-                                $monto = $request->input('twuenty') * $details->ammount;
-                                echo "lower ".$details->lower;
-                                echo "<br>";
-                                echo "up ".$details->upper;
-                                echo "<br>"; echo "<br>";
-
-                            }
-
-
-                        }
-                        dd($collection);
-
-                        if($distancia >= $details->lower && $distancia <= $details->upper){
-
-                            $monto = $request->input('twuenty') * $details->ammount;
-                            echo "lower ".$details->lower;
-                            echo "<br>";
-                            echo "up ".$details->upper;
-                            echo "<br>"; echo "<br>";
-
-                        }
-                    }
-
-                }
-                dd($inlands);
+                    } // if ports
+                }// foreach ports
+            }//foreach inlands
+            if(!empty($data)){
+                $collection = Collection::make($data);
+               // dd($collection); //  completo 
+                $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
+                    $test = $item->where('monto', $item->min('monto'))->first(); 
+                    return $test;
+                });
+                 // dd($inlandDestiny); // filtraor por el minimo 
             }
-        }*/
 
+        }
         $date =  $request->input('date');
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
         {
@@ -229,7 +229,7 @@ class QuoteController extends Controller
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment'));
+        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment','inlandDestiny'));
 
     }
 
