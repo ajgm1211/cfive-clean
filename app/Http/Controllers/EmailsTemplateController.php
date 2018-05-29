@@ -50,7 +50,7 @@ class EmailsTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $template = new EmailTemplate();
         $template->name = $request->name;
         $template->subject = $request->subject;
@@ -70,7 +70,10 @@ class EmailsTemplateController extends Controller
      */
     public function show($id)
     {
-        //
+        $template = EmailTemplate::find($id);
+
+        return view('emails-template.show', compact('template'));
+
     }
 
     /**

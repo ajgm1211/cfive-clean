@@ -97,6 +97,9 @@
                                 <td>{!! strip_tags( $arr->menssage ) !!}</td>
                                 <td>{{ $arr->user_id }}</td>
                                 <td> 
+                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View " onclick="AbrirModal('look',{{  $arr->id }})" >
+                                        <i class="la la-search"></i>
+                                    </a>
                                     <a href="{{ route('emails-template.edit', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                         <i class="la la-edit"></i>
                                     </a>
@@ -165,6 +168,13 @@
             }
             if(action == "delete"){
                 var url = '{{ route("emails-template.msg", "id") }}';
+                url = url.replace('id', id);
+                $('.modal-body').load(url,function(){
+                    $('#m_modal_5').modal({show:true});
+                });
+            }
+            if(action == "look"){
+                var url = '{{ route("emails-template.show", "id") }}';
                 url = url.replace('id', id);
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
