@@ -41,6 +41,9 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
     Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
 });
 Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
+    Route::resource('mail-templates', 'EmailsTemplateController');
+    Route::get('list', 'EmailsTemplateController@index')->name('emails-template.list');
+    Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
     
 });
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
