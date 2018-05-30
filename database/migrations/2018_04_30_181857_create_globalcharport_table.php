@@ -15,11 +15,16 @@ class CreateGlobalcharportTable extends Migration
     {
         Schema::create('globalcharport', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('port')->unsigned();
+            $table->integer('port_orig')->unsigned();
+            $table->integer('port_dest')->unsigned();
             $table->integer('globalcharge_id')->unsigned();
-            $table->foreign('port')->references('id')->on('harbors');
+            $table->integer('typedestiny_id')->unsigned();
+            $table->foreign('port_orig')->references('id')->on('harbors');
+            $table->foreign('port_dest')->references('id')->on('harbors');
             $table->foreign('globalcharge_id')->references('id')->on('globalcharges')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('typedestiny_id')->references('id')->on('typedestiny')->onDelete('cascade');
+
+
         });
     }
 

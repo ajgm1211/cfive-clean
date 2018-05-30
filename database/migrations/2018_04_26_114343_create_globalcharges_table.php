@@ -16,7 +16,7 @@ class CreateGlobalchargesTable extends Migration
         Schema::create('globalcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('surcharge_id')->unsigned();
-            $table->string('changetype');
+            $table->integer('typedestiny_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('calculationtype_id')->unsigned();
             $table->double('ammount');
@@ -25,6 +25,7 @@ class CreateGlobalchargesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('calculationtype_id')->references('id')->on('calculationtype');
             $table->foreign('currency_id')->references('id')->on('currency');
+            $table->foreign('typedestiny_id')->references('id')->on('typedestiny')->onDelete('cascade');
             $table->timestamps();
         });
     }

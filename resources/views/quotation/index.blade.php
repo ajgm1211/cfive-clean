@@ -815,24 +815,28 @@
                                 </tr>
                                 @if(!empty($inlandDestiny))
                                     @foreach($inlandDestiny as $inlandDest)
-                                        <tr>
-                                            <th>{{ $inlandDest['provider'] }}</th>
-                                            <th>{{ $inlandDest['type'] }}</th>
-                                            <th>{{ $inlandDest['km'] }} KM</th>
-                                            <th>{{ $inlandDest['port_name'] }}</th>
-                                            <th>{{ $inlandDest['monto'] }}</th>
-                                        </tr>
+                                        @if($inlandDest['port_id'] == $arr->port_destiny->id )
+                                            <tr>
+                                                <th>{{ $inlandDest['provider'] }}</th>
+                                                <th>{{ $inlandDest['type'] }}</th>
+                                                <th>{{ $inlandDest['km'] }} KM</th>
+                                                <th>{{ $inlandDest['port_name'] }}</th>
+                                                <th>{{ $inlandDest['monto'] }}</th>
+                                            </tr>
+                                        @endif
                                      @endforeach
                                 @endif
                                   @if(!empty($inlandOrigin))
                                     @foreach($inlandOrigin as $inlandOrig)
-                                        <tr>
-                                            <th>{{ $inlandOrig['provider'] }}</th>
-                                            <th>{{ $inlandOrig['type'] }}</th>
-                                            <th>{{ $inlandOrig['km'] }} KM</th>
-                                            <th>{{ $inlandOrig['port_name'] }}</th>
-                                            <th>{{ $inlandOrig['monto'] }}</th>
-                                        </tr>
+                                        @if($inlandOrig['port_id'] == $arr->port_origin->id )
+                                            <tr>
+                                                <th>{{ $inlandOrig['provider'] }}</th>
+                                                <th>{{ $inlandOrig['type'] }}</th>
+                                                <th>{{ $inlandOrig['km'] }} KM</th>
+                                                <th>{{ $inlandOrig['port_name'] }}</th>
+                                                <th>{{ $inlandOrig['monto'] }}</th>
+                                            </tr>
+                                        @endif
                                      @endforeach
                                     @endif
                             </table>

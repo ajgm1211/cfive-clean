@@ -22,7 +22,6 @@ class Harbor extends Model
     }
     public function globalcharport()
     {
-
         return $this->hasMany('App\GlobalCharPort');
     }
 

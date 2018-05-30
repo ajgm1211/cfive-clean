@@ -8,7 +8,7 @@ class GlobalCharCarrier extends Model
 {
     protected $table    = "globalcharcarrier";
     protected $fillable =   ['id','carrier_id','globalcharge_id'];
-
+    public $timestamps = false;
     public function globalcharge()
     {
 

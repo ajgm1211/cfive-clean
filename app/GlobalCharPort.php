@@ -8,13 +8,21 @@ class GlobalCharPort extends Model
 {
 
     protected $table    = "globalcharport";
-    protected $fillable =   ['id','port','globalcharge_id'];
+    protected $fillable =   ['id','port','typedestiny_id','globalcharge_id'];
+    public $timestamps = false;
     public function globalcharge()
     {
         return $this->belongsTo('App\GlobalCharge','globalcharge_id');
     }
-    public function ports(){
-        return $this->belongsTo('App\Harbor','port');
+    public function portOrig(){
+        return $this->belongsTo('App\Harbor','port_orig');
+    }
+    public function portDest(){
+        return $this->belongsTo('App\Harbor','port_dest');
+
+    }
+    public function typedestiny(){
+        return $this->belongsTo('App\TypeDestiny');
 
     }
 }

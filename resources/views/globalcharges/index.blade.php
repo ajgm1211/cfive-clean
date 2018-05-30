@@ -70,7 +70,10 @@
                             Type
                         </th>
                         <th title="Field #2">
-                            Ports
+                            Origin Port
+                        </th>
+                        <th title="Field #2">
+                            Destiny Port
                         </th>
                         <th title="Field #3">
                             Changetype
@@ -95,8 +98,8 @@
                 <tbody>
 
                     @foreach ($global as $globalcharges)
-                    
-            
+
+
 
                     <tr id='tr_l{{++$loop->index}}'>
                         <td>
@@ -108,20 +111,31 @@
                         <td>
                             <div id="divport{{$loop->index}}"  class="val">
 
-                                {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('ports')->pluck('name') ) !!} 
+                                {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('name') ) !!} 
                             </div>
-                         
+
                             <div class="in" hidden="true">
-                                {{ Form::select('port_id[]', $harbor,
-                                $globalcharges->globalcharport->pluck('port'),['id' => 'port'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
+                                {{ Form::select('port_orig[]', $harbor,
+                                $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div id="divportDest{{$loop->index}}"  class="val">
+
+                             {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('name') ) !!} 
+                            </div>
+
+                            <div class="in" hidden="true">
+                                {{ Form::select('port_dest[]', $harbor,
+                                $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
                         <td>
 
-                            <div id="divchangetype{{$loop->index}}"  class="val">{!! $globalcharges->changetype !!}</div>
+                            <div id="divchangetype{{$loop->index}}"  class="val">{!! $globalcharges->typedestiny->description !!}</div>
                             <div class="in" hidden="true">
-
-                                {{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],$globalcharges->changetype,['id' => 'changetype'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
+                                {{ Form::select('changetype[]',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
+                        
                             </div>
                         </td>
                         <td>
@@ -173,8 +187,9 @@
             <table hidden="true">
                 <tr  id='globalclone' hidden="true" >
                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
-                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port','multiple' => 'multiple']) }}</td>
-                    <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'custom-select form-control']) }}</td>
+                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port_orig','multiple' => 'multiple']) }}</td>
+                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port_dest','multiple' => 'multiple']) }}</td>
+                    <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                     <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
                     <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>

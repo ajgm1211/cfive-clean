@@ -19,7 +19,7 @@ class CreateGlobalcharcarrierTable extends Migration
             $table->integer('globalcharge_id')->unsigned();
             $table->foreign('carrier_id')->references('id')->on('carriers');
             $table->foreign('globalcharge_id')->references('id')->on('globalcharges')->onDelete('cascade');
-            $table->timestamps();
+          
         });
     }
 

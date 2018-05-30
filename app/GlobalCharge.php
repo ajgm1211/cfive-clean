@@ -8,7 +8,7 @@ class GlobalCharge extends Model
 {
     protected $table    = "globalcharges";
     protected $fillable = 
-        ['id','surcharge_id','changetype','user_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
+        ['id','surcharge_id','typedestiny_id','user_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -42,6 +42,10 @@ class GlobalCharge extends Model
     public function globalCharPortCarriers(){
 
         return $this->hasMany('App\GlobalCharPortCarrier','port');
+
+    }
+    public function typedestiny(){
+        return $this->belongsTo('App\TypeDestiny');
 
     }
 }

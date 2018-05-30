@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrencyTableSeeder::class);
         $this->call(CalculationtypeTableSeeder::class);
         $this->call(CarriersTableSeeder::class);
+        $this->call(TypedestinyTableSeeder::class);
     }
 }
