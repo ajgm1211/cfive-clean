@@ -9,7 +9,7 @@ class TermAndCondition extends Model
     //
 
     protected $table = "termsAndConditions";
-    protected $fillable = ['id', 'user_id', 'name', 'import', 'export'];
+    protected $fillable = ['id', 'user_id', 'name', 'import', 'export', 'company'];
 
     public function user(){
         return $this->belongsTo('App\User');

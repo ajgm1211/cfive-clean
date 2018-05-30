@@ -17,10 +17,10 @@ class EmailsTemplateController extends Controller
     public function index()
     {
         $template = EmailTemplate::All();
-        $data = $template->where('user_id', Auth::user()->id);
-
+        $data = $template->where('company', Auth::user()->name_company);
+        
         foreach($data as $i){
-            $user = User::find(Auth::user()->id);    
+            $user = User::find($i->user_id);    
             $i->user_id = $user->name;
         }
 
@@ -56,6 +56,7 @@ class EmailsTemplateController extends Controller
         $template->subject = $request->subject;
         $template->menssage = $request->menssage;
         $template->user_id = Auth::user()->id;
+        $template->company = Auth::user()->name_company;
         $template->save();
 
         return redirect('mail-templates/list');
