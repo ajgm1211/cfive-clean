@@ -19,7 +19,7 @@ class TermsAndConditionsController extends Controller
     {
 
         $terms = TermAndCondition::All();
-        $data = $terms->where('user_id', Auth::user()->id);
+        $data = $terms->where('company', Auth::user()->name_company);
         
         $tabla = Harbor::All();
         $terms_port = TermsPort::All();
@@ -67,6 +67,7 @@ class TermsAndConditionsController extends Controller
         $term->user_id = Auth::user()->id;
         $term->import = $request->import;
         $term->export = $request->export;
+        $term->company = Auth::user()->name_company;
         $term->save();
         
         $ports = $request->ports;
