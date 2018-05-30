@@ -96,5 +96,10 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
+Route::middleware(['auth'])->prefix('settings')->group(function () {
+    Route::post('update/currency/{id}', ['uses' => 'SettingController@update', 'as' => 'settings.update']);
+});
+Route::resource('settings', 'SettingController')->middleware('auth');
+
 Auth::routes();
 

@@ -38,20 +38,11 @@ class QuoteController extends Controller
     public function index()
     {
 
-
-
-        /*$data = Contract::with('rates')->get();
-        return view('quotation/index', ['arreglo' => $data]);*/ 
         $quotes = Quote::all();
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('business_name','id');
         $countries = Country::all()->pluck('name','id');
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]);
-
-        /*
-        $objharbor = new Harbor();
-        $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/new', compact('harbor'));*/
 
     }
     public function automatic(){

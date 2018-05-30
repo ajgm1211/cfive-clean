@@ -261,6 +261,16 @@ Air Freight
                             </span>
                         </a>
                     </li>
+                    @if(\Auth::user()->type=='admin')
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{ route('settings.index') }}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Default Currency
+                            </span>
+                        </a>
+                    </li>
+                    @endif
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>

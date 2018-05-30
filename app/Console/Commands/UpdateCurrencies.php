@@ -54,14 +54,14 @@ class updateCurrencies extends Command
         // Decode JSON response:
         $exchangeRates = json_decode($json, true);
         $currencies = array("USDEUR", "USDARS", "USDCLP");
-        //dd($exchangeRates['quotes']);
-        //Currency::truncate();
 
         foreach($exchangeRates['quotes'] as $key=>$value){
-            $currency=Currency::where('alphacode',$key)->first();
-            if($currency->rates!=$value){
-                Currency::where('id',$currency->id)
-                    ->update(['alphacode' => $key, 'rates' => $value]);
+            $currency=Currency::where('api_code',$key)->first();
+            if(isset($currency)){
+                if($currency->rates!=$value){
+                    Currency::where('id',$currency->id)
+                        ->update(['api_code' => $key, 'rates' => $value]);
+                }
             }
         }
 

@@ -1,3 +1,8 @@
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
 function display(id){
 
@@ -23,8 +28,6 @@ function cancel(id){
 }
 
 function save(id,idval){
-
-
     $.ajax({
         type: 'GET',
         url: '../updateRate/' + idval,
@@ -154,6 +157,37 @@ $("#newL").on("click", function() {
     $("#sample_editable_1").append($myClone);
 
 
+});
+
+$(document).on('click', '#default-currency-submit', function () {
+    var id = $('#company_id').val();
+    var form = $('#default-currency');
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: '/settings/update/currency/' + id,
+                data: form.serialize(),
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Done!',
+                            'Your choice has been saved.',
+                            'success'
+                        )
+                    }
+                }
+            });
+
+        }
+
+    });
 });
 
 $(document).on('click', '.remove', function () {
