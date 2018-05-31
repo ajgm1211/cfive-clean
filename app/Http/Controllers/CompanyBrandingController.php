@@ -74,7 +74,26 @@ class CompanyBrandingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $companyUser = CompanyUser::find($id);
+        $var = $request->image;
+        
+        if($var){
+            $name = $var->getClientOriginalName();
+            $companyUser->logo = $name;
+            \Storage::disk('local')->put($name,  \File::get($var));
+        }
+        
+        $companyUser->name = $request->name;
+        $companyUser->address = $request->address;
+        $companyUser->phone = $request->phone;
+        $companyUser->currency_id = $request->currency;
+        $companyUser->save();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You upgrade has been success ');
+        return redirect()->route('users.home');
     }
 
     /**

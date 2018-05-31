@@ -16,8 +16,10 @@
                             </div>
                         </div>
                         <div class="m-portlet__body text-center" style="font-size: 11px !important;">
+                        
                             
-                                <form id="default-currency" >
+                            {!! Form::model($company, ['route' => ['preferences.update', $company], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
+                                
                                     <div class="row text-left" style="font-size: 12px !important;">
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group ">
@@ -46,11 +48,18 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group">
-                                                <button type="button" id="default-currency-submit" class="btn btn-primary btn-block">Update</button>
+                                                <label for="currency_id">Logo</label>
+                                                <input type="file" class="form-control-file" name="image">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group m-form__group">
+                                                <button type="submit" id="default-currency-submit" class="btn btn-primary btn-block">Update</button>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                
+                                {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
