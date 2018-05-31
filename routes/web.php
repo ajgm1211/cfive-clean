@@ -50,6 +50,10 @@ Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function 
     Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
     
 });
+Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
+    Route::resource('preferences', 'CompanyBrandingController');
+    Route::get('config{id}', 'CompanyBrandingController@edit')->name('company-brand.edit');
+});
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
