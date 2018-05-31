@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Julio
- * Date: 29/05/2018
- * Time: 10:50 PM
- */
-?>
 @extends('layouts.app')
 @section('title', 'Settings')
 @section('content')
@@ -24,66 +16,32 @@
                             </div>
                         </div>
                         <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                            @if(!isset($company->companyUser))
-                                <form id="default-currency">
-                                    <div class="row text-left" style="font-size: 11px !important;">
-                                        <div class="col-md-12">
-                                            <div class="form-group m-form__group">
-                                                <label for="name">Name</label>
-                                                <input type="text" placeholder="Company's name" id="name" name="name" class="form-control"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group m-form__group">
-                                                <label for="phone">Phone</label>
-                                                <input type="text" placeholder="Company's phone" id="phone" name="phone" class="form-control"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group m-form__group">
-                                                <label for="address">Address</label>
-                                                <textarea class="form-control" name="address"  placeholder="Company's address" cols="4"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group m-form__group">
-                                                <label for="currency_id">Currency</label>
-                                                {{ Form::select('currency_id',$currencies,null,['placeholder' => 'Please choose a currency','class'=>'custom-select form-control','id' => 'currency_id']) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group m-form__group">
-                                                <button type="button" id="default-currency-submit" class="btn btn-primary btn-block">Save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            @else
+                            
                                 <form id="default-currency" >
                                     <div class="row text-left" style="font-size: 12px !important;">
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group ">
                                                 <label for="name">Name</label>
-                                                <input type="hidden" value="{{$company->companyUser->id}}" id="company_id" name="company_id" class="form-control"/>
-                                                <input type="text" value="{{$company->companyUser->name}}" id="name" name="name" class="form-control"/>
+                                                <input type="hidden" value="{{$company->id}}" id="company_id" name="company_id" class="form-control"/>
+                                                <input type="text" value="{{$company->name}}" id="name" name="name" class="form-control"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group text-left">
                                                 <label for="phone">Phone</label>
-                                                <input type="text" value="{{$company->companyUser->phone}}" id="phone" name="phone" class="form-control"/>
+                                                <input type="text" value="{{$company->phone}}" id="phone" name="phone" class="form-control"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group">
                                                 <label for="address">Address</label>
-                                                <textarea class="form-control" name="address" cols="4">{{$company->companyUser->address}}</textarea>
+                                                <textarea class="form-control" name="address" cols="4">{{$company->address}}</textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group">
                                                 <label for="currency_id">Currency</label>
-                                                {{ Form::select('currency_id',$currencies,$company->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'currency_id']) }}
+                                                {{ Form::select('currency_id',$currencies,$company->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'currency_id']) }}
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -93,7 +51,6 @@
                                         </div>
                                     </div>
                                 </form>
-                            @endif
                         </div>
                     </div>
                 </div>
