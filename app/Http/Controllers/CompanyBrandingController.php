@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\CompanyUser;
+use App\Currency;
 
 class CompanyBrandingController extends Controller
 {
@@ -54,9 +57,12 @@ class CompanyBrandingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        $company = CompanyUser::find(Auth::user()->company_user_id);
+        $currencies = Currency::All()->toArray();
+
+        return view('company-brand.edit', compact('company', 'currencies'));
     }
 
     /**

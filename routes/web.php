@@ -52,7 +52,7 @@ Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function 
 });
 Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
     Route::resource('preferences', 'CompanyBrandingController');
-    Route::get('config{id}', 'CompanyBrandingController@edit')->name('company-brand.edit');
+    Route::get('config', 'CompanyBrandingController@edit')->name('company-brands.edit');
 });
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
