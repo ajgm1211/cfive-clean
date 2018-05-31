@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\TermAndCondition;
 use App\Harbor;
 use App\TermsPort;
+use App\CompanyUser;
 
 class TermsAndConditionsController extends Controller
 {
@@ -18,8 +19,10 @@ class TermsAndConditionsController extends Controller
     public function index()
     {
 
+        $companyUser = CompanyUser::All();
+        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $terms = TermAndCondition::All();
-        $data = $terms->where('company', Auth::user()->name_company);
+        $data = $terms->where('company', $company);
         
         $tabla = Harbor::All();
         $terms_port = TermsPort::All();
@@ -62,12 +65,13 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
+        $company = CompanyUser::find(Auth::user()->company_user_id)->pluck('name');
         $term = new TermAndCondition();
         $term->name = $request->name;
         $term->user_id = Auth::user()->id;
         $term->import = $request->import;
         $term->export = $request->export;
-        $term->company = Auth::user()->name_company;
+        $term->company = $company;
         $term->save();
         
         $ports = $request->ports;
