@@ -65,7 +65,8 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
-        $company = CompanyUser::find(Auth::user()->company_user_id)->pluck('name');
+        $companyUser = CompanyUser::All();
+        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $term = new TermAndCondition();
         $term->name = $request->name;
         $term->user_id = Auth::user()->id;
