@@ -115,9 +115,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <input class="form-control m-input" type="text" placeholder="Email" name="email" autocomplete="off">
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="Name of Company" name="company" autocomplete="off">
-                                        </div>
-                                        <div class="form-group m-form__group">
                                             <input class="form-control m-input" type="password" placeholder="Password" name="password">
                                         </div>
                                         <div class="form-group m-form__group">

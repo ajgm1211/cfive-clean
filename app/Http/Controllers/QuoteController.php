@@ -557,7 +557,7 @@ class QuoteController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Request $request,$id)
+    public function destroy($id)
     {
         $quote = Quote::find($id);
         $quote->delete();
@@ -569,5 +569,122 @@ class QuoteController extends Controller
     {
         $harbor = Harbor::findOrFail($id);
         return $harbor;
+    }
+
+    public function duplicate($id)
+    {
+        $quotes = Quote::all();
+        $quote = Quote::findOrFail($id);
+        $companies = Company::all()->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('name','id');
+        $countries = Country::all()->pluck('name','id');
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $prices = Price::all()->pluck('name','id');
+        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+        $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+        $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+        $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+
+        $quote_duplicate = new Quote();
+        $quote_duplicate->owner=\Auth::id();
+        $quote_duplicate->incoterm=$quote->incoterm;
+        $quote_duplicate->modality=$quote->modality;
+        $quote_duplicate->pick_up_date=$quote->pick_up_date;
+        if($quote->origin_address){
+            $quote_duplicate->origin_address=$quote->origin_address;
+        }
+        if($quote->destination_address){
+            $quote_duplicate->destination_address=$quote->destination_address;
+        }
+        if($quote->company_id){
+            $quote_duplicate->company_id=$quote->company_id;
+        }
+        if($quote->origin_harbor_id){
+            $quote_duplicate->origin_harbor_id=$quote->origin_harbor_id;
+        }
+        if($quote->destination_harbor_id){
+            $quote_duplicate->destination_harbor_id=$quote->destination_harbor_id;
+        }
+        if($quote->price_id){
+            $quote_duplicate->price_id=$quote->price_id;
+        }
+        if($quote->contact_id){
+            $quote_duplicate->contact_id=$quote->contact_id;
+        }
+        if($quote->qty_20){
+            $quote_duplicate->qty_20=$quote->qty_20;
+        }
+        if($quote->qty_40){
+            $quote_duplicate->qty_40=$quote->qty_40;
+        }
+        if($quote->qty_40_hc){
+            $quote_duplicate->qty_40_hc=$quote->qty_40_hc;
+        }
+        if($quote->delivery_type){
+            $quote_duplicate->delivery_type=$quote->delivery_type;
+        }
+        if($quote->sub_total_origin){
+            $quote_duplicate->sub_total_origin=$quote->sub_total_origin;
+        }
+        if($quote->sub_total_freight){
+            $quote_duplicate->sub_total_freight=$quote->sub_total_freight;
+        }
+        if($quote->sub_total_destination){
+            $quote_duplicate->sub_total_destination=$quote->sub_total_destination;
+        }
+        $quote_duplicate->status_id=$quote->status_id;
+        $quote_duplicate->type=$quote->type;
+        $quote_duplicate->save();
+
+        foreach ($origin_ammounts as $origin){
+            $origin_ammount_duplicate = new OriginAmmount();
+            $origin_ammount_duplicate->charge=$origin->charge;
+            $origin_ammount_duplicate->detail=$origin->detail;
+            $origin_ammount_duplicate->units=$origin->units;
+            $origin_ammount_duplicate->price_per_unit=$origin->price_per_unit;
+            $origin_ammount_duplicate->markup=$origin->markup;
+            $origin_ammount_duplicate->currency_id=$origin->currency_id;
+            $origin_ammount_duplicate->total_ammount=$origin->total_ammount;
+            if($origin->total_ammount_2){
+                $origin_ammount_duplicate->total_ammount_2=$origin->total_ammount_2;
+            }
+            $origin_ammount_duplicate->quote_id=$quote_duplicate->id;
+            $origin_ammount_duplicate->save();
+        }
+
+        foreach ($freight_ammounts as $freight){
+            $freight_ammount_duplicate = new FreightAmmount();
+            $freight_ammount_duplicate->charge=$freight->charge;
+            $freight_ammount_duplicate->detail=$freight->detail;
+            $freight_ammount_duplicate->units=$freight->units;
+            $freight_ammount_duplicate->price_per_unit=$freight->price_per_unit;
+            $freight_ammount_duplicate->markup=$freight->markup;
+            $freight_ammount_duplicate->currency_id=$freight->currency_id;
+            $freight_ammount_duplicate->total_ammount=$freight->total_ammount;
+            if($freight->total_ammount_2){
+                $freight_ammount_duplicate->total_ammount_2=$freight->total_ammount_2;
+            }
+            $freight_ammount_duplicate->quote_id=$quote_duplicate->id;
+            $freight_ammount_duplicate->save();
+        }
+
+        foreach ($destination_ammounts as $destination){
+            $destination_ammount_duplicate = new DestinationAmmount();
+            $destination_ammount_duplicate->charge=$destination->charge;
+            $destination_ammount_duplicate->detail=$destination->detail;
+            $destination_ammount_duplicate->units=$destination->units;
+            $destination_ammount_duplicate->price_per_unit=$destination->price_per_unit;
+            $destination_ammount_duplicate->markup=$destination->markup;
+            $destination_ammount_duplicate->currency_id=$destination->currency_id;
+            $destination_ammount_duplicate->total_ammount=$destination->total_ammount;
+            if($destination->total_ammount_2){
+                $destination_ammount_duplicate->total_ammount_2=$destination->total_ammount_2;
+            }
+            $destination_ammount_duplicate->quote_id=$quote_duplicate->id;
+            $destination_ammount_duplicate->save();
+        }
+
+        return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
 }

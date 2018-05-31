@@ -93,6 +93,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
+    Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

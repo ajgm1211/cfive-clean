@@ -235,7 +235,7 @@ $(document).on('click', '#delete-quote', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'quotes.destroy/' + id,
+                url: 'quotes/delete/' + id,
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -614,7 +614,7 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
             }
             sum += +total_amount;
             $("#total_origin_ammount").val(sum);
-            $("#sub_total_origin").html(" "+sum + " USD");
+            $("#sub_total_origin").html(" "+sum);
             $("#total_origin_ammount").change();
         });
     });
@@ -645,7 +645,7 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
             }
             sum += +total_amount;
             $("#total_freight_ammount").val(sum);
-            $("#sub_total_freight").html(" "+sum + " USD");
+            $("#sub_total_freight").html(" "+sum);
             $("#total_freight_ammount").change();
         });
     });
@@ -676,7 +676,7 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
             }
             sum += +total_amount;
             $("#total_destination_ammount").val(sum);
-            $("#sub_total_destination").html(" "+sum + " USD");
+            $("#sub_total_destination").html(" "+sum);
             $("#total_destination_ammount").change();
         });
     });
@@ -697,5 +697,5 @@ $(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_am
     }
     var sum = 0;
     sum = total_origin + +total_freight + +total_destination;
-    $("#total").html(" "+sum + " USD");
+    $("#total").html(" "+sum);
 });

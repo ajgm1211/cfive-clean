@@ -112,6 +112,9 @@
                                 <a href="{{route('quotes.edit',$quote->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                 </a>
+                                <a href="{{route('quotes.duplicate',$quote->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
+                                    <i class="la la-plus"></i>
+                                </a>
                                 <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
                                     <i class="la la-eraser"></i>
                                 </button>

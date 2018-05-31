@@ -288,7 +288,7 @@
                                                                     <div class="col-md-3">Price per unit</div>
                                                                     <div class="col-md-1">Markup</div>
                                                                     <div class="col-md-1">Total</div>
-                                                                    <div class="col-md-1">Total {{$currency_name->alphacode}}</div>
+                                                                    <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
                                                                 </div>
                                                                 <hr>
                                                                 <div class="row">
@@ -416,7 +416,7 @@
                                                                         <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;{{$currency_name->alphacode}}
+                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
                                                                                     <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -449,7 +449,7 @@
                                                                     <div class="col-md-3">Price per unit</div>
                                                                     <div class="col-md-1">Markup</div>
                                                                     <div class="col-md-1">Total</div>
-                                                                    <div class="col-md-1">Total {{$currency_name->alphacode}}</div>
+                                                                    <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
                                                                 </div>
                                                                 <hr>
                                                                 <div class="row">
@@ -577,7 +577,7 @@
                                                                         <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;{{$currency_name->alphacode}}
+                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
                                                                                     <input type="hidden" id="total_freight_ammount" name="sub_total_freight" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -610,7 +610,7 @@
                                                                     <div class="col-md-3">Price per unit</div>
                                                                     <div class="col-md-1">Markup</div>
                                                                     <div class="col-md-1">Total</div>
-                                                                    <div class="col-md-1">Total {{$currency_name->alphacode}}</div>
+                                                                    <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
                                                                 </div>
                                                                 <hr>
                                                                 <div class="row">
@@ -738,7 +738,7 @@
                                                                         <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp{{$currency_name->alphacode}}
+                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
                                                                                     <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -757,7 +757,7 @@
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="form-group text-right">
-                                                                            <h3><b>Total:</b> <span id="total"> {{$currency_name->alphacode}}</span> </h3>
+                                                                            <h3><b>Total:</b> <span id="total"> @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</span> </h3>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -797,7 +797,9 @@
                                         </div>
                                     </div>
                                     <div class="m-portlet__body">
-                                        {{ Form::select('price_id',$currencies,$company_user->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal','disabled'=>'true']) }}
+                                        @if(isset($company_user->companyUser->currency_id))
+                                            {{ Form::select('price_id',$currencies,$company_user->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal','disabled'=>'true']) }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
