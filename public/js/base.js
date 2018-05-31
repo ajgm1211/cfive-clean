@@ -172,7 +172,7 @@ $(document).on('click', '#default-currency-submit', function () {
         if (result.value) {
             $.ajax({
                 type: 'POST',
-                url: '/settings/update/currency/' + id,
+                url: '/settings/store/profile/company',
                 data: form.serialize(),
                 success: function(data) {
                     if(data.message=='Ok'){

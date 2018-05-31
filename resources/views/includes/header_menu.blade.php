@@ -217,23 +217,6 @@ Air Freight
                             </span>
                         </a>
                     </li>
-                    <!--
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-business"></i>
-<span class="m-menu__link-text">
-Sea Freight LCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-business"></i>
-<span class="m-menu__link-text">
-Air Freight
-</span>
-</a>
-</li>-->
                 </ul>
             </div>
         </li>
@@ -266,7 +249,7 @@ Air Freight
                         <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-                                Default Currency
+                                Company's Profile
                             </span>
                         </a>
                     </li>

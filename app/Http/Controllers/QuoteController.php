@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CompanyPrice;
+use App\CompanyUser;
 use App\Contact;
 use App\Country;
+use App\Currency;
 use App\DestinationAmmount;
 use App\DestinationAmount;
 use App\FreightAmmount;
@@ -13,6 +15,7 @@ use App\OriginAmmount;
 use App\OriginAmount;
 use App\Price;
 use App\Quote;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use App\Contract;
@@ -220,7 +223,6 @@ class QuoteController extends Controller
 
         }
 
-
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
         return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment'));
@@ -239,7 +241,10 @@ class QuoteController extends Controller
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
-        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices]);
+        $company_user = User::where('id',\Auth::id())->first();
+        $currency_name = Currency::where('id',$company_user->companyUser->currency_id)->first();
+        $currencies = Currency::all()->pluck('alphacode','id');
+        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
     }
 
     /**
