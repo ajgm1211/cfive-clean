@@ -10,13 +10,15 @@ $("#new").on("click", function() {
 });
 $("#new2").on("click", function() {
 
+
     var $template = $('#tclone2');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id').addClass('trclone2');
     $myClone.find("select").select2();
-    $ids = $( ".port" ).length;
+    $ids = $( ".portOrig" ).length;
     $ids = $ids + 1;
 
-    $myClone.find(".port").attr('name', 'port_id'+$ids+'[]');
+    $myClone.find(".portOrig").attr('name', 'port_origlocal'+$ids+'[]');
+    $myClone.find(".portDest").attr('name', 'port_destlocal'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier_id'+$ids+'[]');
 
     $("#sample_editable_2").append($myClone);
@@ -34,7 +36,10 @@ $(document).on('click', '.removeL', function () {
     $i = 2;
     $('.trclone2').each(function () {
 
-        var res = $(".port",this).removeAttr('name').attr('name', 'port_id'+$i+'[]');
+
+
+        var res = $(".portOrig",this).removeAttr('name').attr('name', 'port_origlocal'+$i+'[]');
+        var res = $(".portDest",this).removeAttr('name').attr('name', 'port_destlocal'+$i+'[]');
         var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier_id'+$i+'[]');
         $i++;
     });

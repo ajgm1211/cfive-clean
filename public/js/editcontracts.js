@@ -93,11 +93,14 @@ function cancel_l(id){
 function save_l(id,idval){
 
     $.ajax({
+
+
         type: 'GET',
         url: '../updateLocalCharge/' + idval,
         data: {
             'surcharge_id' : $("#type"+id).val(),
-            'port' : $("#port"+id).val(),
+            'port_origlocal' : $("#portOrig"+id).val(),
+            'port_destlocal' : $("#portDest"+id).val(),
             'changetype' : $("#changetype"+id).val(),
             'carrier_id' : $("#localcarrier"+id).val(),
             'calculationtype_id' : $("#calculationtype"+id).val(),
@@ -105,6 +108,7 @@ function save_l(id,idval){
             'currency_id' : $("#localcurrency"+id).val()
 
         },
+
         success: function(data) {
 
             swal(
@@ -122,7 +126,7 @@ function save_l(id,idval){
             $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
             var selText ="";
             var porText = "";
-
+            var porTextDest = "";
             $("#localcarrier"+id+" option:selected").each(function () {
                 var $this = $(this);
                 if ($this.length) {
@@ -131,7 +135,7 @@ function save_l(id,idval){
                 }
             });
 
-           $("#port"+id+" option:selected").each(function () {
+            $("#portOrig"+id+" option:selected").each(function () {
                 var $this = $(this);
                 if ($this.length) {
                     porText += $this.text()+ ", ";
@@ -139,15 +143,27 @@ function save_l(id,idval){
                 }
             });
 
+            $("#portDest"+id+" option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                    porTextDest += $this.text()+ ", ";
+
+                }
+            });
             $("#divtype"+id).html($("#type"+id+" option:selected").text());
             $("#divport"+id).html(porText);
+            $("#divportDest"+id).html(porTextDest);
             $("#divcarr"+id).html(selText);
             $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
             $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
             $("#divammount"+id).html($("#ammount"+id).val());
             $("#divcurrency"+id).html($("#localcurrency"+id+" option:selected").text());
 
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
         }
+
     });
 
 }
@@ -169,8 +185,9 @@ $("#newL").on("click", function() {
 
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id').addClass('tr_edit');;
     $myClone.find("select").select2();
-    $ids = $( ".port" ).length;
-    $myClone.find(".port").attr('name', 'port_id'+$ids+'[]');
+    $ids = $( ".portOrig" ).length;
+    $myClone.find(".portOrig").attr('name', 'port_origlocal'+$ids+'[]');
+    $myClone.find(".portDest").attr('name', 'port_destlocal'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier_id'+$ids+'[]');
     $("#sample_editable_1").append($myClone);
 
@@ -182,7 +199,8 @@ $(document).on('click', '.remove', function () {
     $i = 1;
     $('.tr_edit').each(function () {
 
-        var res = $(".port",this).removeAttr('name').attr('name', 'port_id'+$i+'[]');
+        var res = $(".portOrig",this).removeAttr('name').attr('name', 'port_origlocal'+$i+'[]');
+        var resDest = $(".portDest",this).removeAttr('name').attr('name', 'port_destlocal'+$i+'[]');
         var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier_id'+$i+'[]');
         $i++;
     });

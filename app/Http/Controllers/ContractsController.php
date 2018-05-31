@@ -16,6 +16,7 @@ use App\LocalCharCarrier;
 use App\LocalCharPort;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use App\TypeDestiny;
 class ContractsController extends Controller
 {
     /**
@@ -53,16 +54,19 @@ class ContractsController extends Controller
         $objcurrency = new Currency();
         $objcalculation = new CalculationType();
         $objsurcharge = new Surcharge();
+        $objtypedestiny = new TypeDestiny();
+
 
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
 
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny'));
     }
 
     public function create()
@@ -115,13 +119,18 @@ class ContractsController extends Controller
             if(!empty($request->input('ammount.'.$key2))) {
                 $localcharge = new LocalCharge();
                 $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->changetype = $request->input('changetype.'.$key2);
+                $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
                 $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $localcharge->ammount = $request->input('ammount.'.$key2);
                 $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
                 $localcharge->save();    
-                $detailport = $request->input('port_id'.$contador);
+
+
+                $detailportOrig = $request->input('port_origlocal'.$contador);
+                $detailportDest = $request->input('port_destlocal'.$contador);
+
+
                 $detailcarrier = $request->input('localcarrier_id'.$contador);
                 foreach($detailcarrier as $c => $value)
                 {
@@ -130,12 +139,19 @@ class ContractsController extends Controller
                     $detailcarrier->localcharge()->associate($localcharge);
                     $detailcarrier->save();
                 }
-                foreach($detailport as $p => $value)
+                foreach($detailportOrig as $orig => $value)
                 {
-                    $detailport = new LocalCharPort();
-                    $detailport->port = $request->input('port_id'.$contador.'.'.$p);
-                    $detailport->localcharge()->associate($localcharge);
-                    $detailport->save();
+                    foreach($detailportDest as $dest => $value)
+                    {
+
+
+                        $detailport = new LocalCharPort();
+                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                        $detailport->localcharge()->associate($localcharge);
+                        $detailport->save();
+                    }
+
                 }
                 $contador++;
 
@@ -174,8 +190,7 @@ class ContractsController extends Controller
 
         $contracts = Contract::with('rates','localcharges.localcharports','localcharges.localcharcarriers')->get()->find($id);
 
-
-
+        $objtypedestiny = new TypeDestiny();
         $objcountry = new Country();
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
@@ -188,9 +203,10 @@ class ContractsController extends Controller
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny'));
     }
     /**
      * Update the specified resource in storage.
@@ -239,13 +255,14 @@ class ContractsController extends Controller
             if(!empty($request->input('ammount.'.$key2))) {
                 $localcharge = new LocalCharge();
                 $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->changetype = $request->input('changetype.'.$key2);
+                $localcharge->typedestiny_id  = $request->input('changetype.'.$key2);
                 $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
                 $localcharge->ammount = $request->input('ammount.'.$key2);
                 $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
                 $localcharge->save();
-                $detailport = $request->input('port_id'.$contador);
+                $detailportOrig = $request->input('port_origlocal'.$contador);
+                $detailportDest = $request->input('port_destlocal'.$contador);
                 $detailcarrier = $request->input('localcarrier_id'.$contador);
                 foreach($detailcarrier as $c => $value)
                 {
@@ -254,12 +271,19 @@ class ContractsController extends Controller
                     $detailcarrier->localcharge()->associate($localcharge);
                     $detailcarrier->save();
                 }
-                foreach($detailport as $p => $value)
+                foreach($detailportOrig as $orig => $value)
                 {
-                    $detailport = new LocalCharPort();
-                    $detailport->port = $request->input('port_id'.$contador.'.'.$p);
-                    $detailport->localcharge()->associate($localcharge);
-                    $detailport->save();
+                    foreach($detailportDest as $dest => $value)
+                    {
+
+
+                        $detailport = new LocalCharPort();
+                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                        $detailport->localcharge()->associate($localcharge);
+                        $detailport->save();
+                    }
+
                 }
                 $contador++;
 
@@ -297,19 +321,25 @@ class ContractsController extends Controller
         $localC = LocalCharge::find($id);
         $localC->update($requestForm);
 
-        $port = $request->input('port');
+        $detailportOrig = $request->input('port_origlocal');
+        $detailportDest = $request->input('port_destlocal');
         $carrier = $request->input('carrier_id');
         $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
         $deleteCarrier->delete();
         $deletePort = LocalCharPort::where("localcharge_id",$id);
         $deletePort->delete();
-        
-        foreach($port as $key2)
+
+        foreach($detailportOrig as $orig => $valueOrig)
         {
-            $detailport = new LocalCharPort();
-            $detailport->port = $key2;
-            $detailport->localcharge_id = $id;
-            $detailport->save();
+            foreach($detailportDest as $dest => $valueDest)
+            {
+                $detailport = new LocalCharPort();
+                $detailport->port_orig = $valueOrig;
+                $detailport->port_dest = $valueDest;
+                $detailport->localcharge_id = $id;
+                $detailport->save();
+            }
+
         }
         foreach($carrier as $key)
         {

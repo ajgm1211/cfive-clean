@@ -88,7 +88,7 @@ function save_l(id,idval){
             $("#divtype"+id).html($("#type"+id+" option:selected").text());
             $("#divport"+id).html(porText);
             $("#divportDest"+id).html(porTextDest);
-            
+
             $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
             $("#divcarrier"+id).html(selText);
             $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
@@ -166,8 +166,8 @@ $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
     $i = 1;
     $('.closetr').each(function () {
-
-        var res = $(".port",this).removeAttr('name').attr('name', 'port_id'+$i+'[]');
+        var res = $(".port_orig",this).removeAttr('name').attr('name', 'port_orig'+$i+'[]');
+        var resDest = $(".port_dest",this).removeAttr('name').attr('name', 'port_dest'+$i+'[]');
         var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier'+$i+'[]');
         $i++;
     });

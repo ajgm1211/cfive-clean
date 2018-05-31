@@ -14,4 +14,5 @@ class TypeDestiny extends Model
     {
         return $this->hasMany('App\GlobalCharPort');
     }
+
 }
