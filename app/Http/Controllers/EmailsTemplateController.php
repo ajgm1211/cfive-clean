@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\EmailTemplate;
 use App\User;
+use App\CompanyUser;
 
 class EmailsTemplateController extends Controller
 {
@@ -16,8 +17,10 @@ class EmailsTemplateController extends Controller
      */
     public function index()
     {
+        $companyUser = CompanyUser::All();
+        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = EmailTemplate::All();
-        $data = $template->where('company', Auth::user()->name_company);
+        $data = $template->where('company', $company);
         
         foreach($data as $i){
             $user = User::find($i->user_id);    
@@ -51,12 +54,14 @@ class EmailsTemplateController extends Controller
     public function store(Request $request)
     {
 
+        $companyUser = CompanyUser::All();
+        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = new EmailTemplate();
         $template->name = $request->name;
         $template->subject = $request->subject;
         $template->menssage = $request->menssage;
         $template->user_id = Auth::user()->id;
-        $template->company = Auth::user()->name_company;
+        $template->company = $company;
         $template->save();
 
         return redirect('mail-templates/list');
