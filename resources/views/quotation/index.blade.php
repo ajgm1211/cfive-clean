@@ -299,7 +299,7 @@
                                 <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
                                 @if($formulario->twuenty !="0")
                                 @foreach($localTwuenty as $originTwuenty)
-                                @if($originTwuenty->changetype == "origin")
+                                @if($originTwuenty->typedestiny_id == "1")
                                 @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
                                 @if($carrierTwuenty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -320,7 +320,7 @@
                                 @endif
                                 @endforeach
                                 @foreach($globalTwuenty as $globalChartwuenty)
-                                @if($globalChartwuenty->changetype == "origin")
+                                @if($globalChartwuenty->typedestiny_id == "1")
                                 @foreach($globalChartwuenty->globalcharcarrier as $carrierGlobal)
                                 @if($carrierGlobal->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -345,7 +345,7 @@
                                 <!--  Local charge  containter 40 , TEU , Per Container in Origin -->
                                 @if($formulario->forty !="0")
                                 @foreach($localForty as $originForty)
-                                @if($originForty->changetype == "origin")
+                                @if($originForty->typedestiny_id == "1")
                                 @foreach($originForty->localcharcarriers as $carrierForty)
                                 @if($carrierForty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -381,7 +381,7 @@
 
                                 @endforeach
                                 @foreach($globalForty as $globalCharForty)
-                                @if($globalCharForty->changetype == "origin")
+                                @if($globalCharForty->typedestiny_id == "1")
                                 @foreach($globalCharForty->globalcharcarrier as $carrierGlobalForty)
                                 @if($carrierGlobalForty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -420,7 +420,7 @@
                                 <!--  Local charge  containter 40HC , TEU , Per Container in Origin -->
                                 @if($formulario->fortyhc != "0")
                                 @foreach($localFortyHc as $originFortyHc)
-                                @if($originFortyHc->changetype == "origin")
+                                @if($originFortyHc->typedestiny_id == "1")
                                 @foreach($originFortyHc->localcharcarriers as $carrierFortyHc)
                                 @if($carrierFortyHc->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -456,7 +456,7 @@
                                 @endforeach
                                 <!--  Global charge  containter 40HC , TEU , Per Container in Destination -->
                                 @foreach($globalFortyHc as $globalCharFortyHc)
-                                @if($globalCharFortyHc->changetype == "origin")
+                                @if($globalCharFortyHc->typedestiny_id == "1")
                                 @foreach($globalCharFortyHc->globalcharcarrier as $carrierGlobalHc)
                                 @if($carrierGlobalHc->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -496,7 +496,7 @@
 
                                 <!-- PER SHIPMENT LOCAL -->
                                 @foreach($shipment as $shipmentorig)
-                                @if($shipmentorig->changetype == "origin")
+                                @if($shipmentorig->typedestiny_id == "1")
                                 @foreach($shipmentorig->localcharcarriers as $carriership)
                                 @if($carriership->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -517,7 +517,7 @@
                                 <!-- PER SHIPMENT GLOBAL -->
 
                                 @foreach($globalshipment as $shipmentglob)
-                                @if($shipmentglob->changetype == "origin")
+                                @if($shipmentglob->typedestiny_id == "1")
                                 @foreach($shipmentglob->globalcharcarrier as $carriershipdest)
                                 @if($carriershipdest->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -559,7 +559,7 @@
                                 @if($formulario->twuenty !="0")
                                 <!--  Local charge  containter 20 , TEU , Per Container in Destination -->
                                 @foreach($localTwuenty as $originTwuenty)
-                                @if($originTwuenty->changetype == "destination")
+                                @if($originTwuenty->typedestiny_id == "2")
                                 @foreach($originTwuenty->localcharcarriers as $carrierTwuenty)
                                 @if($carrierTwuenty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -580,7 +580,7 @@
                                 @endforeach
                                 <!-- Global charge  containter 20 , TEU , Per Container in Destination -->
                                 @foreach($globalTwuenty as $globalChartwuenty)
-                                @if($globalChartwuenty->changetype == "destination")
+                                @if($globalChartwuenty->typedestiny_id == "2")
                                 @foreach($globalChartwuenty->globalcharcarrier as $carrierGlobal)
                                 @if($carrierGlobal->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -604,7 +604,7 @@
                                 <!--  Local charge  containter 40 , TEU , Per Container in Destination -->
                                 @if($formulario->forty !="0")
                                 @foreach($localForty as $originForty)
-                                @if($originForty->changetype == "destination")
+                                @if($originForty->typedestiny_id == "2")
                                 @foreach($originForty->localcharcarriers as                 $carrierForty)
                                 @if($carrierForty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -641,7 +641,7 @@
                         @endforeach
                                 <!--  Global charge  containter 40 , TEU , Per Container in Destination -->
                                 @foreach($globalForty as $globalCharForty)
-                                @if($globalCharForty->changetype == "destination")
+                                @if($globalCharForty->typedestiny_id == "2")
                                 @foreach($globalCharForty->globalcharcarrier as $carrierGlobalForty)
                                 @if($carrierGlobalForty->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -678,7 +678,7 @@
                                 <!--  Local charge  containter 40HC , TEU , Per Container in Destination -->
                                 @if($formulario->fortyhc !="0")
                                 @foreach($localFortyHc as $originFortyHc)
-                                @if($originFortyHc->changetype == "destination")
+                                @if($originFortyHc->typedestiny_id == "2")
                                 @foreach($originFortyHc->localcharcarriers as $carrierFortyHc)
                                 @if($carrierFortyHc->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -716,7 +716,7 @@
                                 @endforeach
                                 <!--  Global charge  containter 40HC , TEU , Per Container in Destination -->
                                 @foreach($globalFortyHc as $globalCharFortyHc)
-                                @if($globalCharFortyHc->changetype == "destination")
+                                @if($globalCharFortyHc->typedestiny_id == "2")
                                 @foreach($globalCharFortyHc->globalcharcarrier as $carrierGlobalHc)
                                 @if($carrierGlobalHc->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -755,7 +755,7 @@
                                 @endif
                                 <!-- PER SHIPMENT LOCAL  -->
                                 @foreach($shipment as $shipmentorig)
-                                @if($shipmentorig->changetype == "destination")
+                                @if($shipmentorig->typedestiny_id == "2")
                                 @foreach($shipmentorig->localcharcarriers as $carriership)
                                 @if($carriership->carrier_id == $arr->carrier->id )
                                 <tr>
@@ -776,7 +776,7 @@
                                 <!-- PER SHIPMENT GLOBAL -->
 
                                 @foreach($globalshipment as $shipmentglob)
-                                @if($shipmentglob->changetype == "destination")
+                                @if($shipmentglob->typedestiny_id == "2")
                                 @foreach($shipmentglob->globalcharcarrier as $carriershipdest)
                                 @if($carriershipdest->carrier_id == $arr->carrier->id )
                                 <tr>
