@@ -66,6 +66,7 @@ class QuoteController extends Controller
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
 
+        // Calculo de los inlands
         if($delivery_type == "2" || $delivery_type == "4" ){
             $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
                 $q->whereIn('port', $destiny_port);
@@ -208,6 +209,7 @@ class QuoteController extends Controller
             }
 
         }
+        // Fin del calculo de los inlands 
         
         $date =  $request->input('date');
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
