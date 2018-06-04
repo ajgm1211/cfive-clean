@@ -14,7 +14,8 @@
                 <button class="btn btn-primary btn-block">Schedules</button>
             </div>
             <div class="col-md-1">
-                <button class="btn btn-info btn-block">Send</button>
+                <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
+                <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             </div>
         </div>
         <br>
@@ -809,6 +810,7 @@
             </div>
         </div>
     </div>
+    @include('quotes.partials.sendQuoteModal');
 @endsection
 
 @section('js')

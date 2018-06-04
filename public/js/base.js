@@ -699,3 +699,26 @@ $(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_am
     sum = total_origin + +total_freight + +total_destination;
     $("#total").html(" "+sum);
 });
+
+$(document).on('click', '#send-pdf-quote', function () {
+    var id = $('#quote-id').val();
+    var email = $('#quote_email').val();
+    $.ajax({
+        type: 'GET',
+        url: '/quotes/send/pdf/'+id+'/'+email,
+        beforeSend: function () {
+            $('#spin').show();
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                $('#spin').hide();
+                $('#SendQuoteModal').modal('toggle');
+                swal(
+                    'Done!',
+                    'Your message has been sent.',
+                    'success'
+                )
+            }
+        }
+    });
+});

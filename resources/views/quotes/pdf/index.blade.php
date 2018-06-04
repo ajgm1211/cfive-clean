@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <title>Quote #{{$quote->id}}</title>
     <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
-    <link rel="stylesheet" href="{{asset('css/app.css')}}" media="all" />
-    <link rel="stylesheet" href="{{asset('css/custom.css')}}" media="all" />
 </head>
 <body style="background-color: white;">
 <header class="clearfix">

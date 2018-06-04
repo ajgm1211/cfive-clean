@@ -94,6 +94,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+    Route::get('send/pdf/{id}/{email}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
