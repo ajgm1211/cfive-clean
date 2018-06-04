@@ -162,8 +162,7 @@
 
                     @foreach ($arreglo as $key => $arr)
                     @php
-                    $destination = 'false';
-                    $origin = 'false';
+
                     $inl = 'false';
                     $subtotalRate = 0;
                     @endphp
@@ -267,7 +266,9 @@
                                         {{ $formulario->fortyhc *  $arr->fortyhc   }} {{ $arr->currency->alphacode  }} 
                                     </td>
                                 </tr>
+
                                 @endif
+
 
                                 @foreach($freighTwuenty as $freigh20)
                                 <tr>
@@ -276,11 +277,22 @@
                                     <td>{{ $freigh20['cantidad']  }}</td>
                                     <td>{{ $freigh20['monto']  }} {{ $freigh20['currency']  }}</td>
                                     <td>{{  $freigh20['totalAmmount']  }} {{ $freigh20['currency']  }}</td>
-
                                     <td>{{  $freigh20['totalAmmount']  }} {{ $freigh20['currency']  }}</td>
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($freighTwuentyGlo as $freighGlo20)
+                                <tr>
+                                    <td>{{$freighGlo20['carrier_name'] }}</td>
+                                    <td>Container 20 ' Global</td>
+                                    <td>{{ $freighGlo20['cantidad']  }}</td>
+                                    <td>{{ $freighGlo20['monto']  }} {{ $freighGlo20['currency']  }}</td>
+                                    <td>{{  $freighGlo20['totalAmmount']  }} {{ $freighGlo20['currency']  }}</td>
+                                    <td>{{  $freighGlo20['totalAmmount']  }} {{ $freighGlo20['currency']  }}</td>
+                                </tr>
+                                @endforeach
+
                                 @foreach($freighForty as $freigh40)
                                 <tr>
                                     <td>{{$freigh40['carrier_name'] }}</td>
@@ -293,6 +305,20 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($freighFortyGlo as $freighGlo40)
+                                <tr>
+                                    <td>{{$freighGlo40['carrier_name'] }}</td>
+                                    <td>Container 40 ' Global</td>
+                                    <td>{{ $freighGlo40['cantidad']  }}</td>
+                                    <td>{{ $freighGlo40['monto']  }} {{ $freighGlo40['currency']  }}</td>
+                                    <td>{{  $freighGlo40['totalAmmount']  }} {{ $freighGlo40['currency']  }}</td>
+
+                                    <td>{{  $freighGlo40['totalAmmount']  }} {{ $freighGlo40['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
                                 @foreach($freighFortyHc as $freigh40hc)
                                 <tr>
                                     <td>{{$freigh40hc['carrier_name'] }}</td>
@@ -305,7 +331,21 @@
 
                                 </tr>
                                 @endforeach
-                                
+
+                                @foreach($freighFortyHcGlo as $freighGlo40hc)
+                                <tr>
+                                    <td>{{$freighGlo40hc['carrier_name'] }}</td>
+                                    <td>Container 40 HC ' Global</td>
+                                    <td>{{ $freighGlo40hc['cantidad']  }}</td>
+                                    <td>{{ $freighGlo40hc['monto']  }} {{ $freighGlo40hc['currency']  }}</td>
+                                    <td>{{  $freighGlo40hc['totalAmmount']  }} {{ $freighGlo40hc['currency']  }}</td>
+
+                                    <td>{{  $freighGlo40hc['totalAmmount']  }} {{ $freighGlo40hc['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
+
                                 @foreach($freightPer as $freightPeer)
                                 <tr>
                                     <td>{{$freightPeer['carrier_name'] }}</td>
@@ -315,10 +355,22 @@
                                     <td>{{ $freightPeer['monto']  }} {{ $freightPeer['currency']  }}</td>
                                     <td>{{  $freightPeer['totalAmmount']  }} {{ $freightPeer['currency']  }}</td>
 
-                                    <td>{{  $freightPeer['totalAmmount']  }} {{ $freightPeer['currency']  }}</td>
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($freightPerGlo as $freightPeerGlo)
+                                <tr>
+                                    <td>{{$freightPeerGlo['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Global</td>
+                                    <td>{{$freightPeerGlo['calculation_name'] }} </td>
+                                    <td>{{ $freightPeerGlo['cantidad']  }}</td>
+                                    <td>{{ $freightPeerGlo['monto']  }} {{ $freightPeerGlo['currency']  }}</td>
+                                    <td>{{  $freightPeerGlo['totalAmmount']  }} {{ $freightPeerGlo['currency']  }}</td>
+                                </tr>
+                                @endforeach
+
+
 
 
                                 @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0") )
@@ -366,6 +418,21 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($origTwuentyGlo as $originTwuentyGlo)
+                                <tr>
+                                    <td>{{$originTwuentyGlo['carrier_name'] }}</td>
+                                    <td>Container 20 ' Global</td>
+                                    <td>{{$originTwuentyGlo['calculation_name'] }} </td>
+                                    <td>{{ $originTwuentyGlo['cantidad']  }}</td>
+                                    <td>{{ $originTwuentyGlo['monto']  }} {{ $originTwuentyGlo['currency']  }}</td>
+                                    <td>{{  $originTwuentyGlo['totalAmmount']  }} {{ $originTwuentyGlo['currency']  }}</td>
+
+                                    <td>{{  $originTwuentyGlo['totalAmmount']  }} {{ $originTwuentyGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach                    
+
                                 @foreach($origForty as $originForty)
                                 <tr>
                                     <td>{{$originForty['carrier_name'] }}</td>
@@ -379,6 +446,21 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($origFortyGlo as $originFortyGlo)
+                                <tr>
+                                    <td>{{$originFortyGlo['carrier_name'] }}</td>
+                                    <td>Container 40 ' Global</td>
+                                    <td>{{$originFortyGlo['calculation_name'] }} </td>
+                                    <td>{{ $originFortyGlo['cantidad']  }}</td>
+                                    <td>{{ $originFortyGlo['monto']  }} {{ $originFortyGlo['currency']  }}</td>
+                                    <td>{{  $originFortyGlo['totalAmmount']  }} {{ $originFortyGlo['currency']  }}</td>
+
+                                    <td>{{  $originFortyGlo['totalAmmount']  }} {{ $originFortyGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
                                 @foreach($origFortyHc as $originFortyHc)
                                 <tr>
                                     <td>{{$originFortyHc['carrier_name'] }}</td>
@@ -392,13 +474,28 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($origFortyHcGlo as $originFortyHcGlo)
+                                <tr>
+                                    <td>{{$originFortyHcGlo['carrier_name'] }}</td>
+                                    <td>Container 40 HC ' Global</td>
+                                    <td>{{$originFortyHcGlo['calculation_name'] }} </td>
+                                    <td>{{ $originFortyHcGlo['cantidad']  }}</td>
+                                    <td>{{ $originFortyHcGlo['monto']  }} {{ $originFortyHcGlo['currency']  }}</td>
+                                    <td>{{  $originFortyHcGlo['totalAmmount']  }} {{ $originFortyHcGlo['currency']  }}</td>
+
+                                    <td>{{  $originFortyHcGlo['totalAmmount']  }} {{ $originFortyHcGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
                                 @foreach($origPer as $originPer)
                                 <tr>
                                     <td>{{$originPer['carrier_name'] }}</td>
                                     <td>Per Shipment ' Local</td>
                                     <td>{{$originPer['calculation_name'] }} </td>
                                     <td>{{ $originPer['cantidad']  }}</td>
-                                    <td>{{ $originFororiginPertyHc['monto']  }} {{ $originPer['currency']  }}</td>
+                                    <td>{{ $originPer['monto']  }} {{ $originPer['currency']  }}</td>
                                     <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
 
                                     <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
@@ -406,6 +503,19 @@
                                 </tr>
                                 @endforeach
 
+                                @foreach($origPerGlo as $originPerGlo)
+                                <tr>
+                                    <td>{{$originPerGlo['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Global</td>
+                                    <td>{{$originPerGlo['calculation_name'] }} </td>
+                                    <td>{{ $originPerGlo['cantidad']  }}</td>
+                                    <td>{{ $originPerGlo['monto']  }} {{ $originPer['currency']  }}</td>
+                                    <td>{{  $originPerGlo['totalAmmount']  }} {{ $originPerGlo['currency']  }}</td>
+
+                                    <td>{{  $originPerGlo['totalAmmount']  }} {{ $originPerGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
 
 
 
@@ -427,6 +537,7 @@
                                     <th>Ammount</th>
                                     <th>Total Ammount</th>
                                 </tr>
+
                                 @foreach($destTwuenty as $destinyTwuenty)
                                 <tr>
                                     <td>{{$destinyTwuenty['carrier_name'] }}</td>
@@ -440,6 +551,20 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($destTwuentyGlo as $destinyTwuentyGlo)
+                                <tr>
+                                    <td>{{$destinyTwuentyGlo['carrier_name'] }}</td>
+                                    <td>Container 20 ' Global</td>
+                                    <td>{{$destinyTwuentyGlo['calculation_name'] }} </td>
+                                    <td>{{ $destinyTwuentyGlo['cantidad']  }}</td>
+                                    <td>{{ $destinyTwuentyGlo['monto']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
+                                    <td>{{  $destinyTwuentyGlo['totalAmmount']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
+                                    <td>{{  $destinyTwuentyGlo['totalAmmount']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
+                                </tr>
+                                @endforeach
+
+
                                 @foreach($destForty as $destinyForty)
                                 <tr>
                                     <td>{{$destinyForty['carrier_name'] }}</td>
@@ -453,6 +578,22 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($destFortyGlo as $destinyFortyGlo)
+                                <tr>
+                                    <td>{{$destinyFortyGlo['carrier_name'] }}</td>
+                                    <td>Container 40 ' Global</td>
+                                    <td>{{$destinyFortyGlo['calculation_name'] }} </td>
+                                    <td>{{ $destinyFortyGlo['cantidad']  }}</td>
+                                    <td>{{ $destinyFortyGlo['monto']  }} {{ $destinyFortyGlo['currency']  }}</td>
+                                    <td>{{  $destinyFortyGlo['totalAmmount']  }} {{ $destinyFortyGlo['currency']  }}</td>
+
+                                    <td>{{  $destinyFortyGlo['totalAmmount']  }} {{ $destinyFortyGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
+
                                 @foreach($destFortyHc as $destinyFortyHc)
                                 <tr>
                                     <td>{{$destinyFortyHc['carrier_name'] }}</td>
@@ -467,6 +608,22 @@
                                 </tr>
                                 @endforeach
 
+
+                                @foreach($destFortyHcGlo as $destinyFortyHcGlo)
+                                <tr>
+                                    <td>{{$destinyFortyHcGlo['carrier_name'] }}</td>
+                                    <td>Container 40 HC ' Global</td>
+                                    <td>{{$destinyFortyHcGlo['calculation_name'] }} </td>
+                                    <td>{{ $destinyFortyHcGlo['cantidad']  }}</td>
+                                    <td>{{ $destinyFortyHcGlo['monto']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
+                                    <td>{{  $destinyFortyHcGlo['totalAmmount']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
+
+                                    <td>{{  $destinyFortyHcGlo['totalAmmount']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
+
                                 @foreach($destPer as $destinyPer)
                                 <tr>
                                     <td>{{$destinyPer['carrier_name'] }}</td>
@@ -480,6 +637,21 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($destPerGlo as $destinyPerGlo)
+                                <tr>
+                                    <td>{{$destinyPerGlo['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Global</td>
+                                    <td>{{$destinyPerGlo['calculation_name'] }} </td>
+                                    <td>{{ $destinyPerGlo['cantidad']  }}</td>
+                                    <td>{{ $destinyPerGlo['monto']  }} {{ $destinyPerGlo['currency']  }}</td>
+                                    <td>{{  $destinyPerGlo['totalAmmount']  }} {{ $destinyPerGlo['currency']  }}</td>
+
+                                    <td>{{  $destinyPerGlo['totalAmmount']  }} {{ $destinyPerGlo['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
 
                             </table>
                         </td>
