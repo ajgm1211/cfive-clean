@@ -232,6 +232,9 @@ class QuoteController extends Controller
         $origFortyHc=  array();
         $destFortyHc=  array();
         $freighFortyHc =  array();
+        $origPer=  array();
+        $destPer=  array();
+        $freightPer=  array();
 
         foreach($arreglo as $data){
             $subtotal = 0;
@@ -335,8 +338,25 @@ class QuoteController extends Controller
                         }
                     }
                 }
+                if($local->calculationtype_id == "6"){
+                    foreach($local->localcharcarriers as $carrierGlobal){
+                        if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($local->typedestiny_id == '1'){
+                                $totalAmmount =  $local->ammount;
+                                $origPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                            }
+                            if($local->typedestiny_id == '2'){
+                                $totalAmmount =  $local->ammount;
+                                $destPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                            }
+                            if($local->typedestiny_id == '3'){
+                                $totalAmmount =  $local->ammount;
+                                $freightPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                            }
+                        }
+                    }
+                }
             }
-
         }
 
 
@@ -373,7 +393,7 @@ class QuoteController extends Controller
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','formulario','arreglo','origTwuenty','destTwuenty','freighTwuenty','origForty','destForty','freighForty','origFortyHc','destFortyHc','freighFortyHc','inlandDestiny','inlandOrigin'));
+        return view('quotation/index', compact('harbor','formulario','arreglo','origTwuenty','destTwuenty','freighTwuenty','origForty','destForty','freighForty','origFortyHc','destFortyHc','freighFortyHc','inlandDestiny','inlandOrigin','origPer','destPer','freightPer'));
 
     }
     public function create()

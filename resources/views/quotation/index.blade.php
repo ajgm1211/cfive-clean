@@ -268,8 +268,8 @@
                                     </td>
                                 </tr>
                                 @endif
-       
-                                 @foreach($freighTwuenty as $freigh20)
+
+                                @foreach($freighTwuenty as $freigh20)
                                 <tr>
                                     <td>{{$freigh20['carrier_name'] }}</td>
                                     <td>Container 20 ' Local</td>
@@ -306,17 +306,31 @@
                                 </tr>
                                 @endforeach
                                 
-                                
+                                @foreach($freightPer as $freightPeer)
+                                <tr>
+                                    <td>{{$freightPeer['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Local</td>
+                                    <td>{{$freightPeer['calculation_name'] }} </td>
+                                    <td>{{ $freightPeer['cantidad']  }}</td>
+                                    <td>{{ $freightPeer['monto']  }} {{ $freightPeer['currency']  }}</td>
+                                    <td>{{  $freightPeer['totalAmmount']  }} {{ $freightPeer['currency']  }}</td>
+
+                                    <td>{{  $freightPeer['totalAmmount']  }} {{ $freightPeer['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
+
                                 @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0") )
                                 <tr>
-                                <td colspan="4"></td>
-                                <td ><b>SUBTOTAL:</b></td>
-                                <td>{{$subtotalRate  }} {{ $arr->currency->alphacode  }}</td>
+                                    <td colspan="4"></td>
+                                    <td ><b>SUBTOTAL:</b></td>
+                                    <td>{{$subtotalRate  }} {{ $arr->currency->alphacode  }}</td>
                                 </tr>
 
                                 @else
                                 <tr>
-                                <td colspan='6'>No data available</td>
+                                    <td colspan='6'>No data available</td>
                                 </tr>
 
                                 @endif
@@ -378,6 +392,23 @@
 
                                 </tr>
                                 @endforeach
+                                @foreach($origPer as $originPer)
+                                <tr>
+                                    <td>{{$originPer['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Local</td>
+                                    <td>{{$originPer['calculation_name'] }} </td>
+                                    <td>{{ $originPer['cantidad']  }}</td>
+                                    <td>{{ $originFororiginPertyHc['monto']  }} {{ $originPer['currency']  }}</td>
+                                    <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
+
+                                    <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
+
+
+
 
                             </table>
                         </td>
@@ -435,6 +466,21 @@
 
                                 </tr>
                                 @endforeach
+
+                                @foreach($destPer as $destinyPer)
+                                <tr>
+                                    <td>{{$destinyPer['carrier_name'] }}</td>
+                                    <td>Per Shipment ' Local</td>
+                                    <td>{{$destinyPer['calculation_name'] }} </td>
+                                    <td>{{ $destinyPer['cantidad']  }}</td>
+                                    <td>{{ $destinyPer['monto']  }} {{ $destinyPer['currency']  }}</td>
+                                    <td>{{  $destinyPer['totalAmmount']  }} {{ $destinyPer['currency']  }}</td>
+
+                                    <td>{{  $destinyPer['totalAmmount']  }} {{ $destinyPer['currency']  }}</td>
+
+                                </tr>
+                                @endforeach
+
                             </table>
                         </td>
                     </tr>
