@@ -317,9 +317,14 @@ class ContractsController extends Controller
     public function updateLocalChar(Request $request, $id)
     {
 
-        $requestForm = $request->all();
+
         $localC = LocalCharge::find($id);
-        $localC->update($requestForm);
+        $localC->surcharge_id = $request->input('surcharge_id');
+        $localC->typedestiny_id  = $request->input('changetype');
+        $localC->calculationtype_id = $request->input('calculationtype_id');
+        $localC->ammount = $request->input('ammount');
+        $localC->currency_id = $request->input('currency_id');
+        $localC->update();
 
         $detailportOrig = $request->input('port_origlocal');
         $detailportDest = $request->input('port_destlocal');
