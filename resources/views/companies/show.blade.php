@@ -145,8 +145,16 @@
                                     <td>{{$quote->company->business_name }}</td>
                                     <td>{{$quote->created_at }}</td>
                                     <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
-                                    <td>{{$quote->origin_country->name }}</td>
-                                    <td>{{$quote->destination_country->name }}</td>
+                                    @if($quote->origin_country)
+                                        <td>{{$quote->origin_country->name }}</td>
+                                    @else
+                                        <td>---</td>
+                                    @endif
+                                    @if($quote->destination_country)
+                                        <td>{{$quote->destination_country->name }}</td>
+                                    @else
+                                        <td>---</td>
+                                    @endif
                                     <td>{{$quote->ammount }}</td>
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
