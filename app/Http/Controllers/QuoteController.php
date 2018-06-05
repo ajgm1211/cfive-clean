@@ -248,18 +248,24 @@ class QuoteController extends Controller
         $destPerGlo =  array();
         $freightPerGlo =  array();
 
+
+        $collectionLocal = new Collection();
+
         foreach($arreglo as $data){
+            $collection = new Collection();   
             $subtotal = 0;
             $orig_port = array($data->origin_port);
             $dest_port = array($data->destiny_port);
             $carrier[] = $data->carrier_id;
 
-            $localChar = LocalCharge::whereHas('localcharcarriers', function($q) use($carrier) {
+            $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
             })->with('localcharports.portOrig','localcharcarriers.carrier','currency')->get();
+
             foreach($localChar as $local){
+
                 if(in_array($local->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($local->localcharcarriers as $carrierGlobal){
@@ -267,50 +273,59 @@ class QuoteController extends Controller
                                 if($local->typedestiny_id == '1'){
 
                                     $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $origTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $origTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id  );
+                                  
 
                                 }
                                 if($local->typedestiny_id == '2'){
                                     $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $destTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $destTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                  
                                 }
                                 if($local->typedestiny_id == '3'){
                                     $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $freighTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $freighTwuenty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id);
+                                  
                                 }
                             }
                         }
                     }
                 }
+
                 if(in_array($local->calculationtype_id, $array40)){
                     if($request->input('forty') != "0") {
                         foreach($local->localcharcarriers as $carrierGlobal){
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($local->typedestiny_id == '1'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->forty *  $local->ammount;
                                     }
 
-                                    $origForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $origForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                   
+
 
                                 }
                                 if($local->typedestiny_id == '2'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->forty *  $local->ammount;
                                     }
-                                    $destForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $destForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                  
                                 }
                                 if($local->typedestiny_id == '3'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->forty *  $local->ammount;
                                     }
-                                    $freighForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $freighForty[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                    
+
                                 }
                             }
                         }
@@ -321,30 +336,34 @@ class QuoteController extends Controller
                         foreach($local->localcharcarriers as $carrierGlobal){
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($local->typedestiny_id == '1'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->fortyhc *  $local->ammount;
                                     }
 
-                                    $origFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $origFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                   
 
                                 }
                                 if($local->typedestiny_id == '2'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->fortyhc *  $local->ammount;
                                     }
-                                    $destFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $destFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                  
                                 }
                                 if($local->typedestiny_id == '3'){
-                                    if($local->calculationtype_id == "4" ||$local->calculationtype_id == "5" ){
+                                    if($local->calculationtype_id == "4"  ){
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                     }else{
                                         $totalAmmount = $formulario->fortyhc *  $local->ammount;
                                     }
-                                    $freighFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                    $freighFortyHc[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                                   
+
                                 }
                             }
                         }
@@ -355,22 +374,28 @@ class QuoteController extends Controller
                         if($carrierGlobal->carrier_id == $data->carrier_id ){
                             if($local->typedestiny_id == '1'){
                                 $totalAmmount =  $local->ammount;
-                                $origPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                $origPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                             
                             }
                             if($local->typedestiny_id == '2'){
                                 $totalAmmount =  $local->ammount;
-                                $destPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                $destPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                               
                             }
                             if($local->typedestiny_id == '3'){
                                 $totalAmmount =  $local->ammount;
-                                $freightPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name);
+                                $freightPer[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id );
+                 
+
                             }
                         }
                     }
                 }
+
+
             }
 
-
+ 
             $globalChar = GlobalCharge::whereHas('globalcharcarrier', function($q) use($carrier) {
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
@@ -378,23 +403,23 @@ class QuoteController extends Controller
             })->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency')->get();
 
             foreach($globalChar as $global){
-                if(in_array($local->calculationtype_id, $array20)){
+                if(in_array($global->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($global->typedestiny_id == '1'){
 
                                     $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $origTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $origTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
 
                                 }
                                 if($global->typedestiny_id == '2'){
                                     $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $destTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $destTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                                 if($global->typedestiny_id == '3'){
                                     $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $freighTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $freighTwuentyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                             }
                         }
@@ -411,7 +436,7 @@ class QuoteController extends Controller
                                         $totalAmmount = $formulario->forty *  $global->ammount;
                                     }
 
-                                    $origFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $origFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
 
                                 }
                                 if($global->typedestiny_id == '2'){
@@ -420,7 +445,7 @@ class QuoteController extends Controller
                                     }else{
                                         $totalAmmount = $formulario->forty *  $global->ammount;
                                     }
-                                    $destFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $destFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                                 if($global->typedestiny_id == '3'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
@@ -428,7 +453,7 @@ class QuoteController extends Controller
                                     }else{
                                         $totalAmmount = $formulario->forty *  $global->ammount;
                                     }
-                                    $freighFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $freighFortyGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                             }
                         }
@@ -445,7 +470,7 @@ class QuoteController extends Controller
                                         $totalAmmount = $formulario->fortyhc *  $global->ammount;
                                     }
 
-                                    $origFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $origFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
 
                                 }
                                 if($global->typedestiny_id == '2'){
@@ -454,7 +479,7 @@ class QuoteController extends Controller
                                     }else{
                                         $totalAmmount = $formulario->fortyhc *  $global->ammount;
                                     }
-                                    $destFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $destFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                                 if($global->typedestiny_id == '3'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
@@ -462,7 +487,7 @@ class QuoteController extends Controller
                                     }else{
                                         $totalAmmount = $formulario->fortyhc *  $global->ammount;
                                     }
-                                    $freighFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                    $freighFortyHcGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                                 }
                             }
                         }
@@ -473,15 +498,15 @@ class QuoteController extends Controller
                         if($carrierGlobal->carrier_id == $data->carrier_id ){
                             if($global->typedestiny_id == '1'){
                                 $totalAmmount =  $global->ammount;
-                                $origPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                $origPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id);
                             }
                             if($global->typedestiny_id == '2'){
                                 $totalAmmount =  $global->ammount;
-                                $destPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                $destPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id);
                             }
                             if($global->typedestiny_id == '3'){
                                 $totalAmmount =  $global->ammount;
-                                $freightPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name);
+                                $freightPerGlo[] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id );
                             }
                         }
                     }
@@ -489,6 +514,7 @@ class QuoteController extends Controller
             }
 
         }
+             
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
