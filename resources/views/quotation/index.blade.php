@@ -266,124 +266,28 @@
                                         {{ $formulario->fortyhc *  $arr->fortyhc   }} {{ $arr->currency->alphacode  }} 
                                     </td>
                                 </tr>
-
                                 @endif
 
-
-                                @foreach($freighTwuenty as $freigh20)
-                                @if($freigh20['carrier_id'] == $arr->carrier_id && $freigh20['contract_id'] == $arr->contract_id )
+                                @foreach($arr->localFreight as $freight)
                                 <tr>
-                                    <td>{{$freigh20['carrier_name'] }}</td>
-                                    <td>Container 20 ' Local</td>
-                                    <td>{{ $freigh20['cantidad']  }}</td>
-                                    <td>{{ $freigh20['monto']  }} {{ $freigh20['currency']  }}</td>
-                                    <td>{{  $freigh20['totalAmmount']  }} {{ $freigh20['currency']  }}</td>
-                                    <td>{{  $freigh20['totalAmmount']  }} {{ $freigh20['currency']  }}</td>
-
+                                    <td>{{ $freight['freight']['carrier_name'] }}</td>
+                                    <td>{{ $freight['freight']['calculation_name'] }} </td>
+                                    <td>{{  $freight['freight']['cantidad']  }}</td>
+                                    <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
+                                    <td>{{  $freight['freight']['totalAmmount']  }} {{ $freight['freight']['currency']  }}</td>
+                                    <td>{{  $freight['freight']['totalAmmount']  }} {{ $freight['freight']['currency']  }}</td>
                                 </tr>
-                                @endif
                                 @endforeach
 
-                                @foreach($freighTwuentyGlo as $freighGlo20)
-                                @if($freighGlo20['carrier_id'] == $arr->carrier_id)
+                                @foreach($arr->globalFreight as $freightGlo)
                                 <tr>
-                                    <td>{{$freighGlo20['carrier_name'] }}</td>
-                                    <td>Container 20 ' Global</td>
-                                    <td>{{ $freighGlo20['cantidad']  }}</td>
-                                    <td>{{ $freighGlo20['monto']  }} {{ $freighGlo20['currency']  }}</td>
-                                    <td>{{  $freighGlo20['totalAmmount']  }} {{ $freighGlo20['currency']  }}</td>
-                                    <td>{{  $freighGlo20['totalAmmount']  }} {{ $freighGlo20['currency']  }}</td>
+                                    <td>{{ $freightGlo['freight']['carrier_name'] }}</td>
+                                    <td>{{ $freightGlo['freight']['calculation_name'] }} </td>
+                                    <td>{{  $freightGlo['freight']['cantidad']  }}</td>
+                                    <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                                    <td>{{  $freightGlo['freight']['totalAmmount']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                                    <td>{{  $freightGlo['freight']['totalAmmount']  }} {{ $freightGlo['freight']['currency']  }}</td>
                                 </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($freighForty as $freigh40)
-                                @if($freigh40['carrier_id'] == $arr->carrier_id && $freigh40['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$freigh40['carrier_name'] }}</td>
-                                    <td>Container 40 ' Local</td>
-                                    <td>{{ $freigh40['cantidad']  }}</td>
-                                    <td>{{ $freigh40['monto']  }} {{ $freigh40['currency']  }}</td>
-                                    <td>{{  $freigh40['totalAmmount']  }} {{ $freigh40['currency']  }}</td>
-
-                                    <td>{{  $freigh40['totalAmmount']  }} {{ $freigh40['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($freighFortyGlo as $freighGlo40)
-                                @if($freighGlo40['carrier_id'] == $arr->carrier_id  )
-                                <tr>
-                                    <td>{{$freighGlo40['carrier_name'] }}</td>
-                                    <td>Container 40 ' Global</td>
-                                    <td>{{ $freighGlo40['cantidad']  }}</td>
-                                    <td>{{ $freighGlo40['monto']  }} {{ $freighGlo40['currency']  }}</td>
-                                    <td>{{  $freighGlo40['totalAmmount']  }} {{ $freighGlo40['currency']  }}</td>
-
-                                    <td>{{  $freighGlo40['totalAmmount']  }} {{ $freighGlo40['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($freighFortyHc as $freigh40hc)
-                                @if($freigh40hc['carrier_id'] == $arr->carrier_id && $freigh40hc['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$freigh40hc['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Local</td>
-                                    <td>{{ $freigh40hc['cantidad']  }}</td>
-                                    <td>{{ $freigh40hc['monto']  }} {{ $freigh40hc['currency']  }}</td>
-                                    <td>{{  $freigh40hc['totalAmmount']  }} {{ $freigh40hc['currency']  }}</td>
-
-                                    <td>{{  $freigh40hc['totalAmmount']  }} {{ $freigh40hc['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($freighFortyHcGlo as $freighGlo40hc)
-                                @if($freighGlo40hc['carrier_id'] == $arr->carrier_id  )
-                                <tr>
-                                    <td>{{$freighGlo40hc['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Global</td>
-                                    <td>{{ $freighGlo40hc['cantidad']  }}</td>
-                                    <td>{{ $freighGlo40hc['monto']  }} {{ $freighGlo40hc['currency']  }}</td>
-                                    <td>{{  $freighGlo40hc['totalAmmount']  }} {{ $freighGlo40hc['currency']  }}</td>
-
-                                    <td>{{  $freighGlo40hc['totalAmmount']  }} {{ $freighGlo40hc['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-
-                                @foreach($freightPer as $freightPeer)
-                                @if($freightPeer['carrier_id'] == $arr->carrier_id && $freightPeer['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$freightPeer['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Local</td>
-                                    <td>{{$freightPeer['calculation_name'] }} </td>
-                                    <td>{{ $freightPeer['cantidad']  }}</td>
-                                    <td>{{ $freightPeer['monto']  }} {{ $freightPeer['currency']  }}</td>
-                                    <td>{{  $freightPeer['totalAmmount']  }} {{ $freightPeer['currency']  }}</td>
-
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($freightPerGlo as $freightPeerGlo)
-                                @if($freightPeerGlo['carrier_id'] == $arr->carrier_id )
-                                <tr>
-                                    <td>{{$freightPeerGlo['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Global</td>
-                                    <td>{{$freightPeerGlo['calculation_name'] }} </td>
-                                    <td>{{ $freightPeerGlo['cantidad']  }}</td>
-                                    <td>{{ $freightPeerGlo['monto']  }} {{ $freightPeerGlo['currency']  }}</td>
-                                    <td>{{  $freightPeerGlo['totalAmmount']  }} {{ $freightPeerGlo['currency']  }}</td>
-                                </tr>
-                                @endif
                                 @endforeach
 
 
@@ -421,138 +325,29 @@
                                     <th>Total Ammount</th>
                                 </tr>
                                 <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
-                                @foreach($origTwuenty as $originTwuenty)
-                                @if($originTwuenty['carrier_id'] == $arr->carrier_id && $originTwuenty['contract_id'] == $arr->contract_id )
+
+                                @foreach($arr->localOrig as $origin)
                                 <tr>
-                                    <td>{{$originTwuenty['carrier_name'] }}</td>
-                                    <td>Container 20 ' Local</td>
-                                    <td>{{$originTwuenty['calculation_name'] }} </td>
-                                    <td>{{ $originTwuenty['cantidad']  }}</td>
-                                    <td>{{ $originTwuenty['monto']  }} {{ $originTwuenty['currency']  }}</td>
-                                    <td>{{  $originTwuenty['totalAmmount']  }} {{ $originTwuenty['currency']  }}</td>
-
-                                    <td>{{  $originTwuenty['totalAmmount']  }} {{ $originTwuenty['currency']  }}</td>
-
+                                    <td>{{ $origin['origin']['carrier_name'] }}</td>
+                                    <td> {{ $origin['origin']['carrier_name'] }} </td>
+                                    <td>{{ $origin['origin']['calculation_name'] }} </td>
+                                    <td>{{  $origin['origin']['cantidad']  }}</td>
+                                    <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['totalAmmount']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['totalAmmount']  }} {{ $origin['origin']['currency']  }}</td>
                                 </tr>
-                                @endif
                                 @endforeach
-
-                                @foreach($origTwuentyGlo as $originTwuentyGlo)
-                                @if($originTwuentyGlo['carrier_id'] == $arr->carrier_id  )
+                                @foreach($arr->globalOrig as $originGlo)
                                 <tr>
-                                    <td>{{$originTwuentyGlo['carrier_name'] }}</td>
-                                    <td>Container 20 ' Global</td>
-                                    <td>{{$originTwuentyGlo['calculation_name'] }} </td>
-                                    <td>{{ $originTwuentyGlo['cantidad']  }}</td>
-                                    <td>{{ $originTwuentyGlo['monto']  }} {{ $originTwuentyGlo['currency']  }}</td>
-                                    <td>{{  $originTwuentyGlo['totalAmmount']  }} {{ $originTwuentyGlo['currency']  }}</td>
-
-                                    <td>{{  $originTwuentyGlo['totalAmmount']  }} {{ $originTwuentyGlo['currency']  }}</td>
-
+                                    <td>{{ $originGlo['origin']['carrier_name'] }}</td>
+                                    <td> {{ $originGlo['origin']['carrier_name'] }} </td>
+                                    <td>{{ $originGlo['origin']['calculation_name'] }} </td>
+                                    <td>{{  $originGlo['origin']['cantidad']  }}</td>
+                                    <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['totalAmmount']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['totalAmmount']  }} {{ $originGlo['origin']['currency']  }}</td>
                                 </tr>
-                                @endif
-                                @endforeach                    
-
-
-                                @foreach($origForty as $originForty)
-                                @if($originForty['carrier_id'] == $arr->carrier_id && $originForty['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$originForty['carrier_name'] }}</td>
-                                    <td>Container 40 ' Local</td>
-                                    <td>{{$originForty['calculation_name'] }} </td>
-                                    <td>{{ $originForty['cantidad']  }}</td>
-                                    <td>{{ $originForty['monto']  }} {{ $originForty['currency']  }}</td>
-                                    <td>{{  $originForty['totalAmmount']  }} {{ $originForty['currency']  }}</td>
-
-                                    <td>{{  $originForty['totalAmmount']  }} {{ $originForty['currency']  }}</td>
-
-                                </tr>
-                                @endif
                                 @endforeach
-
-                                @foreach($origFortyGlo as $originFortyGlo)
-                                @if($originFortyGlo['carrier_id'] == $arr->carrier_id  )
-                                <tr>
-                                    <td>{{$originFortyGlo['carrier_name'] }}</td>
-                                    <td>Container 40 ' Global</td>
-                                    <td>{{$originFortyGlo['calculation_name'] }} </td>
-                                    <td>{{ $originFortyGlo['cantidad']  }}</td>
-                                    <td>{{ $originFortyGlo['monto']  }} {{ $originFortyGlo['currency']  }}</td>
-                                    <td>{{  $originFortyGlo['totalAmmount']  }} {{ $originFortyGlo['currency']  }}</td>
-
-                                    <td>{{  $originFortyGlo['totalAmmount']  }} {{ $originFortyGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($origFortyHc as $originFortyHc)
-                                @if($originFortyHc['carrier_id'] == $arr->carrier_id && $originFortyHc['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$originFortyHc['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Local</td>
-                                    <td>{{$originFortyHc['calculation_name'] }} </td>
-                                    <td>{{ $originFortyHc['cantidad']  }}</td>
-                                    <td>{{ $originFortyHc['monto']  }} {{ $originFortyHc['currency']  }}</td>
-                                    <td>{{  $originFortyHc['totalAmmount']  }} {{ $originFortyHc['currency']  }}</td>
-
-                                    <td>{{  $originFortyHc['totalAmmount']  }} {{ $originFortyHc['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($origFortyHcGlo as $originFortyHcGlo)
-                                @if($originFortyHcGlo['carrier_id'] == $arr->carrier_id  )
-                                <tr>
-                                    <td>{{$originFortyHcGlo['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Global</td>
-                                    <td>{{$originFortyHcGlo['calculation_name'] }} </td>
-                                    <td>{{ $originFortyHcGlo['cantidad']  }}</td>
-                                    <td>{{ $originFortyHcGlo['monto']  }} {{ $originFortyHcGlo['currency']  }}</td>
-                                    <td>{{  $originFortyHcGlo['totalAmmount']  }} {{ $originFortyHcGlo['currency']  }}</td>
-
-                                    <td>{{  $originFortyHcGlo['totalAmmount']  }} {{ $originFortyHcGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($origPer as $originPer)
-                                @if($originPer['carrier_id'] == $arr->carrier_id && $originPer['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$originPer['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Local</td>
-                                    <td>{{$originPer['calculation_name'] }} </td>
-                                    <td>{{ $originPer['cantidad']  }}</td>
-                                    <td>{{ $originPer['monto']  }} {{ $originPer['currency']  }}</td>
-                                    <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
-
-                                    <td>{{  $originPer['totalAmmount']  }} {{ $originPer['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($origPerGlo as $originPerGlo)
-                                @if($originPerGlo['carrier_id'] == $arr->carrier_id )
-                                <tr>
-                                    <td>{{$originPerGlo['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Global</td>
-                                    <td>{{$originPerGlo['calculation_name'] }} </td>
-                                    <td>{{ $originPerGlo['cantidad']  }}</td>
-                                    <td>{{ $originPerGlo['monto']  }} {{ $originPer['currency']  }}</td>
-                                    <td>{{  $originPerGlo['totalAmmount']  }} {{ $originPerGlo['currency']  }}</td>
-
-                                    <td>{{  $originPerGlo['totalAmmount']  }} {{ $originPerGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-
-
-
                             </table>
                         </td>
                     </tr> 
@@ -571,134 +366,28 @@
                                     <th>Total Ammount</th>
                                 </tr>
 
-                                @foreach($destTwuenty as $destinyTwuenty)
-                                @if($destinyTwuenty['carrier_id'] == $arr->carrier_id && $destinyTwuenty['contract_id'] == $arr->contract_id )
+                                @foreach($arr->localDest as $destiny)
                                 <tr>
-                                    <td>{{$destinyTwuenty['carrier_name'] }}</td>
-                                    <td>Container 20 ' Local</td>
-                                    <td>{{$destinyTwuenty['calculation_name'] }} </td>
-                                    <td>{{ $destinyTwuenty['cantidad']  }}</td>
-                                    <td>{{ $destinyTwuenty['monto']  }} {{ $destinyTwuenty['currency']  }}</td>
-                                    <td>{{  $destinyTwuenty['totalAmmount']  }} {{ $destinyTwuenty['currency']  }}</td>
-
-                                    <td>{{  $destinyTwuenty['totalAmmount']  }} {{ $destinyTwuenty['currency']  }}</td>
-
+                                    <td>{{ $destiny['destiny']['carrier_name'] }}</td>
+                                    <td> {{ $destiny['destiny']['carrier_name'] }} </td>
+                                    <td>{{ $destiny['destiny']['calculation_name'] }} </td>
+                                    <td>{{  $destiny['destiny']['cantidad']  }}</td>
+                                    <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
+                                    <td>{{  $destiny['destiny']['totalAmmount']  }} {{ $destiny['destiny']['currency']  }}</td>
+                                    <td>{{  $destiny['destiny']['totalAmmount']  }} {{ $destiny['destiny']['currency']  }}</td>
                                 </tr>
-                                @endif
                                 @endforeach
 
-                                @foreach($destTwuentyGlo as $destinyTwuentyGlo)
-                                @if($destinyTwuentyGlo['carrier_id'] == $arr->carrier_id )
+                                @foreach($arr->globalDest as $destinyGlo)
                                 <tr>
-                                    <td>{{$destinyTwuentyGlo['carrier_name'] }}</td>
-                                    <td>Container 20 ' Global</td>
-                                    <td>{{$destinyTwuentyGlo['calculation_name'] }} </td>
-                                    <td>{{ $destinyTwuentyGlo['cantidad']  }}</td>
-                                    <td>{{ $destinyTwuentyGlo['monto']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
-                                    <td>{{  $destinyTwuentyGlo['totalAmmount']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
-                                    <td>{{  $destinyTwuentyGlo['totalAmmount']  }} {{ $destinyTwuentyGlo['currency']  }}</td>
+                                    <td>{{ $destinyGlo['destiny']['carrier_name'] }}</td>
+                                    <td> {{ $destinyGlo['destiny']['carrier_name'] }} </td>
+                                    <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
+                                    <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
+                                    <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
+                                    <td>{{  $destinyGlo['destiny']['totalAmmount']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
+                                    <td>{{  $destinyGlo['destiny']['totalAmmount']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
                                 </tr>
-                                @endif
-                                @endforeach
-
-
-                                @foreach($destForty as $destinyForty)
-                                @if($destinyForty['carrier_id'] == $arr->carrier_id && $destinyForty['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$destinyForty['carrier_name'] }}</td>
-                                    <td>Container 40 ' Local</td>
-                                    <td>{{$destinyForty['calculation_name'] }} </td>
-                                    <td>{{ $destinyForty['cantidad']  }}</td>
-                                    <td>{{ $destinyForty['monto']  }} {{ $destinyForty['currency']  }}</td>
-                                    <td>{{  $destinyForty['totalAmmount']  }} {{ $destinyForty['currency']  }}</td>
-
-                                    <td>{{  $destinyForty['totalAmmount']  }} {{ $destinyForty['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($destFortyGlo as $destinyFortyGlo)
-                                @if($destinyFortyGlo['carrier_id'] == $arr->carrier_id  )
-                                <tr>
-                                    <td>{{$destinyFortyGlo['carrier_name'] }}</td>
-                                    <td>Container 40 ' Global</td>
-                                    <td>{{$destinyFortyGlo['calculation_name'] }} </td>
-                                    <td>{{ $destinyFortyGlo['cantidad']  }}</td>
-                                    <td>{{ $destinyFortyGlo['monto']  }} {{ $destinyFortyGlo['currency']  }}</td>
-                                    <td>{{  $destinyFortyGlo['totalAmmount']  }} {{ $destinyFortyGlo['currency']  }}</td>
-
-                                    <td>{{  $destinyFortyGlo['totalAmmount']  }} {{ $destinyFortyGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-
-                                @foreach($destFortyHc as $destinyFortyHc)
-                                @if($destinyFortyHc['carrier_id'] == $arr->carrier_id && $destinyFortyHc['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$destinyFortyHc['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Local</td>
-                                    <td>{{$destinyFortyHc['calculation_name'] }} </td>
-                                    <td>{{ $destinyFortyHc['cantidad']  }}</td>
-                                    <td>{{ $destinyFortyHc['monto']  }} {{ $destinyFortyHc['currency']  }}</td>
-                                    <td>{{  $destinyFortyHc['totalAmmount']  }} {{ $destinyFortyHc['currency']  }}</td>
-
-                                    <td>{{  $destinyFortyHc['totalAmmount']  }} {{ $destinyFortyHc['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-
-                                @foreach($destFortyHcGlo as $destinyFortyHcGlo)
-                                @if($destinyFortyHcGlo['carrier_id'] == $arr->carrier_id )
-                                <tr>
-                                    <td>{{$destinyFortyHcGlo['carrier_name'] }}</td>
-                                    <td>Container 40 HC ' Global</td>
-                                    <td>{{$destinyFortyHcGlo['calculation_name'] }} </td>
-                                    <td>{{ $destinyFortyHcGlo['cantidad']  }}</td>
-                                    <td>{{ $destinyFortyHcGlo['monto']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
-                                    <td>{{  $destinyFortyHcGlo['totalAmmount']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
-
-                                    <td>{{  $destinyFortyHcGlo['totalAmmount']  }} {{ $destinyFortyHcGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-
-                                @foreach($destPer as $destinyPer)
-                                @if($destinyPer['carrier_id'] == $arr->carrier_id && $destinyPer['contract_id'] == $arr->contract_id )
-                                <tr>
-                                    <td>{{$destinyPer['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Local</td>
-                                    <td>{{$destinyPer['calculation_name'] }} </td>
-                                    <td>{{ $destinyPer['cantidad']  }}</td>
-                                    <td>{{ $destinyPer['monto']  }} {{ $destinyPer['currency']  }}</td>
-                                    <td>{{  $destinyPer['totalAmmount']  }} {{ $destinyPer['currency']  }}</td>
-
-                                    <td>{{  $destinyPer['totalAmmount']  }} {{ $destinyPer['currency']  }}</td>
-
-                                </tr>
-                                @endif
-                                @endforeach
-
-                                @foreach($destPerGlo as $destinyPerGlo)
-                                @if($destinyPerGlo['carrier_id'] == $arr->carrier_id)
-                                <tr>
-                                    <td>{{$destinyPerGlo['carrier_name'] }}</td>
-                                    <td>Per Shipment ' Global</td>
-                                    <td>{{$destinyPerGlo['calculation_name'] }} </td>
-                                    <td>{{ $destinyPerGlo['cantidad']  }}</td>
-                                    <td>{{ $destinyPerGlo['monto']  }} {{ $destinyPerGlo['currency']  }}</td>
-                                    <td>{{  $destinyPerGlo['totalAmmount']  }} {{ $destinyPerGlo['currency']  }}</td>
-
-                                    <td>{{  $destinyPerGlo['totalAmmount']  }} {{ $destinyPerGlo['currency']  }}</td>
-
-                                </tr>
-                                @endif
                                 @endforeach
                             </table>
                         </td>
