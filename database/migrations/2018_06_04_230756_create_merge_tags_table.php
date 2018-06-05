@@ -13,8 +13,19 @@ class CreateMergeTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('merge_tags', function (Blueprint $table) {
+        Schema::create('mergeTags', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('company_name');
+            $table->string('client_name');
+            $table->string('client_phone');
+            $table->string('client_email');
+            $table->string('quote_number');
+            $table->string('quote_total');
+            $table->string('destination');
+            $table->string('origin');
+            $table->string('carrier');
+            $table->string('user_name');
+            $table->string('user_email');
             $table->timestamps();
         });
     }
@@ -26,6 +37,6 @@ class CreateMergeTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('merge_tags');
+        Schema::dropIfExists('mergeTags');
     }
 }

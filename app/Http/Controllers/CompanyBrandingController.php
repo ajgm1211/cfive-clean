@@ -59,6 +59,7 @@ class CompanyBrandingController extends Controller
      */
     public function edit()
     {
+        
         $company = CompanyUser::find(Auth::user()->company_user_id);
         $currencies = Currency::All()->toArray();
 
