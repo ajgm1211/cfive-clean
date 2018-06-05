@@ -19,11 +19,11 @@ class CreateMergeTagsTable extends Migration
             $table->string('client_name');
             $table->string('client_phone');
             $table->string('client_email');
-            $table->string('quote_number');
-            $table->string('quote_total');
-            $table->string('destination');
-            $table->string('origin');
-            $table->string('carrier');
+            $table->integer('quote_number')->nullable();
+            $table->float('quote_total')->nullable();
+            $table->string('destination')->nullable();
+            $table->string('origin')->nullable();
+            $table->string('carrier')->nullable();
             $table->string('user_name');
             $table->string('user_email');
             $table->timestamps();

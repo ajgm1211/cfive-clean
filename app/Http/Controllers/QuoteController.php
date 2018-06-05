@@ -27,6 +27,7 @@ use App\LocalCharPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
+use App\MergeTag;
 use GoogleMaps;
 use App\Inland;
 use Illuminate\Support\Facades\Input;
