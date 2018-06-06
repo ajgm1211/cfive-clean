@@ -41,7 +41,7 @@ class QuoteController extends Controller
     public function index()
     {
 
-        $quotes = Quote::all();
+        $quotes = Quote::where('owner',\Auth::id())->get();
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('business_name','id');
         $countries = Country::all()->pluck('name','id');
@@ -50,7 +50,7 @@ class QuoteController extends Controller
     }
     public function automatic(){
 
-        $quotes = Quote::all();
+        $quotes = Quote::where('owner',\Auth::id())->get();
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
@@ -242,7 +242,11 @@ class QuoteController extends Controller
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
         $company_user = User::where('id',\Auth::id())->first();
-        $currency_name = Currency::where('id',$company_user->companyUser->currency_id)->first();
+        if(count($company_user->companyUser)>0) {
+            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+        }else{
+            $currency_name = '';
+        }
         $currencies = Currency::all()->pluck('alphacode','id');
         return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
     }
@@ -410,7 +414,19 @@ class QuoteController extends Controller
      */
     public function show($id)
     {
-        //
+        $quote = Quote::findOrFail($id);
+        $companies = Company::all()->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('name','id');
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $prices = Price::all()->pluck('name','id');
+        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+        $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+        $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+        $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+        return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
+            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
     }
 
     /**
