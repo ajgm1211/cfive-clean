@@ -329,7 +329,7 @@
                                 @foreach($arr->localOrig as $origin)
                                 <tr>
                                     <td>{{ $origin['origin']['carrier_name'] }}</td>
-                                    <td> {{ $origin['origin']['carrier_name'] }} </td>
+                                    <td> {{ $origin['origin']['type'] }} </td>
                                     <td>{{ $origin['origin']['calculation_name'] }} </td>
                                     <td>{{  $origin['origin']['cantidad']  }}</td>
                                     <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
@@ -340,7 +340,7 @@
                                 @foreach($arr->globalOrig as $originGlo)
                                 <tr>
                                     <td>{{ $originGlo['origin']['carrier_name'] }}</td>
-                                    <td> {{ $originGlo['origin']['carrier_name'] }} </td>
+                                    <td> {{ $originGlo['origin']['type'] }} </td>
                                     <td>{{ $originGlo['origin']['calculation_name'] }} </td>
                                     <td>{{  $originGlo['origin']['cantidad']  }}</td>
                                     <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
@@ -369,7 +369,7 @@
                                 @foreach($arr->localDest as $destiny)
                                 <tr>
                                     <td>{{ $destiny['destiny']['carrier_name'] }}</td>
-                                    <td> {{ $destiny['destiny']['carrier_name'] }} </td>
+                                    <td> {{ $destiny['destiny']['type'] }} </td>
                                     <td>{{ $destiny['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destiny['destiny']['cantidad']  }}</td>
                                     <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
@@ -381,7 +381,7 @@
                                 @foreach($arr->globalDest as $destinyGlo)
                                 <tr>
                                     <td>{{ $destinyGlo['destiny']['carrier_name'] }}</td>
-                                    <td> {{ $destinyGlo['destiny']['carrier_name'] }} </td>
+                                    <td> {{ $destinyGlo['destiny']['type'] }} </td>
                                     <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
                                     <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
