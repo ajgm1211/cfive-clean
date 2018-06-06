@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\MergeTag;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class MergeTagController extends Controller
      */
     public function index()
     {
-        //
+        
+        
     }
 
     /**

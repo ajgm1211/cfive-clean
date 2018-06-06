@@ -22,15 +22,13 @@ class EmailsTemplateController extends Controller
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = EmailTemplate::All();
         $data = $template->where('company', $company);
-        $mergeTag = MergeTag::All();
-        $tags = $mergeTag->where('company_name', $company);
         
         foreach($data as $i){
             $user = User::find($i->user_id);    
             $i->user_id = $user->name;
         }
 
-        return view('emails-template.list', compact('data', 'tags'));
+        return view('emails-template.list', compact('data'));
     }
 
     /**
@@ -45,7 +43,12 @@ class EmailsTemplateController extends Controller
 
     public function add(){
 
-        return view('emails-template.add');
+        $companyUser = CompanyUser::All();
+        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+        $mergeTag = MergeTag::All();
+        $array = $mergeTag->where('company_name', $company);
+
+        return view('emails-template.add', compact('array'));
     }
 
     /**

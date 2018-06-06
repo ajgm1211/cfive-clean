@@ -13,6 +13,11 @@
     
 </div>
 
+<div class="form-group m-form__group"  >
+    {!! Form::label('Tags', 'Tags') !!}<br>
+    {{ Form::select('tags[]', $array, null, ['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+</div>
+
 <div class="form-group m-form__group">
     {!! Form::textarea('menssage', null, ['placeholder' => 'Please enter your  menssage','class' => 'form-control editor m-input']) !!}
 
