@@ -8,7 +8,8 @@ class MergeTag extends Model
 {
     protected $table = "mergeTags";
     protected $fillable = [
-        'id', 
+        'id',
+        'tag_name', 
         'company_name', 
         'client_name', 
         'client_phone', 

@@ -46,7 +46,8 @@ class EmailsTemplateController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $mergeTag = MergeTag::All();
-        $array = $mergeTag->where('company_name', $company);
+        $array = $mergeTag->where('company_name', $company[0])->pluck('tag_name');
+        
 
         return view('emails-template.add', compact('array'));
     }

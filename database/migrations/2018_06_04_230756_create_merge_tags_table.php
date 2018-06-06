@@ -15,6 +15,7 @@ class CreateMergeTagsTable extends Migration
     {
         Schema::create('mergeTags', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('tag_name');
             $table->string('company_name');
             $table->string('client_name');
             $table->string('client_phone');
