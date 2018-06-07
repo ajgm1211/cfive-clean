@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" >
     @include('includes.head')
-    <body class="m-page--fluid m--skin- m-content--skin-light2 m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
-        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+    <body class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default"  >
+        <div class="m-grid m-grid--hor m-grid--root m-page">
         @section('content')
         @show
         </div>

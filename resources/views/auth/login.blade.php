@@ -7,15 +7,10 @@
                     <div class="m-stack m-stack--hor m-stack--desktop">
                         <div class="m-stack__item m-stack__item--fluid">
                             <div class="m-login__wrapper">
-                                <div class="m-login__logo">
-                                    <a href="#">
-                                        <img src="/assets/app/media/img//logos/logo-2.png">
-                                    </a>
-                                </div>
                                 <div class="m-login__signin">
                                     <div class="m-login__head">
                                         <h3 class="m-login__title">
-                                            Sign In To Admin
+                                            Welcome to Cargofive
                                         </h3>
                                     </div>
                                     @if (session('status'))
@@ -59,7 +54,7 @@
                                             Sign Up
                                         </h3>
                                         <div class="m-login__desc">
-                                            Enter your details to create your account:
+                                            Create your account
                                         </div>
                                     </div>
                                     <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
@@ -83,9 +78,9 @@
                                             <div class="col m--align-left">
                                                 <label class="m-checkbox m-checkbox--focus">
                                                     <input type="checkbox" name="agree">
-                                                    I Agree the
-                                                    <a href="#" class="m-link m-link--focus">
-                                                        terms and conditions
+                                                    I acept the
+                                                    <a href="https://cargorive.com/terms-and-conditions" class="m-link m-link--focus" >
+                                                        Terms and Conditions
                                                     </a>
                                                     .
                                                     <span></span>
@@ -135,17 +130,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-grid__item m-grid__item--fluid m-grid m-grid--center m-grid--hor m-grid__item--order-tablet-and-mobile-1	m-login__content" style="background-image: url(/assets/app/media/img//bg/bg-4.jpg)">
-                    <div class="m-grid__item m-grid__item--middle">
-                        <h3 class="m-login__welcome">
-                            Join Our Community
-                        </h3>
-                        <p class="m-login__msg">
-                            Lorem ipsum dolor sit amet, coectetuer adipiscing
-                            <br>
-                            elit sed diam nonummy et nibh euismod
-                        </p>
-                    </div>
+                <div class="m-grid__item m-grid__item--fluid m-grid m-grid--center m-grid--hor m-grid__item--order-tablet-and-mobile-1	m-login__content" style="background-image: url(/images/login.jpg)">
                 </div>
             </div>
 

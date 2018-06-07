@@ -13,7 +13,7 @@
     <!--end::Page Vendors -->
     
     <!--end::Base Styles -->
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.png" />
     <!--<link href="{{ asset('css/custom.css') }}" rel="stylesheet" />-->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     @show
