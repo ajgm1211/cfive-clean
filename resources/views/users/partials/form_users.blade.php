@@ -88,10 +88,7 @@
         <div    class="form-group m-form__group" >
             {!! Form::label('position', 'Position') !!}<br>
             {!! Form::text('position', null, ['placeholder' => 'Please enter position','class' => 'form-control m-input','id'=>'txtSubuser']) !!}
-
         </div>
-
-
     </div>
 @endif
 

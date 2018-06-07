@@ -1,14 +1,6 @@
 <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
     <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-            <a  href="#" class="m-menu__link m-menu__toggle">
-                <span class="m-menu__link-text">
-                    New Quote
-                </span>
-            </a>
-        </li>
-
-        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
             <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                 <span class="m-menu__link-text">
                     Quotes

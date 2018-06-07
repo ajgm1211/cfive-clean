@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Inlands')
+@section('title', 'Inland for FCL')
 @section('content')
     <div class="m-content">
         <div class="m-portlet m-portlet--mobile">
@@ -7,7 +7,7 @@
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
                         <h3 class="m-portlet__head-text">
-                            List  Inland
+                            Inland for FCL
                         </h3>
                     </div>
                 </div>
