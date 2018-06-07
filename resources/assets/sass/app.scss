@@ -52,7 +52,7 @@ a.m-brand__logo-wrapper img {
 }
 
 h3.m-subheader__title{
-  color:#FF5F47 !important;
+  color:$primary-color;
 }
 
 .m-dropdown__body span {
@@ -114,8 +114,8 @@ h3.m-subheader__title{
 }
 
 .m-tabs-line.m-tabs-line--success.nav.nav-tabs .nav-link:hover, .m-tabs-line.m-tabs-line--success.nav.nav-tabs .nav-link.active, .m-tabs-line.m-tabs-line--success a.m-tabs__link:hover, .m-tabs-line.m-tabs-line--success a.m-tabs__link.active {
-  color: $color-orange !important;
-  border-bottom: 3px solid $color-orange !important;
+  color: $primary-color !important;
+  border-bottom: 3px solid $primary-color !important;
   font-weight: bold !important;
 }
 
@@ -531,3 +531,22 @@ input#password {
 
 }
 
+/*
+INLAND RATES
+*/
+
+th#lower-limit-fcl {
+  width:50px;
+}
+
+th#upper-limit-fcl {
+  width:50px;
+}
+
+th#rate-limit-fcl {
+  width:50px;
+}
+
+th#options-limit-fcl {
+  width:50px;
+}

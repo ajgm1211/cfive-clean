@@ -54,7 +54,7 @@
                                             Sign Up
                                         </h3>
                                         <div class="m-login__desc">
-                                            Create your account
+                                            Sign Up in Cargofive
                                         </div>
                                     </div>
                                     <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
