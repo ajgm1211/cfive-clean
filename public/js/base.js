@@ -497,7 +497,6 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
-
 $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
         $("#origin_address_label").hide();

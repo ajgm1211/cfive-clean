@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
+use App\ContractClientRestriction;
+use App\ContractCompanyRestriction;
 use Illuminate\Http\Request;
 use App\Contract;
 use App\Country;
@@ -60,9 +63,10 @@ class ContractsController extends Controller
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
+        $companies = Company::all()->pluck('business_name','id');
+        $contacts = Contract::all()->pluck('name','id');
 
-
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','companies','contacts'));
     }
 
     public function create()
@@ -78,8 +82,6 @@ class ContractsController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $contract = new Contract($request->all());
         $contract->user_id =Auth::user()->id;
         $validation = explode('/',$request->validation_expire);
@@ -89,13 +91,13 @@ class ContractsController extends Controller
 
         $details = $request->input('origin_id');
         $detailscharges = $request->input('type');
-        // For Each de los rates 
+        $companies = $request->input('companies');
+        $users = $request->input('users');
+        // For Each de los rates
         $contador = 1;
         foreach($details as $key => $value)
         {
             if(!empty($request->input('twuenty.'.$key))) {
-
-
                 $rates = new Rate();
                 $rates->origin_port = $request->input('origin_id.'.$key);
                 $rates->destiny_port = $request->input('destiny_id.'.$key);
@@ -120,7 +122,7 @@ class ContractsController extends Controller
                 $localcharge->ammount = $request->input('ammount.'.$key2);
                 $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
                 $localcharge->contract()->associate($contract);
-                $localcharge->save();    
+                $localcharge->save();
                 $detailport = $request->input('port_id'.$contador);
                 $detailcarrier = $request->input('localcarrier_id'.$contador);
                 foreach($detailcarrier as $c => $value)
@@ -139,6 +141,26 @@ class ContractsController extends Controller
                 }
                 $contador++;
 
+            }
+        }
+
+        if(!empty($companies)){
+            foreach($companies as $key3 => $value)
+            {
+                $contract_company_restriction = new ContractCompanyRestriction();
+                $contract_company_restriction->company_id=$value;
+                $contract_company_restriction->contract_id=$contract->id;
+                $contract_company_restriction->save();
+            }
+        }
+
+        if(!empty($users->isEmpty)){
+            foreach($users as $key4 => $value)
+            {
+                $contract_client_restriction = new ContractClientRestriction();
+                $contract_client_restriction->contact_id=$value;
+                $contract_client_restriction->contract_id=$contract->id;
+                $contract_client_restriction->save();
             }
         }
 
@@ -303,7 +325,7 @@ class ContractsController extends Controller
         $deleteCarrier->delete();
         $deletePort = LocalCharPort::where("localcharge_id",$id);
         $deletePort->delete();
-        
+
         foreach($port as $key2)
         {
             $detailport = new LocalCharPort();
