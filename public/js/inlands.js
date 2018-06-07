@@ -208,6 +208,12 @@ $("#newtwuenty").on("click", function() {
 
     var $template = $('#twuentyclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
+    $ids = $( ".low20" ).length + 1;
+
+    $myClone.find(".cloLow20").removeAttr('id').attr('id', 'lo20'+$ids).attr('onblur',"validateRange(this.id,'t20clone')").attr('required', 'true').addClass('low20');
+
+    $myClone.find(".cloUp20").removeAttr('id').attr('id', 'up20'+$ids).attr('onblur',"validateRange(this.id,'t20')").attr('required', 'true').addClass('up20');
+
     $myClone.find(".sel").addClass('col-lg-4'); 
     $("#twuenty").append($myClone);
 });
@@ -216,6 +222,12 @@ $("#newforty").on("click", function() {
 
     var $template = $('#fortyclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
+    
+    $ids = $( ".low40" ).length + 1;
+    $myClone.find(".cloLow40").removeAttr('id').attr('id', 'lo40'+$ids).attr('onblur',"validateRange40(this.id,'t40clone')").attr('required', 'true').addClass('low40');
+
+    $myClone.find(".cloUp40").removeAttr('id').attr('id', 'up40'+$ids).attr('onblur',"validateRange40(this.id,'t40')").attr('required', 'true').addClass('up40');
+
     $myClone.find(".sel").addClass('col-lg-4'); 
     $("#forty").append($myClone);
 });
@@ -224,6 +236,13 @@ $("#newfortyhc").on("click", function() {
 
     var $template = $('#fortyhcclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
+    
+      
+    $ids = $( ".low40H" ).length + 1;
+    
+    $myClone.find(".cloLow40H").removeAttr('id').attr('id', 'lo40H'+$ids).attr('onblur',"validateRange40hc(this.id,'t40cloneH')").attr('required', 'true').addClass('low40H');
+
+    $myClone.find(".cloUp40H").removeAttr('id').attr('id', 'up40H'+$ids).attr('onblur',"validateRange40hc(this.id,'t40H')").attr('required', 'true').addClass('up40H');
     $myClone.find(".sel").addClass('col-lg-4'); 
     $("#fortyhc").append($myClone);
 });
@@ -267,7 +286,7 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
-
+    $('#msg20').hide();
 });
 
 function deleteInland(idval){
@@ -313,6 +332,134 @@ function deleteInland(idval){
         }
 
     });
+
+
+}
+
+function validateRange(id,tipo){
+
+    if(tipo == 't20'){
+        var idval = id.substr(4);
+   
+        $('.low20').each(function(index){
+           
+            var id = index + 1;
+                
+            if(id <= idval ){
+                var low = parseInt($('#lo20'+id).val());
+                var up =  parseInt($('#up20'+idval).val());
+                if(low >= up ){
+                    $('#msg20').show();
+                    $('#up20'+idval).val("");
+
+                }else{
+                    $('#msg20').hide();
+                }
+            }else{
+                $('#up20'+id).val("");
+                $('#lo20'+id).val("");
+            }
+        });
+    } 
+
+    if(tipo == 't20clone'){
+        var idval = id.substr(4);
+        var idanterior = idval - 1;
+        var low = parseInt($('#lo20'+idval).val());
+        var up =  parseInt($('#up20'+idval).val());
+        var upAnterior =  parseInt($('#up20'+idanterior).val());
+        if((low <= upAnterior) || (low >= up)){
+            $('#msg20').show();
+            $('#up20'+idval).val("");
+            $('#lo20'+idval).val("");
+
+        }else{
+            $('#msg20').hide();
+        }
+    } 
+
+
+}
+function validateRange40(id,tipo){
+
+    if(tipo == 't40'){
+        var idval = id.substr(4);
+        $('.low40').each(function(index){
+            var id = index + 1;
+            if(id <= idval ){
+                var low = parseInt($('#lo40'+id).val());
+                var up =  parseInt($('#up40'+idval).val());
+                if(low >= up ){
+                    $('#msg40').show();
+                    $('#up40'+idval).val("");
+
+                }else{
+                    $('#msg40').hide();
+                }
+            }else{
+                $('#up40'+id).val("");
+                $('#lo40'+id).val("");
+            }
+        });
+    } 
+
+    if(tipo == 't40clone'){
+        var idval = id.substr(4);
+        var idanterior = idval - 1;
+        var low = parseInt($('#lo40'+idval).val());
+        var up =  parseInt($('#up40'+idval).val());
+        var upAnterior =  parseInt($('#up40'+idanterior).val());
+        if((low <= upAnterior) || (low >= up)){
+            $('#msg40').show();
+            $('#up40'+idval).val("");
+            $('#lo40'+idval).val("");
+
+        }else{
+            $('#msg40').hide();
+        }
+    } 
+
+
+}
+function validateRange40hc(id,tipo){
+
+
+    if(tipo == 't40H'){
+        var idval = id.substr(5);
+        $('.low40H').each(function(index){
+            var id = index + 1;
+            if(id <= idval ){
+                var low = parseInt($('#lo40H'+id).val());
+                var up =  parseInt($('#up40H'+idval).val());
+                if(low >= up ){
+                    $('#msg40H').show();
+                    $('#up40H'+idval).val("");
+
+                }else{
+                    $('#msg40H').hide();
+                }
+            }else{
+                $('#up40H'+id).val("");
+                $('#lo40H'+id).val("");
+            }
+        });
+    } 
+
+    if(tipo == 't40cloneH'){
+        var idval = id.substr(5);
+        var idanterior = idval - 1;
+        var low = parseInt($('#lo40H'+idval).val());
+        var up =  parseInt($('#up40H'+idval).val());
+        var upAnterior =  parseInt($('#up40H'+idanterior).val());
+        if((low <= upAnterior) || (low >= up)){
+            $('#msg40H').show();
+            $('#up40H'+idval).val("");
+            $('#lo40H'+idval).val("");
+
+        }else{
+            $('#msg40H').hide();
+        }
+    } 
 
 
 }

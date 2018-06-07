@@ -532,7 +532,7 @@ class QuoteController extends Controller
 
 
         }
-
+    
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
         return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin'));
