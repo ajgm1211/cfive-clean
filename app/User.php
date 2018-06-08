@@ -54,10 +54,10 @@ class User extends Authenticatable
 
     public function getVerifiedAttribute()
     {
-        if($this->attributes['verified']==1){
-            return $this->attributes['verified']='Active';
+        if($this->attributes['state']==1){
+            return $this->attributes['state']='Active';
         }else{
-            return $this->attributes['verified']='Inactive';
+            return $this->attributes['state']='Inactive';
         }
     }
 }

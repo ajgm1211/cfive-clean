@@ -16,7 +16,6 @@ class CreateTypedestinyTable extends Migration
         Schema::create('typedestiny', function (Blueprint $table) {
             $table->increments('id');
             $table->string('description');
-           
         });
     }
 

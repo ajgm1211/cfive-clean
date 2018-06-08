@@ -205,15 +205,15 @@ class UsersController extends Controller
     public function activate(Request $request,$id) {
         $user=User::find($id);
         //dd(json_encode($user));
-        if($user->verified=='Active'){
-            $user->verified=0;
+        if($user->state=='Active'){
+            $user->state=0;
             $user->update();
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'User has been disabled successfully!');
             return redirect()->route('users.home');
         }else{
-            $user->verified=1;
+            $user->state=1;
             $user->update();
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
