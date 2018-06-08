@@ -41,6 +41,27 @@ class EmailsTemplateController extends Controller
         //
     }
 
+    public function createHtmlTag($data){
+
+        $tag ='<!DOCTYPE html>
+            <html>
+                <head>
+                </head>
+                <body>
+                    <p>
+                        <strong>Nombre:</strong> '.$data->client_name.'<br/>'.
+                        '<strong>Company:</strong> '.$data->company_name.'<br/>'.
+                        '<strong>Quote Number:</strong> '.$data->quote_number.'<br/>'.
+                        '<strong>Origin:</strong> '.$data->origin.'<br/>'.
+                        '<strong>Destination:</strong> '.$data->destination.'<br/>'.
+                        '<strong>Total:</strong> '.$data->quote_total.'<br/>'.
+                    '</p>
+                </body>
+            </html>';
+
+        return $tag;
+    }
+
     public function add(){
 
         $companyUser = CompanyUser::All();
@@ -53,7 +74,7 @@ class EmailsTemplateController extends Controller
         {
             $templates[] = [
                 'title' => $arr->tag_name,
-                'content' => 'Nombre: '.$arr->client_name
+                'content' => self::createHtmlTag($arr)
             ];
         }
         
@@ -69,7 +90,6 @@ class EmailsTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->menssage);
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = new EmailTemplate();
@@ -107,8 +127,19 @@ class EmailsTemplateController extends Controller
     public function edit($id)
     {
         $template = EmailTemplate::find($id);
+        $mergeTag = MergeTag::All();
+        $array = $mergeTag->where('user_name', Auth::user()->name);
 
-        return view('emails-template.edit', compact('template'));
+        $templates = [];
+        foreach ($array as $arr)
+        {
+            $templates[] = [
+                'title' => $arr->tag_name,
+                'content' => self::createHtmlTag($arr)
+            ];
+        }
+
+        return view('emails-template.edit', compact('template', 'templates'));
     }
 
     /**
