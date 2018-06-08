@@ -90,8 +90,8 @@ class RegisterController extends Controller
         $verifyUser = VerifyUser::where('token', $token)->first();
         if(isset($verifyUser) ){
             $user = $verifyUser->user;
-            if(!$user->verified) {
-                $verifyUser->user->verified = 1;
+            if(!$user->emailverified) {
+                $verifyUser->user->emailverified = 1;
                 $verifyUser->user->save();
                 VerifyUser::where('token', $token)->delete();
                 $status = "Your e-mail is verified. You can now login.";
