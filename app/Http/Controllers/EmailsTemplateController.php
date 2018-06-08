@@ -46,10 +46,19 @@ class EmailsTemplateController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $mergeTag = MergeTag::All();
-        $array = $mergeTag->where('company_name', $company[0])->pluck('tag_name');
+        $array = $mergeTag->where('user_name', Auth::user()->name);
+
+        $templates = [];
+        foreach ($array as $arr)
+        {
+            $templates[] = [
+                'title' => $arr->tag_name,
+                'content' => 'Nombre: '.$arr->client_name
+            ];
+        }
         
 
-        return view('emails-template.add', compact('array'));
+        return view('emails-template.add', compact('templates'));
     }
 
     /**
@@ -60,7 +69,7 @@ class EmailsTemplateController extends Controller
      */
     public function store(Request $request)
     {
-
+        dd($request->menssage);
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = new EmailTemplate();
