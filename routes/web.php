@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('auth/login');
+    return view('dashboard/index');
 });
 
 Route::get('/home', function () {

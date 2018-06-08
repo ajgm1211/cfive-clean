@@ -116,7 +116,7 @@
                             Number
                         </th>
                         <th title="Field #3">
-                            Courier
+                            Carrier
                         </th>
                         <th title="Field #4">
                             Origin Port
@@ -133,11 +133,11 @@
                         <th title="Field #8" >
                             40'HC
                         </th>
-                        <th title="Field #9">
-                            Validation
-                        </th>
                         <th title="Field #10">
                             Currency
+                        </th>
+                        <th title="Field #9">
+                            Validity
                         </th>
                         <th title="Field #11">
                             Status
@@ -162,8 +162,8 @@
                                 <td>{{$rates->twuenty  }}</td>
                                 <td>{{$rates->forty  }}</td>
                                 <td>{{$rates->fortyhc  }}</td>
-                                <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
                                 <td>{{$rates->currency->alphacode  }}</td>
+                                <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
                                 <td>@if($arr->status == "publish")
                                         1
                                     @else

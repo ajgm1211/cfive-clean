@@ -156,7 +156,7 @@
                                             Origin Port
                                         </th>
                                         <th title="Field #2">
-                                            Destiny  Port 
+                                            Destiny  Port
                                         </th>
                                         <th title="Field #3">
                                             Changetype
@@ -189,6 +189,7 @@
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>-</td>
+
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
