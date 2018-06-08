@@ -19,19 +19,16 @@ class SurchargesController extends Controller
         $data = Surcharge::where('user_id','=',Auth::user()->id)->with('user')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
+
     public function add()
     {
-
-
         return view('surcharges/add');
     }
-
 
     public function create()
     {
         //
     }
-
 
     public function store(Request $request)
     {
@@ -51,7 +48,6 @@ class SurchargesController extends Controller
 
     public function edit($id)
     {
-
         $surcharges = Surcharge::find($id);
         return view('surcharges.edit', compact('surcharges','surcharges'));
     }
@@ -68,22 +64,22 @@ class SurchargesController extends Controller
         return redirect()->action('SurchargesController@index');
     }
 
-
     public function destroy($id)
     {
         $surcharges = Surcharge::find($id);
         $surcharges->delete();
         return $surcharges;
     }
+
     public function destroySubcharge(Request $request,$id)
     {
-
         $user = self::destroy($id);
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully delete ');
         return redirect()->action('SurchargesController@index');
     }
+
     public function destroymsg($id)
     {
         return view('surcharges/message' ,['surcharge_id' => $id]);
