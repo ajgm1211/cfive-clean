@@ -17,7 +17,7 @@ class CreateEmailTemplatesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('subject');
-            $table->string('menssage');
+            $table->longText('menssage');
             $table->string('company');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
