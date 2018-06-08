@@ -42,7 +42,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
-        $request->request->add(['user_id' => \Auth::id()]);
+        $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
         $company=Company::create($request->all());
 
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
