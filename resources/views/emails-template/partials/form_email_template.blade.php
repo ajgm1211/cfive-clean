@@ -13,10 +13,6 @@
     
 </div>
 
-<div class="form-group m-form__group"  >
-    {!! Form::label('Tags', 'Tags') !!}<br>
-    {{ Form::select('tags[]', $array, null, ['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
-</div>
 
 <div class="form-group m-form__group">
     {!! Form::textarea('menssage', null, ['placeholder' => 'Please enter your  menssage','class' => 'form-control editor m-input']) !!}
@@ -25,6 +21,9 @@
 
 <!-- tinyMCE script config -->
 <script>
+
+  var title = <?php echo json_encode($templates) ?>;
+
   var editor_config = {
     path_absolute : "/",
     selector: "textarea.editor",
@@ -36,6 +35,7 @@
       "fullpage toc tinymcespellchecker imagetools help"
     ],
     toolbar: "insertfile undo redo | styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+    templates: title,
     external_plugins: { "nanospell": "http://localhost:8000/js/tinymce/plugins/nanospell/plugin.js" },
     nanospell_server:"php",
     browser_spellcheck: true,
