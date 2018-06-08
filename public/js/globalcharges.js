@@ -34,7 +34,8 @@ function save_l(id,idval){
         url: 'globalcharges/updateGlobalCharge/' + idval,
         data: {
             'surcharge_id' : $("#type"+id).val(),
-            'port' : $("#port"+id).val(),
+            'port_orig' : $("#port_orig"+id).val(),
+            'port_dest' : $("#port_dest"+id).val(),
             'changetype' : $("#changetype"+id).val(),
             'carrier_id' : $("#localcarrier"+id).val(),
             'calculationtype_id' : $("#calculationtype"+id).val(),
@@ -60,7 +61,7 @@ function save_l(id,idval){
             $("#tr_l"+id+" .in input , #tr_l"+id+" .in select ").prop('disabled', true);
             var selText ="";
             var porText = "";
-
+            var porTextDest = "";
             $("#localcarrier"+id+" option:selected").each(function () {
                 var $this = $(this);
                 if ($this.length) {
@@ -68,15 +69,26 @@ function save_l(id,idval){
 
                 }
             });
-            $("#port"+id+" option:selected").each(function () {
+            $("#port_orig"+id+" option:selected").each(function () {
                 var $this = $(this);
                 if ($this.length) {
                     porText += $this.text()+ ", ";
 
                 }
             });
+            $("#port_dest"+id+" option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                    porTextDest += $this.text()+ ", ";
+
+                }
+            });
+
+
             $("#divtype"+id).html($("#type"+id+" option:selected").text());
             $("#divport"+id).html(porText);
+            $("#divportDest"+id).html(porTextDest);
+
             $("#divchangetype"+id).html($("#changetype"+id+" option:selected").text());
             $("#divcarrier"+id).html(selText);
             $("#divcalculation"+id).html($("#calculationtype"+id+" option:selected").text());
@@ -104,8 +116,9 @@ $("#new").on("click", function() {
     $myClone.addClass('closetr');
     $myClone.find("select").select2();
 
-    $ids = $( ".port" ).length;
-    $myClone.find(".port").attr('name', 'port_id'+$ids+'[]');
+    $ids = $( ".port_orig" ).length;
+    $myClone.find(".port_orig").attr('name', 'port_orig'+$ids+'[]');
+    $myClone.find(".port_dest").attr('name', 'port_dest'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier'+$ids+'[]');
     $("#sample_editable_1").append($myClone);
     // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
@@ -153,8 +166,8 @@ $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
     $i = 1;
     $('.closetr').each(function () {
-
-        var res = $(".port",this).removeAttr('name').attr('name', 'port_id'+$i+'[]');
+        var res = $(".port_orig",this).removeAttr('name').attr('name', 'port_orig'+$i+'[]');
+        var resDest = $(".port_dest",this).removeAttr('name').attr('name', 'port_dest'+$i+'[]');
         var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier'+$i+'[]');
         $i++;
     });

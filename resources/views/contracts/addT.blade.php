@@ -153,7 +153,10 @@
                                             Type
                                         </th>
                                         <th title="Field #2">
-                                            Ports
+                                            Origin Port
+                                        </th>
+                                        <th title="Field #2">
+                                            Destiny  Port 
                                         </th>
                                         <th title="Field #3">
                                             Changetype
@@ -178,20 +181,20 @@
                                     <tbody>
                                     <tr>
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td>{{ Form::select('port_id1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
-                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td>{{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
-
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>-</td>
-
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
-                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control port' ,'multiple' => 'multiple']) }}</td>
-                                        <td>{{ Form::select('changetype[]',['origin' => 'Origin','destination' => 'Destination'],null,['class'=>'form-control']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple']) }}</td>
 
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'form-control']) }}</td>

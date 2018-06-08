@@ -62,14 +62,18 @@ class QuoteController extends Controller
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
-  /*
-        if($delivery_type == "2"){
+
+        // Calculo de los inlands
+        if($delivery_type == "2" || $delivery_type == "4" ){
             $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
                 $q->whereIn('port', $destiny_port);
             })->with('inlandports.ports','inlanddetails.currency')->get();
 
             foreach($inlands as $inlandsValue){
+
                 foreach($inlandsValue->inlandports as $ports){
+                    $monto = 0;
+                    $temporal = 0;
                     if (in_array($ports->ports->id, $destiny_port )) {
                         $origin =  $ports->ports->coordinates;
                         $destination = $request->input('destination_address');
@@ -85,155 +89,453 @@ class QuoteController extends Controller
                         foreach($var->routes as $resp) {
                             foreach($resp->legs as $dist) {
                                 $km = explode(" ",$dist->distance->text);
-                                $distance[] = array("port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] );
+
+                                foreach($inlandsValue->inlanddetails as $details){
+                                    if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('twuenty') * $details->ammount;
+
+                                            //  echo $monto;
+                                            //echo '<br>';
+
+                                        }
+                                    }
+                                    if($details->type == 'forty' && $request->input('forty') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('forty') * $details->ammount;
+
+                                        }
+                                    }
+                                    if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('fortyhc') * $details->ammount;
+
+                                        }
+                                    }
+
+                                }
+                                if($monto > 0){
+                                    $data[] = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door');
+                                }
                             }
                         }
-
-                    }
-                }
-
-
-                $collection = Collection::make($distance);
-
-                $distancia = "72";
-
-                foreach($inlandsValue->inlanddetails as $details){
-
-                    if($details->type == 'twuenty'){
-
-                        foreach($collection as $key2 =>  $value){
-                            echo $value["port_name"];echo "<br>";
-                            echo $value["km"];echo "<br>";
-
-                            if($distancia>= $details->lower && $distancia <= $details->upper){
-                                echo "im here";
-                                $monto = $request->input('twuenty') * $details->ammount;
-                                echo "lower ".$details->lower;
-                                echo "<br>";
-                                echo "up ".$details->upper;
-                                echo "<br>"; echo "<br>";
-
-                            }
-
-
-                        }
-                        dd($collection);
-
-                        if($distancia >= $details->lower && $distancia <= $details->upper){
-
-                            $monto = $request->input('twuenty') * $details->ammount;
-                            echo "lower ".$details->lower;
-                            echo "<br>";
-                            echo "up ".$details->upper;
-                            echo "<br>"; echo "<br>";
-
-                        }
-                    }
-
-                }
-                dd($inlands);
+                    } // if ports
+                }// foreach ports
+            }//foreach inlands
+            if(!empty($data)){
+                $collection = Collection::make($data);
+                // dd($collection); //  completo 
+                $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
+                    $test = $item->where('monto', $item->min('monto'))->first();
+                    return $test;
+                });
+                // dd($inlandDestiny); // filtraor por el minimo 
             }
-        }*/
+
+        }
+        if($delivery_type == "3" || $delivery_type == "4" ){
+            $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
+                $q->whereIn('port', $origin_port);
+            })->with('inlandports.ports','inlanddetails.currency')->get();
+
+            foreach($inlands as $inlandsValue){
+
+                foreach($inlandsValue->inlandports as $ports){
+                    $monto = 0;
+                    $temporal = 0;
+                    if (in_array($ports->ports->id, $origin_port )) {
+                        $origin = $request->input('origin_address');
+                        $destination =  $ports->ports->coordinates;
+                        $response = GoogleMaps::load('directions')
+                            ->setParam([
+                                'origin'          => $origin,
+                                'destination'     => $destination,
+                                'mode' => 'driving' ,
+                                'language' => 'es',
+
+                            ])->get();
+                        $var = json_decode($response);
+                        foreach($var->routes as $resp) {
+                            foreach($resp->legs as $dist) {
+                                $km = explode(" ",$dist->distance->text);
+
+                                foreach($inlandsValue->inlanddetails as $details){
+                                    if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('twuenty') * $details->ammount;
+                                        }
+                                    }
+                                    if($details->type == 'forty' && $request->input('forty') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('forty') * $details->ammount;
+
+                                        }
+                                    }
+                                    if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
+                                        $distancia = intval($km[0]);
+                                        if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                                            $monto += $request->input('fortyhc') * $details->ammount;
+
+                                        }
+                                    }
+
+                                }
+                                if($monto > 0){
+                                    $dataOrig[] = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door');
+                                }
+                            }
+                        }
+                    } // if ports
+                }// foreach ports
+            }//foreach inlands
+
+
+            if(!empty($dataOrig)){
+                $collectionOrig = Collection::make($dataOrig);
+                // dd($collection); //  completo 
+                $inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
+                    $test = $item->where('monto', $item->min('monto'))->first();
+                    return $test;
+                });
+                // dd($inlandOrigin); // filtraor por el minimo 
+            }
+
+        }
+        // Fin del calculo de los inlands 
 
         $date =  $request->input('date');
-        $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract')->whereHas('contract', function($q) use($date)
+        $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date)
         {
             $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
         })->get();
 
         $formulario = $request;
+        $array20 = array('2','4','5');
+        $array40 =  array('1','4','5');
+        $array40Hc= array('3','4','5');
+
+
+
+
+        $collectionLocal = new Collection();
 
         foreach($arreglo as $data){
+            $collectionOrig = new Collection();
+            $collectionDest = new Collection();
+            $collectionFreight = new Collection();
+
+            $collectionGloOrig = new Collection();
+            $collectionGloDest = new Collection();
+            $collectionGloFreight = new Collection();
+
+
             $subtotal = 0;
-            $merge = array($data->origin_port,$data->destiny_port);
+            $orig_port = array($data->origin_port);
+            $dest_port = array($data->destiny_port);
+            $carrier[] = $data->carrier_id;
 
-            if($request->input('twuenty') != "0") {
-                $subtotal = ($data->twuenty * $request->input('twuenty')) + $subtotal;
-                $carrier[] = $data->carrier_id;
+            $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
+                $q->whereIn('carrier_id', $carrier);
+            })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
+                $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
+            })->with('localcharports.portOrig','localcharcarriers.carrier','currency')->get();
 
-                $localTwuenty = LocalCharge::whereIn('calculationtype_id',[2,4,5])->whereHas('localcharcarriers', function($q) use($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->whereHas('localcharports', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
+            foreach($localChar as $local){
 
-                // Global charges twuenty 
+                if(in_array($local->calculationtype_id, $array20)){
+                    if($request->input('twuenty') != "0") {
+                        foreach($local->localcharcarriers as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($local->typedestiny_id == '1'){
 
-                $globalTwuenty = GlobalCharge::whereIn('calculationtype_id',[2,4,5])->whereHas('globalcharcarrier', function($q) use($carrier) {
-                    $q->whereIn('carrier_id', $carrier);
-                })->whereHas('globalcharport', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
+                                    $origTwuenty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local '   );
 
+                                    $collectionOrig->push($origTwuenty);
+
+                                }
+                                if($local->typedestiny_id == '2'){
+                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
+                                    $destTwuenty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ' );
+                                    $collectionDest->push($destTwuenty);
+                                }
+                                if($local->typedestiny_id == '3'){
+                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
+                                    $freighTwuenty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' );
+                                    $collection->push($freighTwuenty);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if(in_array($local->calculationtype_id, $array40)){
+                    if($request->input('forty') != "0") {
+                        foreach($local->localcharcarriers as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($local->typedestiny_id == '1'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                    }
+
+                                    $origForty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' );
+                                    $collectionOrig->push($origForty);
+
+
+
+                                }
+                                if($local->typedestiny_id == '2'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                    }
+                                    $destForty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local '  );
+                                    $collectionDest->push($destForty);
+
+
+                                }
+                                if($local->typedestiny_id == '3'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                    }
+                                    $freighForty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' );
+                                    $collection->push($freighForty);
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+                if(in_array($local->calculationtype_id, $array40Hc)){
+                    if($request->input('fortyhc') != "0") {
+                        foreach($local->localcharcarriers as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($local->typedestiny_id == '1'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                    }
+
+                                    $origFortyHc["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ' );
+                                    $collectionOrig->push($origFortyHc);
+
+
+
+                                }
+                                if($local->typedestiny_id == '2'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                    }
+                                    $destFortyHc["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ');
+                                    $collectionDest->push($destFortyHc);
+
+
+                                }
+                                if($local->typedestiny_id == '3'){
+                                    if($local->calculationtype_id == "4"  ){
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                    }
+                                    $freighFortyHc["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ');
+                                    $collection->push($freighFortyHc);
+
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+                if($local->calculationtype_id == "6"){
+                    foreach($local->localcharcarriers as $carrierGlobal){
+                        if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($local->typedestiny_id == '1'){
+                                $totalAmmount =  $local->ammount;
+                                $origPer["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local '  );
+                                $collectionOrig->push($origPer);
+
+                            }
+                            if($local->typedestiny_id == '2'){
+                                $totalAmmount =  $local->ammount;
+                                $destPer["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ');
+                                $collectionDest->push($destPer);
+
+                            }
+                            if($local->typedestiny_id == '3'){
+                                $totalAmmount =  $local->ammount;
+                                $freightPer["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ' );
+                                $collectionFreight->push($freightPer);
+
+
+                            }
+                        }
+                    }
+                }
             }
-            if($request->input('forty') != "0") {
-                $subtotal = ($data->forty * $request->input('forty')) + $subtotal;
+            $globalChar = GlobalCharge::whereHas('globalcharcarrier', function($q) use($carrier) {
+                $q->whereIn('carrier_id', $carrier);
+            })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
+                $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+            })->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency')->get();
 
+            foreach($globalChar as $global){
+                if(in_array($global->calculationtype_id, $array20)){
+                    if($request->input('twuenty') != "0") {
+                        foreach($global->globalcharcarrier as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($global->typedestiny_id == '1'){
 
-                $carrierForty[] = $data->carrier_id;                
-                $localForty = LocalCharge::whereIn('calculationtype_id',[1,4,5])->whereHas('localcharcarriers', function($q) use($carrierForty) {
-                    $q->whereIn('carrier_id', $carrierForty);
-                })->whereHas('localcharports', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('localcharports.ports')->get();
+                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
+                                    $origTwuentyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\' Global ' );
+                                    $collectionGloOrig->push($origTwuentyGlo);
 
-                // Global charges forty 
+                                }
+                                if($global->typedestiny_id == '2'){
+                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
+                                    $destTwuentyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ');
+                                    $collectionGloDest->push($destTwuentyGlo);
+                                }
+                                if($global->typedestiny_id == '3'){
+                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
+                                    $freighTwuentyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ');
+                                    $collectionGloFreight->push($freighTwuentyGlo);
+                                }
+                            }
+                        }
+                    }
+                }
+                if(in_array($global->calculationtype_id, $array40)){
+                    if($request->input('forty') != "0") {
+                        foreach($global->globalcharcarrier as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($global->typedestiny_id == '1'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                    }
 
-                $globalForty = GlobalCharge::whereIn('calculationtype_id',[1,4,5])->whereHas('globalcharcarrier', function($q) use($carrierForty) {
-                    $q->whereIn('carrier_id', $carrierForty);
-                })->whereHas('globalcharport', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+                                    $origFortyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ');
+                                    $collectionGloOrig->push($origFortyGlo);
 
+                                }
+                                if($global->typedestiny_id == '2'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                    }
+                                    $destFortyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ');
+                                    $collectionGloDest->push($destFortyGlo);
+                                }
+                                if($global->typedestiny_id == '3'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                    }
+                                    $freighFortyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ' );
+                                    $collectionGloFreight->push($freighFortyGlo);
+                                }
+                            }
+                        }
+                    }
+                }
+                if(in_array($global->calculationtype_id, $array40Hc)){
+                    if($request->input('fortyhc') != "0") {
+                        foreach($global->globalcharcarrier as $carrierGlobal){
+                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                                if($global->typedestiny_id == '1'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
+                                    }
+
+                                    $origFortyHcGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\' HC Global ' );
+                                    $collectionGloOrig->push($origFortyHcGlo);
+
+                                }
+                                if($global->typedestiny_id == '2'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
+                                    }
+                                    $destFortyHcGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ');
+
+                                    $collectionGloDest->push($destFortyHcGlo);
+                                }
+                                if($global->typedestiny_id == '3'){
+                                    if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                    }else{
+                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
+                                    }
+                                    $freighFortyHcGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ');
+                                    $collectionGloFreight->push($freighFortyHcGlo);
+                                }
+                            }
+                        }
+                    }
+                }
+                if($global->calculationtype_id == "6"){
+                    foreach($global->globalcharcarrier as $carrierGlobal){
+                        if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($global->typedestiny_id == '1'){
+                                $totalAmmount =  $global->ammount;
+                                $origPerGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ');
+                                $collectionGloOrig->push($origPerGlo);
+                            }
+                            if($global->typedestiny_id == '2'){
+                                $totalAmmount =  $global->ammount;
+                                $destPerGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=> 'Shipment Global ');
+                                $collectionGloDest->push($destPerGlo);
+                            }
+                            if($global->typedestiny_id == '3'){
+                                $totalAmmount =  $global->ammount;
+                                $freightPerGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ');
+                                $collectionGloFreight->push($freightPerGlo);
+                            }
+                        }
+                    }
+                }
             }
-            if($request->input('fortyhc') != "0") {
-                $subtotal = ($data->fortyhc * $request->input('fortyhc')) + $subtotal;
 
-                $carrierFortyHc[] = $data->carrier_id;                
-                $localFortyHc = LocalCharge::whereIn('calculationtype_id',[3,4,5])->whereHas('localcharcarriers', function($q) use($carrierFortyHc) {
-                    $q->whereIn('carrier_id', $carrierFortyHc);
-                })->whereHas('localcharports', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('localcharports.ports')->get();
+            $data->setAttribute('globalOrig',$collectionGloOrig);
+            $data->setAttribute('globalDest',$collectionGloDest);
+            $data->setAttribute('globalFreight',$collectionGloFreight);
 
-                // GLobal Charges
-                $globalFortyHc = GlobalCharge::whereIn('calculationtype_id',[3,4,5])->whereHas('globalcharcarrier', function($q) use($carrierFortyHc) {
-                    $q->whereIn('carrier_id', $carrierFortyHc);
-                })->whereHas('globalcharport', function($q) use($merge) {
-                    $q->whereIn('port', $merge);
-                })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
+            $data->setAttribute('localOrig',$collectionOrig);
+            $data->setAttribute('localDest',$collectionDest);
+            $data->setAttribute('localFreight',$collectionFreight);
 
-            }
-            // PER SHIPTMENT LOCAL
-            $sub[] =   $subtotal;
-            $carrierShip[] = $data->carrier_id;
-            $shipment = LocalCharge::where('calculationtype_id','=','6')->whereHas('localcharcarriers', function($q) use($carrierShip) {
-                $q->whereIn('carrier_id', $carrierShip);
-            })->whereHas('localcharports', function($q) use($merge) {
-                $q->whereIn('port', $merge);
-            })->with('localcharports.ports','localcharcarriers.carrier','currency')->get();
-
-            // PER SHIPMENT GLOBAL 
-            $globalshipment = GlobalCharge::where('calculationtype_id','=','6')->whereHas('globalcharcarrier', function($q) use($carrierShip) {
-                $q->whereIn('carrier_id', $carrierShip);
-            })->whereHas('globalcharport', function($q) use($merge) {
-                $q->whereIn('port', $merge);
-            })->with('globalcharport.ports','globalcharcarrier.carrier','currency')->get();
 
         }
 
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','arreglo','formulario','sub','localTwuenty','localForty','localFortyHc','shipment','globalTwuenty','globalForty','globalFortyHc','globalshipment'));
+        return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin'));
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $quotes = Quote::all();

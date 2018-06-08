@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CalculationtypeTableSeeder::class);
         $this->call(CarriersTableSeeder::class);
         $this->call(HarborsTableSeeder::class);
+        $this->call(TypedestinyTableSeeder::class);
     }
 }

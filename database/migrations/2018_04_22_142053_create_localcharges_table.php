@@ -16,7 +16,7 @@ class CreateLocalchargesTable extends Migration
         Schema::create('localcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('surcharge_id')->unsigned();
-            $table->string('changetype');
+            $table->integer('typedestiny_id')->unsigned();
             $table->integer('contract_id')->unsigned();
             $table->integer('calculationtype_id')->unsigned();
             $table->double('ammount');
@@ -25,6 +25,7 @@ class CreateLocalchargesTable extends Migration
             $table->foreign('contract_id')->references('id')->on('contracts');
             $table->foreign('calculationtype_id')->references('id')->on('calculationtype');
             $table->foreign('currency_id')->references('id')->on('currency');
+            $table->foreign('typedestiny_id')->references('id')->on('typedestiny')->onDelete('cascade');
             $table->timestamps();
         });
     }
