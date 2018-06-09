@@ -12,12 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('dashboard/index');
+    return redirect('users/home');
 });
 
 Route::get('/home', function () {
     return redirect('users/home');
 });
+
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::middleware(['auth'])->prefix('users')->group(function () {
