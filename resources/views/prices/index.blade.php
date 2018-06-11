@@ -141,6 +141,7 @@
     @parent
     <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
     <script>
         function AbrirModal(action,id){
             if(action == "edit"){

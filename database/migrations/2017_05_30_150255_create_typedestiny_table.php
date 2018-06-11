@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCurrencyTable extends Migration
+class CreateTypedestinyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateCurrencyTable extends Migration
      */
     public function up()
     {
-        Schema::create('currency', function (Blueprint $table) {
+        Schema::create('typedestiny', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->nullable();
-            $table->string('alphacode')->nullable();
-            $table->double('rates')->nullable();
-
+            $table->string('description');
         });
     }
 
@@ -29,6 +26,6 @@ class CreateCurrencyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currency');
+        Schema::dropIfExists('typedestiny');
     }
 }

@@ -27,6 +27,13 @@ $("#new2").on("click", function() {
 
 });
 
+$('#m-select2-company').select2({
+    placeholder: "Select an option"
+});
+$('#m-select2-client').select2({
+    placeholder: "Select an option"
+});
+
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });

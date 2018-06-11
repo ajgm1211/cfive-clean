@@ -12,12 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('auth/login');
+    return redirect('users/home');
 });
 
 Route::get('/home', function () {
     return redirect('users/home');
 });
+
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::middleware(['auth'])->prefix('users')->group(function () {
@@ -91,10 +92,17 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
+    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
-
+    Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+    Route::get('send/pdf/{id}/{email}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('settings')->group(function () {
+    Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+});
+Route::resource('settings', 'SettingController')->middleware('auth');
 
 Auth::routes();
 
