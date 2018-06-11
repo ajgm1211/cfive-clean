@@ -1,3 +1,8 @@
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
 function display(id){
 
@@ -23,8 +28,6 @@ function cancel(id){
 }
 
 function save(id,idval){
-
-
     $.ajax({
         type: 'GET',
         url: '../updateRate/' + idval,
@@ -156,6 +159,37 @@ $("#newL").on("click", function() {
 
 });
 
+$(document).on('click', '#default-currency-submit', function () {
+    var id = $('#company_id').val();
+    var form = $('#default-currency');
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: '/settings/store/profile/company',
+                data: form.serialize(),
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Done!',
+                            'Your choice has been saved.',
+                            'success'
+                        )
+                    }
+                }
+            });
+
+        }
+
+    });
+});
+
 $(document).on('click', '.remove', function () {
     $(this).closest('tr').remove();
 });
@@ -201,7 +235,7 @@ $(document).on('click', '#delete-quote', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'quotes.destroy/' + id,
+                url: 'quotes/delete/' + id,
                 success: function(data) {
                     swal(
                         'Deleted!',
@@ -369,6 +403,14 @@ $(document).on('click', '#create-quote-back', function (e) {
     $("#create-quote").show();
 });
 
+$(document).on('click', '.addButtonOrigin', function (e) {
+    var $template = $('#origin_ammounts'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
+});
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
         $clone = $template
@@ -378,9 +420,6 @@ $(document).on('click', '.addButton', function (e) {
             .insertAfter($template);
 });
 
-$(document).on('click', '.removeButton', function (e) {
-    var $row = $(this).closest('.row').remove();
-});
 $(document).on('click', '.addButtonDestination', function (e) {
     var $template = $('#destination_ammounts'),
         $clone = $template
@@ -389,9 +428,17 @@ $(document).on('click', '.addButtonDestination', function (e) {
             .removeAttr('id')
             .insertAfter($template);
 });
-
+$(document).on('click', '.removeOriginButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+    $(".origin_price_per_unit").change();
+});
+$(document).on('click', '.removeButton', function (e) {
+    var $row = $(this).closest('.row').remove();
+    $(".freight_price_per_unit").change();
+});
 $(document).on('click', '.removeButtonDestination', function (e) {
     var $row = $(this).closest('.row').remove();
+    $(".destination_price_per_unit").change();
 });
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
@@ -450,7 +497,6 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
-
 $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
         $("#origin_address_label").hide();
@@ -521,7 +567,7 @@ $( document ).ready(function() {
                 success: function(data) {
                     $('select[name="client"]').empty();
                     $.each(data, function(key, value) {
-                        $('select[name="client"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
                 }
             });
@@ -542,5 +588,136 @@ $( document ).ready(function() {
     });
 });
 
+$(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var markup = 0;
+    $(".origin_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.origin_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                markup = $(this).closest('.row').find('.origin_ammount_markup').val();
+                total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
+                $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_origin_ammount").val(sum);
+            $("#sub_total_origin").html(" "+sum);
+            $("#total_origin_ammount").change();
+        });
+    });
+});
 
+$(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var markup = 0;
+    $(".freight_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.freight_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                markup = $(this).closest('.row').find('.freight_ammount_markup').val();
+                total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
+                $(this).closest('.row').find('.freight_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.freight_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_freight_ammount").val(sum);
+            $("#sub_total_freight").html(" "+sum);
+            $("#total_freight_ammount").change();
+        });
+    });
+});
 
+$(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var markup = 0;
+    $(".destination_price_per_unit").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('.row').find('.destination_ammount_units').val();
+            if(quantity > 0) {
+                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
+                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
+                }else{
+                    total_amount = quantity * $(this).val();
+                }*/
+                markup = $(this).closest('.row').find('.destination_ammount_markup').val();
+                total_amount = quantity * $(this).val();
+                if(markup > 0){
+                    total_amount = total_amount + +markup;
+                }
+                $(this).closest('.row').find('.destination_total_ammount').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('.row').find('.destination_total_ammount').val(total_amount);
+            }
+            sum += +total_amount;
+            $("#total_destination_ammount").val(sum);
+            $("#sub_total_destination").html(" "+sum);
+            $("#total_destination_ammount").change();
+        });
+    });
+});
+
+$(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_ammount, #total_destination_ammount", function() {
+    var total_origin=$("#total_origin_ammount").val();
+    var total_freight=$("#total_freight_ammount").val();
+    var total_destination=$("#total_destination_ammount").val();
+    if(total_origin>0){
+        total_origin=parseFloat(total_origin);
+    }
+    if(total_freight>0){
+        total_freight=parseFloat(total_freight);
+    }
+    if(total_destination>0){
+        total_destination=parseFloat(total_destination);
+    }
+    var sum = 0;
+    sum = total_origin + +total_freight + +total_destination;
+    $("#total").html(" "+sum);
+});
+
+$(document).on('click', '#send-pdf-quote', function () {
+    var id = $('#quote-id').val();
+    var email = $('#quote_email').val();
+    $.ajax({
+        type: 'GET',
+        url: '/quotes/send/pdf/'+id+'/'+email,
+        beforeSend: function () {
+            $('#spin').show();
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                $('#spin').hide();
+                $('#SendQuoteModal').modal('toggle');
+                swal(
+                    'Done!',
+                    'Your message has been sent.',
+                    'success'
+                )
+            }
+        }
+    });
+});

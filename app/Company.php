@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $fillable = ['business_name','phone','address','email','associated_contacts','associated_quotes'];
+    protected $fillable = ['business_name','phone','address','email','associated_contacts','associated_quotes','currency_id','company_user_id'];
 
     public function contact()
     {
@@ -16,6 +16,11 @@ class Company extends Model
     public function quote()
     {
         return $this->hasMany('App\Quote');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
     }
 
     public function company_price()

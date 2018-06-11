@@ -42,6 +42,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
         $usuario = new User($request->all());
         $usuario->password = bcrypt($usuario->password);
         $usuario->save();
@@ -52,9 +53,11 @@ class UsersController extends Controller
             $subuser->user()->associate($usuario);
             $subuser->save();
         }
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully added this user.');
+
         return redirect('users/home');
     }
 
@@ -72,7 +75,7 @@ class UsersController extends Controller
     public function add()
     {
         $user = new User();
-        $companyall = User::all('id','type','name_company')->where('type', '=', 'company')->pluck('name_company', 'id');
+        $companyall = User::all('id','type')->where('type', '=', 'company')->pluck('name_company', 'id');
         return view('users.add',compact('companyall'));
     }
     public function resetPass(Request $request,$user)
@@ -122,11 +125,9 @@ class UsersController extends Controller
         $user = User::find($id);
 
         if($user->type == "subuser"){
-
             $subuser = Subuser::find($user->subuser->id);
             $subuser->company_id  =  $request->id_company;
             $subuser->update();
-
         }
 
         $user->update($requestForm);
@@ -180,8 +181,8 @@ class UsersController extends Controller
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $user = new User();
             $data = $user->all();
-
         }
+
         if(Auth::user()->type == 'company' ){
             $data =  User::whereHas('subuser', function($q)
             {
@@ -204,15 +205,15 @@ class UsersController extends Controller
     public function activate(Request $request,$id) {
         $user=User::find($id);
         //dd(json_encode($user));
-        if($user->verified=='Active'){
-            $user->verified=0;
+        if($user->state=='Active'){
+            $user->state=0;
             $user->update();
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'User has been disabled successfully!');
             return redirect()->route('users.home');
         }else{
-            $user->verified=1;
+            $user->state=1;
             $user->update();
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
