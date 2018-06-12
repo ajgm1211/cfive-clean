@@ -115,7 +115,7 @@
                                 <button onclick="AbrirModal('edit',{{$contact->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                 </button>
-                                <button onclick="AbrirModal('delete',{{$contact->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
+                                <button id="delete-contact" data-contact-id="{{$contact->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
                                     <i class="la la-eraser"></i>
                                 </button>
                             </td>

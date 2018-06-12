@@ -4,17 +4,8 @@
 
     <div class="m-content">
         <div class="row">
-            <div class="col-md-1">
-                <button class="btn btn-primary btn-block">Save</button>
-            </div>
-            <div class="col-md-1">
-                <button class="btn btn-primary btn-block">PDF</button>
-            </div>
             <div class="col-md-2">
                 <button class="btn btn-primary btn-block">Schedules</button>
-            </div>
-            <div class="col-md-1">
-                <button class="btn btn-info btn-block">Send</button>
             </div>
         </div>
         <br>
@@ -51,7 +42,7 @@
                                                 <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
                                                     <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
                                                         <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
-                                                            Create Manual Quote
+                                                            Next
                                                         </a>
                                                         <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
                                                             Back
@@ -165,11 +156,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-2">
                                                                             <label>Modality</label>
-                                                                            {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
+                                                                            {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
                                                                         </div>
                                                                         <div class="col-md-2">
                                                                             <label>Incoterm</label>
-                                                                            {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control']) }}
+                                                                            {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
                                                                         </div>
                                                                         <div class="col-md-5">
                                                                             <label>Delivery type</label>
@@ -178,7 +169,7 @@
                                                                         <div class="col-md-3">
                                                                             <label>Pick up date</label>
                                                                             <div class="input-group date">
-                                                                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input']) !!}
+                                                                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input','required'=>'true']) !!}
                                                                                 <div class="input-group-append">
                                                                                 <span class="input-group-text">
                                                                                     <i class="la la-calendar-check-o"></i>
