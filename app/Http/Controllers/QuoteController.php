@@ -62,6 +62,7 @@ class QuoteController extends Controller
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
+        $typeCurrency = 'USD';
 
         // Calculo de los inlands
         if($delivery_type == "2" || $delivery_type == "4" ){
@@ -247,6 +248,12 @@ class QuoteController extends Controller
             })->with('localcharports.portOrig','localcharcarriers.carrier','currency')->get();
 
             foreach($localChar as $local){
+                $rate = Currency::where('id','=',$local->currency->id)->get();
+
+                foreach($rate as $rate){
+                    $rateMount = $rate->rates;
+
+                }
 
                 if(in_array($local->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
@@ -254,20 +261,29 @@ class QuoteController extends Controller
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($local->typedestiny_id == '1'){
 
-                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $origTwuenty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local '   );
+                                    $subtotal_local = $formulario->twuenty *  $local->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $local->ammount) * $rateMount ;
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $origTwuenty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
 
                                     $collectionOrig->push($origTwuenty);
 
                                 }
                                 if($local->typedestiny_id == '2'){
-                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $destTwuenty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ' );
+                                    $subtotal_local = $formulario->twuenty *  $local->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destTwuenty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ', 'subtotal_local' => $subtotal_local  );
                                     $collectionDest->push($destTwuenty);
                                 }
                                 if($local->typedestiny_id == '3'){
-                                    $totalAmmount = $formulario->twuenty *  $local->ammount;
-                                    $freighTwuenty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' );
+                                    $subtotal_local = $formulario->twuenty *  $local->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount;
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighTwuenty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
                                     $collection->push($freighTwuenty);
                                 }
                             }
@@ -282,12 +298,16 @@ class QuoteController extends Controller
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($local->typedestiny_id == '1'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                        $subtotal_local = $formulario->forty *  $local->ammount;
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) *  $rateMount ;
                                     }
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
 
-                                    $origForty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' );
+                                    $origForty["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ', 'subtotal_local' => $subtotal_local  );
                                     $collectionOrig->push($origForty);
 
 
@@ -295,22 +315,30 @@ class QuoteController extends Controller
                                 }
                                 if($local->typedestiny_id == '2'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                        $subtotal_local = $formulario->forty *  $local->ammount;
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) / $rateMount ;
                                     }
-                                    $destForty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local '  );
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destForty["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local  );
                                     $collectionDest->push($destForty);
 
 
                                 }
                                 if($local->typedestiny_id == '3'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $local->ammount;
+                                        $subtotal_local = $formulario->forty *  $local->ammount;
+                                        $totalAmmount = ($formulario->forty *  $local->ammount)/ $rateMount ;
                                     }
-                                    $freighForty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' );
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighForty["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local );
                                     $collection->push($freighForty);
 
 
@@ -325,12 +353,15 @@ class QuoteController extends Controller
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($local->typedestiny_id == '1'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2 ) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                        $subtotal_local = $formulario->fortyhc *  $local->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount)  / $rateMount;
                                     }
-
-                                    $origFortyHc["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ' );
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $origFortyHc["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local  );
                                     $collectionOrig->push($origFortyHc);
 
 
@@ -338,25 +369,31 @@ class QuoteController extends Controller
                                 }
                                 if($local->typedestiny_id == '2'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                        $subtotal_local = $formulario->fortyhc *  $local->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) / $rateMount;
                                     }
-                                    $destFortyHc["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ');
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destFortyHc["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
                                     $collectionDest->push($destFortyHc);
 
 
                                 }
                                 if($local->typedestiny_id == '3'){
                                     if($local->calculationtype_id == "4"  ){
-                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2) / $rateMount ;
                                     }else{
-                                        $totalAmmount = $formulario->fortyhc *  $local->ammount;
+                                        $subtotal_local = $formulario->fortyhc *  $local->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $local->ammount) / $rateMount;
                                     }
-                                    $freighFortyHc["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ');
+                                    $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighFortyHc["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
                                     $collection->push($freighFortyHc);
-
-
 
                                 }
                             }
@@ -367,20 +404,30 @@ class QuoteController extends Controller
                     foreach($local->localcharcarriers as $carrierGlobal){
                         if($carrierGlobal->carrier_id == $data->carrier_id ){
                             if($local->typedestiny_id == '1'){
-                                $totalAmmount =  $local->ammount;
-                                $origPer["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local '  );
+
+                                $subtotal_local =  $local->ammount;
+                                $totalAmmount =  $local->ammount  / $rateMount;
+                                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $origPer["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local   );
                                 $collectionOrig->push($origPer);
 
                             }
                             if($local->typedestiny_id == '2'){
-                                $totalAmmount =  $local->ammount;
-                                $destPer["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ');
+                                $subtotal_local =  $local->ammount;
+                                $totalAmmount =  $local->ammount  / $rateMount;
+                                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $destPer["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local );
                                 $collectionDest->push($destPer);
 
                             }
                             if($local->typedestiny_id == '3'){
-                                $totalAmmount =  $local->ammount;
-                                $freightPer["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ' );
+                                $subtotal_local =  $local->ammount;
+                                $totalAmmount =  $local->ammout  / $rateMount;
+                                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $freightPer["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  );
                                 $collectionFreight->push($freightPer);
 
 
@@ -396,25 +443,38 @@ class QuoteController extends Controller
             })->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency')->get();
 
             foreach($globalChar as $global){
+                $rateG = Currency::where('id','=',$global->currency->id)->get();
+                foreach($rateG as $rateG){
+                    $rateMountG = $rateG->rates;
+                }
                 if(in_array($global->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($global->typedestiny_id == '1'){
 
-                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $origTwuentyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\' Global ' );
+                                    $subtotal_global = $formulario->twuenty *  $global->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG ;
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $origTwuentyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\' Global '  , 'subtotal_global' => $subtotal_global );
                                     $collectionGloOrig->push($origTwuentyGlo);
 
                                 }
                                 if($global->typedestiny_id == '2'){
-                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $destTwuentyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ');
+                                    $subtotal_global = $formulario->twuenty *  $global->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG;
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destTwuentyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ', 'subtotal_global' => $subtotal_global);
                                     $collectionGloDest->push($destTwuentyGlo);
                                 }
                                 if($global->typedestiny_id == '3'){
-                                    $totalAmmount = $formulario->twuenty *  $global->ammount;
-                                    $freighTwuentyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ');
+                                    $subtotal_global = $formulario->twuenty *  $global->ammount;
+                                    $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG;
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighTwuentyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ', 'subtotal_global' => $subtotal_global);
                                     $collectionGloFreight->push($freighTwuentyGlo);
                                 }
                             }
@@ -427,31 +487,42 @@ class QuoteController extends Controller
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($global->typedestiny_id == '1'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $global->ammount) * 2 ) / $rateMountG ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                        $subtotal_global = $formulario->forty *  $global->ammount;
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) / $rateMountG;
                                     }
-
-                                    $origFortyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ');
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $origFortyGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ', 'subtotal_global' => $subtotal_global);
                                     $collectionGloOrig->push($origFortyGlo);
 
                                 }
                                 if($global->typedestiny_id == '2'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $global->ammount) * 2 ) / $rateMountG ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                        $subtotal_global = $formulario->forty *  $global->ammount;
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) / $rateMountG;
                                     }
-                                    $destFortyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ');
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destFortyGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ', 'subtotal_global' => $subtotal_global);
                                     $collectionGloDest->push($destFortyGlo);
                                 }
                                 if($global->typedestiny_id == '3'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->forty *  $global->ammount) * 2 ) / $rateMountG ;
                                     }else{
-                                        $totalAmmount = $formulario->forty *  $global->ammount;
+                                        $subtotal_global = $formulario->forty *  $global->ammount;
+                                        $totalAmmount = ($formulario->forty *  $global->ammount) / $rateMountG;
                                     }
-                                    $freighFortyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ' );
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighFortyGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->forty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' Global ' , 'subtotal_global' => $subtotal_global);
                                     $collectionGloFreight->push($freighFortyGlo);
                                 }
                             }
@@ -464,32 +535,46 @@ class QuoteController extends Controller
                             if($carrierGlobal->carrier_id == $data->carrier_id ){
                                 if($global->typedestiny_id == '1'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
-                                    }else{
-                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
-                                    }
+                                        $subtotal_global = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $global->ammount) * 2)  / $rateMountG ;
 
-                                    $origFortyHcGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\' HC Global ' );
+                                    }else{
+                                        $subtotal_global =  $formulario->fortyhc *  $global->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
+                                    }
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $origFortyHcGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\' HC Global ', 'subtotal_global' => $subtotal_global );
                                     $collectionGloOrig->push($origFortyHcGlo);
 
                                 }
                                 if($global->typedestiny_id == '2'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                        $subtotal_global = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $global->ammount) * 2)  / $rateMountG ;
+
                                     }else{
-                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
+                                        $subtotal_global =  $formulario->fortyhc *  $global->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
                                     }
-                                    $destFortyHcGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ');
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $destFortyHcGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ', 'subtotal_global' => $subtotal_global);
 
                                     $collectionGloDest->push($destFortyHcGlo);
                                 }
                                 if($global->typedestiny_id == '3'){
                                     if($global->calculationtype_id == "4" ||$global->calculationtype_id == "5" ){
-                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                        $subtotal_global = ($formulario->fortyhc *  $global->ammount) * 2 ;
+                                        $totalAmmount = (($formulario->fortyhc *  $global->ammount) * 2)  / $rateMountG ;
+
                                     }else{
-                                        $totalAmmount = $formulario->fortyhc *  $global->ammount;
+                                        $subtotal_global =  $formulario->fortyhc *  $global->ammount;
+                                        $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
                                     }
-                                    $freighFortyHcGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' => $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ');
+                                    $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                    $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $freighFortyHcGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => $formulario->fortyhc , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Global ', 'subtotal_global' => $subtotal_global);
                                     $collectionGloFreight->push($freighFortyHcGlo);
                                 }
                             }
@@ -500,18 +585,27 @@ class QuoteController extends Controller
                     foreach($global->globalcharcarrier as $carrierGlobal){
                         if($carrierGlobal->carrier_id == $data->carrier_id ){
                             if($global->typedestiny_id == '1'){
-                                $totalAmmount =  $global->ammount;
-                                $origPerGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ');
+                                $subtotal_global = $global->ammount;
+                                $totalAmmount =  $global->ammount / $rateMountG;
+                                $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $origPerGlo["origin"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ', 'subtotal_global' => $subtotal_global);
                                 $collectionGloOrig->push($origPerGlo);
                             }
                             if($global->typedestiny_id == '2'){
-                                $totalAmmount =  $global->ammount;
-                                $destPerGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=> 'Shipment Global ');
+                                $subtotal_global = $global->ammount;
+                                $totalAmmount =  $global->ammount / $rateMountG;
+                                $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $destPerGlo["destiny"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=> 'Shipment Global ', 'subtotal_global' => $subtotal_global);
                                 $collectionGloDest->push($destPerGlo);
                             }
                             if($global->typedestiny_id == '3'){
-                                $totalAmmount =  $global->ammount;
-                                $freightPerGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ');
+                                $subtotal_global = $global->ammount;
+                                $totalAmmount =  $global->ammount / $rateMountG;
+                                $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                $freightPerGlo["freight"] = array('carrier_name' => $data->carrier->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ', 'subtotal_global' => $subtotal_global);
                                 $collectionGloFreight->push($freightPerGlo);
                             }
                         }
@@ -572,8 +666,8 @@ class QuoteController extends Controller
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
         return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
+                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                    'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
     }
 
     /**
@@ -727,8 +821,8 @@ class QuoteController extends Controller
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
         return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
+                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                    'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
     }
 
     /**
