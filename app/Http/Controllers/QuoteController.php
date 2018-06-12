@@ -710,7 +710,7 @@ class QuoteController extends Controller
             }
             if(!empty($inlandDestiny)){
                 foreach($inlandDestiny as $inlandDest){
-                    if($inlandDest['port_id'] == $data->port_origin->id ){
+                    if($inlandDest['port_id'] == $data->port_destiny->id ){
                         $totalQuote += $inlandDest['monto'];
                     }
                 }
