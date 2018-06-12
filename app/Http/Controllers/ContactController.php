@@ -69,9 +69,14 @@ class ContactController extends Controller
 
     public function destroy(Request $request,$id)
     {
-        $company = Contact::find($id);
-        $company->delete();
+        try {
+            $contact = Contact::find($id);
+            $contact->delete();
 
-        return $company;
+            return response()->json(['message' => 'Ok']);
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => $e]);
+        }
     }
 }

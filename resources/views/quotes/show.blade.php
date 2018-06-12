@@ -5,6 +5,11 @@
     <div class="m-content">
         <div class="row">
             <div class="col-md-1">
+                <a href="{{route('quotes.edit',$quote->id)}}" class="btn btn-info btn-block"  title="Edit ">
+                    Edit
+                </a>
+            </div>
+            <div class="col-md-1">
                 <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
             </div>
             <div class="col-md-1">
@@ -126,26 +131,26 @@
                                                                 <div class="row">
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control" id="origin_ammount_charge" value="{{$origin_ammount->charge}}" name="origin_ammount_charge[]"/>
+                                                                            <input type="text" class="form-control" id="origin_ammount_charge" value="{{$origin_ammount->charge}}" name="origin_ammount_charge[]" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="{{$origin_ammount->detail}}" class="form-control" type="text"/>
+                                                                            <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="{{$origin_ammount->detail}}" class="form-control" type="text" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="..." readonly>
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
-                                                                                        <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+                                                                                        <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]" readonly>
                                                                                             <option value="">Currency</option>
                                                                                             <option value="1" {!! $origin_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
                                                                                             <option value="2" {!! $origin_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
@@ -160,19 +165,19 @@
                                                                     @endforeach
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="origin_total_ammount_2[]"  value="{{$origin_ammount->total_ammount_2}}" class="form-control" aria-label="...">
+                                                                                    <input type="text" name="origin_total_ammount_2[]"  value="{{$origin_ammount->total_ammount_2}}" class="form-control" aria-label="..." readonly>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -181,26 +186,26 @@
                                                                 <div class='row hide' id="origin_ammounts">
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
+                                                                            <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
+                                                                            <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                            <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="..." readonly>
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
-                                                                                        <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+                                                                                        <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]" readonly>
                                                                                             <option value="">Currency</option>
                                                                                             <option value="1">USD</option>
                                                                                             <option value="2">CLP</option>
@@ -214,19 +219,19 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                            <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+                                                                                    <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="..." readonly>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -250,7 +255,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
-                                                                                    <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value="{{$quote->sub_total_origin}}" class="form-control"/>
+                                                                                    <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value="{{$quote->sub_total_origin}}" class="form-control" readonly/>
                                                                                 </h5>
                                                                             </span>
                                                                         </div>
@@ -280,26 +285,26 @@
                                                                 <div class="row">
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control" id="freight_ammount_charge" value="{{$freight_ammount->charge}}" name="freight_ammount_charge[]"/>
+                                                                            <input type="text" class="form-control" id="freight_ammount_charge" value="{{$freight_ammount->charge}}" name="freight_ammount_charge[]" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="{{$freight_ammount->detail}}" class="form-control" type="text"/>
+                                                                            <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="{{$freight_ammount->detail}}" class="form-control" type="text" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
+                                                                            <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" min="0" max="99" type="number" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
+                                                                                <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="..." readonly>
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
-                                                                                        <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                        <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]" readonly>
                                                                                             <option value="">Currency</option>
                                                                                             <option value="1" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
                                                                                             <option value="2" {!! $freight_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
@@ -313,21 +318,21 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" min="0" type="number"/>
+                                                                            <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" min="0" type="number" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" aria-label="...">
+                                                                                    <input type="text" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" aria-label="..." readonly>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" value="{{$freight_ammount->total_ammount_2}}" class="form-control" min="0" type="number"/>
+                                                                            <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" value="{{$freight_ammount->total_ammount_2}}" class="form-control" min="0" type="number" readonly/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -335,26 +340,26 @@
                                                             <div class='row hide' id="freight_ammounts">
                                                                 <div class="col-md-2">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
+                                                                        <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
+                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
+                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         <div class="input-group">
-                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
+                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="..." readonly>
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]" readonly>
                                                                                         <option value="">Currency</option>
                                                                                         <option value="1">USD</option>
                                                                                         <option value="2">CLP</option>
@@ -368,21 +373,21 @@
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number"/>
+                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1" >
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         <div class="form-group">
                                                                             <div class="input-group">
-                                                                                <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
+                                                                                <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="..." readonly>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number"/>
+                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1">
@@ -434,26 +439,26 @@
                                                                 <div class="row">
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input type="text" class="form-control" id="destination_ammount_charge" value="{{$destination_ammount->charge}}" name="destination_ammount_charge[]"/>
+                                                                            <input type="text" class="form-control" id="destination_ammount_charge" value="{{$destination_ammount->charge}}" name="destination_ammount_charge[]" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-2">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_ammount_detatil" name="destination_ammount_detail[]" value="{{$destination_ammount->detail}}" class="form-control" type="text"/>
+                                                                            <input id="destination_ammount_detatil" name="destination_ammount_detail[]" value="{{$destination_ammount->detail}}" class="form-control" type="text" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                            <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-3">
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                <input type="number" id="destination_ammount" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="..." readonly>
                                                                                 <div class="input-group-btn">
                                                                                     <div class="btn-group">
-                                                                                        <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                        <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]" readonly>
                                                                                             <option value="">Currency</option>
                                                                                             <option value="1" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
                                                                                             <option value="2" {!! $destination_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
@@ -467,19 +472,19 @@
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_ammount_markup" name="destination_ammount_markup[]"  value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                                                            <input id="destination_ammount_markup" name="destination_ammount_markup[]"  value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1">
                                                                         <div class="m-bootstrap-touchspin-brand">
-                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]"  value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                            <input id="destination_total_ammount" name="destination_total_ammount[]"  value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0" readonly/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-1" >
                                                                         <div class="m-bootstrap-touchspin-brand">
                                                                             <div class="form-group">
                                                                                 <div class="input-group">
-                                                                                    <input type="text" name="destination_total_ammount_2[]"  value="{{$destination_ammount->total_ammount_2}}" class="form-control" aria-label="...">
+                                                                                    <input type="text" name="destination_total_ammount_2[]"  value="{{$destination_ammount->total_ammount_2}}" class="form-control" aria-label="..." readonly>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -489,26 +494,26 @@
                                                             <div class='row hide' id="destination_ammounts">
                                                                 <div class="col-md-2">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
+                                                                        <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
+                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         <div class="input-group">
-                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="..." readonly>
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]" readonly>
                                                                                         <option value="">Currency</option>
                                                                                         <option value="1">USD</option>
                                                                                         <option value="2">CLP</option>
@@ -522,7 +527,7 @@
                                                                 </div>
                                                                 <div class="col-md-1">
                                                                     <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0" readonly/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-1">

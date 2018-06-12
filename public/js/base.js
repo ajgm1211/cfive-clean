@@ -222,34 +222,7 @@ $(document).on('click', '#delete-contact', function () {
     });
 });
 
-$(document).on('click', '#delete-quote', function () {
-    var id = $(this).attr('data-quote-id');
-    var theElement = $(this);
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                type: 'get',
-                url: 'quotes/delete/' + id,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                    $(theElement).closest('tr').remove();
-                }
-            });
-
-        }
-
-    });
-});
+//Prices
 
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){
@@ -394,6 +367,9 @@ $(document).on('change', '#type_local_markup_3', function (e) {
         $("#local_percent_markup_3_2").val('0');
     }
 });
+
+//Quotes
+
 $(document).on('click', '#create-quote', function (e) {
     $(this).hide();
     $("#create-quote-back").show();
@@ -418,6 +394,35 @@ $(document).on('click', '.addButton', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+});
+
+$(document).on('click', '#delete-quote', function () {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'quotes/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                }
+            });
+
+        }
+
+    });
 });
 
 $(document).on('click', '.addButtonDestination', function (e) {
@@ -456,42 +461,6 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
         $("#inland_percent_markup_3").val(0);
         $("#inland_percent_markup_3_2").val(0);
     }
-});
-
-
-$(document).on('click', '.m_sweetalert_demo_8', function (e) {
-    var res = $("i",this).attr('id');
-
-    var theElement = $(this);
-    var idval = res.substr(4);
-
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
-
-            $.ajax({
-                type: 'get',
-                url: '../deleteLocalCharge/' + idval,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                    $(theElement).closest('tr').remove();
-
-                }
-            });
-
-        }
-
-    });
-
 });
 
 $('.m-select2-general').select2({
@@ -704,20 +673,106 @@ $(document).on('click', '#send-pdf-quote', function () {
     var email = $('#quote_email').val();
     $.ajax({
         type: 'GET',
-        url: '/quotes/send/pdf/'+id+'/'+email,
+        url: '/quotes/send/pdf/'+id,
         beforeSend: function () {
             $('#spin').show();
         },
         success: function(data) {
+            $('#spin').hide();
+            $('#SendQuoteModal').modal('toggle');
             if(data.message=='Ok'){
-                $('#spin').hide();
-                $('#SendQuoteModal').modal('toggle');
                 swal(
                     'Done!',
                     'Your message has been sent.',
                     'success'
                 )
+            }else{
+                swal(
+                    'Error!',
+                    'Your message has not been sent.',
+                    'error'
+                )
             }
         }
+    });
+});
+
+//Clients
+
+$(document).on('click', '#delete-contact', function () {
+    var id = $(this).attr('data-contact-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'contacts/delete/' + id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                    }else{
+                        swal(
+                            'Error!',
+                            'Your can\'t delete this contact because have quotes related.',
+                            'warning'
+                        )
+                        console.log(data.message);
+                    }
+                }
+            });
+
+        }
+
+    });
+});
+
+//Companies
+
+$(document).on('click', '#delete-company', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'companies/delete/' + id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                    }else{
+                        swal(
+                            'Error!',
+                            'Your can\'t delete this contact because have quotes related.',
+                            'warning'
+                        )
+                        console.log(data.message);
+                    }
+                }
+            });
+
+        }
+
     });
 });

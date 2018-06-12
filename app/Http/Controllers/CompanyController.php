@@ -87,15 +87,17 @@ class CompanyController extends Controller
         return view('companies.delete', compact('company'));
     }
 
-    public function destroy(Request $request,$id)
+    public function destroy($id)
     {
-        $company = Company::find($id);
-        $company->delete();
+        try {
+            $company = Company::find($id);
+            $company->delete();
 
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register deleted successfully!');
-        return redirect()->route('companies.index');
+            return response()->json(['message' => 'Ok']);
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => $e]);
+        }
     }
 
     public function getCompanyPrice($id){
