@@ -701,6 +701,22 @@ class QuoteController extends Controller
             $totalOrigin  =  number_format($totalOrigin, 2, '.', '');
             $totalDestiny =  number_format($totalDestiny, 2, '.', '');
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
+            if(!empty($inlandOrigin)){
+                foreach($inlandOrigin as $inlandOrig){
+                    if($inlandOrig['port_id'] == $data->port_origin->id ){
+                        $totalQuote += $inlandOrig['monto'];
+                    }
+                }
+            }
+            if(!empty($inlandDestiny)){
+                foreach($inlandDestiny as $inlandDest){
+                    if($inlandDest['port_id'] == $data->port_origin->id ){
+                        $totalQuote += $inlandDest['monto'];
+                    }
+                }
+            }
+
+
 
             $totalFreight = $totalFreight." ".$typeCurrency;
             $totalOrigin = $totalOrigin." ".$typeCurrency;
