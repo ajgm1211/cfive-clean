@@ -274,8 +274,8 @@
                                     <td>{{ $freight['freight']['calculation_name'] }} </td>
                                     <td>{{  $freight['freight']['cantidad']  }}</td>
                                     <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
-                                    <td>{{  $freight['freight']['totalAmmount']  }} {{ $freight['freight']['currency']  }}</td>
-                                    <td>{{  $freight['freight']['totalAmmount']  }} {{ $freight['freight']['currency']  }}</td>
+                                    <td>{{  $freight['freight']['subtotal_local']  }} {{ $freight['freight']['currency']  }}</td>
+                                    <td>{{  $freight['freight']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
 
@@ -285,8 +285,8 @@
                                     <td>{{ $freightGlo['freight']['calculation_name'] }} </td>
                                     <td>{{  $freightGlo['freight']['cantidad']  }}</td>
                                     <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
-                                    <td>{{  $freightGlo['freight']['totalAmmount']  }} {{ $freightGlo['freight']['currency']  }}</td>
-                                    <td>{{  $freightGlo['freight']['totalAmmount']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                                    <td>{{  $freightGlo['freight']['subtotal_global']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                                    <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
 
@@ -333,8 +333,8 @@
                                     <td>{{ $origin['origin']['calculation_name'] }} </td>
                                     <td>{{  $origin['origin']['cantidad']  }}</td>
                                     <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
-                                    <td>{{  $origin['origin']['totalAmmount']  }} {{ $origin['origin']['currency']  }}</td>
-                                    <td>{{  $origin['origin']['totalAmmount']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
                                 @foreach($arr->globalOrig as $originGlo)
@@ -344,8 +344,8 @@
                                     <td>{{ $originGlo['origin']['calculation_name'] }} </td>
                                     <td>{{  $originGlo['origin']['cantidad']  }}</td>
                                     <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
-                                    <td>{{  $originGlo['origin']['totalAmmount']  }} {{ $originGlo['origin']['currency']  }}</td>
-                                    <td>{{  $originGlo['origin']['totalAmmount']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
                             </table>
@@ -373,8 +373,8 @@
                                     <td>{{ $destiny['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destiny['destiny']['cantidad']  }}</td>
                                     <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
-                                    <td>{{  $destiny['destiny']['totalAmmount']  }} {{ $destiny['destiny']['currency']  }}</td>
-                                    <td>{{  $destiny['destiny']['totalAmmount']  }} {{ $destiny['destiny']['currency']  }}</td>
+                                    <td>{{  $destiny['destiny']['subtotal_local']  }} {{ $destiny['destiny']['currency']  }}</td>
+                                    <td>{{  $destiny['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
 
@@ -385,8 +385,8 @@
                                     <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
                                     <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
-                                    <td>{{  $destinyGlo['destiny']['totalAmmount']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
-                                    <td>{{  $destinyGlo['destiny']['totalAmmount']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
+                                    <td>{{  $destinyGlo['destiny']['subtotal_global']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
+                                    <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
                             </table>
