@@ -54,6 +54,11 @@ Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
     Route::resource('preferences', 'CompanyBrandingController');
     Route::get('config', 'CompanyBrandingController@edit')->name('company-brands.edit');
 });
+Route::group(['prefix' => 'mail', 'middleware' => ['auth']], function(){
+    Route::resource('mail', 'MailSendController');
+    Route::get('list', 'MailSendController@index')->name('mail.list');
+    Route::get('send{id}', 'MailSendController@send')->name('mail.send');
+});
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
