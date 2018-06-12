@@ -50,12 +50,20 @@ class QuoteController extends Controller
     }
     public function automatic(){
 
-        $quotes = Quote::where('owner',\Auth::id())->get();
+        $quotes = Quote::all();
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
-        return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices]);
+        $company_user = User::where('id',\Auth::id())->first();
+        if(count($company_user->companyUser)>0) {
+            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+        }else{
+            $currency_name = '';
+        }
+        $currencies = Currency::all()->pluck('alphacode','id');
+        return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
+
     }
     public function listRate(Request $request)
     {
