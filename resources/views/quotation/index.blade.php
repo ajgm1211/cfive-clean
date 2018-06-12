@@ -198,7 +198,7 @@
                             <div class="m-widget5">
                                 <div class="m-widget5__item">
                                     <div class="m-widget5__stats1">
-                                        <span class="m-widget5__number">{{$arr->currency->alphacode  }} 
+                                        <span class="m-widget5__number">{{ $arr->totalQuote }}
 
                                         </span><br>
                                         <button type="button" class="btn m-btn--square  btn-primary m-btn--wide">Select</button><br>
@@ -227,12 +227,9 @@
                                     <td>Container 20'</td>
                                     <td>{{ $formulario->twuenty  }}</td>
                                     <td>{{ $arr->twuenty  }} {{ $arr->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->twuenty *  $arr->twuenty   }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montT['subtotal']  }} {{ $arr->currency->alphacode  }}</td>
                                     <td>
-                                        @php
-                                        $subtotalRate = $formulario->twuenty *  $arr->twuenty + $subtotalRate 
-                                        @endphp
-                                        {{ $formulario->twuenty *  $arr->twuenty   }} {{ $arr->currency->alphacode  }} 
+                                        {{ $arr->montT['total']  }} 
 
                                     </td>
                                 </tr>
@@ -243,12 +240,9 @@
                                     <td>Container 40' </td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $arr->forty  }} {{ $arr->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->forty *  $arr->forty   }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montF['subtotal'] }}  {{ $arr->currency->alphacode  }}</td>
                                     <td>
-                                        @php
-                                        $subtotalRate = $formulario->forty *  $arr->forty  + $subtotalRate 
-                                        @endphp
-                                        {{ $formulario->forty *  $arr->forty   }} {{ $arr->currency->alphacode  }} 
+                                        {{ $arr->montF['total']  }} 
                                     </td>
                                 </tr>
                                 @endif
@@ -258,12 +252,9 @@
                                     <td>Container 40HC'</td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $arr->fortyhc  }} {{ $arr->currency->alphacode  }}</td>
-                                    <td>{{ $formulario->fortyhc *  $arr->fortyhc   }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montHFC['subtotal'] }} {{ $arr->currency->alphacode  }}</td>
                                     <td>
-                                        @php
-                                        $subtotalRate = $formulario->fortyhc *  $arr->fortyhc  + $subtotalRate 
-                                        @endphp
-                                        {{ $formulario->fortyhc *  $arr->fortyhc   }} {{ $arr->currency->alphacode  }} 
+                                        {{ $arr->montHFC['total']  }} 
                                     </td>
                                 </tr>
                                 @endif
@@ -297,7 +288,7 @@
                                 <tr>
                                     <td colspan="4"></td>
                                     <td ><b>SUBTOTAL:</b></td>
-                                    <td>{{$subtotalRate  }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{$arr->totalFreight  }}</td>
                                 </tr>
 
                                 @else
@@ -348,6 +339,11 @@
                                     <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="5"></td>
+                                    <td ><b>SUBTOTAL:</b></td>
+                                    <td>{{$arr->totalOrigin  }}  </td>
+                                </tr>
                             </table>
                         </td>
                     </tr> 
@@ -389,6 +385,11 @@
                                     <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="5"></td>
+                                    <td ><b>SUBTOTAL:</b></td>
+                                    <td>{{  $arr->totalDestiny  }}  </td>
+                                </tr>
                             </table>
                         </td>
                     </tr>
@@ -413,7 +414,7 @@
                                     <th>{{ $inlandDest['type'] }}</th>
                                     <th>{{ $inlandDest['km'] }} KM</th>
                                     <th>{{ $inlandDest['port_name'] }}</th>
-                                    <th>{{ $inlandDest['monto'] }}</th>
+                                    <th>{{ $inlandDest['monto'] }} {{  $inlandDest['type_currency'] }}</th>
                                 </tr>
                                 @endif
                                 @endforeach
@@ -426,7 +427,7 @@
                                     <th>{{ $inlandOrig['type'] }}</th>
                                     <th>{{ $inlandOrig['km'] }} KM</th>
                                     <th>{{ $inlandOrig['port_name'] }}</th>
-                                    <th>{{ $inlandOrig['monto'] }}</th>
+                                    <th>{{ $inlandOrig['monto'] }} {{  $inlandOrig['type_currency'] }}</th>
                                 </tr>
                                 @endif
                                 @endforeach
