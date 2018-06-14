@@ -52,6 +52,37 @@ var DatatableHtmlTableDemo = function() {
                             status[row.Status].state + '">' +
                             status[row.Status].title + '</span>';
                     },
+                    width: 50,
+                },{
+                    field: "20'",
+                    title: "Field #6",
+                    sortable: false,
+                    width: 30,
+                },{
+                    field: "40'",
+                    title: "Field #7",
+                    sortable: false,
+                    width: 30,
+                },{
+                    field: "40'HC",
+                    title: "Field #8",
+                    sortable: false,
+                    width: 45,
+                },{
+                    field: "Currency",
+                    title: "Field #10",
+                    sortable: false,
+                    width: 70,
+                },{
+                    field: "Number",
+                    title: "Field #2",
+                    sortable: false,
+                    width: 55,
+                },{
+                    field: "Name",
+                    title: "Field #1",
+                    sortable: false,
+                    width: 80,
                 },
             ],
         });
