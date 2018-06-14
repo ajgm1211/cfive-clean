@@ -15,7 +15,7 @@ class SurchargesController extends Controller
      */
     public function index()
     {
-       
+
         $data = Surcharge::where('user_id','=',Auth::user()->id)->with('user')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
@@ -73,11 +73,21 @@ class SurchargesController extends Controller
 
     public function destroySubcharge(Request $request,$id)
     {
-        $user = self::destroy($id);
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully delete ');
-        return redirect()->action('SurchargesController@index');
+        try {
+            $user = self::destroy($id);
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'You successfully delete ');
+            return redirect()->action('SurchargesController@index');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            $request->session()->flash('message.nivel', 'warning');
+            $request->session()->flash('message.title', 'I\'m Sorry!');
+            $request->session()->flash('message.content', 'You can not delete the charge, it belongs to a contract');
+            return redirect()->action('SurchargesController@index');
+        }
+
     }
 
     public function destroymsg($id)
