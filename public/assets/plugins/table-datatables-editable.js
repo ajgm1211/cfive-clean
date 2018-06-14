@@ -30,7 +30,27 @@ var TableDatatablesEditable = function () {
 
 
 
-        var table = $('#sample_editable_1');
+        var table = $('#sample_editable_1').mDatatable({
+            columns: [
+                {
+                    field: "Currency",
+                    title: "Field #9",
+                    sortable: false,
+                    width: 70,
+                },{
+                    field: "Calculation type",
+                    title: "Field #7",
+                    sortable: false,
+                    width: 50,
+                },{
+                    field: "Carrier",
+                    title: "Field #4",
+                    sortable: false,
+                    width: 170,
+                },
+                
+            ],
+        });
 
         var oTable = table.dataTable({
 
