@@ -126,10 +126,10 @@
                                         <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control']) }}</td>
                                         <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
 
-                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
-                                        <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
-                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => '20','class' => 'form-control m-input twuenty' ]) !!} </td>
+                                        <td>{!! Form::text('forty[]', null, ['placeholder' => '40','class' => 'form-control m-input forty']) !!} </td>
+                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => '40HC','class' => 'form-control m-input fortyhc']) !!}</td>
+                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control ']) }}</td>
                                         <td>   <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
                                                 <i class="la la-eraser"></i>
                                             </a>
@@ -183,11 +183,11 @@
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>{{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
-                                        <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
+                                        <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control type']) }}</td>
                                         <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
+                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => '40HC','class' => 'form-control m-input fortyhc','required' => 'required']) !!}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control currency']) }}</td>
                                         <td>-</td>
 
                                     </tr>
