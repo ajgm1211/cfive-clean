@@ -246,16 +246,15 @@ Air Freight
                     </li>
                     @if( Auth::user()->type == 'company'   )
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{ route('terms.list') }}" class="m-menu__link ">
+                        <a  href="" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Company's Profile
                             </span>
                         </a>
                     </li>
-                    @endif
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{ route('emails-template.list') }}" class="m-menu__link ">
+                        <a  href="{{ route('terms.list') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Terms & Conditions
@@ -272,7 +271,7 @@ Air Freight
                     </li>
                     @endif
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="" class="m-menu__link ">
+                        <a  href="{{ route('emails-template.list') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Email templates

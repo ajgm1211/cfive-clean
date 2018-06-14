@@ -113,10 +113,10 @@
                                         <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
                                         <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
 
-                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' => 'required']) !!} </td>
-                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
-                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control']) }}</td>
+                                        <td>{!! Form::text('twuenty[]', null, ['placeholder' => '20','class' => 'form-control m-input twuenty','required' => 'required']) !!} </td>
+                                        <td>{!! Form::text('forty[]', null, ['placeholder' => '40','class' => 'form-control m-input forty','required' => 'required']) !!} </td>
+                                        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => '40HC','class' => 'form-control m-input fortyhc','required' => 'required']) !!}</td>
+                                        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control currency']) }}</td>
                                         <td>-</td>
 
                                     </tr>
