@@ -72,11 +72,7 @@
                                         <p>{{$company->address}}</p>
                                         <hr>
                                         <label><b>Price level</b></label>
-                                        @if(isset($company->company_price))
-                                            {!! Form::select('price_id',$prices,$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @else
-                                            {!! Form::select('price_id',$prices,null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @endif
+                                            {!! Form::select('price_id',$prices,@$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal','disabled' => true])  !!}                         
                                         <hr>
                                     </div>
                                 </div>

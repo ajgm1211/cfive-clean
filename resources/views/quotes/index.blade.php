@@ -52,7 +52,7 @@
                             <a href="{{route('quotes.create')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                             <span>
                                 <span>
-                                    Add Quote
+                                    Manual Quote
                                 </span>
                                 <i class="la la-plus"></i>
                             </span>

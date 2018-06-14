@@ -333,7 +333,22 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                             </table>
                         </div>
                         <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged
+                                <div class="row">
+                                    <div class="col-md-12" id="origin_harbor_label">
+                                        <label>Company</label>
+                                        <div class="form-group m-form__group align-items-center">
+                                            {{ Form::select('companies[]',$companies,@$company->id,['multiple','class'=>'m-select2-general','id' => 'm-select2-company']) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" id="origin_harbor_label">
+                                        <label>Users</label>
+                                        <div class="form-group m-form__group align-items-center">
+                                            {{ Form::select('users[]',$contacts,@$contact->id,['multiple','class'=>'m-select2-general','id' => 'm-select2-client']) }}
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                     <div class="m-portlet__foot m-portlet__foot--fit">
