@@ -50,7 +50,6 @@ class ContractsController extends Controller
         $objsurcharge = new Surcharge();
         $objtypedestiny = new TypeDestiny();
 
-
         $harbor = $objharbor->all()->pluck('name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
@@ -62,7 +61,6 @@ class ContractsController extends Controller
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
         })->pluck('first_name','id');
-
 
         return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts'));
 
@@ -138,8 +136,6 @@ class ContractsController extends Controller
                 {
                     foreach($detailportDest as $dest => $value)
                     {
-
-
                         $detailport = new LocalCharPort();
                         $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
                         $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
@@ -149,7 +145,6 @@ class ContractsController extends Controller
 
                 }
                 $contador++;
-
             }
         }
 
@@ -200,7 +195,7 @@ class ContractsController extends Controller
      */
     public function edit($id)
     {
-        $contracts = Contract::with('rates','localcharges.localcharports','localcharges.localcharcarriers')->get()->find($id);
+        $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->first();
 
         $objtypedestiny = new TypeDestiny();
         $objcountry = new Country();
@@ -217,8 +212,16 @@ class ContractsController extends Controller
         $calculationT = $objcalculation->all()->pluck('name','id');
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
+        $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
+        if(!empty($company_restriction)){
+            $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
+        }
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+        $contacts = Contact::whereHas('company', function ($query) {
+            $query->where('company_user_id', '=', \Auth::user()->company_user_id);
+        })->pluck('first_name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','contacts'));
     }
     /**
      * Update the specified resource in storage.
@@ -238,6 +241,7 @@ class ContractsController extends Controller
 
         $details = $request->input('origin_id');
         $detailscharges = $request->input('ammount');
+        $companies = $request->input('companies');
         $contador = 1;
         // for each rates 
         foreach($details as $key => $value)
@@ -274,6 +278,7 @@ class ContractsController extends Controller
                 $detailportOrig = $request->input('port_origlocal'.$contador);
                 $detailportDest = $request->input('port_destlocal'.$contador);
                 $detailcarrier = $request->input('localcarrier_id'.$contador);
+                $companies = $request->input('companies');
                 foreach($detailcarrier as $c => $value)
                 {
                     $detailcarrier = new LocalCharCarrier();
@@ -298,6 +303,18 @@ class ContractsController extends Controller
                 $contador++;
             }
         }
+        
+        if(!empty($companies)){
+            ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
+            
+            foreach($companies as $key3 => $value)
+            {
+                $contract_company_restriction = new ContractCompanyRestriction();
+                $contract_company_restriction->company_id=$value;
+                $contract_company_restriction->contract_id=$contract->id;
+                $contract_company_restriction->save();
+            }
+        }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -317,8 +334,6 @@ class ContractsController extends Controller
 
     public function updateLocalChar(Request $request, $id)
     {
-
-
         $localC = LocalCharge::find($id);
         $localC->surcharge_id = $request->input('surcharge_id');
         $localC->typedestiny_id  = $request->input('changetype');

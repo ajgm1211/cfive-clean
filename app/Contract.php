@@ -11,18 +11,15 @@ class Contract extends Model
     protected $fillable = ['id', 'name','number','user_id','validity','expire','status'];
 
     public function rates(){
-
         return $this->hasMany('App\Rate');
-
     }
+    
     public function localcharges(){
- //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
+        //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
         return $this->hasMany('App\LocalCharge');
-
-
-        
-        
-        
     }
-
+    
+    public function restriction_company(){
+        return $this->hasManyThrough('App\ContractCompanyRestriction','App\Company','id','id');
+    }
 }
