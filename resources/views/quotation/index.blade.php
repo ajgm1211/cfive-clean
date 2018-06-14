@@ -208,14 +208,57 @@
                             </div>
                         </td>
                     </tr>
+                    <tr id="origin{{$loop->iteration}}" hidden="true"  >
+                        <td colspan="6">
+                            <b>Origin Charges</b>
+                            <hr>
+                            <table  class="table m-table m-table--head-separator-primary">
+                                <tr>
+                                    <th>Charge</th>
+                                    <th>Detail  </th>
+                                    <th>Units</th>
+                                    <th>Price per Unit</th>
+                                    <th>Ammount</th>
+                                    <th>Total Ammount</th>
+                                </tr>
+                                <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
+
+                                @foreach($arr->localOrig as $origin)
+                                <tr>
+                                    <td>{{ $origin['origin']['surcharge_name'] }}</td>
+                                    <td>{{ $origin['origin']['calculation_name'] }} </td>
+                                    <td>{{  $origin['origin']['cantidad']  }}</td>
+                                    <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['totalAmmount']  }} </td>
+                                </tr>
+                                @endforeach
+                                @foreach($arr->globalOrig as $originGlo)
+                                <tr>
+                                    <td>{{ $originGlo['origin']['surcharge_name'] }}</td>
+                                    <td>{{ $originGlo['origin']['calculation_name'] }} </td>
+                                    <td>{{  $originGlo['origin']['cantidad']  }}</td>
+                                    <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
+                                </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td ><b>SUBTOTAL:</b></td>
+                                    <td>{{$arr->totalOrigin  }}  </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr> 
                     <tr id="detail{{$loop->iteration}}"  hidden="true">
                         <td colspan="6">
                             <b>Freight Charges</b>
                             <hr>
                             <table class="table m-table m-table--head-separator-primary">
                                 <tr>
-                                    <th>Carrier</th>
-                                    <th>Type  </th>
+                                    <th>Charge</th>
+                                    <th>Details  </th>
                                     <th>Units</th>
                                     <th>Price per Unit</th>
                                     <th>Ammount</th>
@@ -223,7 +266,7 @@
                                 </tr>
                                 @if($formulario->twuenty !="0")
                                 <tr>
-                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Ocean Freight 20</td>
                                     <td>Container 20'</td>
                                     <td>{{ $formulario->twuenty  }}</td>
                                     <td>{{ $arr->twuenty  }} {{ $arr->currency->alphacode  }}</td>
@@ -236,7 +279,7 @@
                                 @endif
                                 @if($formulario->forty !="0")
                                 <tr>
-                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td> Ocean Freight 40</td>
                                     <td>Container 40' </td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $arr->forty  }} {{ $arr->currency->alphacode  }}</td>
@@ -248,7 +291,7 @@
                                 @endif
                                 @if($formulario->fortyhc !="0")
                                 <tr>
-                                    <td>{{$arr->carrier->name  }}</td>
+                                    <td>Ocean Freight 40´HC</td>
                                     <td>Container 40HC'</td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $arr->fortyhc  }} {{ $arr->currency->alphacode  }}</td>
@@ -261,7 +304,7 @@
 
                                 @foreach($arr->localFreight as $freight)
                                 <tr>
-                                    <td>{{ $freight['freight']['carrier_name'] }}</td>
+                                    <td>{{ $freight['freight']['surcharge_name'] }}</td>
                                     <td>{{ $freight['freight']['calculation_name'] }} </td>
                                     <td>{{  $freight['freight']['cantidad']  }}</td>
                                     <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
@@ -272,7 +315,7 @@
 
                                 @foreach($arr->globalFreight as $freightGlo)
                                 <tr>
-                                    <td>{{ $freightGlo['freight']['carrier_name'] }}</td>
+                                    <td>{{ $freightGlo['freight']['surcharge_name'] }}</td>
                                     <td>{{ $freightGlo['freight']['calculation_name'] }} </td>
                                     <td>{{  $freightGlo['freight']['cantidad']  }}</td>
                                     <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
@@ -301,60 +344,14 @@
                             </table>
                         </td>
                     </tr>
-                    <tr id="origin{{$loop->iteration}}" hidden="true"  >
-                        <td colspan="6">
-                            <b>Origin Charges</b>
-                            <hr>
-                            <table  class="table m-table m-table--head-separator-primary">
-                                <tr>
-                                    <th>Carrier</th>
-                                    <th>Type</th>
-                                    <th>Detail  </th>
-                                    <th>Units</th>
-                                    <th>Price per Unit</th>
-                                    <th>Ammount</th>
-                                    <th>Total Ammount</th>
-                                </tr>
-                                <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
 
-                                @foreach($arr->localOrig as $origin)
-                                <tr>
-                                    <td>{{ $origin['origin']['carrier_name'] }}</td>
-                                    <td> {{ $origin['origin']['type'] }} </td>
-                                    <td>{{ $origin['origin']['calculation_name'] }} </td>
-                                    <td>{{  $origin['origin']['cantidad']  }}</td>
-                                    <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
-                                    <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
-                                    <td>{{  $origin['origin']['totalAmmount']  }} </td>
-                                </tr>
-                                @endforeach
-                                @foreach($arr->globalOrig as $originGlo)
-                                <tr>
-                                    <td>{{ $originGlo['origin']['carrier_name'] }}</td>
-                                    <td> {{ $originGlo['origin']['type'] }} </td>
-                                    <td>{{ $originGlo['origin']['calculation_name'] }} </td>
-                                    <td>{{  $originGlo['origin']['cantidad']  }}</td>
-                                    <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
-                                    <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
-                                    <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
-                                </tr>
-                                @endforeach
-                                <tr>
-                                    <td colspan="5"></td>
-                                    <td ><b>SUBTOTAL:</b></td>
-                                    <td>{{$arr->totalOrigin  }}  </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> 
                     <tr id="destination{{$loop->iteration}}" hidden="true" >
                         <td colspan="6">
                             <b>Destination Charges</b>
                             <hr>
                             <table class="table m-table m-table--head-separator-primary">
                                 <tr>
-                                    <th>Carrier</th>
-                                    <th>Type</th>
+                                    <th>Charge</th>
                                     <th>Detail  </th>
                                     <th>Units</th>
                                     <th>Price per Unit</th>
@@ -364,8 +361,7 @@
 
                                 @foreach($arr->localDest as $destiny)
                                 <tr>
-                                    <td>{{ $destiny['destiny']['carrier_name'] }}</td>
-                                    <td> {{ $destiny['destiny']['type'] }} </td>
+                                    <td>{{ $destiny['destiny']['surcharge_name'] }}</td>
                                     <td>{{ $destiny['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destiny['destiny']['cantidad']  }}</td>
                                     <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
@@ -376,8 +372,7 @@
 
                                 @foreach($arr->globalDest as $destinyGlo)
                                 <tr>
-                                    <td>{{ $destinyGlo['destiny']['carrier_name'] }}</td>
-                                    <td> {{ $destinyGlo['destiny']['type'] }} </td>
+                                    <td>{{ $destinyGlo['destiny']['surcharge_name'] }}</td>
                                     <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
                                     <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
                                     <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
@@ -386,7 +381,7 @@
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="5"></td>
+                                    <td colspan="4"></td>
                                     <td ><b>SUBTOTAL:</b></td>
                                     <td>{{  $arr->totalDestiny  }}  </td>
                                 </tr>

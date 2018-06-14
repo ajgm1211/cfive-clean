@@ -33,4 +33,5 @@ class Rate extends Model
     }
 
 
+
 }
