@@ -78563,3 +78563,13 @@ th#rate-limit-fcl {
 th#options-limit-fcl {
   width: 50px;
 }
+
+/*
+Inlands Add
+*/
+.up{
+  width: 60px;
+}
+.low{
+  width: 60px;
+}
