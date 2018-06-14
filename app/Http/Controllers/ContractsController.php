@@ -213,15 +213,19 @@ class ContractsController extends Controller
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
         $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
+        $user_restriction = ContractClientRestriction::where('contract_id',$contracts->id)->first();
         if(!empty($company_restriction)){
             $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
+        }
+        if(!empty($user_restriction)){
+            $contact = Contact::where('id',$user_restriction->contact_id)->select('id')->first();
         }
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
         })->pluck('first_name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','contacts'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','contacts','contact'));
     }
     /**
      * Update the specified resource in storage.

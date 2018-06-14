@@ -19,7 +19,4 @@ class Contract extends Model
         return $this->hasMany('App\LocalCharge');
     }
     
-    public function restriction_company(){
-        return $this->hasManyThrough('App\ContractCompanyRestriction','App\Company','id','id');
-    }
 }
