@@ -13,7 +13,16 @@
                 </div>
             </div>
         </div>
-
+        @if (count($errors) > 0)
+        <div id="notificationError" class="alert alert-danger">
+            <strong>Ocurrió un problema con tus datos de entrada</strong><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         @if(Session::has('message.nivel'))
 
         <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
@@ -51,7 +60,7 @@
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
-                        {!! Form::open(['route' => 'UploadFileRates.store','method' => 'post','class' => 'form-group m-form__group', 'file'=>true]) !!}
+                        {!! Form::open(['route' => 'UploadFileRates.store','method' => 'post','class' => 'form-group m-form__group', 'files'=>true]) !!}
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-lg-3 col-sm-12">
                                 Single File Upload
@@ -60,7 +69,7 @@
                             <div class="col-lg-4 col-md-9 col-sm-12">
                                 <input type="file" name="file" required>
                             </div>
-                            <!--   <div class="form-group m-form__group row">
+                            <!--      <div class="form-group m-form__group row">
 <label class="col-form-label col-lg-3 col-sm-12">
 Single File Upload
 </label>

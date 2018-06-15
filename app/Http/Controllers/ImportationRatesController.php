@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\TmpRate;
+use Excel;
+use Illuminate\Support\Facades\Log;
 
 class ImportationRatesController extends Controller
 {
@@ -35,10 +37,10 @@ class ImportationRatesController extends Controller
      */
     public function store(Request $request)
     {
-        
-        dd($request );
+
+        //dd($request );
         $validator = \Validator::make($request->all(), [
-            'file' => 'required|mimes:xls,xlsx,csv',
+            'file' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -51,40 +53,62 @@ class ImportationRatesController extends Controller
         $file = $request->file('file');
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
-        \Storage::disk('local')->put($nombre, \File::get($file));
-/*
-        
+
+        $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        //dd(\Storage::disk('UpLoadFile')->url($nombre));
+
+
+
+
 
         try {
-            Excel::load(\Storage::disk('local')->url($nombre), function($reader) {
+            $res = Excel::selectSheetsByIndex(1)->load(\Storage::disk('UpLoadFile')->url($nombre), function($reader) {
+                config(['excel.import.startRow' => 6]);
+                //$reader->skipRows(1);
+                 foreach ($reader->get() as $book) {
+                // The firstname getter will correspond with a cell coordinate set inside the config
+                $firstname = $book->Receipt;
+                log::info($firstname);
+                 }
 
-                /*  foreach ($reader->get() as $book) {
+            });
 
-                    Archivo::create([
-                        'codigo' => $book->codigo,
-                        'nombre' => $book->nombre,
-                        'estado' => $book->estado,
-                        'municipio' => $book->municipio,
-                        'parroquia' => $book->parroquia,
-                        'descripcion' => $book->direccion,
-                        'codigorf' => $book->cod_rf,
-                        'radiobase' => $book->radio_base_donante,
-                        'electores' => $book->electores,
-                        'mesa' => $book->mesas,
-                    ]);
-                }*/
-          /*  });
+            /*$res = Excel::selectSheetsByIndex(0)->load(\Storage::disk('UpLoadFile')->url($nombre), function($reader){
+
+                  foreach ($reader->get() as $book) {
+
+                      log::info($book->name);
+
+                     /* if($book->Charge == 'BAS'){
+                          log::info($book->Charge);
+                      }*/
+
+
+
+            /*   TmpRate::create([
+                        'PortOrigin'        => $book->    ,
+                        'PortDestination'   => $book->    ,
+                        'Carrier'           => $book->    ,
+                        'Rate20'            => $book->    ,
+                        'Rate40'            => $book->    ,
+                        'Rate40HC'          => $book->    ,
+                        'codigorf'          => $book->    ,
+                        'Currency'          => $book->    ,
+                    ]);*/
+            /*    }
+         });*/
+            dd($res);
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.contenido', 'El archivo ha sido subido con exito');
-            return view('/archivo/crearArchivo');
+            //return view('/archivo/crearArchivo');
         } catch (\Illuminate\Database\QueryException $e) {
 
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.contenido', 'Se ha producido un error al cargar el archivo');
             return view('/archivo/crearArchivo');
         }
-*/
+
     }
 
     /**
