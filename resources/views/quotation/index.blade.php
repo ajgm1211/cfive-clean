@@ -295,9 +295,9 @@
                                     <td>Container 40HC'</td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $arr->fortyhc  }} {{ $arr->currency->alphacode  }}</td>
-                                    <td>{{ $arr->montHFC['subtotal'] }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montFHC['subtotal'] }} {{ $arr->currency->alphacode  }}</td>
                                     <td>
-                                        {{ $arr->montHFC['total']  }} 
+                                        {{ $arr->montFHC['total']  }} 
                                     </td>
                                 </tr>
                                 @endif
@@ -344,7 +344,6 @@
                             </table>
                         </td>
                     </tr>
-
                     <tr id="destination{{$loop->iteration}}" hidden="true" >
                         <td colspan="6">
                             <b>Destination Charges</b>

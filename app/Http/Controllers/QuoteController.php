@@ -340,7 +340,7 @@ class QuoteController extends Controller
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                                     $freighTwuenty["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
-                                    $collection->push($freighTwuenty);
+                                    $collectionFreight->push($freighTwuenty);
                                 }
                             }
                         }
@@ -401,7 +401,7 @@ class QuoteController extends Controller
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                                     $freighForty["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local );
-                                    $collection->push($freighForty);
+                                    $collectionFreight->push($freighForty);
 
 
                                 }
@@ -461,7 +461,7 @@ class QuoteController extends Controller
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                                     $freighFortyHc["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
-                                    $collection->push($freighFortyHc);
+                                    $collectionFreight->push($freighFortyHc);
 
                                 }
                             }
