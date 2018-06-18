@@ -63,12 +63,12 @@ class ImportationRatesController extends Controller
 
         try {
             $res = Excel::selectSheetsByIndex(1)->load(\Storage::disk('UpLoadFile')->url($nombre), function($reader) {
-                config(['excel.import.startRow' => 6]);
+                config(['excel.import.startRow' => 2]);
                 //$reader->skipRows(1);
                  foreach ($reader->get() as $book) {
-                // The firstname getter will correspond with a cell coordinate set inside the config
-                $firstname = $book->Receipt;
-                log::info($firstname);
+                
+                //$firstname = $book->Charge;
+                log::info($book->lastname);
                  }
 
             });

@@ -77,6 +77,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                 </button>
                             </a>
 
+
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
+                                Upload Rates
+                                <i class="fa flaticon-tool-1"></i>
+                            </button>
+
                             <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
                                 <thead>
                                     <tr>
@@ -351,10 +357,56 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
         <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
+    <div class="modal fade" id="uploadfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                
+                 {!! Form::open(['route' => 'Upload.File.Rates.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Upload File Of Rates
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">
+                             Single File Upload:
+                        </label>
+                        {!!Form::file('file',['id'=>'recipient-name'])!!}
+                    </div>
+                        {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
+
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                  <!--  <button type="submit" class="btn btn-success">
+                        Load
+                    </button>-->
+                    <input type="submit" class="btn btn-success">
+                {!! Form::close()!!}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @section('js')
 @parent
+
+<script type="application/x-javascript">
+    $(document).ready(function(){
+
+    });
+</script>
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 

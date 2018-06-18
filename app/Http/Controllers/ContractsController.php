@@ -17,6 +17,10 @@ use App\LocalCharPort;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\TypeDestiny;
+use Excel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 class ContractsController extends Controller
 {
     /**
@@ -206,7 +210,7 @@ class ContractsController extends Controller
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
         $surcharge = $objsurcharge->where('user_id','=',Auth::user()->id)->pluck('name','id');
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','id'));
     }
     /**
      * Update the specified resource in storage.
@@ -312,6 +316,63 @@ class ContractsController extends Controller
         $rate = Rate::find($id);
         $rate->update($requestForm);
 
+    }
+
+    public function UploadFileRateForContract(Request $request){
+
+        //dd($request);
+        try {
+            $validator = \Validator::make($request->all(), [
+                'file' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()
+                    ->route('contracts.edit',$request->contract_id)
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            $file = $request->file('file');
+            //obtenemos el nombre del archivo
+            $nombre = $file->getClientOriginalName();
+
+            $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+            //dd(\Storage::disk('UpLoadFile')->url($nombre));
+
+            $contract = $request->contract_id;
+
+               
+
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract) {
+                foreach ($reader->get() as $book) {
+                    //$curren = $book->currency;
+                    $currenc =  Currency::where('alphacode','=',$book->currency)->first();
+                  
+                    
+                    Rate::create([
+                        'origin_port'   => $book->origin,
+                        'destiny_port'  => $book->destination,
+                        'carrier_id'    => $book->carrier,
+                        'contract_id'   => $contract,
+                        'twuenty'       => $book->twuenty,
+                        'forty'         => $book->forty,
+                        'fortyhc'       => $book->fortyhc,
+                        'currency_id'   => $currenc->id,
+                    ]);
+                }
+            });
+            //dd($res);
+
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.contenido', 'El archivo ha sido subido con exito');
+            //return view('/archivo/crearArchivo');
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.contenido', 'Se ha producido un error al cargar el archivo');
+            return view('/archivo/crearArchivo');
+        }
     }
 
     public function updateLocalChar(Request $request, $id)
