@@ -65,6 +65,12 @@ class QuoteController extends Controller
         return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
 
     }
+
+    public function skipPluck($pluck)
+    {
+        $skips = ["[","]","\""];
+        return str_replace($skips, ' ',$pluck);
+    }
     public function listRate(Request $request)
     {
 
@@ -72,6 +78,34 @@ class QuoteController extends Controller
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
         $typeCurrency = 'USD';
+        // valores de los markup en Freight 
+        $fclMarkup = Price::whereHas('company_price', function($q) {
+            $q->where('company_id', '=',1);
+        })->with('freight_markup','local_markup')->get();
+        $freighPercentage = 0;
+        $freighAmmount = 0;
+        $localPercentage = 0;
+        $localAmmount = 0;
+
+        foreach($fclMarkup as $freight){
+            // Freight 
+            $fclFreight = $freight->freight_markup->where('price_type_id','=',1);
+            $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
+            $freighAmmount =  $this->skipPluck($fclFreight->pluck('fixed_markup'));
+            // Local y global
+
+            $fclLocal = $freight->local_markup->where('price_type_id','=',1);
+            if($request->modality == "1"){
+                $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
+                $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
+            }else{
+                $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
+                $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
+            }
+
+        }
+
+        //--------------------------------------
 
         // Calculo de los inlands
         if($delivery_type == "2" || $delivery_type == "4" ){
@@ -235,8 +269,8 @@ class QuoteController extends Controller
 
         })->get();
 
-        
-      
+
+
         $formulario = $request;
         $array20 = array('2','4','5');
         $array40 =  array('1','4','5');
@@ -247,6 +281,7 @@ class QuoteController extends Controller
             $totalOrigin = 0;
             $totalDestiny =0;
             $totalQuote= 0;
+
             $collectionOrig = new Collection();
             $collectionDest = new Collection();
             $collectionFreight = new Collection();
@@ -266,26 +301,73 @@ class QuoteController extends Controller
             if($request->input('twuenty') != "0") {
                 $subtotalT = $formulario->twuenty *  $data->twuenty;
                 $totalT = ($formulario->twuenty *  $data->twuenty) / $rateC ;
+                // MARKUPS 
+                if($freighPercentage != 0){
+                    $freighPercentage = intval($freighPercentage);
+                    $markup = ( $totalT *  $freighPercentage ) / 100 ;
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalT += $markup ;
+                    $arraymarkupT = array("markup" => $markup , "typemarkup" => "($freighPercentage%)") ;
+                }else{
+                    $markup =$freighAmmount;
+
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalT += $markup;
+                    $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                }
+
                 $totalT =  number_format($totalT, 2, '.', '');
                 $totalFreight += $totalT;
                 $array = array('subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency);
+                $array = array_merge($array,$arraymarkupT);
+
                 $data->setAttribute('montT',$array);
             }
             if($request->input('forty') != "0") {
                 $subtotalF = $formulario->forty *  $data->forty;
                 $totalF = ($formulario->forty *  $data->forty)  / $rateC ;
+                // MARKUPS 
+                if($freighPercentage != 0){
+                    $freighPercentage = intval($freighPercentage);
+                    $markup = ( $totalF *  $freighPercentage ) / 100 ;
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalF += $markup ;
+                    $arraymarkupF = array("markup" => $markup ,  "typemarkup" => "($freighPercentage%)") ;
+                }else{
+                    $markup =$freighAmmount;
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalF += $markup;
+                    $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                }
+
                 $totalF =  number_format($totalF, 2, '.', '');
                 $totalFreight += $totalF;
                 $array = array('subtotal' => $subtotalF ,'total' =>$totalF." ". $typeCurrency);
+                $array = array_merge($array,$arraymarkupF);
+
                 $data->setAttribute('montF',$array);
             }
             if($request->input('fortyhc') != "0") {
                 $subtotalFHC = $formulario->fortyhc *  $data->fortyhc;
                 $totalFHC = ($formulario->fortyhc *  $data->fortyhc)  / $rateC ;
+                // MARKUPS 
+                if($freighPercentage != 0){
+                    $freighPercentage = intval($freighPercentage);
+                    $markup = ( $totalFHC *  $freighPercentage ) / 100 ;
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalFHC += $markup ;
+                    $arraymarkupFH = array("markup" => $markup  , "typemarkup" => "($freighPercentage%)") ;
+                }else{
+                    $markup =$freighAmmount;
+                    $markup = number_format(intval($markup), 2, '.', '');
+                    $totalFHC += $markup;
+                    $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                }
+
                 $totalFHC =  number_format($totalFHC, 2, '.', '');
                 $totalFreight += $totalFHC;
                 $array = array('subtotal' => $subtotalFHC , 'total' =>$totalFHC." ". $typeCurrency);
-
+                $array = array_merge($array,$arraymarkupFH);
                 $data->setAttribute('montFHC',$array);
 
             }
@@ -296,9 +378,9 @@ class QuoteController extends Controller
             })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
             })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge')->get();
-            
-            
-       
+
+
+
 
             foreach($localChar as $local){
                 $rate = Currency::where('id','=',$local->currency->id)->get();
@@ -315,31 +397,76 @@ class QuoteController extends Controller
                                 if($local->typedestiny_id == '1'){
 
                                     $subtotal_local = $formulario->twuenty *  $local->ammount;
-                                    $totalAmmount = ($formulario->twuenty *  $local->ammount) * $rateMount ;
+                                    $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
+                                    // MARKUP
+                                    if($localPercentage != 0){
+
+                                        $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                    }else{
+                                        $markup =$localAmmount;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    }
+
                                     $totalOrigin += $totalAmmount ;
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $origTwuenty["origin"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloOrig = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloOrig = array_merge($arregloOrig,$arraymarkupT);
+                                    $origTwuenty["origin"] = $arregloOrig;
 
                                     $collectionOrig->push($origTwuenty);
 
                                 }
+                                
                                 if($local->typedestiny_id == '2'){
                                     $subtotal_local = $formulario->twuenty *  $local->ammount;
                                     $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
+                                    // MARKUP
+                                    if($localPercentage != 0){
+                                        $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                    }else{
+                                        $markup =$localAmmount;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    }
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $destTwuenty["destiny"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ', 'subtotal_local' => $subtotal_local  );
+                                    $arregloDest =  array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ', 'subtotal_local' => $subtotal_local  );
+                                    $arregloDest = array_merge($arregloDest,$arraymarkupT);
+                                    $destTwuenty["destiny"] =$arregloDest;
                                     $collectionDest->push($destTwuenty);
                                 }
                                 if($local->typedestiny_id == '3'){
                                     $subtotal_local = $formulario->twuenty *  $local->ammount;
                                     $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount;
+                                    // MARKUP
+                                    if($localPercentage != 0){
+                                        $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                    }else{
+                                        $markup =$localAmmount;
+                                        $markup = number_format(intval($markup), 2, '.', '');
+                                        $totalAmmount += $markup;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    }
                                     $totalFreight += $totalAmmount;
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $freighTwuenty["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array_merge($arregloFreight,$arraymarkupT);
+                                    $freighTwuenty["freight"] = $arregloFreight;
                                     $collectionFreight->push($freighTwuenty);
                                 }
                             }
@@ -356,16 +483,42 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalOrigin += $totalAmmount ;
                                     }else{
                                         $subtotal_local = $formulario->forty *  $local->ammount;
                                         $totalAmmount = ($formulario->forty *  $local->ammount) *  $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalOrigin += $totalAmmount ;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                                    $arregloOrig =  array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ', 'subtotal_local' => $subtotal_local  );
+                                    $arregloOrig = array_merge($arregloOrig,$arraymarkupF);
 
-                                    $origForty["origin"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ', 'subtotal_local' => $subtotal_local  );
+                                    $origForty["origin"] =$arregloOrig;
                                     $collectionOrig->push($origForty);
 
 
@@ -375,15 +528,41 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalDestiny += $totalAmmount;
                                     }else{
                                         $subtotal_local = $formulario->forty *  $local->ammount;
                                         $totalAmmount = ($formulario->forty *  $local->ammount) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalDestiny += $totalAmmount;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $destForty["destiny"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local  );
+                                    $arregloDest =  array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local  );
+                                    $arregloDest = array_merge($arregloDest,$arraymarkupF);
+                                    $destForty["destiny"] =$arregloDest;
                                     $collectionDest->push($destForty);
 
 
@@ -392,15 +571,41 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalFreight += $totalAmmount;
                                     }else{
                                         $subtotal_local = $formulario->forty *  $local->ammount;
                                         $totalAmmount = ($formulario->forty *  $local->ammount)/ $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalFreight += $totalAmmount;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $freighForty["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array_merge($arregloFreight,$arraymarkupF);
+                                    $freighForty["freight"] = $arregloFreight;
                                     $collectionFreight->push($freighForty);
 
 
@@ -417,15 +622,41 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2 ) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalOrigin += $totalAmmount ;
                                     }else{
                                         $subtotal_local = $formulario->fortyhc *  $local->ammount;
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount)  / $rateMount;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalOrigin += $totalAmmount ;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $origFortyHc["origin"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local  );
+                                    $arregloOrig =  array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local  );
+                                    $arregloOrig = array_merge($arregloOrig,$arraymarkupFH);
+                                    $origFortyHc["origin"] =$arregloOrig;
                                     $collectionOrig->push($origFortyHc);
 
 
@@ -435,15 +666,41 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalDestiny += $totalAmmount;
                                     }else{
                                         $subtotal_local = $formulario->fortyhc *  $local->ammount;
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount) / $rateMount;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalDestiny += $totalAmmount;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $destFortyHc["destiny"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
+                                    $arregloDest = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
+                                    $arregloDest  = array_merge($arregloDest,$arraymarkupFH);
+                                    $destFortyHc["destiny"] = $arregloDest;
                                     $collectionDest->push($destFortyHc);
 
 
@@ -452,15 +709,41 @@ class QuoteController extends Controller
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
                                         $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2) / $rateMount ;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalFreight += $totalAmmount;
                                     }else{
                                         $subtotal_local = $formulario->fortyhc *  $local->ammount;
                                         $totalAmmount = ($formulario->fortyhc *  $local->ammount) / $rateMount;
+                                        // MARKUP
+                                        if($localPercentage != 0){
+                                            $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                        }else{
+                                            $markup =$localAmmount;
+                                            $markup = number_format(intval($markup), 2, '.', '');
+                                            $totalAmmount += $markup;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        }
                                         $totalFreight += $totalAmmount;
                                     }
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                    $freighFortyHc["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->fortyhc , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\' HC Local ', 'subtotal_local' => $subtotal_local );
+                                    $arregloFreight = array_merge($arregloFreight,$arraymarkupFH);
+                                    $freighFortyHc["freight"] = $arregloFreight;
                                     $collectionFreight->push($freighFortyHc);
 
                                 }
@@ -475,30 +758,73 @@ class QuoteController extends Controller
 
                                 $subtotal_local =  $local->ammount;
                                 $totalAmmount =  $local->ammount  / $rateMount;
+                                // MARKUP
+                                if($localPercentage != 0){
+                                    $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                }else{
+                                    $markup =$localAmmount;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                }
                                 $totalOrigin += $totalAmmount ;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                $origPer["origin"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local   );
+                                $arregloOrig =  array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local);
+                                $arregloOrig = array_merge($arregloOrig,$arraymarkupPC);
+                                $origPer["origin"] =$arregloOrig;
                                 $collectionOrig->push($origPer);
 
                             }
                             if($local->typedestiny_id == '2'){
                                 $subtotal_local =  $local->ammount;
                                 $totalAmmount =  $local->ammount  / $rateMount;
+                                // MARKUP
+                                if($localPercentage != 0){
+                                    $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                }else{
+                                    $markup =$localAmmount;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                }
                                 $totalDestiny += $totalAmmount;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                                $destPer["destiny"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local );
+                                $arregloDest = array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local );
+                                $arregloDest = array_merge($arregloDest,$arraymarkupPC);
+                                $destPer["destiny"] = $arregloDest;
                                 $collectionDest->push($destPer);
 
                             }
                             if($local->typedestiny_id == '3'){
                                 $subtotal_local =  $local->ammount;
+
+                                // MARKUP
+                                if($localPercentage != 0){
+                                    $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "($localPercentage%)") ;
+                                }else{
+                                    $markup =$localAmmount;
+                                    $markup = number_format(intval($markup), 2, '.', '');
+                                    $totalAmmount += $markup;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                }
                                 $totalAmmount =  $local->ammout  / $rateMount;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                                 $totalFreight += $totalAmmount;
-                                $freightPer["freight"] = array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  );
+                                $arregloPC = array('surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  );
+                                $arregloPC = array_merge($arregloPC,$arraymarkupPC);
+                                $freightPer["freight"] = $arregloPC;
                                 $collectionFreight->push($freightPer);
 
 

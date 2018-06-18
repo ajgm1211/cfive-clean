@@ -218,6 +218,7 @@
                                     <th>Detail  </th>
                                     <th>Units</th>
                                     <th>Price per Unit</th>
+                                    <th>Markup</th>
                                     <th>Ammount</th>
                                     <th>Total Ammount</th>
                                 </tr>
@@ -230,6 +231,7 @@
                                     <td>{{  $origin['origin']['cantidad']  }}</td>
                                     <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
                                     <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
+                                    <td>{{  $origin['origin']['markup']  }} {{ $origin['origin']['typemarkup']  }}</td>
                                     <td>{{  $origin['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -240,11 +242,12 @@
                                     <td>{{  $originGlo['origin']['cantidad']  }}</td>
                                     <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
                                     <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
+                                    <td>-</td>
                                     <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4"></td>
+                                    <td colspan="5"></td>
                                     <td ><b>SUBTOTAL:</b></td>
                                     <td>{{$arr->totalOrigin  }}  </td>
                                 </tr>
@@ -262,6 +265,7 @@
                                     <th>Units</th>
                                     <th>Price per Unit</th>
                                     <th>Ammount</th>
+                                    <th>Markup</th>
                                     <th>Total Ammount</th>
                                 </tr>
                                 @if($formulario->twuenty !="0")
@@ -271,9 +275,9 @@
                                     <td>{{ $formulario->twuenty  }}</td>
                                     <td>{{ $arr->twuenty  }} {{ $arr->currency->alphacode  }}</td>
                                     <td>{{ $arr->montT['subtotal']  }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montT['markup']  }} {{ $arr->montT['typemarkup']  }}</td>
                                     <td>
                                         {{ $arr->montT['total']  }} 
-
                                     </td>
                                 </tr>
                                 @endif
@@ -283,7 +287,9 @@
                                     <td>Container 40' </td>
                                     <td>{{ $formulario->forty  }}</td>
                                     <td>{{ $arr->forty  }} {{ $arr->currency->alphacode  }}</td>
+
                                     <td>{{ $arr->montF['subtotal'] }}  {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montF['markup']  }} {{ $arr->montF['typemarkup']  }}</td>
                                     <td>
                                         {{ $arr->montF['total']  }} 
                                     </td>
@@ -295,7 +301,9 @@
                                     <td>Container 40HC'</td>
                                     <td>{{ $formulario->fortyhc  }}</td>
                                     <td>{{ $arr->fortyhc  }} {{ $arr->currency->alphacode  }}</td>
+
                                     <td>{{ $arr->montFHC['subtotal'] }} {{ $arr->currency->alphacode  }}</td>
+                                    <td>{{ $arr->montFHC['markup']  }} {{ $arr->montFHC['typemarkup']  }}</td>
                                     <td>
                                         {{ $arr->montFHC['total']  }} 
                                     </td>
@@ -309,6 +317,7 @@
                                     <td>{{  $freight['freight']['cantidad']  }}</td>
                                     <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
                                     <td>{{  $freight['freight']['subtotal_local']  }} {{ $freight['freight']['currency']  }}</td>
+                                    <td>{{  $freight['freight']['markup']  }} {{ $freight['freight']['typemarkup']  }}</td>
                                     <td>{{  $freight['freight']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -320,6 +329,7 @@
                                     <td>{{  $freightGlo['freight']['cantidad']  }}</td>
                                     <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
                                     <td>{{  $freightGlo['freight']['subtotal_global']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                                    <td>-</td>
                                     <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -329,7 +339,7 @@
 
                                 @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0") )
                                 <tr>
-                                    <td colspan="4"></td>
+                                    <td colspan="5"></td>
                                     <td ><b>SUBTOTAL:</b></td>
                                     <td>{{$arr->totalFreight  }}</td>
                                 </tr>
@@ -355,6 +365,7 @@
                                     <th>Units</th>
                                     <th>Price per Unit</th>
                                     <th>Ammount</th>
+                                    <th>Markup</th>
                                     <th>Total Ammount</th>
                                 </tr>
 
@@ -365,6 +376,7 @@
                                     <td>{{  $destiny['destiny']['cantidad']  }}</td>
                                     <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
                                     <td>{{  $destiny['destiny']['subtotal_local']  }} {{ $destiny['destiny']['currency']  }}</td>
+                                    <td>{{  $destiny['destiny']['markup']  }} {{ $destiny['destiny']['typemarkup']  }}</td>
                                     <td>{{  $destiny['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -376,11 +388,12 @@
                                     <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
                                     <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
                                     <td>{{  $destinyGlo['destiny']['subtotal_global']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
+                                    <td>-</td>
                                     <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4"></td>
+                                    <td colspan="5"></td>
                                     <td ><b>SUBTOTAL:</b></td>
                                     <td>{{  $arr->totalDestiny  }}  </td>
                                 </tr>
