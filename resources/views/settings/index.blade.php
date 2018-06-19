@@ -88,6 +88,12 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group">
+                                                <label for="currency_id">Logo</label>
+                                                <input type="file" class="form-control-file" name="image">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group m-form__group">
                                                 <button type="button" id="default-currency-submit" class="btn btn-primary btn-block">Update</button>
                                             </div>
                                         </div>
