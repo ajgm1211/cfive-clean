@@ -218,8 +218,8 @@
                                     <th>Detail  </th>
                                     <th>Units</th>
                                     <th>Price per Unit</th>
-                                    <th>Markup</th>
                                     <th>Ammount</th>
+                                    <th>Markup</th>
                                     <th>Total Ammount</th>
                                 </tr>
                                 <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
@@ -242,7 +242,7 @@
                                     <td>{{  $originGlo['origin']['cantidad']  }}</td>
                                     <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
                                     <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
-                                    <td>-</td>
+                                    <td>{{  $originGlo['origin']['markup']  }} {{ $originGlo['origin']['typemarkup']  }}</td>
                                     <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -329,7 +329,7 @@
                                     <td>{{  $freightGlo['freight']['cantidad']  }}</td>
                                     <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
                                     <td>{{  $freightGlo['freight']['subtotal_global']  }} {{ $freightGlo['freight']['currency']  }}</td>
-                                    <td>-</td>
+                                    <td>{{  $freightGlo['freight']['markup']  }} {{ $freightGlo['freight']['typemarkup']  }}</td>
                                     <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -388,7 +388,7 @@
                                     <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
                                     <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
                                     <td>{{  $destinyGlo['destiny']['subtotal_global']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
-                                    <td>-</td>
+                                    <td>{{  $destinyGlo['destiny']['markup']  }} {{ $destinyGlo['destiny']['typemarkup']  }}</td>
                                     <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
                                 </tr>
                                 @endforeach
@@ -411,6 +411,7 @@
                                     <th>Type</th>
                                     <th>Distance  </th>
                                     <th>Port Name</th>
+                                    <th>Markup</th>
                                     <th>Total Ammount</th>
                                 </tr>
                                 @if(!empty($inlandDestiny))
@@ -421,6 +422,7 @@
                                     <th>{{ $inlandDest['type'] }}</th>
                                     <th>{{ $inlandDest['km'] }} KM</th>
                                     <th>{{ $inlandDest['port_name'] }}</th>
+                                    <th>{{ $inlandDest['markup'] }} {{ $inlandDest['typemarkup'] }}</th>
                                     <th>{{ $inlandDest['monto'] }} {{  $inlandDest['type_currency'] }}</th>
                                 </tr>
                                 @endif
@@ -434,6 +436,7 @@
                                     <th>{{ $inlandOrig['type'] }}</th>
                                     <th>{{ $inlandOrig['km'] }} KM</th>
                                     <th>{{ $inlandOrig['port_name'] }}</th>
+                                    <th>{{ $inlandOrig['markup'] }} {{ $inlandOrig['typemarkup'] }}</th>
                                     <th>{{ $inlandOrig['monto'] }} {{  $inlandOrig['type_currency'] }}</th>
                                 </tr>
                                 @endif
