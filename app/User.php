@@ -52,7 +52,7 @@ class User extends Authenticatable
         return $this->belongsTo('App\CompanyUser');
     }
 
-    public function getVerifiedAttribute()
+    public function getStateAttribute()
     {
         if($this->attributes['state']==1){
             return $this->attributes['state']='Active';

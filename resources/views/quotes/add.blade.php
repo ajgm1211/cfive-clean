@@ -7,6 +7,13 @@
             <div class="col-md-2">
                 <button class="btn btn-primary btn-block">Schedules</button>
             </div>
+            <div class="col-md-10" >
+                @if(isset($company_user->companyUser->currency_id))
+                    <div class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
+                        <input type="text" class="form-control " value="{{$currency_cfg->alphacode}}" disabled="true"/>
+                    </div>
+                @endif
+            </div>
         </div>
         <br>
         @if(Session::has('message.nivel'))
@@ -32,7 +39,7 @@
             <div class="col-md-12">
                 @if(count($company_user->company_user_id)>0)
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-12">
                             {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
                             <div class="m-portlet__body">
                                 <div class="row">
@@ -280,7 +287,7 @@
                                                                         <div class="col-md-3">Price per unit</div>
                                                                         <div class="col-md-1">Markup</div>
                                                                         <div class="col-md-1">Total</div>
-                                                                        <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
+                                                                        <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
                                                                     </div>
                                                                     <hr>
                                                                     <div class="row">
@@ -307,10 +314,9 @@
                                                                                         <div class="btn-group">
                                                                                             <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -361,10 +367,9 @@
                                                                                         <div class="btn-group">
                                                                                             <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -407,8 +412,8 @@
                                                                         <div class="col-md-2">
                                                                             <div class="form-group">
                                                                             <span>
-                                                                                <h5>
-                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
+                                                                                <h5 class="size-12px">
+                                                                                    Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -441,7 +446,7 @@
                                                                         <div class="col-md-3">Price per unit</div>
                                                                         <div class="col-md-1">Markup</div>
                                                                         <div class="col-md-1">Total</div>
-                                                                        <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
+                                                                        <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
                                                                     </div>
                                                                     <hr>
                                                                     <div class="row">
@@ -466,12 +471,11 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                            <select class="btn btn-default freight_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -520,12 +524,11 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                            <select class="btn btn-default freight_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -569,7 +572,7 @@
                                                                             <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
+                                                                                    Sub-Total:<span id="sub_total_freight">0.00</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_freight_ammount" name="sub_total_freight" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -602,7 +605,7 @@
                                                                         <div class="col-md-3">Price per unit</div>
                                                                         <div class="col-md-1">Markup</div>
                                                                         <div class="col-md-1">Total</div>
-                                                                        <div class="col-md-1">Total @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</div>
+                                                                        <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
                                                                     </div>
                                                                     <hr>
                                                                     <div class="row">
@@ -627,12 +630,11 @@
                                                                                     <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                            <select class="btn btn-default destination_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -681,12 +683,11 @@
                                                                                     <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                            <select class="btn btn-default destination_ammount_currency" name="origin_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
-                                                                                                <option value="1">USD</option>
-                                                                                                <option value="2">CLP</option>
-                                                                                                <option value="3">ARS</option>
-                                                                                                <option value="4">EUR</option>
+                                                                                                @foreach($currencies as $currency)
+                                                                                                <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                                                @endforeach
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -730,7 +731,7 @@
                                                                             <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp;@if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif
+                                                                                    Sub-Total:<span id="sub_total_destination">0.00</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -749,7 +750,7 @@
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <div class="form-group text-right">
-                                                                                <h3><b>Total:</b> <span id="total"> @if(isset($currency_name->alphacode)){{$currency_name->alphacode}}@endif</span> </h3>
+                                                                                <h3><b>Total:</b> <span id="total"> @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</span> </h3>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -775,28 +776,7 @@
                             </div>
                             {!! Form::close() !!}
                         </div>
-                        <div class="col-md-2">
-                            <div class="m-portlet__body">
-                                <div class="row">
-                                    <div class="m-portlet m-portlet--tabs" style="min-height: 846px;">
-                                        <div class="m-portlet__head">
-                                            <div class="m-portlet__head-tools">
-                                                <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left m-tabs-line-danger" role="tablist">
-                                                    <li class="nav-item m-tabs__item" style="padding-top: 28px;padding-bottom: 20px;">
-                                                        <h5><b>Currency</b></h5>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="m-portlet__body">
-                                            @if(isset($company_user->companyUser->currency_id))
-                                                {{ Form::select('price_id',$currencies,$company_user->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal','disabled'=>'true']) }}
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 @else
                     <div class="row">

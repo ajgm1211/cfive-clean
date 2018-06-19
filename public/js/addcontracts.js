@@ -42,9 +42,6 @@ $(document).on('click', '.removeL', function () {
     $(this).closest('tr').remove();
     $i = 2;
     $('.trclone2').each(function () {
-
-
-
         var res = $(".portOrig",this).removeAttr('name').attr('name', 'port_origlocal'+$i+'[]');
         var res = $(".portDest",this).removeAttr('name').attr('name', 'port_destlocal'+$i+'[]');
         var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier_id'+$i+'[]');

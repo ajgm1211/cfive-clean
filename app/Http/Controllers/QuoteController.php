@@ -538,19 +538,22 @@ class QuoteController extends Controller
 
     public function create()
     {
+        $company_user_id=\Auth::user()->company_user_id;
         $quotes = Quote::all();
-        $companies = Company::all()->pluck('business_name','id');
+        $company_user=CompanyUser::find($company_user_id);
+        $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
-        $company_user = User::where('id',\Auth::id())->first();
+        $user = User::where('id',\Auth::id())->first();
         if(count($company_user->companyUser)>0) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';
         }
-        $currencies = Currency::all()->pluck('alphacode','id');
-        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
+        $currencies = Currency::all();
+        $currency_cfg = Currency::find($company_user->currency_id);
+        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg]);
     }
 
     /**
