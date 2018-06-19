@@ -89,7 +89,12 @@ class CompanyController extends Controller
     public function delete($id)
     {
         $company = Company::find($id);
-        return view('companies.delete', compact('company'));
+
+        if(count($company->contact)>0){
+            return response()->json(['message' => count($company->contact)]);
+        }
+
+        return response()->json(['message' => 'Ok']);
     }
 
     public function destroy($id)

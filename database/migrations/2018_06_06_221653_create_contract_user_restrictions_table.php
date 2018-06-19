@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContractClientRestrictionsTable extends Migration
+class CreateContractUserRestrictionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateContractClientRestrictionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contract_client_restrictions', function (Blueprint $table) {
+        Schema::create('contract_user_restrictions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('contact_id')->unsigned();
-            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('contract_id')->unsigned();
             $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateContractClientRestrictionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contract_client_restrictions');
+        Schema::dropIfExists('contract_user_restrictions');
     }
 }

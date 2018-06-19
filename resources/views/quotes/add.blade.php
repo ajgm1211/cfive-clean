@@ -471,7 +471,7 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default freight_ammount_currency" name="origin_ammount_currency[]">
+                                                                                            <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
                                                                                                 @foreach($currencies as $currency)
                                                                                                 <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
@@ -524,7 +524,7 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default freight_ammount_currency" name="origin_ammount_currency[]">
+                                                                                            <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
                                                                                                 @foreach($currencies as $currency)
                                                                                                 <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
@@ -630,7 +630,7 @@
                                                                                     <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default destination_ammount_currency" name="origin_ammount_currency[]">
+                                                                                            <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
                                                                                                 @foreach($currencies as $currency)
                                                                                                 <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
@@ -683,7 +683,7 @@
                                                                                     <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            <select class="btn btn-default destination_ammount_currency" name="origin_ammount_currency[]">
+                                                                                            <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
                                                                                                 <option value="">Currency</option>
                                                                                                 @foreach($currencies as $currency)
                                                                                                 <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
