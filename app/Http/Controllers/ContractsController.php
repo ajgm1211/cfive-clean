@@ -8,18 +8,19 @@ use App\Country;
 use App\Carrier;
 use App\Harbor;
 use App\Rate;
+use App\FailRate;
 use App\Currency;
 use App\CalculationType;
 use App\LocalCharge;
 use App\Surcharge;
 use App\LocalCharCarrier;
 use App\LocalCharPort;
+use App\TypeDestiny;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use App\TypeDestiny;
 use Excel;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UploadFileRateRequest;
 
 class ContractsController extends Controller
 {
@@ -320,20 +321,21 @@ class ContractsController extends Controller
 
     public function UploadFileRateForContract(Request $request){
 
-        //dd($request);
         try {
-            $validator = \Validator::make($request->all(), [
-                'file' => 'required',
-            ]);
+            $file = $request->file('file');
+            $ext = strtolower($file->getClientOriginalExtension());
+
+            $validator = \Validator::make(
+                array('ext' => $ext),
+                array('ext' => 'in:xls,xlsx,csv')
+            );
 
             if ($validator->fails()) {
-                return redirect()
-                    ->route('contracts.edit',$request->contract_id)
-                    ->withErrors($validator)
-                    ->withInput();
+                $request->session()->flash('message.nivel', 'danger');
+                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+                return redirect()->route('contracts.edit',$request->contract_id);
             }
 
-            $file = $request->file('file');
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
 
@@ -341,37 +343,137 @@ class ContractsController extends Controller
             //dd(\Storage::disk('UpLoadFile')->url($nombre));
 
             $contract = $request->contract_id;
-
-               
-
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract) {
+            $errors=0;
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors) {
                 foreach ($reader->get() as $book) {
-                    //$curren = $book->currency;
-                    $currenc =  Currency::where('alphacode','=',$book->currency)->first();
-                  
+
+                    $origB=false;
+                    $destiB=false;
+                    $carriB=false;
+                    $twuentyB=false;
+                    $fortyB=false;
+                    $fortyhcB=false;
+                    $curreB=false;
                     
-                    Rate::create([
-                        'origin_port'   => $book->origin,
-                        'destiny_port'  => $book->destination,
-                        'carrier_id'    => $book->carrier,
-                        'contract_id'   => $contract,
-                        'twuenty'       => $book->twuenty,
-                        'forty'         => $book->forty,
-                        'fortyhc'       => $book->fortyhc,
-                        'currency_id'   => $currenc->id,
-                    ]);
+                    $originV;
+                    $destinationV;
+                    $carrierV;
+                    $twuentyV;
+                    $fortyV;
+                    $fortyhcV;
+                    $currencyV;
+                    
+                    $currenc = Currency::where('alphacode','=',$book->currency)->first();
+                    $carrier = Carrier::where('name','=',$book->carrier)->first();
+
+                    if(empty($book->origin) != true){
+                        $origB=true;
+                        $originV = $book->origin;
+                    }else{
+                        $originV = $book->origin.'_E';
+                    }
+
+                    if(empty($book->destination) != true ){
+                        $destiB=true;
+                        $destinationV = $book->destination;
+                    }else{
+                        $destinationV = $book->destination.'_E';
+                    }
+                    
+                    if(empty($carrier->id) != true){
+                        $carriB=true;
+                        $carrierV = $carrier->id;
+                    }else{
+                        $carrierV = $book->carrier.'_E';
+                    }
+
+                    if(empty($book->twuenty) != true ){
+                        $twuentyB=true;
+                        $twuentyV = $book->twuenty;
+                    }
+                    else{
+                        $twuentyV = $book->twuenty.'_E';
+                    }
+                    
+                    if(empty($book->forty) != true ){
+                        $fortyB=true;
+                        $fortyV = $book->forty;
+                    }
+                    else{
+                        $fortyV = $book->forty.'_E';
+                    }
+                    
+                    if(empty($book->fortyhc) != true ){
+                        $fortyhcB=true;
+                        $fortyhcV = $book->fortyhc;
+                    }
+                    else{
+                        $fortyhcV = $book->fortyhc.'_E';
+                    }
+                    
+                    if(empty($currenc->id) != true){
+                        $curreB=true;
+                        $currencyV =  $currenc->id;
+                    }
+                    else{
+                        $currencyV = $book->currency.'_E';
+                    }
+
+                    if( $origB == true && $destiB == true
+                       && $carriB == true && $twuentyB == true
+                       && $fortyB == true && $fortyhcB == true
+                       && $curreB == true ) {
+
+                        Rate::create([
+                            'origin_port'   => $originV,
+                            'destiny_port'  => $destinationV,
+                            'carrier_id'    => $carrierV,
+                            'contract_id'   => $contract,
+                            'twuenty'       => $twuentyV,
+                            'forty'         => $fortyV,
+                            'fortyhc'       => $fortyhcV,
+                            'currency_id'   => $currencyV,
+                        ]);
+                    }
+                    else{
+
+                        FailRate::create([
+                            'origin_port'   => $originV,
+                            'destiny_port'  => $destinationV,
+                            'carrier_id'    => $carrierV,
+                            'contract_id'   => $contract,
+                            'twuenty'       => $twuentyV,
+                            'forty'         => $fortyV,
+                            'fortyhc'       => $fortyhcV,
+                            'currency_id'   => $currencyV,
+                        ]);
+                        $errors++;
+                        
+                    }
                 }
             });
+            if($errors <= 0){
+                $request->session()->flash('message.nivel', 'success');
+                $request->session()->flash('message.title', 'Well done!');
+                $request->session()->flash('message.content', 'You successfully added the rate ');
+            }
+            else{
+                $request->session()->flash('message.nivel', 'danger');
+                $request->session()->flash('message.title', 'Well done!');
+                if($errors == 1){
+                    $request->session()->flash('message.content', $errors.' fee is not charged correctly');
+                }else{
+                    $request->session()->flash('message.content', $errors.' Rates did not load correctly');
+                }
+            }
+            return redirect()->route('contracts.edit',$request->contract_id);
             //dd($res);
 
-            $request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.contenido', 'El archivo ha sido subido con exito');
-            //return view('/archivo/crearArchivo');
         } catch (\Illuminate\Database\QueryException $e) {
 
             $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.contenido', 'Se ha producido un error al cargar el archivo');
-            return view('/archivo/crearArchivo');
+            $request->session()->flash('message.content', 'There was an error loading the file');
+            return redirect()->route('contracts.edit',$request->contract_id);
         }
     }
 

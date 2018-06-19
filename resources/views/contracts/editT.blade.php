@@ -11,6 +11,23 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 @endphp
 <div class="m-content">
 
+            @if(Session::has('message.nivel'))
+
+            <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+                <div class="m-alert__icon">
+                    <i class="la la-warning"></i>
+                </div>
+                <div class="m-alert__text">
+                    <strong>
+                        {{ session('message.title') }}
+                    </strong>
+                    {{ session('message.content') }}
+                </div>
+                <div class="m-alert__close">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            @endif
 
     <!--Begin::Main Portlet-->
     <div class="m-portlet m-portlet--full-height">
@@ -26,6 +43,8 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     </h3>
                 </div>
             </div>
+
+
             <div class="m-portlet__head-tools">
                 <ul class="m-portlet__nav">
                     <li class="m-portlet__nav-item">
@@ -204,6 +223,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </a>
+                            <a>
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#">
+                                    Upload Subcharge
+                                    <i class="fa flaticon-tool-1"></i>
+                                </button>
+                            </a>
                             <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%">
                                 <thead>
                                     <tr>
@@ -360,8 +385,8 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
     <div class="modal fade" id="uploadfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                
-                 {!! Form::open(['route' => 'Upload.File.Rates.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
+
+                {!! Form::open(['route' => 'Upload.File.Rates.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
                         Upload File Of Rates
@@ -373,26 +398,26 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     </button>
                 </div>
                 <div class="modal-body">
-                   
+
                     <div class="form-group">
                         <label for="recipient-name" class="form-control-label">
-                             Single File Upload:
+                            Single File Upload:
                         </label>
                         {!!Form::file('file',['id'=>'recipient-name'])!!}
                     </div>
-                        {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
+                    {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
 
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Close
                     </button>
-                  <!--  <button type="submit" class="btn btn-success">
-                        Load
-                    </button>-->
+                    <!--  <button type="submit" class="btn btn-success">
+Load
+</button>-->
                     <input type="submit" class="btn btn-success">
-                {!! Form::close()!!}
+                    {!! Form::close()!!}
                 </div>
             </div>
         </div>
