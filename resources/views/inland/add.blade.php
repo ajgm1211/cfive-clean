@@ -85,7 +85,7 @@ Price levels
                                 <tbody>
                                     <tr>
                                         <td class=""> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low ','required' => 'required' , 'id' => 'l20']) !!}</td>
-                                        <td class="">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input up up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')']) !!}</td>
+                                        <td class="">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input prove up up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')']) !!}</td>
                                         <td class="">
                                             <div class="input-group">
                                                 {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required']) !!}

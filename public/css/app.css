@@ -78533,18 +78533,33 @@ input#password {
 }
 
 /* ADD FCL CONTRACT FORM*/
-.twuenty{
-  width: 50px;
+/*#origin-port-fcl-form {
+
 }
-.forty{
-  width: 50px;
+
+#destination-port-fcl-form{
+
 }
-.fortyhc{
-  width: 55px;
+
+#carrier-fcl-form{
+
 }
-.currency{
-  width: 50px;
+
+#20-fcl-form{
+  
 }
+
+#40-fcl-form {
+
+}
+
+#40hc-fcl-form{
+
+}
+
+#currency-fcl-form{
+
+}*/
 /*
 INLAND RATES
 */
@@ -78562,14 +78577,4 @@ th#rate-limit-fcl {
 
 th#options-limit-fcl {
   width: 50px;
-}
-
-/*
-Inlands Add
-*/
-.up{
-  width: 60px;
-}
-.low{
-  width: 60px;
 }
