@@ -747,27 +747,67 @@ $(document).on('click', '#delete-company', function () {
         text: "You won't be able to revert this!",
         type: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Continue!'
     }).then(function(result) {
         if (result.value) {
             $.ajax({
                 type: 'get',
                 url: 'companies/delete/' + id,
                 success: function(data) {
-                    if(data.message=='Ok'){
-                        swal(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                        $(theElement).closest('tr').remove();
+                    if(data.message>0){
+                        swal({
+                            title: 'Warning!',
+                            text: "There are "+data.message+" clients assoociated with this company. If you delete it, those contacts will be deleted.",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'companies/destroy/' + id,
+                                    success: function(data) {
+                                        if(data.message=='Ok'){
+                                            swal(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            )
+                                            $(theElement).closest('tr').remove();
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                                'error'
+                                            )
+                                            console.log(data.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                     }else{
-                        swal(
-                            'Error!',
-                            'This company has quotes associated. You can\'t deleted companies with quotes associated.',
-                            'warning'
-                        )
-                        console.log(data.message);
+                        $.ajax({
+                                    type: 'get',
+                                    url: 'companies/destroy/' + id,
+                                    success: function(data) {
+                                        if(data.message=='Ok'){
+                                            swal(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            )
+                                            $(theElement).closest('tr').remove();
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                                'warning'
+                                            )
+                                            console.log(data.message);
+                                        }
+                                    }
+                                });
                     }
                 }
             });

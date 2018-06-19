@@ -60,7 +60,8 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
-    Route::get('delete/{company_id}', 'CompanyController@destroy')->name('companies.delete');
+    Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
+    Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 

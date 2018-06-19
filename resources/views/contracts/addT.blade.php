@@ -222,7 +222,7 @@
                                     <div class="col-md-12" id="origin_harbor_label">
                                         <label>Users</label>
                                         <div class="form-group m-form__group align-items-center">
-                                            {{ Form::select('users[]',$contacts,null,['multiple','class'=>'m-select2-general','id' => 'm-select2-client']) }}
+                                            {{ Form::select('users[]',$users,null,['multiple','class'=>'m-select2-general','id' => 'm-select2-client']) }}
                                         </div>
                                     </div>
                                 </div>
