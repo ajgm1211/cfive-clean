@@ -764,7 +764,7 @@ $(document).on('click', '#delete-company', function () {
                     }else{
                         swal(
                             'Error!',
-                            'Your can\'t delete this contact because have quotes related.',
+                            'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                             'warning'
                         )
                         console.log(data.message);
@@ -775,4 +775,8 @@ $(document).on('click', '#delete-company', function () {
         }
 
     });
+});
+
+$('#m_select2-edit-company').select2({
+    placeholder: "Select an option"
 });

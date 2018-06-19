@@ -32,4 +32,10 @@ class Company extends Model
     {
         return $this->hasManyThrough('App\Price','App\CompanyPrice','company_id','id','id','price_id');
     }
+
+    public function company_user(){
+
+        return $this->belongsTo('App\CompanyUser');
+
+    }
 }

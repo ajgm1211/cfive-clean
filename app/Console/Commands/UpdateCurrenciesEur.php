@@ -6,14 +6,14 @@ use App\Currency;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class updateCurrencies extends Command
+class updateCurrenciesEur extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:updateCurrenciesUsd';
+    protected $signature = 'command:updateCurrenciesEur';
 
     /**
      * The console command description.
@@ -44,7 +44,7 @@ class updateCurrencies extends Command
         $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
 
         // Initialize CURL:
-        $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'');
+        $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source=EUR');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         // Store the data:
@@ -55,11 +55,11 @@ class updateCurrencies extends Command
         $exchangeRates = json_decode($json, true);
 
         foreach($exchangeRates['quotes'] as $key=>$value){
-            $currency=Currency::where('api_code',$key)->first();
+            $currency=Currency::where('api_code_eur',$key)->first();
             if(isset($currency)){
-                if($currency->rates!=$value){
+                if($currency->rates_eur!=$value){
                     Currency::where('id',$currency->id)
-                        ->update(['api_code' => $key, 'rates' => $value]);
+                        ->update(['api_code_eur' => $key, 'rates_eur' => $value]);
                 }
             }
         }
