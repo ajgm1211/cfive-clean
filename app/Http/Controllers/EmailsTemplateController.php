@@ -68,7 +68,7 @@ class EmailsTemplateController extends Controller
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $mergeTag = MergeTag::All();
         $array = $mergeTag->where('user_name', Auth::user()->name);
-
+        //dd($mergeTag);
         $templates = [];
         foreach ($array as $arr)
         {
@@ -78,7 +78,7 @@ class EmailsTemplateController extends Controller
             ];
         }
         
-
+        //dd($templates);
         return view('emails-template.add', compact('templates'));
     }
 
@@ -138,7 +138,7 @@ class EmailsTemplateController extends Controller
                 'content' => self::createHtmlTag($arr)
             ];
         }
-
+        
         return view('emails-template.edit', compact('template', 'templates'));
     }
 
