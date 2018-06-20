@@ -5,9 +5,6 @@
     <div class="m-content">
         <div class="row">
             <div class="col-md-1">
-                <button class="btn btn-primary btn-block">Save</button>
-            </div>
-            <div class="col-md-1">
                 <a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
             </div>
             <div class="col-md-2">
@@ -50,7 +47,7 @@
                                         <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
                                             <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
                                                 <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
-                                                    Edit Manual Quote
+                                                    Next
                                                 </a>
                                                 <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
                                                     Back

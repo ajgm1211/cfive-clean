@@ -38,10 +38,10 @@ class PdfController extends Controller
         return $pdf->stream('quote');
     }
 
-    public function send_pdf_quote($id,$email)
+    public function send_pdf_quote($id)
     {
         $quote = Quote::findOrFail($id);
-        $contacts_email = Contact::where('company_id',$quote->company_id)->get();
+        $contact_email = Contact::find($quote->contact_id);
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('name','id');
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
@@ -57,19 +57,20 @@ class PdfController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        foreach ($contacts_email as $contact) {
-            \Mail::send('emails.quote_pdf', [], function ($message) use ($quote, $contact) {
+        if(count($contact_email)>0) {
+            \Mail::send('emails.quote_pdf', [], function ($message) use ($quote, $contact_email) {
                 $message->from('javila3090@gmail.com', 'Julio Avila');
 
-                $message->to($contact->email)->subject('Quote #' . $quote->id);
+                $message->to($contact_email->email)->subject('Quote #' . $quote->id);
 
                 $message->attach('pdf/temp_' . $quote->id . '.pdf', [
                     'as' => 'Quote.pdf',
                     'mime' => 'application/pdf',
                 ]);
             });
+            return response()->json(['message' => 'Ok']);
+        }else{
+            return response()->json(['message' => 'Error']);
         }
-
-        return response()->json(['message' => 'Ok']);
     }
 }

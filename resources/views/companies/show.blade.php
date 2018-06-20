@@ -72,11 +72,15 @@
                                         <p>{{$company->address}}</p>
                                         <hr>
                                         <label><b>Price level</b></label>
-                                        @if(isset($company->company_price))
-                                            {!! Form::select('price_id',$prices,$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @else
-                                            {!! Form::select('price_id',$prices,null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @endif
+                                            @if(isset($company->price_name))
+                                                <ul>
+                                                    @foreach($company->price_name as $price)
+                                                        <li style="margin-left: -25px;">{{$price->name}}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <p>There are not prices associated</p>
+                                            @endif
                                         <hr>
                                     </div>
                                 </div>

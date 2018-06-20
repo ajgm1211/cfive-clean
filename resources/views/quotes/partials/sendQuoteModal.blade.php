@@ -22,7 +22,7 @@
                     <b>Sending</b> &nbsp;<i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div class="form-group m-form__group">
-                    Do you want send this quote to all contacts of the related company?
+                    Do you want send this quote to selected contact?
                 </div>
                 <br>
                 <div class="form-group m-form__group">

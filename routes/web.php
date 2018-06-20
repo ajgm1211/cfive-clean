@@ -61,6 +61,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
+    Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
@@ -95,7 +96,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
-    Route::get('send/pdf/{id}/{email}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+    Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
