@@ -1,6 +1,7 @@
 <!-- tinyMCE styles -->
-<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+
 <!--end styles -->
 
 <div class="form-group m-form__group">
@@ -8,9 +9,12 @@
     
 </div>
 
-<div class="form-group m-form__group"  >
-    {!! Form::label('Port', 'Port') !!}<br>
-    {!! Form::select('ports[]', $array, null, ['class'=>'m-select2-general form-control', 'multiple' => 'multiple']) !!}
+<div class="form-group m-form__group">
+    {!! Form::label('Port', 'Port') !!}
+    {!! Form::select('ports[]', 
+    $array, 
+    null, 
+    ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
 
 <div class="form-group m-form__group">
@@ -37,7 +41,7 @@
     toolbar: "insertfile undo redo | styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
     external_plugins: { "nanospell": "http://localhost:8000/js/tinymce/plugins/nanospell/plugin.js" },
     nanospell_server:"php",
-    browser_spellcheck: false,
+    browser_spellcheck: true,
     relative_urls: false,
     remove_script_host: false,
     file_browser_callback : function(field_name, url, type, win) {
