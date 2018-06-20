@@ -344,130 +344,154 @@ class ContractsController extends Controller
 
             $contract = $request->contract_id;
             $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors) {
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+
                 foreach ($reader->get() as $book) {
 
-                    $origB=false;
-                    $destiB=false;
-                    $carriB=false;
-                    $twuentyB=false;
-                    $fortyB=false;
-                    $fortyhcB=false;
-                    $curreB=false;
-                    
-                    $originV;
-                    $destinationV;
-                    $carrierV;
-                    $twuentyV;
-                    $fortyV;
-                    $fortyhcV;
-                    $currencyV;
-                    
-                    $currenc = Currency::where('alphacode','=',$book->currency)->first();
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
 
-                    if(empty($book->origin) != true){
-                        $origB=true;
-                        $originV = $book->origin;
+                    $duplicate =  Rate::where('origin_port','=',$book->origin)
+                        ->where('destiny_port','=',$book->destination)
+                        ->where('carrier_id','=',$carrier['id'])
+                        ->where('contract_id','=',$contract)
+                        ->count();
+
+
+                    if($duplicate <= 0){
+
+                        $origB=false;
+                        $destiB=false;
+                        $carriB=false;
+                        $twuentyB=false;
+                        $fortyB=false;
+                        $fortyhcB=false;
+                        $curreB=false;
+
+                        $originV;
+                        $destinationV;
+                        $carrierV;
+                        $twuentyV;
+                        $fortyV;
+                        $fortyhcV;
+                        $currencyV;
+
+                        $currenc = Currency::where('alphacode','=',$book->currency)->first();
+                        $carrier = Carrier::where('name','=',$book->carrier)->first();
+
+                        if(empty($book->origin) != true){
+                            $origB=true;
+                            $originV = $book->origin;
+                        }else{
+                            $originV = $book->origin.'_E';
+                        }
+
+                        if(empty($book->destination) != true ){
+                            $destiB=true;
+                            $destinationV = $book->destination;
+                        }else{
+                            $destinationV = $book->destination.'_E';
+                        }
+
+                        if(empty($carrier->id) != true){
+                            $carriB=true;
+                            $carrierV = $carrier->id;
+                        }else{
+                            $carrierV = $book->carrier.'_E';
+                        }
+
+                        if(empty($book->twuenty) != true ){
+                            $twuentyB=true;
+                            $twuentyV = (int)$book->twuenty;
+                        }
+                        else{
+                            $twuentyV = $book->twuenty.'_E';
+                        }
+
+                        if(empty($book->forty) != true ){
+                            $fortyB=true;
+                            $fortyV = (int)$book->forty;
+                        }
+                        else{
+                            $fortyV = $book->forty.'_E';
+                        }
+
+                        if(empty($book->fortyhc) != true ){
+                            $fortyhcB=true;
+                            $fortyhcV = (int)$book->fortyhc;
+                        }
+                        else{
+                            $fortyhcV = $book->fortyhc.'_E';
+                        }
+
+                        if(empty($currenc->id) != true){
+                            $curreB=true;
+                            $currencyV =  $currenc->id;
+                        }
+                        else{
+                            $currencyV = $book->currency.'_E';
+                        }
+
+                        if( $origB == true && $destiB == true
+                           && $carriB == true && $twuentyB == true
+                           && $fortyB == true && $fortyhcB == true
+                           && $curreB == true ) {
+
+                            Rate::create([
+                                'origin_port'   => $originV,
+                                'destiny_port'  => $destinationV,
+                                'carrier_id'    => $carrierV,
+                                'contract_id'   => $contract,
+                                'twuenty'       => $twuentyV,
+                                'forty'         => $fortyV,
+                                'fortyhc'       => $fortyhcV,
+                                'currency_id'   => $currencyV,
+                            ]);
+                        }
+                        else{
+
+                            $duplicateFail =  FailRate::where('origin_port','=',$originV)
+                                ->where('destiny_port','=',$destinationV)
+                                ->where('carrier_id','=',$carrierV)
+                                ->where('contract_id','=',$contract)
+                                ->count();
+                            if($duplicateFail <= 0){
+                                FailRate::create([
+                                    'origin_port'   => $originV,
+                                    'destiny_port'  => $destinationV,
+                                    'carrier_id'    => $carrierV,
+                                    'contract_id'   => $contract,
+                                    'twuenty'       => $twuentyV,
+                                    'forty'         => $fortyV,
+                                    'fortyhc'       => $fortyhcV,
+                                    'currency_id'   => $currencyV,
+                                ]);
+                                $errors++;
+                            }
+                        }
+                    }
+                }
+                if($errors > 0){
+                    $request->session()->flash('message.content', 'You successfully added the rate ');
+                    $request->session()->flash('message.nivel', 'danger');
+                    $request->session()->flash('message.title', 'Well done!');
+                    if($errors == 1){
+                        $request->session()->flash('message.content', $errors.' fee is not charged correctly');
                     }else{
-                        $originV = $book->origin.'_E';
+                        $request->session()->flash('message.content', $errors.' Rates did not load correctly');
                     }
-
-                    if(empty($book->destination) != true ){
-                        $destiB=true;
-                        $destinationV = $book->destination;
-                    }else{
-                        $destinationV = $book->destination.'_E';
-                    }
-                    
-                    if(empty($carrier->id) != true){
-                        $carriB=true;
-                        $carrierV = $carrier->id;
-                    }else{
-                        $carrierV = $book->carrier.'_E';
-                    }
-
-                    if(empty($book->twuenty) != true ){
-                        $twuentyB=true;
-                        $twuentyV = $book->twuenty;
-                    }
-                    else{
-                        $twuentyV = $book->twuenty.'_E';
-                    }
-                    
-                    if(empty($book->forty) != true ){
-                        $fortyB=true;
-                        $fortyV = $book->forty;
-                    }
-                    else{
-                        $fortyV = $book->forty.'_E';
-                    }
-                    
-                    if(empty($book->fortyhc) != true ){
-                        $fortyhcB=true;
-                        $fortyhcV = $book->fortyhc;
-                    }
-                    else{
-                        $fortyhcV = $book->fortyhc.'_E';
-                    }
-                    
-                    if(empty($currenc->id) != true){
-                        $curreB=true;
-                        $currencyV =  $currenc->id;
-                    }
-                    else{
-                        $currencyV = $book->currency.'_E';
-                    }
-
-                    if( $origB == true && $destiB == true
-                       && $carriB == true && $twuentyB == true
-                       && $fortyB == true && $fortyhcB == true
-                       && $curreB == true ) {
-
-                        Rate::create([
-                            'origin_port'   => $originV,
-                            'destiny_port'  => $destinationV,
-                            'carrier_id'    => $carrierV,
-                            'contract_id'   => $contract,
-                            'twuenty'       => $twuentyV,
-                            'forty'         => $fortyV,
-                            'fortyhc'       => $fortyhcV,
-                            'currency_id'   => $currencyV,
-                        ]);
-                    }
-                    else{
-
-                        FailRate::create([
-                            'origin_port'   => $originV,
-                            'destiny_port'  => $destinationV,
-                            'carrier_id'    => $carrierV,
-                            'contract_id'   => $contract,
-                            'twuenty'       => $twuentyV,
-                            'forty'         => $fortyV,
-                            'fortyhc'       => $fortyhcV,
-                            'currency_id'   => $currencyV,
-                        ]);
-                        $errors++;
-                        
-                    }
+                }
+                else{
+                    $request->session()->flash('message.nivel', 'success');
+                    $request->session()->flash('message.title', 'Well done!');
                 }
             });
-            if($errors <= 0){
-                $request->session()->flash('message.nivel', 'success');
-                $request->session()->flash('message.title', 'Well done!');
-                $request->session()->flash('message.content', 'You successfully added the rate ');
-            }
-            else{
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.title', 'Well done!');
-                if($errors == 1){
-                    $request->session()->flash('message.content', $errors.' fee is not charged correctly');
-                }else{
-                    $request->session()->flash('message.content', $errors.' Rates did not load correctly');
-                }
-            }
-            return redirect()->route('contracts.edit',$request->contract_id);
-            //dd($res);
+
+            //$rates = Rate::where('currency_id','=',$contract)->get();
+            $rates = Rate::with('carrier','contract')->where('contract_id','=',$contract)->get();
+            
+            $failrates = FailRate::where('currency_id','=',$contract)->get();
+            return view('contracts.FailRates',compact('rates','failrates'));
+            //dd($res);*/
 
         } catch (\Illuminate\Database\QueryException $e) {
 
