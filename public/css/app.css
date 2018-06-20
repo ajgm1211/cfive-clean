@@ -78578,3 +78578,7 @@ th#rate-limit-fcl {
 th#options-limit-fcl {
   width: 50px;
 }
+
+.mce-menubar .mce-menubtn{
+  display: none;
+}
