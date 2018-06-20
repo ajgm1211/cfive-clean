@@ -77,9 +77,6 @@
                         <th title="Field #2">
                             Subject
                         </th>
-                        <th title="Field #3">
-                            Menssage
-                        </th>
                         <th title="Field #4">
                             User
                         </th>
@@ -94,7 +91,6 @@
                             <tr>
                                 <td>{{ $arr->name }}</td>
                                 <td>{{ $arr->subject }}</td>
-                                <td>{!! strip_tags( $arr->menssage ) !!}</td>
                                 <td>{{ $arr->user_id }}</td>
                                 <td> 
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View " onclick="AbrirModal('look',{{  $arr->id }})" >
