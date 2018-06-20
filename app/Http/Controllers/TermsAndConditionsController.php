@@ -54,7 +54,7 @@ class TermsAndConditionsController extends Controller
         $harbor = Harbor::all();
         $array = $harbor->pluck('name')->toArray();
 
-        return view('terms.add', compact('array'));
+        return view('terms.add', compact('array', 'harbor'));
     }
 
     /**

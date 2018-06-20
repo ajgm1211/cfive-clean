@@ -26,3 +26,12 @@
 
 @endsection
 
+@section('js')
+@parent
+<script>
+   $('.m-select2-general').select2({
+       placeholder: "Select an option"
+   });
+</script>
+@stop
+
