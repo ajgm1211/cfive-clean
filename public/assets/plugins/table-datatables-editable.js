@@ -47,6 +47,11 @@ var TableDatatablesEditable = function () {
                     title: "Field #4",
                     sortable: false,
                     width: 170,
+                },{
+                    field: "Destiny Port",
+                    title: "Field #2",
+                    sortable: false,
+                    width: 100,
                 },
                 
             ],
