@@ -78586,3 +78586,23 @@ th#options-limit-fcl {
 .low {
   width: 60px;
 }
+
+.fortyhc {
+  width: 60px;
+}
+
+.currency {
+  width: 60px;
+}
+
+.dest-port {
+  width: 100px;
+}
+
+.orig-port {
+  width: 100px;
+}
+
+.carrier {
+  width: 100px;
+}

@@ -181,10 +181,10 @@
                                     <tbody>
                                     <tr>
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td>{{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
-                                        <td>{{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control orig-port','multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control dest-port','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control type']) }}</td>
-                                        <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control carrier','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td> {!! Form::text('ammount[]', null, ['placeholder' => '40HC','class' => 'form-control m-input fortyhc','required' => 'required']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control currency']) }}</td>
@@ -193,8 +193,8 @@
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
-                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple']) }}</td>
-                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portOrig orig-port' ,'multiple' => 'multiple']) }}</td>
+                                        <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portDest dest-port' ,'multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple']) }}</td>
 
