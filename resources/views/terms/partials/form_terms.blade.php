@@ -5,6 +5,7 @@
 <!--end styles -->
 
 <div class="form-group m-form__group">
+    {!! Form::label('Name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'Please enter the term name','class' => 'form-control m-input','required' => 'required']) !!}
     
 </div>
@@ -18,11 +19,13 @@
 </div>
 
 <div class="form-group m-form__group">
+    {!! Form::label('Import', 'Import') !!}
     {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input']) !!}
 
 </div>
 
 <div class="form-group m-form__group">
+    {!! Form::label('Export', 'Export') !!}
     {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input']) !!}
 </div>
 
@@ -31,14 +34,8 @@
   var editor_config = {
     path_absolute : "/",
     selector: "textarea.editor",
-    plugins: [
-      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-      "searchreplace wordcount visualblocks visualchars code fullscreen",
-      "insertdatetime media nonbreaking save table contextmenu directionality",
-      "emoticons template paste textcolor colorpicker textpattern codesample",
-      "fullpage toc imagetools help"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+    plugins: ["template"],
+    toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
     external_plugins: { "nanospell": "http://localhost:8000/js/tinymce/plugins/nanospell/plugin.js" },
     nanospell_server:"php",
     browser_spellcheck: true,
