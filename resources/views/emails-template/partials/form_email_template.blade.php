@@ -4,17 +4,20 @@
 <!--end styles -->
 
 <div class="form-group m-form__group">
+    {!! Form::label('Name', 'Name') !!}
     {!! Form::text('name', null, ['placeholder' => 'Name','class' => 'form-control m-input','required' => 'required']) !!}
     
 </div>
 
 <div class="form-group m-form__group">
+    {!! Form::label('Subject', 'Subject') !!}
     {!! Form::text('subject', null, ['placeholder' => 'Subject','class' => 'form-control m-input','required' => 'required']) !!}
     
 </div>
 
 
 <div class="form-group m-form__group">
+    {!! Form::label('Text', 'Text') !!}
     {!! Form::textarea('menssage', null, ['placeholder' => 'Please enter your  menssage','class' => 'form-control editor m-input']) !!}
 
 </div>
@@ -34,7 +37,7 @@
       "emoticons template paste textcolor colorpicker textpattern codesample",
       "fullpage toc imagetools help"
     ],
-    toolbar: "insertfile undo redo | styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+    toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
     templates: title,
     external_plugins: { "nanospell": "http://localhost:8000/js/tinymce/plugins/nanospell/plugin.js" },
     nanospell_server:"php",
