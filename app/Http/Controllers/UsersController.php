@@ -204,7 +204,7 @@ class UsersController extends Controller
 
     public function activate(Request $request,$id) {
         $user=User::find($id);
-        //dd(json_encode($user));
+        //dd(json_encode($user->state));
         if($user->state=='Active'){
             $user->state=0;
             $user->update();

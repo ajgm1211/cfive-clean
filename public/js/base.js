@@ -222,34 +222,7 @@ $(document).on('click', '#delete-contact', function () {
     });
 });
 
-$(document).on('click', '#delete-quote', function () {
-    var id = $(this).attr('data-quote-id');
-    var theElement = $(this);
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                type: 'get',
-                url: 'quotes/delete/' + id,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                    $(theElement).closest('tr').remove();
-                }
-            });
-
-        }
-
-    });
-});
+//Prices
 
 $(document).on('change', '#type_freight_markup_1', function (e) {
     if($(this).val()==1){
@@ -394,6 +367,11 @@ $(document).on('change', '#type_local_markup_3', function (e) {
         $("#local_percent_markup_3_2").val('0');
     }
 });
+
+/********
+  Quotes
+********/
+
 $(document).on('click', '#create-quote', function (e) {
     $(this).hide();
     $("#create-quote-back").show();
@@ -418,6 +396,35 @@ $(document).on('click', '.addButton', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+});
+
+$(document).on('click', '#delete-quote', function () {
+    var id = $(this).attr('data-quote-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'quotes/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                }
+            });
+
+        }
+
+    });
 });
 
 $(document).on('click', '.addButtonDestination', function (e) {
@@ -456,42 +463,6 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
         $("#inland_percent_markup_3").val(0);
         $("#inland_percent_markup_3_2").val(0);
     }
-});
-
-
-$(document).on('click', '.m_sweetalert_demo_8', function (e) {
-    var res = $("i",this).attr('id');
-
-    var theElement = $(this);
-    var idval = res.substr(4);
-
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
-
-            $.ajax({
-                type: 'get',
-                url: '../deleteLocalCharge/' + idval,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                    $(theElement).closest('tr').remove();
-
-                }
-            });
-
-        }
-
-    });
-
 });
 
 $('.m-select2-general').select2({
@@ -592,15 +563,40 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
     var sum = 0;
     var total_amount = 0;
     var markup = 0;
+
     $(".origin_price_per_unit").each(function(){
         $( this).each(function() {
+            var currency_cfg = $("#currency_id").val();
+            var self = this;
             var quantity = $(this).closest('.row').find('.origin_ammount_units').val();
+            var currency_id = $(self).closest('.row').find('.origin_ammount_currency').val();
+            var total = 0;
             if(quantity > 0) {
-                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
-                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
-                }else{
-                    total_amount = quantity * $(this).val();
-                }*/
+                if ($(self).closest('.row').find('.origin_ammount_currency').val() != "") {
+                        $.ajax({
+                            url: '/api/currency/'+currency_id,
+                            dataType: 'json',
+                            success: function (json) {
+
+                                //var value = $('.origin_exp_amount').val();
+                                var amount = $(self).closest('.row').find('.origin_price_per_unit').val();
+                                var quantity = $(self).closest('.row').find('.origin_ammount_units').val();
+                                var sub_total = amount * quantity;
+                                
+                                if(currency_cfg+json.alphacode == json.api_code){
+                                    total = sub_total / json.rates;
+                                }else{
+                                    total = sub_total / json.rates_eur;
+                                }
+                                total = total.toFixed(2);
+
+                                $(self).closest('.row').find('.origin_total_ammount_2').val(total);
+                                $(self).closest('.row').find('.origin_total_ammount_2').change();
+                                // exchange rata data is stored in json.quotes
+                            }
+                        });
+                    
+                }
                 markup = $(this).closest('.row').find('.origin_ammount_markup').val();
                 total_amount = quantity * $(this).val();
                 if(markup > 0){
@@ -704,20 +700,150 @@ $(document).on('click', '#send-pdf-quote', function () {
     var email = $('#quote_email').val();
     $.ajax({
         type: 'GET',
-        url: '/quotes/send/pdf/'+id+'/'+email,
+        url: '/quotes/send/pdf/'+id,
         beforeSend: function () {
             $('#spin').show();
         },
         success: function(data) {
+            $('#spin').hide();
+            $('#SendQuoteModal').modal('toggle');
             if(data.message=='Ok'){
-                $('#spin').hide();
-                $('#SendQuoteModal').modal('toggle');
                 swal(
                     'Done!',
                     'Your message has been sent.',
                     'success'
                 )
+            }else{
+                swal(
+                    'Error!',
+                    'Your message has not been sent.',
+                    'error'
+                )
             }
         }
     });
+});
+
+//Clients
+
+$(document).on('click', '#delete-contact', function () {
+    var id = $(this).attr('data-contact-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'contacts/delete/' + id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                    }else{
+                        swal(
+                            'Error!',
+                            'Your can\'t delete this contact because have quotes related.',
+                            'warning'
+                        )
+                        console.log(data.message);
+                    }
+                }
+            });
+
+        }
+
+    });
+});
+
+//Companies
+
+$(document).on('click', '#delete-company', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Continue!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'companies/delete/' + id,
+                success: function(data) {
+                    if(data.message>0){
+                        swal({
+                            title: 'Warning!',
+                            text: "There are "+data.message+" clients assoociated with this company. If you delete it, those contacts will be deleted.",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'companies/destroy/' + id,
+                                    success: function(data) {
+                                        if(data.message=='Ok'){
+                                            swal(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            )
+                                            $(theElement).closest('tr').remove();
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                                'error'
+                                            )
+                                            console.log(data.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                                    type: 'get',
+                                    url: 'companies/destroy/' + id,
+                                    success: function(data) {
+                                        if(data.message=='Ok'){
+                                            swal(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            )
+                                            $(theElement).closest('tr').remove();
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                                'warning'
+                                            )
+                                            console.log(data.message);
+                                        }
+                                    }
+                                });
+                    }
+                }
+            });
+
+        }
+
+    });
+});
+
+$('#m_select2-edit-company').select2({
+    placeholder: "Select an option"
 });
