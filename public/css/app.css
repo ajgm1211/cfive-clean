@@ -78579,6 +78579,10 @@ th#options-limit-fcl {
   width: 50px;
 }
 
-.mce-menubar .mce-menubtn{
-  display: none;
+.up {
+  width: 60px;
+}
+
+.low {
+  width: 60px;
 }
