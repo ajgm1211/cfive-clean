@@ -10,7 +10,7 @@
             <div class="col-md-10" >
                 @if(isset($company_user->companyUser->currency_id))
                     <div class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-                        <input type="text" class="form-control " value="{{$currency_cfg->alphacode}}" disabled="true"/>
+                        <input type="text" id="currency_id" class="form-control " value="{{$currency_cfg->alphacode}}" disabled="true"/>
                     </div>
                 @endif
             </div>
@@ -337,7 +337,7 @@
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="...">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -390,7 +390,7 @@
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2[]" aria-label="...">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

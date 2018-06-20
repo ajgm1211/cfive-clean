@@ -368,7 +368,9 @@ $(document).on('change', '#type_local_markup_3', function (e) {
     }
 });
 
-//Quotes
+/********
+  Quotes
+********/
 
 $(document).on('click', '#create-quote', function (e) {
     $(this).hide();
@@ -561,15 +563,40 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
     var sum = 0;
     var total_amount = 0;
     var markup = 0;
+
     $(".origin_price_per_unit").each(function(){
         $( this).each(function() {
+            var currency_cfg = $("#currency_id").val();
+            var self = this;
             var quantity = $(this).closest('.row').find('.origin_ammount_units').val();
+            var currency_id = $(self).closest('.row').find('.origin_ammount_currency').val();
+            var total = 0;
             if(quantity > 0) {
-                /*if($(this).closest('.col-md-12').find('.origin_ammount_currency').val() == "clp" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "ars" || $(this).closest('.col-md-12').find('.international_freight_amount_currency').val() == "eur") {
-                    total_amount = $(this).closest('.col-md-12').find('.international_freight_amount_usd').val();
-                }else{
-                    total_amount = quantity * $(this).val();
-                }*/
+                if ($(self).closest('.row').find('.origin_ammount_currency').val() != "") {
+                        $.ajax({
+                            url: '/api/currency/'+currency_id,
+                            dataType: 'json',
+                            success: function (json) {
+
+                                //var value = $('.origin_exp_amount').val();
+                                var amount = $(self).closest('.row').find('.origin_price_per_unit').val();
+                                var quantity = $(self).closest('.row').find('.origin_ammount_units').val();
+                                var sub_total = amount * quantity;
+                                
+                                if(currency_cfg+json.alphacode == json.api_code){
+                                    total = sub_total / json.rates;
+                                }else{
+                                    total = sub_total / json.rates_eur;
+                                }
+                                total = total.toFixed(2);
+
+                                $(self).closest('.row').find('.origin_total_ammount_2').val(total);
+                                $(self).closest('.row').find('.origin_total_ammount_2').change();
+                                // exchange rata data is stored in json.quotes
+                            }
+                        });
+                    
+                }
                 markup = $(this).closest('.row').find('.origin_ammount_markup').val();
                 total_amount = quantity * $(this).val();
                 if(markup > 0){
