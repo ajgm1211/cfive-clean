@@ -92,38 +92,86 @@
                     </tr>
                 </thead>
                 <tbody>
-             
+                    @php
+                    $i=1 
+                    @endphp
                     @foreach($failrates as $ratef)
-                    <tr class="m-datatable__row--success" id="">
-                        <td><i class="fa fa-dot-circle-o " style="color:red; "></i></td>
+                    <tr class="" >
                         <td>
-                            <div>
+                            <i class="fa fa-dot-circle-o " style="color:red;" id=""></i>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
                                 <abbr style="{{$ratef['classorigin']}}">{{$ratef['origin_port']}}</abbr>
                             </div>
-                            <div class="in" hidden=true>
-                                <input type="text" name="origin_port" class="form-control m-input">
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classorigin']}}" name="origin_port" id="{{'origin'.$i}}" value="{{$ratef['origin_port']}}" class="form-control m-input">
                             </div>
                         </td>
-                        <td><abbr style="{{$ratef['classdestiny']}}">{{$ratef['destiny_port']}}</abbr></td>
-                        <td><abbr style="{{$ratef['classcarrier']}}">{{$ratef['carrier_id']}}</abbr></td>
-                        <td><abbr style="{{$ratef['classtwuenty']}}">{{$ratef['twuenty']}}</abbr></td>
-                        <td><abbr style="{{$ratef['classforty']}}">{{$ratef['forty']}}</abbr></td>
-                        <td><abbr style="{{$ratef['classfortyhc']}}">{{$ratef['fortyhc']}}</abbr></td>
-                        <td><abbr style="{{$ratef['classcurrency']}}">{{$ratef['currency_id']}}</abbr></td>
                         <td>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classdestiny']}}">{{$ratef['destiny_port']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classdestiny']}}" name="destiny_port" id="{{'destination'.$i}}" value="{{$ratef['destiny_port']}}" class="form-control m-input">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classcarrier']}}">{{$ratef['carrier_id']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classcarrier']}}" name="carrier_id" id="{{'carrier'.$i}}" value="{{$ratef['carrier_id']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classtwuenty']}}">{{$ratef['twuenty']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classtwuenty']}}" name="twuenty" id="{{'twuenty'.$i}}" value="{{$ratef['twuenty']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classforty']}}">{{$ratef['forty']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classforty']}}" name="forty" id="{{'forty'.$i}}" value="{{$ratef['forty']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classfortyhc']}}">{{$ratef['fortyhc']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="{{$ratef['classfortyhc']}}" name="fortyhc" id="{{'fortyhc'.$i}}" value="{{$ratef['fortyhc']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <abbr style="{{$ratef['classcurrency']}}">{{$ratef['currency_id']}}</abbr>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden="hidden">
+                                <input type="text" style="{{$ratef['classcurrency']}}" name="currency" id="{{'currency'.$i}}" value="{{$ratef['currency_id']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}}" onclick="showbox({{$i}})" title="Edit ">
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                            <a href="#" hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
                                 <i class="la la-eraser"></i>
                             </a>
 
                         </td>
 
                     </tr>
- 
-
+                        
+                    @php
+                    $i++
+                    @endphp
                     @endforeach
 
                     @foreach ($rates as $rate)
@@ -166,6 +214,16 @@
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
-
+<script>
+    function showbox(id){
+        $(".tdAB"+id).attr('hidden','hidden');
+        $(".tdIn"+id).removeAttr('hidden');
+    }
+    
+    function hidebox(id){
+        $(".tdIn"+id).attr('hidden','hidden');
+        $(".tdAB"+id).removeAttr('hidden');
+    }
+</script>
 
 @stop
