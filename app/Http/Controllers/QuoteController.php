@@ -65,7 +65,14 @@ class QuoteController extends Controller
         return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
 
     }
-
+    public function test(Request $request){
+    
+        $ejemplo =$request->input('info');
+        $ejemplo = json_decode($ejemplo);
+        
+        dd($ejemplo);
+    }
+    
     public function skipPluck($pluck)
     {
         $skips = ["[","]","\""];
@@ -1302,7 +1309,7 @@ class QuoteController extends Controller
 
         }
 
-
+       
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
         return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin'));

@@ -162,10 +162,12 @@
 
                     @foreach ($arreglo as $key => $arr)
                     @php
-
                     $inl = 'false';
                     $subtotalRate = 0;
                     @endphp
+
+                    {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
+                    <input type="hidden" name="info" value="{{ json_encode($arr) }}">
                     <tr id="principal{{$loop->iteration}}">
                         <td>
                             Details <br>
@@ -201,7 +203,7 @@
                                         <span class="m-widget5__number">{{ $arr->totalQuote }}
 
                                         </span><br>
-                                        <button type="button" class="btn m-btn--square  btn-primary m-btn--wide">Select</button><br>
+                                        <button type="submit" class="btn m-btn--square  btn-primary m-btn--wide">Select</button><br>
 
                                     </div>
                                 </div>
@@ -445,7 +447,9 @@
                             </table>
                         </td>
                     </tr>
+
                     @endif
+                    {!! Form::close() !!}
                     @endforeach
 
                 </tbody>
