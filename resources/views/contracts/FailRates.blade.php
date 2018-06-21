@@ -92,12 +92,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php{ 
-                    $i=0;
-                    }
-                    @endphp
+             
                     @foreach($failrates as $ratef)
-                    <tr class="m-datatable__row--success" id="{{'tr'.$i}}">
+                    <tr class="m-datatable__row--success" id="">
                         <td><i class="fa fa-dot-circle-o " style="color:red; "></i></td>
                         <td>
                             <div>
@@ -125,10 +122,7 @@
                         </td>
 
                     </tr>
-                    @php{ 
-                        $i++;
-                    }
-                    @endphp
+ 
 
                     @endforeach
 
