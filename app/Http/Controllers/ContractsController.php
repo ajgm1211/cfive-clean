@@ -448,6 +448,18 @@ class ContractsController extends Controller
                             ]);
                         }
                         else{
+                            if($curreB == true){
+                                $currencyV = $book->currency;
+                            }
+                            if($carriB == true){
+                                $carrierV = $book->carrier;
+                            }
+                            if($destiB == true){
+                                $destinationV = $book->destination;
+                            }
+                            if($origB == true){
+                                $originV = $book->origin;
+                            }
 
                             $duplicateFail =  FailRate::where('origin_port','=',$originV)
                                 ->where('destiny_port','=',$destinationV)
@@ -485,12 +497,8 @@ class ContractsController extends Controller
                     $request->session()->flash('message.title', 'Well done!');
                 }
             });
+            return redirect()->route('Failed.Rates.For.Contracts',$contract);
 
-            //$rates = Rate::where('currency_id','=',$contract)->get();
-            $rates = Rate::with('carrier','contract')->where('contract_id','=',$contract)->get();
-            
-            $failrates = FailRate::where('currency_id','=',$contract)->get();
-            return view('contracts.FailRates',compact('rates','failrates'));
             //dd($res);*/
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -499,6 +507,86 @@ class ContractsController extends Controller
             $request->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$request->contract_id);
         }
+    }
+
+    public function FailedRates($id){
+        //$rates = Rate::where('currency_id','=',$contract)->get();
+        $rates = Rate::with('carrier','contract')->where('contract_id','=',$id)->get();
+        $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
+        $failratesFor = FailRate::where('contract_id','=',$id)->get();
+        $countfailrates = FailRate::where('contract_id','=',$id)->count();
+
+        $originV;
+        $destinationV;
+        $carrierV;
+        $currencyV;
+
+        $originA;
+        $destinationA;
+        $carrierA;
+        $currencyA;
+        $failrates = collect([]);
+        foreach( $failratesFor as $failrate){
+            $classdorigin='color:green';
+            $classddestination='color:green';
+            $classcarrier='color:green';
+            $classcurrency='color:green';
+            $classtwuenty ='color:green';
+            $classforty ='color:green';
+            $classfortyhc ='color:green';
+
+            $originA =  explode("_",$failrate['origin_port']);
+            $destinationA = explode("_",$failrate['destiny_port']);
+            $carrierA = explode("_",$failrate['carrier_id']);
+            $currencyA = explode("_",$failrate['currency_id']);
+
+            $carrierC = count($carrierA);
+            if($carrierC <= 1){
+
+                $carrierA = $carrierA[0];
+            }
+            else{
+
+                $carrierA = $carrierA[0].' (error)';
+                $classcarrier='color:red';
+
+            }
+
+            $currencyC = count($currencyA);
+            if($currencyC <= 1){
+
+                $currencyA = $currencyA[0];
+            }
+            else{
+
+                $currencyA = $currencyA[0].' (error)';
+                $classcurrency='color:red';
+            }
+
+            $colec = ['origin_port'     =>  $originA[0],   
+                      'destiny_port'    =>  $destinationA[0],     
+                      'carrier_id'      =>  $carrierA,
+                      'twuenty'         =>  $failrate['twuenty'],      
+                      'forty'           =>  $failrate['forty'],      
+                      'fortyhc'         =>  $failrate['fortyhc'],  
+                      'currency_id'     =>  $currencyA,
+                      'classorigin'     =>  $classdorigin,
+                      'classdestiny'    =>  $classddestination,
+                      'classcarrier'    =>  $classcarrier,
+                      'classtwuenty'    =>  $classtwuenty,
+                      'classforty'      =>  $classforty,
+                      'classfortyhc'    =>  $classfortyhc,
+                      'classcurrency'   =>  $classcurrency
+                     ];
+
+            $failrates->push($colec);
+
+        }
+        /*dd($failrates);
+        foreach($failrates as $cells){
+            echo $cells['carrier_id'].' '.$cells['currency_id'].'<br>';
+        }*/
+        return view('contracts.FailRates',compact('rates','failrates','countfailrates','countrates'));
     }
 
     public function updateLocalChar(Request $request, $id)

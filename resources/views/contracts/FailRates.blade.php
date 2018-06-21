@@ -9,7 +9,8 @@
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
                         Rates Failed
-                    </h3>
+                    </h3><br>
+
                 </div>
             </div>
         </div>
@@ -41,145 +42,125 @@
         @endif
 
         <div class="m-portlet__body">
+            <div class="m-portlet__head">
+                <label>
+                    <strong>
+                        <i class="fa fa-dot-circle-o" style="color:red;"> </i>
+                        Failed fees: {{$countfailrates}}
+                    </strong>
+                </label>
+                <br>
+                <label>
+                    <strong>
+                        <i class="fa fa-dot-circle-o" style="color:green;"> </i>
+                        Good Rates: {{$countrates}}
+                    </strong>
+                </label>
+            </div>
+            <table class="m-datatable "  id="html_table" >
+                <thead >
+                    <tr>
+                        <th >
+                            Status
+                        </th>
+                        <th >
+                            Origin
+                        </th>
+                        <th >
+                            Destiny
+                        </th>
+
+                        <th >
+                            Carrier
+                        </th>
+                        <th >
+                            20'
+                        </th>
+                        <th >
+                            40'
+                        </th>
+                        <th >
+                            40'Hc
+                        </th>
+                        <th >
+                            Currency
+                        </th>
+                        <th >
+                            Options
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @php{ 
+                    $i=0;
+                    }
+                    @endphp
+                    @foreach($failrates as $ratef)
+                    <tr class="m-datatable__row--success" id="{{'tr'.$i}}">
+                        <td><i class="fa fa-dot-circle-o " style="color:red; "></i></td>
+                        <td>
+                            <div>
+                                <abbr style="{{$ratef['classorigin']}}">{{$ratef['origin_port']}}</abbr>
+                            </div>
+                            <div class="in" hidden=true>
+                                <input type="text" name="origin_port" class="form-control m-input">
+                            </div>
+                        </td>
+                        <td><abbr style="{{$ratef['classdestiny']}}">{{$ratef['destiny_port']}}</abbr></td>
+                        <td><abbr style="{{$ratef['classcarrier']}}">{{$ratef['carrier_id']}}</abbr></td>
+                        <td><abbr style="{{$ratef['classtwuenty']}}">{{$ratef['twuenty']}}</abbr></td>
+                        <td><abbr style="{{$ratef['classforty']}}">{{$ratef['forty']}}</abbr></td>
+                        <td><abbr style="{{$ratef['classfortyhc']}}">{{$ratef['fortyhc']}}</abbr></td>
+                        <td><abbr style="{{$ratef['classcurrency']}}">{{$ratef['currency_id']}}</abbr></td>
+                        <td>
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
+                                <i class="la la-edit"></i>
+                            </a>
+
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                <i class="la la-eraser"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+                    @php{ 
+                        $i++;
+                    }
+                    @endphp
+
+                    @endforeach
+
+                    @foreach ($rates as $rate)
+                    <tr class="m-table__row--active">
+                        <td><i class="fa fa-dot-circle-o " style="color:green; "></i></td>
+                        <td>{{$rate->origin_port}}</td>
+                        <td>{{$rate->destiny_port}}</td>
+                        <td>{{$rate->Carrier->name}}</td>
+                        <td>{{$rate->twuenty}}</td>
+                        <td>{{$rate->forty}}</td>
+                        <td>{{$rate->fortyhc}}</td>
+                        <td>{{$rate->Currency->alphacode}}</td>
+                        <td>
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
+                                <i class="la la-edit"></i>
+                            </a>
+
+                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                <i class="la la-eraser"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
 
-                    <table class="m-datatable__table"  id="html_table2" width="100%" >
-                        <thead>
-                            <tr>
-                                <th title="Field #1">
-                                    Origin
-                                </th>
-                                <th title="Field #2">
-                                    Destiny
-                                </th>
-
-                                <th title="Field #6">
-                                    Carrier
-                                </th>
-                                <th title="Field #7">
-                                    20'
-                                </th>
-                                <th title="Field #8">
-                                    40'
-                                </th>
-                                <th title="Field #9">
-                                    40'Hc
-                                </th>
-                                <th title="Field #10">
-                                    Currency
-                                </th>
-                                <th title="Field #11">
-                                    Options
-                                </th>
-
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            @foreach ($failrates as $rate)
-                            <tr>
-                                <td>{{$rate->origin_port}}</td>
-                                <td>{{$rate->destiny_port}}</td>
-                                <td>{{$rate->carrier_id}}</td>
-                                <td>{{$rate->twuenty}}</td>
-                                <td>{{$rate->forty}}</td>
-                                <td>{{$rate->fortyhc}}</td>
-                                <td>{{$rate->currency_id}}</td>
-                                <td>
-                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
-                                        <i class="la la-edit"></i>
-                                    </a>
-
-                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
-                                        <i class="la la-eraser"></i>
-                                    </a>
-
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="m-portlet m-portlet--mobile">
-        <div class="m-portlet__head">
-            <div class="m-portlet__head-caption">
-                <div class="m-portlet__head-title">
-                    <h3 class="m-portlet__head-text">
-                        Rates Good
-                    </h3>
-                </div>
-            </div>
-        </div>
-        <div class="m-portlet__body">
-            <table class="m-datatable"  id="html_table" >
-                        <thead >
-                            <tr>
-                                <th title="Field #1">
-                                    Origin
-                                </th>
-                                <th title="Field #2">
-                                    Destiny
-                                </th>
-
-                                <th title="Field #3">
-                                    Carrier
-                                </th>
-                                <th title="Field #4">
-                                    20'
-                                </th>
-                                <th title="Field #5">
-                                    40'
-                                </th>
-                                <th title="Field #6">
-                                    40'Hc
-                                </th>
-                                <th title="Field #7">
-                                    Currency
-                                </th>
-                                <th title="Field #8">
-                                    Options
-                                </th>
-                                <th  title="Field #9">
-                                    Status
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($rates as $rate)
-                            <tr>
-                                <td>{{$rate->origin_port}}</td>
-                                <td>{{$rate->destiny_port}}</td>
-                                <td>{{$rate->Carrier->name}}</td>
-                                <td>{{$rate->twuenty}}</td>
-                                <td>{{$rate->forty}}</td>
-                                <td>{{$rate->fortyhc}}</td>
-                                <td>{{$rate->Currency->name}}</td>
-                                <td>
-                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
-                                        <i class="la la-edit"></i>
-                                    </a>
-
-                                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
-                                        <i class="la la-eraser"></i>
-                                    </a>
-
-                                </td>
-                                <td>2</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-            <!--begin: Search Form -->
-            <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                <div class="row align-items-center">
-                   
 
                 </div>
             </div>
@@ -193,4 +174,4 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
 
 
-    @stop
+@stop
