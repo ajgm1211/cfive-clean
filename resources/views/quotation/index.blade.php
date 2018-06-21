@@ -168,6 +168,7 @@
 
                     {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
                     <input type="hidden" name="info" value="{{ json_encode($arr) }}">
+                    <input type="hidden" name="form" value="{{ json_encode($form) }}">
                     <tr id="principal{{$loop->iteration}}">
                         <td>
                             Details <br>
