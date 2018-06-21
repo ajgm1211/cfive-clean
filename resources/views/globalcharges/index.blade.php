@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1">
+            <table class="tab table m-table m-table--head-separator-primary" id="sample_editable_1">
                 <thead>
                     <tr>
                         <th title="Field #1">

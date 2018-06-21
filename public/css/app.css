@@ -78610,3 +78610,8 @@ th#options-limit-fcl {
 .carrier {
   width: 100px;
 }
+
+.tab {
+  display: inline-table !important;
+  width: 100% !important;
+}
