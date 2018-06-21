@@ -127,7 +127,7 @@
 
                             <div class="in" hidden="true">
                                 {{ Form::select('port_dest[]', $harbor,
-                                $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest'.$loop->index ,'class'=>'m-select2-general form-control dest-port2','disabled' => 'true','multiple' => 'multiple']) }}
+                                $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
                             </div>
                         </td>
                         <td>
@@ -188,7 +188,7 @@
                 <tr  id='globalclone' hidden="true" >
                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
                     <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port_orig','multiple' => 'multiple']) }}</td>
-                    <td>{{ Form::select(null, $harbor,null,['class'=>' form-control dest-port2','multiple' => 'multiple']) }}</td>
+                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                     <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
