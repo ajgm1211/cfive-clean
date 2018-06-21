@@ -66,13 +66,32 @@ class QuoteController extends Controller
 
     }
     public function test(Request $request){
-    
-        $ejemplo =$request->input('info');
-        $ejemplo = json_decode($ejemplo);
-        
-        dd($ejemplo);
+
+        $info =$request->input('info');
+        $info = json_decode($info);
+        $form =$request->input('form');
+  
+        $form = json_decode($form);
+        $company_user_id=\Auth::user()->company_user_id;
+        $quotes = Quote::all();
+        $company_user=CompanyUser::find($company_user_id);
+        $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('name','id');
+        $countries = Country::all()->pluck('name','id');
+        $prices = Price::all()->pluck('name','id');
+        $user = User::where('id',\Auth::id())->first();
+        if(count($company_user->companyUser)>0) {
+            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+        }else{
+            $currency_name = '';
+        }
+
+        $currencies = Currency::all();
+        $currency_cfg = Currency::find($company_user->currency_id);
+        return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ]);
+
     }
-    
+
     public function skipPluck($pluck)
     {
         $skips = ["[","]","\""];
@@ -1309,10 +1328,11 @@ class QuoteController extends Controller
 
         }
 
-       
+  
+        $form  = $request->all();
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
-        return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin'));
+        return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
 
     }
 
