@@ -78600,7 +78600,7 @@ th#options-limit-fcl {
 }
 
 .dest-port2 {
-  width: 100px;
+  width: 100px !important;
 }
 
 .orig-port {

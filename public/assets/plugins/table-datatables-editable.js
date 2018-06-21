@@ -36,7 +36,7 @@ var TableDatatablesEditable = function () {
                     field: "Currency",
                     title: "Field #9",
                     sortable: false,
-                    width: 70,
+                    width: 50,
                 },{
                     field: "Calculation type",
                     title: "Field #7",
@@ -46,12 +46,22 @@ var TableDatatablesEditable = function () {
                     field: "Carrier",
                     title: "Field #4",
                     sortable: false,
-                    width: 170,
+                    width: 100,
                 },{
                     field: "Destiny Port",
                     title: "Field #2",
                     sortable: false,
                     width: 100,
+                },{
+                    field: "Origin Port",
+                    title: "Field #2",
+                    sortable: false,
+                    width: 100,
+                },{
+                    field: "Type",
+                    title: "Field #1",
+                    sortable: false,
+                    width: 70,
                 },
                 
             ],
