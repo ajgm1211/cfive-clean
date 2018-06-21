@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%">
+            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1">
                 <thead>
                     <tr>
                         <th title="Field #1">
@@ -188,7 +188,7 @@
                 <tr  id='globalclone' hidden="true" >
                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'custom-select form-control']) }}</td>
                     <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control port_orig','multiple' => 'multiple']) }}</td>
-                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control dest-port2','multiple' => 'multiple']) }}</td>
+                    <td>{{ Form::select(null, $harbor,null,['class'=>' form-control dest-port2','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                     <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
                     <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control']) }}</td>
