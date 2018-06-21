@@ -71,16 +71,32 @@ class QuoteController extends Controller
         $skips = ["[","]","\""];
         return str_replace($skips, ' ',$pluck);
     }
+    public function ratesCurrency($id,$typeCurrency){
+
+        $rates = Currency::where('id','=',$id)->get();
+        foreach($rates as $rate){
+            if($typeCurrency == "USD"){
+                $rateC = $rate->rates;
+            }else{
+                $rateC = $rate->rates_eur;
+            }
+        }
+
+        return $rateC;
+    }
     public function listRate(Request $request)
     {
 
+        $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+        $typeCurrency =  $company->companyUser->currency->alphacode ;
+        //dd($company);
         $origin_port = $request->input('originport');
         $destiny_port = $request->input('destinyport');
         $delivery_type = $request->input('delivery_type');
-        $typeCurrency = 'USD';
+        //$typeCurrency = 'USD';
         // valores de los markup en Freight 
         $price_id = $request->input('price_id');
-      
+
         $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
             $q->where('price_id', '=',$price_id);
         })->with('freight_markup','local_markup','inland_markup')->get();
@@ -120,8 +136,8 @@ class QuoteController extends Controller
 
 
         }
-        
-        
+
+
 
         //--------------------------------------
 
@@ -154,10 +170,8 @@ class QuoteController extends Controller
 
                                 foreach($inlandsValue->inlanddetails as $details){
 
-                                    $rateInland = Currency::where('id','=',$details->currency->id)->get();
-                                    foreach($rateInland as $rateInland){
-                                        $rateI = $rateInland->rates;
-                                    }
+
+                                    $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                                     if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                                         $distancia = intval($km[0]);
                                         if( $distancia >= $details->lower && $distancia  <= $details->upper){
@@ -195,7 +209,7 @@ class QuoteController extends Controller
                                     $markup =$inlandAmmount;
                                     $markup = number_format($markup, 2, '.', '');
                                     $monto += $markup;
-                                    $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
 
 
@@ -249,10 +263,7 @@ class QuoteController extends Controller
 
                                 foreach($inlandsValue->inlanddetails as $details){
 
-                                    $rateInland = Currency::where('id','=',$details->currency->id)->get();
-                                    foreach($rateInland as $rateInland){
-                                        $rateI = $rateInland->rates;
-                                    }
+                                    $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                                     if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                                         $distancia = intval($km[0]);
                                         if( $distancia >= $details->lower && $distancia  <= $details->upper){
@@ -286,7 +297,7 @@ class QuoteController extends Controller
                                     $markup =$inlandAmmount;
                                     $markup = number_format($markup, 2, '.', '');
                                     $monto += $markup;
-                                    $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $monto = number_format($monto, 2, '.', '');
                                 if($monto > 0){
@@ -339,10 +350,8 @@ class QuoteController extends Controller
             $collectionGloOrig = new Collection();
             $collectionGloDest = new Collection();
             $collectionGloFreight = new Collection();
-            $rateCurrency = Currency::where('id','=',$data->currency->id)->get();
-            foreach($rateCurrency as $rateCurrency){
-                $rateC = $rateCurrency->rates;
-            }
+
+            $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
             $subtotal = 0;
             $orig_port = array($data->origin_port);
             $dest_port = array($data->destiny_port);
@@ -363,7 +372,7 @@ class QuoteController extends Controller
 
                     $markup = number_format(intval($markup), 2, '.', '');
                     $totalT += $markup;
-                    $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                    $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
 
                 $totalT =  number_format($totalT, 2, '.', '');
@@ -387,7 +396,7 @@ class QuoteController extends Controller
                     $markup =$freighAmmount;
                     $markup = number_format(intval($markup), 2, '.', '');
                     $totalF += $markup;
-                    $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                    $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
 
                 $totalF =  number_format($totalF, 2, '.', '');
@@ -411,7 +420,7 @@ class QuoteController extends Controller
                     $markup =$freighAmmount;
                     $markup = number_format(intval($markup), 2, '.', '');
                     $totalFHC += $markup;
-                    $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                    $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
 
                 $totalFHC =  number_format($totalFHC, 2, '.', '');
@@ -433,12 +442,8 @@ class QuoteController extends Controller
 
 
             foreach($localChar as $local){
-                $rate = Currency::where('id','=',$local->currency->id)->get();
 
-                foreach($rate as $rate){
-                    $rateMount = $rate->rates;
-
-                }
+                $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
 
                 if(in_array($local->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
@@ -459,7 +464,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
 
                                     $totalOrigin += $totalAmmount ;
@@ -486,7 +491,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $totalDestiny += $totalAmmount;
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -509,7 +514,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $totalFreight += $totalAmmount;
                                     $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -543,7 +548,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalOrigin += $totalAmmount ;
                                     }else{
@@ -559,7 +564,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalOrigin += $totalAmmount ;
                                     }
@@ -588,7 +593,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalDestiny += $totalAmmount;
                                     }else{
@@ -604,7 +609,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalDestiny += $totalAmmount;
                                     }
@@ -631,7 +636,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalFreight += $totalAmmount;
                                     }else{
@@ -647,7 +652,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalFreight += $totalAmmount;
                                     }
@@ -682,7 +687,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalOrigin += $totalAmmount ;
                                     }else{
@@ -698,7 +703,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalOrigin += $totalAmmount ;
                                     }
@@ -726,7 +731,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalDestiny += $totalAmmount;
                                     }else{
@@ -742,7 +747,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalDestiny += $totalAmmount;
                                     }
@@ -769,7 +774,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalFreight += $totalAmmount;
                                     }else{
@@ -785,7 +790,7 @@ class QuoteController extends Controller
                                             $markup =$localAmmount;
                                             $markup = number_format(intval($markup), 2, '.', '');
                                             $totalAmmount += $markup;
-                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                            $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                         }
                                         $totalFreight += $totalAmmount;
                                     }
@@ -818,7 +823,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $totalOrigin += $totalAmmount ;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -842,7 +847,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $totalDestiny += $totalAmmount;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -866,7 +871,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $totalAmmount =  $local->ammout  / $rateMount;
                                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -893,10 +898,8 @@ class QuoteController extends Controller
             })->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge')->get();
 
             foreach($globalChar as $global){
-                $rateG = Currency::where('id','=',$global->currency->id)->get();
-                foreach($rateG as $rateG){
-                    $rateMountG = $rateG->rates;
-                }
+
+                $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
                 if(in_array($global->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
@@ -915,7 +918,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $totalOrigin += $totalAmmount ;
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -941,7 +944,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
 
                                     $totalDestiny += $totalAmmount;
@@ -966,7 +969,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $totalFreight += $totalAmmount;
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -1005,7 +1008,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1035,7 +1038,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1064,7 +1067,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1102,7 +1105,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1133,7 +1136,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1163,7 +1166,7 @@ class QuoteController extends Controller
                                         $markup =$localAmmount;
                                         $markup = number_format(intval($markup), 2, '.', '');
                                         $totalAmmount += $markup;
-                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => "USD") ;
+                                        $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                     }
                                     $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                     $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1192,7 +1195,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $totalOrigin += $totalAmmount ;
                                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -1215,7 +1218,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $totalDestiny += $totalAmmount;
                                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -1238,7 +1241,7 @@ class QuoteController extends Controller
                                     $markup =$localAmmount;
                                     $markup = number_format(intval($markup), 2, '.', '');
                                     $totalAmmount += $markup;
-                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => "USD") ;
+                                    $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                                 }
                                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
