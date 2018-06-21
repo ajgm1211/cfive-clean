@@ -571,7 +571,7 @@ th#options-limit-fcl {
 }
 
 .dest-port2{
-  width: 100px;
+  width: 100px !important;
 }
 
 .orig-port{
@@ -580,4 +580,9 @@ th#options-limit-fcl {
 
 .carrier{
   width: 100px;
+}
+
+.tab{
+  display: inline-table !important;
+  width: 100% !important;
 }
