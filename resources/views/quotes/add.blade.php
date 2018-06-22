@@ -337,7 +337,7 @@
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="...">
+                                                                                        <input type="text" value="" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." readonly="true">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -390,7 +390,7 @@
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="...">
+                                                                                        <input type="text" value="" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." readonly="true">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
