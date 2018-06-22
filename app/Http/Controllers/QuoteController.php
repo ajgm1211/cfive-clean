@@ -57,6 +57,7 @@ class QuoteController extends Controller
         $prices = Price::all()->pluck('name','id');
         return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices]);
     }
+    
     public function listRate(Request $request)
     {
         $origin_port = $request->input('originport');
@@ -213,15 +214,16 @@ class QuoteController extends Controller
         {
             $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
+        })->whereHas('contract_company_restriction', function($q)
+        {
+            $q->whereNotIn('company_user_id',\Auth::user()->company_user_id);
+
         })->get();
 
         $formulario = $request;
         $array20 = array('2','4','5');
         $array40 =  array('1','4','5');
         $array40Hc= array('3','4','5');
-
-
-
 
         $collectionLocal = new Collection();
 
