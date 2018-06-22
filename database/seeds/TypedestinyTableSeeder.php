@@ -27,6 +27,11 @@ class TypedestinyTableSeeder extends Seeder
                 'id' => 2,
                 'description' => 'destiny',
             ),
+            2 => 
+            array (
+                'id' => 3,
+                'description' => 'freight',
+            ),
         ));
         
         

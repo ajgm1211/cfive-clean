@@ -65,7 +65,7 @@ class ContractsController extends Controller
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
             {
-                $q->where('company_id', '=', Auth::user()->company_user_id);
+                $q->where('company_user_id', '=', Auth::user()->company_user_id);
             })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
@@ -237,7 +237,7 @@ class ContractsController extends Controller
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
             {
-                $q->where('company_id', '=', Auth::user()->company_user_id);
+                $q->where('company_user_id', '=', Auth::user()->company_user_id);
             })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
