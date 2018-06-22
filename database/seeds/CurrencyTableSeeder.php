@@ -12,6 +12,7 @@ class CurrencyTableSeeder extends Seeder
      */
     public function run()
     {
+        
 
         \DB::table('currency')->delete();
         
@@ -22,9 +23,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'United Arab Emirates Dirham',
                 'alphacode' => 'AED',
                 'api_code' => 'USDAED',
-                'rates' => 3.672703,
+                'api_code_eur' => 'EURAED',
+                'rates' => 3.672699,
+                'rates_eur' => 4.274064,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:50',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             1 => 
             array (
@@ -32,9 +35,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Afghan Afghani',
                 'alphacode' => 'AFN',
                 'api_code' => 'USDAFN',
-                'rates' => 71.150002,
+                'api_code_eur' => 'EURAFN',
+                'rates' => 71.349998,
+                'rates_eur' => 83.032811,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:35',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             2 => 
             array (
@@ -42,9 +47,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Albanian Lek',
                 'alphacode' => 'ALL',
                 'api_code' => 'USDALL',
-                'rates' => 109.559998,
+                'api_code_eur' => 'EURALL',
+                'rates' => 108.489998,
+                'rates_eur' => 126.254096,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:35',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             3 => 
             array (
@@ -52,9 +59,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Armenian Dram',
                 'alphacode' => 'AMD',
                 'api_code' => 'USDAMD',
-                'rates' => 482.640015,
+                'api_code_eur' => 'EURAMD',
+                'rates' => 482.089996,
+                'rates_eur' => 561.027172,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:35',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             4 => 
             array (
@@ -62,9 +71,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Netherlands Antillean Guilder',
                 'alphacode' => 'ANG',
                 'api_code' => 'USDANG',
-                'rates' => 1.789834,
+                'api_code_eur' => 'EURANG',
+                'rates' => 1.812499,
+                'rates_eur' => 2.109277,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             5 => 
             array (
@@ -72,9 +83,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Angolan Kwanza',
                 'alphacode' => 'AOA',
                 'api_code' => 'USDAOA',
-                'rates' => 238.889008,
+                'api_code_eur' => 'EURAOA',
+                'rates' => 245.468002,
+                'rates_eur' => 285.66081,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             6 => 
             array (
@@ -82,9 +95,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Argentine Peso',
                 'alphacode' => 'ARS',
                 'api_code' => 'USDARS',
-                'rates' => 25.649769,
+                'api_code_eur' => 'EURARS',
+                'rates' => 27.573005,
+                'rates_eur' => 32.087795,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             7 => 
             array (
@@ -92,9 +107,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Australian Dollar',
                 'alphacode' => 'AUD',
                 'api_code' => 'USDAUD',
-                'rates' => 1.313802,
+                'api_code_eur' => 'EURAUD',
+                'rates' => 1.3488,
+                'rates_eur' => 1.569652,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             8 => 
             array (
@@ -102,9 +119,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Aruban Florin',
                 'alphacode' => 'AWG',
                 'api_code' => 'USDAWG',
+                'api_code_eur' => 'EURAWG',
                 'rates' => 1.78,
+                'rates_eur' => 2.071456,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:52',
             ),
             9 => 
             array (
@@ -112,9 +131,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Azerbaijani Manat',
                 'alphacode' => 'AZN',
                 'api_code' => 'USDAZN',
-                'rates' => 1.699497,
+                'api_code_eur' => 'EURAZN',
+                'rates' => 1.699496,
+                'rates_eur' => 1.977771,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             10 => 
             array (
@@ -122,9 +143,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bosnia-Herzegovina Convertible Mark',
                 'alphacode' => 'BAM',
                 'api_code' => 'USDBAM',
-                'rates' => 1.662094,
+                'api_code_eur' => 'EURBAM',
+                'rates' => 1.683503,
+                'rates_eur' => 1.959158,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             11 => 
             array (
@@ -132,9 +155,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Barbadian Dollar',
                 'alphacode' => 'BBD',
                 'api_code' => 'USDBBD',
+                'api_code_eur' => 'EURBBD',
                 'rates' => 2.0,
+                'rates_eur' => 2.327479,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             12 => 
             array (
@@ -142,9 +167,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bangladeshi Taka',
                 'alphacode' => 'BDT',
                 'api_code' => 'USDBDT',
-                'rates' => 84.290001,
+                'api_code_eur' => 'EURBDT',
+                'rates' => 83.989998,
+                'rates_eur' => 97.742478,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             13 => 
             array (
@@ -152,9 +179,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bulgarian Lev',
                 'alphacode' => 'BGN',
                 'api_code' => 'USDBGN',
-                'rates' => 1.658897,
+                'api_code_eur' => 'EURBGN',
+                'rates' => 1.684196,
+                'rates_eur' => 1.959965,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             14 => 
             array (
@@ -162,9 +191,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bahraini Dinar',
                 'alphacode' => 'BHD',
                 'api_code' => 'USDBHD',
-                'rates' => 0.377501,
+                'api_code_eur' => 'EURBHD',
+                'rates' => 0.377704,
+                'rates_eur' => 0.439549,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             15 => 
             array (
@@ -172,9 +203,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Burundian Franc',
                 'alphacode' => 'BIF',
                 'api_code' => 'USDBIF',
+                'api_code_eur' => 'EURBIF',
                 'rates' => 1750.97998,
+                'rates_eur' => 2037.684569,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             16 => 
             array (
@@ -182,9 +215,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bermudan Dollar',
                 'alphacode' => 'BMD',
                 'api_code' => 'USDBMD',
+                'api_code_eur' => 'EURBMD',
                 'rates' => 1.0,
+                'rates_eur' => 1.16374,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:53',
             ),
             17 => 
             array (
@@ -192,9 +227,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Brunei Dollar',
                 'alphacode' => 'BND',
                 'api_code' => 'USDBND',
-                'rates' => 1.320798,
+                'api_code_eur' => 'EURBND',
+                'rates' => 1.337799,
+                'rates_eur' => 1.556849,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:54',
             ),
             18 => 
             array (
@@ -202,9 +239,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bolivian Boliviano',
                 'alphacode' => 'BOB',
                 'api_code' => 'USDBOB',
-                'rates' => 6.860233,
+                'api_code_eur' => 'EURBOB',
+                'rates' => 6.860211,
+                'rates_eur' => 7.983499,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:54',
             ),
             19 => 
             array (
@@ -212,9 +251,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Brazilian Real',
                 'alphacode' => 'BRL',
                 'api_code' => 'USDBRL',
-                'rates' => 3.713003,
+                'api_code_eur' => 'EURBRL',
+                'rates' => 3.749494,
+                'rates_eur' => 4.363434,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:54',
             ),
             20 => 
             array (
@@ -222,9 +263,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bahamian Dollar',
                 'alphacode' => 'BSD',
                 'api_code' => 'USDBSD',
+                'api_code_eur' => 'EURBSD',
                 'rates' => 1.0,
+                'rates_eur' => 1.16374,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:54',
             ),
             21 => 
             array (
@@ -232,9 +275,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bitcoin',
                 'alphacode' => 'BTC',
                 'api_code' => 'USDBTC',
-                'rates' => 0.000148,
+                'api_code_eur' => 'EURBTC',
+                'rates' => 0.000149,
+                'rates_eur' => 0.000173,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:54',
             ),
             22 => 
             array (
@@ -242,9 +287,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Bhutanese Ngultrum',
                 'alphacode' => 'BTN',
                 'api_code' => 'USDBTN',
-                'rates' => 67.750066,
+                'api_code_eur' => 'EURBTN',
+                'rates' => 67.949997,
+                'rates_eur' => 79.076096,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             23 => 
             array (
@@ -252,9 +299,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Botswanan Pula',
                 'alphacode' => 'BWP',
                 'api_code' => 'USDBWP',
-                'rates' => 10.106202,
+                'api_code_eur' => 'EURBWP',
+                'rates' => 10.283102,
+                'rates_eur' => 11.966852,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:29:36',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             24 => 
             array (
@@ -262,9 +311,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Belarusian Ruble',
                 'alphacode' => 'BYR',
                 'api_code' => 'USDBYR',
+                'api_code_eur' => 'EURBYR',
                 'rates' => 19600.0,
+                'rates_eur' => 22809.294234,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:43',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             25 => 
             array (
@@ -272,9 +323,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Belize Dollar',
                 'alphacode' => 'BZD',
                 'api_code' => 'USDBZD',
-                'rates' => 1.997805,
+                'api_code_eur' => 'EURBZD',
+                'rates' => 1.997798,
+                'rates_eur' => 2.324916,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:43',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             26 => 
             array (
@@ -282,9 +335,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Canadian Dollar',
                 'alphacode' => 'CAD',
                 'api_code' => 'USDCAD',
-                'rates' => 1.297404,
+                'api_code_eur' => 'EURCAD',
+                'rates' => 1.32082,
+                'rates_eur' => 1.53709,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:43',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             27 => 
             array (
@@ -292,9 +347,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Congolese Franc',
                 'alphacode' => 'CDF',
                 'api_code' => 'USDCDF',
-                'rates' => 1565.498699,
+                'api_code_eur' => 'EURCDF',
+                'rates' => 1565.523681,
+                'rates_eur' => 1821.861748,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:43',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             28 => 
             array (
@@ -302,9 +359,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Swiss Franc',
                 'alphacode' => 'CHF',
                 'api_code' => 'USDCHF',
-                'rates' => 0.98536,
+                'api_code_eur' => 'EURCHF',
+                'rates' => 0.99324,
+                'rates_eur' => 1.155872,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             29 => 
             array (
@@ -312,9 +371,11 @@ class CurrencyTableSeeder extends Seeder
             'name' => 'Chilean Unit of Account (UF)',
                 'alphacode' => 'CLF',
                 'api_code' => 'USDCLF',
-                'rates' => 0.02312,
+                'api_code_eur' => 'EURCLF',
+                'rates' => 0.02322,
+                'rates_eur' => 0.027022,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             30 => 
             array (
@@ -322,9 +383,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Chilean Peso',
                 'alphacode' => 'CLP',
                 'api_code' => 'USDCLP',
-                'rates' => 632.890015,
+                'api_code_eur' => 'EURCLP',
+                'rates' => 636.599976,
+                'rates_eur' => 740.836539,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:55',
             ),
             31 => 
             array (
@@ -332,9 +395,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Chinese Yuan',
                 'alphacode' => 'CNY',
                 'api_code' => 'USDCNY',
-                'rates' => 6.3999,
+                'api_code_eur' => 'EURCNY',
+                'rates' => 6.437806,
+                'rates_eur' => 7.491929,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             32 => 
             array (
@@ -342,9 +407,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Colombian Peso',
                 'alphacode' => 'COP',
                 'api_code' => 'USDCOP',
-                'rates' => 2861.800049,
+                'api_code_eur' => 'EURCOP',
+                'rates' => 2922.100098,
+                'rates_eur' => 3400.563312,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             33 => 
             array (
@@ -352,9 +419,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Costa Rican Colón',
                 'alphacode' => 'CRC',
                 'api_code' => 'USDCRC',
-                'rates' => 565.299988,
+                'api_code_eur' => 'EURCRC',
+                'rates' => 564.450012,
+                'rates_eur' => 656.872776,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             34 => 
             array (
@@ -362,9 +431,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Cuban Convertible Peso',
                 'alphacode' => 'CUC',
                 'api_code' => 'USDCUC',
+                'api_code_eur' => 'EURCUC',
                 'rates' => 1.0,
+                'rates_eur' => 1.16374,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             35 => 
             array (
@@ -372,9 +443,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Cuban Peso',
                 'alphacode' => 'CUP',
                 'api_code' => 'USDCUP',
+                'api_code_eur' => 'EURCUP',
                 'rates' => 26.5,
+                'rates_eur' => 30.839097,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             36 => 
             array (
@@ -382,9 +455,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Cape Verdean Escudo',
                 'alphacode' => 'CVE',
                 'api_code' => 'USDCVE',
-                'rates' => 93.589996,
+                'api_code_eur' => 'EURCVE',
+                'rates' => 94.800003,
+                'rates_eur' => 110.322508,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             37 => 
             array (
@@ -392,9 +467,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Czech Republic Koruna',
                 'alphacode' => 'CZK',
                 'api_code' => 'USDCZK',
-                'rates' => 21.759701,
+                'api_code_eur' => 'EURCZK',
+                'rates' => 22.15599,
+                'rates_eur' => 25.783801,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             38 => 
             array (
@@ -402,9 +479,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Djiboutian Franc',
                 'alphacode' => 'DJF',
                 'api_code' => 'USDDJF',
-                'rates' => 177.490818,
+                'api_code_eur' => 'EURDJF',
+                'rates' => 177.441813,
+                'rates_eur' => 206.496047,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             39 => 
             array (
@@ -412,9 +491,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Danish Krone',
                 'alphacode' => 'DKK',
                 'api_code' => 'USDDKK',
-                'rates' => 6.320198,
+                'api_code_eur' => 'EURDKK',
+                'rates' => 6.40548,
+                'rates_eur' => 7.45431,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:56',
             ),
             40 => 
             array (
@@ -422,9 +503,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Dominican Peso',
                 'alphacode' => 'DOP',
                 'api_code' => 'USDDOP',
-                'rates' => 49.520032,
+                'api_code_eur' => 'EURDOP',
+                'rates' => 49.549999,
+                'rates_eur' => 57.663291,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             41 => 
             array (
@@ -432,9 +515,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Algerian Dinar',
                 'alphacode' => 'DZD',
                 'api_code' => 'USDDZD',
-                'rates' => 115.968002,
+                'api_code_eur' => 'EURDZD',
+                'rates' => 117.009003,
+                'rates_eur' => 136.167999,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             42 => 
             array (
@@ -442,9 +527,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Egyptian Pound',
                 'alphacode' => 'EGP',
                 'api_code' => 'USDEGP',
-                'rates' => 17.780001,
+                'api_code_eur' => 'EUREGP',
+                'rates' => 17.799999,
+                'rates_eur' => 20.714562,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             43 => 
             array (
@@ -452,9 +539,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Eritrean Nakfa',
                 'alphacode' => 'ERN',
                 'api_code' => 'USDERN',
-                'rates' => 14.989545,
+                'api_code_eur' => 'EURERN',
+                'rates' => 14.989537,
+                'rates_eur' => 17.443916,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             44 => 
             array (
@@ -462,9 +551,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Ethiopian Birr',
                 'alphacode' => 'ETB',
                 'api_code' => 'USDETB',
-                'rates' => 27.200001,
+                'api_code_eur' => 'EURETB',
+                'rates' => 27.230068,
+                'rates_eur' => 31.688706,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             45 => 
             array (
@@ -472,9 +563,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Euro',
                 'alphacode' => 'EUR',
                 'api_code' => 'USDEUR',
-                'rates' => 0.848303,
+                'api_code_eur' => 'EUREUR',
+                'rates' => 0.859299,
+                'rates_eur' => 1.0,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             46 => 
             array (
@@ -482,9 +575,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Fijian Dollar',
                 'alphacode' => 'FJD',
                 'api_code' => 'USDFJD',
-                'rates' => 2.053984,
+                'api_code_eur' => 'EURFJD',
+                'rates' => 2.074997,
+                'rates_eur' => 2.414755,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             47 => 
             array (
@@ -492,9 +587,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Falkland Islands Pound',
                 'alphacode' => 'FKP',
                 'api_code' => 'USDFKP',
-                'rates' => 0.7476,
+                'api_code_eur' => 'EURFKP',
+                'rates' => 0.754698,
+                'rates_eur' => 0.878272,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:57',
             ),
             48 => 
             array (
@@ -502,9 +599,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'British Pound Sterling',
                 'alphacode' => 'GBP',
                 'api_code' => 'USDGBP',
-                'rates' => 0.74766,
+                'api_code_eur' => 'EURGBP',
+                'rates' => 0.753903,
+                'rates_eur' => 0.877346,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             49 => 
             array (
@@ -512,9 +611,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Georgian Lari',
                 'alphacode' => 'GEL',
                 'api_code' => 'USDGEL',
-                'rates' => 2.443798,
+                'api_code_eur' => 'EURGEL',
+                'rates' => 2.448601,
+                'rates_eur' => 2.849534,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             50 => 
             array (
@@ -522,9 +623,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Guernsey Pound',
                 'alphacode' => 'GGP',
                 'api_code' => 'USDGGP',
-                'rates' => 0.747681,
+                'api_code_eur' => 'EURGGP',
+                'rates' => 0.753992,
+                'rates_eur' => 0.87745,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             51 => 
             array (
@@ -532,9 +635,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Ghanaian Cedi',
                 'alphacode' => 'GHS',
                 'api_code' => 'USDGHS',
-                'rates' => 4.698501,
+                'api_code_eur' => 'EURGHS',
+                'rates' => 4.698499,
+                'rates_eur' => 5.467829,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             52 => 
             array (
@@ -542,9 +647,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Gibraltar Pound',
                 'alphacode' => 'GIP',
                 'api_code' => 'USDGIP',
-                'rates' => 0.7479,
+                'api_code_eur' => 'EURGIP',
+                'rates' => 0.755006,
+                'rates_eur' => 0.87863,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:44',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             53 => 
             array (
@@ -552,9 +659,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Gambian Dalasi',
                 'alphacode' => 'GMD',
                 'api_code' => 'USDGMD',
-                'rates' => 46.869999,
+                'api_code_eur' => 'EURGMD',
+                'rates' => 46.849998,
+                'rates_eur' => 54.521193,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             54 => 
             array (
@@ -562,9 +671,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Guinean Franc',
                 'alphacode' => 'GNF',
                 'api_code' => 'USDGNF',
-                'rates' => 8994.999975,
+                'api_code_eur' => 'EURGNF',
+                'rates' => 9002.000197,
+                'rates_eur' => 10475.983224,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             55 => 
             array (
@@ -572,9 +683,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Guatemalan Quetzal',
                 'alphacode' => 'GTQ',
                 'api_code' => 'USDGTQ',
-                'rates' => 7.335998,
+                'api_code_eur' => 'EURGTQ',
+                'rates' => 7.481997,
+                'rates_eur' => 8.707095,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             56 => 
             array (
@@ -582,9 +695,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Guyanaese Dollar',
                 'alphacode' => 'GYD',
                 'api_code' => 'USDGYD',
-                'rates' => 207.059998,
+                'api_code_eur' => 'EURGYD',
+                'rates' => 206.089996,
+                'rates_eur' => 239.835069,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             57 => 
             array (
@@ -592,9 +707,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Hong Kong Dollar',
                 'alphacode' => 'HKD',
                 'api_code' => 'USDHKD',
-                'rates' => 7.844895,
+                'api_code_eur' => 'EURHKD',
+                'rates' => 7.8493,
+                'rates_eur' => 9.13454,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             58 => 
             array (
@@ -602,9 +719,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Honduran Lempira',
                 'alphacode' => 'HNL',
                 'api_code' => 'USDHNL',
-                'rates' => 23.874001,
+                'api_code_eur' => 'EURHNL',
+                'rates' => 23.888023,
+                'rates_eur' => 27.799436,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             59 => 
             array (
@@ -612,9 +731,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Croatian Kuna',
                 'alphacode' => 'HRK',
                 'api_code' => 'USDHRK',
-                'rates' => 6.255905,
+                'api_code_eur' => 'EURHRK',
+                'rates' => 6.338299,
+                'rates_eur' => 7.376129,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             60 => 
             array (
@@ -622,9 +743,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Haitian Gourde',
                 'alphacode' => 'HTG',
                 'api_code' => 'USDHTG',
-                'rates' => 66.050003,
+                'api_code_eur' => 'EURHTG',
+                'rates' => 66.120003,
+                'rates_eur' => 76.946459,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             61 => 
             array (
@@ -632,9 +755,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Hungarian Forint',
                 'alphacode' => 'HUF',
                 'api_code' => 'USDHUF',
-                'rates' => 272.480011,
+                'api_code_eur' => 'EURHUF',
+                'rates' => 278.279999,
+                'rates_eur' => 323.845427,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:58',
             ),
             62 => 
             array (
@@ -642,9 +767,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Indonesian Rupiah',
                 'alphacode' => 'IDR',
                 'api_code' => 'USDIDR',
+                'api_code_eur' => 'EURIDR',
                 'rates' => 13925.0,
+                'rates_eur' => 16205.072562,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:59',
             ),
             63 => 
             array (
@@ -652,9 +779,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Israeli New Sheqel',
                 'alphacode' => 'ILS',
                 'api_code' => 'USDILS',
-                'rates' => 3.570299,
+                'api_code_eur' => 'EURILS',
+                'rates' => 3.636698,
+                'rates_eur' => 4.232169,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:59',
             ),
             64 => 
             array (
@@ -662,9 +791,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Manx pound',
                 'alphacode' => 'IMP',
                 'api_code' => 'USDIMP',
-                'rates' => 0.747681,
+                'api_code_eur' => 'EURIMP',
+                'rates' => 0.753992,
+                'rates_eur' => 0.87745,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:59',
             ),
             65 => 
             array (
@@ -672,9 +803,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Indian Rupee',
                 'alphacode' => 'INR',
                 'api_code' => 'USDINR',
-                'rates' => 67.472397,
+                'api_code_eur' => 'EURINR',
+                'rates' => 68.029999,
+                'rates_eur' => 79.169197,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:18:59',
             ),
             66 => 
             array (
@@ -682,9 +815,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Iraqi Dinar',
                 'alphacode' => 'IQD',
                 'api_code' => 'USDIQD',
+                'api_code_eur' => 'EURIQD',
                 'rates' => 1184.0,
+                'rates_eur' => 1377.86757,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:00',
             ),
             67 => 
             array (
@@ -692,9 +827,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Iranian Rial',
                 'alphacode' => 'IRR',
                 'api_code' => 'USDIRR',
-                'rates' => 42229.999742,
+                'api_code_eur' => 'EURIRR',
+                'rates' => 42419.999861,
+                'rates_eur' => 49365.829502,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:00',
             ),
             68 => 
             array (
@@ -702,9 +839,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Icelandic Króna',
                 'alphacode' => 'ISK',
                 'api_code' => 'USDISK',
-                'rates' => 105.610001,
+                'api_code_eur' => 'EURISK',
+                'rates' => 108.750455,
+                'rates_eur' => 126.5572,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:00',
             ),
             69 => 
             array (
@@ -712,9 +851,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Jersey Pound',
                 'alphacode' => 'JEP',
                 'api_code' => 'USDJEP',
-                'rates' => 0.747681,
+                'api_code_eur' => 'EURJEP',
+                'rates' => 0.753992,
+                'rates_eur' => 0.87745,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:00',
             ),
             70 => 
             array (
@@ -722,9 +863,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Jamaican Dollar',
                 'alphacode' => 'JMD',
                 'api_code' => 'USDJMD',
-                'rates' => 127.620003,
+                'api_code_eur' => 'EURJMD',
+                'rates' => 130.559998,
+                'rates_eur' => 151.937827,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:01',
             ),
             71 => 
             array (
@@ -732,9 +875,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Jordanian Dinar',
                 'alphacode' => 'JOD',
                 'api_code' => 'USDJOD',
-                'rates' => 0.708502,
+                'api_code_eur' => 'EURJOD',
+                'rates' => 0.708503,
+                'rates_eur' => 0.824513,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:01',
             ),
             72 => 
             array (
@@ -742,9 +887,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Japanese Yen',
                 'alphacode' => 'JPY',
                 'api_code' => 'USDJPY',
-                'rates' => 110.077003,
+                'api_code_eur' => 'EURJPY',
+                'rates' => 110.128998,
+                'rates_eur' => 128.161465,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:01',
             ),
             73 => 
             array (
@@ -752,9 +899,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Kenyan Shilling',
                 'alphacode' => 'KES',
                 'api_code' => 'USDKES',
-                'rates' => 100.750211,
+                'api_code_eur' => 'EURKES',
+                'rates' => 100.849998,
+                'rates_eur' => 117.363126,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:01',
             ),
             74 => 
             array (
@@ -762,9 +911,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Kyrgystani Som',
                 'alphacode' => 'KGS',
                 'api_code' => 'USDKGS',
-                'rates' => 68.427803,
+                'api_code_eur' => 'EURKGS',
+                'rates' => 68.281799,
+                'rates_eur' => 79.462227,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:01',
             ),
             75 => 
             array (
@@ -772,9 +923,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Cambodian Riel',
                 'alphacode' => 'KHR',
                 'api_code' => 'USDKHR',
-                'rates' => 3997.485115,
+                'api_code_eur' => 'EURKHR',
+                'rates' => 4029.800049,
+                'rates_eur' => 4689.637501,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:02',
             ),
             76 => 
             array (
@@ -782,9 +935,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Comorian Franc',
                 'alphacode' => 'KMF',
                 'api_code' => 'USDKMF',
-                'rates' => 417.880005,
+                'api_code_eur' => 'EURKMF',
+                'rates' => 421.999563,
+                'rates_eur' => 491.097561,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:02',
             ),
             77 => 
             array (
@@ -792,9 +947,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'North Korean Won',
                 'alphacode' => 'KPW',
                 'api_code' => 'USDKPW',
-                'rates' => 900.000301,
+                'api_code_eur' => 'EURKPW',
+                'rates' => 899.999935,
+                'rates_eur' => 1047.365476,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:02',
             ),
             78 => 
             array (
@@ -802,9 +959,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'South Korean Won',
                 'alphacode' => 'KRW',
                 'api_code' => 'USDKRW',
-                'rates' => 1074.959961,
+                'api_code_eur' => 'EURKRW',
+                'rates' => 1105.512855,
+                'rates_eur' => 1286.528979,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:02',
             ),
             79 => 
             array (
@@ -812,9 +971,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Kuwaiti Dinar',
                 'alphacode' => 'KWD',
                 'api_code' => 'USDKWD',
-                'rates' => 0.301703,
+                'api_code_eur' => 'EURKWD',
+                'rates' => 0.302401,
+                'rates_eur' => 0.351916,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:02',
             ),
             80 => 
             array (
@@ -822,9 +983,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Cayman Islands Dollar',
                 'alphacode' => 'KYD',
                 'api_code' => 'USDKYD',
-                'rates' => 0.820226,
+                'api_code_eur' => 'EURKYD',
+                'rates' => 0.819756,
+                'rates_eur' => 0.953982,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:03',
             ),
             81 => 
             array (
@@ -832,9 +995,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Kazakhstani Tenge',
                 'alphacode' => 'KZT',
                 'api_code' => 'USDKZT',
-                'rates' => 333.910004,
+                'api_code_eur' => 'EURKZT',
+                'rates' => 339.660004,
+                'rates_eur' => 395.275764,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:03',
             ),
             82 => 
             array (
@@ -842,9 +1007,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Laotian Kip',
                 'alphacode' => 'LAK',
                 'api_code' => 'USDLAK',
-                'rates' => 8337.999487,
+                'api_code_eur' => 'EURLAK',
+                'rates' => 8380.00041,
+                'rates_eur' => 9752.137501,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:03',
             ),
             83 => 
             array (
@@ -852,9 +1019,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Lebanese Pound',
                 'alphacode' => 'LBP',
                 'api_code' => 'USDLBP',
-                'rates' => 1504.999715,
+                'api_code_eur' => 'EURLBP',
+                'rates' => 1504.999673,
+                'rates_eur' => 1751.42757,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:45',
+                'updated_at' => '2018-06-19 01:19:04',
             ),
             84 => 
             array (
@@ -862,9 +1031,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Sri Lankan Rupee',
                 'alphacode' => 'LKR',
                 'api_code' => 'USDLKR',
-                'rates' => 159.100006,
+                'api_code_eur' => 'EURLKR',
+                'rates' => 159.550003,
+                'rates_eur' => 185.674641,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:04',
             ),
             85 => 
             array (
@@ -872,9 +1043,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Liberian Dollar',
                 'alphacode' => 'LRD',
                 'api_code' => 'USDLRD',
-                'rates' => 140.320007,
+                'api_code_eur' => 'EURLRD',
+                'rates' => 140.809998,
+                'rates_eur' => 163.866157,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:05',
             ),
             86 => 
             array (
@@ -882,9 +1055,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Lesotho Loti',
                 'alphacode' => 'LSL',
                 'api_code' => 'USDLSL',
-                'rates' => 13.089833,
+                'api_code_eur' => 'EURLSL',
+                'rates' => 13.649624,
+                'rates_eur' => 15.884606,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:05',
             ),
             87 => 
             array (
@@ -892,9 +1067,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Lithuanian Litas',
                 'alphacode' => 'LTL',
                 'api_code' => 'USDLTL',
-                'rates' => 3.048701,
+                'api_code_eur' => 'EURLTL',
+                'rates' => 3.048699,
+                'rates_eur' => 3.547891,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:05',
             ),
             88 => 
             array (
@@ -902,9 +1079,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Latvian Lats',
                 'alphacode' => 'LVL',
                 'api_code' => 'USDLVL',
+                'api_code_eur' => 'EURLVL',
                 'rates' => 0.62055,
+                'rates_eur' => 0.722159,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:05',
             ),
             89 => 
             array (
@@ -912,9 +1091,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Libyan Dinar',
                 'alphacode' => 'LYD',
                 'api_code' => 'USDLYD',
-                'rates' => 1.35602,
+                'api_code_eur' => 'EURLYD',
+                'rates' => 1.355797,
+                'rates_eur' => 1.577795,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:05',
             ),
             90 => 
             array (
@@ -922,9 +1103,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Moroccan Dirham',
                 'alphacode' => 'MAD',
                 'api_code' => 'USDMAD',
-                'rates' => 9.435603,
+                'api_code_eur' => 'EURMAD',
+                'rates' => 9.513496,
+                'rates_eur' => 11.071231,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             91 => 
             array (
@@ -932,9 +1115,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Moldovan Leu',
                 'alphacode' => 'MDL',
                 'api_code' => 'USDMDL',
-                'rates' => 16.801001,
+                'api_code_eur' => 'EURMDL',
+                'rates' => 16.684999,
+                'rates_eur' => 19.416992,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             92 => 
             array (
@@ -942,9 +1127,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Malagasy Ariary',
                 'alphacode' => 'MGA',
                 'api_code' => 'USDMGA',
-                'rates' => 3270.000024,
+                'api_code_eur' => 'EURMGA',
+                'rates' => 3269.999988,
+                'rates_eur' => 3805.428157,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             93 => 
             array (
@@ -952,9 +1139,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Macedonian Denar',
                 'alphacode' => 'MKD',
                 'api_code' => 'USDMKD',
-                'rates' => 51.880001,
+                'api_code_eur' => 'EURMKD',
+                'rates' => 52.650002,
+                'rates_eur' => 61.270887,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             94 => 
             array (
@@ -962,9 +1151,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Myanma Kyat',
                 'alphacode' => 'MMK',
                 'api_code' => 'USDMMK',
-                'rates' => 1351.999653,
+                'api_code_eur' => 'EURMMK',
+                'rates' => 1353.999509,
+                'rates_eur' => 1575.702715,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             95 => 
             array (
@@ -972,9 +1163,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Mongolian Tugrik',
                 'alphacode' => 'MNT',
                 'api_code' => 'USDMNT',
-                'rates' => 2405.999819,
+                'api_code_eur' => 'EURMNT',
+                'rates' => 2419.000027,
+                'rates_eur' => 2815.085886,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             96 => 
             array (
@@ -982,9 +1175,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Macanese Pataca',
                 'alphacode' => 'MOP',
                 'api_code' => 'USDMOP',
-                'rates' => 8.081396,
+                'api_code_eur' => 'EURMOP',
+                'rates' => 8.083198,
+                'rates_eur' => 9.406737,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             97 => 
             array (
@@ -992,9 +1187,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Mauritanian Ouguiya',
                 'alphacode' => 'MRO',
                 'api_code' => 'USDMRO',
-                'rates' => 354.000381,
+                'api_code_eur' => 'EURMRO',
+                'rates' => 354.999991,
+                'rates_eur' => 413.127513,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             98 => 
             array (
@@ -1002,9 +1199,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Mauritian Rupee',
                 'alphacode' => 'MUR',
                 'api_code' => 'USDMUR',
-                'rates' => 33.750293,
+                'api_code_eur' => 'EURMUR',
+                'rates' => 34.830002,
+                'rates_eur' => 40.533049,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:06',
             ),
             99 => 
             array (
@@ -1012,9 +1211,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Maldivian Rufiyaa',
                 'alphacode' => 'MVR',
                 'api_code' => 'USDMVR',
-                'rates' => 15.569677,
+                'api_code_eur' => 'EURMVR',
+                'rates' => 15.570351,
+                'rates_eur' => 18.119832,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:07',
             ),
             100 => 
             array (
@@ -1022,9 +1223,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Malawian Kwacha',
                 'alphacode' => 'MWK',
                 'api_code' => 'USDMWK',
-                'rates' => 713.440002,
+                'api_code_eur' => 'EURMWK',
+                'rates' => 713.450012,
+                'rates_eur' => 830.269961,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:46',
+                'updated_at' => '2018-06-19 01:19:07',
             ),
             101 => 
             array (
@@ -1032,9 +1235,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Mexican Peso',
                 'alphacode' => 'MXN',
                 'api_code' => 'USDMXN',
-                'rates' => 20.538041,
+                'api_code_eur' => 'EURMXN',
+                'rates' => 20.568399,
+                'rates_eur' => 23.936258,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:07',
             ),
             102 => 
             array (
@@ -1042,9 +1247,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Malaysian Ringgit',
                 'alphacode' => 'MYR',
                 'api_code' => 'USDMYR',
-                'rates' => 3.986022,
+                'api_code_eur' => 'EURMYR',
+                'rates' => 3.99497,
+                'rates_eur' => 4.649104,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             103 => 
             array (
@@ -1052,9 +1259,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Mozambican Metical',
                 'alphacode' => 'MZN',
                 'api_code' => 'USDMZN',
-                'rates' => 58.799999,
+                'api_code_eur' => 'EURMZN',
+                'rates' => 58.709999,
+                'rates_eur' => 68.323145,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             104 => 
             array (
@@ -1062,9 +1271,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Namibian Dollar',
                 'alphacode' => 'NAD',
                 'api_code' => 'USDNAD',
-                'rates' => 13.13897,
+                'api_code_eur' => 'EURNAD',
+                'rates' => 13.668011,
+                'rates_eur' => 15.906005,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             105 => 
             array (
@@ -1072,9 +1283,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Nigerian Naira',
                 'alphacode' => 'NGN',
                 'api_code' => 'USDNGN',
-                'rates' => 359.000245,
+                'api_code_eur' => 'EURNGN',
+                'rates' => 358.000471,
+                'rates_eur' => 416.619289,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             106 => 
             array (
@@ -1082,9 +1295,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Nicaraguan Córdoba',
                 'alphacode' => 'NIO',
                 'api_code' => 'USDNIO',
-                'rates' => 31.464499,
+                'api_code_eur' => 'EURNIO',
+                'rates' => 31.309999,
+                'rates_eur' => 36.436683,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             107 => 
             array (
@@ -1092,9 +1307,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Norwegian Krone',
                 'alphacode' => 'NOK',
                 'api_code' => 'USDNOK',
-                'rates' => 8.04174,
+                'api_code_eur' => 'EURNOK',
+                'rates' => 8.11711,
+                'rates_eur' => 9.446201,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:08',
             ),
             108 => 
             array (
@@ -1102,9 +1319,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Nepalese Rupee',
                 'alphacode' => 'NPR',
                 'api_code' => 'USDNPR',
-                'rates' => 107.709999,
+                'api_code_eur' => 'EURNPR',
+                'rates' => 108.519997,
+                'rates_eur' => 126.289007,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:09',
             ),
             109 => 
             array (
@@ -1112,9 +1331,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'New Zealand Dollar',
                 'alphacode' => 'NZD',
                 'api_code' => 'USDNZD',
-                'rates' => 1.422903,
+                'api_code_eur' => 'EURNZD',
+                'rates' => 1.441599,
+                'rates_eur' => 1.677646,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:09',
             ),
             110 => 
             array (
@@ -1122,9 +1343,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Omani Rial',
                 'alphacode' => 'OMR',
                 'api_code' => 'USDOMR',
-                'rates' => 0.384902,
+                'api_code_eur' => 'EUROMR',
+                'rates' => 0.3849,
+                'rates_eur' => 0.447924,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:09',
             ),
             111 => 
             array (
@@ -1132,9 +1355,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Panamanian Balboa',
                 'alphacode' => 'PAB',
                 'api_code' => 'USDPAB',
+                'api_code_eur' => 'EURPAB',
                 'rates' => 1.0,
+                'rates_eur' => 1.16374,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:09',
             ),
             112 => 
             array (
@@ -1142,9 +1367,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Peruvian Nuevo Sol',
                 'alphacode' => 'PEN',
                 'api_code' => 'USDPEN',
-                'rates' => 3.266502,
+                'api_code_eur' => 'EURPEN',
+                'rates' => 3.275501,
+                'rates_eur' => 3.811829,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             113 => 
             array (
@@ -1152,9 +1379,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Papua New Guinean Kina',
                 'alphacode' => 'PGK',
                 'api_code' => 'USDPGK',
-                'rates' => 3.260099,
+                'api_code_eur' => 'EURPGK',
+                'rates' => 3.240293,
+                'rates_eur' => 3.770856,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             114 => 
             array (
@@ -1162,9 +1391,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Philippine Peso',
                 'alphacode' => 'PHP',
                 'api_code' => 'USDPHP',
-                'rates' => 53.130001,
+                'api_code_eur' => 'EURPHP',
+                'rates' => 53.380001,
+                'rates_eur' => 62.120416,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             115 => 
             array (
@@ -1172,9 +1403,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Pakistani Rupee',
                 'alphacode' => 'PKR',
                 'api_code' => 'USDPKR',
-                'rates' => 116.540001,
+                'api_code_eur' => 'EURPKR',
+                'rates' => 118.489998,
+                'rates_eur' => 137.891491,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             116 => 
             array (
@@ -1182,9 +1415,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Polish Zloty',
                 'alphacode' => 'PLN',
                 'api_code' => 'USDPLN',
-                'rates' => 3.618901,
+                'api_code_eur' => 'EURPLN',
+                'rates' => 3.699201,
+                'rates_eur' => 4.304907,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:47',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             117 => 
             array (
@@ -1192,9 +1427,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Paraguayan Guarani',
                 'alphacode' => 'PYG',
                 'api_code' => 'USDPYG',
-                'rates' => 5648.899902,
+                'api_code_eur' => 'EURPYG',
+                'rates' => 5668.600098,
+                'rates_eur' => 6596.773854,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:10',
             ),
             118 => 
             array (
@@ -1202,9 +1439,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Qatari Rial',
                 'alphacode' => 'QAR',
                 'api_code' => 'USDQAR',
-                'rates' => 3.639803,
+                'api_code_eur' => 'EURQAR',
+                'rates' => 3.639797,
+                'rates_eur' => 4.235776,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             119 => 
             array (
@@ -1212,9 +1451,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Romanian Leu',
                 'alphacode' => 'RON',
                 'api_code' => 'USDRON',
-                'rates' => 3.9523,
+                'api_code_eur' => 'EURRON',
+                'rates' => 4.010898,
+                'rates_eur' => 4.66764,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             120 => 
             array (
@@ -1222,9 +1463,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Serbian Dinar',
                 'alphacode' => 'RSD',
                 'api_code' => 'USDRSD',
-                'rates' => 99.840797,
+                'api_code_eur' => 'EURRSD',
+                'rates' => 101.604401,
+                'rates_eur' => 118.241055,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             121 => 
             array (
@@ -1232,9 +1475,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Russian Ruble',
                 'alphacode' => 'RUB',
                 'api_code' => 'USDRUB',
-                'rates' => 62.852095,
+                'api_code_eur' => 'EURRUB',
+                'rates' => 63.443001,
+                'rates_eur' => 73.831126,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             122 => 
             array (
@@ -1242,9 +1487,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Rwandan Franc',
                 'alphacode' => 'RWF',
                 'api_code' => 'USDRWF',
+                'api_code_eur' => 'EURRWF',
                 'rates' => 849.429993,
+                'rates_eur' => 988.515237,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             123 => 
             array (
@@ -1252,9 +1499,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Saudi Riyal',
                 'alphacode' => 'SAR',
                 'api_code' => 'USDSAR',
-                'rates' => 3.749902,
+                'api_code_eur' => 'EURSAR',
+                'rates' => 3.750204,
+                'rates_eur' => 4.36426,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             124 => 
             array (
@@ -1262,9 +1511,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Solomon Islands Dollar',
                 'alphacode' => 'SBD',
                 'api_code' => 'USDSBD',
-                'rates' => 7.902594,
+                'api_code_eur' => 'EURSBD',
+                'rates' => 7.902602,
+                'rates_eur' => 9.19657,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             125 => 
             array (
@@ -1272,9 +1523,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Seychellois Rupee',
                 'alphacode' => 'SCR',
                 'api_code' => 'USDSCR',
-                'rates' => 13.429969,
+                'api_code_eur' => 'EURSCR',
+                'rates' => 13.459637,
+                'rates_eur' => 15.663511,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:11',
             ),
             126 => 
             array (
@@ -1282,9 +1535,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Sudanese Pound',
                 'alphacode' => 'SDG',
                 'api_code' => 'USDSDG',
-                'rates' => 17.955202,
+                'api_code_eur' => 'EURSDG',
+                'rates' => 17.955203,
+                'rates_eur' => 20.895179,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             127 => 
             array (
@@ -1292,9 +1547,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Swedish Krona',
                 'alphacode' => 'SEK',
                 'api_code' => 'USDSEK',
-                'rates' => 8.668499,
+                'api_code_eur' => 'EURSEK',
+                'rates' => 8.81671,
+                'rates_eur' => 10.260353,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:48',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             128 => 
             array (
@@ -1302,9 +1559,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Singapore Dollar',
                 'alphacode' => 'SGD',
                 'api_code' => 'USDSGD',
-                'rates' => 1.33486,
+                'api_code_eur' => 'EURSGD',
+                'rates' => 1.35127,
+                'rates_eur' => 1.572526,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:49',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             129 => 
             array (
@@ -1312,9 +1571,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Saint Helena Pound',
                 'alphacode' => 'SHP',
                 'api_code' => 'USDSHP',
-                'rates' => 0.747901,
+                'api_code_eur' => 'EURSHP',
+                'rates' => 0.754959,
+                'rates_eur' => 0.878575,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:49',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             130 => 
             array (
@@ -1322,9 +1583,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Sierra Leonean Leone',
                 'alphacode' => 'SLL',
                 'api_code' => 'USDSLL',
-                'rates' => 7849.999633,
+                'api_code_eur' => 'EURSLL',
+                'rates' => 7939.999757,
+                'rates_eur' => 9240.091361,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:49',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             131 => 
             array (
@@ -1332,9 +1595,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Somali Shilling',
                 'alphacode' => 'SOS',
                 'api_code' => 'USDSOS',
-                'rates' => 562.999945,
+                'api_code_eur' => 'EURSOS',
+                'rates' => 561.999832,
+                'rates_eur' => 654.021404,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:49',
+                'updated_at' => '2018-06-19 01:19:12',
             ),
             132 => 
             array (
@@ -1342,9 +1607,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Surinamese Dollar',
                 'alphacode' => 'SRD',
                 'api_code' => 'USDSRD',
-                'rates' => 7.429667,
+                'api_code_eur' => 'EURSRD',
+                'rates' => 7.429821,
+                'rates_eur' => 8.646376,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:13',
             ),
             133 => 
             array (
@@ -1352,9 +1619,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'São Tomé and Príncipe Dobra',
                 'alphacode' => 'STD',
                 'api_code' => 'USDSTD',
-                'rates' => 20794.400391,
+                'api_code_eur' => 'EURSTD',
+                'rates' => 21064.400391,
+                'rates_eur' => 24513.474816,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:13',
             ),
             134 => 
             array (
@@ -1362,9 +1631,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Salvadoran Colón',
                 'alphacode' => 'SVC',
                 'api_code' => 'USDSVC',
-                'rates' => 8.749909,
+                'api_code_eur' => 'EURSVC',
+                'rates' => 8.74996,
+                'rates_eur' => 10.182675,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:13',
             ),
             135 => 
             array (
@@ -1372,9 +1643,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Syrian Pound',
                 'alphacode' => 'SYP',
                 'api_code' => 'USDSYP',
+                'api_code_eur' => 'EURSYP',
                 'rates' => 514.97998,
+                'rates_eur' => 599.302545,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:13',
             ),
             136 => 
             array (
@@ -1382,9 +1655,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Swazi Lilangeni',
                 'alphacode' => 'SZL',
                 'api_code' => 'USDSZL',
-                'rates' => 13.138985,
+                'api_code_eur' => 'EURSZL',
+                'rates' => 13.668023,
+                'rates_eur' => 15.906018,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:13',
             ),
             137 => 
             array (
@@ -1392,9 +1667,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Thai Baht',
                 'alphacode' => 'THB',
                 'api_code' => 'USDTHB',
-                'rates' => 32.019946,
+                'api_code_eur' => 'EURTHB',
+                'rates' => 32.660999,
+                'rates_eur' => 38.008895,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:14',
             ),
             138 => 
             array (
@@ -1402,9 +1679,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Tajikistani Somoni',
                 'alphacode' => 'TJS',
                 'api_code' => 'USDTJS',
-                'rates' => 9.068503,
+                'api_code_eur' => 'EURTJS',
+                'rates' => 9.090697,
+                'rates_eur' => 10.579203,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:14',
             ),
             139 => 
             array (
@@ -1412,9 +1691,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Turkmenistani Manat',
                 'alphacode' => 'TMT',
                 'api_code' => 'USDTMT',
+                'api_code_eur' => 'EURTMT',
                 'rates' => 3.4,
+                'rates_eur' => 3.956714,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:14',
             ),
             140 => 
             array (
@@ -1422,9 +1703,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Tunisian Dinar',
                 'alphacode' => 'TND',
                 'api_code' => 'USDTND',
-                'rates' => 2.608797,
+                'api_code_eur' => 'EURTND',
+                'rates' => 2.589796,
+                'rates_eur' => 3.013848,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:14',
             ),
             141 => 
             array (
@@ -1432,9 +1715,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Tongan Paʻanga',
                 'alphacode' => 'TOP',
                 'api_code' => 'USDTOP',
-                'rates' => 2.286903,
+                'api_code_eur' => 'EURTOP',
+                'rates' => 2.303803,
+                'rates_eur' => 2.681027,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:14',
             ),
             142 => 
             array (
@@ -1442,9 +1727,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Turkish Lira',
                 'alphacode' => 'TRY',
                 'api_code' => 'USDTRY',
-                'rates' => 4.514302,
+                'api_code_eur' => 'EURTRY',
+                'rates' => 4.706502,
+                'rates_eur' => 5.477142,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:15',
             ),
             143 => 
             array (
@@ -1452,9 +1739,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Trinidad and Tobago Dollar',
                 'alphacode' => 'TTD',
                 'api_code' => 'USDTTD',
-                'rates' => 6.649502,
+                'api_code_eur' => 'EURTTD',
+                'rates' => 6.649499,
+                'rates_eur' => 7.738285,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:15',
             ),
             144 => 
             array (
@@ -1462,9 +1751,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'New Taiwan Dollar',
                 'alphacode' => 'TWD',
                 'api_code' => 'USDTWD',
-                'rates' => 29.818965,
+                'api_code_eur' => 'EURTWD',
+                'rates' => 30.144987,
+                'rates_eur' => 35.080913,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:15',
             ),
             145 => 
             array (
@@ -1472,9 +1763,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Tanzanian Shilling',
                 'alphacode' => 'TZS',
                 'api_code' => 'USDTZS',
-                'rates' => 2267.999621,
+                'api_code_eur' => 'EURTZS',
+                'rates' => 2267.999722,
+                'rates_eur' => 2639.360867,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:15',
             ),
             146 => 
             array (
@@ -1482,9 +1775,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Ukrainian Hryvnia',
                 'alphacode' => 'UAH',
                 'api_code' => 'USDUAH',
-                'rates' => 26.065001,
+                'api_code_eur' => 'EURUAH',
+                'rates' => 26.315001,
+                'rates_eur' => 30.623806,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:15',
             ),
             147 => 
             array (
@@ -1492,9 +1787,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Ugandan Shilling',
                 'alphacode' => 'UGX',
                 'api_code' => 'USDUGX',
-                'rates' => 3817.000236,
+                'api_code_eur' => 'EURUGX',
+                'rates' => 3847.000256,
+                'rates_eur' => 4476.906161,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             148 => 
             array (
@@ -1502,7 +1799,9 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'United States Dollar',
                 'alphacode' => 'USD',
                 'api_code' => 'USDUSD',
+                'api_code_eur' => 'EUREUR',
                 'rates' => 1.0,
+                'rates_eur' => 149.0,
                 'created_at' => NULL,
                 'updated_at' => '2018-06-11 18:26:50',
             ),
@@ -1512,9 +1811,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Uruguayan Peso',
                 'alphacode' => 'UYU',
                 'api_code' => 'USDUYU',
-                'rates' => 31.259874,
+                'api_code_eur' => 'EURUYU',
+                'rates' => 31.579875,
+                'rates_eur' => 36.750748,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:50',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             150 => 
             array (
@@ -1522,9 +1823,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Uzbekistan Som',
                 'alphacode' => 'UZS',
                 'api_code' => 'USDUZS',
-                'rates' => 7914.000263,
+                'api_code_eur' => 'EURUZS',
+                'rates' => 7864.999707,
+                'rates_eur' => 9152.81084,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             151 => 
             array (
@@ -1532,9 +1835,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Venezuelan Bolívar Fuerte',
                 'alphacode' => 'VEF',
                 'api_code' => 'USDVEF',
-                'rates' => 79800.000092,
+                'api_code_eur' => 'EURVEF',
+                'rates' => 79800.000258,
+                'rates_eur' => 92866.412539,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             152 => 
             array (
@@ -1542,9 +1847,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Vietnamese Dong',
                 'alphacode' => 'VND',
                 'api_code' => 'USDVND',
-                'rates' => 22813.0,
+                'api_code_eur' => 'EURVND',
+                'rates' => 22834.0,
+                'rates_eur' => 26572.827783,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             153 => 
             array (
@@ -1552,9 +1859,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Vanuatu Vatu',
                 'alphacode' => 'VUV',
                 'api_code' => 'USDVUV',
-                'rates' => 106.660004,
+                'api_code_eur' => 'EURVUV',
+                'rates' => 108.050003,
+                'rates_eur' => 125.742057,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             154 => 
             array (
@@ -1562,9 +1871,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Samoan Tala',
                 'alphacode' => 'WST',
                 'api_code' => 'USDWST',
-                'rates' => 2.565598,
+                'api_code_eur' => 'EURWST',
+                'rates' => 2.592902,
+                'rates_eur' => 3.017463,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             155 => 
             array (
@@ -1572,9 +1883,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'CFA Franc BEAC',
                 'alphacode' => 'XAF',
                 'api_code' => 'USDXAF',
-                'rates' => 556.169983,
+                'api_code_eur' => 'EURXAF',
+                'rates' => 563.330017,
+                'rates_eur' => 655.569393,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             156 => 
             array (
@@ -1582,9 +1895,11 @@ class CurrencyTableSeeder extends Seeder
             'name' => 'Silver (troy ounce)',
                 'alphacode' => 'XAG',
                 'api_code' => 'USDXAG',
-                'rates' => 0.059128,
+                'api_code_eur' => 'EURXAG',
+                'rates' => 0.060601,
+                'rates_eur' => 0.070523,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             157 => 
             array (
@@ -1592,9 +1907,11 @@ class CurrencyTableSeeder extends Seeder
             'name' => 'Gold (troy ounce)',
                 'alphacode' => 'XAU',
                 'api_code' => 'USDXAU',
-                'rates' => 0.000769,
+                'api_code_eur' => 'EURXAU',
+                'rates' => 0.00078,
+                'rates_eur' => 0.000908,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:16',
             ),
             158 => 
             array (
@@ -1602,9 +1919,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'East Caribbean Dollar',
                 'alphacode' => 'XCD',
                 'api_code' => 'USDXCD',
-                'rates' => 2.703078,
+                'api_code_eur' => 'EURXCD',
+                'rates' => 2.69968,
+                'rates_eur' => 3.141724,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             159 => 
             array (
@@ -1612,9 +1931,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Special Drawing Rights',
                 'alphacode' => 'XDR',
                 'api_code' => 'USDXDR',
-                'rates' => 0.704142,
+                'api_code_eur' => 'EURXDR',
+                'rates' => 0.708618,
+                'rates_eur' => 0.824647,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             160 => 
             array (
@@ -1622,9 +1943,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'CFA Franc BCEAO',
                 'alphacode' => 'XOF',
                 'api_code' => 'USDXOF',
-                'rates' => 556.169983,
+                'api_code_eur' => 'EURXOF',
+                'rates' => 563.330017,
+                'rates_eur' => 655.569393,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             161 => 
             array (
@@ -1632,9 +1955,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'CFP Franc',
                 'alphacode' => 'XPF',
                 'api_code' => 'USDXPF',
-                'rates' => 101.246215,
+                'api_code_eur' => 'EURXPF',
+                'rates' => 102.580241,
+                'rates_eur' => 119.376678,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             162 => 
             array (
@@ -1642,9 +1967,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Yemeni Rial',
                 'alphacode' => 'YER',
                 'api_code' => 'USDYER',
+                'api_code_eur' => 'EURYER',
                 'rates' => 249.850006,
+                'rates_eur' => 290.760321,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             163 => 
             array (
@@ -1652,9 +1979,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'South African Rand',
                 'alphacode' => 'ZAR',
                 'api_code' => 'USDZAR',
-                'rates' => 13.139799,
+                'api_code_eur' => 'EURZAR',
+                'rates' => 13.6682,
+                'rates_eur' => 15.906224,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             164 => 
             array (
@@ -1662,9 +1991,11 @@ class CurrencyTableSeeder extends Seeder
             'name' => 'Zambian Kwacha (pre-2013)',
                 'alphacode' => 'ZMK',
                 'api_code' => 'USDZMK',
-                'rates' => 9001.198917,
+                'api_code_eur' => 'EURZMK',
+                'rates' => 9001.200967,
+                'rates_eur' => 10475.053128,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             165 => 
             array (
@@ -1672,9 +2003,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Zambian Kwacha',
                 'alphacode' => 'ZMW',
                 'api_code' => 'USDZMW',
-                'rates' => 10.130075,
+                'api_code_eur' => 'EURZMW',
+                'rates' => 9.910165,
+                'rates_eur' => 11.53285,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:17',
             ),
             166 => 
             array (
@@ -1682,9 +2015,11 @@ class CurrencyTableSeeder extends Seeder
                 'name' => 'Zimbabwean Dollar',
                 'alphacode' => 'ZWL',
                 'api_code' => 'USDZWL',
+                'api_code_eur' => 'EURZWL',
                 'rates' => 322.355011,
+                'rates_eur' => 375.13726,
                 'created_at' => NULL,
-                'updated_at' => '2018-06-11 18:26:51',
+                'updated_at' => '2018-06-19 01:19:18',
             ),
         ));
         
