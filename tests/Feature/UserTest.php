@@ -17,4 +17,10 @@ class UserTest extends TestCase
     {
         $this->assertTrue(true);
     }
+
+    public function testAddUser()
+    {
+        $this->Visit('/users/home/')
+            ->click('Add User');
+    }
 }
