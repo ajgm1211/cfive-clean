@@ -35,6 +35,6 @@ class Rate extends Model
     public function contract_company_restriction(){
 
         return $this->HasManyTrougth('App\Contract','App\ContractCompanyRestriction');
-
+        
     }
 }
