@@ -55,6 +55,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
     Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
+    Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
 
 
 });
