@@ -518,7 +518,8 @@ class ContractsController extends Controller
         $harbor = $objharbor->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         //$rates = Rate::where('currency_id','=',$contract)->get();
-        $rates = Rate::with('carrier','contract')->where('contract_id','=',$id)->get();
+        $rates = Rate::with('carrier','contract','port_origin','port_destiny')->where('contract_id','=',$id)->get();
+        //dd($rates);
         $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
         $failratesFor = FailRate::where('contract_id','=',$id)->get();
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
@@ -527,8 +528,7 @@ class ContractsController extends Controller
         $destinationV;
         $carrierV;
         $currencyV;
-        
-        $carrierAIn;
+
         $originA;
         $destinationA;
         $carrierA;
@@ -537,6 +537,7 @@ class ContractsController extends Controller
 
 
         foreach( $failratesFor as $failrate){
+            $carrAIn;
             $classdorigin='color:green';
             $classddestination='color:green';
             $classcarrier='color:green';
@@ -550,10 +551,11 @@ class ContractsController extends Controller
             $carrierA = explode("_",$failrate['carrier_id']);
             $currencyA = explode("_",$failrate['currency_id']);
 
+            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+            $carrAIn = $carrierOb['id'];
             $carrierC = count($carrierA);
             if($carrierC <= 1){
-                $carrierOb =   Carrier::where('id','=',$carrierA[0])->first();
-                $carrierAIn = $carrierOb['id'];
+                //dd($carrierAIn);
                 $carrierA = $carrierA[0];
             }
             else{
@@ -577,7 +579,7 @@ class ContractsController extends Controller
 
             $originLB = Harbor::where('id','=',$originA[0])->first();
             $destinyLB =   Harbor::where('id','=',$destinationA[0])->first();
-//            
+            //            
 
             $colec = ['rate_id'         =>  $failrate->id,
                       'contract_id'     =>  $id,
@@ -589,14 +591,14 @@ class ContractsController extends Controller
                       'destiny_port'    =>  $destinationA[0],     
 
                       'carrierLb'       =>  $carrierA,
-                      'carrierAIn'      =>  $carrierAIn,
+                      'carrierAIn'      =>  $carrAIn,
 
                       'twuenty'         =>  $failrate['twuenty'],      
                       'forty'           =>  $failrate['forty'],      
                       'fortyhc'         =>  $failrate['fortyhc'],  
 
                       'currency_id'     =>  $currencyA,
-                      'currencyAIn'     => $currencyAIn,
+                      'currencyAIn'     =>  $currencyAIn,
 
                       'classorigin'     =>  $classdorigin,
                       'classdestiny'    =>  $classddestination,
@@ -606,7 +608,8 @@ class ContractsController extends Controller
                       'classfortyhc'    =>  $classfortyhc,
                       'classcurrency'   =>  $classcurrency
                      ];
-
+            $currencyAIn = "";
+            $carrAIn = "";
             $failrates->push($colec);
 
         }
@@ -619,61 +622,38 @@ class ContractsController extends Controller
     }
 
     public function SaveCorrectedRate(Request $request){
-        $rate_idR     = $_REQUEST['rate_id'];
-        $contract_idR = $_REQUEST['contract_id'];
-        $originR      = $_REQUEST['origin'];
-        $destinationR = $_REQUEST['destination'];
-        $carrierR     = $_REQUEST['carrier'];
-        $twuentyR     = $_REQUEST['twuenty'];
-        $fortyR       = $_REQUEST['forty'];
-        $fortyhcR     = $_REQUEST['fortyhc'];
-        $currencyR    = $_REQUEST['currency'];
-        return 1;
-
-        /*$carrier = Carrier::where('name','=',$carrierR)->first();
-
+        $rate_idR     =    $_REQUEST['rate_id'];
+        $contract     =    $_REQUEST['contract_id'];
+        $originR      =    $_REQUEST['origin'];
+        $destinationR =    $_REQUEST['destination'];
+        $carrierR     =    $_REQUEST['carrier'];
+        $twuentyR     =    $_REQUEST['twuenty'];
+        $fortyR       =    $_REQUEST['forty'];
+        $fortyhcR     =    $_REQUEST['fortyhc'];
+        $currencyR    =    $_REQUEST['currency'];
+        $failrate = new FailRate();
+        $failrate = FailRate::find($rate_idR);
         $duplicate =  Rate::where('origin_port','=',$originR)
             ->where('destiny_port','=',$destinationR)
-            ->where('carrier_id','=',$carrier['id'])
-            ->where('contract_id','=',$contract_idR)
+            ->where('carrier_id','=',$carrierR)
+            ->where('contract_id','=',$contract)
             ->count();
-
+        //return $duplicate;
 
         if($duplicate <= 0){
 
-            $origB=false;
-            $destiB=false;
-            $carriB=false;
             $twuentyB=false;
             $fortyB=false;
             $fortyhcB=false;
-            $curreB=false;
 
-            $originV;
-            $destinationV;
-            $carrierV;
             $twuentyV;
             $fortyV;
             $fortyhcV;
-            $currencyV;
 
-            $currenc = Currency::where('alphacode','=',$currencyR)->first();
-            $carrier = Carrier::where('name','=',$carrierR)->first();
-
-            if(empty($originR) != true){
-                $origB=true;
-                $originV = $originR;
-            }
-
-            if(empty($destinationR) != true ){
-                $destiB=true;
-                $destinationV = $destinationR;
-            }
-
-            if(empty($carrierR) != true){
-                $carriB=true;
-                $carrierV = $carrierR;
-            }
+            $originV = $originR;
+            $destinationV = $destinationR;
+            $carrierV = $carrierR;
+            $currencyV =  $currencyR;
 
             if(empty($twuentyR) != true ){
                 $twuentyB=true;
@@ -690,15 +670,7 @@ class ContractsController extends Controller
                 $fortyhcV = (int)$fortyhcR;
             }
 
-            if(empty($currenc->id) != true){
-                $curreB=true;
-                $currencyV =  $currenc->id;
-            }
-
-            if( $origB == true && $destiB == true
-               && $carriB == true && $twuentyB == true
-               && $fortyB == true && $fortyhcB == true
-               && $curreB == true ) {
+            if($twuentyB == true && $fortyB == true && $fortyhcB == true) {
 
                 Rate::create([
                     'origin_port'   => $originV,
@@ -709,16 +681,33 @@ class ContractsController extends Controller
                     'forty'         => $fortyV,
                     'fortyhc'       => $fortyhcV,
                     'currency_id'   => $currencyV,
-                ]);
-                return 1;
+                ]); 
+
+                $failrate->delete();
+
+                $origcolle   = Harbor::find($originV);
+                $destcolle   = Harbor::find($destinationV);
+                $carriecolle = Carrier::find($carrierV);
+                $currencolle = Currency::find($currencyV);
+
+                return $col = ['response'  => '1',
+                               'origin'    => $origcolle->name,
+                               'destiny'   => $destcolle->name,
+                               'carrier'   => $carriecolle->name,
+                               'twuenty'   => $twuentyV,
+                               'forty'     => $fortyV,
+                               'fortyhc'   => $fortyhcV,
+                               'currency'  => $currencolle->alphacode,
+                              ];
+
             }
             else{
-                return 0;
+                return $col = ['response'  => '0'];
             }
         } 
         else{
-            return 2;
-        }*/
+            return $col = ['response'  => '2'];
+        }
 
     }
 
