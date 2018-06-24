@@ -164,12 +164,7 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
-<<<<<<< HEAD
-=======
         Maatwebsite\Excel\ExcelServiceProvider::class,
-  
->>>>>>> d1515acd65e3a9ca297e6487e081d8d78238e513
-
     ],
 
     /*
@@ -223,11 +218,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'GoogleMaps' => GoogleMaps\Facade\GoogleMapsFacade::class,
-<<<<<<< HEAD
-=======
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-       
->>>>>>> d1515acd65e3a9ca297e6487e081d8d78238e513
     ],
 
 ];
