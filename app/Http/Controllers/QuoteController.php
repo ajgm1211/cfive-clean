@@ -353,9 +353,7 @@ class QuoteController extends Controller
 		  $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
 		})->get();
-
-
-
+	
 	$formulario = $request;
 	$array20 = array('2','4','5');
 	$array40 =  array('1','4','5');
