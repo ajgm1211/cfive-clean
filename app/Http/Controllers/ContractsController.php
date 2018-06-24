@@ -711,6 +711,79 @@ class ContractsController extends Controller
 
     }
 
+    public function UpdateRatesCorrect(Request $request){
+
+        $rate_idR     = $_REQUEST['rate_id'];
+        $contract     = $_REQUEST['contract_id'];
+        $originR      = $_REQUEST['origin'];
+        $destinationR = $_REQUEST['destination'];
+        $carrierR     = $_REQUEST['carrier'];
+        $twuentyR     = $_REQUEST['twuenty'];
+        $fortyR       = $_REQUEST['forty'];
+        $fortyhcR     = $_REQUEST['fortyhc'];
+        $currencyR    = $_REQUEST['currency'];
+
+        $rate = new Rate();
+
+        $duplicate =  Rate::where('origin_port','=',$originR)
+            ->where('destiny_port','=',$destinationR)
+            ->where('carrier_id','=',$carrierR)
+            ->where('contract_id','=',$contract)
+            ->count();
+        //return $duplicate;
+
+        if($duplicate <= 0){
+            $rate = Rate::find($rate_idR);
+            $rate->origin_port   = $originR;
+            $rate->destiny_port  = $destinationR;
+            $rate->carrier_id    = $carrierR;
+            $rate->twuenty       = $twuentyR;
+            $rate->forty         = $fortyR;
+            $rate->fortyhc       = $fortyhcR;
+            $rate->currency_id   = $currencyR;
+            $rate->save();
+
+            $origcolle   = Harbor::find($rate->origin_port);
+            $destcolle   = Harbor::find($rate->destiny_port);
+            $carriecolle = Carrier::find($rate->carrier_id);
+            $currencolle = Currency::find($rate->currency_id);
+
+            return $col = ['response'  => '1',
+                           'origin'    => $origcolle->name,
+                           'destiny'   => $destcolle->name,
+                           'carrier'   => $carriecolle->name,
+                           'twuenty'   => $twuentyR,
+                           'forty'     => $fortyR,
+                           'fortyhc'   => $fortyhcR,
+                           'currency'  => $currencolle->alphacode,
+                          ];
+
+        }
+        else{
+            return $col = ['response'  => '2'];
+        }
+
+    }
+    
+    public function DestroyRatesFailCorrect(Request $request){
+        $rate_id   =  $_REQUEST['rate_id'];
+        $accion    =  $_REQUEST['accion'];
+        
+        if($accion == 2){
+            $rate = new Rate();
+            $rate = Rate::find($rate_id);
+            $rate->delete();
+            return 2;
+        }
+        else if($accion == 1){
+            $ratefail = new FailRate();
+            $ratefail = FailRate::find($rate_id);
+            $ratefail->delete();
+            return 1;
+        }
+        
+    }
+
     public function updateLocalChar(Request $request, $id)
     {
 

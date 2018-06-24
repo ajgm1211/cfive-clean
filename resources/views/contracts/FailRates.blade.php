@@ -103,7 +103,7 @@
                     $i=1 
                     @endphp
                     @foreach($failrates as $ratef)
-                    <tr class="" >
+                    <tr class="" id="{{'trR'.$i}}">
                         <td>
                             <i class="fa fa-dot-circle-o {{'icon'.$i}}" style="color:red;" id="" ></i>
                         </td>
@@ -178,11 +178,15 @@
                             </div>
                         </td>
                         <td>
-                            <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}}" onclick="showbox({{$i}})" title="Edit ">
+                            <a  class=" {{'tdBTU'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}}" onclick="showbox({{$i}})" title="Edit ">
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
+                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$ratef['rate_id']}})" >
+                                <i class="la 	la-remove"></i>
+                            </a>
+
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$ratef['rate_id']}},{{$ratef['contract_id']}})" >
@@ -200,7 +204,7 @@
                     @endforeach
 
                     @foreach ($rates as $rate)
-                    <tr class="m-table__row--active">
+                    <tr class="m-table__row--active" id="{{'trR'.$i}}">
                         <td><i class="fa fa-dot-circle-o {{'icon'.$i}}" style="color:green; "></i></td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
@@ -221,7 +225,6 @@
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
                                 {{ Form::select('destiny_port',$harbor,$rate->destiny_port,['class'=>'custom-select m-input form-control','id'=>'destination'.$i])}}
-
                             </div>
                         </td>
                         <td>
@@ -277,8 +280,12 @@
                             </div>
                         </td>
                         <td>
-                            <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}}" onclick="showbox({{$i}})" title="Edit ">
+                            <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}} {{'tdBTU'.$i}}" onclick="showbox({{$i}})" title="Edit ">
                                 <i class="la la-edit"></i>
+                            </a>
+
+                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$rate['id']}})" >
+                                <i class="la 	la-remove"></i>
                             </a>
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
@@ -371,6 +378,53 @@
                         $('#strgood').text(b);
                         $('#strfailinput').attr('value',a);
                         $('#strgoodinput').attr('value',b);
+
+                        $('#originlb'+idtr).text(data.origin);
+                        $('#destinylb'+idtr).text(data.destiny);
+                        $('#carrierlb'+idtr).text(data.carrier);
+                        $('#twuentylb'+idtr).text(data.twuenty);
+                        $('#fortylb'+idtr).text(data.forty);
+                        $('#fortyhclb'+idtr).text(data.fortyhc);
+                        $('#currencylb'+idtr).text(data.currency);
+
+                        $("#accion"+idtr).attr('value',2);
+
+                    }
+                    else if(data.response == 2){
+                        //duplicado
+                        swal("Error!", "Alrready Rate!", "warning");
+                    }
+
+                }
+            });
+        }
+        else if( accion == 2){
+            // para actualizar campos
+            jQuery.ajax({
+                method:'get',
+                data:{rate_id:idrate,
+                      contract_id:idcontract,
+                      origin:origin,
+                      destination:destination,
+                      carrier:carrier,
+                      twuenty:twuenty,
+                      forty:forty,
+                      fortyhc:fortyhc,
+                      currency:currency,
+                     },
+                url:'/contracts/UpdateRatesForContracts',
+                success:function(data){
+                    //console.log(data);
+                    if(data.response == 0){
+                        //campo errado
+                        swal("Error!", "wrong field in the rate!", "error");
+                    }
+                    else if(data.response == 1){
+                        //exito
+                        swal("Good job!", "Updated rate!", "success");
+
+                        hidebox(idtr);
+
                         $('#originlb'+idtr).text(data.origin);
                         $('#destinylb'+idtr).text(data.destiny);
                         $('#carrierlb'+idtr).text(data.carrier);
@@ -389,20 +443,55 @@
                 }
             });
         }
-        else if( accion == 2){
-            // para actualizar campos
-            swal("Actualiza!", "Actualiza!", "warning");
-            $('#originlb'+idtr).text('11');
-            $('#destinylb'+idtr).text('11');
-            $('#carrierlb'+idtr).text('11');
-            $('#twuentylb'+idtr).text('11');
-            $('#fortylb'+idtr).text('11');
-            $('#fortyhclb'+idtr).text('11');
-            $('#currencylb'+idtr).text('11');
-             hidebox(idtr);
-        }
         //alert(idcontract);
     }
+
+    function DestroyRate(idtr,idrate){
+        var accion = $('#accion'+idtr).val();
+        jQuery.ajax({
+            method:'get',
+            data:{
+                rate_id:idrate,
+                accion:accion
+            },
+            url:'/contracts/DestroyRatesFailCorrectForContracts',
+            success:function(data){
+                if(data == 1){
+                    swal("Good job!", "Deletion fail rate!", "success");
+                    var a = $('#strfailinput').val();
+                    a--;
+                    $('#strfail').text(a);
+                    $('#strfailinput').attr('value',a);
+
+                }
+                else if( data == 2){
+                    swal("Good job!", "Deletion rate!", "success");
+                    var b = $('#strgoodinput').val();
+                    b--;
+                    $('#strgoodinput').attr('value',b);
+                    $('#strgood').text(b);
+                }
+                $('.tdBTU'+idtr).attr('hidden','hidden');
+                $('.icon'+idtr).attr('style','color:gray');
+
+                $('#originlb'+idtr).attr('style','color:red');
+                $('#destinylb'+idtr).attr('style','color:red');
+                $('#carrierlb'+idtr).attr('style','color:red');
+                $('#twuentylb'+idtr).attr('style','color:red');
+                $('#fortylb'+idtr).attr('style','color:red');
+                $('#fortyhclb'+idtr).attr('style','color:red');
+                $('#currencylb'+idtr).attr('style','color:red');
+            }
+        });
+
+        /* idtr--;
+        var myTable = $('#html_table');
+        myTable.find( 'tbody tr:eq('+idtr+')' ).remove();
+        alert(idtr+' '+accion);*/
+
+
+    }
+
     function prueba(){
         idtr=1;
         var a = $("#origin"+idtr).val();

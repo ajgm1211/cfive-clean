@@ -56,6 +56,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
     Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
     Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
+    Route::get('UpdateRatesForContracts','ContractsController@UpdateRatesCorrect')->name('Update.Rates.For.Contracts');
+    Route::get('DestroyRatesFailCorrectForContracts','ContractsController@DestroyRatesFailCorrect')->name('Destroy.Rates.FailCorrect.For.Contracts');
 
 
 });
