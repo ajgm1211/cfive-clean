@@ -54,7 +54,22 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
     Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
     Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+    Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
+    Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
+    Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
+
+
 });
+
+
+/*Route::middleware(['auth'])->prefix('uploadfile')->group(function () {
+
+    Route::get('ShowUploadFile',function(){  return view('contracts.UploadFile');  })->name('Show.Upload.File');
+
+});*/
+
+Route::resource('UploadFileRates','ImportationRatesController');
+
 Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('companies')->group(function () {
