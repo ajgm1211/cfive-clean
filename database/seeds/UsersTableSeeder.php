@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
                 'password' =>  bcrypt('secret'),
                 'type' => 'admin',
                 'verified' => 1,
-                'emailverified' => 1,
+                'state' => 1,
                 'created_at' => $date,
                 'updated_at' => $date,
             )

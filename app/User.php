@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id','name','lastname', 'password', 'email', 'type','name_company','position','verified','access'
+        'id','name','lastname', 'password', 'email', 'type','company_user_id','position','verified','access'
     ];
 
     /**
@@ -47,12 +47,17 @@ class User extends Authenticatable
         return $this->hasOne('App\VerifyUser');
     }
 
-    public function getVerifiedAttribute()
+    public function companyUser()
     {
-        if($this->attributes['verified']==1){
-            return $this->attributes['verified']='Active';
+        return $this->belongsTo('App\CompanyUser');
+    }
+
+    public function getStateAttribute()
+    {
+        if($this->attributes['state']==1){
+            return $this->attributes['state']='Active';
         }else{
-            return $this->attributes['verified']='Inactive';
+            return $this->attributes['state']='Inactive';
         }
     }
 }

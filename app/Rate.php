@@ -31,6 +31,10 @@ class Rate extends Model
         return $this->belongsTo('App\Currency');
 
     }
+    
+    public function contract_company_restriction(){
 
-
+        return $this->HasManyTrougth('App\Contract','App\ContractCompanyRestriction');
+        
+    }
 }

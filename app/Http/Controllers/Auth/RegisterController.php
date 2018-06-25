@@ -72,8 +72,7 @@ class RegisterController extends Controller
             'lastname' => $data['lastname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'lastname' => $data['lastname'],
-            'name_company' => $data['company'],
+            'lastname' => $data['lastname']
 
         ]);
 
@@ -90,8 +89,8 @@ class RegisterController extends Controller
         $verifyUser = VerifyUser::where('token', $token)->first();
         if(isset($verifyUser) ){
             $user = $verifyUser->user;
-            if(!$user->emailverified) {
-                $verifyUser->user->emailverified = 1;
+            if(!$user->verified) {
+                $verifyUser->user->verified = 1;
                 $verifyUser->user->save();
                 VerifyUser::where('token', $token)->delete();
                 $status = "Your e-mail is verified. You can now login.";

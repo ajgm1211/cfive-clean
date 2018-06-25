@@ -110,33 +110,33 @@
                                                                 </div>
                                                             </div>
                                                             <br>
-                                                          <div class='row'>
-                                        <div class="col-md-4">
-                                            <label>
-                                                20' :
-                                            </label>
-                                            <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('twuenty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label>
-                                                40' :
-                                            </label>
-                                            <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('forty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label>
-                                                40' HC :
-                                            </label>
-                                            <div class="m-bootstrap-touchspin-brand">
-                                                {!! Form::text('fortyhc', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+                                                            <div class='row'>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        20' :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('twuenty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        40' :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('forty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        40' HC :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('fortyhc', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
 
-                                            </div>
-                                        </div>
-                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -180,7 +180,7 @@
                                                                 </div>
                                                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                                     <label>Origin address</label>
-                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                                                 </div>
                                                             </div>
                                                             <br>
@@ -205,20 +205,23 @@
                                                         </div>
                                                         <div class="col-lg-10">
                                                             <br>
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <label>Company</label>
-                                                                    {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label>Client</label>
-                                                                    {{ Form::select('client',[],null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <label>Price level</label>
-                                                                    {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                                </div>
+                                                            <div class="col-lg-10">
+                                                                <br>
+                                                                <div class="row">
+                                                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                        <label>Company</label>
+                                                                        {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
+                                                                    </div>
+                                                                    <div class="col-md-4 col-sm-4 ol-xs-12">
+                                                                        <label>Client</label>
+                                                                        {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control']) }}
+                                                                    </div>
+                                                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                        <label>Price level</label>
+                                                                        {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
+                                                                    </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -772,12 +775,33 @@
 
 @section('js')
 @parent
-<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-<script src="/js/quote.js"></script>
-<script src="/js/base.js"></script>
-<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="/js/quote.js"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+    <script>
+        /*** GOOGLE MAPS API ***/
 
+        var autocomplete;
+        function initAutocomplete() {
+            var geocoder = new google.maps.Geocoder();
+            var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+            var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+            //autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+        function codeAddress(address) {
+            var geocoder;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    alert(results[0].geometry.location);
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+    </script>
 @stop

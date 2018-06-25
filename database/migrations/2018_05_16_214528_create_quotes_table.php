@@ -18,6 +18,7 @@ class CreateQuotesTable extends Migration
             $table->string('owner');
             $table->string('incoterm');
             $table->date('validity')->nullable();
+            $table->integer('modality');
             $table->date('pick_up_date');
             $table->string('origin_address')->nullable();
             $table->string('destination_address')->nullable();
@@ -30,11 +31,16 @@ class CreateQuotesTable extends Migration
             $table->integer('status_id')->unsigned()->nullable()->default(1);
             $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices');
+            $table->integer('contact_id')->unsigned()->nullable();
+            $table->foreign('contact_id')->references('id')->on('contacts');
             $table->integer('type')->unsigned();
             $table->string('qty_20')->nullable();
             $table->string('qty_40')->nullable();
             $table->string('qty_40_hc')->nullable();
             $table->string('delivery_type')->nullable();
+            $table->float('sub_total_origin')->nullable();
+            $table->float('sub_total_freight')->nullable();
+            $table->float('sub_total_destination')->nullable();
             $table->timestamps();
         });
     }
