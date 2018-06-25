@@ -368,8 +368,7 @@ class ContractsController extends Controller
 
     }
 
-    public function updateRates(Request $request, $id)
-    {
+    public function updateRates(Request $request, $id){
         $requestForm = $request->all();
 
         $rate = Rate::find($id);
@@ -402,9 +401,6 @@ class ContractsController extends Controller
             $contract = $request->contract_id;
             $errors=0;
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
-                $twuenty = "20'";
-                $forty = "40'";
-                $fortyhc = "40'hc";
                 foreach ($reader->get() as $book) {
 
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
@@ -414,10 +410,12 @@ class ContractsController extends Controller
                         ->where('carrier_id','=',$carrier['id'])
                         ->where('contract_id','=',$contract)
                         ->count();
-
-
+                    
                     if($duplicate <= 0){
 
+                    $twuenty = "20";
+                    $forty = "40";
+                    $fortyhc = "40hc";
                         $origB=false;
                         $destiB=false;
                         $carriB=false;
@@ -458,28 +456,28 @@ class ContractsController extends Controller
                             $carrierV = $book->carrier.'_E';
                         }
 
-                        if(empty($book->twuenty) != true ){
+                        if(empty($book->$twuenty) != true ){
                             $twuentyB=true;
-                            $twuentyV = (int)$book->twuenty;
+                            $twuentyV = (int)$book->$twuenty;
                         }
                         else{
-                            $twuentyV = $book->twuenty.'_E';
+                            $twuentyV = $book->$twuenty.'_E';
                         }
 
-                        if(empty($book->forty) != true ){
+                        if(empty($book->$forty) != true ){
                             $fortyB=true;
-                            $fortyV = (int)$book->forty;
+                            $fortyV = (int)$book->$forty;
                         }
                         else{
-                            $fortyV = $book->forty.'_E';
+                            $fortyV = $book->$forty.'_E';
                         }
 
-                        if(empty($book->fortyhc) != true ){
+                        if(empty($book->$fortyhc) != true ){
                             $fortyhcB=true;
-                            $fortyhcV = (int)$book->fortyhc;
+                            $fortyhcV = (int)$book->$fortyhc;
                         }
                         else{
-                            $fortyhcV = $book->fortyhc.'_E';
+                            $fortyhcV = $book->$fortyhc.'_E';
                         }
 
                         if(empty($currenc->id) != true){
@@ -597,6 +595,7 @@ class ContractsController extends Controller
 
         foreach( $failratesFor as $failrate){
             $carrAIn;
+            $pruebacurre = "";
             $classdorigin='color:green';
             $classddestination='color:green';
             $classcarrier='color:green';
@@ -627,7 +626,7 @@ class ContractsController extends Controller
             $currencyC = count($currencyA);
             if($currencyC <= 1){
                 $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
-                $currencyAIn = $currenc['id'];
+                $pruebacurre = $currenc['id'];
                 $currencyA = $currencyA[0];
             }
             else{
@@ -657,7 +656,7 @@ class ContractsController extends Controller
                       'fortyhc'         =>  $failrate['fortyhc'],  
 
                       'currency_id'     =>  $currencyA,
-                      'currencyAIn'     =>  $currencyAIn,
+                      'currencyAIn'     =>  $pruebacurre,
 
                       'classorigin'     =>  $classdorigin,
                       'classdestiny'    =>  $classddestination,
@@ -667,7 +666,7 @@ class ContractsController extends Controller
                       'classfortyhc'    =>  $classfortyhc,
                       'classcurrency'   =>  $classcurrency
                      ];
-            $currencyAIn = "";
+            $pruebacurre = "";
             $carrAIn = "";
             $failrates->push($colec);
 
