@@ -410,12 +410,12 @@ class ContractsController extends Controller
                         ->where('carrier_id','=',$carrier['id'])
                         ->where('contract_id','=',$contract)
                         ->count();
-                    
+
                     if($duplicate <= 0){
 
-                    $twuenty = "20";
-                    $forty = "40";
-                    $fortyhc = "40hc";
+                        $twuenty = "20";
+                        $forty = "40";
+                        $fortyhc = "40hc";
                         $origB=false;
                         $destiB=false;
                         $carriB=false;
@@ -869,10 +869,58 @@ class ContractsController extends Controller
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
 
                 foreach ($reader->get() as $book) {
-                    $forty = "40'hc";
-                    echo 'llega'.$book->$forty.'<br>';
-                    /*$carrier = Carrier::where('name','=',$book->carrier)->first();
+                    $surchargeVar        = "surcharge";
+                    $originVar           = "origin";
+                    $destinationVar      = "destination";
+                    $carrierVar          = "carrier";
+                    $calculationtypeVar  = "calculation_type";
+                    $amountVar           = "amount";
+                    $currencyVar         = "currency";
 
+                    $surchargeBol       = false;
+                    $carrierBol         = false;
+                    $calculationtypeBol = false;
+                    $currencyBol        = false;
+
+                    /*echo '1'.$book->$surchargeVar.'<br>';
+                    echo '2'.$book->$originVar.'<br>';
+                    echo '3'.$book->$destinationVar.'<br>';
+                    echo '4'.$book->$carrierVar.'<br>';
+                    echo '5'.$book->$calculationtypeVar.'<br>';
+                    echo '6'.$book->$amountVar.'<br>';
+                    echo '7'.$book->$currencyVar.'<br>';*/
+
+                    $surcharge = Surcharge::where('name','=',$book->$surchargeVar)->where('user_id','=',$request->contract_id)->first();
+                    $carrier = Carrier::where('name','=',$book->carrierVar)->first();
+                    dd($carrier);
+                    $calculationtype = CalculationType::where('name','=',$book->$calculationtypeVar)->first();
+                    $destinytype = 3;
+                    $currency = Currency::where('alphacode','=',$book->$currencyVar)->first();
+
+                    if(empty($surcharge) != true){
+                        $surchargeBol = true;
+                    }
+
+                    if(empty($carrier) != true){
+                        $carrierBol = true;
+                    }
+
+                    if(empty($calculationtype) != true){
+                        $calculationtypeBol = true;
+                    }
+
+                    if(empty($currency) != true){
+                        $currencyBol = true;
+                    }
+
+                    if($surchargeBol == true && $carrierBol == true && $calculationtypeBol == true && $currencyBol == true ){ 
+                        dd($currency);
+                    }
+                        echo '1.'.$surchargeBol.'<br>';
+                        echo '2.'.$carrierBol.'<br>';
+                        echo '3.'.$calculationtypeBol.'<br>';
+                        echo '4.'.$currencyBol;
+                    /*
 
                     $currenc = Currency::where('alphacode','=',$book->currency)->first();
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
