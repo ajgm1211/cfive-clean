@@ -227,7 +227,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                 </button>
                             </a>
                             <a>
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge">
                                     Upload Subcharge
                                     <i class="fa flaticon-tool-1"></i>
                                 </button>
@@ -400,6 +400,50 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
         <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
+    
+        <div class="modal fade" id="uploadfileSubcharge" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+
+                {!! Form::open(['route' => 'Upload.File.Subcharge.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Upload File Of Subcharge
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">
+                            Single File Upload:
+                        </label>
+                        {!!Form::file('file',['id'=>'','required'])!!}
+                    </div>
+                    {!!Form::hidden('contract_id',$id,['id'=>''])!!}
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                    <!--  <button type="submit" class="btn btn-success">
+Load
+</button>-->
+                    <input type="submit" class="btn btn-success">
+                    {!! Form::close()!!}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
     <div class="modal fade" id="uploadfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -421,7 +465,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                         <label for="recipient-name" class="form-control-label">
                             Single File Upload:
                         </label>
-                        {!!Form::file('file',['id'=>'recipient-name'])!!}
+                        {!!Form::file('file',['id'=>'recipient-name','required'])!!}
                     </div>
                     {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
 
