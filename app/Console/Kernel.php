@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\UpdateCurrencies::class,
+        Commands\UpdateCurrenciesEur::class,
     ];
 
     /**
@@ -26,6 +27,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('command:updateCurrenciesUsd')
+            ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->command('command:updateCurrenciesEur')
+            ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
     }
 
     /**

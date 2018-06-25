@@ -15,14 +15,17 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all();
-        $companies = Company::all()->pluck('id','name');
+        $contacts = Contact::whereHas('company', function ($query) {
+            $query->where('company_user_id', '=', \Auth::user()->company_user_id);
+        })->get();
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+
         return view('contacts/index', ['contacts' => $contacts,'companies'=>$companies]);
     }
 
     public function add()
     {
-        $companies = Company::all()->pluck('business_name','id');
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         return view('contacts.add', ['companies'=>$companies]);
     }
 
@@ -33,13 +36,15 @@ class ContactController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
+
         return redirect()->back();
     }
 
     public function edit($id)
     {
         $contact = Contact::find($id);
-        $companies = Company::all()->pluck('business_name','id');
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+
         return view('contacts.edit', compact('contact','companies'));
     }
 
@@ -47,26 +52,31 @@ class ContactController extends Controller
     {
         $company = Contact::find($id);
         $company->update($request->all());
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register updated successfully!');
+
         return redirect()->route('contacts.index');
     }
 
     public function delete($id)
     {
         $contact = Contact::find($id);
+
         return view('contacts.delete', compact('contact'));
     }
 
     public function destroy(Request $request,$id)
     {
-        $company = Contact::find($id);
-        $company->delete();
+        try {
+            $contact = Contact::find($id);
+            $contact->delete();
 
-        /*$request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register deleted successfully!');*/
-        return $company;
+            return response()->json(['message' => 'Ok']);
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => $e]);
+        }
     }
 }

@@ -72,11 +72,15 @@
                                         <p>{{$company->address}}</p>
                                         <hr>
                                         <label><b>Price level</b></label>
-                                        @if(isset($company->company_price))
-                                            {!! Form::select('price_id',$prices,$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @else
-                                            {!! Form::select('price_id',$prices,null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal'])  !!}
-                                        @endif
+                                            @if(isset($company->price_name))
+                                                <ul>
+                                                    @foreach($company->price_name as $price)
+                                                        <li style="margin-left: -25px;">{{$price->name}}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <p>There are not prices associated</p>
+                                            @endif
                                         <hr>
                                     </div>
                                 </div>
@@ -145,8 +149,16 @@
                                     <td>{{$quote->company->business_name }}</td>
                                     <td>{{$quote->created_at }}</td>
                                     <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
-                                    <td>{{$quote->origin_country->name }}</td>
-                                    <td>{{$quote->destination_country->name }}</td>
+                                    @if($quote->origin_country)
+                                        <td>{{$quote->origin_country->name }}</td>
+                                    @else
+                                        <td>---</td>
+                                    @endif
+                                    @if($quote->destination_country)
+                                        <td>{{$quote->destination_country->name }}</td>
+                                    @else
+                                        <td>---</td>
+                                    @endif
                                     <td>{{$quote->ammount }}</td>
                                     <td>
                                         <a href="#" data-toggle="modal" data-target="#editQuoteModal" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
@@ -172,6 +184,7 @@
 
 @section('js')
     @parent
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
     <script>
         function AbrirModal(action,id){

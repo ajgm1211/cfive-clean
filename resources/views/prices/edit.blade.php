@@ -117,52 +117,101 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->freight_markup as $item)
                                                     @if($item->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_1">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($item->percent_markup!=0 || $item->fixed_markup != 0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_1">
+                                                                        <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
-                                                                <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_1" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_1" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_1">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_1">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_1" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_1">
+                                                                    <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_1" value="0" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_1" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -183,77 +232,151 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->local_markup as $local)
                                                     @if($local->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_1">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($local->percent_markup_import!=0 || $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 || $local->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_1">
+                                                                        <option value="1" {!! $local->percent_markup_import != 0 || $local->percent_markup_export != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_import == 0 && $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 && $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="local_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype[]"/>
-                                                                <input type="text" class="form-control"  id="local_percent_markup_1" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_1" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_export == 0 &&  $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="1" name="local_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                                    <input type="text" class="form-control"  id="local_percent_markup_1" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 && $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_1" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_1_2" {!! $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_1_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_1_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1_2" {!! $local->percent_markup_export == 0 &&  $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_1_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1_2" {!! $local->fixed_markup_export == 0 &&  $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_1_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_1">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1">
+                                                                    <input type="hidden" class="form-control" value="1" name="local_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control"  id="local_percent_markup_1" value="0" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_1" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_1_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_1_2" value="0" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_1_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_1_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -275,77 +398,151 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->inland_markup as $inland)
                                                     @if($inland->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_1">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($inland->percent_markup_import!=0 || $inland->fixed_markup_import != 0 || $inland->fixed_markup_export != 0 || $inland->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_1">
+                                                                        <option value="1" {!! $inland->percent_markup_import != 0 || $inland->percent_markup_export != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $inland->fixed_markup_import != 0 || $inland->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_1" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_1" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_1" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_1" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1_2" {!! $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_1_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1_2" {!! $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_1_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1_2" {!! $inland->percent_markup_export == 0 && $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_1_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1_2" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_1_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_1">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1">
+                                                                    <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_1" value="0" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_1" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_1_2" value="0" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_1_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -371,52 +568,101 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->freight_markup as $item)
                                                     @if($item->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_2">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($item->percent_markup!=0 || $item->fixed_markup != 0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_2">
+                                                                        <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_2" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
-                                                                <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_2" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="input-group freight_fixed_markup_2" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                    <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_2" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_2" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="input-group freight_fixed_markup_2" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                        <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_2" style="display:none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_2" value="0" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="input-group freight_fixed_markup_2" style="display: none;">
+                                                                        <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -437,77 +683,151 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->local_markup as $local)
                                                     @if($local->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_2">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($local->percent_markup_import!=0 || $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 || $local->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_2">
+                                                                        <option value="1" {!! $local->percent_markup_import != 0 || $local->percent_markup_export != 0? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 && $local->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 && $local->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="local_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_2" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 && $local->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="local_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 &&  $local->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_2_2" {!! $local->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_2_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2_2" {!! $local->percent_markup_export == 0 && $local->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2_2" {!! $local->fixed_markup_export == 0 && $local->fixed_markup_import == 0? 'style="display:none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="local_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2" value="0" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2_2" >
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2_2" value="0" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -529,77 +849,151 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->inland_markup as $inland)
                                                     @if($inland->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_2">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($inland->percent_markup_import!=0 || $inland->fixed_markup_import != 0 || $inland->fixed_markup_export != 0 || $inland->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_2">
+                                                                        <option value="1" {!! $inland->percent_markup_import != 0 || $inland->percent_markup_export != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $inland->fixed_markup_import != 0 ||  $inland->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 &&  $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_2" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_2" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_2" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="{{ $inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="{{ $inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_2_2"  {!! $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_2_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_2_2"  {!! $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2_2"  {!! $inland->percent_markup_export == 0 && $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2_2"  {!! $inland->fixed_markup_export == 0 && $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2" value="0" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2_2" value="0" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -625,51 +1019,100 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->freight_markup as $item)
                                                     @if($item->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_3">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($item->percent_markup!=0 || $item->fixed_markup != 0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_3">
+                                                                        <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="freight_type[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_3" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="freight_fixed_markup_3" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_currency_markup_3" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="3" name="freight_type[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_3" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="freight_fixed_markup_3" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_currency_markup_3" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_freight_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Freight Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_fixed_markup_2" style="display:none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Freight rate markup</span>
+                                                                </div>
+                                                                <div class="col-md-6 freight_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
+                                                                    <input type="text" class="form-control" id="freight_percent_markup_2" value="0" name="freight_percent_markup[]"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="input-group freight_fixed_markup_2" style="display: none;">
+                                                                        <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -690,75 +1133,149 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->local_markup as $local)
                                                     @if($local->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_3">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($local->percent_markup_import!=0 || $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 || $local->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_3">
+                                                                        <option value="1" {!! $local->percent_markup_import != 0 || $local->percent_markup_export != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $local->fixed_markup_import != 0 || $local->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 && $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 && $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="local_type[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_3" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_3" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_3" name="local_currency_import[]">
-                                                                                <option value="usd" {!! $local->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $local->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $local->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $local->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 && $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="3" name="local_type[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_3" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 && $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_3" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_3" name="local_currency_import[]">
+                                                                                    <option value="usd" {!! $local->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
+                                                                                    <option value="clp" {!! $local->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
+                                                                                    <option value="ars" {!! $local->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
+                                                                                    <option value="eur" {!! $local->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_3_2" {!! $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="text" class="form-control" id="local_percent_markup_3_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_3_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_3_2" name="local_currency_export[]">
-                                                                                <option value="usd" {!! $local->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $local->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $local->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $local->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_3_2" {!! $local->percent_markup_export == 0 && $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_3_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_3_2" {!! $local->fixed_markup_export == 0 && $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_3_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_3_2" name="local_currency_export[]">
+                                                                                    <option value="usd" {!! $local->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
+                                                                                    <option value="clp" {!! $local->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
+                                                                                    <option value="ars" {!! $local->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
+                                                                                    <option value="eur" {!! $local->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_local_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Local Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="local_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2" value="0" name="local_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 local_percent_markup_2_2" >
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype[]"/>
+                                                                    <input type="text" class="form-control" id="local_percent_markup_2_2" value="0" name="local_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 local_fixed_markup_2_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -780,76 +1297,150 @@
                                             <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                                                 @foreach($price->inland_markup as $inland)
                                                     @if($inland->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_3">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
+                                                        @if($inland->percent_markup_import!=0 || $inland->fixed_markup_import != 0 || $inland->fixed_markup_export != 0 || $inland->percent_markup_export!=0)
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_3">
+                                                                        <option value="1" {!! $inland->percent_markup_import != 0 || $inland->percent_markup_export != 0 ? 'selected':'' !!}>Percent Markup</option>
+                                                                        <option value="2" {!! $inland->fixed_markup_import != 0 || $inland->fixed_markup_export != 0 ? 'selected':'' !!}>Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_3" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_3" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_3" name="inland_currency_import[]">
-                                                                                <option value="usd" {!! $inland->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $inland->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $inland->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $inland->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 && $inland->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_3" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 && $inland->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_3" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_3" name="inland_currency_import[]">
+                                                                                    <option value="usd" {!! $inland->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
+                                                                                    <option value="clp" {!! $inland->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
+                                                                                    <option value="ars" {!! $inland->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
+                                                                                    <option value="eur" {!! $inland->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_3_2" {!! $inland->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_3_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3_2" {!! $inland->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_3_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_3_2" name="inland_currency_export[]">
-                                                                                <option value="usd" {!! $inland->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $inland->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $inland->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $inland->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_3_2" {!! $inland->percent_markup_export == 0 && $inland->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_3_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_3_2" {!! $inland->fixed_markup_export == 0 && $inland->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_3_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_3_2" name="inland_currency_export[]">
+                                                                                    <option value="usd" {!! $inland->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
+                                                                                    <option value="clp" {!! $inland->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
+                                                                                    <option value="ars" {!! $inland->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
+                                                                                    <option value="eur" {!! $inland->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
+                                                                                </select>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @else
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <select class="form-control" id="type_inland_markup_2">
+                                                                        <option value="1">Percent Markup</option>
+                                                                        <option value="2">Fixed Markup</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <span><b>Inland Charges</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2">
+                                                                    <span><b>Percent Markup</b></span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                                    <span><b>Fixed Markup</b></span>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Import</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
+                                                                    <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2" value="0" name="inland_percent_markup_import[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row" style="font-size: 11px !important;">
+                                                                <div class="col-md-6">
+                                                                    <span>Export</span>
+                                                                </div>
+                                                                <div class="col-md-6 inland_percent_markup_2_2">
+                                                                    <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
+                                                                    <input type="text" class="form-control" id="inland_percent_markup_2_2" value="0" name="inland_percent_markup_export[]"/>
+                                                                </div>
+                                                                <div class="col-md-6 inland_fixed_markup_2_2" style="display: none;">
+                                                                    <div class="input-group">
+                                                                        <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
+                                                                        <div class="input-group-btn">
+                                                                            <div class="btn-group">
+                                                                                <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
+                                                                                    <option value="usd">USD</option>
+                                                                                    <option value="clp">CLP</option>
+                                                                                    <option value="ars">ARS</option>
+                                                                                    <option value="eur">EUR</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -882,6 +1473,7 @@
     @parent
     <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
     <script>
         function AbrirModal(action,id){
             if(action == "edit"){

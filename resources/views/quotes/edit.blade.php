@@ -1,923 +1,823 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Julio
- * Date: 23/04/2018
- * Time: 07:15 PM
- */
-?>
-
-<!--<div class="m-portlet">
-    {!! Form::open(['route' => 'prices.store','class' => 'form-group m-form__group']) !!}
-        <div class="m-portlet__body">
-            <div class="m-form__section m-form__section--first">
-                <div class="form-group m-form__group">
-                    @include('prices.partials.form_add_prices')
-        </div>
-    </div>
-    <div class="m-portlet__foot m-portlet__foot--fit">
-        <br>
-        <div class="m-form__actions m-form__actions">
-{!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-        <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">Cancel</span>
-        </button>
-    </div>
-</div>
-</div>
-{!! Form::close() !!}
-        </div>
-
-        <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-        <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>-->
-
 @extends('layouts.app')
-@section('title', 'Edit Price Level')
+@section('title', 'Edit Quote')
 @section('content')
+
     <div class="m-content">
-        <div class="m-portlet m-portlet--mobile">
-            @if(Session::has('message.nivel'))
+        <div class="row">
+            <div class="col-md-1">
+                <a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary btn-block">Schedules</button>
+            </div>
+            <div class="col-md-1">
+                <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
+                <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
+            </div>
+        </div>
+        <br>
+        @if(Session::has('message.nivel'))
+            <div class="col-md-12">
+                <br>
+                <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+                    <div class="m-alert__icon">
+                        <i class="la la-warning"></i>
+                    </div>
+                    <div class="m-alert__text">
+                        <strong>
+                            {{ session('message.title') }}
+                        </strong>
+                        {{ session('message.content') }}
+                    </div>
+                    <div class="m-alert__close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        @endif
+        <div class="col-md-12">
+            <div class="row">
                 <div class="col-md-12">
-                    <br>
-                    <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
-                        <div class="m-alert__icon">
-                            <i class="la la-warning"></i>
-                        </div>
-                        <div class="m-alert__text">
-                            <strong>
-                                {{ session('message.title') }}
-                            </strong>
-                            {{ session('message.content') }}
-                        </div>
-                        <div class="m-alert__close">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            <div class="m-portlet__body">
-                {{ Form::model($price, array('route' => array('prices.update', $price->id), 'method' => 'PUT')) }}
-                <div class="row">
-                    <div class="col-md-3">
-                        <label>Name</label>
-                        <div class="form-group m-form__group align-items-center">
-                            {!! Form::text('name', null, ['placeholder' => 'Please enter level pricing name','class' => 'form-control m-input','required' => 'required']) !!}
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Description</label>
-                        <div class="form-group m-form__group align-items-center">
-                            {!! Form::text('description', null, ['placeholder' => 'Please enter level pricing description','class' => 'form-control m-input','required' => 'required']) !!}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Companies</label>
-                        <div class="form-group m-form__group align-items-center">
-                            {{ Form::select('companies[]',$companies,$selected_companies,['multiple','class'=>'custom-select form-control','id' => 'select-2']) }}
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="">
-                            <ul class="nav nav-tabs m-tabs-line m-tabs-line--2x m-tabs-line--success" role="tablist">
-                                <li class="nav-item m-tabs__item">
-                                    <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
-                                        Sea Freights FCL
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown m-tabs__item">
-                                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_2" role="button" aria-haspopup="true" aria-expanded="false">
-                                        Sea Freights LCL
-                                    </a>
-                                </li>
-                                <li class="nav-item m-tabs__item">
-                                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_3" role="tab">
-                                        Air Freights
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Freight Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->freight_markup as $item)
-                                                    @if($item->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_1">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
-                                                                <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_1" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Local Charges Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->local_markup as $local)
-                                                    @if($local->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_1">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_1" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="local_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype[]"/>
-                                                                <input type="text" class="form-control"  id="local_percent_markup_1" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_1" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_1_2" {!! $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_1_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_1_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_1_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <!--end::Portlet-->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Inland Charges Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->inland_markup as $inland)
-                                                    @if($inland->price_type_id==1)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_1">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_1" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_1" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1_2" {!! $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_1_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1_2" {!! $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_1_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <!--end::Portlet-->
+                    {!! Form::model($quote,['route' => array('quotes.update', $quote->id), 'method' => 'PUT','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
+                    <div class="m-portlet__body">
+                        <div class="row">
+                            <div class="m-portlet m-portlet--tabs">
+                                <div class="m-portlet__head">
+                                    <div class="m-portlet__head-tools">
+                                        <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
+                                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
+                                                <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
+                                                    Next
+                                                </a>
+                                                <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                                    Back
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Freight Markups
-                                                        </h3>
+                                <div class="m-portlet__body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="m_portlet_tab_1_1">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-lg-2">
+                                                            <label>
+                                                                <b>MODE</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class='row'>
+                                                                <div class="col-md-4">
+                                                                    <label class="m-option">
+                                                                            <span class="m-option__control">
+                                                                                <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                                                    <input name="type" value="1" type="radio" {!! $quote->type == 1 ? 'checked':'' !!}>
+                                                                                    <span></span>
+                                                                                </span>
+                                                                            </span>
+                                                                            <span class="m-option__label">
+                                                                                <span class="m-option__head">
+                                                                                    <span class="m-option__title">
+                                                                                        FCL
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="m-option">
+                                                                            <span class="m-option__control">
+                                                                                <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                                                    <input name="type" value="2" type="radio" {!! $quote->type == 2 ? 'checked':'' !!}>
+                                                                                    <span></span>
+                                                                                </span>
+                                                                            </span>
+                                                                        <span class="m-option__label">
+                                                                                <span class="m-option__head">
+                                                                                    <span class="m-option__title">
+                                                                                        LCL
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label class="m-option">
+                                                                            <span class="m-option__control">
+                                                                                <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                                                    <input name="type" value="3" type="radio" {!! $quote->type == 3 ? 'checked':'' !!}>
+                                                                                    <span></span>
+                                                                                </span>
+                                                                            </span>
+                                                                        <span class="m-option__label">
+                                                                                <span class="m-option__head">
+                                                                                    <span class="m-option__title">
+                                                                                        AIR
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class='row'>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        20' :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_20', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        40' :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label>
+                                                                        40' HC :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc']) !!}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-lg-2">
+                                                            <label>
+                                                                <b>SERVICES</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <label>Modality</label>
+                                                                    {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <label>Incoterm</label>
+                                                                    {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control']) }}
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <label>Delivery type</label>
+                                                                    {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Pick up date</label>
+                                                                    <div class="input-group date">
+                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input']) !!}
+                                                                        <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="la la-calendar-check-o"></i>
+                                                                                </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-4" id="origin_harbor_label">
+                                                                    <label>Origin port</label>
+                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor']) }}
+                                                                </div>
+                                                                <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                                                    <label>Origin address</label>
+                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-4" id="destination_harbor_label">
+                                                                    <label>Destination port</label>
+                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor']) }}
+                                                                </div>
+                                                                <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                                                    <label>Destination address</label>
+                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-lg-2">
+                                                            <label>
+                                                                <b>CLIENT</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                    <label>Company</label>
+                                                                    {{ Form::select('company_id',$companies,$quote->company_id,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-4 ol-xs-12">
+                                                                    <label>Client</label>
+                                                                    {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control']) }}
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                    <label>Price level</label>
+                                                                    {{ Form::select('price_id',$prices,$quote->price_id,['class'=>'m-select2-general form-control']) }}
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->freight_markup as $item)
-                                                    @if($item->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_2">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_1" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_1" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_2" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
-                                                                <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_2" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="input-group freight_fixed_markup_2" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                    <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
+                                        </div>
+                                        <div class="tab-pane" id="m_portlet_tab_1_2">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <!--<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
+                                                                        <div class="m-portlet__head">
+                                                                            <div class="m-portlet__head-caption">
+                                                                                <div class="m-portlet__head-title">
+                                                                                    <h5 class="m-portlet__head-text">
+                                                                                        Origin
+                                                                                    </h5>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="m-portlet__body">
+                                                                            <span id="origin_input"></span>
+                                                                        </div>
+                                                                    </div>-->
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading"><b>Origin</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="origin_input">
+                                                                                {{$origin_harbor->name}}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading"><b>Destination</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="destination_input">
+                                                                                {{$destination_harbor->name}}
+                                                                            </span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+                                                                <div class="col-md-12">
+                                                                    <h5>Cargo details</h5>
+                                                                    <hr>
+                                                                    <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                    <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                    <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Local Charges Markups
-                                                        </h3>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5>Origin ammounts</h5>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-2">Charge</div>
+                                                                <div class="col-md-2">Detail</div>
+                                                                <div class="col-md-1">Units</div>
+                                                                <div class="col-md-3">Price per unit</div>
+                                                                <div class="col-md-1">Markup</div>
+                                                                <div class="col-md-1">Total</div>
+                                                                <div class="col-md-1">Total EUR</div>
+                                                            </div>
+                                                            <hr>
+                                                            @foreach($origin_ammounts as $origin_ammount)
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="origin_ammount_charge" value="{{$origin_ammount->charge}}" name="origin_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="{{$origin_ammount->detail}}" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1" {!! $origin_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
+                                                                                        <option value="2" {!! $origin_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
+                                                                                        <option value="3" {!! $origin_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
+                                                                                        <option value="4" {!! $origin_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @endforeach
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="origin_total_ammount_2[]"  value="{{$origin_ammount->total_ammount_2}}" class="form-control" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row hide' id="origin_ammounts">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1">USD</option>
+                                                                                        <option value="2">CLP</option>
+                                                                                        <option value="3">ARS</option>
+                                                                                        <option value="4">EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="">
+                                                                                <a class="btn removeOriginButton">
+                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-9"></div>
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <h5>
+                                                                                    Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
+                                                                                    <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value="{{$quote->sub_total_origin}}" class="form-control"/>
+                                                                                </h5>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <a class="btn addButtonOrigin" style="vertical-align: middle">
+                                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5>Freight ammounts</h5>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-2">Charge</div>
+                                                                <div class="col-md-2">Detail</div>
+                                                                <div class="col-md-1">Units</div>
+                                                                <div class="col-md-3">Price per unit</div>
+                                                                <div class="col-md-1">Markup</div>
+                                                                <div class="col-md-1">Total</div>
+                                                                <div class="col-md-1">Total EUR</div>
+                                                            </div>
+                                                            <hr>
+                                                            @foreach($freight_ammounts as $freight_ammount)
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="freight_ammount_charge" value="{{$freight_ammount->charge}}" name="freight_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="{{$freight_ammount->detail}}" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
+                                                                                        <option value="2" {!! $freight_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
+                                                                                        <option value="3" {!! $freight_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
+                                                                                        <option value="4" {!! $freight_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" min="0" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" value="{{$freight_ammount->total_ammount_2}}" class="form-control" min="0" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+                                                            <div class='row hide' id="freight_ammounts">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1">USD</option>
+                                                                                        <option value="2">CLP</option>
+                                                                                        <option value="3">ARS</option>
+                                                                                        <option value="4">EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="">
+                                                                                <a class="btn removeButton">
+                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-9"></div>
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <h5>
+                                                                                    Sub-Total: <span id="sub_total_freight">{{$quote->sub_total_freight}}</span>&nbsp;
+                                                                                    <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value="{{$quote->sub_total_freight}}"  class="form-control"/>
+                                                                                </h5>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <a class="btn addButton" style="vertical-align: middle">
+                                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5>Destination ammounts</h5>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row">
+                                                                <div class="col-md-2">Charge</div>
+                                                                <div class="col-md-2">Detail</div>
+                                                                <div class="col-md-1">Units</div>
+                                                                <div class="col-md-3">Price per unit</div>
+                                                                <div class="col-md-1">Markup</div>
+                                                                <div class="col-md-1">Total</div>
+                                                                <div class="col-md-1">Total EUR</div>
+                                                            </div>
+                                                            <hr>
+                                                            @foreach($destination_ammounts as $destination_ammount)
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="destination_ammount_charge" value="{{$destination_ammount->charge}}" name="destination_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" value="{{$destination_ammount->detail}}" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
+                                                                                        <option value="2" {!! $destination_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
+                                                                                        <option value="3" {!! $destination_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
+                                                                                        <option value="4" {!! $destination_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]"  value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]"  value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="destination_total_ammount_2[]"  value="{{$destination_ammount->total_ammount_2}}" class="form-control" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+                                                            <div class='row hide' id="destination_ammounts">
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="input-group">
+                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                            <div class="input-group-btn">
+                                                                                <div class="btn-group">
+                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                                                                        <option value="">Currency</option>
+                                                                                        <option value="1">USD</option>
+                                                                                        <option value="2">CLP</option>
+                                                                                        <option value="3">ARS</option>
+                                                                                        <option value="4">EUR</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1" >
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <input type="text" name="destination_total_ammount_2[]"  class="form-control" aria-label="...">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        <div class="form-group">
+                                                                            <div class="">
+                                                                                <a class="btn removeButtonDestination">
+                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-9"></div>
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <h5>
+                                                                                    Sub-Total: <span id="sub_total_destination">{{$quote->sub_total_destination}}</span>&nbsp
+                                                                                    <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value="{{$quote->sub_total_destination}}" class="form-control"/>
+                                                                                </h5>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="form-group">
+                                                                            <span>
+                                                                                <a class="btn addButtonDestination" style="vertical-align: middle">
+                                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                </a>
+                                                                            </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group text-right">
+                                                                        <h3><b>Total:</b> <span id="total">{{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }}</span></h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->local_markup as $local)
-                                                    @if($local->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_2">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_2" {!! $local->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="local_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_2" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2" {!! $local->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_2_2" {!! $local->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_2_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_2_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
                                         </div>
-                                        <!--end::Portlet-->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Inland Charges Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->inland_markup as $inland)
-                                                    @if($inland->price_type_id==2)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_2">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_1" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_1" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_2" {!! $inland->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
-                                                                <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_2" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_2" {!! $inland->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="{{ $inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_2_2"  {!! $inland->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_2_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_2_2"  {!! $inland->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <!--end::Portlet-->
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Freight Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->freight_markup as $item)
-                                                    @if($item->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_freight_markup_3">
-                                                                    <option value="1" {!! $item->percent_markup != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $item->fixed_markup != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Freight Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Freight rate markup</span>
-                                                            </div>
-                                                            <div class="col-md-6 freight_percent_markup_3" {!! $item->percent_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="freight_type[]"/>
-                                                                <input type="text" class="form-control" id="freight_percent_markup_3" value="{{$item->percent_markup}}" name="freight_percent_markup[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 freight_fixed_markup_3" {!! $item->fixed_markup == 0 ? 'style="display: none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="freight_fixed_markup_3" name="freight_fixed_markup[]" value="{{$item->fixed_markup}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="freight_currency_markup_3" name="freight_markup_currency[]">
-                                                                                <option value="usd">USD</option>
-                                                                                <option value="clp">CLP</option>
-                                                                                <option value="ars">ARS</option>
-                                                                                <option value="eur">EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
+                                <hr>
+                                <div class="form-group m-form__group row">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-lg-offset-4">
+                                            <button type="submit" class="btn btn-primary">
+                                                Update Quote
+                                            </button>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Local Charges Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->local_markup as $local)
-                                                    @if($local->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_local_markup_3">
-                                                                    <option value="1" {!! $local->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $local->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Local Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_3" {!! $local->percent_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="local_type[]"/>
-                                                                <input type="text" class="form-control" id="local_percent_markup_3" value="{{$local->percent_markup_import}}" name="local_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3" {!! $local->fixed_markup_import == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_3" name="local_fixed_markup_import[]" value="{{$local->fixed_markup_import}}" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_3" name="local_currency_import[]">
-                                                                                <option value="usd" {!! $local->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $local->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $local->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $local->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 local_percent_markup_3_2" {!! $local->percent_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <input type="text" class="form-control" id="local_percent_markup_3_2" value="{{$local->percent_markup_export}}" name="local_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 local_fixed_markup_3_2" {!! $local->fixed_markup_export == 0 ? 'style="display:none"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="local_fixed_markup_3_2" name="local_fixed_markup_export[]" value="{{$local->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="local_currency_markup_3_2" name="local_currency_export[]">
-                                                                                <option value="usd" {!! $local->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $local->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $local->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $local->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <!--end::Portlet-->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!--begin::Portlet-->
-                                        <div class="m-portlet m-portlet--default m-portlet--head-solid-bg" style="min-height: 290px !important;">
-                                            <div class="m-portlet__head">
-                                                <div class="m-portlet__head-caption">
-                                                    <div class="m-portlet__head-title">
-                                                        <h3 class="m-portlet__head-text">
-                                                            Define Inland Charges Markups
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="m-portlet__body text-center" style="font-size: 11px !important;">
-                                                @foreach($price->inland_markup as $inland)
-                                                    @if($inland->price_type_id==3)
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <select class="form-control" id="type_inland_markup_3">
-                                                                    <option value="1" {!! $inland->percent_markup_import != 0 ? 'selected':'' !!}>Percent Markup</option>
-                                                                    <option value="2" {!! $inland->fixed_markup_import != 0 ? 'selected':'' !!}>Fixed Markup</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <span><b>Inland Charges</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Percent Markup</b></span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <span><b>Fixed Markup</b></span>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Import</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_3" {!! $inland->percent_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_3" value="{{$inland->percent_markup_import}}" name="inland_percent_markup_import[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3" {!! $inland->fixed_markup_import == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_3" name="inland_fixed_markup_import[]" value="{{$inland->fixed_markup_import}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_3" name="inland_currency_import[]">
-                                                                                <option value="usd" {!! $inland->currency_import == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $inland->currency_import == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $inland->currency_import == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $inland->currency_import == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div class="row" style="font-size: 11px !important;">
-                                                            <div class="col-md-6">
-                                                                <span>Export</span>
-                                                            </div>
-                                                            <div class="col-md-6 inland_percent_markup_3_2" {!! $inland->percent_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
-                                                                <input type="text" class="form-control" id="inland_percent_markup_3_2" value="{{$inland->percent_markup_export}}" name="inland_percent_markup_export[]"/>
-                                                            </div>
-                                                            <div class="col-md-6 inland_fixed_markup_3_2" {!! $inland->fixed_markup_export == 0 ? 'style="display:none;"':'' !!}>
-                                                                <div class="input-group">
-                                                                    <input type="number" id="inland_fixed_markup_3_2" name="inland_fixed_markup_export[]" value="{{$inland->fixed_markup_export}}" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            <select class="btn btn-default" id="inland_currency_markup_3_2" name="inland_currency_export[]">
-                                                                                <option value="usd" {!! $inland->currency_export == 'usd' ? 'selected':'' !!}>USD</option>
-                                                                                <option value="clp" {!! $inland->currency_export == 'clp' ? 'selected':'' !!}>CLP</option>
-                                                                                <option value="ars" {!! $inland->currency_export == 'ars' ? 'selected':'' !!}>ARS</option>
-                                                                                <option value="eur" {!! $inland->currency_export == 'eur' ? 'selected':'' !!}>EUR</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <!--end::Portlet-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {!! Form::close() !!}
                 </div>
-                <div class="m-portlet__foot m-portlet__foot--fit">
-                    <br>
-                    <div class="m-form__actions">
-                        <button type="submit" class="btn btn-primary">
-                            Submit
-                        </button>
-                        <button type="reset" class="btn btn-success">
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-                {!! Form::close() !!}
             </div>
         </div>
     </div>
+    @include('quotes.partials.sendQuoteModal');
 @endsection
 
 @section('js')
     @parent
-    <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
-    <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
-    <script>
-        function AbrirModal(action,id){
-            if(action == "edit"){
-                var url = '{{ route("prices.edit", ":id") }}';
-                url = url.replace(':id', id);
-                $('.modal-body').load(url,function(){
-                    $('#priceModal').modal({show:true});
-                });
-            }if(action == "add"){
-                var url = '{{ route("prices.add") }}';
-                $('.modal-body').load(url,function(){
-                    $('#priceModal').modal({show:true});
-                });
-            }
-            if(action == "delete"){
-                var url = '{{ route("prices.delete", ":id") }}';
-                url = url.replace(':id', id);
-                $('.modal-body').load(url,function(){
-                    $('#deletePriceModal').modal({show:true});
-                });
-            }
-        }
+    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="/js/quote.js"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+    <script src="s/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 
-        $(document).ready(function() {
-            $('#select-2').select2();
-        });
-        /*$(document).on('change', '#type_freight_markup_1', function (e) {
-            if($(this).val()==1){
-                $("#freight_fixed_markup_1").prop('disabled', true);
-                $("#freight_markup_currency_1").prop('disabled', true);
-                $("#freight_percent_markup_1").prop('disabled', false);
-            }else{
-                $("#freight_fixed_markup_1").prop('disabled', false);
-                $("#freight_markup_currency_1").prop('disabled', false);
-                $("#freight_percent_markup_1").prop('disabled', true);
-            }
-        });*/
-    </script>
 @stop

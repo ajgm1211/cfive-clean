@@ -79,10 +79,10 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             <table id='twuenty' class=" table table-condensed col-lg-12">
                                 <thead>
                                     <tr>
-                                        <th> <span><b>Lower limit (KM)</b></span></th>
-                                        <th>  <span><b>Upper limit (KM)</b></span></th>
-                                        <th><span><b>Rate Per<br> Container</b></span></th>
-                                        <th><span><b>Options</b></span></th>
+                                        <th id="lower-limit-fcl"> <span><b>Lower limit (KM)</b></span></th>
+                                        <th id="upper-limit-fcl">  <span><b>Upper limit (KM)</b></span></th>
+                                        <th id="rate-limit-fcl"><span><b>Rate Per<br> Container</b></span></th>
+                                        <th id="options-limit-fcl"><span><b>Options</b></span></th>
 
                                     </tr>
                                 </thead>

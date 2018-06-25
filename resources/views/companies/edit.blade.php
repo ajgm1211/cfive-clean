@@ -16,7 +16,7 @@
                 @include('companies.partials.form_add_companies')
                 <div class="form-group m-form__group">
                     {!! Form::label('price_id', 'Price Level') !!}<br>
-                    {{ Form::select('price_id',$prices,$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
+                    {{ Form::select('price_id[]',$prices,$company->company_price->price_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2-edit-company','multiple'=>true]) }}
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
 {!! Form::close() !!}
 <!--end::Form-->
 </div>
-
+<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 
