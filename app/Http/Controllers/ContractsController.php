@@ -725,14 +725,14 @@ class ContractsController extends Controller
 
         $rate = new Rate();
 
-        $duplicate =  Rate::where('origin_port','=',$originR)
+        /*$duplicate =  Rate::where('origin_port','=',$originR)
             ->where('destiny_port','=',$destinationR)
             ->where('carrier_id','=',$carrierR)
             ->where('contract_id','=',$contract)
             ->count();
         //return $duplicate;
 
-        if($duplicate <= 0){
+        if($duplicate <= 0){*/
             $rate = Rate::find($rate_idR);
             $rate->origin_port   = $originR;
             $rate->destiny_port  = $destinationR;
@@ -758,10 +758,10 @@ class ContractsController extends Controller
                            'currency'  => $currencolle->alphacode,
                           ];
 
-        }
+        /*}
         else{
             return $col = ['response'  => '2'];
-        }
+        }*/
 
     }
     

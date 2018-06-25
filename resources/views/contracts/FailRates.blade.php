@@ -182,7 +182,7 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$ratef['rate_id']}})" >
+                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$ratef['rate_id']}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
 
@@ -284,7 +284,7 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$rate['id']}})" >
+                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$rate['id']}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
 
@@ -448,42 +448,54 @@
 
     function DestroyRate(idtr,idrate){
         var accion = $('#accion'+idtr).val();
-        jQuery.ajax({
-            method:'get',
-            data:{
-                rate_id:idrate,
-                accion:accion
-            },
-            url:'/contracts/DestroyRatesFailCorrectForContracts',
-            success:function(data){
-                if(data == 1){
-                    swal("Good job!", "Deletion fail rate!", "success");
-                    var a = $('#strfailinput').val();
-                    a--;
-                    $('#strfail').text(a);
-                    $('#strfailinput').attr('value',a);
 
-                }
-                else if( data == 2){
-                    swal("Good job!", "Deletion rate!", "success");
-                    var b = $('#strgoodinput').val();
-                    b--;
-                    $('#strgoodinput').attr('value',b);
-                    $('#strgood').text(b);
-                }
-                $('.tdBTU'+idtr).attr('hidden','hidden');
-                $('.icon'+idtr).attr('style','color:gray');
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function(result) {
+            if (result.value) {
 
-                $('#originlb'+idtr).attr('style','color:red');
-                $('#destinylb'+idtr).attr('style','color:red');
-                $('#carrierlb'+idtr).attr('style','color:red');
-                $('#twuentylb'+idtr).attr('style','color:red');
-                $('#fortylb'+idtr).attr('style','color:red');
-                $('#fortyhclb'+idtr).attr('style','color:red');
-                $('#currencylb'+idtr).attr('style','color:red');
+
+                jQuery.ajax({
+                    method:'get',
+                    data:{
+                        rate_id:idrate,
+                        accion:accion
+                    },
+                    url:'/contracts/DestroyRatesFailCorrectForContracts',
+                    success:function(data){
+                        if(data == 1){
+                            swal("Good job!", "Deletion fail rate!", "success");
+                            var a = $('#strfailinput').val();
+                            a--;
+                            $('#strfail').text(a);
+                            $('#strfailinput').attr('value',a);
+
+                        }
+                        else if( data == 2){
+                            swal("Good job!", "Deletion rate!", "success");
+                            var b = $('#strgoodinput').val();
+                            b--;
+                            $('#strgoodinput').attr('value',b);
+                            $('#strgood').text(b);
+                        }
+                        $('.tdBTU'+idtr).attr('hidden','hidden');
+                        $('.icon'+idtr).attr('style','color:gray');
+
+                        $('#originlb'+idtr).attr('style','color:red');
+                        $('#destinylb'+idtr).attr('style','color:red');
+                        $('#carrierlb'+idtr).attr('style','color:red');
+                        $('#twuentylb'+idtr).attr('style','color:red');
+                        $('#fortylb'+idtr).attr('style','color:red');
+                        $('#fortyhclb'+idtr).attr('style','color:red');
+                        $('#currencylb'+idtr).attr('style','color:red');
+                    }
+                });
             }
         });
-
         /* idtr--;
         var myTable = $('#html_table');
         myTable.find( 'tbody tr:eq('+idtr+')' ).remove();
