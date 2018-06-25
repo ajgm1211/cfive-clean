@@ -19,7 +19,6 @@ class CreateCurrencyTable extends Migration
             $table->string('alphacode')->nullable();
             $table->string('api_code_eur')->nullable();
             $table->string('api_code')->nullable();
-            $table->string('api_code_eur')->nullable();
             $table->double('rates')->nullable();
             $table->double('rates_eur')->nullable();
             $table->timestamps();

@@ -69,15 +69,15 @@ class ContractsController extends Controller
         })->pluck('first_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
 
         return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
@@ -241,18 +241,18 @@ class ContractsController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
     }
     /**
      * Update the specified resource in storage.
@@ -260,7 +260,7 @@ class ContractsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function update(Request $request, $id)
     {
         $requestForm = $request->all();
@@ -335,10 +335,10 @@ class ContractsController extends Controller
                 $contador++;
             }
         }
-        
+
         if(!empty($companies)){
             ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
-            
+
             foreach($companies as $key3 => $value)
             {
                 $contract_company_restriction = new ContractCompanyRestriction();
@@ -350,7 +350,7 @@ class ContractsController extends Controller
 
         if(!empty($users)){
             ContractUserRestriction::where('contract_id',$contract->id)->delete();
-            
+
             foreach($users as $key4 => $value)
             {
                 $contract_client_restriction = new ContractUserRestriction();
@@ -402,7 +402,9 @@ class ContractsController extends Controller
             $contract = $request->contract_id;
             $errors=0;
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
-
+                $twuenty = "20'";
+                $forty = "40'";
+                $fortyhc = "40'hc";
                 foreach ($reader->get() as $book) {
 
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
@@ -790,30 +792,30 @@ class ContractsController extends Controller
         //return $duplicate;
 
         if($duplicate <= 0){*/
-            $rate = Rate::find($rate_idR);
-            $rate->origin_port   = $originR;
-            $rate->destiny_port  = $destinationR;
-            $rate->carrier_id    = $carrierR;
-            $rate->twuenty       = $twuentyR;
-            $rate->forty         = $fortyR;
-            $rate->fortyhc       = $fortyhcR;
-            $rate->currency_id   = $currencyR;
-            $rate->save();
+        $rate = Rate::find($rate_idR);
+        $rate->origin_port   = $originR;
+        $rate->destiny_port  = $destinationR;
+        $rate->carrier_id    = $carrierR;
+        $rate->twuenty       = $twuentyR;
+        $rate->forty         = $fortyR;
+        $rate->fortyhc       = $fortyhcR;
+        $rate->currency_id   = $currencyR;
+        $rate->save();
 
-            $origcolle   = Harbor::find($rate->origin_port);
-            $destcolle   = Harbor::find($rate->destiny_port);
-            $carriecolle = Carrier::find($rate->carrier_id);
-            $currencolle = Currency::find($rate->currency_id);
+        $origcolle   = Harbor::find($rate->origin_port);
+        $destcolle   = Harbor::find($rate->destiny_port);
+        $carriecolle = Carrier::find($rate->carrier_id);
+        $currencolle = Currency::find($rate->currency_id);
 
-            return $col = ['response'  => '1',
-                           'origin'    => $origcolle->name,
-                           'destiny'   => $destcolle->name,
-                           'carrier'   => $carriecolle->name,
-                           'twuenty'   => $twuentyR,
-                           'forty'     => $fortyR,
-                           'fortyhc'   => $fortyhcR,
-                           'currency'  => $currencolle->alphacode,
-                          ];
+        return $col = ['response'  => '1',
+                       'origin'    => $origcolle->name,
+                       'destiny'   => $destcolle->name,
+                       'carrier'   => $carriecolle->name,
+                       'twuenty'   => $twuentyR,
+                       'forty'     => $fortyR,
+                       'fortyhc'   => $fortyhcR,
+                       'currency'  => $currencolle->alphacode,
+                      ];
 
         /*}
         else{
@@ -821,11 +823,11 @@ class ContractsController extends Controller
         }*/
 
     }
-    
+
     public function DestroyRatesFailCorrect(Request $request){
         $rate_id   =  $_REQUEST['rate_id'];
         $accion    =  $_REQUEST['accion'];
-        
+
         if($accion == 2){
             $rate = new Rate();
             $rate = Rate::find($rate_id);
@@ -838,8 +840,76 @@ class ContractsController extends Controller
             $ratefail->delete();
             return 1;
         }
-        
+
     }
+
+    public function UploadFileSubchargeForContract(Request $request){
+
+        try {
+            $file = $request->file('file');
+            $ext = strtolower($file->getClientOriginalExtension());
+
+            $validator = \Validator::make(
+                array('ext' => $ext),
+                array('ext' => 'in:xls,xlsx,csv')
+            );
+
+            if ($validator->fails()) {
+                $request->session()->flash('message.nivel', 'danger');
+                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+                return redirect()->route('contracts.edit',$request->contract_id);
+            }
+
+            //obtenemos el nombre del archivo
+            $nombre = $file->getClientOriginalName();
+
+            $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+
+            $contract = $request->contract_id;
+            $errors=0;
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+
+                foreach ($reader->get() as $book) {
+                    $forty = "40'hc";
+                    echo 'llega'.$book->$forty.'<br>';
+                    /*$carrier = Carrier::where('name','=',$book->carrier)->first();
+
+
+                    $currenc = Currency::where('alphacode','=',$book->currency)->first();
+                    $carrier = Carrier::where('name','=',$book->carrier)->first();
+
+
+                    $errors++;
+
+                } 
+              /*  if($errors > 0){
+                    $request->session()->flash('message.content', 'You successfully added the rate ');
+                    $request->session()->flash('message.nivel', 'danger');
+                    $request->session()->flash('message.title', 'Well done!');
+                    if($errors == 1){
+                        $request->session()->flash('message.content', $errors.' Rates is not charged correctly');
+                    }else{
+                        $request->session()->flash('message.content', $errors.' Rates did not load correctly');
+                    }
+                }
+                else{
+                    $request->session()->flash('message.nivel', 'success');
+                    $request->session()->flash('message.title', 'Well done!');
+                }*/
+                }
+            });
+            //  return redirect()->route('Failed.Rates.For.Contracts',$contract);
+
+            //dd($res);*/
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'There was an error loading the file');
+            return redirect()->route('contracts.edit',$request->contract_id);
+        }
+    }
+
 
     public function updateLocalChar(Request $request, $id)
     {
