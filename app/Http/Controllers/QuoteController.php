@@ -70,7 +70,7 @@ class QuoteController extends Controller
 	$info =$request->input('info');
 	$info = json_decode($info);
 	$form =$request->input('form');
-
+dd($info);
 	$form = json_decode($form);
 	$company_user_id=\Auth::user()->company_user_id;
 	$quotes = Quote::all();
@@ -1380,6 +1380,7 @@ class QuoteController extends Controller
 	 */
   public function store(Request $request)
   {
+    //dd($request->all());
 	$input = Input::all();
 	$request->request->add(['owner' => \Auth::id()]);
 	$quote=Quote::create($request->all());
