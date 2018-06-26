@@ -16,6 +16,10 @@
                 <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
                 <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             </div>
+            <div class="col-md-1">
+                <button data-toggle="modal" data-target="#DuplicateQuote" class="btn btn-info ">Duplicate</button>
+                <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
+            </div>
         </div>
         <br>
         @if(Session::has('message.nivel'))
