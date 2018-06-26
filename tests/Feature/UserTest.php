@@ -25,12 +25,7 @@ class UserTest extends TestCase
 
     public function testAddUser()
     {
-
-        //$this->withoutExceptionHandling();
-
-        //$user = User::find(1);
-        //$this->actingAs($user);
-
+        
         $user = factory(User::class)->create();
         $this->actingAs($user);
 
