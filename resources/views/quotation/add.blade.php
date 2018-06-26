@@ -4,7 +4,7 @@
 @php 
 
 $subtotalOrigin = 0;
-$subtotalFreight = 0;
+
 $subtotalDestiny = 0;
 @endphp
 
@@ -85,7 +85,13 @@ $subtotalDestiny = 0;
                                   <p id="cargo_details_20_p" ><span id="cargo_details_20"></span> {{ $form->twuenty }} x 20' Containers</p>
                                   <p id="cargo_details_40_p" ><span id="cargo_details_40"></span> {{ $form->forty }} x 40' Containers</p>
                                   <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
+                                  <p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>
+
+
+                                  <input type="hidden" name=""  class="form-control total_rates_ammount"  aria-label="..." value="{{ $info->totalrates  }}">
+
                                 </div>
+
                               </div>
                             </div>
                           </div>
@@ -164,14 +170,14 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $total[0] }}"/>
+                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_local }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $subtotalOrigin[0]  }}">
+                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $total[0]  }}">
                                       </div>
                                     </div>
                                   </div>
@@ -234,14 +240,14 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $total[0] }}"/>
+                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_local  }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $subtotalOrigin[0]  }}">
+                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $total[0]  }}">
                                       </div>
                                     </div>
                                   </div>
@@ -414,7 +420,7 @@ $subtotalDestiny = 0;
                               @foreach($info->localFreight as $freight)
                               @php 
                               $total = explode(" ",$freight->freight->totalAmmount);
-                              $subtotalFreight = explode(" ",$info->totalFreight);
+
                               @endphp    
                               <div class="row">
                                 <div class="col-md-2">
@@ -469,14 +475,14 @@ $subtotalDestiny = 0;
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $total[0] }}">
+                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->freight->subtotal_local  }}">
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number" value="{{ $subtotalFreight[0] }}"/>
+                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number" value="{{ $total[0] }}"/>
                                   </div>
                                 </div>
                               </div>
@@ -484,7 +490,7 @@ $subtotalDestiny = 0;
                               @foreach($info->globalFreight as $freight)
                               @php 
                               $total = explode(" ",$freight->freight->totalAmmount);
-                              $subtotalFreight = explode(" ",$info->totalFreight);
+
                               @endphp    
                               <div class="row">
                                 <div class="col-md-2">
@@ -537,14 +543,14 @@ $subtotalDestiny = 0;
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $total[0] }}">
+                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->freight->subtotal_global }}">
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number" value="{{ $subtotalFreight[0] }}"/>
+                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number" value="{{ $total[0] }}"/>
                                   </div>
                                 </div>
                               </div>
@@ -675,8 +681,8 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <span>
                                       <h5>
-                                        Sub-Total:<span id="sub_total_freight">{{$subtotalFreight[0]}}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                        <input type="hidden" id="total_freight_ammount" name="sub_total_freight"  class="form-control" value = '{{$subtotalFreight[0]}}'/>
+                                        Sub-Total:<span id="sub_total_freight">{{ $info->freightCharges }}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                        <input type="hidden" id="total_freight_ammount" name="sub_total_freight"  class="form-control" value = '{{ $info->freightCharges}}'/>
                                       </h5>
                                     </span>
                                   </div>
@@ -765,14 +771,14 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{$total[0] }}"/>
+                                    <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{ $destiny->destiny->subtotal_local }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $subtotalDestiny[0] }}">
+                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $total[0] }}">
                                       </div>
                                     </div>
                                   </div>
@@ -833,14 +839,14 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{$total[0] }}"/>
+                                    <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{  $destiny->destiny->subtotal_global }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $subtotalDestiny[0] }}">
+                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $total[0] }}">
                                       </div>
                                     </div>
                                   </div>
