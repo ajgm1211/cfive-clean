@@ -162,8 +162,8 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
-        GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
+        //Barryvdh\DomPDF\ServiceProvider::class,
+        //GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
         Barryvdh\Elfinder\ElfinderServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
