@@ -114,6 +114,7 @@ class TermsAndConditionsController extends Controller
         $harbor = Harbor::All();
         $termsport = $table_terms_port->where('term_id', $term->id)->pluck('port_id');
         $cnt = 0;
+
         foreach($termsport as $tp){
             $ports[$cnt++] = $harbor->where('id', $tp)->pluck('name');
         }
