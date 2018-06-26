@@ -149,7 +149,7 @@
                                 @endif
                             </td>
                             <td>{{ $arr->name_company }}</td>
-                            <td>{{ $arr->state }}</td>
+                            <td>@if($arr->state==1) Active @else Inactive @endif</td>
                             <td>
                                 <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                     <i class="la la-edit"></i>

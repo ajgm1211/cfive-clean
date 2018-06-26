@@ -15,7 +15,7 @@
 </div>
 @if($type == 'add' )
     <div class="form-group m-form__group">
-        <input type="password" class="form-control m-input" placeholder="Please enter your password" required>
+        <input type="password" name="password" class="form-control m-input" placeholder="Please enter your password" required>
     </div>
 @endif
 @if( Auth::user()->type == 'admin'   )

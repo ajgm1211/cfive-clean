@@ -68,6 +68,8 @@ class PdfController extends Controller
                     'mime' => 'application/pdf',
                 ]);
             });
+            $quote->status_quote_id=2;
+            $quote->update();
             return response()->json(['message' => 'Ok']);
         }else{
             return response()->json(['message' => 'Error']);
