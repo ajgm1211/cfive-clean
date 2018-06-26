@@ -252,7 +252,7 @@ class ContractsController extends Controller
             })->pluck('Name','id');
         }
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
     }
     /**
      * Update the specified resource in storage.
