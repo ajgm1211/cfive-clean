@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,22 +26,31 @@ class UserTest extends TestCase
 
     public function testAddUser()
     {
-        
         $user = factory(User::class)->create();
         $this->actingAs($user);
 
-        $this->visit('/users/add')
-            ->post(route('users.store'), [
-                'name' => 'francisco',
-                'lastname' => 'vargas',
-                'email' => 'fv@mail.com',
-                'pass' => '123456'
-            ]);
+        $userToAdd = factory(User::class)->create();
 
-        $this->seeInDatabase('users', [
-                'name' => 'francisco',
-                'lastname' => 'vargas',
-                'email' => 'fv@mail.com'
-            ]);
+        $this->visit('/users/add')
+            ->post(route('users.store'), $userToAdd->toArray());
+
+        $this->seeInDatabase('users', $userToAdd->toArray());
+    }
+
+    public function testEditUser()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $this->put(route('users.update', $user), $user->toArray());
+
+        $this->seeInDatabase('users', $user->toArray());
+    }
+
+    public function testDeleteUser()
+    {
+
     }
 }
