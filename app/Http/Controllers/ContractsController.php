@@ -568,7 +568,7 @@ class ContractsController extends Controller
     }
 
     public function FailedRates($id){
-
+        //$id se refiere al id del contracto
         $objharbor = new Harbor();
         $objcurrency = new Currency();
         $objcarrier = new Carrier();
@@ -963,7 +963,7 @@ class ContractsController extends Controller
                        && $ammountBol == true){ 
                         echo 'bien<br>';//dd($currency);
 
-                        /*  $idlocalchar = LocalCharge::create([
+                        $idlocalchar = LocalCharge::create([
                             'surcharge_id'        => $surchargeVar,
                             'typedestiny_id'      => $destinytypeVar,
                             'contract_id'         => $contract,
@@ -1009,7 +1009,7 @@ class ContractsController extends Controller
                         }
 
 
-                        /*FailSurCharge::create([
+                        FailSurCharge::create([
                             'surcharge_id'       => $surchargeVar,
                             'port_orig'          => $originVar,
                             'port_dest'          => $destinationVar,
@@ -1019,7 +1019,7 @@ class ContractsController extends Controller
                             'ammount'            => $ammountVar,
                             'currency_id'        => $currencyVar,
                             'carrier_id'         => $carrierVar,
-                        ]);*/
+                        ]);
 
                         $errors++;
                     }
@@ -1055,33 +1055,39 @@ class ContractsController extends Controller
 
     public function FailSubcharges($id){
 
-        $objharbor      = new Harbor();
-        $objcurrency    = new Currency();
-        $objcarrier     = new Carrier();
-        $objsurcharge   = new Surcharge();
-        $objtypedestiny = new TypeDestiny();
+        $objharbor          = new Harbor();
+        $objcurrency        = new Currency();
+        $objcarrier         = new Carrier();
+        $objsurcharge       = new Surcharge();
+        $objtypedestiny     = new TypeDestiny();
+        $objCalculationType = new CalculationType();
 
-        $typedestiny      = $objtypedestiny->all()->pluck('description','id');
-        $surchargeSelect  = $objsurcharge->all()->pluck('name','id');
-        $carrierSelect    = $objcarrier->all()->pluck('name','id');
-        $harbor           = $objharbor->all()->pluck('name','id');
-        $currency         = $objcurrency->all()->pluck('alphacode','id');
+        $typedestiny           = $objtypedestiny->all()->pluck('description','id');
+        $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
+        $carrierSelect         = $objcarrier->all()->pluck('name','id');
+        $harbor                = $objharbor->all()->pluck('name','id');
+        $currency              = $objcurrency->all()->pluck('alphacode','id');
+        $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
 
         $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
 
         $failsurchargecoll = collect([]);
         foreach($failsurchargeS as $failsurcharge){
-            
-            $classdorigin       =  'color:green';
-            $classddestination  =  'color:green';
-            $classcarrier       =  'color:green';
-            $classsurcharger    =  'color:green';
+
+            $classdorigin           =  'color:green';
+            $classddestination      =  'color:green';
+            $classcarrier           =  'color:green';
+            $classsurcharger        =  'color:green';
+            $classcalculationtype   =  'color:green';
+            $classammount           =  'color:green';
+            $classcurrency          =  'color:green';
 
             $surchargeA         =  explode("_",$failsurcharge['surcharge_id']);
             $originA            =  explode("_",$failsurcharge['port_orig']);
             $destinationA       =  explode("_",$failsurcharge['port_dest']);
             $calculationtypeA   =  explode("_",$failsurcharge['calculationtype_id']);
+
             $ammountA           =  explode("_",$failsurcharge['ammount']);
             $currencyA          =  explode("_",$failsurcharge['currency_id']);
             $carrierA           =  explode("_",$failsurcharge['carrier_id']);
@@ -1095,8 +1101,8 @@ class ContractsController extends Controller
                 $surchargeA = $surchargeA[0];
             }
             else{
-                $surchargeA = $surchargeA[0].' (error)';
-                $classsurcharger='color:red';
+                $surchargeA         = $surchargeA[0].' (error)';
+                $classsurcharger    = 'color:red';
             }
 
 
@@ -1108,50 +1114,100 @@ class ContractsController extends Controller
                 $carrierA = $carrierA[0];
             }
             else{
-                $carrierA = $carrierA[0].' (error)';
-                $classcarrier='color:red';
+                $carrierA       = $carrierA[0].' (error)';
+                $classcarrier   ='color:red';
             }
-            
-            $calculationtypeOb  = CalculationType::where('','=',$calculationtypeA[0])->first();
+
+            $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
             $calculationtypeAIn = $calculationtypeOb['id'];
             $calculationtypeC   = count($calculationtypeA);
-            
+
             if($calculationtypeC <= 1){
                 $calculationtypeA = $calculationtypeA[0];
             }
             else{
-                $calculationtypeA = $calculationtypeA[0].' (error)';
-                $classcalculationtype='color:red';
-                
+                $calculationtypeA       = $calculationtypeA[0].' (error)';
+                $classcalculationtype   = 'color:red';
             }
 
-            /*
-            $originLB = Harbor::where('id','=',$originA[0])->first();
-            $destinyLB =   Harbor::where('id','=',$destinationA[0])->first();
+            $ammountC = count($ammountA);
+
+            if($ammountC <= 1){
+                $ammountA = $failsurcharge->ammount;
+            }
+            else{
+                $ammountA       = $ammountA[0].' (error)';
+                $classammount   = 'color:red';
+            }
+
+            $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
+            $currencyAIn  = $currencyOb['id'];
+            $currencyC    = count($currencyA);
+
+            if($currencyC){
+                $currencyA = $currencyA[0];
+            }
+            else{
+                $currencyA      = $currencyA[0].' (error)';
+                $classcurrency  = 'color:red';
+            }
+
+            $typedestinyLB    = TypeDestiny::where('id','=',$failsurcharge['typedestiny_id'])->first();
+
+            $originLB         = Harbor::where('id','=',$originA[0])->first();
+            $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
 
             $arreglo = [
-                'surchargelb'   => $surchargeA,
-                'surcharge_id'  => $surcharAin,
+                'surchargelb'           => $surchargeA,
+                'surcharge_id'          => $surcharAin,
 
-                'origin_portLb' => $originLB['name'],
-                'origin_port'   => $originA[0],
+                'origin_portLb'         => $originLB['name'],
+                'origin_port'           => $originA[0],
 
-                'destiny_portLb'  =>  $destinyLB['name'],
-                'destiny_port'    =>  $destinationA[0],  
-                
+                'destiny_portLb'        => $destinyLB['name'],
+                'destiny_port'          => $destinationA[0], 
 
-                'classsurcharger' => $classsurcharger,
-                'classorigin'     => $classdorigin
-                'classdestiny'    => $classddestination,
-                'classcarrier'    => $classcarrier
+                'carrierlb'            => $carrierA,
+                'carrier_id'           => $carrAIn,
+                'typedestinylb'         => $typedestinyLB['description'],
+                'typedestiny'           => 3,
+
+                'ammount'               => $ammountA,
+
+                'calculationtypelb'     => $calculationtypeA,
+                'calculationtype'       => $calculationtypeAIn,
+
+                'currencylb'            => $currencyA,
+                'currency_id'           => $currencyAIn,
+
+                'classsurcharge'       => $classsurcharger,
+                'classorigin'           => $classdorigin,
+                'classdestiny'          => $classddestination,
+                'classcarrier'          => $classcarrier,
+                'classcalculationtype'  => $classcalculationtype,
+                'classammount'          => $classammount,
+                'classcurrency'         => $classcurrency,
 
             ];
 
 
-            $failsurchargecoll->push()*/
+            $failsurchargecoll->push($arreglo);
         }
-
-        // return  $failsurchargecoll;
+        $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
+        $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
+        $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharports.portOrig','localcharports.portDest')->get();
+        //dd($goodsurcharges);
+        return  view('contracts.FailSurcharge',compact('failsurchargecoll',
+                                                       'countfailsurcharge',
+                                                       'countgoodsurcharge',
+                                                       'typedestiny',
+                                                       'surchargeSelect',
+                                                       'carrierSelect',
+                                                       'harbor',
+                                                       'currency',
+                                                       'calculationtypeselect',
+                                                       'goodsurcharges'
+                                                      )); //*/
     }
 
     public function updateLocalChar(Request $request, $id)
