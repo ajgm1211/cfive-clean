@@ -34,7 +34,7 @@ class Rate extends Model
     
     public function contract_company_restriction(){
 
-        return $this->HasManyTrougth('App\Contract','App\ContractCompanyRestriction');
+        return $this->HasManyThrough('App\ContractCompanyRestriction','App\Contract','id','contract_id','contract_id','id');
         
     }
 }

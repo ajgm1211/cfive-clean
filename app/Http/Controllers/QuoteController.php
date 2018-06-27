@@ -348,11 +348,13 @@ class QuoteController extends Controller
 	// Fin del calculo de los inlands 
 
 	$date =  $request->input('date');
-	$arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date)
+	$arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier','contract_company_restriction')->whereHas('contract', function($q) use($date)
 		{
 		  $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
 		})->get();
+	
+	dd(json_encode($arreglo));
 	
 	$formulario = $request;
 	$array20 = array('2','4','5');
@@ -1747,7 +1749,7 @@ class QuoteController extends Controller
 	if($quote->sub_total_destination){
 	  $quote_duplicate->sub_total_destination=$quote->sub_total_destination;
 	}
-	$quote_duplicate->status_id=$quote->status_id;
+	$quote_duplicate->status_quote_id=$quote->status_quote_id;
 	$quote_duplicate->type=$quote->type;
 	$quote_duplicate->save();
 
