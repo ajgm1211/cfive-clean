@@ -51,6 +51,13 @@ class UserTest extends TestCase
 
     public function testDeleteUser()
     {
+        $this->withoutExceptionHandling();
 
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $this->delete(route('users.destroy', $user->id), $user->toArray());
+
+        $this->dontSeeInDatabase('users', $user->toArray());
     }
 }
