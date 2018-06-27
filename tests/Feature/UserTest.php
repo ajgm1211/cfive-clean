@@ -27,14 +27,13 @@ class UserTest extends TestCase
     public function testAddUser()
     {
         $user = factory(User::class)->create();
+        
         $this->actingAs($user);
 
-        $userToAdd = factory(User::class)->create();
-
         $this->visit('/users/add')
-            ->post(route('users.store'), $userToAdd->toArray());
+            ->post(route('users.store'), $user->toArray());
 
-        $this->seeInDatabase('users', $userToAdd->toArray());
+        $this->seeInDatabase('users', $user->toArray());
     }
 
     public function testEditUser()
