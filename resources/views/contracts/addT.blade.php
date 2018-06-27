@@ -186,7 +186,7 @@
                                         <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required' => 'required']) !!}</td>
+                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
                                         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>-</td>
 
