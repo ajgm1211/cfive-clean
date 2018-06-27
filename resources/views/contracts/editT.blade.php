@@ -228,9 +228,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                             </a>
                             <a>
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge">
-                                    Upload Subcharge
+                                    Upload Surcharge
                                     <i class="fa flaticon-tool-1"></i>
                                 </button>
+                            </a>
+                            <a href="{{route('Failed.Subcharge.For.Contracts',$id)}}" class="btn btn-info">
+                                 Failed Surcharge
+                                <i class="fa flaticon-tool-1"></i>
                             </a>
                             <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%">
                                 <thead>

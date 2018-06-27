@@ -13,7 +13,7 @@ class AddFailSurChargeTable extends Migration
      */
     public function up()
     {
-        Schema::create('fail_surcharges', function (Blueprint $table) {
+        Schema::create('failes_surcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->string('surcharge_id')->nullable();
             $table->string('port_orig')->nullable();
@@ -35,6 +35,6 @@ class AddFailSurChargeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fail_surcharges');
+        Schema::dropIfExists('failes_surcharges');
     }
 }
