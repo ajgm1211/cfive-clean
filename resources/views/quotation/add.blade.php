@@ -87,9 +87,6 @@ $subtotalDestiny = 0;
                                   <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
                                   <p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>
 
-
-                                  <input type="hidden" name=""  class="form-control total_rates_ammount"  aria-label="..." value="{{ $info->totalrates  }}">
-
                                 </div>
 
                               </div>
@@ -132,7 +129,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidad }}"/>
+                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -187,7 +184,7 @@ $subtotalDestiny = 0;
                               @foreach($info->globalOrig as $origin)
                               @php 
                               $total = explode(" ",$origin->origin->totalAmmount);
-                              $subtotalOrigin = explode(" ",$info->totalOrigin);
+
                               @endphp                                       
                               <div class="row">   
                                 <div class="col-md-2">
@@ -202,7 +199,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidad }}"/>
+                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -254,6 +251,77 @@ $subtotalDestiny = 0;
                                 </div>
                               </div>
                               @endforeach
+
+                              @foreach($info->inlandOrigin as $origin)
+                              @php 
+
+                              @endphp                                       
+                              <div class="row">   
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->provider }} " />
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->type }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="1" readonly/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="input-group">
+                                      <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->monto }}">
+                                      <div class="input-group-btn">
+                                        <div class="btn-group">
+
+                                          <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+                                            <option value="">Currency</option>
+
+                                            @foreach($currencies as $currency)
+                                            @if($currency->alphacode == $origin->type_currency)
+                                            @php
+                                            $seleccionado = 'selected = true';
+                                            @endphp
+                                            @else
+                                            @php
+                                            $seleccionado = '';
+                                            @endphp
+                                            @endif
+                                            <option {{ $seleccionado }}  value="{{$currency->id}}">{{$currency->alphacode}} </option>
+                                            @endforeach
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" value="{{ $origin->markup }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->monto  }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1" >
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $origin->monto }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              @endforeach
+
 
                               @if((empty($info->localOrig)) && (empty($info->globalOrig)))
                               <div class="row">
@@ -380,8 +448,8 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <span>
                                       <h5 class="size-12px">
-                                        Sub-Total:<span id="sub_total_origin">{{ $info->totalOrigin }}</span>
-                                        <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control" value="{{ $subtotalOrigin[0] }}"/>
+                                        Sub-Total:<span id="sub_total_origin">{{ $info->totalChargeOrig }}</span>@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif 
+                                        <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control" value="{{ $info->totalChargeOrig }}"/>
                                       </h5>
                                     </span>
                                   </div>
@@ -397,7 +465,7 @@ $subtotalDestiny = 0;
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div><!-- Origin -->
                           <div class="form-group m-form__group row">
                             <div class="col-md-12">
                               <div class="row">
@@ -417,10 +485,81 @@ $subtotalDestiny = 0;
                               </div>
 
                               <hr>
+                              @php 
+                              $totalF = explode(" ",$info->totalFreight);
+                              @endphp
+                              @foreach($info->rates as $freight)
+                              @php 
+                              $total = explode(" ",$freight->total);
+                              @endphp
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"  value="{{ $freight->type }}"  readonly='true'/>
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->detail }}" readonly='true' />
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->cantidad }}" readonly='true'/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="input-group">
+                                      <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->price }}">
+                                      <div class="input-group-btn">
+                                        <div class="btn-group">
+                                          <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+                                            <option value="">Currency</option>
+                                            @foreach($currencies as $currency)
+
+                                            @if($currency->alphacode == $freight->currency)
+                                            @php
+                                            $seleccionado = 'selected = true';
+                                            @endphp
+                                            @else
+                                            @php
+                                            $seleccionado = '';
+                                            @endphp
+                                            @endif
+
+                                            <option {{ $seleccionado }} value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                            @endforeach
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number" value="{{ $freight->markup }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1" >
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->subtotal }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
+                                  </div>
+                                </div>
+                              </div>
+                              @endforeach
                               @foreach($info->localFreight as $freight)
                               @php 
                               $total = explode(" ",$freight->freight->totalAmmount);
-
                               @endphp    
                               <div class="row">
                                 <div class="col-md-2">
@@ -435,7 +574,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidad }}"/>
+                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -487,10 +626,10 @@ $subtotalDestiny = 0;
                                 </div>
                               </div>
                               @endforeach
+
                               @foreach($info->globalFreight as $freight)
                               @php 
                               $total = explode(" ",$freight->freight->totalAmmount);
-
                               @endphp    
                               <div class="row">
                                 <div class="col-md-2">
@@ -505,7 +644,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidad }}"/>
+                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -681,8 +820,8 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <span>
                                       <h5>
-                                        Sub-Total:<span id="sub_total_freight">{{ $info->freightCharges }}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                        <input type="hidden" id="total_freight_ammount" name="sub_total_freight"  class="form-control" value = '{{ $info->freightCharges}}'/>
+                                        Sub-Total:<span id="sub_total_freight">{{ $totalF[0]   }}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                        <input type="hidden" id="total_freight_ammount" name="sub_total_freight"  class="form-control" value = '{{  $totalF[0]  }}'/>
                                       </h5>
                                     </span>
                                   </div>
@@ -698,7 +837,7 @@ $subtotalDestiny = 0;
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div><!-- Freight -->
                           <div class="form-group m-form__group row">
                             <div class="col-md-12">
                               <div class="row">
@@ -719,7 +858,7 @@ $subtotalDestiny = 0;
                               <hr>
                               @foreach($info->localDest as $destiny)
                               @php 
-                              $subtotalDestiny = explode(" ",$info->totalDestiny);
+
                               $total = explode(" ",$destiny->destiny->totalAmmount);
                               @endphp 
                               <div class="row">
@@ -735,7 +874,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidad }}"/>
+                                    <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -787,7 +926,7 @@ $subtotalDestiny = 0;
                               @endforeach
                               @foreach($info->globalDest as $destiny)
                               @php 
-                              $subtotalDestiny = explode(" ",$info->totalDestiny);
+
                               $total = explode(" ",$destiny->destiny->totalAmmount);
                               @endphp 
                               <div class="row">
@@ -803,7 +942,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidad }}"/>
+                                    <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidadT }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-3">
@@ -852,6 +991,72 @@ $subtotalDestiny = 0;
                                   </div>
                                 </div>
                               </div>
+                              @endforeach
+
+                              @foreach($info->inlandDestiny as $destiny)
+                               <div class="row">
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input type="text" class="form-control" name="destination_ammount_charge[]"  value="{{ $destiny->provider }} " />
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input name="destination_ammount_detail[]" class="form-control" type="text" value="{{ $destiny->type }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="1" readonly='true'/>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="input-group">
+                                      <input type="number" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->monto }}">
+                                      <div class="input-group-btn">
+                                        <div class="btn-group">
+                                          <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+                                            <option value="">Currency</option>
+                                            @foreach($currencies as $currency)
+                                            @if($currency->alphacode == $destiny->type_currency)
+                                            @php
+                                            $seleccionado = 'selected = true';
+                                            @endphp
+                                            @else
+                                            @php
+                                            $seleccionado = '';
+                                            @endphp
+                                            @endif
+                                            <option {{  $seleccionado  }} value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                            @endforeach
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0" value="{{ $destiny->markup }}" />
+                                  </div>
+                                </div>
+                                <div class="col-md-1">
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{  $destiny->monto }}"/>
+                                  </div>
+                                </div>
+                                <div class="col-md-1" >
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $destiny->monto }}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>                    
+                           
                               @endforeach
 
 
@@ -981,8 +1186,8 @@ $subtotalDestiny = 0;
                                     <span>
 
                                       <h5>
-                                        Sub-Total:<span id="sub_total_destination">{{ $info->totalDestiny }} </span>&nbsp;
-                                        <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"  value="{{ $subtotalDestiny[0]  }}"/>
+                                        Sub-Total:<span id="sub_total_destination">{{ $info->totalChargeDest }} </span>@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif&nbsp;
+                                        <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"  value="{{ $info->totalChargeDest  }}"/>
                                       </h5>
                                     </span>
                                   </div>
@@ -1001,13 +1206,16 @@ $subtotalDestiny = 0;
                                 <div class="col-md-12">
                                   <div class="form-group text-right">
                                     <h3><b>Total:
-                                      <span id="total">     {{$info->totalQuote}} </span>  </b>  </h3>  
+                                      @php
+                                      $totalQ = explode(" ",$info->totalQuote);
+                                      @endphp
+                                      <span id="total">{{$totalQ[0]}} </span>  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif  </b>  </h3>  
 
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div><!-- Destiny -->
                         </div>
                       </div>
                     </div>

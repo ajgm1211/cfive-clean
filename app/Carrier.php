@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Carrier extends Model
 {
     protected $table    = "carriers";
-    protected $fillable = ['id', 'name'];
+    protected $fillable = ['id', 'name','image'];
     public function rate()
     {
         return $this->hasOne('App\Rate');

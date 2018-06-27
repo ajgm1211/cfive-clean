@@ -602,6 +602,7 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
         }
 
         total_amount = quantity * $(this).val();
+        total_amount = total_amount.toFixed(2);
         $(this).closest('.row').find('.origin_total_ammount').val(total_amount);
         $(this).closest('.row').find('.origin_total_ammount').change();
       }else{
@@ -726,9 +727,11 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
 $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
+  var tot = 0;
   $(".origin_total_ammount_2").each(function(){
     total=$(this).closest('.row').find('.origin_total_ammount_2').val();
     sum += +total;
+   
   });
   $("#sub_total_origin").html(" "+sum);
   $("#total_origin_ammount").val(sum);
@@ -772,27 +775,24 @@ $(document).on("change keyup keydown", ".destination_total_ammount_2", function(
 });
 
 $(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_ammount, #total_destination_ammount", function() {
-  
+
   var total_origin=$("#total_origin_ammount").val();
   var total_freight=$("#total_freight_ammount").val();
   var total_destination=$("#total_destination_ammount").val();
-  var total_rates=$(".total_rates_ammount").val();
-
-  if(total_origin>=0){
+  if(total_origin>0){
     total_origin=parseFloat(total_origin);
   }
-  if(total_freight>=0){
+  if(total_freight>0){
     total_freight=parseFloat(total_freight);
   }
-  if(total_destination>=0){
+  if(total_destination>0){
     total_destination=parseFloat(total_destination);
   }
-    if(total_rates>=0){
-    total_rates=parseFloat(total_rates);
-  }
-  sum = total_destination+total_origin+total_freight + total_rates;
+
+  sum = total_destination+total_origin+total_freight;
   sum = parseFloat(sum);
   sum = sum.toFixed(2);
+
   $("#total").html(" "+sum);
 });
 
