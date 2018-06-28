@@ -348,13 +348,29 @@ class QuoteController extends Controller
 	// Fin del calculo de los inlands 
 
 	$date =  $request->input('date');
-	$arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier','contract_company_restriction')->whereHas('contract', function($q) use($date)
+	$arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier','contract_company_restriction','contract_user_restriction')->whereHas('contract', function($q) use($date)
 		{
 		  $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
 		})->get();
 	
-	dd(json_encode($arreglo));
+	$arreglo = collect($arreglo);
+
+	foreach ($arreglo as $value) {
+		foreach ($value->contract_company_restriction as $i) {
+			$arreglo->map(function ($arreglo) use($i){
+			    $arreglo['company_restriction'] = $i->company_id;
+			});
+		}
+	}
+
+	foreach ($arreglo as $value) {
+		foreach ($value->contract_user_restriction as $i) {
+			$arreglo->map(function ($arreglo) use($i){
+			    $arreglo['user_restriction'] = $i->user_id;
+			});
+		}
+	}
 	
 	$formulario = $request;
 	$array20 = array('2','4','5');
@@ -1323,7 +1339,7 @@ class QuoteController extends Controller
 
 	}
 
-
+	//dd(json_encode($arreglo));
 	$form  = $request->all();
 	$objharbor = new Harbor();
 	$harbor = $objharbor->all()->pluck('name','id');
