@@ -9475,6 +9475,76 @@ CONTENTS:
 1. BASIC STYLE
 ------------------------------------------------------------------------------------------------------------------------
 */
+/* Tamaño Fuentes
+------------------------------------------------------------------ */
+.size-48px {
+  font-size: 48px !important;
+}
+
+.size-40px {
+  font-size: 40px !important;
+}
+
+.size-38px {
+  font-size: 38px !important;
+}
+
+.size-36px {
+  font-size: 36px !important;
+}
+
+.size-34px {
+  font-size: 34px !important;
+}
+
+.size-32px {
+  font-size: 32px !important;
+}
+
+.size-30px {
+  font-size: 30px !important;
+}
+
+.size-28px {
+  font-size: 28px !important;
+}
+
+.size-26px {
+  font-size: 26px !important;
+}
+
+.size-24px {
+  font-size: 24px !important;
+}
+
+.size-22px {
+  font-size: 22px !important;
+}
+
+.size-20px {
+  font-size: 20px !important;
+}
+
+.size-18px {
+  font-size: 18px !important;
+}
+
+.size-16px {
+  font-size: 16px !important;
+}
+
+.size-14px {
+  font-size: 14px !important;
+}
+
+.size-12px {
+  font-size: 12px !important;
+}
+
+.size-10px {
+  font-size: 10px !important;
+}
+
 .mCustomScrollbar {
   -ms-touch-action: pinch-zoom;
   touch-action: pinch-zoom;
@@ -13097,7 +13167,7 @@ select.selectpicker {
   margin: 0;
   position: relative;
   vertical-align: middle;
-  width: 100px !important;
+  width: 200px;
 }
 
 .select2-container .select2-selection--single {
@@ -78614,4 +78684,9 @@ th#options-limit-fcl {
 .tab {
   display: inline-table !important;
   width: 100% !important;
+}
+
+.mce-menubtn button {
+  color: #595959;
+  display: none !important;
 }
