@@ -87,4 +87,14 @@ class UserTest extends TestCase
             ->see('You need to confirm your account. We have sent you an activation code, please check your email.');
 
     }
+
+    public function testActivateUser()
+    {
+        //$this->withoutExceptionHandling();
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $this->put(route('users.activate', $user->id), $user->toArray());
+        $this->seeInDatabase('users', $user->toArray());
+    }
 }
