@@ -961,9 +961,34 @@ class ContractsController extends Controller
                        && $originBol == true
                        && $destinationBol == true
                        && $ammountBol == true){ 
-                        echo 'bien<br>';//dd($currency);
+                        //echo 'bien<br>';//dd($currency);
+                        $SurcharExist = LocalCharge::where('surcharge_id','=',$surchargeVar)
+                            ->where('typedestiny_id','=',$destinytypeVar)
+                            ->where('contract_id','=',$contract)
+                            ->where('calculationtype_id','=',$calculationtypeVar)
+                            ->where('ammount','=',$ammountVar)
+                            ->where('currency_id','=',$currencyVar)
+                            ->first();
 
-                        $idlocalchar = LocalCharge::create([
+
+                        if($SurcharExist != null){
+                            echo $SurcharExist['id'].' Existe local <br>';
+                            $SurcharPortExist = LocalCharPort::where('port_orig','=',$originVar)
+                                    ->where('localcharge_id','=',$SurcharExist['id'])
+                                    ->get();
+                            if($SurcharPortExist != null){
+                                echo ' Existe port <br>';
+                            }
+                            else {
+                                echo ' No Existe port <br>';
+                            }
+
+                        }
+                        else{
+                            echo 'vacio insertar campo <br>';
+                        }
+
+                        /*  $idlocalchar = LocalCharge::create([
                             'surcharge_id'        => $surchargeVar,
                             'typedestiny_id'      => $destinytypeVar,
                             'contract_id'         => $contract,
@@ -1009,7 +1034,7 @@ class ContractsController extends Controller
                         }
 
 
-                        FailSurCharge::create([
+                        /* FailSurCharge::create([
                             'surcharge_id'       => $surchargeVar,
                             'port_orig'          => $originVar,
                             'port_dest'          => $destinationVar,
@@ -1019,7 +1044,7 @@ class ContractsController extends Controller
                             'ammount'            => $ammountVar,
                             'currency_id'        => $currencyVar,
                             'carrier_id'         => $carrierVar,
-                        ]);
+                        ]); */
 
                         $errors++;
                     }
@@ -1041,7 +1066,7 @@ class ContractsController extends Controller
                     }
                 }
             });
-            return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
+            //return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
 
             //dd($res);*/
 
@@ -1195,8 +1220,8 @@ class ContractsController extends Controller
         }
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
         $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
-        $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharports.portOrig','localcharports.portDest')->get();
-        //dd($goodsurcharges);
+        $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->get();
+        //  dd($goodsurcharges);
         return  view('contracts.FailSurcharge',compact('failsurchargecoll',
                                                        'countfailsurcharge',
                                                        'countgoodsurcharge',

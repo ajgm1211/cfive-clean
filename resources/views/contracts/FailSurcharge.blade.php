@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Rates Failed
+                        Failed Surcharge
                     </h3><br>
 
                 </div>
@@ -67,7 +67,7 @@
             <table class="m-datatable "  id="html_table" >
                 <thead >
                     <tr>
-                        <th >
+                        <th style="font-size: 12px;">
                             Status
                         </th>
                         <th >
@@ -209,28 +209,133 @@
                         </td>
 
                     </tr>
-
+                    <tr contextmenu="125"></tr>
                     @php
                     $i++
                     @endphp
                     @endforeach
+                    @foreach($goodsurcharges as $goodsurcharge)
+                    <tr class="m-table__row--active" id="{{'trR'.$i}}">
+                        <td><i class="fa fa-dot-circle-o {{'icon'.$i}}" style="color:green; "></i></td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'surchargelb'.$i}}">
+                                    {{$goodsurcharge->Surcharge['name']}}   
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('surcharge_id',$surchargeSelect,$goodsurcharge['surcharge_id'],['class'=>'custom-select m-input form-control','id'=>'surcharge'.$i]) }}
 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'originlb'.$i}}">
+                                    @foreach($goodsurcharge->localcharports as $carga )
+                                    {{$carga['portOrig']['name']}}
+                                    @endforeach
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+
+                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig'),['class'=>'custom-select m-input form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'destinylb'.$i}}">
+                                    @foreach($goodsurcharge->localcharports as $carga )
+                                    {{$carga['portDest']['name']}}
+                                    @endforeach
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest'),['class'=>'form-control m-select2-general','id'=>'destination'.$i])}}
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'typedestinylb'.$i}}">
+                                    {{$goodsurcharge->TypeDestiny['description']}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('typedestiny_id', $typedestiny, 
+                                $goodsurcharge['typedestiny_id'],['id' =>'typedestiny'.$i,'class'=>'m-select2-general form-control']) }} 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'fortylb'.$i}}">
+                                    {{$goodsurcharge->CalculationType['name']}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('calculationtype_id', $calculationtypeselect,$goodsurcharge['calculationtype_id'],['id' =>'calculationtype'.$i,'class'=>'m-select2-general form-control']) }} 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'ammountlb'.$i}}">
+                                    {{$goodsurcharge['ammount']}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                <input type="text" style="" name="ammount" id="{{'ammount'.$i}}" value="{{$goodsurcharge['ammount']}}" class="form-control m-input"> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'currencylb'.$i}}">
+                                    {{$goodsurcharge->Currency->alphacode}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden="hidden">
+                                {{ Form::select('currency_id', $currency,$goodsurcharge->currency_id,['class'=>'custom-select m-input form-control','id'=>'currency'.$i]) }}
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}" id="{{'carrierlb'.$i}}">
+                                <label style="" id="{{'carrierlb'.$i}}">
+                                    @foreach($goodsurcharge->localcharcarriers as $carga)
+                                    {{$carga['Carrier']['name']}}
+                                    @endforeach
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                @foreach($goodsurcharge->localcharcarriers as $carga)
+                                {{ Form::select('carrier_id', $carrierSelect,$carga['Carrier']['id'],['id' =>'carrier'.$i,'class'=>'m-select2-general form-control']) }}
+                                @endforeach
+
+                            </div>
+                        </td>
+                        <td>
+                            <a  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill {{'tdAB'.$i}} {{'tdBTU'.$i}}" onclick="showbox({{$i}})" title="Edit ">
+                                <i class="la la-edit"></i>
+                            </a>
+
+                            <!--  <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$goodsurcharge['id']}})" > 
+<i class="la 	la-remove"></i>
+</a>-->
+
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
+                                <i class="la 	la-remove"></i>
+                            </a>
+                            <!--<a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$goodsurcharge['id']}},{{$goodsurcharge['contract_id']}})" >
+<i class="la la-save"></i>
+</a>-->
+                            <input type="hidden" name="define" value="2" id="{{'accion'.$i}}" />
+                        </td>
+                        @php
+                        $i++
+                        @endphp
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
-            @foreach($goodsurcharges as $goodsurcharge)
-            Surcharge {{$goodsurcharge->Surcharge['name']}}<br>
-            Origin {{$goodsurcharge->localcharports }}
-
-            <br>
-            Destiny 
-            Type Destiny
-            Type Calculation
-            Ammount
-            Currency
-            Carrier
-            Options
-            @endforeach
-
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
