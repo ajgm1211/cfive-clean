@@ -62,34 +62,33 @@ class UserTest extends TestCase
 
     public function testUserCanLogin()
     {
-        $this->withoutExceptionHandling();
         $user = factory(User::class)->create(['verified' => 1]);
-        $this->actingAs($user);
 
-        $this->visit('/')
-            ->type($user->email, 'email')
-            ->type($user->password, 'password')
-            ->press('Login');
+        $data = [
+            '_token' => $user->remember_token,
+            'email' => $user->email,
+            'password' => $user->password,
+        ];
+
+        $this->post(route('login'), $data);
+        $this->assertResponseStatus(302);
     }
 
     public function testUserCantLogin()
     {
-        $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
-        $this->actingAs($user);
 
         $this->visit('/')
             ->see('login')
             ->type($user->email, 'email')
             ->type($user->password, 'password')
             ->press('Login')
-            ->see('You need to confirm your account. We have sent you an activation code, please check your email.');
+            ->see('These credentials do not match our records.');
 
     }
 
     public function testActivateUser()
     {
-        //$this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $this->actingAs($user);
         $this->put(route('users.activate', $user->id), $user->toArray());
