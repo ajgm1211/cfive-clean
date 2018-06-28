@@ -63,7 +63,6 @@ class UserTest extends TestCase
     public function testUserCanLogin()
     {
         $this->withoutExceptionHandling();
-
         $user = factory(User::class)->create(['verified' => 1]);
         $this->actingAs($user);
 
@@ -93,8 +92,7 @@ class UserTest extends TestCase
         //$this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $this->actingAs($user);
-
         $this->put(route('users.activate', $user->id), $user->toArray());
-        $this->seeInDatabase('users', $user->toArray());
+        $this->notSeeInDatabase('users', $user->toArray());
     }
 }
