@@ -27,7 +27,7 @@ class UserTest extends TestCase
     public function testAddUser()
     {
         $user = factory(User::class)->create();
-        
+
         $this->actingAs($user);
 
         $this->visit('/users/add')
@@ -57,6 +57,34 @@ class UserTest extends TestCase
 
         $this->delete(route('users.destroy', $user->id), $user->toArray());
 
-        $this->dontSeeInDatabase('users', $user->toArray());
+        $this->dontSeeInDatabase('users' ,$user->toArray());
+    }
+
+    public function testUserCanLogin()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create(['verified' => 1]);
+        $this->actingAs($user);
+
+        $this->visit('/')
+            ->type($user->email, 'email')
+            ->type($user->password, 'password')
+            ->press('Login');
+    }
+
+    public function testUserCantLogin()
+    {
+        $this->withoutExceptionHandling();
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $this->visit('/')
+            ->see('login')
+            ->type($user->email, 'email')
+            ->type($user->password, 'password')
+            ->press('Login')
+            ->see('You need to confirm your account. We have sent you an activation code, please check your email.');
+
     }
 }
