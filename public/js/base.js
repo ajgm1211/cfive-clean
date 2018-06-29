@@ -372,16 +372,36 @@ $(document).on('change', '#type_local_markup_3', function (e) {
   Quotes
   ********/
 
+//Btn back
   $(document).on('click', '#create-quote', function (e) {
     $(this).hide();
     $("#create-quote-back").show();
 });
+
+  //Btn next
   $(document).on('click', '#create-quote-back', function (e) {
     $(this).hide();
     $("#create-quote").show();
 });
 
-$(document).on('change', '#origin_harbor', function (e) {
+//Duplicate Quote
+  $(document).on('click', '#duplicate-quote', function (e) {
+    var quote_id = $('#quote-id').val();
+    $.ajax({
+        url: "/quotes/duplicate/"+quote_id,
+        dataType: 'json',
+        success: function(data) {        
+            swal(
+                'Success!',
+                'The quote has been duplicated.',
+                'success'
+            )
+        }
+    });
+});
+
+
+  $(document).on('change', '#origin_harbor', function (e) {
     var harbor_id = $('#origin_harbor').val();
     $.ajax({
         url: "terms/"+harbor_id,

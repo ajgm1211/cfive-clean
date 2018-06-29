@@ -17,7 +17,7 @@
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
         </div>
         <div class="col-md-1">
-            <button data-toggle="modal" data-target="#DuplicateQuote" class="btn btn-info ">Duplicate</button>
+            <button id="duplicate-quote" class="btn btn-info ">Duplicate</button>
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
         </div>
     </div>
@@ -582,40 +582,36 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr>
-                                                        <div class="form-group m-form__group row" id="terms_box" >
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="col-lg-12">
-                                                                        <label>
-                                                                            <b>TERMS & CONDITIONS</b>
-                                                                        </label>
-                                                                    </div>                                                          
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div id="terms_box_import">
-                                                                        <div class="col-lg-12">
-                                                                            <br>
-                                                                            @if(isset($terms_origin))                             
-                                                                                <h5>Origin harbor</h5>
-                                                                                <br>
-                                                                                {!!$terms_origin->import!!}
-                                                                                {!!$terms_origin->export!!}
-                                                                            @endif
-                                                                            @if(isset($terms_destination))
-                                                                                <h5>Destination harbor</h5>
-                                                                                <br>
-                                                                                {!!$terms_destination->import!!}
-                                                                                {!!$terms_destination->export!!}
-                                                                            @endif
-                                                                        </div>
+                                                        <br>
+                                                        <br>      
+                                                        <div class="form-group m-form__group row">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <b>TERMS & CONDITIONS</b>
                                                                     </div>
                                                                 </div>
-                                                            </div>                                                           
+                                                                <hr>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                        <div class="row">                                               
+                                                            <div class="col-lg-12">
+                                                               <div class="form-group ">
+                                                                @if(isset($terms_origin))                             
+                                                                <h5>Origin harbor</h5>
+                                                                @foreach($terms_origin as $v)
+                                                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                                                @endforeach
+                                                                @endif
+                                                                @if(isset($terms_destination))
+                                                                <h5>Destination harbor</h5>
+                                                                @foreach($terms_destination as $v)
+                                                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                                                @endforeach
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                           
                                                 </div>
                                             </div>
                                         </div>
@@ -628,6 +624,8 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 @include('quotes.partials.sendQuoteModal');
 @endsection

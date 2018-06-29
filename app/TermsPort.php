@@ -15,4 +15,5 @@ class TermsPort extends Model
     public function port(){
         return $this->belongsTo('App\Harbor', 'port_id');
     }
+
 }
