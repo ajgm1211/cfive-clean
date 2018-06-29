@@ -30,6 +30,7 @@ use App\GlobalCharCarrier;
 use App\MergeTag;
 use GoogleMaps;
 use App\Inland;
+use App\TermAndCondition;
 use Illuminate\Support\Facades\Input;
 
 class QuoteController extends Controller
@@ -1543,9 +1544,12 @@ class QuoteController extends Controller
 	$origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
 	$freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
 	$destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+	$terms_origin = TermAndCondition::where('harbor_id',$quote->origin_harbor_id)->first();
+	$terms_destination = TermAndCondition::where('harbor_id',$quote->destination_harbor_id)->first();
+	
 	return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
 								'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-								'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
+								'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
   }
 
   /**
@@ -1704,6 +1708,13 @@ class QuoteController extends Controller
   {
 	$harbor = Harbor::findOrFail($id);
 	return $harbor;
+  }
+
+  public function getQuoteTerms($id)
+  {
+	$terms = TermAndCondition::where('harbor_id',$id)->first();
+	return $terms;
+	
   }
 
   public function duplicate($id)

@@ -85,15 +85,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
     Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
 
-
 });
-
-
-/*Route::middleware(['auth'])->prefix('uploadfile')->group(function () {
-
-    Route::get('ShowUploadFile',function(){  return view('contracts.UploadFile');  })->name('Show.Upload.File');
-
-});*/
 
 Route::resource('UploadFileRates','ImportationRatesController');
 
@@ -140,6 +132,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
     Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
     Route::post('test', 'QuoteController@test')->name('quotes.test');
+    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

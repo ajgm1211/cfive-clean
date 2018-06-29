@@ -381,6 +381,19 @@ $(document).on('change', '#type_local_markup_3', function (e) {
     $("#create-quote").show();
 });
 
+$(document).on('change', '#origin_harbor', function (e) {
+    var harbor_id = $('#origin_harbor').val();
+    $.ajax({
+        url: "terms/"+harbor_id,
+        dataType: 'json',
+        success: function(data) {        
+            $('#terms_box').show();
+            $('#terms_box_import').html(data.import);
+            $('#terms_box_export').html(data.export);
+        }
+    });
+});
+
   $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
     $clone = $template
