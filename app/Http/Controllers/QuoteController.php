@@ -353,6 +353,8 @@ class QuoteController extends Controller
 		  $q->where('validity', '<=',$date)->where('expire', '>=', $date);
 
 		})->get();
+
+	
 	
 	$arreglo = collect($arreglo);
 
