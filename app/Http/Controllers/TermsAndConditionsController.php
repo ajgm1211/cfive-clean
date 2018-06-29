@@ -22,7 +22,7 @@ class TermsAndConditionsController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $terms = TermAndCondition::All();
-        $data = $terms->where('company', $company);
+        $data = $terms->where('company_user_id', Auth::user()->company_user_id);
         
         $tabla = Harbor::All();
         $terms_port = TermsPort::All();
@@ -51,10 +51,9 @@ class TermsAndConditionsController extends Controller
 
     public function add()
     {
-        $harbor = Harbor::all();
-        $array = $harbor->pluck('name')->toArray();
+        $harbors = Harbor::all()->pluck('name','id');
 
-        return view('terms.add', compact('array', 'harbor'));
+        return view('terms.add', compact('harbors'));
     }
 
     /**
@@ -66,13 +65,13 @@ class TermsAndConditionsController extends Controller
     public function store(Request $request)
     {
         $companyUser = CompanyUser::All();
-        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+        $company = Auth::user()->company_user_id;
         $term = new TermAndCondition();
         $term->name = $request->name;
         $term->user_id = Auth::user()->id;
         $term->import = $request->import;
         $term->export = $request->export;
-        $term->company = $company;
+        $term->company_user_id = $company;
         $term->save();
         
         $ports = $request->ports;
@@ -109,19 +108,13 @@ class TermsAndConditionsController extends Controller
      */
     public function edit($id)
     {
-        $term = TermAndCondition::find($id);
-        $table_terms_port = TermsPort::All();
-        $harbor = Harbor::All();
-        $termsport = $table_terms_port->where('term_id', $term->id)->pluck('port_id');
-        $cnt = 0;
+        $term = TermAndCondition::where('id',$id)->with('harbor')->first();
+        $selected_harbors = collect($term->harbor);
+        $selected_harbors = $selected_harbors->pluck('id','name');
+        $harbors = harbor::all()->pluck('name','id');
 
-        foreach($termsport as $tp){
-            $ports[$cnt++] = $harbor->where('id', $tp)->pluck('name');
-        }
         
-        $array = $harbor->pluck('name');
-
-        return view('terms.edit', compact('array', 'term', 'ports'));
+        return view('terms.edit', compact('term', 'harbors', 'selected_harbors'));
     }
 
     /**
@@ -133,40 +126,27 @@ class TermsAndConditionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $requestForm = $request->all();
+
         $term = TermAndCondition::find($id);
-        $termsPort = TermsPort::All();
-        $ports = $termsPort->where('term_id', $id)->pluck('port_id', 'id')->toArray();
-        
-        $newPorts = $requestForm['ports'];
-        $nps = [];
-        
-        foreach($newPorts as $np){
-            array_push($nps, $np + 1);     
-        }
+        $term->name = $request->name;
+        $term->user_id = Auth::user()->id;
+        $term->import = $request->import;
+        $term->export = $request->export;
+        $term->company_user_id = Auth::user()->company_user_id;
+        $term->update();
 
-        $diff = array_diff($ports, $nps);
-        while ($i = current($diff)) {
-            $idTermsPort = key($diff);
-            $del = TermsPort::find($idTermsPort);
-            $del->delete();
-            next($diff);
-        }
-        if(!$diff){
-            $diff = array_diff($nps, $ports);;
-            foreach($diff as $i){
-                $newTermsPort = new TermsPort();
-                $newTermsPort->port_id = $i;
-                $newTermsPort->term()->associate($term);
-                $newTermsPort->save();
+        $ports = $request->ports;
+        if($ports != ''){
+            TermsPort::where('term_id',$id)->delete();
+
+            foreach($ports as $i){
+                $termsport = new TermsPort();
+                $termsport->port_id = $i;
+                $termsport->term()->associate($term);
+                $termsport->save();
             }
-        }
+        }        
 
-        $term->name = $requestForm['name'];
-        $term->import = $requestForm['import'];
-        $term->export = $requestForm['export'];
-    
-        $term->save();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');

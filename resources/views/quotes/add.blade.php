@@ -234,31 +234,7 @@
 
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="form-group m-form__group row" id="terms_box" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <label>
-                                                                    <b>TERMS & CONDITIONS</b>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div id="terms_box_import">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">                                             
-                                                                <div id="terms_box_export">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    </div>                                                
                                                 </div>
                                             </div>
                                         </div>

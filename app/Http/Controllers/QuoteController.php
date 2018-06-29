@@ -31,6 +31,7 @@ use App\MergeTag;
 use GoogleMaps;
 use App\Inland;
 use App\TermAndCondition;
+use App\TermsPort;
 use Illuminate\Support\Facades\Input;
 
 class QuoteController extends Controller
@@ -1544,8 +1545,12 @@ class QuoteController extends Controller
 	$origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
 	$freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
 	$destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-	$terms_origin = TermAndCondition::where('harbor_id',$quote->origin_harbor_id)->first();
-	$terms_destination = TermAndCondition::where('harbor_id',$quote->destination_harbor_id)->first();
+	$terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+	  		$q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+		})->get();
+	$terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+	  		$q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+		})->get();
 	
 	return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
 								'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
@@ -1717,7 +1722,7 @@ class QuoteController extends Controller
 	
   }
 
-  public function duplicate($id)
+  public function duplicate(Request $request,$id)
   {
 	$quotes = Quote::all();
 	$quote = Quote::findOrFail($id);
@@ -1830,7 +1835,10 @@ class QuoteController extends Controller
 	  $destination_ammount_duplicate->quote_id=$quote_duplicate->id;
 	  $destination_ammount_duplicate->save();
 	}
-
-	return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
+	if($request->ajax()){
+        return response()->json(['message' => 'Ok']);
+    }else{
+    	return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
+    }
   }
 }
