@@ -142,49 +142,49 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     @foreach ($contracts->rates as $rates)
 
                                     <tr id='tr{{++$loop->index}}' disabled='true'>
-                                        <td class="col-sm-2">
+                                        <td width='15%' > 
                                             <div id='divoriginport{{$loop->index}}' class='val'>{{$rates->port_origin->name}}</div>
                                             <div class='in' hidden="true">
-                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true']) }} 
+                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true' ,'style' => 'width:100%;']) }} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2"> 
+                                        <td  width='15%' >  
                                             <div  id='divdestinyport{{$loop->index}}' class='val'>   {{$rates->port_destiny->name}} </div>
                                             <div class='in' hidden="true">  
-                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ]) }}
+                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%' >
                                             <div id='divcarrier{{$loop->index}}' class='val'>  {{$rates->carrier->name }} </div>
                                             <div class='in' hidden="true"> 
                                                 {{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%' >
                                             <div  id='divtwuenty{{$loop->index}}' class='val'>  {{$rates->twuenty  }}  </div>
                                             <div class='in' hidden="true">  
                                                 {!! Form::text('twuenty[]', $rates->twuenty, ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input', 'disabled' =>  'true' ]) !!} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%'>
                                             <div id='divforty{{$loop->index}}' class='val'>  {{$rates->forty  }}  </div>
                                             <div class='in' hidden="true"> 
                                                 {!! Form::text('forty[]', $rates->forty, ['id' => 'forty'.$loop->index,'placeholder' => 'Please enter the 40','class' => 'form-control m-input' ,'disabled' =>  'true']) !!} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%'  >
                                             <div id='divfortyhc{{$loop->index}}' class='val'>{{ $rates->fortyhc}}  </div>
                                             <div class='in' hidden="true">
-                                                {!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','disabled' =>  'true']) !!}  
+                                                {!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => '40HC','class' => 'form-control','disabled' =>  'true' ]) !!}  
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='15%' >
                                             <div id='divalphacode{{$loop->index}}' class='val'> {{$rates->currency->alphacode}}   </div>
                                             <div class='in' hidden="true">
                                                 {{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-1">      
+                                        <td   width='10%'>      
                                             <a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                                 <i class="la la-edit"></i>
                                             </a>
