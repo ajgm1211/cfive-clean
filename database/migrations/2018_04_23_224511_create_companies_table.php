@@ -21,7 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->string('email');
             $table->integer('associated_quotes')->nullable();
             $table->integer('company_user_id')->unsigned();
-            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
+            //$table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
         });
     }

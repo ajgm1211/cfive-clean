@@ -18,6 +18,7 @@ class CreateCompanyUsersTable extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
+            $table->string('logo')->nullable();
             $table->integer('currency_id')->unsigned()->nullable();
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->timestamps();

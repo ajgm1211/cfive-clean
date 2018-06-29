@@ -41,6 +41,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Surcharge');
 
     }
+    public function emailsTemplates(){
+
+        return $this->hasMany('App\EmailTemplate');
+
+    }
     
     public function verifyUser()
     {

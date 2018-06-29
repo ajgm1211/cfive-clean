@@ -1,6 +1,6 @@
 
 <div class="form-group m-form__group">
-    {!! Form::text('name', null, ['placeholder' => 'Please enter your firts name','class' => 'form-control m-input','required' => 'required']) !!}
+    {!! Form::text('name', null, ['id'=>'name', 'placeholder' => 'Please enter your firts name','class' => 'form-control m-input','required' => 'required']) !!}
 
 </div>
 
@@ -15,7 +15,11 @@
 </div>
 @if($type == 'add' )
     <div class="form-group m-form__group">
+
         <input type="password" name="password" class="form-control m-input" placeholder="Please enter your password" required>
+
+       <!-- <input name="pass" type="password" class="form-control m-input" placeholder="Please enter your password" required>-->
+
     </div>
 @endif
 @if( Auth::user()->type == 'admin'   )
