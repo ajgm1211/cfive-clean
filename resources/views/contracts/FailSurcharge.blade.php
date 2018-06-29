@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Rates Failed
+                        Failed Surcharge
                     </h3><br>
 
                 </div>
@@ -46,29 +46,32 @@
                 <label >
                     <i class="fa fa-dot-circle-o" style="color:red;"> </i>
                     <strong >
-                        Rates Failed: 
+                        Failed Surcharges: 
                     </strong>
-                    <strong id="strfail">{{$countfailrates}}</strong>
-                    <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
+                    <strong id="strfail">{{$countfailsurcharge}}</strong>
+                    <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
                 </label>
                 <br>
                 <label>
                     <i class="fa fa-dot-circle-o" style="color:green;"> </i>
                     <strong id="">
-                        Good Rates: 
+                        Good Surcharges: 
                     </strong>
                     <strong id="strgood">
-                        {{$countrates}}
+                        {{$countgoodsurcharge}}
                     </strong>
-                    <input type="hidden" value="{{$countrates}}" id="strgoodinput" />
+                    <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinput" />
                 </label>
             </div>
             <!--<button onclick="prueba()">prueba</button>-->
             <table class="m-datatable "  id="html_table" >
                 <thead >
                     <tr>
-                        <th >
+                        <th style="font-size: 12px;">
                             Status
+                        </th>
+                        <th >
+                            Surcharge
                         </th>
                         <th >
                             Origin
@@ -76,21 +79,20 @@
                         <th >
                             Destiny
                         </th>
-
                         <th >
-                            Carrier
+                            Type Destiny
                         </th>
                         <th >
-                            20'
+                            Type Calculation 
                         </th>
                         <th >
-                            40'
-                        </th>
-                        <th >
-                            40'Hc
+                            Ammount
                         </th>
                         <th >
                             Currency
+                        </th>
+                        <th >
+                            Carrier
                         </th>
                         <th >
                             Options
@@ -102,79 +104,89 @@
                     @php
                     $i=1 
                     @endphp
-                    @foreach($failrates as $ratef)
+                    @foreach($failsurchargecoll as $surchargef)
                     <tr class="" id="{{'trR'.$i}}">
                         <td>
                             <i class="fa fa-dot-circle-o {{'icon'.$i}}" style="color:red;" id="" ></i>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'originlb'.$i}}" style="{{$ratef['classorigin']}}">
-                                    {{$ratef['origin_portLb']}}
+                                <label class="{{'lb'.$i}}" id="{{'surchargelb'.$i}}" style="{{$surchargef['classsurcharge']}}">
+                                    {{$surchargef['surchargelb']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('origin_port', $harbor,$ratef['origin_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classorigin'],'id'=>'origin'.$i]) }}
+                                {{ Form::select('surcharge_id', $surchargeSelect,$surchargef['surcharge_id'],['id' =>'surcharge'.$i,'class'=>'m-select2-general form-control lb'.$i,'style' => $surchargef['classsurcharge']]) }}
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'destinylb'.$i}}" style="{{$ratef['classdestiny']}}">
-                                    {{$ratef['destiny_portLb']}}
+                                <label class="{{'lb'.$i}}" id="{{'originlb'.$i}}" style="{{$surchargef['classorigin']}}">
+                                    {{$surchargef['origin_portLb']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port', $harbor,$ratef['destiny_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classdestiny'],'id'=>'destination'.$i]) }}
+                                {{ Form::select('origin_port', $harbor,$surchargef['origin_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classorigin'],'id'=>'origin'.$i]) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label class="{{'lb'.$i}}" id="{{'destinylb'.$i}}" style="{{$surchargef['classdestiny']}}">
+                                    {{$surchargef['destiny_portLb']}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('destiny_port', $harbor,$surchargef['destiny_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classdestiny'],'id'=>'destination'.$i]) }}
 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'carrierlb'.$i}}" style="{{$ratef['classcarrier']}}">{{$ratef['carrierLb']}}
+                                <label class="{{'lb'.$i}}" id="{{'typedestinylb'.$i}}" style="{{$surchargef['classdestiny']}}">{{$surchargef['typedestinylb']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('carrier_id', $carrierSelect,$ratef['carrierAIn'],['id' =>'carrier'.$i,'class'=>'m-select2-general form-control lb'.$i,'style' => $ratef['classcarrier']]) }}
+                                {{ Form::select('typedestiny_id', $typedestiny, $surchargef['typedestiny'],['id' =>'typedestiny'.$i,'class'=>'m-select2-general form-control lb'.$i,'style' => $surchargef['classdestiny']]) }}
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'twuentylb'.$i}}" style="{{$ratef['classtwuenty']}}">
-                                    {{$ratef['twuenty']}}
+                                <label class="{{'lb'.$i}}" id="{{'calculationtypelb'.$i}}" style="{{$surchargef['classcalculationtype']}}">
+                                    {{$surchargef['calculationtypelb']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="{{$ratef['classtwuenty']}}" name="twuenty" id="{{'twuenty'.$i}}" value="{{$ratef['twuenty']}}" class="form-control m-input {{'lb'.$i}}"> 
+                                {{ Form::select('calculationtype_id', $calculationtypeselect, $surchargef['calculationtype'],['id' =>'calculationtype'.$i,'class'=>'m-select2-general form-control lb'.$i,'style' => $surchargef['classcalculationtype']]) }}
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'fortylb'.$i}}" style="{{$ratef['classforty']}}">
-                                    {{$ratef['forty']}}
+                                <label class="{{'lb'.$i}}" id="{{'fortylb'.$i}}" style="{{$surchargef['classammount']}}">
+                                    {{$surchargef['ammount']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="{{$ratef['classforty']}}" name="forty" id="{{'forty'.$i}}" value="{{$ratef['forty']}}" class="form-control m-input {{'lb'.$i}}"> 
+                                <input type="text" style="{{$surchargef['classammount']}}" name="forty" id="{{'ammount'.$i}}" value="{{$surchargef['ammount']}}" class="form-control m-input {{'lb'.$i}}"> 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'fortyhclb'.$i}}" style="{{$ratef['classfortyhc']}}">
-                                    {{$ratef['fortyhc']}}
-                                </label>
-                            </div>
-                            <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="{{$ratef['classfortyhc']}}" name="fortyhc" id="{{'fortyhc'.$i}}" value="{{$ratef['fortyhc']}}" class="form-control m-input {{'lb'.$i}}"> 
-                            </div>
-                        </td>
-                        <td>
-                            <div class="{{'tdAB'.$i}}">
-                                <label class="{{'lb'.$i}}" id="{{'currencylb'.$i}}" style="{{$ratef['classcurrency']}}">
-                                    {{$ratef['currency_id']}}
+                                <label class="{{'lb'.$i}}" id="{{'currencylb'.$i}}" style="{{$surchargef['classcurrency']}}">
+                                    {{$surchargef['currencylb']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$ratef['currencyAIn'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classcurrency'],'id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$surchargef['currency_id'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classcurrency'],'id'=>'currency'.$i]) }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label class="{{'lb'.$i}}" id="{{'carrierlb'.$i}}" style="{{$surchargef['classcarrier']}}">
+                                    {{$surchargef['carrierlb']}}
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                {{ Form::select('carrier_id', $carrierSelect,$surchargef['carrier_id'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classcarrier'],'id'=>'carrier'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -182,100 +194,121 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$ratef['rate_id']}})" >
-                                <i class="la 	la-remove"></i>
-                            </a>
+                            <!--  <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$surchargef['surcharge_id']}})" >
+<i class="la 	la-remove"></i>
+</a>-->
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$ratef['rate_id']}},{{$ratef['contract_id']}})" >
-                                <i class="la la-save"></i>
-                            </a>
+                            <!-- <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}})" >
+<i class="la la-save"></i>
+</a>-->
                             <input type="hidden" name="define" value="1" id="{{'accion'.$i}}" />
 
                         </td>
 
                     </tr>
-
+                    <tr contextmenu="125"></tr>
                     @php
                     $i++
                     @endphp
                     @endforeach
-
-                    @foreach ($rates as $rate)
+                    @foreach($goodsurcharges as $goodsurcharge)
                     <tr class="m-table__row--active" id="{{'trR'.$i}}">
                         <td><i class="fa fa-dot-circle-o {{'icon'.$i}}" style="color:green; "></i></td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label style="" id="{{'originlb'.$i}}">
-                                    {{$rate['port_origin']['name']}}   
+                                <label style="" id="{{'surchargelb'.$i}}">
+                                    {{$goodsurcharge->Surcharge['name']}}   
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('origin_port',$harbor,$rate->origin_port,['class'=>'custom-select m-input form-control','id'=>'origin'.$i]) }}
+                                {{ Form::select('surcharge_id',$surchargeSelect,$goodsurcharge['surcharge_id'],['class'=>'custom-select m-input form-control','id'=>'surcharge'.$i]) }}
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}">
+                                <label style="" id="{{'originlb'.$i}}">
+                                    @foreach($goodsurcharge->localcharports as $carga )
+                                    {{$carga['portOrig']['name']}}
+                                    @endforeach
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+
+                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig'),['class'=>'custom-select m-input form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'destinylb'.$i}}">
-                                    {{$rate['port_destiny']['name']}}
+                                    @foreach($goodsurcharge->localcharports as $carga )
+                                    {{$carga['portDest']['name']}}
+                                    @endforeach
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port',$harbor,$rate->destiny_port,['class'=>'custom-select m-input form-control','id'=>'destination'.$i])}}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="{{'tdAB'.$i}}" id="{{'carrierlb'.$i}}">
-                                <label style="" id="{{'carrierlb'.$i}}">
-                                    {{$rate->Carrier->name}}
-                                </label>
-                            </div>
-                            <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('carrier_id', $carrierSelect,$rate->carrier_id,['id' =>'carrier'.$i,'class'=>'m-select2-general form-control']) }}
+                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest'),['class'=>'form-control m-select2-general','id'=>'destination'.$i])}}
 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label style="" id="{{'twuentylb'.$i}}">
-                                    {{$rate->twuenty}}
+                                <label style="" id="{{'typedestinylb'.$i}}">
+                                    {{$goodsurcharge->TypeDestiny['description']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="" name="twuenty" id="{{'twuenty'.$i}}" value="{{$rate->twuenty}}" class="form-control m-input"> 
+                                {{ Form::select('typedestiny_id', $typedestiny, 
+                                $goodsurcharge['typedestiny_id'],['id' =>'typedestiny'.$i,'class'=>'m-select2-general form-control']) }} 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'fortylb'.$i}}">
-                                    {{$rate->forty}}
+                                    {{$goodsurcharge->CalculationType['name']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="" name="forty" id="{{'forty'.$i}}" value="{{$rate['forty']}}" class="form-control m-input"> 
+                                {{ Form::select('calculationtype_id', $calculationtypeselect,$goodsurcharge['calculationtype_id'],['id' =>'calculationtype'.$i,'class'=>'m-select2-general form-control']) }} 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label style="" id="{{'fortyhclb'.$i}}">
-                                    {{$rate->fortyhc}}
+                                <label style="" id="{{'ammountlb'.$i}}">
+                                    {{$goodsurcharge['ammount']}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                <input type="text" style="" name="fortyhc" id="{{'fortyhc'.$i}}" value="{{$rate['fortyhc']}}" class="form-control m-input"> 
+                                <input type="text" style="" name="ammount" id="{{'ammount'.$i}}" value="{{$goodsurcharge['ammount']}}" class="form-control m-input"> 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'currencylb'.$i}}">
-                                    {{$rate->Currency->alphacode}}
+                                    {{$goodsurcharge->Currency->alphacode}}
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$rate->currency_id,['class'=>'custom-select m-input form-control','id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$goodsurcharge->currency_id,['class'=>'custom-select m-input form-control','id'=>'currency'.$i]) }}
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="{{'tdAB'.$i}}" id="{{'carrierlb'.$i}}">
+                                <label style="" id="{{'carrierlb'.$i}}">
+                                    @foreach($goodsurcharge->localcharcarriers as $carga)
+                                    {{$carga['Carrier']['name']}}
+                                    @endforeach
+                                </label>
+                            </div>
+                            <div class="in {{'tdIn'.$i}}" hidden>
+                                @foreach($goodsurcharge->localcharcarriers as $carga)
+                                {{ Form::select('carrier_id', $carrierSelect,$carga['Carrier']['id'],['id' =>'carrier'.$i,'class'=>'m-select2-general form-control']) }}
+                                @endforeach
 
                             </div>
                         </td>
@@ -284,16 +317,16 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$rate['id']}})" >
-                                <i class="la 	la-remove"></i>
-                            </a>
+                            <!--  <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroyRate({{$i}},{{$goodsurcharge['id']}})" > 
+<i class="la 	la-remove"></i>
+</a>-->
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$rate['id']}},{{$rate['contract_id']}})" >
-                                <i class="la la-save"></i>
-                            </a>
+                            <!--<a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$goodsurcharge['id']}},{{$goodsurcharge['contract_id']}})" >
+<i class="la la-save"></i>
+</a>-->
                             <input type="hidden" name="define" value="2" id="{{'accion'.$i}}" />
                         </td>
                         @php
@@ -347,7 +380,7 @@
         if(accion == 1){
             jQuery.ajax({
                 method:'get',
-                data:{rate_id:idrate,
+                data:{surcharge_id:idrate,
                       contract_id:idcontract,
                       origin:origin,
                       destination:destination,
@@ -357,7 +390,7 @@
                       fortyhc:fortyhc,
                       currency:currency,
                      },
-                url:'/contracts/CorrectedRateForContracts',
+                url:'/contracts/CorrectedsurchargeforContracts',
                 success:function(data){
                     //console.log(data);
                     if(data.response == 0){
@@ -402,7 +435,7 @@
             // para actualizar campos
             jQuery.ajax({
                 method:'get',
-                data:{rate_id:idrate,
+                data:{surcharge_id:idrate,
                       contract_id:idcontract,
                       origin:origin,
                       destination:destination,
@@ -462,7 +495,7 @@
                 jQuery.ajax({
                     method:'get',
                     data:{
-                        rate_id:idrate,
+                        surcharge_id:idrate,
                         accion:accion
                     },
                     url:'/contracts/DestroyRatesFailCorrectForContracts',
