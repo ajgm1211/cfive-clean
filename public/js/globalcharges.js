@@ -27,8 +27,6 @@ function cancel_l(id){
 
 function save_l(id,idval){
 
-
-
     $.ajax({
         type: 'GET',
         url: 'globalcharges/updateGlobalCharge/' + idval,
@@ -109,7 +107,6 @@ function save_l(id,idval){
 $("#new").on("click", function() {
 
 
-
     $('#buttons').removeAttr('hidden');
     var $template = $('#globalclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
@@ -120,7 +117,7 @@ $("#new").on("click", function() {
     $myClone.find(".port_orig").attr('name', 'port_orig'+$ids+'[]');
     $myClone.find(".port_dest").attr('name', 'port_dest'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier'+$ids+'[]');
-    $("#sample_editable_1").append($myClone);
+    $("#sample_editable_2").append($myClone);
     // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
     // $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
 

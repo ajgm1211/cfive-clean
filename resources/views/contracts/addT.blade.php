@@ -186,10 +186,9 @@
                                         <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control type']) }}</td>
                                         <td>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control carrier','multiple' => 'multiple']) }}</td>
                                         <td>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control']) }}</td>
-                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => '40HC','class' => 'form-control m-input fortyhc','required' => 'required']) !!}</td>
-                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control currency']) }}</td>
+                                        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                                        <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control']) }}</td>
                                         <td>-</td>
-
                                     </tr>
                                     <tr   id='tclone2' hidden="true" >
                                         <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}</td>
