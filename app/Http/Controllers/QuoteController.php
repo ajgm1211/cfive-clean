@@ -1377,7 +1377,7 @@ class QuoteController extends Controller
         foreach($inlandDestiny as $inlandDest){
           if($inlandDest['port_id'] == $data->port_destiny->id ){
             $totalQuote += $inlandDest['monto'];
-            $totalChargeDest += $inlandOrig['monto'];
+            $totalChargeDest += $inlandDest['monto'];
           }
         }
       }else{
