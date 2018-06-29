@@ -178,7 +178,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                                 {!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => '40HC','class' => 'form-control','disabled' =>  'true' ]) !!}  
                                             </div>
                                         </td>
-                                        <td  width='10%' >
+                                        <td  width='15%' >
                                             <div id='divalphacode{{$loop->index}}' class='val'> {{$rates->currency->alphacode}}   </div>
                                             <div class='in' hidden="true">
                                                 {{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
