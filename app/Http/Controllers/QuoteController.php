@@ -109,7 +109,7 @@ class QuoteController extends Controller
         $rateC = $rate->rates_eur;
       }
     }
-
+   
     return $rateC;
   }
   public function listRate(Request $request)
@@ -226,7 +226,7 @@ class QuoteController extends Controller
                 if($inlandPercentage != 0){
 
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $monto += $markup ;
                   $arraymarkupT = array("markup" => $markup  , "typemarkup" => "$typeCurrency ($inlandPercentage%)") ;
                 }else{
@@ -314,7 +314,7 @@ class QuoteController extends Controller
                 if($inlandPercentage != 0){
 
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $monto += $markup ;
                   $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($inlandPercentage%)") ;
                 }else{
@@ -390,13 +390,13 @@ class QuoteController extends Controller
         if($freighPercentage != 0){
           $freighPercentage = intval($freighPercentage);
           $markup = ( $totalT *  $freighPercentage ) / 100 ;
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalT += $markup ;
           $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
           $markup =$freighAmmount;
 
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalT += $markup;
           $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
@@ -418,12 +418,12 @@ class QuoteController extends Controller
         if($freighPercentage != 0){
           $freighPercentage = intval($freighPercentage);
           $markup = ( $totalF *  $freighPercentage ) / 100 ;
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalF += $markup ;
           $arraymarkupF = array("markup" => $markup ,  "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
           $markup =$freighAmmount;
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalF += $markup;
           $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
@@ -444,12 +444,12 @@ class QuoteController extends Controller
         if($freighPercentage != 0){
           $freighPercentage = intval($freighPercentage);
           $markup = ( $totalFHC *  $freighPercentage ) / 100 ;
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalFHC += $markup ;
           $arraymarkupFH = array("markup" => $markup  , "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
           $markup =$freighAmmount;
-          $markup = number_format(intval($markup), 2, '.', '');
+          $markup = number_format($markup, 2, '.', '');
           $totalFHC += $markup;
           $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
@@ -485,7 +485,7 @@ class QuoteController extends Controller
           if($request->input('twuenty') != "0") {
             foreach($local->localcharcarriers as $carrierGlobal){
               if($carrierGlobal->carrier_id == $data->carrier_id ){
-                if($local->typedestiny_id == '1'){
+                if($local->typedestiny_id == '1'){  
 
                   $subtotal_local = $formulario->twuenty *  $local->ammount;
                   $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
@@ -493,15 +493,18 @@ class QuoteController extends Controller
                   if($localPercentage != 0){
 
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+            
+                    $markup = number_format($markup, 2, '.', '');
+              
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
+               
 
                   $totalOrigin += $totalAmmount ;
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
@@ -509,7 +512,7 @@ class QuoteController extends Controller
                   $arregloOrig = array('surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local , 'cantidadT' => $formulario->twuenty );
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupT);
                   $origTwuenty["origin"] = $arregloOrig;
-
+                
                   $collectionOrig->push($origTwuenty);
 
                 }
@@ -520,12 +523,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -544,12 +547,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -581,12 +584,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -598,12 +601,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -628,12 +631,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -645,12 +648,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -674,12 +677,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -694,12 +697,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -732,12 +735,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -749,12 +752,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -778,12 +781,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -795,12 +798,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -824,12 +827,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -844,12 +847,12 @@ class QuoteController extends Controller
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup ;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                     }else{
                       $markup =$localAmmount;
-                      $markup = number_format(intval($markup), 2, '.', '');
+                      $markup = number_format($markup, 2, '.', '');
                       $totalAmmount += $markup;
                       $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                     }
@@ -880,12 +883,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -905,12 +908,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -930,12 +933,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -982,15 +985,16 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
+                   
                   $totalOrigin += $totalAmmount ;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -1008,15 +1012,16 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
+             
 
                   $totalDestiny += $totalAmmount;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -1034,12 +1039,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1077,12 +1082,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1109,12 +1114,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1140,12 +1145,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1182,12 +1187,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1215,12 +1220,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1245,12 +1250,12 @@ class QuoteController extends Controller
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup ;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
                     $markup =$localAmmount;
-                    $markup = number_format(intval($markup), 2, '.', '');
+                    $markup = number_format($markup, 2, '.', '');
                     $totalAmmount += $markup;
                     $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
@@ -1277,12 +1282,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -1301,12 +1306,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -1326,12 +1331,12 @@ class QuoteController extends Controller
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup ;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                 }else{
                   $markup =$localAmmount;
-                  $markup = number_format(intval($markup), 2, '.', '');
+                  $markup = number_format($markup, 2, '.', '');
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
@@ -1416,7 +1421,8 @@ class QuoteController extends Controller
 
 
     }
-
+    
+    
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
