@@ -396,6 +396,7 @@ class ContractsController extends Controller
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
 
+
             $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
             //dd(\Storage::disk('UpLoadFile')->url($nombre));
 
