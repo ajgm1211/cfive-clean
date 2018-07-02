@@ -36,6 +36,7 @@
 
               <span class="m-accordion__item-mode"></span>     
             </div>
+
             <div class="m-accordion__item-body collapse" id="m_accordion_7_item_1_body" role="tabpanel" aria-labelledby="m_accordion_7_item_1_head" data-parent="#m_accordion_7" style=""> 
               <div class="m-accordion__item-content">
                 <p>
@@ -430,17 +431,17 @@
 </div>
 @endsection
 
-    @section('js')
-    @parent
-    <script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
-    <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
-    <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
-    <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
-    <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-    <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-    <script src="/js/quote.js"></script>
+@section('js')
+@parent
+<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+<script src="/assets/plugins/datatable.js" type="text/javascript"></script>
+<script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+<script src="/js/quote.js"></script>
 
 
-    @stop
+@stop
 
 
