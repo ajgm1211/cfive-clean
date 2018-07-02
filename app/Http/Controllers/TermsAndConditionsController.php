@@ -78,7 +78,7 @@ class TermsAndConditionsController extends Controller
 
         foreach($ports as $i){
             $termsport = new TermsPort();
-            $termsport->port_id = $i + 1;
+            $termsport->port_id = $i;
             $termsport->term()->associate($term);
             $termsport->save();
         }
