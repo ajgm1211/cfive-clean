@@ -58,7 +58,7 @@
                 </div>
               </div>
             </div>
-            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%">
+            <table class="table m-table m-table--head-separator-primary" id="myTable" width="100%">
               <thead>
                 <tr>
                   <th title="Field #1">
@@ -286,11 +286,16 @@
 @section('js')
 @parent
 
-<script src="/js/globalcharges.js"></script>
-<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+
+
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
-
+<script>
+$(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="/js/globalcharges.js"></script>
 
 @stop

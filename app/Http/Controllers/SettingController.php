@@ -28,7 +28,9 @@ class SettingController extends Controller
 
 
         if(!$request->company_id){
+
             //$company=CompanyUser::create($request->all());
+
             $company = new CompanyUser();
             $company->name = $request->name;
             $company->address = $request->address;

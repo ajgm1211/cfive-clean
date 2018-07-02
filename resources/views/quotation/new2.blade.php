@@ -61,7 +61,7 @@
                                   <label class="m-option">
                                     <span class="m-option__control">
                                       <span class="m-radio m-radio--brand m-radio--check-bold">
-                                        <input name="type" value="1" type="radio">
+                                        <input name="type" value="1" required='true' type="radio">
                                         <span></span>
                                       </span>
                                     </span>
@@ -163,7 +163,7 @@
                                 <div class="col-md-3">
                                   <label>Pick up date</label>
                                   <div class="input-group date">
-                                    {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input']) !!}
+                                    {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input' ,'required' => 'true']) !!}
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="la la-calendar-check-o"></i>
