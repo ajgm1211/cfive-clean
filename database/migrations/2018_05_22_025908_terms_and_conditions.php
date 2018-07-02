@@ -19,7 +19,7 @@ class TermsAndConditions extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('import');
             $table->string('export');
-            $table->string('company_user_id')->unsigned();
+            $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
