@@ -135,7 +135,7 @@
 
     </div>
     <div class="m-portlet__body">
-      <table  class="table m-table " id="sample_editable_1">
+      <table  class="table m-table m-table--head-separator-primary" id="sample_editable">
         <thead>
           <tr>
             <th title="Field #1">
@@ -433,15 +433,17 @@
 
 @section('js')
 @parent
-<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+  
+<script src="/js/quote.js"></script>
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-<script src="/js/quote.js"></script>
-
-
+<script>
+$(document).ready( function () {
+    $('#sample_editable').DataTable();
+} );
+</script>
 @stop
 
 

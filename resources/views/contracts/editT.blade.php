@@ -493,17 +493,17 @@ Load
 @section('js')
 @parent
 
-<script type="application/x-javascript">
-    $(document).ready(function(){
-
-    });
+<script>
+$(document).ready( function () {
+    $('#sample_editable_').DataTable();
+} );
 </script>
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 
 
 <script src="/js/editcontracts.js"></script>
-<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
