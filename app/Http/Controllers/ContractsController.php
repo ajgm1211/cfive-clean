@@ -984,20 +984,11 @@ class ContractsController extends Controller
                             ->where('carrier_id','=',$carrierVar)
                             ->first();
 
+                        if($SurcharExist != null && $SurcharcarrierExist != null){ // sur.. y carrieer exiten
+            
                         $SurcharPortExist = LocalCharPort::where('port_orig','=',$originVar)
                             ->where('localcharge_id','=',$SurcharExist['id'])
                             ->count();
-
-                        //echo $i.' Registro: '.$SurcharExist['id'].'&nbsp &nbsp &nbsp &nbsp ';
-                        //    echo 'Puerto Origen:'.$SurcharcarrierExist['id'].'<br>';
-
-                        if($SurcharExist != null && $SurcharcarrierExist != null){ // sur.. y carrieer exiten
-                            // echo $SurcharExist['id'].' Existe local ';
-
-                            // dd($SurcharPortExist);
-                            // echo $i.'.  Carrier: '.$SurcharcarrierExist['carrier_id'].'<br>';
-                            // echo $i.'.  Surcharge: '.$SurcharExist['id'].'<br>';
-
                             echo ' &nbsp &nbsp &nbsp '.$i.' Port id:'.$SurcharPortExist.' &nbsp &nbsp origen: '.$originVar.'<br>';
 
                             if($SurcharPortExist > 0){ // puert origin existe
@@ -1006,13 +997,6 @@ class ContractsController extends Controller
                                     ->where('port_dest','=',$destinationVar)
                                     ->where('localcharge_id','=',$SurcharExist['id'])
                                     ->first();
-
-
-                                /*
-                                echo "<br>";
-                                print_r($SurcharBootPortExist);
-                                echo "<br>";
-*/
 
 
                                 if($SurcharBootPortExist != null){ // puert origin y desti...  existe
@@ -1137,7 +1121,7 @@ class ContractsController extends Controller
 
                 }
             });
-            //return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
+            return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
 
 
         } catch (\Illuminate\Database\QueryException $e) {
