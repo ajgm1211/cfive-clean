@@ -28,8 +28,8 @@ class SettingController extends Controller
 
 
         if(!$request->company_id){
-            /*$company=CompanyUser::create($request->all());
-            User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);*/
+            $company=CompanyUser::create($request->all());
+            User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
             $company = new CompanyUser();
             $company->name = $request->name;
             $company->address = $request->address;
