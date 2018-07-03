@@ -6,23 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Surcharge extends Model
 {
-    protected $table    = "surcharges";
-    protected $fillable = ['id', 'name', 'description'];
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
+  protected $table    = "surcharges";
+  protected $fillable = ['id', 'name', 'description'];
+ 
+  public function companyUser()
+  {
+    return $this->belongsTo('App\CompanyUser');
+  }
 
-    public function localcharge()
-    {
+  public function localcharge()
+  {
 
-        return $this->hasOne('App\LocalCharge');
-    }
-    public function globalcharge()
-    {
+    return $this->hasOne('App\LocalCharge');
+  }
+  public function globalcharge()
+  {
 
-        return $this->hasOne('App\GlobalCharge');
-    }
+    return $this->hasOne('App\GlobalCharge');
+  }
 
 
 }

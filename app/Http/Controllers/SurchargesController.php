@@ -16,7 +16,7 @@ class SurchargesController extends Controller
     public function index()
     {
 
-        $data = Surcharge::where('user_id','=',Auth::user()->id)->with('user')->get();
+        $data = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->with('companyUser')->get();
         return view('surcharges/index', ['arreglo' => $data]);
     }
 
@@ -33,7 +33,7 @@ class SurchargesController extends Controller
     public function store(Request $request)
     {
         $surcharges = new Surcharge($request->all());
-        $surcharges->user_id =Auth::user()->id ;
+        $surcharges->company_user_id =Auth::user()->company_user_id ;
         $surcharges->save();
         return redirect()->action('SurchargesController@index');
 
