@@ -17,8 +17,8 @@ class CreateSurchargesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('description');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('company_user_id')->unsigned()->nullable();
+            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
         });
     }
