@@ -338,6 +338,7 @@ function deleteInland(idval){
 
 function validateRange(id,tipo){
 
+
     if(tipo == 't20'){
         var idval = id.substr(4);
    
