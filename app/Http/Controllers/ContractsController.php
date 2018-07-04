@@ -401,7 +401,20 @@ class ContractsController extends Controller
 
             $contract = $request->contract_id;
             $errors=0;
+
+
+
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+
+                if($reader->get()->isEmpty() != true){
+                    Rate::where('contract_id','=',$contract)
+                        ->delete();
+                } else{
+                    $request->session()->flash('message.nivel', 'danger');
+                    $request->session()->flash('message.content', 'The file is it empty');
+                    return redirect()->route('contracts.edit',$contract);   
+                }
+
                 foreach ($reader->get() as $book) {
 
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
@@ -440,21 +453,21 @@ class ContractsController extends Controller
                             $origB=true;
                             $originV = $book->origin;
                         }else{
-                            $originV = $book->origin.'_E';
+                            $originV = $book->origin.'_E_E';
                         }
 
                         if(empty($book->destination) != true ){
                             $destiB=true;
                             $destinationV = $book->destination;
                         }else{
-                            $destinationV = $book->destination.'_E';
+                            $destinationV = $book->destination.'_E_E';
                         }
 
                         if(empty($carrier->id) != true){
                             $carriB=true;
                             $carrierV = $carrier->id;
                         }else{
-                            $carrierV = $book->carrier.'_E';
+                            $carrierV = $book->carrier.'_E_E';
                         }
 
                         if(empty($book->$twuenty) != true ){
@@ -462,7 +475,7 @@ class ContractsController extends Controller
                             $twuentyV = (int)$book->$twuenty;
                         }
                         else{
-                            $twuentyV = $book->$twuenty.'_E';
+                            $twuentyV = $book->$twuenty.'_E_E';
                         }
 
                         if(empty($book->$forty) != true ){
@@ -470,7 +483,7 @@ class ContractsController extends Controller
                             $fortyV = (int)$book->$forty;
                         }
                         else{
-                            $fortyV = $book->$forty.'_E';
+                            $fortyV = $book->$forty.'_E_E';
                         }
 
                         if(empty($book->$fortyhc) != true ){
@@ -478,7 +491,7 @@ class ContractsController extends Controller
                             $fortyhcV = (int)$book->$fortyhc;
                         }
                         else{
-                            $fortyhcV = $book->$fortyhc.'_E';
+                            $fortyhcV = $book->$fortyhc.'_E_E';
                         }
 
                         if(empty($currenc->id) != true){
@@ -486,7 +499,7 @@ class ContractsController extends Controller
                             $currencyV =  $currenc->id;
                         }
                         else{
-                            $currencyV = $book->currency.'_E';
+                            $currencyV = $book->currency.'_E_E';
                         }
 
                         if( $origB == true && $destiB == true
@@ -555,12 +568,15 @@ class ContractsController extends Controller
                     $request->session()->flash('message.title', 'Well done!');
                 }
             });
+            
+            //$RatesDelT = Rate::where('contract_id','=',$contract)
+               // ->forceDelete();
             return redirect()->route('Failed.Rates.For.Contracts',$contract);
 
             //dd($res);*/
 
         } catch (\Illuminate\Database\QueryException $e) {
-
+            $RatesDelT->restore();
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$request->contract_id);
@@ -902,10 +918,6 @@ class ContractsController extends Controller
                     $SurcharPortExist = "";
                     $SurcharBootPortExist = "";
 
-                    /* echo $book->$calculationtypeBook;
-                    echo "<br>";
-                    echo "<br>";echo "<br>";echo "<br>";*/
-
                     $surcharge = Surcharge::where('name','=',$book->$surchargeBook)->where('user_id','=',\Auth::user()->id)->first();
                     $carrier = Carrier::where('name','=',$book->$carrierBook)->first();
                     $calculationtype = CalculationType::where('name','like','%'.$book->$calculationtypeBook.'%')->first();
@@ -971,75 +983,57 @@ class ContractsController extends Controller
                        && $originBol == true
                        && $destinationBol == true
                        && $ammountBol == true){ 
-                        //echo 'bien<br>';//dd($currency);
-                        $SurcharExist = LocalCharge::where('surcharge_id','=',$surchargeVar)
+
+                        $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
                             ->where('typedestiny_id','=',$destinytypeVar)
                             ->where('contract_id','=',$contract)
                             ->where('calculationtype_id','=',$calculationtypeVar)
                             ->where('ammount','=',$ammountVar)
                             ->where('currency_id','=',$currencyVar)
-                            ->first();
+                            ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                                $q->where('carrier_id','=',$carrierVar);
+                            })
+                            ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                                $k->where('port_orig','=',$originVar);
+                            })->get();
 
-                        $SurcharcarrierExist = LocalCharCarrier::where('localcharge_id','=',$SurcharExist['id'])
-                            ->where('carrier_id','=',$carrierVar)
-                            ->first();
+                        if($SurcharFull->isEmpty() != true){
+                            //  echo 'existe sur y port orig <br>';
+                            foreach($SurcharFull as $Surchar){
+                                $existportdest = LocalCharge::where('surcharge_id','=',$surchargeVar)
+                                    ->where('typedestiny_id','=',$destinytypeVar)
+                                    ->where('contract_id','=',$contract)
+                                    ->where('calculationtype_id','=',$calculationtypeVar)
+                                    ->where('ammount','=',$ammountVar)
+                                    ->where('currency_id','=',$currencyVar)
+                                    ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                                        $q->where('carrier_id','=',$carrierVar);
+                                    })
+                                    ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                                        $k->where('port_orig','=',$originVar)->where('port_dest','=',$destinationVar);
+                                    })->get();
 
-                        if($SurcharExist != null && $SurcharcarrierExist != null){ // sur.. y carrieer exiten
-            
-                        $SurcharPortExist = LocalCharPort::where('port_orig','=',$originVar)
-                            ->where('localcharge_id','=',$SurcharExist['id'])
-                            ->count();
-                            echo ' &nbsp &nbsp &nbsp '.$i.' Port id:'.$SurcharPortExist.' &nbsp &nbsp origen: '.$originVar.'<br>';
+                                if($existportdest->isEmpty()){
+                                    //echo 'No existe puertto destno <br>';
+                                    foreach($SurcharFull as $Surchar){
 
-                            if($SurcharPortExist > 0){ // puert origin existe
-                                // echo ' Existe port <br>';
-                                $SurcharBootPortExist = LocalCharPort::where('port_orig','=',$originVar)
-                                    ->where('port_dest','=',$destinationVar)
-                                    ->where('localcharge_id','=',$SurcharExist['id'])
-                                    ->first();
+                                        LocalCharPort::create([
+                                            'port_orig'        => $originVar,
+                                            'port_dest'        => $destinationVar,
+                                            'localcharge_id'   => $Surchar['id']
+                                        ]);  
+                                    }
 
 
-                                if($SurcharBootPortExist != null){ // puert origin y desti...  existe
-                                    //echo 'exite, duplicado';
-                                }else{
-                                    LocalCharPort::create([
-                                        'port_orig'        => $originVar,
-                                        'port_dest'        => $destinationVar,
-                                        'localcharge_id'   => $SurcharExist['id']
-                                    ]);  //*/
+
+                                } else{
+                                    //echo 'existe valor<br>';
 
                                 }
-                            }
-                            else {
-
-                                echo "repetido <br>";
-
-                                //echo ' No Existe port <br>';
-                                $idlocalchar = LocalCharge::create([
-                                    'surcharge_id'        => $surchargeVar,
-                                    'typedestiny_id'      => $destinytypeVar,
-                                    'contract_id'         => $contract,
-                                    'calculationtype_id'  => $calculationtypeVar,
-                                    'ammount'             => $ammountVar,
-                                    'currency_id'         => $currencyVar,
-                                ]);
-
-                                LocalCharPort::create([
-                                    'port_orig'        => $originVar,
-                                    'port_dest'        => $destinationVar,
-                                    'localcharge_id'   => $idlocalchar->id
-                                ]);  
-
-                                LocalCharCarrier::create([
-                                    'carrier_id'      => $carrierVar,
-                                    'localcharge_id'  => $idlocalchar->id
-                                ]);
 
                             }
-
-                        }
-                        else{
-                            // echo 'vacio insertar campo <br>';
+                        } else {
+                            // echo 'vacio<br>';
                             $idlocalchar = LocalCharge::create([
                                 'surcharge_id'        => $surchargeVar,
                                 'typedestiny_id'      => $destinytypeVar,
@@ -1059,8 +1053,6 @@ class ContractsController extends Controller
                                 'carrier_id'      => $carrierVar,
                                 'localcharge_id'  => $idlocalchar->id
                             ]);
-                            //dd($idlocalchar); //*/
-
                         }
 
                     } else {
@@ -1086,7 +1078,6 @@ class ContractsController extends Controller
                             $ammountVar = $book->$amountBook;
                         }
 
-
                         FailSurCharge::create([
                             'surcharge_id'       => $surchargeVar,
                             'port_orig'          => $originVar,
@@ -1101,7 +1092,6 @@ class ContractsController extends Controller
 
                         $errors++;
                     }
-
 
                     if($errors > 0){
                         $request->session()->flash('message.content', 'You successfully added the rate ');
@@ -1122,7 +1112,6 @@ class ContractsController extends Controller
                 }
             });
             return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
-
 
         } catch (\Illuminate\Database\QueryException $e) {
 
