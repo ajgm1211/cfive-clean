@@ -846,149 +846,20 @@ class ContractsController extends Controller
 
   public function UploadFileSubchargeForContract(Request $request){
     //dd($request);
-    try {
-      $file = $request->file('file');
-      $ext = strtolower($file->getClientOriginalExtension());
+        try {
+            $file = $request->file('file');
+            $ext = strtolower($file->getClientOriginalExtension());
 
-      $validator = \Validator::make(
-        array('ext' => $ext),
-        array('ext' => 'in:xls,xlsx,csv')
-      );
+            $validator = \Validator::make(
+                array('ext' => $ext),
+                array('ext' => 'in:xls,xlsx,csv')
+            );
 
-      if ($validator->fails()) {
-        $request->session()->flash('message.nivel', 'danger');
-        $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-        return redirect()->route('contracts.edit',$request->contract_id);
-      }
-
-      //obtenemos el nombre del archivo
-      $nombre = $file->getClientOriginalName();
-
-      $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
-
-      $contract = $request->contract_id;
-      $errors=0;
-      Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
-
-        foreach ($reader->get() as $book) {
-          $surchargeBook        = "surcharge";
-          $originBook           = "origin";
-          $destinationBook      = "destination";
-          $carrierBook          = "carrier";
-          $calculationtypeBook  = "calculation_type";
-          $amountBook           = "amount";
-          $currencyBook         = "currency";
-
-          $surchargeBol       = false;
-          $carrierBol         = false;
-          $calculationtypeBol = false;
-          $currencyBol        = false;
-          $ammountBol         = false;
-          $originBol          = false;
-          $destinationBol     = false;
-
-
-          $originVar      = $book->$originBook;
-          $destinationVar = $book->$destinationBook;
-          $ammountVar     = (int)$book->$amountBook;
-          $destinytypeVar = 3;
-          $surchargeVar;
-          $carrierVar;
-          $calculationtypeVar;
-          $currencyVar;
-
-          $surcharge = Surcharge::where('name','=',$book->$surchargeBook)->where('user_id','=',\Auth::user()->id)->first();
-          $carrier = Carrier::where('name','=',$book->$carrierBook)->first();
-          $calculationtype = CalculationType::where('name','=',$book->$calculationtypeBook)->first();
-          $currency = Currency::where('alphacode','=',$book->$currencyBook)->first();
-
-          if(empty($surcharge) != true){
-            $surchargeBol = true;
-            $surchargeVar = $surcharge['id'];
-          }
-          else{
-            $surchargeVar = $book->$surchargeBook.'_E_E';
-          }
-
-          if(empty($originVar) != true){
-            $originBol = true;
-          }
-          else{
-            $originVar = $originVar.'_E_E';
-          }
-
-          if(empty($destinationVar) != true){
-            $destinationBol = true;
-          }
-          else{
-            $destinationVar = $destinationVar.'_E_E';
-          }
-
-          if(empty($carrier) != true){
-            $carrierBol = true;
-            $carrierVar = $carrier['id'];
-          }
-          else{
-            $carrierVar = $book->$carrierBook.'_E_E';
-          }
-
-          if(empty($calculationtype) != true){
-            $calculationtypeBol = true;
-            $calculationtypeVar = $calculationtype['id'];
-          }
-          else{
-            $calculationtypeVar = $book->$calculationtypeBook.'_E_E';
-          }
-
-          if(empty($currency) != true){
-            $currencyBol = true;
-            $currencyVar = $currency['id'];
-          }
-          else{
-            $currencyVar = $book->$currencyBook;
-          }
-
-          if(empty($ammountVar) != true){
-            $ammountBol = true;
-          }
-          else{
-            $ammountVar = $ammountVar.'_E_E';
-          }
-
-          if($surchargeBol == true 
-             && $carrierBol == true 
-             && $calculationtypeBol == true 
-             && $currencyBol == true 
-             && $originBol == true
-             && $destinationBol == true
-             && $ammountBol == true){ 
-            //echo 'bien<br>';//dd($currency);
-            $SurcharExist = LocalCharge::where('surcharge_id','=',$surchargeVar)
-              ->where('typedestiny_id','=',$destinytypeVar)
-              ->where('contract_id','=',$contract)
-              ->where('calculationtype_id','=',$calculationtypeVar)
-              ->where('ammount','=',$ammountVar)
-              ->where('currency_id','=',$currencyVar)
-              ->first();
-
-
-            if($SurcharExist != null){
-              echo $SurcharExist['id'].' Existe local <br>';
-              $SurcharPortExist = LocalCharPort::where('port_orig','=',$originVar)
-                ->where('localcharge_id','=',$SurcharExist['id'])
-                ->get();
-              if($SurcharPortExist != null){
-                echo ' Existe port <br>';
-              }
-              else {
-                echo ' No Existe port <br>';
-              }
-
+            if ($validator->fails()) {
+                $request->session()->flash('message.nivel', 'danger');
+                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+                return redirect()->route('contracts.edit',$request->contract_id);
             }
-            else{
-              echo 'vacio insertar campo <br>';
-            }
-
 
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
@@ -1175,13 +1046,11 @@ class ContractsController extends Controller
                                 'localcharge_id'   => $idlocalchar->id
                             ]);
 
-
                             LocalCharCarrier::create([
                                 'carrier_id'      => $carrierVar,
                                 'localcharge_id'  => $idlocalchar->id
                             ]);
                         }
-
 
                     } else {
                         if($surchargeBol == true){
@@ -1218,8 +1087,8 @@ class ContractsController extends Controller
                             'carrier_id'         => $carrierVar,
                         ]); //*/
 
-            $errors++;
-          }
+                        $errors++;
+                    }
 
                     if($errors > 0){
                         $request->session()->flash('message.content', 'You successfully added the rate ');
@@ -1250,11 +1119,10 @@ class ContractsController extends Controller
                 ->restore();
             FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
                 ->restore();
-
-      $request->session()->flash('message.nivel', 'danger');
-      $request->session()->flash('message.content', 'There was an error loading the file');
-      return redirect()->route('contracts.edit',$request->contract_id);
-    }
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'There was an error loading the file');
+            return redirect()->route('contracts.edit',$request->contract_id);
+        }
   }
 
   public function FailSubcharges($id){
