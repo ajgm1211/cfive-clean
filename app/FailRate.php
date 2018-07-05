@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FailRate extends Model
 {
+    use SoftDeletes;
+    protected $dates    = ['deleted_at'];
+    
     protected $table    = "failes_rates";
     protected $fillable = [
         'origin_port',
@@ -15,6 +19,6 @@ class FailRate extends Model
         'twuenty',
         'forty',
         'fortyhc',
-        'currency_id'
+        'currency_id',
     ];
 }
