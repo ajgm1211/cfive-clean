@@ -231,27 +231,26 @@
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'originlb'.$i}}">
-                                    @foreach($goodsurcharge->localcharports as $carga )
-                                    {{$carga['portOrig']['name']}}
-                                    @endforeach
+                                    
+                                    {!! str_replace(["[","]","\""], ' ', $goodsurcharge->localcharports->pluck('portOrig')->unique()->pluck('name') ) !!}
+                                    
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
 
-                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig'),['class'=>'custom-select m-input form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
+                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig')->unique(),['class'=>'custom-select m-input form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'destinylb'.$i}}">
-                                    @foreach($goodsurcharge->localcharports as $carga )
-                                    {{$carga['portDest']['name']}}
-                                    @endforeach
+                                    {!! str_replace(["[","]","\""], ' ', $goodsurcharge->localcharports->pluck('portDest')->unique()->pluck('name') ) !!}
+                                    
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest'),['class'=>'form-control m-select2-general','id'=>'destination'.$i])}}
+                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest')->unique(),['class'=>'form-control m-select2-general','id'=>'destination'.$i])}}
 
                             </div>
                         </td>

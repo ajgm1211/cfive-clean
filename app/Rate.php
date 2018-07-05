@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rate extends Model
 {
+    use SoftDeletes;
+    protected $dates    = ['deleted_at'];
+    
     protected $table    = "rates";
     protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contract_id','twuenty','forty','fortyhc', 'currency_id'];
     public function contract()

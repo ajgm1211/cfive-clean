@@ -64,7 +64,7 @@
                 </label>
             </div>
             <!--<button onclick="prueba()">prueba</button>-->
-            <table class="m-datatable "  id="html_table" >
+            <table class="table m-table m-table--head-separator-primary "  id="html_table" >
                 <thead >
                     <tr>
                         <th >
@@ -114,7 +114,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('origin_port', $harbor,$ratef['origin_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classorigin'],'id'=>'origin'.$i]) }}
+                                {{ Form::select('origin_port[]', $harbor,$ratef['origin_port'],['class'=>'m-select2-general form-control m-input lb'.$i,'style'=>$ratef['classorigin'],'id'=>'origin'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -124,8 +124,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port', $harbor,$ratef['destiny_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classdestiny'],'id'=>'destination'.$i]) }}
-
+                                {{ Form::select('destiny_port', $harbor,$ratef['destiny_port'],['class'=>'m-select2-general m-input form-control lb'.$i,'style'=>$ratef['classdestiny'],'id'=>'destination'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -174,7 +173,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$ratef['currencyAIn'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$ratef['classcurrency'],'id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$ratef['currencyAIn'],['class'=>'m-select2-general m-input form-control lb'.$i,'style'=>$ratef['classcurrency'],'id'=>'currency'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -213,7 +212,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('origin_port',$harbor,$rate->origin_port,['class'=>'custom-select m-input form-control','id'=>'origin'.$i]) }}
+                                {{ Form::select('origin_port',$harbor,$rate->origin_port,['class'=>'m-select2-general m-input form-control','id'=>'origin'.$i]) }}
 
                             </div>
                         </td>
@@ -224,7 +223,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port',$harbor,$rate->destiny_port,['class'=>'custom-select m-input form-control','id'=>'destination'.$i])}}
+                                {{ Form::select('destiny_port',$harbor,$rate->destiny_port,['class'=>'m-select2-general m-input form-control','id'=>'destination'.$i])}}
                             </div>
                         </td>
                         <td>
@@ -275,7 +274,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$rate->currency_id,['class'=>'custom-select m-input form-control','id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$rate->currency_id,['class'=>'m-select2-general m-input form-control','id'=>'currency'.$i]) }}
 
                             </div>
                         </td>
@@ -323,6 +322,11 @@
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
 <script>
+
+    $('.m-select2-general').select2({
+        placeholder: "Select an option"
+    });
+
     function showbox(id){
         $(".tdAB"+id).attr('hidden','hidden');
         $(".tdIn"+id).removeAttr('hidden');
