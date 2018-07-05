@@ -44,7 +44,12 @@ class QuoteController extends Controller
   public function index()
   {
 
-  	$quotes = Quote::where('owner',\Auth::id())->get();
+    $company_user_id = \Auth::user()->company_user_id;
+
+  	$quotes = Quote::whereHas('user', function($q) use($company_user_id) 
+        {
+         $q->where('company_user_id','=',$company_user_id);
+       })->get();
   	$companies = Company::all()->pluck('business_name','id');
   	$harbors = Harbor::all()->pluck('business_name','id');
   	$countries = Country::all()->pluck('name','id');
@@ -351,31 +356,18 @@ class QuoteController extends Controller
     // Fin del calculo de los inlands 
 
   $date =  $request->input('date');
-  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date)
-  {
-  	$q->where('validity', '<=',$date)->where('expire', '>=', $date);
+  $user_id =  \Auth::id();
+  $company_user_id =  \Auth::user()->company_user_id;
+  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id) 
+        {
+         $q->where('validity', '<=',$date)->where('expire', '>=', $date)->whereHas('contract_user_restriction', function($a) use($user_id)                                                                                                                              {
+           $a->where('user_id', '=',$user_id);
 
-  })->get();
+         })->orDoesntHave('contract_user_restriction');
 
+       })->get();
 
-  $arreglo = collect($arreglo);
-
-  foreach ($arreglo as $value) {
-  	foreach ($value->contract_company_restriction as $i) {
-  		$arreglo->map(function ($arreglo) use($i){
-  			$arreglo['company_restriction'] = $i->company_id;
-  		});
-  	}
-  }
-
-  foreach ($arreglo as $value) {
-  	foreach ($value->contract_user_restriction as $i) {
-  		$arreglo->map(function ($arreglo) use($i){
-  			$arreglo['user_restriction'] = $i->user_id;
-  		});
-  	}
-  }
-
+      
   $formulario = $request;
   $array20 = array('2','4','5');
   $array40 =  array('1','4','5');

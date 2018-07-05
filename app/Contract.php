@@ -18,5 +18,23 @@ class Contract extends Model
         //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
         return $this->hasMany('App\LocalCharge');
     }
+
+    public function contract_company_restriction(){
+
+        return $this->HasMany('App\ContractCompanyRestriction');
+        
+    }
+
+    public function contract_user_restriction(){
+
+        return $this->HasMany('App\ContractUserRestriction');
+        
+    }
+
+    public function user(){
+
+        return $this->belongsTo('App\User');
+        
+    }
     
 }
