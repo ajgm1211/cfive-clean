@@ -341,9 +341,9 @@ function validateRange(id,tipo){
 
     if(tipo == 't20'){
         var idval = id.substr(4);
-   
+  
         $('.low20').each(function(index){
-           
+
             var id = index + 1;
                 
             if(id <= idval ){

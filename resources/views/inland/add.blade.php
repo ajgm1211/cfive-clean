@@ -154,7 +154,7 @@ $validation_expire = 'Please enter validation date';
                           </thead>
                           <tbody>
                             <tr>
-                              <td width="30%"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low ','required' => 'required' , 'id' => 'l20','style'=>'width:100%']) !!}</td>
+                              <td width="30%"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low20 ','required' => 'required' , 'id' => 'lo201','style'=>'width:100%']) !!}</td>
                               <td width="30%">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input prove up up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')','style'=>'width:100%']) !!}</td>
                               <td width="40%">
                                 <div class="input-group">
@@ -438,6 +438,12 @@ $validation_expire = 'Please enter validation date';
 
 @section('js')
 @parent
+
+
+
+
+
+
 <script src="/js/inlands.js"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
