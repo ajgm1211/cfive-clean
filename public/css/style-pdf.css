@@ -1,3 +1,13 @@
+@font-face{
+  font-family: "JosefinSans Bold";
+  src: url("/fonts/JosefinSans-Bold.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "JosefinSans Light";
+  src: url("/fonts/JosefinSans-Light.ttf") format("opentype");
+}
+
 .clearfix:after {
   content: "";
   display: table;
@@ -16,8 +26,8 @@ body {
   margin: 0 auto; 
   color: #555555;
   background: #FFFFFF; 
-  font-family: Arial, sans-serif; 
-  font-size: 14px;
+  font-family: JosefinSans Light,Arial !important; 
+  font-size: 12px !important;
 }
 
 header {
@@ -27,7 +37,9 @@ header {
 }
 
 .title{
-  color: #1D3A6E;
+  color: #1D3A6E !important;
+  font-weight: bold !important;
+  font-size: 12px !important; 
 }
 .subtotal{
   font-size: 12px;
