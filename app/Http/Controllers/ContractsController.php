@@ -359,6 +359,7 @@ class ContractsController extends Controller
         $contract_client_restriction->contract_id=$contract->id;
         $contract_client_restriction->save();
       }
+
     }
 
     $request->session()->flash('message.nivel', 'success');
@@ -831,19 +832,20 @@ class ContractsController extends Controller
     $rate_id   =  $_REQUEST['rate_id'];
     $accion    =  $_REQUEST['accion'];
 
-    if($accion == 2){
-      $rate = new Rate();
-      $rate = Rate::find($rate_id);
-      $rate->delete();
-      return 2;
-    }
+
+      if($accion == 2){
+        $rate = new Rate();
+        $rate = Rate::find($rate_id);
+        $rate->delete();
+        return 2;
+      }
     else if($accion == 1){
       $ratefail = new FailRate();
       $ratefail = FailRate::find($rate_id);
       $ratefail->delete();
       return 1;
-    }
 
+    }
   }
 
   public function UploadFileSubchargeForContract(Request $request){
