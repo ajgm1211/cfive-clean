@@ -24,6 +24,7 @@ class AddFailSurChargeTable extends Migration
             $table->string('ammount')->nullable();
             $table->string('currency_id')->nullable();
             $table->string('carrier_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
