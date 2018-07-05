@@ -18,10 +18,10 @@ var WizardDemo = function () {
       
         })
 
-        //== Change event
-        wizard.on('change', function(wizard) {
+        //== Change event envia al tope de la pagina 
+      /*  wizard.on('change', function(wizard) {
             mApp.scrollTop();
-        });
+        });*/
     }
 
     var initValidation = function() {
@@ -145,7 +145,7 @@ var WizardDemo = function () {
             
             //== Display error  
             invalidHandler: function(event, validator) {     
-                mApp.scrollTop();
+               // mApp.scrollTop();
 
                 swal({
                     "title": "", 
