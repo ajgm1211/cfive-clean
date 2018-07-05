@@ -17,15 +17,6 @@ class Contract extends Model
   {
     return $this->belongsTo('App\CompanyUser');
   }
-
-  public function localcharges(){
-    //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
-    return $this->hasMany('App\LocalCharge');
-  }
-
-  public function rates(){
-    return $this->hasMany('App\Rate');
-  }
   
   public function localcharges(){
         //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
