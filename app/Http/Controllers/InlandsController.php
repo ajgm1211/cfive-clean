@@ -18,7 +18,7 @@ class InlandsController extends Controller
      */
   public function index()
   {
-    $data = Inland::with('inlandports.ports')->get();
+    $data = Inland::where('company_user_id','=',Auth::user()->company_user_id)->with('inlandports.ports')->get();
     return view('inland/index', ['arreglo' => $data]);
   }
 
