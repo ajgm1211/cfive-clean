@@ -23,6 +23,7 @@ class CreateRatesTable extends Migration
             $table->string('forty');
             $table->string('fortyhc');
             $table->integer('currency_id')->unsigned();
+            $table->softDeletes();
             $table->foreign('origin_port')->references('id')->on('harbors');
             $table->foreign('destiny_port')->references('id')->on('harbors');
             $table->foreign('carrier_id')->references('id')->on('carriers');

@@ -244,9 +244,9 @@ Air Freight
                             </span>
                         </a>
                     </li>
-                    @if( Auth::user()->type == 'company'   )
+                    @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="" class="m-menu__link ">
+                        <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Company's Profile
@@ -258,14 +258,6 @@ Air Freight
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
                                 Terms & Conditions
-                            </span>
-                        </a>
-                    </li>
-                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{ route('company-brands.edit') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
-                            <span class="m-menu__link-text">
-                                Company preferences
                             </span>
                         </a>
                     </li>

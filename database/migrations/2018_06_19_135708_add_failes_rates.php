@@ -23,6 +23,7 @@ class AddFailesRates extends Migration
             $table->string('forty')->nullable();
             $table->string('fortyhc')->nullable();
             $table->string('currency_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
