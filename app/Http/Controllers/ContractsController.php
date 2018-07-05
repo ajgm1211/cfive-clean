@@ -409,6 +409,9 @@ class ContractsController extends Controller
                 if($reader->get()->isEmpty() != true){
                     Rate::where('contract_id','=',$contract)
                         ->delete();
+                    FailRate::where('contract_id','=',$contract)
+                        ->delete();
+
                 } else{
                     $request->session()->flash('message.nivel', 'danger');
                     $request->session()->flash('message.content', 'The file is it empty');
@@ -426,7 +429,8 @@ class ContractsController extends Controller
                         ->count();
 
                     if($duplicate <= 0){
-
+                        $origin = "origin";
+                        $destination ="destiny";
                         $twuenty = "20";
                         $forty = "40";
                         $fortyhc = "40hc";
@@ -449,18 +453,18 @@ class ContractsController extends Controller
                         $currenc = Currency::where('alphacode','=',$book->currency)->first();
                         $carrier = Carrier::where('name','=',$book->carrier)->first();
 
-                        if(empty($book->origin) != true){
+                        if(empty($book->$origin) != true){
                             $origB=true;
-                            $originV = $book->origin;
+                            $originV = $book->$origin;
                         }else{
-                            $originV = $book->origin.'_E_E';
+                            $originV = $book->$origin.'_E_E';
                         }
 
-                        if(empty($book->destination) != true ){
+                        if(empty($book->$destination) != true ){
                             $destiB=true;
-                            $destinationV = $book->destination;
+                            $destinationV = $book->$destination;
                         }else{
-                            $destinationV = $book->destination.'_E_E';
+                            $destinationV = $book->$destination.'_E_E';
                         }
 
                         if(empty($carrier->id) != true){
@@ -526,10 +530,10 @@ class ContractsController extends Controller
                                 $carrierV = $book->carrier;
                             }
                             if($destiB == true){
-                                $destinationV = $book->destination;
+                                $destinationV = $book->$destination;
                             }
                             if($origB == true){
-                                $originV = $book->origin;
+                                $originV = $book->$origin;
                             }
 
                             $duplicateFail =  FailRate::where('origin_port','=',$originV)
@@ -568,15 +572,18 @@ class ContractsController extends Controller
                     $request->session()->flash('message.title', 'Well done!');
                 }
             });
-            
-            //$RatesDelT = Rate::where('contract_id','=',$contract)
-               // ->forceDelete();
+
+            Rate::onlyTrashed()->where('contract_id','=',$contract)
+                ->forceDelete();
+            FailRate::onlyTrashed()->where('contract_id','=',$contract)
+                ->forceDelete();
             return redirect()->route('Failed.Rates.For.Contracts',$contract);
 
-            //dd($res);*/
-
         } catch (\Illuminate\Database\QueryException $e) {
-            $RatesDelT->restore();
+            Rate::onlyTrashed()->where('contract_id','=',$contract)
+                ->restore();
+            FailRate::onlyTrashed()->where('contract_id','=',$contract)
+                ->restore();
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$request->contract_id);
@@ -884,10 +891,22 @@ class ContractsController extends Controller
             $contract = $request->contract_id;
             $errors=0;
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+                if($reader->get()->isEmpty() != true){
+                    LocalCharge::where('contract_id','=',$contract)
+                        ->delete();
+                    FailSurCharge::where('contract_id','=',$contract)
+                        ->delete();
+
+                } else{
+                    $request->session()->flash('message.nivel', 'danger');
+                    $request->session()->flash('message.content', 'The file is it empty');
+                    return redirect()->route('contracts.edit',$contract);   
+                }
                 $i=1;
                 $SurcharExist;
                 $SurcharcarrierExist;
                 $SurcharPortExist;
+
                 foreach ($reader->get() as $book) {
                     $surchargeBook        = "surcharge";
                     $originBook           = "origin";
@@ -1111,10 +1130,17 @@ class ContractsController extends Controller
 
                 }
             });
+            LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
+                ->forceDelete();
+            FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
+                ->forceDelete();
             return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
 
         } catch (\Illuminate\Database\QueryException $e) {
-
+            LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
+                ->restore();
+            FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
+                ->restore();
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$request->contract_id);
