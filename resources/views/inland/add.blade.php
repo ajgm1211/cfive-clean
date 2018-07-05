@@ -71,33 +71,31 @@ Price levels
                                 </ul>
                             </div>
                         </div>
-                        <div    class="text-center" style="font-size: 11px !important;">
+                        <div class="text-center" style="font-size: 11px !important;">
 
-                            <table id='twuenty' class=" table table-condensed col-lg-12">
+                            <table id='twuenty' class=" table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th> <span><b>Lower limit (KM)</b></span></th>
-                                        <th>  <span><b>Upper limit (KM)</b></span></th>
-                                        <th><span><b>Rate Per<br> Container</b></span></th>
-                                        <th></th>
-
+                                        <th> <span><b>Lower <br> limit (KM)</b></span></th>
+                                        <th>  <span><b>Upper <br> limit (KM)</b></span></th>
+                                        <th><span><b>Rate Per <br> Container</b></span></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="col-md-2"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input low20','required' => 'required' , 'id' => 'lo201']) !!}</td>
-                                        <td class="col-md-2">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'col-lg-12 form-control m-input up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')']) !!}</td>
-                                        <td  class="col-md-5">
+                                        <td class=""> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low ','required' => 'required' , 'id' => 'l20']) !!}</td>
+                                        <td class="">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input prove up up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')']) !!}</td>
+                                        <td class="">
                                             <div class="input-group">
-                                                {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input','required' => 'required']) !!}
-                                                <div class="input-group-btn">
-                                                    <div class="btn-group">
-                                                        {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
-                                                    </div>
+                                                {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required']) !!}
+                                            
+                                            <div class="input-group-btn">
+                                                <div class="btn-group">
+                                                    {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td class="col-md-2">  -
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -106,19 +104,21 @@ Price levels
                             <table hidden="true">
                                 <tr id="twuentyclone">
 
-                                    <td class="col-md-2"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input cloLow20']) !!}</td>
-                                    <td class="col-md-2">         {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input  cloUp20']) !!}</td>
-                                    <td  class="col-md-5">
+                                    <td class=""> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low cloLow20']) !!}</td>
+                                    <td class="">         {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input  up cloUp20']) !!}</td>
+                                    <td  class="">
                                         <div class="input-group">
-                                            {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
-                                            <div class="input-group-btn">
-                                                <div class="btn-group">
-                                                    {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
-                                                </div>
+                                            {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input']) !!}
+                                        
+                                        <div class="input-group-btn">
+                                            <div class="btn-group">
+                                                {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                             </div>
                                         </div>
+                                        </div>
+                                        
                                     </td>
-                                    <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                    <td class="">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                         <i class="la la-eraser"></i>
                                         </a>
                                     </td>
@@ -161,28 +161,26 @@ Price levels
                             <table id='forty' class=" table table-condensed col-lg-12">
                                 <thead>
                                     <tr>
-                                        <th> <span><b>Lower limit (KM)</b></span></th>
-                                        <th>  <span><b>Upper limit (KM)</b></span></th>
-                                        <th><span><b>Rate Per<br> Container</b></span></th>
-                                        <th></th>
+                                        <th> <span><b>Lower <br> limit (KM)</b></span></th>
+                                        <th>  <span><b>Upper <br> limit (KM)</b></span></th>
+                                        <th><span><b>Rate Per <br> Container</b></span></th>
+                                        
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="col-md-2"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input low40','required' => 'required' , 'id' => 'lo401']) !!}</td>
-                                        <td class="col-md-2">  {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => 'col-lg-12 form-control m-input up40','required' => 'required','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')']) !!}</td>
-                                        <td  class="col-md-5">
+                                        <td class=""> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40','required' => 'required' , 'id' => 'lo401']) !!}</td>
+                                        <td class="">  {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40','required' => 'required','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')']) !!}</td>
+                                        <td  class="">
                                             <div class="input-group">
-                                                {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input','required' => 'required']) !!}
+                                                {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required']) !!}
                                                 <div class="input-group-btn">
                                                     <div class="btn-group">
-                                                        {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
+                                                        {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td class="col-md-2">  -
                                         </td>
                                     </tr>
                                 </tbody>
@@ -190,19 +188,19 @@ Price levels
 
                             <table hidden="true">
                                 <tr id="fortyclone">
-                                    <td class="col-md-2"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input  cloLow40']) !!}</td>
-                                    <td class="col-md-2">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input cloUp40']) !!}</td>
-                                    <td  class="col-md-5">
+                                    <td class=""> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input low cloLow40']) !!}</td>
+                                    <td class="">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => 'form-control m-input up cloUp40']) !!}</td>
+                                    <td  class="">
                                         <div class="input-group">
-                                            {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
+                                            {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input']) !!}
                                             <div class="input-group-btn">
                                                 <div class="btn-group">
-                                                    {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
+                                                    {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                    <td class="">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                         <i class="la la-eraser"></i>
                                         </a>
                                     </td>
@@ -244,28 +242,26 @@ Price levels
                             <table id='fortyhc' class=" table table-condensed col-lg-12">
                                 <thead>
                                     <tr>
-                                        <th> <span><b>Lower limit (KM)</b></span></th>
-                                        <th>  <span><b>Upper limit (KM)</b></span></th>
-                                        <th><span><b>Rate Per<br> Container</b></span></th>
-                                        <th></th>
+                                        <th> <span><b>Lower <br> limit (KM)</b></span></th>
+                                        <th>  <span><b>Upper <br> limit (KM)</b></span></th>
+                                        <th><span><b>Rate Per <br> Container</b></span></th>
+                                    
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="col-md-2"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input low40H','required' => 'required' ,'id' => 'lo40H1']) !!}</td>
-                                        <td class="col-md-2">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => 'col-lg-12 form-control m-input up40H','required' => 'required', 'id' => 'up40H1' ,'onblur' => 'validateRange40hc(this.id,\'t40H\')' ]) !!}</td>
-                                        <td  class="col-md-5">
+                                        <td class=""> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40H','required' => 'required' ,'id' => 'lo40H1']) !!}</td>
+                                        <td class="">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40H','required' => 'required', 'id' => 'up40H1' ,'onblur' => 'validateRange40hc(this.id,\'t40H\')' ]) !!}</td>
+                                        <td  class="">
                                             <div class="input-group">
-                                                {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input','required' => 'required']) !!}
+                                                {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required']) !!}
                                                 <div class="input-group-btn">
                                                     <div class="btn-group">
-                                                        {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
+                                                        {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td class="col-md-2">  -
                                         </td>
                                     </tr>
                                 </tbody>
@@ -273,19 +269,19 @@ Price levels
 
                             <table hidden="true">
                                 <tr id="fortyhcclone">
-                                    <td class="col-md-2"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input cloLow40H']) !!}</td>
-                                    <td class="col-md-2">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input cloUp40H']) !!}</td>
-                                    <td  class="col-md-5">
+                                    <td class=""> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'form-control m-input low cloLow40H']) !!}</td>
+                                    <td class="">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input up cloUp40H']) !!}</td>
+                                    <td  class="">
                                         <div class="input-group">
-                                            {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
+                                            {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input']) !!}
                                             <div class="input-group-btn">
                                                 <div class="btn-group">
-                                                    {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
+                                                    {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                                    <td class="">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                         <i class="la la-eraser"></i>
                                         </a>
                                     </td>

@@ -97,7 +97,7 @@ class ImportationRatesController extends Controller
                     ]);*/
             /*    }
          });*/
-            dd($res);
+            
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.contenido', 'El archivo ha sido subido con exito');

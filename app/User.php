@@ -41,6 +41,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Surcharge');
 
     }
+    public function emailsTemplates(){
+
+        return $this->hasMany('App\EmailTemplate');
+
+    }
     
     public function verifyUser()
     {
@@ -52,12 +57,5 @@ class User extends Authenticatable
         return $this->belongsTo('App\CompanyUser');
     }
 
-    public function getStateAttribute()
-    {
-        if($this->attributes['state']==1){
-            return $this->attributes['state']='Active';
-        }else{
-            return $this->attributes['state']='Inactive';
-        }
-    }
+
 }

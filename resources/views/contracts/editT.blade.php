@@ -142,49 +142,49 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     @foreach ($contracts->rates as $rates)
 
                                     <tr id='tr{{++$loop->index}}' disabled='true'>
-                                        <td class="col-sm-2">
+                                        <td width='15%' > 
                                             <div id='divoriginport{{$loop->index}}' class='val'>{{$rates->port_origin->name}}</div>
                                             <div class='in' hidden="true">
-                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true']) }} 
+                                                {{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true' ,'style' => 'width:100%;']) }} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2"> 
+                                        <td  width='15%' >  
                                             <div  id='divdestinyport{{$loop->index}}' class='val'>   {{$rates->port_destiny->name}} </div>
                                             <div class='in' hidden="true">  
-                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ]) }}
+                                                {{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%' >
                                             <div id='divcarrier{{$loop->index}}' class='val'>  {{$rates->carrier->name }} </div>
                                             <div class='in' hidden="true"> 
                                                 {{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%' >
                                             <div  id='divtwuenty{{$loop->index}}' class='val'>  {{$rates->twuenty  }}  </div>
                                             <div class='in' hidden="true">  
                                                 {!! Form::text('twuenty[]', $rates->twuenty, ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input', 'disabled' =>  'true' ]) !!} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%'>
                                             <div id='divforty{{$loop->index}}' class='val'>  {{$rates->forty  }}  </div>
                                             <div class='in' hidden="true"> 
                                                 {!! Form::text('forty[]', $rates->forty, ['id' => 'forty'.$loop->index,'placeholder' => 'Please enter the 40','class' => 'form-control m-input' ,'disabled' =>  'true']) !!} 
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='10%'  >
                                             <div id='divfortyhc{{$loop->index}}' class='val'>{{ $rates->fortyhc}}  </div>
                                             <div class='in' hidden="true">
-                                                {!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','disabled' =>  'true']) !!}  
+                                                {!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => '40HC','class' => 'form-control','disabled' =>  'true' ]) !!}  
                                             </div>
                                         </td>
-                                        <td class="col-sm-2">
+                                        <td  width='15%' >
                                             <div id='divalphacode{{$loop->index}}' class='val'> {{$rates->currency->alphacode}}   </div>
                                             <div class='in' hidden="true">
                                                 {{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
                                             </div>
                                         </td>
-                                        <td class="col-sm-1">      
+                                        <td   width='10%'>      
                                             <a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                                 <i class="la la-edit"></i>
                                             </a>
@@ -236,7 +236,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                  Failed Surcharge
                                 <i class="fa flaticon-tool-1"></i>
                             </a>
-                            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%">
+                            <table class="table m-table m-table--head-separator-primary" id="sample_editable_1" width="100%" >
                                 <thead>
                                     <tr>
                                         <th title="Field #1">
@@ -271,63 +271,63 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                 <tbody>
                                     @foreach ($contracts->localcharges as $localcharges)
                                     <tr id='tr_l{{++$loop->index}}'>
-                                        <td>
+                                        <td width='10%'>
                                             <div id="divtype{{$loop->index}}"  class="val">{!! $localcharges->surcharge->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('type[]', $surcharge,$localcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('type[]', $surcharge,$localcharges->surcharge_id,['id' => 'type'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true' ,'style' => 'width:100%;']) }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td width='15%'>
                                             <div id="divport{{$loop->index}}"  class="val">   
                                                 {!! str_replace(["[","]","\""], ' ', $localcharges->localcharports->pluck('portOrig')->unique()->pluck('name') ) !!}
                                             </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('port_origlocal[]', $harbor,$localcharges->localcharports->pluck('port_orig'),['id' => 'portOrig'.$loop->index ,'class'=>'m-select2-general  form-control ','disabled' => 'true','multiple' => 'multiple']) }}
+                                                {{ Form::select('port_origlocal[]', $harbor,$localcharges->localcharports->pluck('port_orig'),['id' => 'portOrig'.$loop->index ,'class'=>'m-select2-general  form-control ','disabled' => 'true','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td width='12%'>
 
 
                                             <div id="divportDest{{$loop->index}}"  class="val">   
                                                 {!! str_replace(["[","]","\""], ' ', $localcharges->localcharports->pluck('portDest')->unique()->pluck('name') ) !!}
                                             </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('port_destlocal[]', $harbor,$localcharges->localcharports->pluck('port_dest'),['id' => 'portDest'.$loop->index ,'class'=>'m-select2-general  form-control ','disabled' => 'true','multiple' => 'multiple']) }}
+                                                {{ Form::select('port_destlocal[]', $harbor,$localcharges->localcharports->pluck('port_dest'),['id' => 'portDest'.$loop->index ,'class'=>'m-select2-general  form-control ','disabled' => 'true','multiple' => 'multiple','style' => 'width:100%;']) }}
                                             </div>
-                                        </td>
-                                        <td>
+                                        </td >
+                                        <td width='10%'>
 
                                             <div id="divchangetype{{$loop->index}}"  class="val">{!! $localcharges->typedestiny->description !!} </div>
                                             <div class="in" hidden="true">
 
-                                                {{ Form::select('changetype[]',$typedestiny, $localcharges->typedestiny_id,['id' => 'changetype'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
+                                                {{ Form::select('changetype[]',$typedestiny, $localcharges->typedestiny_id,['id' => 'changetype'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','style' => 'width:100%;']) }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td width='10%'>
                                             <div id="divcarr{{$loop->index}}"  class="val">
                                                 {!! str_replace(["[","]","\""], ' ', $localcharges->localcharcarriers->pluck('carrier')->pluck('name') ) !!}
                                             </div>
                                             <div class="in" hidden="true">
                                                 {{ Form::select('localcarrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier'.$loop->index ,'class'=>'m-select2-general form-control','disabled' => 'true','multiple' => 'multiple']) }}
                                             </div>
-                                        </td>
+                                        </td >
 
-                                        <td>   
+                                        <td width='11%'>   
                                             <div id="divcalculation{{$loop->index}}"  class="val">{!! $localcharges->calculationtype->name !!}</div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('calculationtype[]', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true']) }}
+                                                {{ Form::select('calculationtype[]', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype'.$loop->index ,'class'=>'m-select2-general form-control ','disabled' => 'true','style' => 'width:80%;']) }}
                                             </div> 
-                                        <td> 
+                                        <td width='10%'> 
                                             <div id="divammount{{$loop->index}}" class="val"> {!! $localcharges->ammount !!} </div>
                                             <div class="in" hidden="    true"> {!! Form::text('ammount[]', $localcharges->ammount, ['id' => 'ammount'.$loop->index ,'placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','disabled' => 'true']) !!}</div> 
                                         </td>
-                                        <td>
+                                        <td width='8%'>
                                             <div id="divcurrency{{$loop->index}}"  class="val"> {!! $localcharges->currency->alphacode !!} </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'m-select2-general form-control' ,'disabled' => 'true']) }}
+                                                {{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
                                             </div> 
                                         </td>
-                                        <td>
+                                        <td width='12%'>
                                             <a  id='edit_l{{$loop->index}}' onclick="display_l({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                                 <i class="la la-edit"></i>
                                             </a>
@@ -352,16 +352,16 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                             <table hidden="true">
                                 <tr   id='tclone2' hidden="true"  >
                                     <td>
-                                        {{ Form::select('type[]', $surcharge,null,['class'=>'form-control']) }}
+                                        {{ Form::select('type[]', $surcharge,null,['class'=>'form-control','style' => 'width:100%;']) }}
                                     </td>
-                                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control portOrig','multiple' => 'multiple']) }}</td>
-                                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control portDest','multiple' => 'multiple']) }}</td>
-                                    <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control']) }}</td>
-                                    <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple']) }}</td>
+                                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control portOrig','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                                    <td>{{ Form::select(null, $harbor,null,['class'=>'custom-select form-control portDest','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                                    <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
+                                    <td>{{ Form::select(null, $carrier,null,['class'=>'custom-select form-control carrier','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
 
-                                    <td>  {{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control ']) }}</td>
+                                    <td>  {{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control ','style' => 'width:100%;']) }}</td>
                                     <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                                    <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                                    <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
                                     <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                         <i class="la la-eraser"></i>
                                         </a>
@@ -503,7 +503,7 @@ Load
 
 
 <script src="/js/editcontracts.js"></script>
-<script src="/assets/plugins/table-datatables-editable.js" type="text/javascript"></script>
+
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>

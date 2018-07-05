@@ -30,7 +30,42 @@ var TableDatatablesEditable = function () {
 
 
 
-        var table = $('#sample_editable_1');
+        var table = $('#sample_editable_1').mDatatable({
+            columns: [
+                {
+                    field: "Currency",
+                    title: "Field #9",
+                    sortable: false,
+                    width: 50,
+                },{
+                    field: "Calculation type",
+                    title: "Field #7",
+                    sortable: false,
+                    width: 50,
+                },{
+                    field: "Carrier",
+                    title: "Field #4",
+                    sortable: false,
+                    width: 100,
+                },{
+                    field: "Destiny Port",
+                    title: "Field #2",
+                    sortable: false,
+                    width: 100,
+                },{
+                    field: "Origin Port",
+                    title: "Field #2",
+                    sortable: false,
+                    width: 100,
+                },{
+                    field: "Type",
+                    title: "Field #1",
+                    sortable: false,
+                    width: 70,
+                },
+                
+            ],
+        });
 
         var oTable = table.dataTable({
 

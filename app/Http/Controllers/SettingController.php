@@ -19,15 +19,35 @@ class SettingController extends Controller
 
     public function store(Request $request){
 
+        $var = $request->image;
+
+        if($var){
+            $name = $var->getClientOriginalName();
+            \Storage::disk('local')->put($name,  \File::get($var));
+        }
+
+
         if(!$request->company_id){
-            $company=CompanyUser::create($request->all());
+
+            //$company=CompanyUser::create($request->all());
+
+            $company = new CompanyUser();
+            $company->name = $request->name;
+            $company->address = $request->address;
+            $company->phone = $request->phone;
+            $company->currency_id = $request->currency_id;
+            //$company->logo = $name;
+            $company->save();
+
             User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
+
         }else{
             $company=CompanyUser::findOrFail($request->company_id);
             $company->name=$request->name;
             $company->phone=$request->phone;
             $company->address=$request->address;
             $company->currency_id=$request->currency_id;
+            //$company->logo = $name;
             $company->update();
         }
 

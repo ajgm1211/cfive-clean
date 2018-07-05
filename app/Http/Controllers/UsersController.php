@@ -10,7 +10,8 @@ use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Password;
-
+use App\Mail\VerifyMail;
+use App\VerifyUser;
 
 class UsersController extends Controller
 {
@@ -42,17 +43,26 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+      
+    
         $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
-        $usuario = new User($request->all());
-        $usuario->password = bcrypt($usuario->password);
-        $usuario->save();
-
-        if($usuario->type == "subuser"){
+        $user = new User($request->all());
+        $user->password = bcrypt($request->password);
+        $user->save();
+      
+        if($user->type == "subuser"){
             $subuser = new Subuser();
-            $subuser->company_id = $request->id_company;
-            $subuser->user()->associate($usuario);
-            $subuser->save();
+            $subuser->company_id = Auth::user()->id;
+            $subuser->user()->associate($user);
+            $subuser->save(); 
         }
+        
+        VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => str_random(40)
+        ]);
+        
+        \Mail::to($user->email)->send(new VerifyMail($user));
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -105,10 +115,12 @@ class UsersController extends Controller
         if($user->type == "subuser"){
             $subuser = Subuser::find($user->subuser->id);
             $datosSubuser = User::find($subuser->company_id);
+            $var = compact($user, $companyall, $datosSubuser);
+            
             return view('users.edit', compact('user','companyall','datosSubuser'));
         }
 
-
+        
         return view('users.edit', compact('user','companyall'));
     }
 
@@ -129,7 +141,7 @@ class UsersController extends Controller
             $subuser->company_id  =  $request->id_company;
             $subuser->update();
         }
-
+        
         $user->update($requestForm);
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -205,7 +217,7 @@ class UsersController extends Controller
     public function activate(Request $request,$id) {
         $user=User::find($id);
         //dd(json_encode($user->state));
-        if($user->state=='Active'){
+        if($user->state==1){
             $user->state=0;
             $user->update();
             $request->session()->flash('message.nivel', 'success');

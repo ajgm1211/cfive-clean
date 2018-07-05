@@ -500,10 +500,9 @@ input#password {
   height: 35px;
 }
 
-
 /* ADD FCL CONTRACT FORM*/
 
-#origin-port-fcl-form {
+/*#origin-port-fcl-form {
 
 }
 
@@ -516,7 +515,7 @@ input#password {
 }
 
 #20-fcl-form{
-
+  
 }
 
 #40-fcl-form {
@@ -529,7 +528,7 @@ input#password {
 
 #currency-fcl-form{
 
-}
+}*/
 
 /*
 INLAND RATES
@@ -549,4 +548,46 @@ th#rate-limit-fcl {
 
 th#options-limit-fcl {
   width:50px;
+}
+
+.up{
+  width: 60px;
+}
+
+.low{
+  width: 60px;
+}
+
+.fortyhc{
+  width: 60px;
+}
+
+.currency{
+  width: 60px;
+}
+
+.dest-port{
+  width: 100px;
+}
+
+.dest-port2{
+  width: 100px !important;
+}
+
+.orig-port{
+  width: 100px;
+}
+
+.carrier{
+  width: 100px;
+}
+
+.tab{
+  display: inline-table !important;
+  width: 100% !important;
+}
+
+.mce-menubtn button {
+  color: #595959;
+  display: none !important;
 }
