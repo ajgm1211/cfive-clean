@@ -358,12 +358,17 @@ class QuoteController extends Controller
   $date =  $request->input('date');
   $user_id =  \Auth::id();
   $company_user_id =  \Auth::user()->company_user_id;
-  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id) 
+  $company_id = $request->input('company_id');
+  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
         {
          $q->where('validity', '<=',$date)->where('expire', '>=', $date)->whereHas('contract_user_restriction', function($a) use($user_id)                                                                                                                              {
            $a->where('user_id', '=',$user_id);
 
-         })->orDoesntHave('contract_user_restriction');
+         })->orDoesntHave('contract_company_restriction')
+         ->whereHas('contract_company_restriction', function($a) use($company_id)                                                                                                                              {
+           $a->where('company_id', '=',$company_id);
+
+         })->orDoesntHave('contract_company_restriction');
 
        })->get();
 

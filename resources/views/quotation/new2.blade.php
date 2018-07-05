@@ -33,14 +33,7 @@
                 <div class="m-portlet__head">
                   <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-                      <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
-                        <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
-                          Create Manual Quote
-                        </a>
-                        <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
-                          Back
-                        </a>
-                      </li>
+                      
                     </ul>
                   </div>
                 </div>
