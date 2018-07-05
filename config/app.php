@@ -165,8 +165,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
         Barryvdh\Elfinder\ElfinderServiceProvider::class,
-
-        //Maatwebsite\Excel\ExcelServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
