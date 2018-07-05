@@ -15,9 +15,7 @@ var WizardDemo = function () {
 
         //== Validation before going to next page
         wizard.on('beforeNext', function(wizard) {
-            if (validator.form() !== true) {
-                return false;  // don't go to the next step
-            }
+      
         })
 
         //== Change event

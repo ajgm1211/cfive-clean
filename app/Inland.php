@@ -6,17 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inland extends Model
 {
-       protected $table    = "inlands";
-    protected $fillable =   ['id','provider','type','validity','expire'];
+  protected $table    = "inlands";
+  protected $fillable =   ['id','provider','type','validity','expire'];
 
-    public function inlandports(){
+  public function inlandports(){
 
-        return $this->hasMany('App\InlandPort');
+    return $this->hasMany('App\InlandPort');
 
-    }
-    public function inlanddetails(){
+  }
+  public function inlanddetails(){
 
-        return $this->hasMany('App\InlandDetail');
+    return $this->hasMany('App\InlandDetail');
 
-    }
+  }
+  public function companyUser()
+  {
+    return $this->belongsTo('App\CompanyUser');
+  }
+
 }

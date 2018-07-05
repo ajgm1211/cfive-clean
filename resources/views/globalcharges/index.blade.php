@@ -180,22 +180,37 @@
             {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-              <div class="row align-items-center">
 
-                <div class="new col-xl-12 order-1 order-xl-2 m--align-right">
-                  <a >
+              <div class="row">
+                <div class="col-md-2">
+                  <a  id="new" class="">
                     <button id="new" type="button" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                      <span>
-                        <i class="la la-user"></i>
-                        <span>
-                          Add Charge
-                        </span>
-                      </span>
+                      Add New
+                      <i class="fa fa-plus"></i>
                     </button>
                   </a>
-                  <div class="m-separator m-separator--dashed d-xl-none"></div>
                 </div>
+                @if($surcharge->isEmpty())
+                <div class="col-md-10">
+                  <div class="m-alert m-alert--icon m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="m-alert__icon">
+                      <i class="la la-warning"></i>
+                    </div>
+                    <div class="m-alert__text">
+                      <strong>
+                        Important Message
+                      </strong>
+                      You have to first add surcharges terms in order to add surcharges to this global. <a href="{{route('surcharges.index')}}" > Go to </a>
+                    </div>
+                    <div class="m-alert__close">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  </div>
+
+                </div>
+                @endif
               </div>
+             
             </div>
 
             <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
@@ -264,7 +279,7 @@
                 </td>
               </tr>
             </table>
-            
+
             <div class="m-portlet__foot m-portlet__foot--fit">
               <div id="button"  class="m-form__actions m-form__actions">
                 {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
@@ -292,9 +307,9 @@
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
 <script>
-$(document).ready( function () {
+  $(document).ready( function () {
     $('#myTable').DataTable();
-} );
+  } );
 </script>
 <script src="/js/globalcharges.js"></script>
 

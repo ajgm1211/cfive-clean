@@ -6,17 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    protected $table    = "contracts";
+  protected $table    = "contracts";            
 
-    protected $fillable = ['id', 'name','number','user_id','validity','expire','status'];
+  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status'];
 
-    public function rates(){
-        return $this->hasMany('App\Rate');
-    }
-    
-    public function localcharges(){
-        //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
-        return $this->hasMany('App\LocalCharge');
-    }
-    
+  public function rates(){
+    return $this->hasMany('App\Rate');
+  }
+  public function companyUser()
+  {
+    return $this->belongsTo('App\CompanyUser');
+  }
+
+  public function localcharges(){
+    //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
+    return $this->hasMany('App\LocalCharge');
+  }
+
 }
