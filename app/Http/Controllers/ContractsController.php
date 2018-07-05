@@ -37,7 +37,13 @@ class ContractsController extends Controller
      */
     public function index()
     {
-        $contracts = Contract::where('user_id','=',Auth::user()->id)->with('rates')->get();
+        $company_user_id = \Auth::user()->company_user_id;
+
+        $contracts = Contract::whereHas('user', function($q) use($company_user_id) 
+        {
+            $q->where('company_user_id','=',$company_user_id);
+        })->with('rates')->get();
+
         return view('contracts/index', ['arreglo' => $contracts]);
     }
 
