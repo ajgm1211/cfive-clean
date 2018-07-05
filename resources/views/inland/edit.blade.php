@@ -177,33 +177,33 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                               @foreach($inland->inlanddetails as $inlanddetails)
                               @if($inlanddetails->type == "twuenty")
                               <tr id='tr_twuenty{{++$loop->index}}'>
-                                <td class="col-md-2">
+                                <td  width="20%"  >
 
                                   <div id="divlowertwuenty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->lower }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('lowertwuenty[]', $inlanddetails->lower, ['id' => 'lowertwuenty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('lowertwuenty[]', $inlanddetails->lower, ['id' => 'lowertwuenty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true','style'=>'width:100%']) !!}
                                   </div>
                                 </td>
-                                <td class="col-md-2">
+                                <td width="20%" >
                                   <div id="divuppertwuenty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->upper }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('uppertwuenty[]', $inlanddetails->upper, ['id' => 'uppertwuenty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('uppertwuenty[]', $inlanddetails->upper, ['id' => 'uppertwuenty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input ','disabled' => 'true','style'=>'width:100%']) !!}
                                   </div>
 
 
                                 </td>
-                                <td  class="col-md-5">
+                                <td width="30%"  >
                                   <div id="divammounttwuenty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->ammount }} /
                                     {{ $inlanddetails->currency->alphacode }}
                                   </div>
                                   <div class="in" hidden="    true">
                                     <div class="input-group">
-                                      {!! Form::number('ammounttwuenty[]', $inlanddetails->ammount, ['id' => 'ammounttwuenty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-5 form-control m-input','disabled' => 'true']) !!}
+                                      {!! Form::number('ammounttwuenty[]', $inlanddetails->ammount, ['id' => 'ammounttwuenty'.$loop->index ,'placeholder' => '50','class' => 'form-control m-input','disabled' => 'true','style'=>'width:50%']) !!}
                                       <div class="input-group-btn">
                                         <div class="btn-group">
                                           {{ Form::select('currencytwuenty[]',$currency,$inlanddetails->currency_id,['id' =>    'currencytwuenty'.$loop->index ,'class'=>'custom-select form-control col-lg-12','disabled' => 'true']) }}
@@ -214,7 +214,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                                 </td>
 
-                                <td class="col-md-2">
+                                <td  width="20%" >
                                   <a  id='edit_twuenty{{$loop->index}}' onclick="display_twuenty({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                   </a>
@@ -238,11 +238,11 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                           <table hidden="true">
                             <tr id="twuentyclone">
-                              <td class="col-md-2"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input']) !!}</td>
-                              <td class="col-md-2">         {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input']) !!}</td>
-                              <td  class="col-md-5">
+                              <td width="20%"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low cloLow20','style'=>'width:100%']) !!}</td>
+                              <td width="20%">         {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input up cloUp20','style'=>'width:100%']) !!}</td>
+                              <td  width="30%">
                                 <div class="input-group">
-                                  {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
+                                  {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
                                   <div class="input-group-btn">
                                     <div class="btn-group">
                                       {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
@@ -250,7 +250,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                                   </div>
                                 </div>
                               </td>
-                              <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                              <td width="20%">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                 <i class="la la-eraser"></i>
                                 </a>
                               </td>
@@ -308,33 +308,33 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                               @foreach($inland->inlanddetails as $inlanddetails)
                               @if($inlanddetails->type == "forty")
                               <tr id='tr_forty{{++$loop->index}}'>
-                                <td class="col-md-2">
+                                <td  width="20%">
 
                                   <div id="divlowerforty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->lower }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lowerforty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lowerforty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input ','disabled' => 'true']) !!}
                                   </div>
                                 </td>
-                                <td class="col-md-2">
+                                <td width="20%">
                                   <div id="divupperforty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->upper }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'upperforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'upperforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up up40','disabled' => 'true','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}
                                   </div>
 
 
                                 </td>
-                                <td  class="col-md-5">
+                                <td  width="30%" >
                                   <div id="divammountforty{{$loop->index}}" class="val">
                                     {{ $inlanddetails->ammount }} /
                                     {{ $inlanddetails->currency->alphacode }}
                                   </div>
                                   <div class="in" hidden="    true">
                                     <div class="input-group">
-                                      {!! Form::number('ammountforty[]', $inlanddetails->ammount, ['id' => 'ammountforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-5 form-control m-input','disabled' => 'true']) !!}
+                                      {!! Form::number('ammountforty[]', $inlanddetails->ammount, ['id' => 'ammountforty'.$loop->index ,'placeholder' => '50','class' => 'form-control m-input','disabled' => 'true','style'=>'width:50%']) !!}
                                       <div class="input-group-btn">
                                         <div class="btn-group">
                                           {{ Form::select('currencyforty[]',$currency,$inlanddetails->currency_id,['id' =>    'currencyforty'.$loop->index ,'class'=>'custom-select form-control col-lg-12','disabled' => 'true']) }}
@@ -345,7 +345,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                                 </td>
 
-                                <td class="col-md-2">
+                                <td width="20%" >
                                   <a  id='edit_forty{{$loop->index}}' onclick="display_forty({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                   </a>
@@ -369,11 +369,11 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                           <table hidden="true">
                             <tr id="fortyclone">
-                              <td class="col-md-2"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input']) !!}</td>
-                              <td class="col-md-2">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input']) !!}</td>
-                              <td  class="col-md-5">
+                              <td  width="20%"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input ','style'=>'width:100%']) !!}</td>
+                              <td  width="20%">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => ' form-control m-input  ','style' => 'width:100%']) !!}</td>
+                              <td   width="30%">
                                 <div class="input-group">
-                                  {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
+                                  {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => ' form-control m-input','style'=>'width:50%']) !!}
                                   <div class="input-group-btn">
                                     <div class="btn-group">
                                       {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
@@ -381,7 +381,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                                   </div>
                                 </div>
                               </td>
-                              <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                              <td width="20%">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                 <i class="la la-eraser"></i>
                                 </a>
                               </td>
@@ -438,33 +438,33 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                               @foreach($inland->inlanddetails as $inlanddetails)
                               @if($inlanddetails->type == "fortyhc")
                               <tr id='tr_fortyhc{{++$loop->index}}'>
-                                <td class="col-md-2">
+                                <td width="20%" >
 
                                   <div id="divlowerfortyhc{{$loop->index}}" class="val">
                                     {{ $inlanddetails->lower }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('lowerfortyhc[]', $inlanddetails->lower, ['id' => 'lowerfortyhc'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('lowerfortyhc[]', $inlanddetails->lower, ['id' => 'lowerfortyhc'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true','style'=>'width:100%']) !!}
                                   </div>
                                 </td>
-                                <td class="col-md-2">
+                                <td width="20%" >
                                   <div id="divupperfortyhc{{$loop->index}}" class="val">
                                     {{ $inlanddetails->upper }}
                                   </div>
                                   <div class="in" hidden="    true">
-                                    {!! Form::text('upperfortyhc[]', $inlanddetails->upper, ['id' => 'upperfortyhc'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input','disabled' => 'true']) !!}
+                                    {!! Form::text('upperfortyhc[]', $inlanddetails->upper, ['id' => 'upperfortyhc'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input','disabled' => 'true','style'=>'width:100%']) !!}
                                   </div>
 
 
                                 </td>
-                                <td  class="col-md-5">
+                                <td  width="30%" >
                                   <div id="divammountfortyhc{{$loop->index}}" class="val">
                                     {{ $inlanddetails->ammount }} /
                                     {{ $inlanddetails->currency->alphacode }}
                                   </div>
                                   <div class="in" hidden="    true">
                                     <div class="input-group">
-                                      {!! Form::number('ammountfortyhc[]', $inlanddetails->ammount, ['id' => 'ammountfortyhc'.$loop->index ,'placeholder' => '50','class' => ' col-lg-5 form-control m-input' ,'disabled' => 'true']) !!}
+                                      {!! Form::number('ammountfortyhc[]', $inlanddetails->ammount, ['id' => 'ammountfortyhc'.$loop->index ,'placeholder' => '50','class' => 'form-control m-input' ,'disabled' => 'true','style'=>'width:50%']) !!}
                                       <div class="input-group-btn">
                                         <div class="btn-group">
                                           {{ Form::select('currencyfortyhc[]',$currency,$inlanddetails->currency_id,['id' =>    'currencyfortyhc'.$loop->index ,'class'=>'custom-select form-control col-lg-12' ,'disabled' => 'true']) }}
@@ -475,7 +475,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                                 </td>
 
-                                <td class="col-md-2">
+                                <td width="20%">
                                   <a  id='edit_fortyhc{{$loop->index}}' onclick="display_fortyhc({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                   </a>
@@ -499,11 +499,11 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
 
                           <table hidden="true">
                             <tr id="fortyhcclone">
-                              <td class="col-md-2"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input']) !!}</td>
-                              <td class="col-md-2">         {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input']) !!}</td>
-                              <td  class="col-md-5">
+                              <td width="20%"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'col-lg-12 form-control m-input','style'=>'width:100%' ]) !!}</td>
+                              <td width="20%">         {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-12 form-control m-input','style'=>'width:100%']) !!}</td>
+                              <td   width="30%">
                                 <div class="input-group">
-                                  {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => ' col-lg-5 form-control m-input']) !!}
+                                  {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
                                   <div class="input-group-btn">
                                     <div class="btn-group">
                                       {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control col-lg-12','id' => '']) }}
@@ -511,7 +511,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                                   </div>
                                 </div>
                               </td>
-                              <td class="col-md-2">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
+                              <td width="20%">  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                                 <i class="la la-eraser"></i>
                                 </a>
                               </td>
