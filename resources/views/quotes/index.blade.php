@@ -90,7 +90,7 @@
                     <tbody>
                     @foreach ($quotes as $quote)
                         <tr>
-                            <td>{{$quote->status_id }}</td>
+                            <td>{{$quote->status_quote_id }}</td>
                             @if(isset($quote->company))
                                 <td>{{$quote->company->business_name }}</td>
                             @else

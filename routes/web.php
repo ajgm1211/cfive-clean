@@ -32,6 +32,33 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
 });
 
+Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
+    Route::resource('terms', 'TermsAndConditionsController');
+    Route::get('list', 'TermsAndConditionsController@index')->name('terms.list');
+    Route::get('add', 'TermsAndConditionsController@add')->name('terms.add');
+    Route::get('edit{id}', 'TermsAndConditionsController@edit')->name('terms.edit');
+    Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
+    Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+});
+Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
+    Route::resource('mail-templates', 'EmailsTemplateController');
+    Route::get('list', 'EmailsTemplateController@index')->name('emails-template.list');
+    Route::get('edit{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
+    Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
+    Route::get('msg/{id}', 'EmailsTemplateController@destroymsg')->name('emails-template.msg');
+    Route::get('show/{id}', 'EmailsTemplateController@show')->name('emails-template.show');
+    Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
+    
+});
+Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
+    Route::resource('preferences', 'CompanyBrandingController');
+    Route::get('config', 'CompanyBrandingController@edit')->name('company-brands.edit');
+});
+Route::group(['prefix' => 'mail', 'middleware' => ['auth']], function(){
+    Route::resource('mail', 'MailSendController');
+    Route::get('list', 'MailSendController@index')->name('mail.list');
+    Route::get('send{id}', 'MailSendController@send')->name('mail.send');
+});
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
     Route::get('add', 'SurchargesController@add')->name('surcharges.add');
     Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
@@ -64,15 +91,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::PUT('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
     Route::get('FailedSubchargeForContracts/{id}','ContractsController@FailSubcharges')->name('Failed.Subcharge.For.Contracts');
 
-
 });
-
-
-/*Route::middleware(['auth'])->prefix('uploadfile')->group(function () {
-
-    Route::get('ShowUploadFile',function(){  return view('contracts.UploadFile');  })->name('Show.Upload.File');
-
-});*/
 
 Route::resource('UploadFileRates','ImportationRatesController');
 
@@ -119,6 +138,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
     Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
     Route::post('test', 'QuoteController@test')->name('quotes.test');
+    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

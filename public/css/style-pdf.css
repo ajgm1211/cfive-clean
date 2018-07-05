@@ -26,9 +26,15 @@ header {
   border-bottom: 1px solid #AAAAAA;
 }
 
+.title{
+  color: #1D3A6E;
+}
+.subtotal{
+  font-size: 12px;
+  color: #1D3A6E;;
+}
 #logo {
   float: left;
-  margin-top: 8px;
 }
 
 #logo img {
@@ -102,7 +108,7 @@ table th {
 }
 
 table td {
-  text-align: right;
+  text-align: center;
 }
 
 table td h3{
@@ -130,7 +136,7 @@ table .qty {
 }
 
 table .total {
-  background: #57B223;
+  background: #1D3A6E;
   color: #FFFFFF;
 }
 
@@ -158,9 +164,8 @@ table tfoot tr:first-child td {
 }
 
 table tfoot tr:last-child td {
-  color: #57B223;
+  color: #1D3A6E;
   font-size: 1.4em;
-  border-top: 1px solid #57B223; 
 
 }
 

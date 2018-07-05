@@ -28,7 +28,6 @@ class CreateQuotesTable extends Migration
             $table->foreign('origin_harbor_id')->references('id')->on('harbors');
             $table->integer('destination_harbor_id')->unsigned()->nullable();
             $table->foreign('destination_harbor_id')->references('id')->on('harbors');
-            $table->integer('status_id')->unsigned()->nullable()->default(1);
             $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices');
             $table->integer('contact_id')->unsigned()->nullable();
@@ -41,6 +40,8 @@ class CreateQuotesTable extends Migration
             $table->float('sub_total_origin')->nullable();
             $table->float('sub_total_freight')->nullable();
             $table->float('sub_total_destination')->nullable();
+            $table->integer('status_quote_id')->unsigned()->default(1);
+            $table->foreign('status_quote_id')->references('id')->on('status_quotes');            
             $table->timestamps();
         });
     }

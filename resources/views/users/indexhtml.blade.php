@@ -91,16 +91,14 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                            <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
-                            <span>
-                                <i class="la la-user"></i>
+                            <button id="add" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                                 <span>
-                                    Add User
+                                    <i class="la la-user"></i>
+                                    <span>
+                                        Add User
+                                    </span>
                                 </span>
-                            </span>
                             </button>
-
-
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
                         </div>
                     </div>
@@ -149,7 +147,7 @@
                                 @endif
                             </td>
                             <td>{{ $arr->name_company }}</td>
-                            <td>{{ $arr->state }}</td>
+                            <td>@if($arr->state==1) Active @else Inactive @endif</td>
                             <td>
                                 <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                     <i class="la la-edit"></i>

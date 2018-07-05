@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CarriersTableSeeder::class);
         $this->call(HarborsTableSeeder::class);
         $this->call(TypedestinyTableSeeder::class);
+        $this->call(StatusQuotesTableSeeder::class);
     }
 }
