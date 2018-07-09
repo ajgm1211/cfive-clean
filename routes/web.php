@@ -93,7 +93,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 });
 
-Route::resource('UploadFileRates','ImportationRatesController');
+Route::resource('UploadFile','FileHarborsPortsController');
 
 Route::resource('contracts', 'ContractsController')->middleware('auth');
 
