@@ -16,7 +16,7 @@
                     @include('companies.partials.form_add_companies')
                     <div class="form-group m-form__group">
                         {!! Form::label('price_id', 'Price Level') !!}<br>
-                        {{ Form::select('price_id',$prices,null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
+                        {{ Form::select('price_id[]',$prices,null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'price_level_company','multiple'=>'true']) }}
                     </div>
                 </div>
             </div>
