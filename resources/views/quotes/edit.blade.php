@@ -329,13 +329,7 @@
                                                                             <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1" {!! $origin_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
-                                                                                        <option value="2" {!! $origin_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
-                                                                                        <option value="3" {!! $origin_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
-                                                                                        <option value="4" {!! $origin_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$origin_ammount->currency_id,['class'=>'m-select2-general form-control']) }}              
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -384,13 +378,7 @@
                                                                             <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1">USD</option>
-                                                                                        <option value="2">CLP</option>
-                                                                                        <option value="3">ARS</option>
-                                                                                        <option value="4">EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'m-select2-general form-control']) }}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -434,6 +422,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
+                                                                                    @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value="{{$quote->sub_total_origin}}" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -492,13 +481,7 @@
                                                                             <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1" {!! $freight_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
-                                                                                        <option value="2" {!! $freight_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
-                                                                                        <option value="3" {!! $freight_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
-                                                                                        <option value="4" {!! $freight_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('freight_ammount_currency[]',$currencies,$freight_ammount->currency_id,['class'=>'m-select2-general form-control']) }}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -547,13 +530,7 @@
                                                                             <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1">USD</option>
-                                                                                        <option value="2">CLP</option>
-                                                                                        <option value="3">ARS</option>
-                                                                                        <option value="4">EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'m-select2-general form-control']) }}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -596,7 +573,7 @@
                                                                     <div class="form-group">
                                                                             <span>
                                                                                 <h5>
-                                                                                    Sub-Total: <span id="sub_total_freight">{{$quote->sub_total_freight}}</span>&nbsp;
+                                                                                    Sub-Total: <span id="sub_total_freight">{{$quote->sub_total_freight}}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value="{{$quote->sub_total_freight}}"  class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -655,13 +632,7 @@
                                                                             <input type="number" id="destination_ammount" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1" {!! $destination_ammount->currency_id == 1 ? 'selected':'' !!}>USD</option>
-                                                                                        <option value="2" {!! $destination_ammount->currency_id == 2 ? 'selected':'' !!}>CLP</option>
-                                                                                        <option value="3" {!! $destination_ammount->currency_id == 3 ? 'selected':'' !!}>ARS</option>
-                                                                                        <option value="4" {!! $destination_ammount->currency_id == 4 ? 'selected':'' !!}>EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('destination_ammount_currency[]',$currencies,$destination_ammount->currency_id,['class'=>'m-select2-general form-control']) }}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -710,13 +681,7 @@
                                                                             <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                                                             <div class="input-group-btn">
                                                                                 <div class="btn-group">
-                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        <option value="1">USD</option>
-                                                                                        <option value="2">CLP</option>
-                                                                                        <option value="3">ARS</option>
-                                                                                        <option value="4">EUR</option>
-                                                                                    </select>
+                                                                                    {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'m-select2-general form-control']) }}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -760,6 +725,7 @@
                                                                             <span>
                                                                                 <h5>
                                                                                     Sub-Total: <span id="sub_total_destination">{{$quote->sub_total_destination}}</span>&nbsp
+                                                                                    @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
                                                                                     <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value="{{$quote->sub_total_destination}}" class="form-control"/>
                                                                                 </h5>
                                                                             </span>
@@ -778,7 +744,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div class="form-group text-right">
-                                                                        <h3><b>Total:</b> <span id="total">{{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }}</span></h3>
+                                                                        <h3><b>Total:</b> <span id="total">{{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</span></h3>
                                                                     </div>
                                                                 </div>
                                                             </div>

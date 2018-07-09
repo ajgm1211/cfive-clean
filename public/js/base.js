@@ -981,3 +981,8 @@ $(document).on('click', '#delete-company', function () {
 $('#m_select2-edit-company').select2({
   placeholder: "Select an option"
 });
+
+$('#price_level_company').select2({
+  placeholder: "Select an option"
+});
+
