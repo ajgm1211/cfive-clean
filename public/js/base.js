@@ -374,90 +374,90 @@ $(document).on('change', '#type_local_markup_3', function (e) {
 
 
 //Btn back
-  $(document).on('click', '#create-quote', function (e) {
-    $(this).hide();
-    $("#create-quote-back").show();
+$(document).on('click', '#create-quote', function (e) {
+  $(this).hide();
+  $("#create-quote-back").show();
 });
 
-  //Btn next
-  $(document).on('click', '#create-quote-back', function (e) {
-    $(this).hide();
-    $("#create-quote").show();
+//Btn next
+$(document).on('click', '#create-quote-back', function (e) {
+  $(this).hide();
+  $("#create-quote").show();
 });
 
 //Duplicate Quote
-  $(document).on('click', '#duplicate-quote', function (e) {
-    var quote_id = $('#quote-id').val();
-    $.ajax({
-        url: "/quotes/duplicate/"+quote_id,
-        dataType: 'json',
-        success: function(data) {        
-            swal(
-                'Success!',
-                'The quote has been duplicated.',
-                'success'
-            )
-        }
-    });
+$(document).on('click', '#duplicate-quote', function (e) {
+  var quote_id = $('#quote-id').val();
+  $.ajax({
+    url: "/quotes/duplicate/"+quote_id,
+    dataType: 'json',
+    success: function(data) {        
+      swal(
+        'Success!',
+        'The quote has been duplicated.',
+        'success'
+      )
+    }
+  });
 });
 
 
-  $(document).on('change', '#origin_harbor', function (e) {
-    var harbor_id = $('#origin_harbor').val();
-    $.ajax({
-        url: "terms/"+harbor_id,
-        dataType: 'json',
-        success: function(data) {        
-            $('#terms_box').show();
-            $('#terms_box_import').html(data.import);
-            $('#terms_box_export').html(data.export);
-        }
-    });
+$(document).on('change', '#origin_harbor', function (e) {
+  var harbor_id = $('#origin_harbor').val();
+  $.ajax({
+    url: "terms/"+harbor_id,
+    dataType: 'json',
+    success: function(data) {        
+      $('#terms_box').show();
+      $('#terms_box_import').html(data.import);
+      $('#terms_box_export').html(data.export);
+    }
+  });
 });
 
-  $(document).on('click', '.addButtonOrigin', function (e) {
-    var $template = $('#origin_ammounts'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertAfter($template);
+$(document).on('click', '.addButtonOrigin', function (e) {
+  var $template = $('#origin_ammounts'),
+      $clone = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertAfter($template);
 });
-  $(document).on('click', '.addButton', function (e) {
-    var $template = $('#freight_ammounts'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertAfter($template);
+$(document).on('click', '.addButton', function (e) {
+  var $template = $('#freight_ammounts'),
+      $clone = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertAfter($template);
 });
 
-  $(document).on('click', '#delete-quote', function () {
-    var id = $(this).attr('data-quote-id');
-    var theElement = $(this);
-    swal({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!'
-    }).then(function(result) {
-        if (result.value) {
-            $.ajax({
-                type: 'get',
-                url: 'quotes/delete/' + id,
-                success: function(data) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                        )
-                    $(theElement).closest('tr').remove();
-                }
-            });
-
+$(document).on('click', '#delete-quote', function () {
+  var id = $(this).attr('data-quote-id');
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'quotes/delete/' + id,
+        success: function(data) {
+          swal(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          $(theElement).closest('tr').remove();
         }
       });
+
+    }
+  });
 });
 
 $(document).on('click', '.addButtonDestination', function (e) {
@@ -764,7 +764,7 @@ $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   $(".origin_total_ammount_2").each(function(){
     total=$(this).closest('.row').find('.origin_total_ammount_2').val();
     sum += +total;
-   
+
   });
   $("#sub_total_origin").html(" "+sum);
   $("#total_origin_ammount").val(sum);
@@ -976,6 +976,54 @@ $(document).on('click', '#delete-company', function () {
     }
 
   });
+});
+
+// Pricing 
+$(document).on('click', '#delete-pricing', function () {
+
+
+  var id = $(this).attr('data-pricing-id');
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Continue!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'prices/destroy/' + id,
+        success: function(data) {
+          if(data.message == "fail"){
+            swal({
+              title: 'Warning!',
+              text: "There are  quotes assoociated with this pricing.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'I understand'
+            });
+          }else if(data.message == "Ok"){
+
+            swal(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            $(theElement).closest('tr').remove();
+
+          }
+
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+
+      });
+
+    }
+  });   
 });
 
 $('#m_select2-edit-company').select2({
