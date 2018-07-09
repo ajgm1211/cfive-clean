@@ -456,21 +456,21 @@ class ContractsController extends Controller
                             $origB=true;
                             $originV = $book->$origin;
                         }else{
-                            $originV = $book->$origin.'_E';
+                            $originV = $book->$origin.'_E_E';
                         }
 
                         if(empty($book->$destination) != true ){
                             $destiB=true;
                             $destinationV = $book->$destination;
                         }else{
-                            $destinationV = $book->$destination.'_E';
+                            $destinationV = $book->$destination.'_E_E';
                         }
 
                         if(empty($carrier->id) != true){
                             $carriB=true;
                             $carrierV = $carrier->id;
                         }else{
-                            $carrierV = $book->carrier.'_E';
+                            $carrierV = $book->carrier.'_E_E';
                         }
 
                         if(empty($book->$twuenty) != true ){
@@ -478,7 +478,7 @@ class ContractsController extends Controller
                             $twuentyV = (int)$book->$twuenty;
                         }
                         else{
-                            $twuentyV = $book->$twuenty.'_E';
+                            $twuentyV = $book->$twuenty.'_E_E';
                         }
 
                         if(empty($book->$forty) != true ){
@@ -486,7 +486,7 @@ class ContractsController extends Controller
                             $fortyV = (int)$book->$forty;
                         }
                         else{
-                            $fortyV = $book->$forty.'_E';
+                            $fortyV = $book->$forty.'_E_E';
                         }
 
                         if(empty($book->$fortyhc) != true ){
@@ -494,7 +494,7 @@ class ContractsController extends Controller
                             $fortyhcV = (int)$book->$fortyhc;
                         }
                         else{
-                            $fortyhcV = $book->$fortyhc.'_E';
+                            $fortyhcV = $book->$fortyhc.'_E_E';
                         }
 
                         if(empty($currenc->id) != true){
@@ -502,7 +502,7 @@ class ContractsController extends Controller
                             $currencyV =  $currenc->id;
                         }
                         else{
-                            $currencyV = $book->currency.'_E';
+                            $currencyV = $book->currency.'_E_E';
                         }
 
                         if( $origB == true && $destiB == true
