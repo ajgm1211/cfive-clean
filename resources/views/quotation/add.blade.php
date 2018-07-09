@@ -162,7 +162,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" value="{{ $origin->origin->markup }}"/>
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" step=".01" min="0" value="{{ $origin->origin->markup }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -538,7 +538,8 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number" value="{{ $freight->markup }}"/>
+                                    
+                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step="0.01" min="0" type="number" value="{{ $freight->markup }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
@@ -695,61 +696,7 @@ $subtotalDestiny = 0;
                               </div>
                               @endforeach
 
-                              @if((empty($info->localFreight)) &&  (empty($info->globalFreight)))
-                              <div class="row">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            @foreach($currencies as $currency)
-                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number"/>
-                                  </div>
-                                </div>
-                              </div>
-                              @endif
+                              
                               <div class='row hide' id="freight_ammounts">
                                 <div class="col-md-2">
                                   <div class="m-bootstrap-touchspin-brand">
