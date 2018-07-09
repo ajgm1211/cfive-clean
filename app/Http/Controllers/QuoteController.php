@@ -47,21 +47,22 @@ class QuoteController extends Controller
 
     $company_user_id = \Auth::user()->company_user_id;
 
-  	$quotes = Quote::whereHas('user', function($q) use($company_user_id) 
-        {
-         $q->where('company_user_id','=',$company_user_id);
-       })->get();
-  	$companies = Company::all()->pluck('business_name','id');
-  	$harbors = Harbor::all()->pluck('business_name','id');
-  	$countries = Country::all()->pluck('name','id');
-  	return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]);
+    $quotes = Quote::whereHas('user', function($q) use($company_user_id) 
+                              {
+                                $q->where('company_user_id','=',$company_user_id);
+                              })->get();
+    $companies = Company::all()->pluck('business_name','id');
+    $harbors = Harbor::all()->pluck('business_name','id');
+    $countries = Country::all()->pluck('name','id');
+    return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]);
 
 
   }
   public function automatic(){
 
     $quotes = Quote::all();
-    $companies = Company::all()->pluck('business_name','id');
+    $company_user_id=\Auth::user()->company_user_id;
+    $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
@@ -359,52 +360,52 @@ class QuoteController extends Controller
     // Fin del calculo de los inlands 
 
 
-  $date =  $request->input('date');
-  $user_id =  \Auth::id();
-  $company_user_id =  \Auth::user()->company_user_id;
-  $company_id = $request->input('company_id');
-  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
+    $date =  $request->input('date');
+    $user_id =  \Auth::id();
+    $company_user_id =  \Auth::user()->company_user_id;
+    $company_id = $request->input('company_id');
+    $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
         {
-         $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id)                                                                                                                              {
-           $a->where('user_id', '=',$user_id);
+          $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id)                                                                                                                              {
+            $a->where('user_id', '=',$user_id);
 
-         })->orDoesntHave('contract_company_restriction')
-         ->whereHas('contract_company_restriction', function($a) use($company_id)                                                                                                                              {
-           $a->where('company_id', '=',$company_id);
+          })->orDoesntHave('contract_company_restriction')
+            ->whereHas('contract_company_restriction', function($a) use($company_id)                                                                                                                              {
+              $a->where('company_id', '=',$company_id);
 
-         })->orDoesntHave('contract_company_restriction');
+            })->orDoesntHave('contract_company_restriction');
 
-       })->get();
+        })->get();
 
-      
-  $formulario = $request;
-  $array20 = array('2','4','5');
-  $array40 =  array('1','4','5');
-  $array40Hc= array('3','4','5');
-  $collectionLocal = new Collection();
-  foreach($arreglo as $data){
-  	$totalFreight = 0;
-  	$FreightCharges = 0;
-  	$totalRates = 0;
-  	$totalOrigin = 0;
-  	$totalDestiny =0;
-  	$totalQuote= 0;
 
-  	$collectionOrig = new Collection();
-  	$collectionDest = new Collection();
-  	$collectionFreight = new Collection();
+    $formulario = $request;
+    $array20 = array('2','4','5');
+    $array40 =  array('1','4','5');
+    $array40Hc= array('3','4','5');
+    $collectionLocal = new Collection();
+    foreach($arreglo as $data){
+      $totalFreight = 0;
+      $FreightCharges = 0;
+      $totalRates = 0;
+      $totalOrigin = 0;
+      $totalDestiny =0;
+      $totalQuote= 0;
 
-  	$collectionGloOrig = new Collection();
-  	$collectionGloDest = new Collection();
-  	$collectionGloFreight = new Collection();
+      $collectionOrig = new Collection();
+      $collectionDest = new Collection();
+      $collectionFreight = new Collection();
 
-  	$collectionRate = new Collection();
+      $collectionGloOrig = new Collection();
+      $collectionGloDest = new Collection();
+      $collectionGloFreight = new Collection();
 
-  	$rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
-  	$subtotal = 0;
-  	$orig_port = array($data->origin_port);
-  	$dest_port = array($data->destiny_port);
-  	$carrier[] = $data->carrier_id;
+      $collectionRate = new Collection();
+
+      $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
+      $subtotal = 0;
+      $orig_port = array($data->origin_port);
+      $dest_port = array($data->destiny_port);
+      $carrier[] = $data->carrier_id;
 
       // Calculo de los rates
       if($request->input('twuenty') != "0") {
