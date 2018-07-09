@@ -237,7 +237,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_local  }}"/>
+                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_global  }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
