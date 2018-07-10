@@ -451,20 +451,29 @@ class ContractsController extends Controller
 
                         $currenc = Currency::where('alphacode','=',$book->currency)->first();
                         $carrier = Carrier::where('name','=',$book->carrier)->first();
+                        $originExits = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+                            ->get();
+                        $destinationExits = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+                            ->get();
 
-                        if(empty($book->$origin) != true){
+                        if(count($originExits) == 1){
                             $origB=true;
-                            $originV = $book->$origin;
+                            foreach($originExits as $originRc){
+                                $originV = $originRc['id'];
+                            }
                         }else{
                             $originV = $book->$origin.'_E_E';
                         }
-
-                        if(empty($book->$destination) != true ){
+                        
+                        if(count($destinationExits) == 1){
                             $destiB=true;
-                            $destinationV = $book->$destination;
+                            foreach($destinationExits as $destinationRc){
+                                $destinationV = $destinationRc['id'];
+                            }
                         }else{
-                            $destinationV = $book->$destination.'_E_E';
+                            $destinationV = $book->$origin.'_E_E';
                         }
+                        
 
                         if(empty($carrier->id) != true){
                             $carriB=true;
@@ -522,6 +531,12 @@ class ContractsController extends Controller
                             ]);
                         }
                         else{
+                            if($origB == true){
+                                $originV = $book->$origin;
+                            }
+                            if($destiB == true){
+                                $destinationV = $book->$destination;
+                            }
                             if($curreB == true){
                                 $currencyV = $book->currency;
                             }
@@ -534,7 +549,7 @@ class ContractsController extends Controller
                             if($origB == true){
                                 $originV = $book->$origin;
                             }
-
+                            
                             $duplicateFail =  FailRate::where('origin_port','=',$originV)
                                 ->where('destiny_port','=',$destinationV)
                                 ->where('carrier_id','=',$carrierV)
@@ -629,14 +644,37 @@ class ContractsController extends Controller
             $classfortyhc ='color:green';
 
             $originA =  explode("_",$failrate['origin_port']);
+            //dd($originA);
             $destinationA = explode("_",$failrate['destiny_port']);
             $carrierA = explode("_",$failrate['carrier_id']);
             $currencyA = explode("_",$failrate['currency_id']);
-
+            
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                            ->first();
+            $originAIn = $originOb['id'];
+            $originC   = count($originA);
+            if($originC <= 1){
+               $originA = $originA[0];
+            } else{
+                $originA = $originA[0].' (error)';
+                $classdorigin='color:red';
+            }
+ /////////////////////////////////////////           
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                            ->first();
+            $destinationAIn = $destinationOb['id'];
+            $destinationC   = count($destinationA);
+            if($destinationC <= 1){
+               $destinationA = $destinationA[0];
+            } else{
+                $destinationA = $destinationA[0].' (error)';
+                $classddestination='color:red';
+            }
+/////////////////////////////////////////
             $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
             $carrAIn = $carrierOb['id'];
             $carrierC = count($carrierA);
-
+            
             if($carrierC <= 1){
                 //dd($carrierAIn);
                 $carrierA = $carrierA[0];
@@ -659,21 +697,21 @@ class ContractsController extends Controller
                 $currencyA = $currencyA[0].' (error)';
                 $classcurrency='color:red';
             }
-
-            $originLB = Harbor::where('id','=',$originA[0])->first();
+/////////////////////////////////////////////////////////////////////////////////////////
+           // $originLB = Harbor::where('id','=',$originA[0])->first();
             $destinyLB =   Harbor::where('id','=',$destinationA[0])->first();
-            //            
+            ////////////////////////////////////////////////////////////////////////////////////////////////////            
 
             $colec = ['rate_id'         =>  $failrate->id,
                       'contract_id'     =>  $id,
 
-                      'origin_portLb'   =>  $originLB['name'],
-                      'origin_port'     =>  $originA[0],   
+                      'origin_portLb'   =>  $originA,
+                      'origin_port'     =>  $originAIn,   
 
-                      'destiny_portLb'  =>  $destinyLB['name'],
-                      'destiny_port'    =>  $destinationA[0],     
+                      'destiny_portLb'  =>  $destinationA[0],
+                      'destiny_port'    =>  $destinationAIn,     
 
-                      'carrierLb'       =>  $carrierA,
+                      'carrierLb'       =>  $destinationA,
                       'carrierAIn'      =>  $carrAIn,
 
                       'twuenty'         =>  $failrate['twuenty'],      
@@ -701,6 +739,8 @@ class ContractsController extends Controller
         foreach($failrates as $cells){
             echo $cells['carrier_id'].' '.$cells['currency_id'].'<br>';
         }*/
+        
+        //dd($failrates);
         return view('contracts.FailRates',compact('rates','failrates','countfailrates','countrates','harbor','currency','carrierSelect'));
     }
 
