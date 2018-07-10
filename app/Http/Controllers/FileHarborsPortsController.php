@@ -30,11 +30,18 @@ class FileHarborsPortsController extends Controller
      */
     public function create()
     {
-       $impr = Harbor_copy::where('varation', 'Abu Dhabi City')
-                ->get();
-       // $impr = Harbor_copy::all();
-
+        $pa = 'durres';
+        $impr = Harbor_copy::where('varation->type','like','%'.strtolower($pa).'%')
+            ->get();
+        // $impr = Harbor_copy::all();j
         dd($impr);
+        foreach($impr as $prueba){
+
+            $e =   json_decode($prueba->varation);
+            print_r($e).'<br>';
+        }
+
+        //dd($impr);
     }
 
     /**
@@ -96,18 +103,18 @@ class FileHarborsPortsController extends Controller
             foreach ($reader->get() as $book) {
                 $countryExist = Country::where('name','=',$book->country)->first();
                 $i++;
-                $type = array(
-                    $book->$uencode2,
-                    $book->$PNameV1,
-                    $book->$PNameMSC,
-                    $book->$PNameMaersk,
-                    $book->$PNameCosco,
-                    $book->$PNamePorWPT,
-                    $book->$PNameNamWPT,
-                    $book->$PNameNamWCi
-                );
+
+                $type['type'] = array( strtolower($book->$uencode2),
+                                      strtolower($book->$PNameV1),
+                                      strtolower($book->$PNameMSC),
+                                      strtolower($book->$PNameMaersk),
+                                      strtolower($book->$PNameCosco),
+                                      strtolower($book->$PNamePorWPT),
+                                      strtolower($book->$PNameNamWPT),
+                                      strtolower($book->$PNameNamWCi));
+
                 $json = json_encode($type);
-                
+
                 if(empty($countryExist['id']) != true){   
                     $f++;
                     $prueba = Harbor_copy::create([
@@ -117,10 +124,19 @@ class FileHarborsPortsController extends Controller
                         'country_id'    => $countryExist['id'],
                         'varation'      => $json
                     ]);
-                    dd($prueba);
+                    //dd($prueba);
+                }else{
+                    $prueba = Harbor_copy::create([
+                        'name'          => $book->$portName, 
+                        'code'          => $book->$codeport,
+                        'coordinates'   => $book->$location,
+                        'country_id'    => 248,
+                        'varation'      => $json
+                    ]);
                 }
             }
             //dd($i.' '.$f);
+            echo 'listo';
         });
         /* }catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');

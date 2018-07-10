@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class HarborsTableSeeder extends Seeder
+class HarborsCopyTableSeeder extends Seeder
 {
 
     /**
@@ -14,9 +14,9 @@ class HarborsTableSeeder extends Seeder
     {
         
 
-        \DB::table('harbors')->delete();
+        \DB::table('harbors_copy')->delete();
         
-        \DB::table('harbors')->insert(array (
+        \DB::table('harbors_copy')->insert(array (
             0 => 
             array (
                 'id' => 1,
