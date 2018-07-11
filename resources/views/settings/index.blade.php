@@ -25,7 +25,7 @@
                         </div>
                         <div class="m-portlet__body text-center" style="font-size: 11px !important;">
                             @if(!isset($company->companyUser))
-                                <form id="default-currency">
+                                <form id="default-currency" enctype="multipart/form-data">
                                     <div class="row text-left" style="font-size: 11px !important;">
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group">
@@ -65,7 +65,7 @@
                                     </div>
                                 </form>
                             @else
-                                <form id="default-currency" >
+                                <form id="default-currency" enctype="multipart/form-data">
                                     <div class="row text-left" style="font-size: 12px !important;">
                                         <div class="col-md-12">
                                             <div class="form-group m-form__group ">

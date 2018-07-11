@@ -28,6 +28,7 @@ class PriceController extends Controller
     return view('prices.add', ['prices' => $prices,'companies' => $companies]);
   }
 
+
   public function store(Request $request)
   {
     $input = Input::all();
@@ -35,6 +36,7 @@ class PriceController extends Controller
     $price = new Price();
     $price->name = $request->input('name');
     $price->description = $request->input('description');
+    $price->company_user_id = \Auth::user()->company_user_id;
     $price->save();
 
     if (count($request->input("companies")) > 0) {
@@ -112,8 +114,9 @@ class PriceController extends Controller
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
     return redirect()->route('prices.index');
-
   }
+
+
 
   public function edit($id)
   {

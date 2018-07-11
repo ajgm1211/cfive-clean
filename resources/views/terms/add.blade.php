@@ -14,7 +14,7 @@
             <br>
             <div class="m-form__actions m-form__actions">
                 {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-                <a type="button" class="btn btn-success" href="{{url()->previous()}}">
+                <a class="btn btn-danger" href="{{url()->previous()}}">
                     Cancel
                 </a>
             </div>

@@ -17,6 +17,8 @@ class CreatePricesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('description');
+            $table->integer('company_user_id')->unsigned();
+            $table->foreign('company_user_id')->references('id')->on('company_users');            
             $table->timestamps();
         });
     }

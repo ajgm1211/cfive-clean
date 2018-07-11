@@ -85,8 +85,11 @@ var DatatableHtmlTableDemo = function() {
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              1: {'title': 'publish', 'state': 'success'},
-              2: {'title': 'draft', 'state': 'warning'},
+              1: {'title': 'Draft', 'state': 'warning'},
+              2: {'title': 'Sent', 'state': 'info'},
+              3: {'title': 'Negociated', 'state': 'info'},
+              4: {'title': 'Lost', 'state': 'danger'},
+              5: {'title': 'Win', 'state': 'success'},
             };
             return '<span class="m-badge m-badge--' + status[row.Status].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
               status[row.Status].state + '">' +

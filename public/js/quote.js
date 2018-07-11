@@ -4,6 +4,7 @@ $('.m-select2-general').select2({
 });
 
 
+
 function display(id){
     var elemento = $("#detail"+id);
     var origin = $("#origin"+id);

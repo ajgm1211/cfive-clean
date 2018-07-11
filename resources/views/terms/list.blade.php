@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
                         
-                            <a href="{{ route('terms.add') }}" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                            <a href="{{ route('terms.add') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>

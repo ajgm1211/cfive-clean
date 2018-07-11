@@ -26,7 +26,7 @@ class CompanyController extends Controller
 
     public function add()
     {
-        $prices = Price::all()->pluck('name','id');
+        $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
         return view('companies.add', compact('prices'));
     }
 
@@ -62,7 +62,7 @@ class CompanyController extends Controller
     public function edit($id)
     {
         $company = Company::find($id);
-        $prices = Price::all()->pluck('name','id');
+        $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
         return view('companies.edit', compact('company','prices'));
     }
 
