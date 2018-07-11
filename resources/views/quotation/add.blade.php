@@ -538,7 +538,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    
+
                                     <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step="0.01" min="0" type="number" value="{{ $freight->markup }}"/>
                                   </div>
                                 </div>
@@ -696,7 +696,7 @@ $subtotalDestiny = 0;
                               </div>
                               @endforeach
 
-                              
+
                               <div class='row hide' id="freight_ammounts">
                                 <div class="col-md-2">
                                   <div class="m-bootstrap-touchspin-brand">
@@ -941,7 +941,7 @@ $subtotalDestiny = 0;
                               @endforeach
 
                               @foreach($info->inlandDestiny as $destiny)
-                               <div class="row">
+                              <div class="row">
                                 <div class="col-md-2">
                                   <div class="m-bootstrap-touchspin-brand">
                                     <input type="text" class="form-control" name="destination_ammount_charge[]"  value="{{ $destiny->provider }} " />
@@ -1003,7 +1003,7 @@ $subtotalDestiny = 0;
                                   </div>
                                 </div>
                               </div>                    
-                           
+
                               @endforeach
 
 
@@ -1181,6 +1181,15 @@ $subtotalDestiny = 0;
               </div>
             </div>
           </div>
+          @if(isset($form->price_id ))
+            @php
+              $priceID = $form->price_id;
+            @endphp
+          @else
+            @php
+              $priceID = "";
+            @endphp
+          @endif
           <input type="hidden" class="form-control" id="incoterm" name="incoterm" value="{{ $form->incoterm }} ">
           <input type="hidden" class="form-control" id="modality" name="modality" value="{{ $form->modality }} ">
           <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $form->date }}">
@@ -1189,7 +1198,7 @@ $subtotalDestiny = 0;
           <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id }} ">
           <input type="hidden" class="form-control" id="origin_harbor_id" name="origin_harbor_id" value="{{ $info->origin_port }} ">
           <input type="hidden" class="form-control" id="destination_harbor_id" name="destination_harbor_id" value="{{ $info->destiny_port }} ">
-          <input type="hidden" class="form-control" id="price_id" name="price_id" value="{{ $form->price_id }} ">
+          <input type="hidden" class="form-control" id="price_id" name="price_id" value="{{ $priceID }} ">
           <input type="hidden" class="form-control" id="contact_id" name="contact_id" value="{{ $form->contact_id }} ">
           <input type="hidden" class="form-control" id="qty_20" name="qty_20" value="{{ $form->twuenty }} ">
           <input type="hidden" class="form-control" id="qty_40" name="qty_40" value="{{ $form->forty }} ">
