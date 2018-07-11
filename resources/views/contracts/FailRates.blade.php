@@ -70,10 +70,10 @@
                         <th width="5%" >
                             Status
                         </th >
-                        <th width="20%">
+                        <th width="18%">
                             Origin
                         </th>
-                        <th width="20%">
+                        <th width="18%">
                             Destiny
                         </th>
 
@@ -496,6 +496,7 @@
                         $('#fortylb'+idtr).attr('style','color:red');
                         $('#fortyhclb'+idtr).attr('style','color:red');
                         $('#currencylb'+idtr).attr('style','color:red');
+                        $('#trR'+idtr).attr('hidden','hidden');
                     }
                 });
             }

@@ -64,7 +64,7 @@
                 </label>
             </div>
             <!--<button onclick="prueba()">prueba</button>-->
-            <table class="m-datatable "  id="html_table" >
+            <table class="table m-table m-table--head-separator-primary "  id="html_table" >
                 <thead >
                     <tr>
                         <th style="font-size: 12px;">
@@ -126,7 +126,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('origin_port', $harbor,$surchargef['origin_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classorigin'],'id'=>'origin'.$i]) }}
+                                {{ Form::select('origin_port', $harbor,$surchargef['origin_port'],['class'=>'m-select2-general  form-control lb'.$i,'style'=>$surchargef['classorigin'],'id'=>'origin'.$i,'multilple'=>'multiple']) }}
                             </div>
                         </td>
                         <td>
@@ -136,7 +136,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port', $harbor,$surchargef['destiny_port'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classdestiny'],'id'=>'destination'.$i]) }}
+                                {{ Form::select('destiny_port', $harbor,$surchargef['destiny_port'],['class'=>'m-select2-general form-control lb'.$i,'style'=>$surchargef['classdestiny'],'id'=>'destination'.$i,'multiple'=>'multiple']) }}
 
                             </div>
                         </td>
@@ -176,7 +176,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$surchargef['currency_id'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classcurrency'],'id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$surchargef['currency_id'],['class'=>'m-select2-general  form-control lb'.$i,'style'=>$surchargef['classcurrency'],'id'=>'currency'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -186,7 +186,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('carrier_id', $carrierSelect,$surchargef['carrier_id'],['class'=>'custom-select m-input form-control lb'.$i,'style'=>$surchargef['classcarrier'],'id'=>'carrier'.$i]) }}
+                                {{ Form::select('carrier_id', $carrierSelect,$surchargef['carrier_id'],['class'=>'m-select2-general form-control lb'.$i,'style'=>$surchargef['classcarrier'],'id'=>'carrier'.$i]) }}
                             </div>
                         </td>
                         <td>
@@ -201,9 +201,9 @@
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
-                            <!-- <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}})" >
-<i class="la la-save"></i>
-</a>-->
+                            <!--<a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$surchargef['failSrucharge_id']}},{{$id}})" >
+                                <i class="la la-save"></i>
+                            </a>-->
                             <input type="hidden" name="define" value="1" id="{{'accion'.$i}}" />
 
                         </td>
@@ -224,21 +224,21 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('surcharge_id',$surchargeSelect,$goodsurcharge['surcharge_id'],['class'=>'custom-select m-input form-control','id'=>'surcharge'.$i]) }}
+                                {{ Form::select('surcharge_id',$surchargeSelect,$goodsurcharge['surcharge_id'],['class'=>'m-select2-general form-control','id'=>'surcharge'.$i]) }}
 
                             </div>
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'originlb'.$i}}">
-                                    
+
                                     {!! str_replace(["[","]","\""], ' ', $goodsurcharge->localcharports->pluck('portOrig')->unique()->pluck('name') ) !!}
-                                    
+
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
 
-                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig')->unique(),['class'=>'custom-select m-input form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
+                                {{ Form::select('origin_port',$harbor,$goodsurcharge->localcharports->pluck('port_orig')->unique(),['class'=>'m-select2-general form-control','id'=>'origin'.$i,'multilple'=>'multiple']) }}
 
                             </div>
                         </td>
@@ -246,11 +246,11 @@
                             <div class="{{'tdAB'.$i}}">
                                 <label style="" id="{{'destinylb'.$i}}">
                                     {!! str_replace(["[","]","\""], ' ', $goodsurcharge->localcharports->pluck('portDest')->unique()->pluck('name') ) !!}
-                                    
+
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden>
-                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest')->unique(),['class'=>'form-control m-select2-general','id'=>'destination'.$i])}}
+                                {{ Form::select('destiny_port[]',$harbor,$goodsurcharge->localcharports->pluck('port_dest')->unique(),['class'=>'form-control m-select2-general','id'=>'destination'.$i,'multiple'=>'multiple'])}}
 
                             </div>
                         </td>
@@ -292,7 +292,7 @@
                                 </label>
                             </div>
                             <div class="in {{'tdIn'.$i}}" hidden="hidden">
-                                {{ Form::select('currency_id', $currency,$goodsurcharge->currency_id,['class'=>'custom-select m-input form-control','id'=>'currency'.$i]) }}
+                                {{ Form::select('currency_id', $currency,$goodsurcharge->currency_id,['class'=>'m-select2-general form-control','id'=>'currency'.$i]) }}
 
                             </div>
                         </td>
@@ -355,6 +355,12 @@
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
 <script>
+
+    $('.m-select2-general').select2({
+        placeholder: "Select an option"
+    });
+
+
     function showbox(id){
         $(".tdAB"+id).attr('hidden','hidden');
         $(".tdIn"+id).removeAttr('hidden');
@@ -365,41 +371,44 @@
         $(".tdAB"+id).removeAttr('hidden');
     }
 
-    function SaveCorrectRate(idtr,idrate,idcontract){
+    function SaveCorrectRate(idtr,idSurcharge,idcontract){
         //alert('tdIn'+idtr+' '+idrate);
+        var surcharge = $("#surcharge"+idtr).val();
         var origin = $("#origin"+idtr).val();
         var destination = $("#destination"+idtr).val();
-        var carrier = $("#carrier"+idtr).val();
-        var twuenty = $("#twuenty"+idtr).val();
-        var forty = $("#forty"+idtr).val();
-        var fortyhc = $("#fortyhc"+idtr).val();
+        var typedestiny = $("#typedestiny"+idtr).val();
+        var calculationtype = $("#calculationtype"+idtr).val();
+        var ammount = $("#ammount"+idtr).val();
         var currency = $("#currency"+idtr).val();
+        var carrier = $("#carrier"+idtr).val();
         var accion = $("#accion"+idtr).val();
-        //alert('A.'+origin+' B.'+ destination+' C.'+ carrier+' D.'+ twuenty+' E.'+ forty+' F.'+fortyhc +' G.'+ currency);
         if(accion == 1){
+            //alert('A.'+surcharge+' / '+origin+' B.'+ destination+' C.'+ typedestiny+' D.'+ calculationtype+' E.'+ ammount+' F.'+currency +' G.'+ carrier);
             jQuery.ajax({
                 method:'get',
-                data:{surcharge_id:idrate,
-                      contract_id:idcontract,
-                      origin:origin,
-                      destination:destination,
-                      carrier:carrier,
-                      twuenty:twuenty,
-                      forty:forty,
-                      fortyhc:fortyhc,
-                      currency:currency,
-                     },
-                url:'/contracts/CorrectedsurchargeforContracts',
+                data:{
+                    surcharge:surcharge,
+                    idSurcharge:idSurcharge,
+                    contract_id:idcontract,
+                    origin:origin,
+                    destination:destination,
+                    typedestiny:typedestiny,
+                    calculationtype:calculationtype,
+                    ammount:ammount,
+                    currency:currency,
+                    carrier:carrier,
+                },
+                url:'/contracts/CorrectedSurchargeForContracts',
                 success:function(data){
                     //console.log(data);
                     if(data.response == 0){
                         //campo errado
-                        swal("Error!", "wrong field in the rate!", "error");
+                        swal("Error!", "wrong field in the Surcharge!", "error");
                     }
                     else if(data.response == 1){
                         //exito
-                        swal("Good job!", "Updated rate!", "success");
-                        $(".icon"+idtr).attr('style','color:green');
+                        swal("Good job!", "Updated Surcharge!", "success");
+                        /* $(".icon"+idtr).attr('style','color:green');
                         $(".lb"+idtr).removeAttr('style');
                         hidebox(idtr);
                         var a = $('#strfailinput').val();
@@ -419,12 +428,12 @@
                         $('#fortyhclb'+idtr).text(data.fortyhc);
                         $('#currencylb'+idtr).text(data.currency);
 
-                        $("#accion"+idtr).attr('value',2);
+                        $("#accion"+idtr).attr('value',2);*/
 
                     }
                     else if(data.response == 2){
                         //duplicado
-                        swal("Error!", "Alrready Rate!", "warning");
+                        swal("Error!", "Alrready Surcharge!", "warning");
                     }
 
                 }
@@ -432,7 +441,7 @@
         }
         else if( accion == 2){
             // para actualizar campos
-            jQuery.ajax({
+            /*  jQuery.ajax({
                 method:'get',
                 data:{surcharge_id:idrate,
                       contract_id:idcontract,
@@ -473,7 +482,7 @@
                     }
 
                 }
-            });
+            });*/
         }
         //alert(idcontract);
     }
