@@ -232,7 +232,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" value="{{ $origin->origin->markup }}"/>
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup"  step="0.01"  type="number" min="0" value="{{ $origin->origin->markup }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -302,7 +302,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" value="{{ $origin->markup }}"/>
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.01"  type="number" min="0" value="{{ $origin->markup }}"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -732,21 +732,21 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" type="number"/>
+                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup"  step="0.01"  min="0" type="number"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
                                   <div class="m-bootstrap-touchspin-brand">
                                     <div class="form-group">
                                       <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
+                                        <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  step="0.01"  aria-label="...">
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" type="number"/>
+                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0"  step="0.01"  type="number"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
