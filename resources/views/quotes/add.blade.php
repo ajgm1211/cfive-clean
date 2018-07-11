@@ -263,518 +263,366 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="m_portlet_tab_1_2">
+                                            <br>
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <div class="form-group m-form__group row">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="panel panel-default">
-                                                                        <div class="panel-heading"><b>Origin</b></div>
-                                                                        <div class="panel-body">
-                                                                            <span id="origin_input"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="panel panel-default">
-                                                                        <div class="panel-heading"><b>Destination</b></div>
-                                                                        <div class="panel-body">
-                                                                            <span id="destination_input"></span>
-                                                                        </div>
-                                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
+                                                                <div class="panel-body">
+                                                                    <span id="origin_input"></span>
                                                                 </div>
                                                             </div>
-                                                            <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
-                                                                <div class="col-md-12">
-                                                                    <h5>Cargo details</h5>
-                                                                    <hr>
-                                                                    <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                                    <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
-                                                                    <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
+                                                                <div class="panel-body">
+                                                                    <span id="destination_input"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group m-form__group row">
+                                                    <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
                                                         <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <h5>Origin ammounts</h5>
-                                                                </div>
-                                                            </div>
+                                                            <h5 class="title-quote size-14px">Cargo details</h5>
                                                             <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">Charge</div>
-                                                                <div class="col-md-2">Detail</div>
-                                                                <div class="col-md-1">Units</div>
-                                                                <div class="col-md-3">Price per unit</div>                             
-                                                                <div class="col-md-1">Total</div>
-                                                                <div class="col-md-1">Markup @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                                <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                            <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                            <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                            <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h5 class="title-quote size-14px">Origin ammounts</h5>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered color-blue">
+                                                                    <thead class="title-quote text-center header-table">
+                                                                        <tr>
+                                                                            <td >Charge</td>
+                                                                            <td >Detail</td>
+                                                                            <td >Units</td>
+                                                                            <td >Price per unit</td>
+                                                                            <td >Markup</td>
+                                                                            <td >Total</td>
+                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" value="" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." readonly="true">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='row hide' id="origin_ammounts">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" value="" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." readonly="true">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="">
-                                                                                <a class="btn removeOriginButton">
-                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='row'>
-                                                                <div class="col-md-11">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <h5 class="size-12px pull-left">
-                                                                                Sub-Total:<span id="sub_total_origin">0</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                                <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control"/>
-                                                                            </h5>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <a class="btn addButtonOrigin" style="margin-top:-10px;">
-                                                                                <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                            </a>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        
+                                                                        <tr class="hide"  id="origin_ammounts">
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                        <a class="btn removeOriginButton">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>                
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group m-form__group row">
+                                                    <div class='row'>
                                                         <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <h5>Freight ammounts</h5>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">Charge</div>
-                                                                <div class="col-md-2">Detail</div>
-                                                                <div class="col-md-1">Units</div>
-                                                                <div class="col-md-3">Price per unit</div>                       
-                                                                <div class="col-md-1">Total</div>
-                                                                <div class="col-md-1">Markup @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                                <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" type="number"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                            <h5 class="title-quote pull-right">
+                                                                Sub-Total: <span id="sub_total_origin"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value=""  class="form-control"/>
+                                                                <a class="btn addButtonOrigin" style="vertical-align: middle">
+                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                </a>
+                                                            </h5>                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h5 class="title-quote size-14px">Freight ammounts</h5>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered color-blue">
+                                                                    <thead class="title-quote text-center header-table">
+                                                                        <tr>
+                                                                            <td >Charge</td>
+                                                                            <td >Detail</td>
+                                                                            <td >Units</td>
+                                                                            <td >Price per unit</td>
+                                                                            <td >Markup</td>
+                                                                            <td >Total</td>
+                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" step="0.01" type="number"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" step="0.01" type="number"/>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='row hide' id="freight_ammounts">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" step="0.01" type="number"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="...">
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount" aria-label="...">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" step="0.01" type="number"/>
-                                                                    </div>
-                                                                </div>                                                                        
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2" min="0" step="0.01" type="number"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="">
-                                                                                <a class="btn removeButton">
-                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='row'>
-                                                                <div class="col-md-11">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <h5>
-                                                                                Sub-Total:<span id="sub_total_freight">0</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                                <input type="hidden" id="total_freight_ammount" name="sub_total_freight" class="form-control"/>
-                                                                            </h5>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <a class="btn addButton" style="margin-top:-10px;">
-                                                                                <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                            </a>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        
+                                                                        <tr class="hide"  id="freight_ammounts">
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="...">
+                                                                                        <a class="btn removeButton">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>                
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group m-form__group row">
+                                                    <div class='row'>
                                                         <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <h5>Destination ammounts</h5>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">Charge</div>
-                                                                <div class="col-md-2">Detail</div>
-                                                                <div class="col-md-1">Units</div>
-                                                                <div class="col-md-3">Price per unit</div>                                 
-                                                                <div class="col-md-1">Total</div>
-                                                                <div class="col-md-1">Markup @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                                <div class="col-md-1">Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                            <h5 class="title-quote pull-right">
+                                                                Sub-Total: <span id="sub_total_freight"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value=""  class="form-control"/>
+                                                                <a class="btn addButton" style="vertical-align: middle">
+                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                </a>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <h5 class="title-quote size-14px">Destination ammounts</h5>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered color-blue">
+                                                                    <thead class="title-quote text-center header-table">
+                                                                        <tr>
+                                                                            <td >Charge</td>
+                                                                            <td >Detail</td>
+                                                                            <td >Units</td>
+                                                                            <td >Price per unit</td>
+                                                                            <td >Markup</td>
+                                                                            <td >Total</td>
+                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        <tr>
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>                             
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="...">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='row hide' id="destination_ammounts">
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="input-group">
-                                                                            <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
-                                                                            <div class="input-group-btn">
-                                                                                <div class="btn-group">
-                                                                                    <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                                                                        <option value="">Currency</option>
-                                                                                        @foreach($currencies as $currency)
-                                                                                        <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                                        @endforeach
-                                                                                    </select>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>                                 
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0" step="0.01"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1" >
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="...">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        <div class="form-group">
-                                                                            <div class="">
-                                                                                <a class="btn removeButtonDestination">
-                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        
+                                                                        <tr class="hide"  id="destination_ammounts">
+                                                                            <td>
+                                                                                <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                            </td>
+                                                                            <td>
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                        <a class="btn removeButtonDestination">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>                
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
-                                                            <div class='row'>
-                                                                <div class="col-md-11">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <h5>
-                                                                                Sub-Total:<span id="sub_total_destination">0</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                                <input type="hidden" id="total_destination_ammount" name="sub_total_destination" class="form-control"/>
-                                                                            </h5>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1">
-                                                                    <div class="form-group">
-                                                                        <span>
-                                                                            <a class="btn addButtonDestination" style="margin-top:-10px;">
-                                                                                <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                            </a>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group text-right">
-                                                                        <h3><b>Total: </b> <span id="total"> </span> @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</h3>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class="col-md-12">
+                                                            <h5 class="title-quote pull-right">
+                                                                Sub-Total: <span id="sub_total_destination"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value=""  class="form-control"/>
+                                                                <a class="btn addButtonDestination" style="vertical-align: middle">
+                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                </a>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class="col-md-12">
+                                                            <h5 class="title-quote pull-right size-16px">
+                                                                Total: <span id="total"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                 </div>

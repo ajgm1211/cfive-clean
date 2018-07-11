@@ -145,7 +145,7 @@
                             <tbody>
                             @foreach ($quotes as $quote)
                                 <tr>
-                                    <td>{{$quote->status_id }}</td>
+                                    <td>{{$quote->status_quote_id }}</td>
                                     <td>{{$quote->company->business_name }}</td>
                                     <td>{{$quote->created_at }}</td>
                                     <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>

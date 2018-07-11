@@ -32,6 +32,7 @@ use GoogleMaps;
 use App\Inland;
 use App\TermAndCondition;
 use App\TermsPort;
+use App\StatusQuote;
 use Illuminate\Support\Facades\Input;
 
 class QuoteController extends Controller
@@ -47,10 +48,10 @@ class QuoteController extends Controller
 
     $company_user_id = \Auth::user()->company_user_id;
 
-    $quotes = Quote::whereHas('user', function($q) use($company_user_id) 
-                              {
-                                $q->where('company_user_id','=',$company_user_id);
-                              })->get();
+    $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+      $q->where('company_user_id','=',$company_user_id);
+    })->get();
+
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('business_name','id');
     $countries = Country::all()->pluck('name','id');
@@ -361,24 +362,19 @@ class QuoteController extends Controller
     }
     // Fin del calculo de los inlands 
 
-
     $date =  $request->input('date');
     $user_id =  \Auth::id();
     $company_user_id =  \Auth::user()->company_user_id;
     $company_id = $request->input('company_id');
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
         {
-          $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id)                                                                                                                              {
+          $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id){
             $a->where('user_id', '=',$user_id);
-
           })->orDoesntHave('contract_company_restriction')
-            ->whereHas('contract_company_restriction', function($a) use($company_id)                                                                                                                              {
+            ->whereHas('contract_company_restriction', function($a) use($company_id)                  {
               $a->where('company_id', '=',$company_id);
-
             })->orDoesntHave('contract_company_restriction');
-
         })->get();
-
 
     $formulario = $request;
     $array20 = array('2','4','5');
@@ -1473,7 +1469,7 @@ class QuoteController extends Controller
     }else{
       $currency_name = '';
     }
-    $currencies = Currency::all();
+    $currencies = Currency::pluck('alphacode','id');
     $currency_cfg = Currency::find($company_user->currency_id);
     return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg]);
   }
@@ -1487,18 +1483,24 @@ class QuoteController extends Controller
   public function edit($id)
   {
     $quote = Quote::findOrFail($id);
-    $companies = Company::all()->pluck('business_name','id');
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::all()->pluck('name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
     $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
     $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+    $currencies = Currency::pluck('alphacode','id');
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts]);
+                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg]);
   }
 
   /**
@@ -1644,25 +1646,38 @@ class QuoteController extends Controller
   {
 
     $quote = Quote::findOrFail($id);
-    $companies = Company::all()->pluck('business_name','id');
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::all()->pluck('name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
     $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
     $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $status_quotes=StatusQuote::all()->pluck('name','id');
     $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
       $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
     })->get();
     $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
       $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
     })->get();
+    $currencies = Currency::pluck('alphacode','id');
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $currency_cfg = Currency::find($company_user->currency_id);
+      if($currency_cfg->alphacode=='USD'){
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
+      }else{
+        $exchange = Currency::where('api_code','USDEUR')->first();
+      }
+    }
+
 
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
+                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange]);
 
   }
 
@@ -1950,5 +1965,14 @@ class QuoteController extends Controller
     }else{
       return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
+  }
+
+  public function updateStatus(Request $request,$id)
+  {
+    $quote=Quote::findOrFail($id);
+    $quote->status_quote_id=$request->status_id;
+    $quote->update();
+
+    return response()->json(['message' => 'Ok']);
   }
 }

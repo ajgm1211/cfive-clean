@@ -105,6 +105,21 @@ CONTENTS:
   width: auto;
   height: auto; }
 
+.title-quote {
+  font-size: 12px;
+  font-weight: bold !important;
+  color: #1d3a6e !important;
+}
+
+.header-table{
+  background-color: #F4F3F8;
+  line-height: 3;
+}
+
+.color-blue{
+  color: #1d3a6e !important; 
+}
+
 /*
 ------------------------------------------------------------------------------------------------------------------------
 2. VERTICAL SCROLLBAR
@@ -3167,7 +3182,7 @@ select.selectpicker {
   margin: 0;
   position: relative;
   vertical-align: middle;
-  width: 200px;
+  width: 100% !important;
 }
 
 .select2-container .select2-selection--single {
