@@ -7,6 +7,8 @@ use App\CompanyUser;
 use App\Currency;
 use App\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Input;
 
 class SettingController extends Controller
 {
@@ -19,13 +21,20 @@ class SettingController extends Controller
 
     public function store(Request $request){
 
-        $var = $request->image;
+        $file = Input::file('image');
 
-        if($var){
-            $name = $var->getClientOriginalName();
-            \Storage::disk('local')->put($name,  \File::get($var));
+        if($file != ""){
+                //Creamos una instancia de la libreria instalada   
+            $image = Image::make(Input::file('image'));
+                //Ruta donde queremos guardar las imagenes
+            $path = public_path().'/uploads/logos/';
+                // Guardar Original
+                //$image->save($path.$file->getClientOriginalName());
+                // Cambiar de tamaño
+            //$image->resize(300,500);
+                // Guardar
+            $image->save($path.$file->getClientOriginalName());
         }
-
 
         if(!$request->company_id){
 
@@ -36,7 +45,9 @@ class SettingController extends Controller
             $company->address = $request->address;
             $company->phone = $request->phone;
             $company->currency_id = $request->currency_id;
-            //$company->logo = $name;
+            if($file != ""){
+                $company->logo = '/uploads/logos/'.$file->getClientOriginalName();
+            }
             $company->save();
 
             User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
@@ -47,7 +58,9 @@ class SettingController extends Controller
             $company->phone=$request->phone;
             $company->address=$request->address;
             $company->currency_id=$request->currency_id;
-            //$company->logo = $name;
+            if($file != ""){
+                $company->logo = '/uploads/logos/'.$file->getClientOriginalName();
+            }
             $company->update();
         }
 
