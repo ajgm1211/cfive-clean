@@ -67,17 +67,17 @@
             <table class="table m-table m-table--head-separator-primary "  id="html_table" >
                 <thead >
                     <tr>
-                        <th >
+                        <th width="5%" >
                             Status
-                        </th>
-                        <th >
+                        </th >
+                        <th width="20%">
                             Origin
                         </th>
-                        <th >
+                        <th width="20%">
                             Destiny
                         </th>
 
-                        <th >
+                        <th width="10%">
                             Carrier
                         </th>
                         <th >
