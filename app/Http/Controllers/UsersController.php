@@ -44,8 +44,10 @@ class UsersController extends Controller
     public function store(Request $request)
     {
       
-    
-        $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
+        if($request->type == "subuser"){
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
+        }
+        
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
         $user->save();

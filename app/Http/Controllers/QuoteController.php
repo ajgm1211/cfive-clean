@@ -1471,7 +1471,7 @@ public function create()
   }else{
     $currency_name = '';
   }
-  $currencies = Currency::all();
+  $currencies = Currency::pluck('alphacode','id');
   $currency_cfg = Currency::find($company_user->currency_id);
   return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg]);
 }

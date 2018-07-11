@@ -51,9 +51,9 @@
             <div class="m-portlet__body">
                 <div class="m-portlet__head" style="min-height: 100px;">
                     <div class="m-portlet__head-tools">
-                        <div class="col-md-12" style="margin-top: 30px;">
-                            <div class="pull-left text-left" style="line-height: .5">
-                                <img src="{{$user->companyUser->logo}}" class="img img-responsive">
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <div class="pull-left text-left" style="line-height: .5;">
+                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
                             </div>
                             <div class="pull-right text-right" style="line-height: .5">                                
                                 <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
@@ -271,12 +271,17 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-md-12">            
-            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
-                <b>Terms & conditions</b>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">      
+                    <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                        <b>Terms & conditions</b>                
+                    </div>
+                </div>
             </div>
-            <div class="row">                                               
-                <div class="col-lg-12">
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="form-group ">
                         @if(isset($terms_origin) && $terms_origin->count()>0)                             
                         <h5 class="title-quote">Origin harbor</h5>
