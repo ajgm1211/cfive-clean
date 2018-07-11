@@ -82,14 +82,17 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
     Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
     
+    // Rates
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
     Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
     Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
     Route::get('UpdateRatesForContracts','ContractsController@UpdateRatesCorrect')->name('Update.Rates.For.Contracts');
     Route::get('DestroyRatesFailCorrectForContracts','ContractsController@DestroyRatesFailCorrect')->name('Destroy.Rates.FailCorrect.For.Contracts');
     
+    // Surcharge
     Route::PUT('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
     Route::get('FailedSubchargeForContracts/{id}','ContractsController@FailSubcharges')->name('Failed.Subcharge.For.Contracts');
+    Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
 
 });
 

@@ -667,7 +667,7 @@ class ContractsController extends Controller
             $originAIn = $originOb['id'];
             $originC   = count($originA);
             if($originC <= 1){
-                $originA = $originA[0];
+                $originA = $originOb['name'];
             } else{
                 $originA = $originA[0].' (error)';
                 $classdorigin='color:red';
@@ -678,7 +678,7 @@ class ContractsController extends Controller
             $destinationAIn = $destinationOb['id'];
             $destinationC   = count($destinationA);
             if($destinationC <= 1){
-                $destinationA = $destinationA[0];
+                $destinationA = $destinationOb['name'];
             } else{
                 $destinationA = $destinationA[0].' (error)';
                 $classddestination='color:red';
@@ -995,6 +995,7 @@ class ContractsController extends Controller
 
                     $originVar      = $book->$originBook;
                     $destinationVar = $book->$destinationBook;
+
                     $ammountVar     = (int)$book->$amountBook;
                     $destinytypeVar = 3;
                     $surchargeVar ="";
@@ -1011,26 +1012,36 @@ class ContractsController extends Controller
                     $calculationtype = CalculationType::where('name','like','%'.$book->$calculationtypeBook.'%')->first();
                     $currency = Currency::where('alphacode','=',$book->$currencyBook)->first();
 
+                    $originExits = Harbor::where('varation->type','like','%'.strtolower($originVar).'%')
+                        ->get();
+
+                    if(count($originExits) == 1){
+                        $originBol=true;
+                        foreach($originExits as $originRc){
+                            $originVar = $originRc['id'];
+                        }
+                    }else{
+                        $originVar = $originVar.'_E_E';
+                    }
+
+                    $destinationExits = Harbor::where('varation->type','like','%'.strtolower($destinationVar).'%')
+                        ->get();
+
+                    if(count($destinationExits) == 1){
+                        $destinationBol=true;
+                        foreach($destinationExits as $destinationRc){
+                            $destinationVar = $destinationRc['id'];
+                        }
+                    }else{
+                        $destinationVar = $destinationVar.'_E_E';
+                    }
+
                     if(empty($surcharge) != true){
                         $surchargeBol = true;
                         $surchargeVar = $surcharge['id'];
                     }
                     else{
                         $surchargeVar = $book->$surchargeBook.'_E_E';
-                    }
-
-                    if(empty($originVar) != true){
-                        $originBol = true;
-                    }
-                    else{
-                        $originVar = $originVar.'_E_E';
-                    }
-
-                    if(empty($destinationVar) != true){
-                        $destinationBol = true;
-                    }
-                    else{
-                        $destinationVar = $destinationVar.'_E_E';
                     }
 
                     if(empty($carrier) != true){
@@ -1112,11 +1123,8 @@ class ContractsController extends Controller
                                         ]);  
                                     }
 
-
-
                                 } else{
                                     //echo 'existe valor<br>';
-
                                 }
 
                             }
@@ -1256,6 +1264,27 @@ class ContractsController extends Controller
             $currencyA          =  explode("_",$failsurcharge['currency_id']);
             $carrierA           =  explode("_",$failsurcharge['carrier_id']);
 
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            $originAIn = $originOb['id'];
+            $originC   = count($originA);
+            if($originC <= 1){
+                $originA = $originOb['name'];
+            } else{
+                $originA = $originA[0].' (error)';
+                $classdorigin='color:red';
+            }
+
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            $destinationAIn = $destinationOb['id'];
+            $destinationC   = count($destinationA);
+            if($destinationC <= 1){
+                $destinationA = $destinationOb['name'];
+            } else{
+                $destinationA = $destinationA[0].' (error)';
+                $classddestination='color:red';
+            }
 
             $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
             $surcharAin  = $surchargeOb['id'];
@@ -1317,19 +1346,20 @@ class ContractsController extends Controller
             }
 
             $typedestinyLB    = TypeDestiny::where('id','=',$failsurcharge['typedestiny_id'])->first();
-
-            $originLB         = Harbor::where('id','=',$originA[0])->first();
+            ////////////////////////////////////////////////////////////////////////////////////
+            //$originLB         = Harbor::where('id','=',$originA[0])->first();
             $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
-
+            ////////////////////////////////////////////////////////////////////////////////////
             $arreglo = [
+                'failSrucharge_id'      => $failsurcharge->id,
                 'surchargelb'           => $surchargeA,
                 'surcharge_id'          => $surcharAin,
 
-                'origin_portLb'         => $originLB['name'],
-                'origin_port'           => $originA[0],
+                'origin_portLb'         => $originA,
+                'origin_port'           => $originAIn,
 
-                'destiny_portLb'        => $destinyLB['name'],
-                'destiny_port'          => $destinationA[0], 
+                'destiny_portLb'        => $destinationA,
+                'destiny_port'          => $destinationAIn, 
 
                 'carrierlb'            => $carrierA,
                 'carrier_id'           => $carrAIn,
@@ -1344,7 +1374,7 @@ class ContractsController extends Controller
                 'currencylb'            => $currencyA,
                 'currency_id'           => $currencyAIn,
 
-                'classsurcharge'       => $classsurcharger,
+                'classsurcharge'        => $classsurcharger,
                 'classorigin'           => $classdorigin,
                 'classdestiny'          => $classddestination,
                 'classcarrier'          => $classcarrier,
@@ -1353,7 +1383,7 @@ class ContractsController extends Controller
                 'classcurrency'         => $classcurrency,
 
             ];
-
+            //dd($arreglo);
 
             $failsurchargecoll->push($arreglo);
         }
@@ -1370,8 +1400,70 @@ class ContractsController extends Controller
                                                        'harbor',
                                                        'currency',
                                                        'calculationtypeselect',
-                                                       'goodsurcharges'
+                                                       'goodsurcharges',
+                                                       'id'
                                                       )); //*/
+    }
+
+    public function SaveCorrectedSurcharge(Request $request){
+
+        $idSurchargeVar        =    29;
+        $surchargeVar          =    2;
+        $contractVar           =    1;
+        $originVar             =    15;
+        $destinationVarArr     =    [77,12];
+        $typedestinyVar        =    3;
+        $calculationtypeVar    =    1;
+        $ammountVar            =    100;
+        $currencyVar           =    149;
+        $carrierVar            =    14;
+        //*/
+        /*
+        $idSurchargeVar        =    $_REQUEST['idSurcharge'];
+        $surchargeVar          =    $_REQUEST['surcharge'];
+        $contractVar           =    $_REQUEST['contract_id'];
+        $originVar             =    $_REQUEST['origin'];
+        $destinationVarArr     =    $_REQUEST['destination'];
+        $typedestinyVar        =    $_REQUEST['typedestiny'];
+        $calculationtypeVar    =    $_REQUEST['rate_id'];
+        $ammountVar            =    $_REQUEST['ammount'];
+        $currencyVar           =    $_REQUEST['currency'];
+        $carrierVar            =    $_REQUEST['carrier'];
+
+        //*/
+        //return $col = ['response'  => '1'];
+
+        $failSurcharge = new FailSurCharge();
+        $failSurcharge = FailSurCharge::find($idSurchargeVar);
+        $count=0;
+        $countArreglo = count($destinationVarArr);
+        
+        //->where('port_dest','=',$destinationVar)
+        
+        foreach($destinationVarArr as $destinationVar){
+            $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
+                ->where('typedestiny_id','=',$typedestinyVar)
+                ->where('contract_id','=',$contractVar)
+                ->where('calculationtype_id','=',$calculationtypeVar)
+                ->where('ammount','=',$ammountVar)
+                ->where('currency_id','=',$currencyVar)
+                ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                    $q->where('carrier_id','=',$carrierVar);
+                })
+                ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                    $k->where('port_orig','=',$originVar);
+                })->get();
+            if($SurcharFull->isEmpty() != true){
+                
+                  $portdes =  LocalCharPort::where('port_dest','=',$SurcharFull->id)->get();
+                if($portdes->isEmpty()){
+                    dd($portdes);
+                }
+            }
+        }
+
+
+        dd($SurcharFull);
     }
 
     public function updateLocalChar(Request $request, $id)
