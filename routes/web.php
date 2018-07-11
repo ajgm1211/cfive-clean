@@ -139,6 +139,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
     Route::post('test', 'QuoteController@test')->name('quotes.test');
     Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+    Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
