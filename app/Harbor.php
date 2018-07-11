@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Harbor extends Model
 {
     protected $table    = "harbors";
-    protected $fillable = ['id', 'name', 'code','country_id'];
+    protected $fillable = ['id', 'name', 'code','country_id','varation'];
 
     public function globalcharge()
     {
