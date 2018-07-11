@@ -106,9 +106,14 @@ CONTENTS:
   height: auto; }
 
 .title-quote {
-  font-size: 12px !important;
+  font-size: 12px;
   font-weight: bold !important;
   color: #1d3a6e !important;
+}
+
+.header-table{
+  background-color: #F4F3F8;
+  line-height: 3;
 }
 
 .color-blue{

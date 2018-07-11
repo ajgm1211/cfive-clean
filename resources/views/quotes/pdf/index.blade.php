@@ -92,7 +92,7 @@
                     <td class="white">{{$origin_ammount->detail}}</td>
                     <td class="white">{{$origin_ammount->units}}</td>
                     <td class="white">{{$origin_ammount->price_per_unit}}</td>
-                    <td class="white">{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
+                    <td class="white">{{$origin_ammount->total_ammount + ($origin_ammount->markup/$origin_ammount->units)}} {{$origin_ammount->currency->alphacode}}</td>
                     <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                 </tr>
                 @endforeach
@@ -125,7 +125,7 @@
                     <td>{{$freight_ammount->detail}}</td>
                     <td>{{$freight_ammount->units}}</td>
                     <td>{{$freight_ammount->price_per_unit}}</td>
-                    <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
+                    <td>{{$freight_ammount->total_ammount + ($freight_ammount->markup/$freight_ammount->units)}} {{$freight_ammount->currency->alphacode}}</td>
                     <td>{{$freight_ammount->total_ammount_2}}</td>
                 </tr>
                 @endforeach
@@ -158,7 +158,7 @@
                     <td>{{$destination_ammount->detail}}</td>
                     <td>{{$destination_ammount->units}}</td>
                     <td>{{$destination_ammount->price_per_unit}}</td>
-                    <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
+                    <td>{{$destination_ammount->total_ammount + ($destination_ammount->markup/$destination_ammount->units)}} {{$destination_ammount->currency->alphacode}}</td>
                     <td>{{$destination_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                 </tr>
                 @endforeach

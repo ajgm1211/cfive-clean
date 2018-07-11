@@ -32,6 +32,7 @@ use GoogleMaps;
 use App\Inland;
 use App\TermAndCondition;
 use App\TermsPort;
+use App\StatusQuote;
 use Illuminate\Support\Facades\Input;
 
 class QuoteController extends Controller
@@ -1484,11 +1485,11 @@ public function create()
   public function edit($id)
   {
     $quote = Quote::findOrFail($id);
-    $companies = Company::all()->pluck('business_name','id');
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::all()->pluck('name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
     $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
@@ -1647,16 +1648,17 @@ public function create()
   {
 
     $quote = Quote::findOrFail($id);
-    $companies = Company::all()->pluck('business_name','id');
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::all()->pluck('name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
     $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
     $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
     $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $status_quotes=StatusQuote::all()->pluck('name','id');
     $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
       $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
     })->get();
@@ -1667,11 +1669,17 @@ public function create()
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
+      if($currency_cfg->alphacode=='USD'){
+          $exchange = Currency::where('api_code_eur','EURUSD')->first();
+      }else{
+          $exchange = Currency::where('api_code','USDEUR')->first();
+      }
     }
+
 
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
       'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user]);
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange]);
 
   }
 
@@ -1959,5 +1967,14 @@ public function create()
     }else{
       return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
+  }
+
+  public function updateStatus(Request $request,$id)
+  {
+    $quote=Quote::findOrFail($id);
+    $quote->status_quote_id=$request->status_id;
+    $quote->update();
+
+    return response()->json(['message' => 'Ok']);
   }
 }

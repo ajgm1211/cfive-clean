@@ -858,6 +858,33 @@ $(document).on('click', '#send-pdf-quote', function () {
   });
 });
 
+$(document).on('change', '#status_quote_id', function () {
+    var id = $('#quote-id').val();
+    var status_id = $('#status_quote_id').val();
+    $.ajax({
+        type: 'POST',
+        url: '/quotes/update/status/'+id,
+        data:{"status_id":status_id},
+        success: function(data) {
+            $('#spin').hide();
+          
+            if(data.message=='Ok'){
+                swal(
+                  'Done!',
+                  'Status updated.',
+                  'success'
+                  )
+            }else{
+                swal(
+                  'Error!',
+                  'Has ocurred an error.',
+                  'error'
+                  )
+            }
+        }
+    });
+});
+
 //Clients
 
 $(document).on('click', '#delete-contact', function () {
