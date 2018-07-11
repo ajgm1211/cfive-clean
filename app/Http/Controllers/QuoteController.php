@@ -144,6 +144,8 @@ class QuoteController extends Controller
     $freighAmmount = 0;
     $localPercentage = 0;
     $localAmmount = 0;
+    $inlandPercentage = 0;
+    $inlandAmmount = 0;
     // Calculo de los markups
     foreach($fclMarkup as $freight){
       // Freight 
