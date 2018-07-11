@@ -1438,7 +1438,7 @@ class ContractsController extends Controller
         $count=0;
         $countArreglo = count($destinationVarArr);
         
-        //->where('port_dest','=',$destinationVar)
+        //->where('port_dest','=',$destinationVar);
         
         foreach($destinationVarArr as $destinationVar){
             $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
