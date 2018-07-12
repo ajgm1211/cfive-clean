@@ -123,323 +123,330 @@
 </div>
 </div>
 <!--end:: Widgets/Authors Profit-->  </div>
-<div class="col-xl-9">
-  <!--begin:: Widgets/Best Sellers-->
-  <div class="m-portlet m-portlet--full-height ">
-    <div class="m-portlet__head">
-      <div class="m-portlet__head-caption">
-        <div class="m-portlet__head-title">
-          <h3 class="m-portlet__head-text">
-            Rates 
 
-          </h3>
+<div class="col-xl-9">
+  <div  class="row">
+    <div class="col-xl-11">
+      <div class="m-portlet m-portlet--full-height ">
+
+        <div class="m-portlet__body">
+          <table  class="table m-table m-table--head-separator-primary"  border="0" id="">
+            <thead>
+              <tr>
+                <th  width = '20%' title="Field #2">
+                  <span class="darkblue cabezeras">Sort By: </span>
+                </th>
+                <th  width = '20%' title="Field #3">
+                  <span class="gray cabezeras">Origin </span>
+                </th>
+                <th  width = '20%' title="Field #4" >
+                  <span  class="gray cabezeras"  style=" float: right;">Destination </span> 
+                </th>
+                <th  width = '20%' title="Field #5">
+                  <span class="gray cabezeras"> Validity</span> 
+                </th>
+                <th  width = '20%' title="Field #6" >
+                  <span class="gray cabezeras"  style=" float: right;">Price</span>  
+                </th>
+              </tr>
+            </thead>
+          </table>
         </div>
       </div>
-
     </div>
-    <div class="m-portlet__body">
-      <table  class="table m-table m-table--head-separator-primary" border="0" id="sample_editable">
-        <thead>
-          <tr>
+  </div>
+  @foreach ($arreglo as $key => $arr)
+  @php
+  $inl = 'false';
+  @endphp
+  <div  class="row">
+    <div class="col-xl-11">
+      <div class="m-portlet m-portlet--full-height ">
+        <div class="m-portlet__body">
+          <table  class="table m-table m-table--head-separator-primary" border="0" id="sample_editable">
+            <tbody>
+              {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
+              <input type="hidden" name="info" value="{{ json_encode($arr) }}">
+              <input type="hidden" name="form" value="{{ json_encode($form) }}">
+              <tr id="principal{{$loop->iteration}}">
 
-            <th title="Field #2">
-              Carrier
-            </th>
-            <th title="Field #3">
-              Origin
-            </th>
-            <th title="Field #4" >
-              <span style=" float: right;">Destination </span> 
-            </th>
-            <th title="Field #5">
-              Validity
-            </th>
-            <th title="Field #6">
-              Price
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-
-          @foreach ($arreglo as $key => $arr)
-          @php
-          $inl = 'false';
-          @endphp
-
-          {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
-          <input type="hidden" name="info" value="{{ json_encode($arr) }}">
-          <input type="hidden" name="form" value="{{ json_encode($form) }}">
-          <tr id="principal{{$loop->iteration}}">
-
-            <td width = '20%'>
-              <div class="m-widget5">
-                <div class="m-widget5__item">
-                  <div class="m-widget5__pic"> 
-                    <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
+                <td width = '20%'>
+                  <div class="m-widget5">
+                    <div class="m-widget5__item">
+                      <div class="m-widget5__pic"> 
+                        <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-            </td>
-            <td width = '40%' colspan="2">
+                </td>
+                <td width = '40%' colspan="2">
 
-              <div class="row">
-                <div class="col-md-4">
-                  <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
-                  <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
-                </div>
-                <div class="col-md-4">
-                  <div class="progress m-progress--sm">
-                    <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
+                      <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="progress m-progress--sm">
+                        <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
+                      <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-4">
-                  <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
-                  <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
-                </div>
-              </div>
 
-                <br>
-                <span class="workblue">Salling Schedules </span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
-                <i  class="la la-angle-down blue"></i>
-                </a>
+                  <br>
+                  <span class="workblue">Salling Schedules </span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+                  <i  class="la la-angle-down blue"></i>
+                  </a>
                 </td>
 
-            <td width = '20%'>
+                <td width = '20%'>
 
-              <span class="darkblue validate"> {{   \Carbon\Carbon::parse($formulario->date)->format('d/M/Y') }}</span>
-            </td>
-            <td width = '20%'>     
-              <div class="m-widget5">
-                <div class="m-widget5__item">
-                  <div class="m-widget5__stats1">
+                  <span class="darkblue validate"> {{   \Carbon\Carbon::parse($formulario->date)->format('d M Y') }}</span>
+                </td>
+                <td width = '20%'>     
+                  <div class="m-widget5" style="float:right;">
+
                     <span class="m-widget5__number"> <span class="portalphacode"> {{ $arr->quoteCurrency }} </span> <span class="darkblue totalq">  {{ $arr->totalQuoteSin }} </span> 
 
                     </span><br>
                     <button type="submit" class="btn boton btn-md">Select</button><br>
+
+                    <span class="workblue">Detail Cost </span>  <a  id='display_l{{$loop->iteration}}'  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+                    <i  class="la la-angle-down blue"></i>
+                    </a>
+
                   </div>
-                </div>
-              </div>
-            </td>
+                </td>
 
-          </tr>
-          @if((!$arr->globalOrig->isEmpty()) || (!$arr->localOrig->isEmpty()))
-          <tr id="origin{{$loop->iteration}}" hidden="true"  >
-            <td colspan="6">
-              <b>Origin Charges</b>
-              <hr>
-              <table  class="table m-table m-table--head-separator-primary">
-                <tr>
-                  <th>Charge</th>
-                  <th>Detail  </th>
-                  <th>Units</th>
-                  <th>Price per Unit</th>
-                  <th>Ammount</th>
-                  <th>Markup</th>
-                  <th>Total Ammount</th>
-                </tr>
-                <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
+              </tr>
+              @if((!$arr->globalOrig->isEmpty()) || (!$arr->localOrig->isEmpty()))
+              <tr id="origin{{$loop->iteration}}" hidden="true"  >
+                <td colspan="6">
+                  <span class="darkblue cabezeras">Origin Charges</span>
+                  <hr>
+                  <table  class="table m-table m-table--head-separator-primary">
+                    <tr class="thead-light">
+                      <th><span class="portalphacode">Charge</span></th>
+                      <th><span class="portalphacode">Detail</span>  </th>
+                      <th><span class="portalphacode">Units</span></th>
+                      <th><span class="portalphacode">Price per Unit</span></th>
+                      <th><span class="portalphacode">Ammount</span></th>
+                      <th><span class="portalphacode">Markup</span></th>
+                      <th><span class="portalphacode">Total Ammount</span></th>
+                    </tr>
+                    <!--  Local charge  containter 20 , TEU , Per Container in Origin -->
 
-                @foreach($arr->localOrig as $origin)
-                <tr>
-                  <td>{{ $origin['origin']['surcharge_name'] }}</td>
-                  <td>{{ $origin['origin']['calculation_name'] }} </td>
-                  <td>{{  $origin['origin']['cantidad']  }}</td>
-                  <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
-                  <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
-                  <td>{{  $origin['origin']['markup']  }} {{ $origin['origin']['typemarkup']  }}</td>
-                  <td>{{  $origin['origin']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
-                @foreach($arr->globalOrig as $originGlo)
-                <tr>
-                  <td>{{ $originGlo['origin']['surcharge_name'] }}</td>
-                  <td>{{ $originGlo['origin']['calculation_name'] }} </td>
-                  <td>{{  $originGlo['origin']['cantidad']  }}</td>
-                  <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
-                  <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
-                  <td>{{  $originGlo['origin']['markup']  }} {{ $originGlo['origin']['typemarkup']  }}</td>
-                  <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
-                <tr>
-                  <td colspan="5"></td>
-                  <td ><b>SUBTOTAL:</b></td>
-                  <td>{{$arr->totalOrigin  }}  </td>
-                </tr>
-              </table>
-            </td>
-          </tr> 
-          @endif
-          <tr id="detail{{$loop->iteration}}"  hidden="true">
-            <td colspan="6">
-              <b>Freight Charges</b>
-              <hr>
-              <table class="table m-table m-table--head-separator-primary">
-                <tr>
-                  <th>Charge</th>
-                  <th>Details  </th>
-                  <th>Units</th>
-                  <th>Price per Unit</th>
-                  <th>Ammount</th>
-                  <th>Markup</th>
-                  <th>Total Ammount</th>
-                </tr>
-                @foreach($arr->rates  as $var)
-                <tr>
-                  <td>{{ $var['type'] }}</td>
-                  <td>{{ $var['detail'] }}</td>
-                  <td>{{ $var['cantidad'] }}</td>
-                  <td>{{ $var['price'] }} {{ $var['currency']   }}</td>
-                  <td>{{ $var['subtotal'] }} {{ $var['currency']   }}</td>
-                  <td>{{ $var['markup'] }} {{ $var['typemarkup']   }}</td>
-                  <td>{{ $var['total'] }}</td>
-                </tr>
-                @endforeach
-                @foreach($arr->localFreight as $freight)
-                <tr>
-                  <td>{{ $freight['freight']['surcharge_name'] }}</td>
-                  <td>{{ $freight['freight']['calculation_name'] }} </td>
-                  <td>{{  $freight['freight']['cantidad']  }}</td>
-                  <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
-                  <td>{{  $freight['freight']['subtotal_local']  }} {{ $freight['freight']['currency']  }}</td>
-                  <td>{{  $freight['freight']['markup']  }} {{ $freight['freight']['typemarkup']  }}</td>
-                  <td>{{  $freight['freight']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
+                    @foreach($arr->localOrig as $origin)
+                    <tr>
+                      <td>{{ $origin['origin']['surcharge_name'] }}</td>
+                      <td>{{ $origin['origin']['calculation_name'] }} </td>
+                      <td>{{  $origin['origin']['cantidad']  }}</td>
+                      <td>{{ $origin['origin']['monto']  }} {{ $origin['origin']['currency']  }}</td>
+                      <td>{{  $origin['origin']['subtotal_local']  }} {{ $origin['origin']['currency']  }}</td>
+                      <td>{{  $origin['origin']['markup']  }} {{ $origin['origin']['typemarkup']  }}</td>
+                      <td>{{  $origin['origin']['totalAmmount']  }} </td>
+                    </tr>
+                    @endforeach
+                    @foreach($arr->globalOrig as $originGlo)
+                    <tr>
+                      <td>{{ $originGlo['origin']['surcharge_name'] }}</td>
+                      <td>{{ $originGlo['origin']['calculation_name'] }} </td>
+                      <td>{{  $originGlo['origin']['cantidad']  }}</td>
+                      <td>{{ $originGlo['origin']['monto']  }} {{ $originGlo['origin']['currency']  }}</td>
+                      <td>{{  $originGlo['origin']['subtotal_global']  }} {{ $originGlo['origin']['currency']  }}</td>
+                      <td>{{  $originGlo['origin']['markup']  }} {{ $originGlo['origin']['typemarkup']  }}</td>
+                      <td>{{  $originGlo['origin']['totalAmmount']  }} </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                      <td colspan="5"></td>
+                      <td > <span  class="darkblue px12" >SUBTOTAL:</span></b></td>
+                      <td><span  class="darkblue px12" >{{$arr->totalOrigin  }} </span> </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr> 
+              @endif
+              <tr id="detail{{$loop->iteration}}"  hidden="true">
+                <td colspan="6">
+                  <span class="darkblue cabezeras">Freight Charges</span>
+                  <hr>
+                  <table class="table m-table m-table--head-separator-primary">
+                    <tr class="thead-light">
+                
+                        <th><span class="portalphacode">Charge</span></span></th>
+                        <th><span class="portalphacode">Details  </span></th>
+                        <th><span class="portalphacode">Units</span></th>
+                        <th><span class="portalphacode">Price per Unit</span></th>
+                        <th><span class="portalphacode">Ammount</span></th>
+                        <th><span class="portalphacode">Markup</span></th>
+                        <th><span class="portalphacode">Total Ammount</span></th>
+                        </tr>
+             
+                  @foreach($arr->rates  as $var)
+                  <tr>
+                    <td>{{ $var['type'] }}</td>
+                    <td>{{ $var['detail'] }}</td>
+                    <td>{{ $var['cantidad'] }}</td>
+                    <td>{{ $var['price'] }} {{ $var['currency']   }}</td>
+                    <td>{{ $var['subtotal'] }} {{ $var['currency']   }}</td>
+                    <td>{{ $var['markup'] }} {{ $var['typemarkup']   }}</td>
+                    <td>{{ $var['total'] }}</td>
+                  </tr>
+                  @endforeach
+                  @foreach($arr->localFreight as $freight)
+                  <tr>
+                    <td>{{ $freight['freight']['surcharge_name'] }}</td>
+                    <td>{{ $freight['freight']['calculation_name'] }} </td>
+                    <td>{{  $freight['freight']['cantidad']  }}</td>
+                    <td>{{ $freight['freight']['monto']  }} {{ $freight['freight']['currency']  }}</td>
+                    <td>{{  $freight['freight']['subtotal_local']  }} {{ $freight['freight']['currency']  }}</td>
+                    <td>{{  $freight['freight']['markup']  }} {{ $freight['freight']['typemarkup']  }}</td>
+                    <td>{{  $freight['freight']['totalAmmount']  }} </td>
+                  </tr>
+                  @endforeach
 
-                @foreach($arr->globalFreight as $freightGlo)
-                <tr>
-                  <td>{{ $freightGlo['freight']['surcharge_name'] }}</td>
-                  <td>{{ $freightGlo['freight']['calculation_name'] }} </td>
-                  <td>{{  $freightGlo['freight']['cantidad']  }}</td>
-                  <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
-                  <td>{{  $freightGlo['freight']['subtotal_global']  }} {{ $freightGlo['freight']['currency']  }}</td>
-                  <td>{{  $freightGlo['freight']['markup']  }} {{ $freightGlo['freight']['typemarkup']  }}</td>
-                  <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
-                @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0") )
-                <tr>
-                  <td colspan="5"></td>
-                  <td ><b>SUBTOTAL:</b></td>
-                  <td>{{$arr->totalFreight  }}</td>
-                </tr>
+                  @foreach($arr->globalFreight as $freightGlo)
+                  <tr>
+                    <td>{{ $freightGlo['freight']['surcharge_name'] }}</td>
+                    <td>{{ $freightGlo['freight']['calculation_name'] }} </td>
+                    <td>{{  $freightGlo['freight']['cantidad']  }}</td>
+                    <td>{{ $freightGlo['freight']['monto']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                    <td>{{  $freightGlo['freight']['subtotal_global']  }} {{ $freightGlo['freight']['currency']  }}</td>
+                    <td>{{  $freightGlo['freight']['markup']  }} {{ $freightGlo['freight']['typemarkup']  }}</td>
+                    <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
+                  </tr>
+                  @endforeach
+                  @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0") )
+                  <tr>
+                    <td colspan="5"></td>
+                      <td > <span  class="darkblue px12" >SUBTOTAL:</span></b></td>
+                      <td> <span  class="darkblue px12" > {{$arr->totalFreight  }} </span></td>
+                  </tr>
 
-                @else
-                <tr>
-                  <td colspan='6'>No data available</td>
-                </tr>
+                  @else
+                  <tr>
+                    <td colspan='6'>No data available</td>
+                  </tr>
 
-                @endif
+                  @endif
 
-              </table>
-            </td>
-          </tr>
-          @if((!$arr->globalDest->isEmpty() ) || (!$arr->localDest->isEmpty() ))
-          <tr id="destination{{$loop->iteration}}" hidden="true" >
-            <td colspan="6">
-              <b>Destination Charges</b>
-              <hr>
-              <table class="table m-table m-table--head-separator-primary">
-                <tr>
-                  <th>Charge</th>
-                  <th>Detail  </th>
-                  <th>Units</th>
-                  <th>Price per Unit</th>
-                  <th>Ammount</th>
-                  <th>Markup</th>
-                  <th>Total Ammount</th>
-                </tr>
-
-                @foreach($arr->localDest as $destiny)
-                <tr>
-                  <td>{{ $destiny['destiny']['surcharge_name'] }}</td>
-                  <td>{{ $destiny['destiny']['calculation_name'] }} </td>
-                  <td>{{  $destiny['destiny']['cantidad']  }}</td>
-                  <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
-                  <td>{{  $destiny['destiny']['subtotal_local']  }} {{ $destiny['destiny']['currency']  }}</td>
-                  <td>{{  $destiny['destiny']['markup']  }} {{ $destiny['destiny']['typemarkup']  }}</td>
-                  <td>{{  $destiny['destiny']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
-
-                @foreach($arr->globalDest as $destinyGlo)
-                <tr>
-                  <td>{{ $destinyGlo['destiny']['surcharge_name'] }}</td>
-                  <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
-                  <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
-                  <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
-                  <td>{{  $destinyGlo['destiny']['subtotal_global']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
-                  <td>{{  $destinyGlo['destiny']['markup']  }} {{ $destinyGlo['destiny']['typemarkup']  }}</td>
-                  <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
-                </tr>
-                @endforeach
-                <tr>
-                  <td colspan="5"></td>
-                  <td ><b>SUBTOTAL:</b></td>
-                  <td>{{  $arr->totalDestiny  }}  </td>
-                </tr>
-              </table>
+          </table>
             </td>
           </tr>
-          @endif
-          @if((!empty($inlandDestiny)) || (!empty($inlandOrigin)))
-          <tr id="inlands{{$loop->iteration}}" hidden="true" >
-            <td colspan="6">
-              <b>Inlands Charges</b>
-              <hr>
-              <table class="table m-table m-table--head-separator-primary">
-                <tr>
-                  <th>Provider</th>
-                  <th>Type</th>
-                  <th>Distance  </th>
-                  <th>Port Name</th>
-                  <th>Markup</th>
-                  <th>Total Ammount</th>
-                </tr>
-                @if(!empty($inlandDestiny))
-                @foreach($inlandDestiny as $inlandDest)
-                @if($inlandDest['port_id'] == $arr->port_destiny->id )
-                <tr>
-                  <th>{{ $inlandDest['provider'] }}</th>
-                  <th>{{ $inlandDest['type'] }}</th>
-                  <th>{{ $inlandDest['km'] }} KM</th>
-                  <th>{{ $inlandDest['port_name'] }}</th>
-                  <th>{{ $inlandDest['markup'] }} {{ $inlandDest['typemarkup'] }}</th>
-                  <th>{{ $inlandDest['monto'] }} {{  $inlandDest['type_currency'] }}</th>
-                </tr>
-                @endif
-                @endforeach
-                @endif
-                @if(!empty($inlandOrigin))
-                @foreach($inlandOrigin as $inlandOrig)
-                @if($inlandOrig['port_id'] == $arr->port_origin->id )
-                <tr>
-                  <th>{{ $inlandOrig['provider'] }}</th>
-                  <th>{{ $inlandOrig['type'] }}</th>
-                  <th>{{ $inlandOrig['km'] }} KM</th>
-                  <th>{{ $inlandOrig['port_name'] }}</th>
-                  <th>{{ $inlandOrig['markup'] }} {{ $inlandOrig['typemarkup'] }}</th>
-                  <th>{{ $inlandOrig['monto'] }} {{  $inlandOrig['type_currency'] }}</th>
-                </tr>
-                @endif
-                @endforeach
-                @endif
-              </table>
-            </td>
-          </tr>
+        @if((!$arr->globalDest->isEmpty() ) || (!$arr->localDest->isEmpty() ))
+        <tr id="destination{{$loop->iteration}}" hidden="true" >
+          <td colspan="6">
+            <span class="darkblue cabezeras"> Destination Charges</span>
+            <hr>
+            <table class="table m-table m-table--head-separator-primary">
+            <tr class="thead-light">
+                <th><span class="portalphacode">Charge</span></th>
+                <th><span class="portalphacode">Detail</span>  </th>
+                <th><span class="portalphacode">Units</span></th>
+                <th><span class="portalphacode">Price per Unit</span></th>
+                <th><span class="portalphacode">Ammount</span></th>
+                <th><span class="portalphacode">Markup</span></th>
+                <th><span class="portalphacode">Total Ammount</span></th>
+              </tr>
 
-          @endif
-          {!! Form::close() !!}
-          @endforeach
+              @foreach($arr->localDest as $destiny)
+              <tr>
+                <td>{{ $destiny['destiny']['surcharge_name'] }}</td>
+                <td>{{ $destiny['destiny']['calculation_name'] }} </td>
+                <td>{{  $destiny['destiny']['cantidad']  }}</td>
+                <td>{{ $destiny['destiny']['monto']  }} {{ @$destiny['destiny']['currency']  }}</td>
+                <td>{{  $destiny['destiny']['subtotal_local']  }} {{ $destiny['destiny']['currency']  }}</td>
+                <td>{{  $destiny['destiny']['markup']  }} {{ $destiny['destiny']['typemarkup']  }}</td>
+                <td>{{  $destiny['destiny']['totalAmmount']  }} </td>
+              </tr>
+              @endforeach
+
+              @foreach($arr->globalDest as $destinyGlo)
+              <tr>
+                <td>{{ $destinyGlo['destiny']['surcharge_name'] }}</td>
+                <td>{{ $destinyGlo['destiny']['calculation_name'] }} </td>
+                <td>{{  $destinyGlo['destiny']['cantidad']  }}</td>
+                <td>{{ $destinyGlo['destiny']['monto']  }} {{ @$destinyGlo['destiny']['currency']  }}</td>
+                <td>{{  $destinyGlo['destiny']['subtotal_global']  }} {{ $destinyGlo['destiny']['currency']  }}</td>
+                <td>{{  $destinyGlo['destiny']['markup']  }} {{ $destinyGlo['destiny']['typemarkup']  }}</td>
+                <td>{{  $destinyGlo['destiny']['totalAmmount']  }} </td>
+              </tr>
+              @endforeach
+              <tr>
+                <td colspan="5"></td>
+                <td > <span  class="darkblue px12" >SUBTOTAL:</span></b></td>
+                <td> <span  class="darkblue px12" > {{  $arr->totalDestiny  }}</span>  </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        @endif
+        @if((!empty($inlandDestiny)) || (!empty($inlandOrigin)))
+        <tr id="inlands{{$loop->iteration}}" hidden="true" >
+          <td colspan="6">
+            <b>Inlands Charges</b>
+            <hr>
+            <table class="table m-table m-table--head-separator-primary">
+             <tr class="thead-light">
+                <th><span class="portalphacode">Provider</span></th>
+                <th><span class="portalphacode">Type</span></th>
+                <th><span class="portalphacode">Distance</span>  </th>
+                <th><span class="portalphacode">Port Name</span></th>
+                <th><span class="portalphacode">Markup</span></th>
+                <th><span class="portalphacode">Total Ammount</span></th>
+              </tr>
+              @if(!empty($inlandDestiny))
+              @foreach($inlandDestiny as $inlandDest)
+              @if($inlandDest['port_id'] == $arr->port_destiny->id )
+              <tr>
+                <th>{{ $inlandDest['provider'] }}</th>
+                <th>{{ $inlandDest['type'] }}</th>
+                <th>{{ $inlandDest['km'] }} KM</th>
+                <th>{{ $inlandDest['port_name'] }}</th>
+                <th>{{ $inlandDest['markup'] }} {{ $inlandDest['typemarkup'] }}</th>
+                <th>{{ $inlandDest['monto'] }} {{  $inlandDest['type_currency'] }}</th>
+              </tr>
+              @endif
+              @endforeach
+              @endif
+              @if(!empty($inlandOrigin))
+              @foreach($inlandOrigin as $inlandOrig)
+              @if($inlandOrig['port_id'] == $arr->port_origin->id )
+              <tr>
+                <th>{{ $inlandOrig['provider'] }}</th>
+                <th>{{ $inlandOrig['type'] }}</th>
+                <th>{{ $inlandOrig['km'] }} KM</th>
+                <th>{{ $inlandOrig['port_name'] }}</th>
+                <th>{{ $inlandOrig['markup'] }} {{ $inlandOrig['typemarkup'] }}</th>
+                <th>{{ $inlandOrig['monto'] }} {{  $inlandOrig['type_currency'] }}</th>
+              </tr>
+              @endif
+              @endforeach
+              @endif
+            </table>
+          </td>
+        </tr>
+
+        @endif
+        {!! Form::close() !!}
 
         </tbody>
       </table>
-    </div>
   </div>
-  <!--end:: Widgets/Best Sellers-->  
 </div>
+
+</div>
+</div>
+
+@endforeach
+</div>
+
 </div>
 @endsection
 

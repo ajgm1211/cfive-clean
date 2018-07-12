@@ -19,9 +19,6 @@
         </div>
       </div>
     </div>
-
-
-
     <div class="m-portlet m-portlet--tabs">
       <div class="m-portlet__head">
         <div class="m-portlet__head-tools">
@@ -234,12 +231,12 @@
                   <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
                   <td width='15%'>{{ Form::select('port_orig1[]', $harbor,null,['class'=>'m-select2-general form-control port_orig','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
                   <td width='15%'>{{ Form::select('port_dest1[]', $harbor,null,['class'=>'m-select2-general form-control port_dest','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
-                  <td width='15%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                  <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
                   <td width='15%'> {{ Form::select('localcarrier1[]', $carrier,null,['class'=>'m-select2-general form-control carrier','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
                   <td width='15%'>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                  <td width='15%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                  <td width='10%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
                   <td width='15%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                  <td width='15%'>  -
+                  <td >  -
                   </td>
                 </tr>
               </tbody>

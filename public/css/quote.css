@@ -22,6 +22,9 @@
 .blue{
   color: #4316fd;
 }
+.gray{
+  color: #55597f;
+}
 
 .darkblue{
   color: #2e0084;
@@ -30,11 +33,19 @@
 }
 
 .validate {
-  font-size: 14px;
+  font-size: 15px;
+}
+.px12 {
+  font-size: 13px;
 }
 
 .totalq {
   font-size: 28px;
+}
+.cabezeras {
+  font-size: 16px;
+  width: auto;
+  font-weight: bold;
 }
 
 .boton{
