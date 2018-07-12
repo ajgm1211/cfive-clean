@@ -1418,7 +1418,9 @@ class QuoteController extends Controller
       $totalFreight = $totalFreight." ".$typeCurrency;
       $totalOrigin = $totalOrigin." ".$typeCurrency;
       $totalDestiny = $totalDestiny." ".$typeCurrency;
+      $totalQuoteSin = number_format($totalQuote, 2, ',', '');
       $totalQuote = $totalQuote." ".$typeCurrency;
+      $quoteCurrency = $typeCurrency;
 
 
       $data->setAttribute('globalOrig',$collectionGloOrig);
@@ -1439,6 +1441,10 @@ class QuoteController extends Controller
       $data->setAttribute('inlandOrigin',$inlandOrigin);
       $data->setAttribute('totalChargeOrig',$totalChargeOrig);
       $data->setAttribute('totalChargeDest',$totalChargeDest);
+      //Total quote atributes
+      $data->setAttribute('totalQuoteSin',$totalQuoteSin);
+      $data->setAttribute('quoteCurrency',$quoteCurrency);
+
 
 
 
