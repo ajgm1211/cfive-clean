@@ -39,6 +39,12 @@ var DatatableHtmlTableDemo = function() {
         }
       },
       columns: [
+               {
+          field: "Name",
+          title: "Name",
+          width: 60,
+          overflow: 'visible',
+        },
         {
           field: "Number",
           title: "Number",
@@ -62,26 +68,27 @@ var DatatableHtmlTableDemo = function() {
         {
           field: "20'",
           title: "20'",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
         {
           field: "40'",
           title: "40'",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
         {
           field: "40'HC",
           title: "40'HC",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
+        
 
         {
           field: 'Status',
           title: 'Status',
-          width: 60,
+          width: 40,
           // callback function support for column rendering
           template: function(row) {
             var status = {
