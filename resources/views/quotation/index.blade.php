@@ -175,7 +175,7 @@
               <div class="m-widget5">
                 <div class="m-widget5__item">
                   <div class="m-widget5__pic"> 
-                    <img src="{{ url('/imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
+                    <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
                   </div>
                 </div>
               </div>
@@ -194,9 +194,9 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <span class="portcss"> {{$arr->port_destiny->name  }}</span>
+                  <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
                   <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
-                </div><
+                </div>
               </div>
 
                 <br>
