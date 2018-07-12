@@ -57,6 +57,29 @@ $(document).on('click', '.removeL', function () {
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
-
+$(document).on('click', '.addCT', function () {
+  
+  toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": true,
+  "onclick": null,
+  "showDuration": "0",
+  "hideDuration": "0",
+  "timeOut": "0",
+  "extendedTimeOut": "0",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+};
+  var surcharge = $('.type');
+  if(surcharge.val() == null){
+    toastr.error(' You have to first add surcharges terms in order to add surcharges to this contract. <a href="surcharges" > <b> Add Surcharge</b> </a>!','IMPORTANT MESSAGE!');
+  }
+} );
 
 
