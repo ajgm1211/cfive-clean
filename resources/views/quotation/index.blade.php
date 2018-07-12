@@ -175,7 +175,7 @@
               <div class="m-widget5">
                 <div class="m-widget5__item">
                   <div class="m-widget5__pic"> 
-                    <img src="{{ url('storage/imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
+                    <img src="{{ url('/imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
                   </div>
                 </div>
               </div>
