@@ -50,7 +50,7 @@ $validation_expire = 'Please enter validation date';
                 </a>
               </li>
               <li class="nav-item m-tabs__item">
-                <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                <a class="nav-link m-tabs__link addCT" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                   <i class="la la-briefcase"></i>
                   Surcharges
                 </a>
@@ -150,25 +150,7 @@ $validation_expire = 'Please enter validation date';
                     </button>
                   </a>
                 </div>
-                @if($surcharge->isEmpty())
-                <div class="col-md-10">
-                  <div class="m-alert m-alert--icon m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
-                    <div class="m-alert__icon">
-                      <i class="la la-warning"></i>
-                    </div>
-                    <div class="m-alert__text">
-                      <strong>
-                        Important Message
-                      </strong>
-                      You have to first add surcharges terms in order to add surcharges to this contract. <a href="{{route('surcharges.index')}}" > Go to </a>
-                    </div>
-                    <div class="m-alert__close">
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                  </div>
-
-                </div>
-                @endif
+ 
               </div>
 
 

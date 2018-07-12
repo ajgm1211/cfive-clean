@@ -359,7 +359,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" value="0.00"  step="0.01" type="number" min="0"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -413,7 +413,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" min="0"/>
+                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.01" value="0.00" type="number" min="0"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -447,7 +447,7 @@ $subtotalDestiny = 0;
                                 <div class="col-md-2">
                                   <div class="form-group">
                                     <span>
-                                      <h5 class="size-12px">
+                                      <h5 >
                                         Sub-Total:<span id="sub_total_origin">{{ $info->totalChargeOrig }}</span>@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif 
                                         <input type="hidden" id="total_origin_ammount" name="sub_total_origin" class="form-control" value="{{ $info->totalChargeOrig }}"/>
                                       </h5>
@@ -732,7 +732,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup"  step="0.01"  min="0" type="number"/>
+                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" value='0.00' step="0.01"  min="0" type="number"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1" >
@@ -1043,7 +1043,7 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" value='0.00' step="0.01" min="0"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -1097,7 +1097,8 @@ $subtotalDestiny = 0;
                                 </div>
                                 <div class="col-md-1">
                                   <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" min="0"/>
+                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control destination_ammount_markup" step="0.01" value="
+                                    0.00" type="number" min="0"/>
                                   </div>
                                 </div>
                                 <div class="col-md-1">
@@ -1182,13 +1183,13 @@ $subtotalDestiny = 0;
             </div>
           </div>
           @if(isset($form->price_id ))
-            @php
-              $priceID = $form->price_id;
-            @endphp
+          @php
+          $priceID = $form->price_id;
+          @endphp
           @else
-            @php
-              $priceID = "";
-            @endphp
+          @php
+          $priceID = "";
+          @endphp
           @endif
           <input type="hidden" class="form-control" id="incoterm" name="incoterm" value="{{ $form->incoterm }} ">
           <input type="hidden" class="form-control" id="modality" name="modality" value="{{ $form->modality }} ">
@@ -1246,7 +1247,7 @@ $subtotalDestiny = 0;
 
 @section('js')
 @parent
-<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+<script src="{{asset('js/base2.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
