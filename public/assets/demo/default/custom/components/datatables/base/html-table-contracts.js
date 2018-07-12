@@ -96,6 +96,22 @@ var DatatableHtmlTableDemo = function() {
               status[row.Status].title + '</span>';
           },
         },
+          {
+          field: 'status',
+          title: 'status',
+          width: 60,
+          // callback function support for column rendering
+          template: function(row) {
+            var status = {
+              1: {'title': 'publish', 'state': 'success'},
+              2: {'title': 'draft', 'state': 'warning'},
+
+            };
+            return '<span class="m-badge m-badge--' + status[row.status].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
+              status[row.status].state + '">' +
+              status[row.status].title + '</span>';
+          },
+        },
       ],
     });
 
