@@ -229,7 +229,7 @@
                 <td colspan="6">
                   <span class="darkblue cabezeras">Origin Charges</span>
                   <hr>
-                  <table  class="table m-table m-table--head-separator-primary">
+                  <table  class="table  table-hover">
                     <tr class="thead-light">
                       <th><span class="portalphacode">Charge</span></th>
                       <th><span class="portalphacode">Detail</span>  </th>
@@ -276,7 +276,7 @@
                 <td colspan="6">
                   <span class="darkblue cabezeras">Freight Charges</span>
                   <hr>
-                  <table class="table m-table m-table--head-separator-primary">
+                  <table class="table table-hover">
                     <tr class="thead-light">
                 
                         <th><span class="portalphacode">Charge</span></span></th>
@@ -344,7 +344,7 @@
           <td colspan="6">
             <span class="darkblue cabezeras"> Destination Charges</span>
             <hr>
-            <table class="table m-table m-table--head-separator-primary">
+            <table class="table table-hover">
             <tr class="thead-light">
                 <th><span class="portalphacode">Charge</span></th>
                 <th><span class="portalphacode">Detail</span>  </th>
@@ -392,7 +392,7 @@
           <td colspan="6">
             <b>Inlands Charges</b>
             <hr>
-            <table class="table m-table m-table--head-separator-primary">
+            <table class="table table-hover">
              <tr class="thead-light">
                 <th><span class="portalphacode">Provider</span></th>
                 <th><span class="portalphacode">Type</span></th>
