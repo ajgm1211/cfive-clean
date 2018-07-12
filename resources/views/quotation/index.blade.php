@@ -1,8 +1,11 @@
 @extends('layouts.app')
 @section('css')
 @parent
+<link href="/css/quote.css" rel="stylesheet" type="text/css" />
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
+
+
 
 @section('title', 'Quotes')
 @section('content')
@@ -135,20 +138,18 @@
 
     </div>
     <div class="m-portlet__body">
-      <table  class="table m-table m-table--head-separator-primary" id="sample_editable">
+      <table  class="table m-table m-table--head-separator-primary" border="0" id="sample_editable">
         <thead>
           <tr>
-            <th title="Field #1">
-              Detail
-            </th>
+
             <th title="Field #2">
               Carrier
             </th>
             <th title="Field #3">
               Origin
             </th>
-            <th title="Field #4">
-              Destination 
+            <th title="Field #4" >
+              <span style=" float: right;">Destination </span> 
             </th>
             <th title="Field #5">
               Validity
@@ -169,47 +170,58 @@
           <input type="hidden" name="info" value="{{ json_encode($arr) }}">
           <input type="hidden" name="form" value="{{ json_encode($form) }}">
           <tr id="principal{{$loop->iteration}}">
-            <td>
-              Details <br>
-              <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
-                <i  class="la la-plus"></i>
-              </a>
-            </td>
-            <td>
+
+            <td width = '20%'>
               <div class="m-widget5">
                 <div class="m-widget5__item">
                   <div class="m-widget5__pic"> 
                     <img src="{{ url('storage/imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
-           
                   </div>
                 </div>
               </div>
 
             </td>
-            <td>
-              {{$arr->port_origin->name  }}
+            <td width = '40%' colspan="2">
+
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
+                  <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
+                </div>
+                <div class="col-md-4">
+                  <div class="progress m-progress--sm">
+                    <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <span class="portcss"> {{$arr->port_destiny->name  }}</span>
+                  <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
+                </div><
+              </div>
+
+                <br>
+                <span class="workblue">Salling Schedules </span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+                <i  class="la la-angle-down blue"></i>
+                </a>
+                </td>
+
+            <td width = '20%'>
+
+              <span class="darkblue validate"> {{   \Carbon\Carbon::parse($formulario->date)->format('d/M/Y') }}</span>
             </td>
-            <td>
-              {{$arr->port_destiny->name  }}
-            </td>
-            <td>     
-              <span class="m-widget5__info-date m--font-info">
-                {{ $formulario->date }}
-              </span>
-            </td>
-            <td>           
+            <td width = '20%'>     
               <div class="m-widget5">
                 <div class="m-widget5__item">
                   <div class="m-widget5__stats1">
-                    <span class="m-widget5__number">{{ $arr->totalQuote }}
+                    <span class="m-widget5__number"> <span class="portalphacode"> {{ $arr->quoteCurrency }} </span> <span class="darkblue totalq">  {{ $arr->totalQuoteSin }} </span> 
 
                     </span><br>
-                    <button type="submit" class="btn m-btn--square  btn-primary m-btn--wide">Select</button><br>
-
+                    <button type="submit" class="btn boton btn-md">Select</button><br>
                   </div>
                 </div>
               </div>
             </td>
+
           </tr>
           @if((!$arr->globalOrig->isEmpty()) || (!$arr->localOrig->isEmpty()))
           <tr id="origin{{$loop->iteration}}" hidden="true"  >
@@ -433,16 +445,16 @@
 
 @section('js')
 @parent
-  
+
 <script src="/js/quote.js"></script>
 <script src="/assets/plugins/datatable.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script>
-$(document).ready( function () {
+  $(document).ready( function () {
     $('#sample_editable').DataTable();
-} );
+  } );
 </script>
 @stop
 
