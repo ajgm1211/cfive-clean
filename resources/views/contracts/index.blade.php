@@ -140,7 +140,7 @@
                             Validity
                         </th>
                         <th title="Field #11">
-                            Status
+                            status
                         </th>
                         <th title="Field #12">
                             Options
