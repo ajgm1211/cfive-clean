@@ -196,11 +196,11 @@
                             </a>
 
                             <a class=" {{'tdAB'.$i}} {{'tdBTU'.$i}} DestroyRate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="DestroySurcharge({{$i}})" >
-                                <i class="la 	la-remove"></i>
+                                <i class="la la-remove"></i>
                             </a>
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
-                                <i class="la 	la-remove"></i>
+                                <i class="la la-mail-reply"></i>
                             </a>
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectSurcharge({{$i}},{{$id}})" >
                                 <i class="la la-save"></i>
@@ -268,7 +268,7 @@
                         </td>
                         <td>
                             <div class="{{'tdAB'.$i}}">
-                                <label style="" id="{{'fortylb'.$i}}">
+                                <label style="" id="{{'calculationtypelb'.$i}}">
                                     {{$goodsurcharge->CalculationType['name']}}
                                 </label>
                             </div>
@@ -319,12 +319,12 @@
                                 <i class="la 	la-remove"></i>
                             </a>
 
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
-                                <i class="la 	la-remove"></i>
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close    " onclick="hidebox({{$i}})" >
+                                <i class="la la-mail-reply"></i>
                             </a>
-                            <!--<a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectSurcharge({{$i}},{{$goodsurcharge['contract_id']}})" >
-<i class="la la-save"></i>
-</a>-->
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectSurcharge({{$i}},{{$goodsurcharge['contract_id']}})" >
+                                <i class="la la-save"></i>
+                            </a>
                             <input type="hidden" name="define" value="2" id="{{'accion'.$i}}" />
                             <input type="hidden" name="idf" value="{{$goodsurcharge['id']}}" id="{{'idf'.$i}}" />
                         </td>
@@ -360,7 +360,6 @@
         placeholder: "Select an option"
     });
 
-
     function showbox(id){
         $(".tdAB"+id).attr('hidden','hidden');
         $(".tdIn"+id).removeAttr('hidden');
@@ -372,9 +371,11 @@
     }
 
     function SaveCorrectSurcharge(idtr,idcontract){
+
+
         //alert('tdIn'+idtr+' '+idrate);
-        var idSurcharge = $("#idf"+idtr).val();
-        var surcharge = $("#surcharge"+idtr).val();
+        var idSurcharge = $("#idf"+idtr).val(); //id que representa el registro en la base datos localcharge
+        var surcharge = $("#surcharge"+idtr).val(); // id de los 'surchage list'
         var origin = $("#origin"+idtr).val();
         var destination = $("#destination"+idtr).val();
         var typedestiny = $("#typedestiny"+idtr).val();
@@ -384,7 +385,6 @@
         var carrier = $("#carrier"+idtr).val();
         var accion = $("#accion"+idtr).val();
         if(accion == 1){
-            //alert('A.'+surcharge+' / '+origin+' B.'+ destination+' C.'+ typedestiny+' D.'+ calculationtype+' E.'+ ammount+' F.'+currency +' G.'+ carrier);
             jQuery.ajax({
                 method:'get',
                 data:{
@@ -439,53 +439,65 @@
                         swal("Error!", "Alrready Surcharge!", "warning");
                     }
 
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
                 }
+
+
             });
-        }
+        }   
         else if( accion == 2){
             // para actualizar campos
-            /*  jQuery.ajax({
+            // alert('A.'+surcharge+' / '+origin+' B.'+ destination+' C.'+ typedestiny+' D.'+ calculationtype+' E.'+ ammount+' F.'+currency +' G.'+ carrier+' .'+idSurcharge);
+
+            jQuery.ajax({
                 method:'get',
-                data:{surcharge_id:idrate,
-                      contract_id:idcontract,
-                      origin:origin,
-                      destination:destination,
-                      carrier:carrier,
-                      twuenty:twuenty,
-                      forty:forty,
-                      fortyhc:fortyhc,
-                      currency:currency,
-                     },
-                url:'/contracts/UpdateRatesForContracts',
+                data:{
+                    surcharge:surcharge,
+                    idSurcharge:idSurcharge,
+                    contract_id:idcontract,
+                    origin:origin,
+                    destination:destination,
+                    typedestiny:typedestiny,
+                    calculationtype:calculationtype,
+                    ammount:ammount,
+                    currency:currency,
+                    carrier:carrier,
+                },
+                url:'/contracts/UpdateSurchargeForContracts',
+
                 success:function(data){
-                    //console.log(data);
+                                    
+                    console.log(data);
+                   
                     if(data.response == 0){
                         //campo errado
-                        swal("Error!", "wrong field in the rate!", "error");
+                        swal("Error!", "wrong field in the Surcharge!", "error");
                     }
                     else if(data.response == 1){
                         //exito
-                        swal("Good job!", "Updated rate!", "success");
+                        swal("Good job!", "Updated Surcharge!", "success");
 
                         hidebox(idtr);
 
-                        $('#originlb'+idtr).text(data.origin);
-                        $('#destinylb'+idtr).text(data.destiny);
+                        $('#surchargelb'+idtr).text(data.surchargeLB);
+                        $('#originlb'+idtr).text(data.port_origLB);
+                        $('#destinylb'+idtr).text(data.port_destLB);
+                        $('#typedestinylb'+idtr).text(data.typedestinyLB);
+                        $('#calculationtypelb'+idtr).text(data.calculationtypeLB);
+                        $('#ammountlb'+idtr).text(data.ammount);
+                        $('#currencylb'+idtr).text(data.currencyLB);
                         $('#carrierlb'+idtr).text(data.carrier);
-                        $('#twuentylb'+idtr).text(data.twuenty);
-                        $('#fortylb'+idtr).text(data.forty);
-                        $('#fortyhclb'+idtr).text(data.fortyhc);
-                        $('#currencylb'+idtr).text(data.currency);
                         $("#accion"+idtr).attr('value',2);
 
                     }
-                    else if(data.response == 2){
-                        //duplicado
-                        swal("Error!", "Alrready Rate!", "warning");
-                    }
 
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
                 }
-            });*/
+            });
         }
         //alert(idcontract);
     }

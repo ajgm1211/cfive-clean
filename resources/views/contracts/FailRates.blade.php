@@ -186,7 +186,7 @@
                             </a>
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
-                                <i class="la 	la-remove"></i>
+                                <i class="la la-mail-reply"></i>
                             </a>
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$ratef['contract_id']}})" >
                                 <i class="la la-save"></i>
@@ -289,7 +289,7 @@
                             </a>
 
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
-                                <i class="la 	la-remove"></i>
+                                <i class="la la-mail-reply"></i>
                             </a>
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$rate['contract_id']}})" >
                                 <i class="la la-save"></i>
@@ -400,7 +400,7 @@
                     }
                     else if(data.response == 2){
                         //duplicado
-                        swal("Error!", "Alrready Rate!", "warning");
+                        swal("Error!", "Error Rate!", "warning");
                     }
 
                 }
@@ -408,9 +408,11 @@
         }
         else if( accion == 2){
             // para actualizar campos
+            //alert('A.'+origin+' B.'+ destination+' C.'+ carrier+' D.'+ twuenty+' E.'+ forty+' F.'+fortyhc +' G.'+ currency+' .'+idrate+' ..'+idcontract);
             jQuery.ajax({
                 method:'get',
-                data:{rate_id:idrate,
+                data:{
+                      rate_id:idrate,
                       contract_id:idcontract,
                       origin:origin,
                       destination:destination,
@@ -445,7 +447,7 @@
                     }
                     else if(data.response == 2){
                         //duplicado
-                        swal("Error!", "Alrready Rate!", "warning");
+                        swal("Error!", "Error Rate!", "warning");
                     }
 
                 }
