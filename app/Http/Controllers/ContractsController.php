@@ -834,7 +834,7 @@ class ContractsController extends Controller
                     'currency_id'   => $currencyV,
                 ]); 
 
-                $failrate->delete();
+                $failrate->forceDelete();
 
                 $origcolle   = Harbor::find($originV);
                 $destcolle   = Harbor::find($destinationV);
@@ -864,55 +864,46 @@ class ContractsController extends Controller
     }
 
     public function UpdateRatesCorrect(Request $request){
+        try{
+            $rate_idR     = $_REQUEST['rate_id'];
+            $contract     = $_REQUEST['contract_id'];
+            $originR      = $_REQUEST['origin'];
+            $destinationR = $_REQUEST['destination'];
+            $carrierR     = $_REQUEST['carrier'];
+            $twuentyR     = $_REQUEST['twuenty'];
+            $fortyR       = $_REQUEST['forty'];
+            $fortyhcR     = $_REQUEST['fortyhc'];
+            $currencyR    = $_REQUEST['currency'];
 
-        $rate_idR     = $_REQUEST['rate_id'];
-        $contract     = $_REQUEST['contract_id'];
-        $originR      = $_REQUEST['origin'];
-        $destinationR = $_REQUEST['destination'];
-        $carrierR     = $_REQUEST['carrier'];
-        $twuentyR     = $_REQUEST['twuenty'];
-        $fortyR       = $_REQUEST['forty'];
-        $fortyhcR     = $_REQUEST['fortyhc'];
-        $currencyR    = $_REQUEST['currency'];
+            $rate = new Rate();
 
-        $rate = new Rate();
+            $rate = Rate::find($rate_idR);
+            $rate->origin_port   = $originR;
+            $rate->destiny_port  = $destinationR;
+            $rate->carrier_id    = $carrierR;
+            $rate->twuenty       = $twuentyR;
+            $rate->forty         = $fortyR;
+            $rate->fortyhc       = $fortyhcR;
+            $rate->currency_id   = $currencyR;
+            $rate->save();
 
-        /*$duplicate =  Rate::where('origin_port','=',$originR)
-            ->where('destiny_port','=',$destinationR)
-            ->where('carrier_id','=',$carrierR)
-            ->where('contract_id','=',$contract)
-            ->count();
-        //return $duplicate;
+            $origcolle   = Harbor::find($rate->origin_port);
+            $destcolle   = Harbor::find($rate->destiny_port);
+            $carriecolle = Carrier::find($rate->carrier_id);
+            $currencolle = Currency::find($rate->currency_id);
 
-        if($duplicate <= 0){*/
-        $rate = Rate::find($rate_idR);
-        $rate->origin_port   = $originR;
-        $rate->destiny_port  = $destinationR;
-        $rate->carrier_id    = $carrierR;
-        $rate->twuenty       = $twuentyR;
-        $rate->forty         = $fortyR;
-        $rate->fortyhc       = $fortyhcR;
-        $rate->currency_id   = $currencyR;
-        $rate->save();
-
-        $origcolle   = Harbor::find($rate->origin_port);
-        $destcolle   = Harbor::find($rate->destiny_port);
-        $carriecolle = Carrier::find($rate->carrier_id);
-        $currencolle = Currency::find($rate->currency_id);
-
-        return $col = ['response'  => '1',
-                       'origin'    => $origcolle->name,
-                       'destiny'   => $destcolle->name,
-                       'carrier'   => $carriecolle->name,
-                       'twuenty'   => $twuentyR,
-                       'forty'     => $fortyR,
-                       'fortyhc'   => $fortyhcR,
-                       'currency'  => $currencolle->alphacode,
-                      ];
-        /*}
-        else{
+            return $col = ['response'  => '1',
+                           'origin'    => $origcolle->name,
+                           'destiny'   => $destcolle->name,
+                           'carrier'   => $carriecolle->name,
+                           'twuenty'   => $twuentyR,
+                           'forty'     => $fortyR,
+                           'fortyhc'   => $fortyhcR,
+                           'currency'  => $currencolle->alphacode,
+                          ];
+        }catch(\Exception $e){
             return $col = ['response'  => '2'];
-        }*/
+        }
 
     }
 
@@ -1454,7 +1445,7 @@ class ContractsController extends Controller
                     'localcharge_id'    => $SurchargeId->id  
                 ]);
             }
-            //$failSurcharge->forceDelete();*/
+            $failSurcharge->forceDelete(); //*/
             $goodsurcharges     = LocalCharge::where('id','=',$SurchargeId->id)
                 //$goodsurcharges     = LocalCharge::where('id','=',16)
                 ->where('contract_id','=',$contractVar)
@@ -1528,6 +1519,116 @@ class ContractsController extends Controller
         }catch(\Exception $e){
             return 3;
         }
+    }
+
+    public function UpdateSurchargeCorrect(Request $request){
+        try {
+/*
+            $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
+            $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
+            $contractVar           =  $_REQUEST['contract_id'];
+            $originVarArr          =  $_REQUEST['origin'];
+            $destinationVarArr     =  $_REQUEST['destination'];
+            $typedestinyVar        =  $_REQUEST['typedestiny'];
+            $calculationtypeVar    =  $_REQUEST['calculationtype'];
+            $ammountVar            =  $_REQUEST['ammount'];
+            $currencyVar           =  $_REQUEST['currency'];
+            $carrierVarArr         =  $_REQUEST['carrier'];  */
+
+            $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
+            $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
+            $contractVar           =  $_REQUEST['contract_id'];
+            $originVarArr          =  $_REQUEST['origin'];
+            $destinationVarArr     =  $_REQUEST['destination'];
+            $typedestinyVar        =  $_REQUEST['typedestiny'];
+            $calculationtypeVar    =  $_REQUEST['calculationtype'];
+            $ammountVar            =  $_REQUEST['ammount'];
+            $currencyVar           =  $_REQUEST['currency'];
+            $carrierVarArr         =  $_REQUEST['carrier'];
+       // return response()->json(['message' => 'Ok']);
+            //*/
+            
+            
+            
+            $SurchargeId = new LocalCharge();
+            $SurchargeId  = LocalCharge::find($idSurchargeVar);
+
+            $SurchargeId->surcharge_id          = $surchargeVar;
+            $SurchargeId->typedestiny_id        = $typedestinyVar;
+            $SurchargeId->contract_id           = $contractVar;
+            $SurchargeId->calculationtype_id    = $calculationtypeVar;
+            $SurchargeId->ammount               = $ammountVar;
+            $SurchargeId->currency_id           = $currencyVar;
+            $SurchargeId->update();
+
+            LocalCharPort::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+            foreach($originVarArr as $originVar){
+                foreach($destinationVarArr as $destinationVar){
+                    LocalCharPort::create([
+                        'port_orig'         => $originVar,
+                        'port_dest'         => $destinationVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
+            }
+
+           LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+            foreach($carrierVarArr as $carrierVar){
+                LocalCharCarrier::create([
+                    'carrier_id'        => $carrierVar,
+                    'localcharge_id'    => $SurchargeId->id  
+                ]); //
+            }
+
+            $goodsurcharges     = LocalCharge::where('id','=',$SurchargeId->id)
+                //$goodsurcharges     = LocalCharge::where('id','=',16)
+                ->where('contract_id','=',$contractVar)
+                ->with('currency',
+                       'calculationtype',
+                       'surcharge',
+                       'typedestiny',
+                       'localcharcarriers.carrier',
+                       'localcharports.portOrig',
+                       'localcharports.portDest'
+                      )->get();
+
+            foreach($goodsurcharges as $goodsurcharge){
+                //dd($goodsurcharge->calculationtype);
+                $portOri ='';
+                foreach($goodsurcharge->localcharports->pluck('portOrig')->unique()->pluck('name') as $name){
+                    $portOri = $portOri.' '.$name.'.';
+                }
+
+                $portDest ='';
+                foreach($goodsurcharge->localcharports->pluck('portDest')->unique()->pluck('name') as $name){
+                    $portDest = $portDest.' '.$name.'.';
+                }
+                $carriercoll ='';
+                foreach($goodsurcharge->localcharcarriers->pluck('carrier')->unique()->pluck('name') as $name){
+                    $carriercoll = $carriercoll.' '.$name.'.';
+                }
+
+                $arreglo  = [
+                    'surcharge_id'          => $goodsurcharge->id,
+                    'surchargeLB'           => $goodsurcharge->surcharge['name'],
+
+                    'typedestinyLB'         => $goodsurcharge->typedestiny['description'],
+
+                    'calculationtypeLB'     => $goodsurcharge->calculationtype['name'],
+                    'ammount'               => $goodsurcharge->ammount,
+                    'currencyLB'            => $goodsurcharge->currency['alphacode'],
+
+                    'port_origLB'           => $portOri,
+                    'port_destLB'           => $portDest,
+                    'carrier'               => $carriercoll,
+                    'response'              => 1
+                ];
+                //dd($arreglo);
+                return $arreglo;
+            }
+        } catch (\Exception $e){
+            return $arreglo = ['response'  => 0];
+        } //*/
     }
 
     public function updateLocalChar(Request $request, $id)
