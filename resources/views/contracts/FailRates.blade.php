@@ -188,10 +188,11 @@
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Close " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$ratef['rate_id']}},{{$ratef['contract_id']}})" >
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$ratef['contract_id']}})" >
                                 <i class="la la-save"></i>
                             </a>
                             <input type="hidden" name="define" value="1" id="{{'accion'.$i}}" />
+                            <input type="hidden" name="idf" value="{{$ratef['rate_id']}}" id="{{'idf'.$i}}" />
 
                         </td>
 
@@ -290,10 +291,11 @@
                             <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="hidebox({{$i}})" >
                                 <i class="la 	la-remove"></i>
                             </a>
-                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$rate['id']}},{{$rate['contract_id']}})" >
+                            <a  hidden class=" {{'tdIn'.$i}} m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Save " onclick="SaveCorrectRate({{$i}},{{$rate['contract_id']}})" >
                                 <i class="la la-save"></i>
                             </a>
                             <input type="hidden" name="define" value="2" id="{{'accion'.$i}}" />
+                            <input type="hidden" name="idf" value="{{$rate['id']}}" id="{{'idf'.$i}}" />
                         </td>
                         @php
                         $i++
@@ -337,8 +339,9 @@
         $(".tdAB"+id).removeAttr('hidden');
     }
 
-    function SaveCorrectRate(idtr,idrate,idcontract){
+    function SaveCorrectRate(idtr,idcontract){
         //alert('tdIn'+idtr+' '+idrate);
+        var idrate = $("#idf"+idtr).val();
         var origin = $("#origin"+idtr).val();
         var destination = $("#destination"+idtr).val();
         var carrier = $("#carrier"+idtr).val();
@@ -390,6 +393,7 @@
                         $('#fortylb'+idtr).text(data.forty);
                         $('#fortyhclb'+idtr).text(data.fortyhc);
                         $('#currencylb'+idtr).text(data.currency);
+                        $('#idf'+idtr).attr('value',data.idrate);
 
                         $("#accion"+idtr).attr('value',2);
 
