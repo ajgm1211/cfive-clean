@@ -111,6 +111,11 @@ CONTENTS:
   color: #1d3a6e !important;
 }
 
+.settings {
+  font-size: 12px;
+  color: #1d3a6e !important;
+}
+
 .header-table{
   background-color: #F4F3F8;
   line-height: 3;
@@ -118,6 +123,18 @@ CONTENTS:
 
 .color-blue{
   color: #1d3a6e !important; 
+}
+
+/*** CUSTOMIZE DATATABLES ***/
+.m-datatable > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell > span, .m-datatable > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell > span{
+  font-size: 12px !important;
+  color: #1d3a6e !important;
+}
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > span{
+    color: #1d3a6e !important;
+    font-size:12px !important;
+    font-weight: lighter !important;
 }
 
 /*
