@@ -628,10 +628,11 @@
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px">Main currency</p>
-            <p class="title-quote size-12px" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
+            
+            <p class="settings size-12px" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
             <hr>
             <p class="title-quote title-quote size-14px">Exchange rate</p>
-            <p class="title-quote size-12px" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            <p class="settings size-12px" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
         </div>
     </div>
 </div>
