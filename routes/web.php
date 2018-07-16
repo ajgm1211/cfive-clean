@@ -96,6 +96,13 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
     Route::get('DestroySurchargeFailCorrectForContracts','ContractsController@DestroySurchargeFailCorrect')->name('Destroy.Surcharge.FailCorrect.For.Contracts');
     Route::get('UpdateSurchargeForContracts','ContractsController@UpdateSurchargeCorrect')->name('Update.Surcharge.For.Contractss');
+    
+    //Contract FCL Importation
+    
+    route::get('imporfcl',function(){
+       return view('contracts.ImporContractFcl');
+    })->name('importaion.fcl');
+    Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
