@@ -99,7 +99,6 @@ class QuoteController extends Controller
       $currency_name = '';
     }
 
-    //dd($info);
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
     return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency ]);
@@ -130,6 +129,7 @@ class QuoteController extends Controller
     $company_user_id=\Auth::user()->company_user_id;
     $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
     $typeCurrency =  $company->companyUser->currency->alphacode ;
+    $idCurrency = $company->companyUser->currency_id;
     //dd($company);
     $origin_port = $request->input('originport');
     $destiny_port = $request->input('destinyport');
@@ -491,7 +491,9 @@ class QuoteController extends Controller
 
       $data->setAttribute('rates',$collectionRate);
 
-
+      // id de los ALL 
+      array_push($orig_port,742);
+      array_push($dest_port,742);
 
       //  calculo de los local charges en freight , origin y destiny 
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
@@ -1423,6 +1425,7 @@ class QuoteController extends Controller
       $quoteCurrency = $typeCurrency;
 
 
+
       $data->setAttribute('globalOrig',$collectionGloOrig);
       $data->setAttribute('globalDest',$collectionGloDest);
       $data->setAttribute('globalFreight',$collectionGloFreight);
@@ -1444,6 +1447,7 @@ class QuoteController extends Controller
       //Total quote atributes
       $data->setAttribute('totalQuoteSin',$totalQuoteSin);
       $data->setAttribute('quoteCurrency',$quoteCurrency);
+      $data->setAttribute('idCurrency',$idCurrency);
 
 
 
