@@ -30,800 +30,543 @@ use App\Http\Requests\UploadFileRateRequest;
 
 class ContractsController extends Controller
 {
-    /**
+  /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
-    {
-        $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
-        return view('contracts/index', ['arreglo' => $contracts]);
-    }
+  public function index()
+  {
+    $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
 
-    /**
+
+    return view('contracts/index', compact('arreglo','contractG'));
+  }
+
+  /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function add()
-    {
-        $objcountry = new Country();
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcalculation = new CalculationType();
-        $objsurcharge = new Surcharge();
-        $objtypedestiny = new TypeDestiny();
+  public function add()
+  {
+    $objcountry = new Country();
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    $objtypedestiny = new TypeDestiny();
 
-        $harbor = $objharbor->all()->pluck('name','id');
-        $country = $objcountry->all()->pluck('name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $calculationT = $objcalculation->all()->pluck('name','id');
-        $typedestiny = $objtypedestiny->all()->pluck('description','id');
-        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
-        $contacts = Contact::whereHas('company', function ($query) {
-            $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-        })->pluck('first_name','id');
-        if(Auth::user()->type == 'company' ){
-            $users =  User::whereHas('companyUser', function($q)
-                                     {
-                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                     })->pluck('Name','id');
-        }
-        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
-            $users =  User::whereHas('companyUser', function($q)
-                                     {
-                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                     })->pluck('Name','id');
-        }
-
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
-
+    $harbor = $objharbor->all()->pluck('name','id');
+    $country = $objcountry->all()->pluck('name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    $contacts = Contact::whereHas('company', function ($query) {
+      $query->where('company_user_id', '=', \Auth::user()->company_user_id);
+    })->pluck('first_name','id');
+    if(Auth::user()->type == 'company' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
+    }
+    if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
     }
 
-    public function create()
-    {
-        //
-    }
+    return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
 
-    /**
+  }
+
+  public function create()
+  {
+    //
+  }
+
+  /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+  public function store(Request $request)
+  {
+    $contract = new Contract($request->all());
+    $contract->company_user_id =Auth::user()->company_user_id;
+    $validation = explode('/',$request->validation_expire);
+    $contract->validity = $validation[0];
+    $contract->expire = $validation[1];
+    $contract->save();
+
+    $details = $request->input('origin_id');
+    $detailscharges = $request->input('localcurrency_id');
+    $companies = $request->input('companies');
+    $users = $request->input('users');
+    // For Each de los rates
+    $contador = 1;
+    foreach($details as $key => $value)
     {
-        $contract = new Contract($request->all());
-        $contract->company_user_id =Auth::user()->company_user_id;
-        $validation = explode('/',$request->validation_expire);
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
-        $contract->save();
+      if(!empty($request->input('twuenty.'.$key))) {
+        $rates = new Rate();
+        $rates->origin_port = $request->input('origin_id.'.$key);
+        $rates->destiny_port = $request->input('destiny_id.'.$key);
+        $rates->carrier_id = $request->input('carrier_id.'.$key);
+        $rates->twuenty = $request->input('twuenty.'.$key);
+        $rates->forty = $request->input('forty.'.$key);
+        $rates->fortyhc = $request->input('fortyhc.'.$key);
+        $rates->currency_id = $request->input('currency_id.'.$key);
+        $rates->contract()->associate($contract);
+        $rates->save();
+      }
+    }
+    // For Each de los localcharge
 
-        $details = $request->input('origin_id');
-        $detailscharges = $request->input('localcurrency_id');
-        $companies = $request->input('companies');
-        $users = $request->input('users');
-        // For Each de los rates
-        $contador = 1;
-        foreach($details as $key => $value)
+    foreach($detailscharges as $key2 => $value)
+    {
+      if(!empty($request->input('ammount.'.$key2))) {
+        $localcharge = new LocalCharge();
+        $localcharge->surcharge_id = $request->input('type.'.$key2);
+        $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
+        $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
+        $localcharge->ammount = $request->input('ammount.'.$key2);
+        $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+        $localcharge->contract()->associate($contract);
+        $localcharge->save();
+
+        $detailportOrig = $request->input('port_origlocal'.$contador);
+        $detailportDest = $request->input('port_destlocal'.$contador);
+
+        $detailcarrier = $request->input('localcarrier_id'.$contador);
+        foreach($detailcarrier as $c => $value)
         {
-            if(!empty($request->input('twuenty.'.$key))) {
-                $rates = new Rate();
-                $rates->origin_port = $request->input('origin_id.'.$key);
-                $rates->destiny_port = $request->input('destiny_id.'.$key);
-                $rates->carrier_id = $request->input('carrier_id.'.$key);
-                $rates->twuenty = $request->input('twuenty.'.$key);
-                $rates->forty = $request->input('forty.'.$key);
-                $rates->fortyhc = $request->input('fortyhc.'.$key);
-                $rates->currency_id = $request->input('currency_id.'.$key);
-                $rates->contract()->associate($contract);
-                $rates->save();
-            }
+          $detailcarrier = new LocalCharCarrier();
+          $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+          $detailcarrier->localcharge()->associate($localcharge);
+          $detailcarrier->save();
         }
-        // For Each de los localcharge
-
-        foreach($detailscharges as $key2 => $value)
+        foreach($detailportOrig as $orig => $value)
         {
-            if(!empty($request->input('ammount.'.$key2))) {
-                $localcharge = new LocalCharge();
-                $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
-                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
-                $localcharge->ammount = $request->input('ammount.'.$key2);
-                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-                $localcharge->contract()->associate($contract);
-                $localcharge->save();
+          foreach($detailportDest as $dest => $value)
+          {
+            $detailport = new LocalCharPort();
+            $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+            $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+            $detailport->localcharge()->associate($localcharge);
+            $detailport->save();
+          }
 
-                $detailportOrig = $request->input('port_origlocal'.$contador);
-                $detailportDest = $request->input('port_destlocal'.$contador);
-
-                $detailcarrier = $request->input('localcarrier_id'.$contador);
-                foreach($detailcarrier as $c => $value)
-                {
-                    $detailcarrier = new LocalCharCarrier();
-                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
-                    $detailcarrier->localcharge()->associate($localcharge);
-                    $detailcarrier->save();
-                }
-                foreach($detailportOrig as $orig => $value)
-                {
-                    foreach($detailportDest as $dest => $value)
-                    {
-                        $detailport = new LocalCharPort();
-                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-                        $detailport->localcharge()->associate($localcharge);
-                        $detailport->save();
-                    }
-
-                }
-                $contador++;
-            }
         }
-
-        if(!empty($companies)){
-            foreach($companies as $key3 => $value)
-            {
-                $contract_company_restriction = new ContractCompanyRestriction();
-                $contract_company_restriction->company_id=$value;
-                $contract_company_restriction->contract_id=$contract->id;
-                $contract_company_restriction->save();
-            }
-        }
-
-        if(!empty($users)){
-            foreach($users as $key4 => $value)
-            {
-                $contract_client_restriction = new ContractUserRestriction();
-                $contract_client_restriction->user_id=$value;
-                $contract_client_restriction->contract_id=$contract->id;
-                $contract_client_restriction->save();
-            }
-        }
-
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully add this contract.');
-
-        return redirect()->action('ContractsController@index');
-
+        $contador++;
+      }
     }
 
-    /**
+    if(!empty($companies)){
+      foreach($companies as $key3 => $value)
+      {
+        $contract_company_restriction = new ContractCompanyRestriction();
+        $contract_company_restriction->company_id=$value;
+        $contract_company_restriction->contract_id=$contract->id;
+        $contract_company_restriction->save();
+      }
+    }
+
+    if(!empty($users)){
+      foreach($users as $key4 => $value)
+      {
+        $contract_client_restriction = new ContractUserRestriction();
+        $contract_client_restriction->user_id=$value;
+        $contract_client_restriction->contract_id=$contract->id;
+        $contract_client_restriction->save();
+      }
+    }
+
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'You successfully add this contract.');
+
+    return redirect()->action('ContractsController@index');
+
+  }
+
+  /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+  public function show($id)
+  {
+    //
+  }
 
-    /**
+  /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->first();
+  public function edit($id)
+  {
+    $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->first();
 
-        $objtypedestiny = new TypeDestiny();
-        $objcountry = new Country();
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcalculation = new CalculationType();
-        $objsurcharge = new Surcharge();
+    $objtypedestiny = new TypeDestiny();
+    $objcountry = new Country();
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
 
-        $harbor = $objharbor->all()->pluck('name','id');
-        $country = $objcountry->all()->pluck('name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $calculationT = $objcalculation->all()->pluck('name','id');
-        $typedestiny = $objtypedestiny->all()->pluck('description','id');
-        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
-        $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
-        if(!empty($company_restriction)){
-            $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
-        }
-        if(!empty($user_restriction)){
-            $user = User::where('id',$user_restriction->user_id)->select('id')->first();
-        }
-        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
-        if(Auth::user()->type == 'company' ){
-            $users =  User::whereHas('companyUser', function($q)
-                                     {
-                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                     })->pluck('Name','id');
-        }
-        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
-            $users =  User::whereHas('companyUser', function($q)
-                                     {
-                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                     })->pluck('Name','id');
-        }
-
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
+    $harbor = $objharbor->all()->pluck('name','id');
+    $country = $objcountry->all()->pluck('name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
+    $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
+    if(!empty($company_restriction)){
+      $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
     }
-    /**
+    if(!empty($user_restriction)){
+      $user = User::where('id',$user_restriction->user_id)->select('id')->first();
+    }
+    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    if(Auth::user()->type == 'company' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
+    }
+    if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
+    }
+
+    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
+  }
+  /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */ 
-    public function update(Request $request, $id)
+  public function update(Request $request, $id)
+  {
+    $requestForm = $request->all();
+    $contract = Contract::find($id);
+    $validation = explode('/',$request->validation_expire);
+    $contract->validity = $validation[0];
+    $contract->expire = $validation[1];
+    $contract->update($requestForm);
+
+    $details = $request->input('origin_id');
+    $detailscharges = $request->input('ammount');
+    $companies = $request->input('companies');
+    $users = $request->input('users');
+    $contador = 1;
+    // for each rates 
+    foreach($details as $key => $value)
     {
-        $requestForm = $request->all();
-        $contract = Contract::find($id);
-        $validation = explode('/',$request->validation_expire);
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
-        $contract->update($requestForm);
+      if(!empty($request->input('twuenty.'.$key))) {
 
-        $details = $request->input('origin_id');
-        $detailscharges = $request->input('ammount');
+        $rates = new Rate();
+        $rates->origin_port = $request->input('origin_id.'.$key);
+        $rates->destiny_port = $request->input('destiny_id.'.$key);
+        $rates->carrier_id = $request->input('carrier_id.'.$key);
+        $rates->twuenty = $request->input('twuenty.'.$key);
+        $rates->forty = $request->input('forty.'.$key);
+        $rates->fortyhc = $request->input('fortyhc.'.$key);
+        $rates->currency_id = $request->input('currency_id.'.$key);
+        $rates->contract()->associate($contract);
+        $rates->save();
+
+      }
+    }
+
+    // For Each de los localcharge
+
+    foreach($detailscharges as $key2 => $value)
+    {
+      if(!empty($request->input('ammount.'.$key2))) {
+        $localcharge = new LocalCharge();
+        $localcharge->surcharge_id = $request->input('type.'.$key2);
+        $localcharge->typedestiny_id  = $request->input('changetype.'.$key2);
+        $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
+        $localcharge->ammount = $request->input('ammount.'.$key2);
+        $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+        $localcharge->contract()->associate($contract);
+        $localcharge->save();
+        $detailportOrig = $request->input('port_origlocal'.$contador);
+        $detailportDest = $request->input('port_destlocal'.$contador);
+        $detailcarrier = $request->input('localcarrier_id'.$contador);
         $companies = $request->input('companies');
-        $users = $request->input('users');
-        $contador = 1;
-        // for each rates 
-        foreach($details as $key => $value)
+        foreach($detailcarrier as $c => $value)
         {
-            if(!empty($request->input('twuenty.'.$key))) {
-
-                $rates = new Rate();
-                $rates->origin_port = $request->input('origin_id.'.$key);
-                $rates->destiny_port = $request->input('destiny_id.'.$key);
-                $rates->carrier_id = $request->input('carrier_id.'.$key);
-                $rates->twuenty = $request->input('twuenty.'.$key);
-                $rates->forty = $request->input('forty.'.$key);
-                $rates->fortyhc = $request->input('fortyhc.'.$key);
-                $rates->currency_id = $request->input('currency_id.'.$key);
-                $rates->contract()->associate($contract);
-                $rates->save();
-
-            }
+          $detailcarrier = new LocalCharCarrier();
+          $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+          $detailcarrier->localcharge()->associate($localcharge);
+          $detailcarrier->save();
         }
-
-        // For Each de los localcharge
-
-        foreach($detailscharges as $key2 => $value)
+        foreach($detailportOrig as $orig => $value)
         {
-            if(!empty($request->input('ammount.'.$key2))) {
-                $localcharge = new LocalCharge();
-                $localcharge->surcharge_id = $request->input('type.'.$key2);
-                $localcharge->typedestiny_id  = $request->input('changetype.'.$key2);
-                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
-                $localcharge->ammount = $request->input('ammount.'.$key2);
-                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-                $localcharge->contract()->associate($contract);
-                $localcharge->save();
-                $detailportOrig = $request->input('port_origlocal'.$contador);
-                $detailportDest = $request->input('port_destlocal'.$contador);
-                $detailcarrier = $request->input('localcarrier_id'.$contador);
-                $companies = $request->input('companies');
-                foreach($detailcarrier as $c => $value)
-                {
-                    $detailcarrier = new LocalCharCarrier();
-                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
-                    $detailcarrier->localcharge()->associate($localcharge);
-                    $detailcarrier->save();
-                }
-                foreach($detailportOrig as $orig => $value)
-                {
-                    foreach($detailportDest as $dest => $value)
-                    {
+          foreach($detailportDest as $dest => $value)
+          {
 
 
-                        $detailport = new LocalCharPort();
-                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-                        $detailport->localcharge()->associate($localcharge);
-                        $detailport->save();
-                    }
-
-                }
-                $contador++;
-            }
-        }
-
-        if(!empty($companies)){
-            ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
-
-            foreach($companies as $key3 => $value)
-            {
-                $contract_company_restriction = new ContractCompanyRestriction();
-                $contract_company_restriction->company_id=$value;
-                $contract_company_restriction->contract_id=$contract->id;
-                $contract_company_restriction->save();
-            }
-        }
-
-        if(!empty($users)){
-            ContractUserRestriction::where('contract_id',$contract->id)->delete();
-
-            foreach($users as $key4 => $value)
-            {
-                $contract_client_restriction = new ContractUserRestriction();
-                $contract_client_restriction->user_id=$value;
-                $contract_client_restriction->contract_id=$contract->id;
-                $contract_client_restriction->save();
-            }
+            $detailport = new LocalCharPort();
+            $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+            $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+            $detailport->localcharge()->associate($localcharge);
+            $detailport->save();
+          }
 
         }
+        $contador++;
+      }
+    }
 
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully update this contract.');
+    if(!empty($companies)){
+      ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
 
-        return redirect()->action('ContractsController@index');
+      foreach($companies as $key3 => $value)
+      {
+        $contract_company_restriction = new ContractCompanyRestriction();
+        $contract_company_restriction->company_id=$value;
+        $contract_company_restriction->contract_id=$contract->id;
+        $contract_company_restriction->save();
+      }
+    }
+
+    if(!empty($users)){
+      ContractUserRestriction::where('contract_id',$contract->id)->delete();
+
+      foreach($users as $key4 => $value)
+      {
+        $contract_client_restriction = new ContractUserRestriction();
+        $contract_client_restriction->user_id=$value;
+        $contract_client_restriction->contract_id=$contract->id;
+        $contract_client_restriction->save();
+      }
 
     }
 
-    public function updateRates(Request $request, $id){
-        $requestForm = $request->all();
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'You successfully update this contract.');
 
-        $rate = Rate::find($id);
-        $rate->update($requestForm);
-    }
+    return redirect()->action('ContractsController@index');
 
-    public function UploadFileRateForContract(Request $request){
+  }
 
-        try {
-            $file = $request->file('file');
-            $ext = strtolower($file->getClientOriginalExtension());
+  public function updateRates(Request $request, $id){
+    $requestForm = $request->all();
 
-            $validator = \Validator::make(
-                array('ext' => $ext),
-                array('ext' => 'in:xls,xlsx,csv')
-            );
+    $rate = Rate::find($id);
+    $rate->update($requestForm);
+  }
 
-            if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('contracts.edit',$request->contract_id);
-            }
+  public function UploadFileRateForContract(Request $request){
 
-            //obtenemos el nombre del archivo
-            $nombre = $file->getClientOriginalName();
+    try {
+      $file = $request->file('file');
+      $ext = strtolower($file->getClientOriginalExtension());
 
+      $validator = \Validator::make(
+        array('ext' => $ext),
+        array('ext' => 'in:xls,xlsx,csv')
+      );
 
-            $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
-            //dd(\Storage::disk('UpLoadFile')->url($nombre));
+      if ($validator->fails()) {
+        $request->session()->flash('message.nivel', 'danger');
+        $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+        return redirect()->route('contracts.edit',$request->contract_id);
+      }
 
-            $contract = $request->contract_id;
-            $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
-                if($reader->get()->isEmpty() != true){
-                    Rate::where('contract_id','=',$contract)
-                        ->delete();
-                    FailRate::where('contract_id','=',$contract)
-                        ->delete();
-
-                } else{
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.content', 'The file is it empty');
-                    return redirect()->route('contracts.edit',$contract);   
-                }
-                foreach ($reader->get() as $book) {
-
-                    $carrier = Carrier::where('name','=',$book->carrier)->first();
-
-                    $duplicate =  Rate::where('origin_port','=',$book->origin)
-                        ->where('destiny_port','=',$book->destination)
-                        ->where('carrier_id','=',$carrier['id'])
-                        ->where('contract_id','=',$contract)
-                        ->count();
-
-                    if($duplicate <= 0){
-
-                        $twuenty = "20";
-                        $forty = "40";
-                        $fortyhc = "40hc";
-                        $origin = "origin";
-                        $destination = "destiny";
-                        $origB=false;
-                        $destiB=false;
-                        $carriB=false;
-                        $twuentyB=false;
-                        $fortyB=false;
-                        $fortyhcB=false;
-                        $curreB=false;
-
-                        $originV;
-                        $destinationV;
-                        $carrierV;
-                        $twuentyV;
-                        $fortyV;
-                        $fortyhcV;
-                        $currencyV;
-
-                        $currenc = Currency::where('alphacode','=',$book->currency)->first();
-                        $carrier = Carrier::where('name','=',$book->carrier)->first();
-                        $originExits = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
-                            ->get();
-
-                        if(count($originExits) == 1){
-                            $origB=true;
-                            foreach($originExits as $originRc){
-                                $originV = $originRc['id'];
-                            }
-                        }else{
-                            $originV = $book->$origin.'_E_E';
-                        }
-
-                        $destinationExits = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
-                            ->get();
-
-                        if(count($destinationExits) == 1){
-                            $destiB=true;
-                            foreach($destinationExits as $destinationRc){
-                                $destinationV = $destinationRc['id'];
-                            }
-                        }else{
-                            $destinationV = $book->$destination.'_E_E';
-                        }
+      //obtenemos el nombre del archivo
+      $nombre = $file->getClientOriginalName();
 
 
-                        if(empty($carrier->id) != true){
-                            $carriB=true;
-                            $carrierV = $carrier->id;
-                        }else{
-                            $carrierV = $book->carrier.'_E_E';
-                        }
+      $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+      //dd(\Storage::disk('UpLoadFile')->url($nombre));
 
-                        if(empty($book->$twuenty) != true ){
-                            $twuentyB=true;
-                            $twuentyV = (int)$book->$twuenty;
-                        }
-                        else{
-                            $twuentyV = $book->$twuenty.'_E_E';
-                        }
+      $contract = $request->contract_id;
+      $errors=0;
+      Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+        if($reader->get()->isEmpty() != true){
+          Rate::where('contract_id','=',$contract)
+            ->delete();
+          FailRate::where('contract_id','=',$contract)
+            ->delete();
 
-                        if(empty($book->$forty) != true ){
-                            $fortyB=true;
-                            $fortyV = (int)$book->$forty;
-                        }
-                        else{
-                            $fortyV = $book->$forty.'_E_E';
-                        }
-
-                        if(empty($book->$fortyhc) != true ){
-                            $fortyhcB=true;
-                            $fortyhcV = (int)$book->$fortyhc;
-                        }
-                        else{
-                            $fortyhcV = $book->$fortyhc.'_E_E';
-                        }
-
-                        if(empty($currenc->id) != true){
-                            $curreB=true;
-                            $currencyV =  $currenc->id;
-                        }
-                        else{
-                            $currencyV = $book->currency.'_E_E';
-                        }
-
-                        if( $origB == true && $destiB == true
-                           && $carriB == true && $twuentyB == true
-                           && $fortyB == true && $fortyhcB == true
-                           && $curreB == true ) {
-
-                            Rate::create([
-                                'origin_port'   => $originV,
-                                'destiny_port'  => $destinationV,
-                                'carrier_id'    => $carrierV,
-                                'contract_id'   => $contract,
-                                'twuenty'       => $twuentyV,
-                                'forty'         => $fortyV,
-                                'fortyhc'       => $fortyhcV,
-                                'currency_id'   => $currencyV,
-                            ]);
-                        }
-                        else{
-                            if($origB == true){
-                                $originV = $book->$origin;
-                            }
-                            if($destiB == true){
-                                $destinationV = $book->$destination;
-                            }
-                            if($curreB == true){
-                                $currencyV = $book->currency;
-                            }
-                            if($carriB == true){
-                                $carrierV = $book->carrier;
-                            }
-
-
-                            if( empty($book->$origin) == true
-                               && empty($book->$destination) == true
-                               && empty($book->carrier) == true
-                               && empty($book->currency) == true
-                               && empty($book->$twuenty) == true
-                               && empty($book->$forty) == true
-                               && empty($book->$fortyhc) == true ) {
-
-                            }else{
-
-                                $duplicateFail =  FailRate::where('origin_port','=',$originV)
-                                    ->where('destiny_port','=',$destinationV)
-                                    ->where('carrier_id','=',$carrierV)
-                                    ->where('contract_id','=',$contract)
-                                    ->count();
-
-                                if($duplicateFail <= 0){
-                                    FailRate::create([
-                                        'origin_port'   => $originV,
-                                        'destiny_port'  => $destinationV,
-                                        'carrier_id'    => $carrierV,
-                                        'contract_id'   => $contract,
-                                        'twuenty'       => $twuentyV,
-                                        'forty'         => $fortyV,
-                                        'fortyhc'       => $fortyhcV,
-                                        'currency_id'   => $currencyV,
-                                    ]);
-                                    $errors++;
-                                }
-                            }
-                        }
-                    }
-                } //***
-                if($errors > 0){
-                    $request->session()->flash('message.content', 'You successfully added the rate ');
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.title', 'Well done!');
-                    if($errors == 1){
-                        $request->session()->flash('message.content', $errors.' fee is not charged correctly');
-                    }else{
-                        $request->session()->flash('message.content', $errors.' Rates did not load correctly');
-                    }
-                }
-                else{
-                    $request->session()->flash('message.nivel', 'success');
-                    $request->session()->flash('message.title', 'Well done!');
-                }
-            });
-            Rate::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            FailRate::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            return redirect()->route('Failed.Rates.For.Contracts',$contract);
-
-            //dd($res);*/
-
-        } catch (\Illuminate\Database\QueryException $e) {
-            Rate::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
-            FailRate::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('contracts.edit',$request->contract_id);
+        } else{
+          $request->session()->flash('message.nivel', 'danger');
+          $request->session()->flash('message.content', 'The file is it empty');
+          return redirect()->route('contracts.edit',$contract);   
         }
-    }
+        foreach ($reader->get() as $book) {
 
-    public function FailedRates($id){
-        //$id se refiere al id del contracto
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcarrier = new Carrier();
-        $carrierSelect = $objcarrier->all()->pluck('name','id');
-        $harbor = $objharbor->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
+          $carrier = Carrier::where('name','=',$book->carrier)->first();
 
-        $rates = Rate::with('carrier','contract','port_origin','port_destiny')->where('contract_id','=',$id)->get();
-        //dd($rates);
-        $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
-        $failratesFor = FailRate::where('contract_id','=',$id)->get();
-        $countfailrates = FailRate::where('contract_id','=',$id)->count();
-
-        $originV;
-        $destinationV;
-        $carrierV;
-        $currencyV;
-
-        $originA;
-        $destinationA;
-        $carrierA;
-        $currencyA;
-        $twuentyA;
-        $fortyA;
-        $fortyhcA;
-        $failrates = collect([]);
-
-        foreach( $failratesFor as $failrate){
-            $carrAIn;
-            $pruebacurre = "";
-            $classdorigin='color:green';
-            $classddestination='color:green';
-            $classcarrier='color:green';
-            $classcurrency='color:green';
-            $classtwuenty ='color:green';
-            $classforty ='color:green';
-            $classfortyhc ='color:green';
-
-            $originA =  explode("_",$failrate['origin_port']);
-            //dd($originA);
-            $destinationA = explode("_",$failrate['destiny_port']);
-            $carrierA = explode("_",$failrate['carrier_id']);
-            $currencyA = explode("_",$failrate['currency_id']);
-            $twuentyA = explode("_",$failrate['twuenty']);
-            $fortyA = explode("_",$failrate['forty']);
-            $fortyhcA = explode("_",$failrate['fortyhc']);
-
-            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                ->first();
-            $originAIn = $originOb['id'];
-            $originC   = count($originA);
-            if($originC <= 1){
-                $originA = $originOb['name'];
-            } else{
-                $originA = $originA[0].' (error)';
-                $classdorigin='color:red';
-            }
-
-            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                ->first();
-            $destinationAIn = $destinationOb['id'];
-            $destinationC   = count($destinationA);
-            if($destinationC <= 1){
-                $destinationA = $destinationOb['name'];
-            } else{
-                $destinationA = $destinationA[0].' (error)';
-                $classddestination='color:red';
-            }
-
-            $twuentyC   = count($twuentyA);
-            if($twuentyC <= 1){
-                $twuentyA = $twuentyA[0];
-            } else{
-                $twuentyA = $twuentyA[0].' (error)';
-                $classtwuenty='color:red';
-            }
-
-            $fortyC   = count($fortyA);
-            if($fortyC <= 1){
-                $fortyA = $fortyA[0];
-            } else{
-                $fortyA = $fortyA[0].' (error)';
-                $classforty='color:red';
-            }
-
-            $fortyhcC   = count($fortyhcA);
-            if($fortyhcC <= 1){
-                $fortyhcA = $fortyhcA[0];
-            } else{
-                $fortyhcA = $fortyhcA[0].' (error)';
-                $classfortyhc='color:red';
-            }
-
-            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
-            $carrAIn = $carrierOb['id'];
-            $carrierC = count($carrierA);
-
-            if($carrierC <= 1){
-                //dd($carrierAIn);
-                $carrierA = $carrierA[0];
-            }
-            else{
-
-                $carrierA = $carrierA[0].' (error)';
-                $classcarrier='color:red';
-
-            }
-
-            $currencyC = count($currencyA);
-            if($currencyC <= 1){
-                $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
-                $pruebacurre = $currenc['id'];
-                $currencyA = $currencyA[0];
-            }
-            else{
-
-                $currencyA = $currencyA[0].' (error)';
-                $classcurrency='color:red';
-            }        
-
-            $colec = ['rate_id'         =>  $failrate->id,
-                      'contract_id'     =>  $id,
-
-                      'origin_portLb'   =>  $originA,
-                      'origin_port'     =>  $originAIn,   
-
-                      'destiny_portLb'  =>  $destinationA,
-                      'destiny_port'    =>  $destinationAIn,     
-
-                      'carrierLb'       =>  $carrierA,
-                      'carrierAIn'      =>  $carrAIn,
-
-                      'twuenty'         =>  $twuentyA,      
-                      'forty'           =>  $fortyA,      
-                      'fortyhc'         =>  $fortyhcA,  
-
-                      'currency_id'     =>  $currencyA,
-                      'currencyAIn'     =>  $pruebacurre,
-
-                      'classorigin'     =>  $classdorigin,
-                      'classdestiny'    =>  $classddestination,
-                      'classcarrier'    =>  $classcarrier,
-                      'classtwuenty'    =>  $classtwuenty,
-                      'classforty'      =>  $classforty,
-                      'classfortyhc'    =>  $classfortyhc,
-                      'classcurrency'   =>  $classcurrency
-                     ];
-            $pruebacurre = "";
-            $carrAIn = "";
-            $failrates->push($colec);
-
-        }
-
-        //  dd($failrates);
-        return view('contracts.FailRates',compact('rates','failrates','countfailrates','countrates','harbor','currency','carrierSelect'));
-    }
-
-    public function SaveCorrectedRate(Request $request){
-        $rate_idR     =    $_REQUEST['rate_id'];
-        $contract     =    $_REQUEST['contract_id'];
-        $originR      =    $_REQUEST['origin'];
-        $destinationR =    $_REQUEST['destination'];
-        $carrierR     =    $_REQUEST['carrier'];
-        $twuentyR     =    $_REQUEST['twuenty'];
-        $fortyR       =    $_REQUEST['forty'];
-        $fortyhcR     =    $_REQUEST['fortyhc'];
-        $currencyR    =    $_REQUEST['currency'];
-        $failrate = new FailRate();
-        $failrate = FailRate::find($rate_idR);
-        $duplicate =  Rate::where('origin_port','=',$originR)
-            ->where('destiny_port','=',$destinationR)
-            ->where('carrier_id','=',$carrierR)
+          $duplicate =  Rate::where('origin_port','=',$book->origin)
+            ->where('destiny_port','=',$book->destination)
+            ->where('carrier_id','=',$carrier['id'])
             ->where('contract_id','=',$contract)
             ->count();
-        //return $duplicate;
 
-        if($duplicate <= 0){
+          if($duplicate <= 0){
 
+            $twuenty = "20";
+            $forty = "40";
+            $fortyhc = "40hc";
+            $origin = "origin";
+            $destination = "destiny";
+            $origB=false;
+            $destiB=false;
+            $carriB=false;
             $twuentyB=false;
             $fortyB=false;
             $fortyhcB=false;
+            $curreB=false;
 
+            $originV;
+            $destinationV;
+            $carrierV;
             $twuentyV;
             $fortyV;
             $fortyhcV;
+            $currencyV;
 
-            $originV = $originR;
-            $destinationV = $destinationR;
-            $carrierV = $carrierR;
-            $currencyV =  $currencyR;
+            $currenc = Currency::where('alphacode','=',$book->currency)->first();
+            $carrier = Carrier::where('name','=',$book->carrier)->first();
+            $originExits = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+              ->get();
 
-            if(empty($twuentyR) != true ){
-                $twuentyB=true;
-                $twuentyV = (int)$twuentyR;
+            if(count($originExits) == 1){
+              $origB=true;
+              foreach($originExits as $originRc){
+                $originV = $originRc['id'];
+              }
+            }else{
+              $originV = $book->$origin.'_E_E';
             }
 
-            if(empty($fortyR) != true ){
-                $fortyB=true;
-                $fortyV = (int)$fortyR;
+            $destinationExits = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+              ->get();
+
+            if(count($destinationExits) == 1){
+              $destiB=true;
+              foreach($destinationExits as $destinationRc){
+                $destinationV = $destinationRc['id'];
+              }
+            }else{
+              $destinationV = $book->$destination.'_E_E';
             }
 
-            if(empty($fortyhcR) != true ){
-                $fortyhcB=true;
-                $fortyhcV = (int)$fortyhcR;
+
+            if(empty($carrier->id) != true){
+              $carriB=true;
+              $carrierV = $carrier->id;
+            }else{
+              $carrierV = $book->carrier.'_E_E';
             }
 
-            if($twuentyB == true && $fortyB == true && $fortyhcB == true) {
+            if(empty($book->$twuenty) != true ){
+              $twuentyB=true;
+              $twuentyV = (int)$book->$twuenty;
+            }
+            else{
+              $twuentyV = $book->$twuenty.'_E_E';
+            }
 
-                Rate::create([
+            if(empty($book->$forty) != true ){
+              $fortyB=true;
+              $fortyV = (int)$book->$forty;
+            }
+            else{
+              $fortyV = $book->$forty.'_E_E';
+            }
+
+            if(empty($book->$fortyhc) != true ){
+              $fortyhcB=true;
+              $fortyhcV = (int)$book->$fortyhc;
+            }
+            else{
+              $fortyhcV = $book->$fortyhc.'_E_E';
+            }
+
+            if(empty($currenc->id) != true){
+              $curreB=true;
+              $currencyV =  $currenc->id;
+            }
+            else{
+              $currencyV = $book->currency.'_E_E';
+            }
+
+            if( $origB == true && $destiB == true
+               && $carriB == true && $twuentyB == true
+               && $fortyB == true && $fortyhcB == true
+               && $curreB == true ) {
+
+              Rate::create([
+                'origin_port'   => $originV,
+                'destiny_port'  => $destinationV,
+                'carrier_id'    => $carrierV,
+                'contract_id'   => $contract,
+                'twuenty'       => $twuentyV,
+                'forty'         => $fortyV,
+                'fortyhc'       => $fortyhcV,
+                'currency_id'   => $currencyV,
+              ]);
+            }
+            else{
+              if($origB == true){
+                $originV = $book->$origin;
+              }
+              if($destiB == true){
+                $destinationV = $book->$destination;
+              }
+              if($curreB == true){
+                $currencyV = $book->currency;
+              }
+              if($carriB == true){
+                $carrierV = $book->carrier;
+              }
+
+
+              if( empty($book->$origin) == true
+                 && empty($book->$destination) == true
+                 && empty($book->carrier) == true
+                 && empty($book->currency) == true
+                 && empty($book->$twuenty) == true
+                 && empty($book->$forty) == true
+                 && empty($book->$fortyhc) == true ) {
+
+              }else{
+
+                $duplicateFail =  FailRate::where('origin_port','=',$originV)
+                  ->where('destiny_port','=',$destinationV)
+                  ->where('carrier_id','=',$carrierV)
+                  ->where('contract_id','=',$contract)
+                  ->count();
+
+                if($duplicateFail <= 0){
+                  FailRate::create([
                     'origin_port'   => $originV,
                     'destiny_port'  => $destinationV,
                     'carrier_id'    => $carrierV,
@@ -832,51 +575,311 @@ class ContractsController extends Controller
                     'forty'         => $fortyV,
                     'fortyhc'       => $fortyhcV,
                     'currency_id'   => $currencyV,
-                ]); 
-
-                $failrate->delete();
-
-                $origcolle   = Harbor::find($originV);
-                $destcolle   = Harbor::find($destinationV);
-                $carriecolle = Carrier::find($carrierV);
-                $currencolle = Currency::find($currencyV);
-
-                return $col = ['response'  => '1',
-                               'origin'    => $origcolle->name,
-                               'destiny'   => $destcolle->name,
-                               'carrier'   => $carriecolle->name,
-                               'twuenty'   => $twuentyV,
-                               'forty'     => $fortyV,
-                               'fortyhc'   => $fortyhcV,
-                               'currency'  => $currencolle->alphacode,
-                              ];
-
+                  ]);
+                  $errors++;
+                }
+              }
             }
-            else{
-                return $col = ['response'  => '0'];
-            }
-        } 
-        else{
-            return $col = ['response'  => '2'];
+          }
+        } //***
+        if($errors > 0){
+          $request->session()->flash('message.content', 'You successfully added the rate ');
+          $request->session()->flash('message.nivel', 'danger');
+          $request->session()->flash('message.title', 'Well done!');
+          if($errors == 1){
+            $request->session()->flash('message.content', $errors.' fee is not charged correctly');
+          }else{
+            $request->session()->flash('message.content', $errors.' Rates did not load correctly');
+          }
         }
+        else{
+          $request->session()->flash('message.nivel', 'success');
+          $request->session()->flash('message.title', 'Well done!');
+        }
+      });
+      Rate::onlyTrashed()->where('contract_id','=',$contract)
+        ->forceDelete();
+      FailRate::onlyTrashed()->where('contract_id','=',$contract)
+        ->forceDelete();
+      return redirect()->route('Failed.Rates.For.Contracts',$contract);
+
+      //dd($res);*/
+
+    } catch (\Illuminate\Database\QueryException $e) {
+      Rate::onlyTrashed()->where('contract_id','=',$contract)
+        ->restore();
+      FailRate::onlyTrashed()->where('contract_id','=',$contract)
+        ->restore();
+      $request->session()->flash('message.nivel', 'danger');
+      $request->session()->flash('message.content', 'There was an error loading the file');
+      return redirect()->route('contracts.edit',$request->contract_id);
+    }
+  }
+
+  public function FailedRates($id){
+    //$id se refiere al id del contracto
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objcarrier = new Carrier();
+    $carrierSelect = $objcarrier->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+
+    $rates = Rate::with('carrier','contract','port_origin','port_destiny')->where('contract_id','=',$id)->get();
+    //dd($rates);
+    $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
+    $failratesFor = FailRate::where('contract_id','=',$id)->get();
+    $countfailrates = FailRate::where('contract_id','=',$id)->count();
+
+    $originV;
+    $destinationV;
+    $carrierV;
+    $currencyV;
+
+    $originA;
+    $destinationA;
+    $carrierA;
+    $currencyA;
+    $twuentyA;
+    $fortyA;
+    $fortyhcA;
+    $failrates = collect([]);
+
+    foreach( $failratesFor as $failrate){
+      $carrAIn;
+      $pruebacurre = "";
+      $classdorigin='color:green';
+      $classddestination='color:green';
+      $classcarrier='color:green';
+      $classcurrency='color:green';
+      $classtwuenty ='color:green';
+      $classforty ='color:green';
+      $classfortyhc ='color:green';
+
+      $originA =  explode("_",$failrate['origin_port']);
+      //dd($originA);
+      $destinationA = explode("_",$failrate['destiny_port']);
+      $carrierA = explode("_",$failrate['carrier_id']);
+      $currencyA = explode("_",$failrate['currency_id']);
+      $twuentyA = explode("_",$failrate['twuenty']);
+      $fortyA = explode("_",$failrate['forty']);
+      $fortyhcA = explode("_",$failrate['fortyhc']);
+
+      $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+        ->first();
+      $originAIn = $originOb['id'];
+      $originC   = count($originA);
+      if($originC <= 1){
+        $originA = $originOb['name'];
+      } else{
+        $originA = $originA[0].' (error)';
+        $classdorigin='color:red';
+      }
+
+      $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+        ->first();
+      $destinationAIn = $destinationOb['id'];
+      $destinationC   = count($destinationA);
+      if($destinationC <= 1){
+        $destinationA = $destinationOb['name'];
+      } else{
+        $destinationA = $destinationA[0].' (error)';
+        $classddestination='color:red';
+      }
+
+      $twuentyC   = count($twuentyA);
+      if($twuentyC <= 1){
+        $twuentyA = $twuentyA[0];
+      } else{
+        $twuentyA = $twuentyA[0].' (error)';
+        $classtwuenty='color:red';
+      }
+
+      $fortyC   = count($fortyA);
+      if($fortyC <= 1){
+        $fortyA = $fortyA[0];
+      } else{
+        $fortyA = $fortyA[0].' (error)';
+        $classforty='color:red';
+      }
+
+      $fortyhcC   = count($fortyhcA);
+      if($fortyhcC <= 1){
+        $fortyhcA = $fortyhcA[0];
+      } else{
+        $fortyhcA = $fortyhcA[0].' (error)';
+        $classfortyhc='color:red';
+      }
+
+      $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+      $carrAIn = $carrierOb['id'];
+      $carrierC = count($carrierA);
+
+      if($carrierC <= 1){
+        //dd($carrierAIn);
+        $carrierA = $carrierA[0];
+      }
+      else{
+
+        $carrierA = $carrierA[0].' (error)';
+        $classcarrier='color:red';
+
+      }
+
+      $currencyC = count($currencyA);
+      if($currencyC <= 1){
+        $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
+        $pruebacurre = $currenc['id'];
+        $currencyA = $currencyA[0];
+      }
+      else{
+
+        $currencyA = $currencyA[0].' (error)';
+        $classcurrency='color:red';
+      }        
+
+      $colec = ['rate_id'         =>  $failrate->id,
+                'contract_id'     =>  $id,
+
+                'origin_portLb'   =>  $originA,
+                'origin_port'     =>  $originAIn,   
+
+                'destiny_portLb'  =>  $destinationA,
+                'destiny_port'    =>  $destinationAIn,     
+
+                'carrierLb'       =>  $carrierA,
+                'carrierAIn'      =>  $carrAIn,
+
+                'twuenty'         =>  $twuentyA,      
+                'forty'           =>  $fortyA,      
+                'fortyhc'         =>  $fortyhcA,  
+
+                'currency_id'     =>  $currencyA,
+                'currencyAIn'     =>  $pruebacurre,
+
+                'classorigin'     =>  $classdorigin,
+                'classdestiny'    =>  $classddestination,
+                'classcarrier'    =>  $classcarrier,
+                'classtwuenty'    =>  $classtwuenty,
+                'classforty'      =>  $classforty,
+                'classfortyhc'    =>  $classfortyhc,
+                'classcurrency'   =>  $classcurrency
+               ];
+      $pruebacurre = "";
+      $carrAIn = "";
+      $failrates->push($colec);
 
     }
 
-    public function UpdateRatesCorrect(Request $request){
+    //  dd($failrates);
+    return view('contracts.FailRates',compact('rates','failrates','countfailrates','countrates','harbor','currency','carrierSelect'));
+  }
 
-        $rate_idR     = $_REQUEST['rate_id'];
-        $contract     = $_REQUEST['contract_id'];
-        $originR      = $_REQUEST['origin'];
-        $destinationR = $_REQUEST['destination'];
-        $carrierR     = $_REQUEST['carrier'];
-        $twuentyR     = $_REQUEST['twuenty'];
-        $fortyR       = $_REQUEST['forty'];
-        $fortyhcR     = $_REQUEST['fortyhc'];
-        $currencyR    = $_REQUEST['currency'];
+  public function SaveCorrectedRate(Request $request){
+    $rate_idR     =    $_REQUEST['rate_id'];
+    $contract     =    $_REQUEST['contract_id'];
+    $originR      =    $_REQUEST['origin'];
+    $destinationR =    $_REQUEST['destination'];
+    $carrierR     =    $_REQUEST['carrier'];
+    $twuentyR     =    $_REQUEST['twuenty'];
+    $fortyR       =    $_REQUEST['forty'];
+    $fortyhcR     =    $_REQUEST['fortyhc'];
+    $currencyR    =    $_REQUEST['currency'];
+    $failrate = new FailRate();
+    $failrate = FailRate::find($rate_idR);
+    $duplicate =  Rate::where('origin_port','=',$originR)
+      ->where('destiny_port','=',$destinationR)
+      ->where('carrier_id','=',$carrierR)
+      ->where('contract_id','=',$contract)
+      ->count();
+    //return $duplicate;
 
-        $rate = new Rate();
+    if($duplicate <= 0){
 
-        /*$duplicate =  Rate::where('origin_port','=',$originR)
+      $twuentyB=false;
+      $fortyB=false;
+      $fortyhcB=false;
+
+      $twuentyV;
+      $fortyV;
+      $fortyhcV;
+
+      $originV = $originR;
+      $destinationV = $destinationR;
+      $carrierV = $carrierR;
+      $currencyV =  $currencyR;
+
+      if(empty($twuentyR) != true ){
+        $twuentyB=true;
+        $twuentyV = (int)$twuentyR;
+      }
+
+      if(empty($fortyR) != true ){
+        $fortyB=true;
+        $fortyV = (int)$fortyR;
+      }
+
+      if(empty($fortyhcR) != true ){
+        $fortyhcB=true;
+        $fortyhcV = (int)$fortyhcR;
+      }
+
+      if($twuentyB == true && $fortyB == true && $fortyhcB == true) {
+
+        Rate::create([
+          'origin_port'   => $originV,
+          'destiny_port'  => $destinationV,
+          'carrier_id'    => $carrierV,
+          'contract_id'   => $contract,
+          'twuenty'       => $twuentyV,
+          'forty'         => $fortyV,
+          'fortyhc'       => $fortyhcV,
+          'currency_id'   => $currencyV,
+        ]); 
+
+        $failrate->delete();
+
+        $origcolle   = Harbor::find($originV);
+        $destcolle   = Harbor::find($destinationV);
+        $carriecolle = Carrier::find($carrierV);
+        $currencolle = Currency::find($currencyV);
+
+        return $col = ['response'  => '1',
+                       'origin'    => $origcolle->name,
+                       'destiny'   => $destcolle->name,
+                       'carrier'   => $carriecolle->name,
+                       'twuenty'   => $twuentyV,
+                       'forty'     => $fortyV,
+                       'fortyhc'   => $fortyhcV,
+                       'currency'  => $currencolle->alphacode,
+                      ];
+
+      }
+      else{
+        return $col = ['response'  => '0'];
+      }
+    } 
+    else{
+      return $col = ['response'  => '2'];
+    }
+
+  }
+
+  public function UpdateRatesCorrect(Request $request){
+
+    $rate_idR     = $_REQUEST['rate_id'];
+    $contract     = $_REQUEST['contract_id'];
+    $originR      = $_REQUEST['origin'];
+    $destinationR = $_REQUEST['destination'];
+    $carrierR     = $_REQUEST['carrier'];
+    $twuentyR     = $_REQUEST['twuenty'];
+    $fortyR       = $_REQUEST['forty'];
+    $fortyhcR     = $_REQUEST['fortyhc'];
+    $currencyR    = $_REQUEST['currency'];
+
+    $rate = new Rate();
+
+    /*$duplicate =  Rate::where('origin_port','=',$originR)
             ->where('destiny_port','=',$destinationR)
             ->where('carrier_id','=',$carrierR)
             ->where('contract_id','=',$contract)
@@ -884,541 +887,541 @@ class ContractsController extends Controller
         //return $duplicate;
 
         if($duplicate <= 0){*/
-        $rate = Rate::find($rate_idR);
-        $rate->origin_port   = $originR;
-        $rate->destiny_port  = $destinationR;
-        $rate->carrier_id    = $carrierR;
-        $rate->twuenty       = $twuentyR;
-        $rate->forty         = $fortyR;
-        $rate->fortyhc       = $fortyhcR;
-        $rate->currency_id   = $currencyR;
-        $rate->save();
+    $rate = Rate::find($rate_idR);
+    $rate->origin_port   = $originR;
+    $rate->destiny_port  = $destinationR;
+    $rate->carrier_id    = $carrierR;
+    $rate->twuenty       = $twuentyR;
+    $rate->forty         = $fortyR;
+    $rate->fortyhc       = $fortyhcR;
+    $rate->currency_id   = $currencyR;
+    $rate->save();
 
-        $origcolle   = Harbor::find($rate->origin_port);
-        $destcolle   = Harbor::find($rate->destiny_port);
-        $carriecolle = Carrier::find($rate->carrier_id);
-        $currencolle = Currency::find($rate->currency_id);
+    $origcolle   = Harbor::find($rate->origin_port);
+    $destcolle   = Harbor::find($rate->destiny_port);
+    $carriecolle = Carrier::find($rate->carrier_id);
+    $currencolle = Currency::find($rate->currency_id);
 
-        return $col = ['response'  => '1',
-                       'origin'    => $origcolle->name,
-                       'destiny'   => $destcolle->name,
-                       'carrier'   => $carriecolle->name,
-                       'twuenty'   => $twuentyR,
-                       'forty'     => $fortyR,
-                       'fortyhc'   => $fortyhcR,
-                       'currency'  => $currencolle->alphacode,
-                      ];
-        /*}
+    return $col = ['response'  => '1',
+                   'origin'    => $origcolle->name,
+                   'destiny'   => $destcolle->name,
+                   'carrier'   => $carriecolle->name,
+                   'twuenty'   => $twuentyR,
+                   'forty'     => $fortyR,
+                   'fortyhc'   => $fortyhcR,
+                   'currency'  => $currencolle->alphacode,
+                  ];
+    /*}
         else{
             return $col = ['response'  => '2'];
         }*/
 
+  }
+
+  public function DestroyRatesFailCorrect(Request $request){
+    $rate_id   =  $_REQUEST['rate_id'];
+    $accion    =  $_REQUEST['accion'];
+
+
+    if($accion == 2){
+      $rate = new Rate();
+      $rate = Rate::find($rate_id);
+      $rate->delete();
+      return 2;
     }
+    else if($accion == 1){
+      $ratefail = new FailRate();
+      $ratefail = FailRate::find($rate_id);
+      $ratefail->delete();
+      return 1;
 
-    public function DestroyRatesFailCorrect(Request $request){
-        $rate_id   =  $_REQUEST['rate_id'];
-        $accion    =  $_REQUEST['accion'];
-
-
-        if($accion == 2){
-            $rate = new Rate();
-            $rate = Rate::find($rate_id);
-            $rate->delete();
-            return 2;
-        }
-        else if($accion == 1){
-            $ratefail = new FailRate();
-            $ratefail = FailRate::find($rate_id);
-            $ratefail->delete();
-            return 1;
-
-        }
     }
+  }
 
-    public function UploadFileSubchargeForContract(Request $request){
-        //dd($request);
-        try {
-            $file = $request->file('file');
-            $ext = strtolower($file->getClientOriginalExtension());
+  public function UploadFileSubchargeForContract(Request $request){
+    //dd($request);
+    try {
+      $file = $request->file('file');
+      $ext = strtolower($file->getClientOriginalExtension());
 
-            $validator = \Validator::make(
-                array('ext' => $ext),
-                array('ext' => 'in:xls,xlsx,csv')
-            );
+      $validator = \Validator::make(
+        array('ext' => $ext),
+        array('ext' => 'in:xls,xlsx,csv')
+      );
 
-            if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('contracts.edit',$request->contract_id);
+      if ($validator->fails()) {
+        $request->session()->flash('message.nivel', 'danger');
+        $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+        return redirect()->route('contracts.edit',$request->contract_id);
+      }
+
+      //obtenemos el nombre del archivo
+      $nombre = $file->getClientOriginalName();
+
+      $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+
+      $contract = $request->contract_id;
+      $errors=0;
+      Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+        if($reader->get()->isEmpty() != true){
+          LocalCharge::where('contract_id','=',$contract)
+            ->delete();
+          FailSurCharge::where('contract_id','=',$contract)
+            ->delete();
+
+        } else{
+          $request->session()->flash('message.nivel', 'danger');
+          $request->session()->flash('message.content', 'The file is it empty');
+          return redirect()->route('contracts.edit',$contract);   
+        }
+        $i=1;
+        $SurcharExist;
+        $SurcharcarrierExist;
+        $SurcharPortExist;
+
+        foreach ($reader->get() as $book) {
+          $surchargeBook        = "surcharge";
+          $originBook           = "origin";
+          $destinationBook      = "destination";
+          $carrierBook          = "carrier";
+          $calculationtypeBook  = "calculation_type";
+          $amountBook           = "amount";
+          $currencyBook         = "currency";
+
+          $surchargeBol       = false;
+          $carrierBol         = false;
+          $calculationtypeBol = false;
+          $currencyBol        = false;
+          $ammountBol         = false;
+          $originBol          = false;
+          $destinationBol     = false;
+
+          $originVar      = $book->$originBook;
+          $destinationVar = $book->$destinationBook;
+
+          $ammountVar     = (int)$book->$amountBook;
+          $destinytypeVar = 3;
+          $surchargeVar ="";
+          $carrierVar ="";
+          $calculationtypeVar ="";
+          $currencyVar ="";
+          $SurcharExist = "";
+          $SurcharcarrierExist = "";
+          $SurcharPortExist = "";
+          $SurcharBootPortExist = "";
+
+          $surcharge = Surcharge::where('name','=',$book->$surchargeBook)->where('company_user_id','=',\Auth::user()->company_user_id)->first();
+          $carrier = Carrier::where('name','=',$book->$carrierBook)->first();
+          $calculationtype = CalculationType::where('name','like','%'.$book->$calculationtypeBook.'%')->first();
+          $currency = Currency::where('alphacode','=',$book->$currencyBook)->first();
+
+          $originExits = Harbor::where('varation->type','like','%'.strtolower($originVar).'%')
+            ->get();
+
+          if(count($originExits) == 1){
+            $originBol=true;
+            foreach($originExits as $originRc){
+              $originVar = $originRc['id'];
             }
+          }else{
+            $originVar = $originVar.'_E_E';
+          }
 
-            //obtenemos el nombre del archivo
-            $nombre = $file->getClientOriginalName();
+          $destinationExits = Harbor::where('varation->type','like','%'.strtolower($destinationVar).'%')
+            ->get();
 
-            $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+          if(count($destinationExits) == 1){
+            $destinationBol=true;
+            foreach($destinationExits as $destinationRc){
+              $destinationVar = $destinationRc['id'];
+            }
+          }else{
+            $destinationVar = $destinationVar.'_E_E';
+          }
 
-            $contract = $request->contract_id;
-            $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
-                if($reader->get()->isEmpty() != true){
-                    LocalCharge::where('contract_id','=',$contract)
-                        ->delete();
-                    FailSurCharge::where('contract_id','=',$contract)
-                        ->delete();
+          if(empty($surcharge) != true){
+            $surchargeBol = true;
+            $surchargeVar = $surcharge['id'];
+          }
+          else{
+            $surchargeVar = $book->$surchargeBook.'_E_E';
+          }
+
+          if(empty($carrier) != true){
+            $carrierBol = true;
+            $carrierVar = $carrier['id'];
+          }
+          else{
+            $carrierVar = $book->$carrierBook.'_E_E';
+          }
+
+          if(empty($calculationtype) != true){
+            $calculationtypeBol = true;
+            $calculationtypeVar = $calculationtype['id'];
+          }
+          else{
+            $calculationtypeVar = $book->$calculationtypeBook.'_E_E';
+          }
+
+          if(empty($currency) != true){
+            $currencyBol = true;
+            $currencyVar = $currency['id'];
+          }
+          else{
+            $currencyVar = $book->$currencyBook;
+          }
+
+          if(empty($ammountVar) != true){
+            $ammountBol = true;
+          }
+          else{
+            $ammountVar = $ammountVar.'_E_E';
+          }
+
+          if($surchargeBol == true 
+             && $carrierBol == true 
+             && $calculationtypeBol == true 
+             && $currencyBol == true 
+             && $originBol == true
+             && $destinationBol == true
+             && $ammountBol == true){ 
+
+            $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
+              ->where('typedestiny_id','=',$destinytypeVar)
+              ->where('contract_id','=',$contract)
+              ->where('calculationtype_id','=',$calculationtypeVar)
+              ->where('ammount','=',$ammountVar)
+              ->where('currency_id','=',$currencyVar)
+              ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                $q->where('carrier_id','=',$carrierVar);
+              })
+              ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                $k->where('port_orig','=',$originVar);
+              })->get();
+
+            if($SurcharFull->isEmpty() != true){
+              //  echo 'existe sur y port orig <br>';
+              foreach($SurcharFull as $Surchar){
+                $existportdest = LocalCharge::where('surcharge_id','=',$surchargeVar)
+                  ->where('typedestiny_id','=',$destinytypeVar)
+                  ->where('contract_id','=',$contract)
+                  ->where('calculationtype_id','=',$calculationtypeVar)
+                  ->where('ammount','=',$ammountVar)
+                  ->where('currency_id','=',$currencyVar)
+                  ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                    $q->where('carrier_id','=',$carrierVar);
+                  })
+                  ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                    $k->where('port_orig','=',$originVar)->where('port_dest','=',$destinationVar);
+                  })->get();
+
+                if($existportdest->isEmpty()){
+                  //echo 'No existe puertto destno <br>';
+                  foreach($SurcharFull as $Surchar){
+
+                    LocalCharPort::create([
+                      'port_orig'        => $originVar,
+                      'port_dest'        => $destinationVar,
+                      'localcharge_id'   => $Surchar['id']
+                    ]);  
+                  }
 
                 } else{
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.content', 'The file is it empty');
-                    return redirect()->route('contracts.edit',$contract);   
+                  //echo 'existe valor<br>';
                 }
-                $i=1;
-                $SurcharExist;
-                $SurcharcarrierExist;
-                $SurcharPortExist;
 
-                foreach ($reader->get() as $book) {
-                    $surchargeBook        = "surcharge";
-                    $originBook           = "origin";
-                    $destinationBook      = "destination";
-                    $carrierBook          = "carrier";
-                    $calculationtypeBook  = "calculation_type";
-                    $amountBook           = "amount";
-                    $currencyBook         = "currency";
+              }
+            } else {
+              // echo 'vacio<br>';
+              $idlocalchar = LocalCharge::create([
+                'surcharge_id'        => $surchargeVar,
+                'typedestiny_id'      => $destinytypeVar,
+                'contract_id'         => $contract,
+                'calculationtype_id'  => $calculationtypeVar,
+                'ammount'             => $ammountVar,
+                'currency_id'         => $currencyVar,
+              ]);
 
-                    $surchargeBol       = false;
-                    $carrierBol         = false;
-                    $calculationtypeBol = false;
-                    $currencyBol        = false;
-                    $ammountBol         = false;
-                    $originBol          = false;
-                    $destinationBol     = false;
+              LocalCharPort::create([
+                'port_orig'        => $originVar,
+                'port_dest'        => $destinationVar,
+                'localcharge_id'   => $idlocalchar->id
+              ]);
 
-                    $originVar      = $book->$originBook;
-                    $destinationVar = $book->$destinationBook;
+              LocalCharCarrier::create([
+                'carrier_id'      => $carrierVar,
+                'localcharge_id'  => $idlocalchar->id
+              ]);
+            }
 
-                    $ammountVar     = (int)$book->$amountBook;
-                    $destinytypeVar = 3;
-                    $surchargeVar ="";
-                    $carrierVar ="";
-                    $calculationtypeVar ="";
-                    $currencyVar ="";
-                    $SurcharExist = "";
-                    $SurcharcarrierExist = "";
-                    $SurcharPortExist = "";
-                    $SurcharBootPortExist = "";
+          } else {
+            if($surchargeBol == true){
+              $surchargeVar = $book->$surchargeBook;
+            }
+            if($carrierBol == true){
+              $carrierVar = $book->$carrierBook;
+            }
+            if($calculationtypeBol == true){
+              $calculationtypeVar = $book->$calculationtypeBook;
+            }
+            if($currencyBol == true){
+              $currencyVar = $book->$currencyBook;
+            }
+            if($originBol == true){
+              $originVar = $book->$originBook;
+            }
+            if($destinationBol == true){
+              $destinationVar = $book->$destinationBook;
+            }
+            if($ammountBol == true){
+              $ammountVar = $book->$amountBook;
+            }
 
-                    $surcharge = Surcharge::where('name','=',$book->$surchargeBook)->where('company_user_id','=',\Auth::user()->company_user_id)->first();
-                    $carrier = Carrier::where('name','=',$book->$carrierBook)->first();
-                    $calculationtype = CalculationType::where('name','like','%'.$book->$calculationtypeBook.'%')->first();
-                    $currency = Currency::where('alphacode','=',$book->$currencyBook)->first();
+            FailSurCharge::create([
+              'surcharge_id'       => $surchargeVar,
+              'port_orig'          => $originVar,
+              'port_dest'          => $destinationVar,
+              'typedestiny_id'     => $destinytypeVar,
+              'contract_id'        => $contract,
+              'calculationtype_id' => $calculationtypeVar,
+              'ammount'            => $ammountVar,
+              'currency_id'        => $currencyVar,
+              'carrier_id'         => $carrierVar,
+            ]); //*/
 
-                    $originExits = Harbor::where('varation->type','like','%'.strtolower($originVar).'%')
-                        ->get();
+            $errors++;
+          }
 
-                    if(count($originExits) == 1){
-                        $originBol=true;
-                        foreach($originExits as $originRc){
-                            $originVar = $originRc['id'];
-                        }
-                    }else{
-                        $originVar = $originVar.'_E_E';
-                    }
-
-                    $destinationExits = Harbor::where('varation->type','like','%'.strtolower($destinationVar).'%')
-                        ->get();
-
-                    if(count($destinationExits) == 1){
-                        $destinationBol=true;
-                        foreach($destinationExits as $destinationRc){
-                            $destinationVar = $destinationRc['id'];
-                        }
-                    }else{
-                        $destinationVar = $destinationVar.'_E_E';
-                    }
-
-                    if(empty($surcharge) != true){
-                        $surchargeBol = true;
-                        $surchargeVar = $surcharge['id'];
-                    }
-                    else{
-                        $surchargeVar = $book->$surchargeBook.'_E_E';
-                    }
-
-                    if(empty($carrier) != true){
-                        $carrierBol = true;
-                        $carrierVar = $carrier['id'];
-                    }
-                    else{
-                        $carrierVar = $book->$carrierBook.'_E_E';
-                    }
-
-                    if(empty($calculationtype) != true){
-                        $calculationtypeBol = true;
-                        $calculationtypeVar = $calculationtype['id'];
-                    }
-                    else{
-                        $calculationtypeVar = $book->$calculationtypeBook.'_E_E';
-                    }
-
-                    if(empty($currency) != true){
-                        $currencyBol = true;
-                        $currencyVar = $currency['id'];
-                    }
-                    else{
-                        $currencyVar = $book->$currencyBook;
-                    }
-
-                    if(empty($ammountVar) != true){
-                        $ammountBol = true;
-                    }
-                    else{
-                        $ammountVar = $ammountVar.'_E_E';
-                    }
-
-                    if($surchargeBol == true 
-                       && $carrierBol == true 
-                       && $calculationtypeBol == true 
-                       && $currencyBol == true 
-                       && $originBol == true
-                       && $destinationBol == true
-                       && $ammountBol == true){ 
-
-                        $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
-                            ->where('typedestiny_id','=',$destinytypeVar)
-                            ->where('contract_id','=',$contract)
-                            ->where('calculationtype_id','=',$calculationtypeVar)
-                            ->where('ammount','=',$ammountVar)
-                            ->where('currency_id','=',$currencyVar)
-                            ->whereHas('localcharcarriers',function($q) use($carrierVar){
-                                $q->where('carrier_id','=',$carrierVar);
-                            })
-                            ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
-                                $k->where('port_orig','=',$originVar);
-                            })->get();
-
-                        if($SurcharFull->isEmpty() != true){
-                            //  echo 'existe sur y port orig <br>';
-                            foreach($SurcharFull as $Surchar){
-                                $existportdest = LocalCharge::where('surcharge_id','=',$surchargeVar)
-                                    ->where('typedestiny_id','=',$destinytypeVar)
-                                    ->where('contract_id','=',$contract)
-                                    ->where('calculationtype_id','=',$calculationtypeVar)
-                                    ->where('ammount','=',$ammountVar)
-                                    ->where('currency_id','=',$currencyVar)
-                                    ->whereHas('localcharcarriers',function($q) use($carrierVar){
-                                        $q->where('carrier_id','=',$carrierVar);
-                                    })
-                                    ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
-                                        $k->where('port_orig','=',$originVar)->where('port_dest','=',$destinationVar);
-                                    })->get();
-
-                                if($existportdest->isEmpty()){
-                                    //echo 'No existe puertto destno <br>';
-                                    foreach($SurcharFull as $Surchar){
-
-                                        LocalCharPort::create([
-                                            'port_orig'        => $originVar,
-                                            'port_dest'        => $destinationVar,
-                                            'localcharge_id'   => $Surchar['id']
-                                        ]);  
-                                    }
-
-                                } else{
-                                    //echo 'existe valor<br>';
-                                }
-
-                            }
-                        } else {
-                            // echo 'vacio<br>';
-                            $idlocalchar = LocalCharge::create([
-                                'surcharge_id'        => $surchargeVar,
-                                'typedestiny_id'      => $destinytypeVar,
-                                'contract_id'         => $contract,
-                                'calculationtype_id'  => $calculationtypeVar,
-                                'ammount'             => $ammountVar,
-                                'currency_id'         => $currencyVar,
-                            ]);
-
-                            LocalCharPort::create([
-                                'port_orig'        => $originVar,
-                                'port_dest'        => $destinationVar,
-                                'localcharge_id'   => $idlocalchar->id
-                            ]);
-
-                            LocalCharCarrier::create([
-                                'carrier_id'      => $carrierVar,
-                                'localcharge_id'  => $idlocalchar->id
-                            ]);
-                        }
-
-                    } else {
-                        if($surchargeBol == true){
-                            $surchargeVar = $book->$surchargeBook;
-                        }
-                        if($carrierBol == true){
-                            $carrierVar = $book->$carrierBook;
-                        }
-                        if($calculationtypeBol == true){
-                            $calculationtypeVar = $book->$calculationtypeBook;
-                        }
-                        if($currencyBol == true){
-                            $currencyVar = $book->$currencyBook;
-                        }
-                        if($originBol == true){
-                            $originVar = $book->$originBook;
-                        }
-                        if($destinationBol == true){
-                            $destinationVar = $book->$destinationBook;
-                        }
-                        if($ammountBol == true){
-                            $ammountVar = $book->$amountBook;
-                        }
-
-                        FailSurCharge::create([
-                            'surcharge_id'       => $surchargeVar,
-                            'port_orig'          => $originVar,
-                            'port_dest'          => $destinationVar,
-                            'typedestiny_id'     => $destinytypeVar,
-                            'contract_id'        => $contract,
-                            'calculationtype_id' => $calculationtypeVar,
-                            'ammount'            => $ammountVar,
-                            'currency_id'        => $currencyVar,
-                            'carrier_id'         => $carrierVar,
-                        ]); //*/
-
-                        $errors++;
-                    }
-
-                    if($errors > 0){
-                        $request->session()->flash('message.content', 'You successfully added the rate ');
-                        $request->session()->flash('message.nivel', 'danger');
-                        $request->session()->flash('message.title', 'Well done!');
-                        if($errors == 1){
-                            $request->session()->flash('message.content', $errors.' Subcharge is not charged correctly');
-                        }else{
-                            $request->session()->flash('message.content', $errors.' Subcharge did not load correctly');
-                        }
-                    }
-                    else{
-                        $request->session()->flash('message.nivel', 'success');
-                        $request->session()->flash('message.title', 'Well done!');
-                    }
-                    $i++;
-
-                }
-            });
-            LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
-
-        } catch (\Illuminate\Database\QueryException $e) {
-            LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
-            FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
+          if($errors > 0){
+            $request->session()->flash('message.content', 'You successfully added the rate ');
             $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('contracts.edit',$request->contract_id);
+            $request->session()->flash('message.title', 'Well done!');
+            if($errors == 1){
+              $request->session()->flash('message.content', $errors.' Subcharge is not charged correctly');
+            }else{
+              $request->session()->flash('message.content', $errors.' Subcharge did not load correctly');
+            }
+          }
+          else{
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+          }
+          $i++;
 
         }
+      });
+      LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
+        ->forceDelete();
+      FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
+        ->forceDelete();
+      return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
+
+    } catch (\Illuminate\Database\QueryException $e) {
+      LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
+        ->restore();
+      FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
+        ->restore();
+      $request->session()->flash('message.nivel', 'danger');
+      $request->session()->flash('message.content', 'There was an error loading the file');
+      return redirect()->route('contracts.edit',$request->contract_id);
+
     }
+  }
 
-    public function FailSubcharges($id){
+  public function FailSubcharges($id){
 
-        $objharbor          = new Harbor();
-        $objcurrency        = new Currency();
-        $objcarrier         = new Carrier();
-        $objsurcharge       = new Surcharge();
-        $objtypedestiny     = new TypeDestiny();
-        $objCalculationType = new CalculationType();
+    $objharbor          = new Harbor();
+    $objcurrency        = new Currency();
+    $objcarrier         = new Carrier();
+    $objsurcharge       = new Surcharge();
+    $objtypedestiny     = new TypeDestiny();
+    $objCalculationType = new CalculationType();
 
-        $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-        $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
-        $carrierSelect         = $objcarrier->all()->pluck('name','id');
-        $harbor                = $objharbor->all()->pluck('name','id');
-        $currency              = $objcurrency->all()->pluck('alphacode','id');
-        $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-
-
-        $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
-
-        $failsurchargecoll = collect([]);
-        foreach($failsurchargeS as $failsurcharge){
-
-            $classdorigin           =  'color:green';
-            $classddestination      =  'color:green';
-            $classcarrier           =  'color:green';
-            $classsurcharger        =  'color:green';
-            $classcalculationtype   =  'color:green';
-            $classammount           =  'color:green';
-            $classcurrency          =  'color:green';
-
-            $surchargeA         =  explode("_",$failsurcharge['surcharge_id']);
-            $originA            =  explode("_",$failsurcharge['port_orig']);
-            $destinationA       =  explode("_",$failsurcharge['port_dest']);
-            $calculationtypeA   =  explode("_",$failsurcharge['calculationtype_id']);
-
-            $ammountA           =  explode("_",$failsurcharge['ammount']);
-            $currencyA          =  explode("_",$failsurcharge['currency_id']);
-            $carrierA           =  explode("_",$failsurcharge['carrier_id']);
-
-            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                ->first();
-            $originAIn = $originOb['id'];
-            $originC   = count($originA);
-            if($originC <= 1){
-                $originA = $originOb['name'];
-            } else{
-                $originA = $originA[0].' (error)';
-                $classdorigin='color:red';
-            }
-
-            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                ->first();
-            $destinationAIn = $destinationOb['id'];
-            $destinationC   = count($destinationA);
-            if($destinationC <= 1){
-                $destinationA = $destinationOb['name'];
-            } else{
-                $destinationA = $destinationA[0].' (error)';
-                $classddestination='color:red';
-            }
-
-            $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
-            $surcharAin  = $surchargeOb['id'];
-            $surchargeC = count($surchargeA);
-
-            if($surchargeC <= 1){
-                $surchargeA = $surchargeA[0];
-            }
-            else{
-                $surchargeA         = $surchargeA[0].' (error)';
-                $classsurcharger    = 'color:red';
-            }
+    $typedestiny           = $objtypedestiny->all()->pluck('description','id');
+    $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
+    $carrierSelect         = $objcarrier->all()->pluck('name','id');
+    $harbor                = $objharbor->all()->pluck('name','id');
+    $currency              = $objcurrency->all()->pluck('alphacode','id');
+    $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
 
-            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
-            $carrAIn = $carrierOb['id'];
-            $carrierC = count($carrierA);
+    $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
 
-            if($carrierC <= 1){
-                $carrierA = $carrierA[0];
-            }
-            else{
-                $carrierA       = $carrierA[0].' (error)';
-                $classcarrier   ='color:red';
-            }
+    $failsurchargecoll = collect([]);
+    foreach($failsurchargeS as $failsurcharge){
 
-            $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
-            $calculationtypeAIn = $calculationtypeOb['id'];
-            $calculationtypeC   = count($calculationtypeA);
+      $classdorigin           =  'color:green';
+      $classddestination      =  'color:green';
+      $classcarrier           =  'color:green';
+      $classsurcharger        =  'color:green';
+      $classcalculationtype   =  'color:green';
+      $classammount           =  'color:green';
+      $classcurrency          =  'color:green';
 
-            if($calculationtypeC <= 1){
-                $calculationtypeA = $calculationtypeA[0];
-            }
-            else{
-                $calculationtypeA       = $calculationtypeA[0].' (error)';
-                $classcalculationtype   = 'color:red';
-            }
+      $surchargeA         =  explode("_",$failsurcharge['surcharge_id']);
+      $originA            =  explode("_",$failsurcharge['port_orig']);
+      $destinationA       =  explode("_",$failsurcharge['port_dest']);
+      $calculationtypeA   =  explode("_",$failsurcharge['calculationtype_id']);
 
-            $ammountC = count($ammountA);
+      $ammountA           =  explode("_",$failsurcharge['ammount']);
+      $currencyA          =  explode("_",$failsurcharge['currency_id']);
+      $carrierA           =  explode("_",$failsurcharge['carrier_id']);
 
-            if($ammountC <= 1){
-                $ammountA = $failsurcharge->ammount;
-            }
-            else{
-                $ammountA       = $ammountA[0].' (error)';
-                $classammount   = 'color:red';
-            }
+      $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+        ->first();
+      $originAIn = $originOb['id'];
+      $originC   = count($originA);
+      if($originC <= 1){
+        $originA = $originOb['name'];
+      } else{
+        $originA = $originA[0].' (error)';
+        $classdorigin='color:red';
+      }
 
-            $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
-            $currencyAIn  = $currencyOb['id'];
-            $currencyC    = count($currencyA);
+      $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+        ->first();
+      $destinationAIn = $destinationOb['id'];
+      $destinationC   = count($destinationA);
+      if($destinationC <= 1){
+        $destinationA = $destinationOb['name'];
+      } else{
+        $destinationA = $destinationA[0].' (error)';
+        $classddestination='color:red';
+      }
 
-            if($currencyC){
-                $currencyA = $currencyA[0];
-            }
-            else{
-                $currencyA      = $currencyA[0].' (error)';
-                $classcurrency  = 'color:red';
-            }
+      $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
+      $surcharAin  = $surchargeOb['id'];
+      $surchargeC = count($surchargeA);
 
-            $typedestinyLB    = TypeDestiny::where('id','=',$failsurcharge['typedestiny_id'])->first();
-            ////////////////////////////////////////////////////////////////////////////////////
-            //$originLB         = Harbor::where('id','=',$originA[0])->first();
-            $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
-            ////////////////////////////////////////////////////////////////////////////////////
-            $arreglo = [
-                'failSrucharge_id'      => $failsurcharge->id,
-                'surchargelb'           => $surchargeA,
-                'surcharge_id'          => $surcharAin,
+      if($surchargeC <= 1){
+        $surchargeA = $surchargeA[0];
+      }
+      else{
+        $surchargeA         = $surchargeA[0].' (error)';
+        $classsurcharger    = 'color:red';
+      }
 
-                'origin_portLb'         => $originA,
-                'origin_port'           => $originAIn,
 
-                'destiny_portLb'        => $destinationA,
-                'destiny_port'          => $destinationAIn, 
+      $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+      $carrAIn = $carrierOb['id'];
+      $carrierC = count($carrierA);
 
-                'carrierlb'            => $carrierA,
-                'carrier_id'           => $carrAIn,
-                'typedestinylb'         => $typedestinyLB['description'],
-                'typedestiny'           => 3,
+      if($carrierC <= 1){
+        $carrierA = $carrierA[0];
+      }
+      else{
+        $carrierA       = $carrierA[0].' (error)';
+        $classcarrier   ='color:red';
+      }
 
-                'ammount'               => $ammountA,
+      $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
+      $calculationtypeAIn = $calculationtypeOb['id'];
+      $calculationtypeC   = count($calculationtypeA);
 
-                'calculationtypelb'     => $calculationtypeA,
-                'calculationtype'       => $calculationtypeAIn,
+      if($calculationtypeC <= 1){
+        $calculationtypeA = $calculationtypeA[0];
+      }
+      else{
+        $calculationtypeA       = $calculationtypeA[0].' (error)';
+        $classcalculationtype   = 'color:red';
+      }
 
-                'currencylb'            => $currencyA,
-                'currency_id'           => $currencyAIn,
+      $ammountC = count($ammountA);
 
-                'classsurcharge'        => $classsurcharger,
-                'classorigin'           => $classdorigin,
-                'classdestiny'          => $classddestination,
-                'classcarrier'          => $classcarrier,
-                'classcalculationtype'  => $classcalculationtype,
-                'classammount'          => $classammount,
-                'classcurrency'         => $classcurrency,
+      if($ammountC <= 1){
+        $ammountA = $failsurcharge->ammount;
+      }
+      else{
+        $ammountA       = $ammountA[0].' (error)';
+        $classammount   = 'color:red';
+      }
 
-            ];
-            //dd($arreglo);
+      $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
+      $currencyAIn  = $currencyOb['id'];
+      $currencyC    = count($currencyA);
 
-            $failsurchargecoll->push($arreglo);
-        }
-        $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
-        $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
-        $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->get();
-        //  dd($goodsurcharges);
-        return  view('contracts.FailSurcharge',compact('failsurchargecoll',
-                                                       'countfailsurcharge',
-                                                       'countgoodsurcharge',
-                                                       'typedestiny',
-                                                       'surchargeSelect',
-                                                       'carrierSelect',
-                                                       'harbor',
-                                                       'currency',
-                                                       'calculationtypeselect',
-                                                       'goodsurcharges',
-                                                       'id'
-                                                      )); //*/
+      if($currencyC){
+        $currencyA = $currencyA[0];
+      }
+      else{
+        $currencyA      = $currencyA[0].' (error)';
+        $classcurrency  = 'color:red';
+      }
+
+      $typedestinyLB    = TypeDestiny::where('id','=',$failsurcharge['typedestiny_id'])->first();
+      ////////////////////////////////////////////////////////////////////////////////////
+      //$originLB         = Harbor::where('id','=',$originA[0])->first();
+      $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
+      ////////////////////////////////////////////////////////////////////////////////////
+      $arreglo = [
+        'failSrucharge_id'      => $failsurcharge->id,
+        'surchargelb'           => $surchargeA,
+        'surcharge_id'          => $surcharAin,
+
+        'origin_portLb'         => $originA,
+        'origin_port'           => $originAIn,
+
+        'destiny_portLb'        => $destinationA,
+        'destiny_port'          => $destinationAIn, 
+
+        'carrierlb'            => $carrierA,
+        'carrier_id'           => $carrAIn,
+        'typedestinylb'         => $typedestinyLB['description'],
+        'typedestiny'           => 3,
+
+        'ammount'               => $ammountA,
+
+        'calculationtypelb'     => $calculationtypeA,
+        'calculationtype'       => $calculationtypeAIn,
+
+        'currencylb'            => $currencyA,
+        'currency_id'           => $currencyAIn,
+
+        'classsurcharge'        => $classsurcharger,
+        'classorigin'           => $classdorigin,
+        'classdestiny'          => $classddestination,
+        'classcarrier'          => $classcarrier,
+        'classcalculationtype'  => $classcalculationtype,
+        'classammount'          => $classammount,
+        'classcurrency'         => $classcurrency,
+
+      ];
+      //dd($arreglo);
+
+      $failsurchargecoll->push($arreglo);
     }
+    $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
+    $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
+    $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->get();
+    //  dd($goodsurcharges);
+    return  view('contracts.FailSurcharge',compact('failsurchargecoll',
+                                                   'countfailsurcharge',
+                                                   'countgoodsurcharge',
+                                                   'typedestiny',
+                                                   'surchargeSelect',
+                                                   'carrierSelect',
+                                                   'harbor',
+                                                   'currency',
+                                                   'calculationtypeselect',
+                                                   'goodsurcharges',
+                                                   'id'
+                                                  )); //*/
+  }
 
-    public function SaveCorrectedSurcharge(Request $request){
+  public function SaveCorrectedSurcharge(Request $request){
 
-        $idSurchargeVar        =    29;
-        $surchargeVar          =    2;
-        $contractVar           =    1;
-        $originVar             =    15;
-        $destinationVarArr     =    [77,12];
-        $typedestinyVar        =    3;
-        $calculationtypeVar    =    1;
-        $ammountVar            =    100;
-        $currencyVar           =    149;
-        $carrierVar            =    14;
-        //*/
-        /*
+    $idSurchargeVar        =    29;
+    $surchargeVar          =    2;
+    $contractVar           =    1;
+    $originVar             =    15;
+    $destinationVarArr     =    [77,12];
+    $typedestinyVar        =    3;
+    $calculationtypeVar    =    1;
+    $ammountVar            =    100;
+    $currencyVar           =    149;
+    $carrierVar            =    14;
+    //*/
+    /*
         $idSurchargeVar        =    $_REQUEST['idSurcharge'];
         $surchargeVar          =    $_REQUEST['surcharge'];
         $contractVar           =    $_REQUEST['contract_id'];
@@ -1431,111 +1434,142 @@ class ContractsController extends Controller
         $carrierVar            =    $_REQUEST['carrier'];
 
         //*/
-        //return $col = ['response'  => '1'];
+    //return $col = ['response'  => '1'];
 
-        $failSurcharge = new FailSurCharge();
-        $failSurcharge = FailSurCharge::find($idSurchargeVar);
-        $count=0;
-        $countArreglo = count($destinationVarArr);
-        
-        //->where('port_dest','=',$destinationVar);
-        
-        foreach($destinationVarArr as $destinationVar){
-            $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
-                ->where('typedestiny_id','=',$typedestinyVar)
-                ->where('contract_id','=',$contractVar)
-                ->where('calculationtype_id','=',$calculationtypeVar)
-                ->where('ammount','=',$ammountVar)
-                ->where('currency_id','=',$currencyVar)
-                ->whereHas('localcharcarriers',function($q) use($carrierVar){
-                    $q->where('carrier_id','=',$carrierVar);
-                })
-                ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
-                    $k->where('port_orig','=',$originVar);
-                })->get();
-            if($SurcharFull->isEmpty() != true){
-                
-                  $portdes =  LocalCharPort::where('port_dest','=',$SurcharFull->id)->get();
-                if($portdes->isEmpty()){
-                    dd($portdes);
-                }
-            }
+    $failSurcharge = new FailSurCharge();
+    $failSurcharge = FailSurCharge::find($idSurchargeVar);
+    $count=0;
+    $countArreglo = count($destinationVarArr);
+
+    //->where('port_dest','=',$destinationVar);
+
+    foreach($destinationVarArr as $destinationVar){
+      $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
+        ->where('typedestiny_id','=',$typedestinyVar)
+        ->where('contract_id','=',$contractVar)
+        ->where('calculationtype_id','=',$calculationtypeVar)
+        ->where('ammount','=',$ammountVar)
+        ->where('currency_id','=',$currencyVar)
+        ->whereHas('localcharcarriers',function($q) use($carrierVar){
+          $q->where('carrier_id','=',$carrierVar);
+        })
+        ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+          $k->where('port_orig','=',$originVar);
+        })->get();
+      if($SurcharFull->isEmpty() != true){
+
+        $portdes =  LocalCharPort::where('port_dest','=',$SurcharFull->id)->get();
+        if($portdes->isEmpty()){
+          dd($portdes);
         }
-
-
-        dd($SurcharFull);
+      }
     }
 
-    public function updateLocalChar(Request $request, $id)
+
+    dd($SurcharFull);
+  }
+
+  public function updateLocalChar(Request $request, $id)
+  {
+    $localC = LocalCharge::find($id);
+    $localC->surcharge_id = $request->input('surcharge_id');
+    $localC->typedestiny_id  = $request->input('changetype');
+    $localC->calculationtype_id = $request->input('calculationtype_id');
+    $localC->ammount = $request->input('ammount');
+    $localC->currency_id = $request->input('currency_id');
+    $localC->update();
+
+    $detailportOrig = $request->input('port_origlocal');
+    $detailportDest = $request->input('port_destlocal');
+    $carrier = $request->input('carrier_id');
+    $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
+    $deleteCarrier->delete();
+    $deletePort = LocalCharPort::where("localcharge_id",$id);
+    $deletePort->delete();
+
+    foreach($detailportOrig as $orig => $valueOrig)
     {
-        $localC = LocalCharge::find($id);
-        $localC->surcharge_id = $request->input('surcharge_id');
-        $localC->typedestiny_id  = $request->input('changetype');
-        $localC->calculationtype_id = $request->input('calculationtype_id');
-        $localC->ammount = $request->input('ammount');
-        $localC->currency_id = $request->input('currency_id');
-        $localC->update();
-
-        $detailportOrig = $request->input('port_origlocal');
-        $detailportDest = $request->input('port_destlocal');
-        $carrier = $request->input('carrier_id');
-        $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
-        $deleteCarrier->delete();
-        $deletePort = LocalCharPort::where("localcharge_id",$id);
-        $deletePort->delete();
-
-        foreach($detailportOrig as $orig => $valueOrig)
-        {
-            foreach($detailportDest as $dest => $valueDest)
-            {
-                $detailport = new LocalCharPort();
-                $detailport->port_orig = $valueOrig;
-                $detailport->port_dest = $valueDest;
-                $detailport->localcharge_id = $id;
-                $detailport->save();
-            }
-
-        }
-        foreach($carrier as $key)
-        {
-            $detailcarrier = new LocalCharCarrier();
-            $detailcarrier->carrier_id = $key;
-            $detailcarrier->localcharge_id = $id;
-            $detailcarrier->save();
-        }
+      foreach($detailportDest as $dest => $valueDest)
+      {
+        $detailport = new LocalCharPort();
+        $detailport->port_orig = $valueOrig;
+        $detailport->port_dest = $valueDest;
+        $detailport->localcharge_id = $id;
+        $detailport->save();
+      }
 
     }
+    foreach($carrier as $key)
+    {
+      $detailcarrier = new LocalCharCarrier();
+      $detailcarrier->carrier_id = $key;
+      $detailcarrier->localcharge_id = $id;
+      $detailcarrier->save();
+    }
 
-    /**
+  }
+
+  /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $rate = Rate::find($id);
-        $rate->delete();
-        return $rate;
+  public function destroy($id)
+  {
+    $rate = Rate::find($id);
+    $rate->delete();
+    return $rate;
+  }
+
+  public function deleteContract($id){
+
+    $contract = Contract::find($id);
+
+    if(count($contract->rates)>0){
+      if(count($contract->localcharges)>0){
+        return response()->json(['message' => count($contract->rates),'local' => count($contract->localcharges) ]);
+      }else{
+        return response()->json(['message' => count($contract->rates),'local' => 0]);
+      }
+
     }
 
-    public function destroyLocalCharges($id)
-    {
-        $local = LocalCharge::find($id);
-        $local->delete();
+
+    return response()->json(['message' => 'Ok' ]);
+
+  }
+  public function destroyContract($id){
+
+    try {
+      $contract = Contract::find($id);
+      $contract->delete();
+
+      return response()->json(['message' => 'Ok']);
+    }
+    catch (\Exception $e) {
+      return response()->json(['message' => $e]);
     }
 
-    public function destroyRates(Request $request,$id)
-    {
-        $rates = self::destroy($id);
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully delete the rate ');
-        return redirect()->action('ContractsController@index');
-    }
+  }
 
-    public function destroymsg($id)
-    {
-        return view('contracts/message' ,['rate_id' => $id]);
-    }
+  public function destroyLocalCharges($id)
+  {
+    $local = LocalCharge::find($id);
+    $local->delete();
+  }
+
+  public function destroyRates(Request $request,$id)
+  {
+    $rates = self::destroy($id);
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'You successfully delete the rate ');
+    return redirect()->action('ContractsController@index');
+  }
+
+  public function destroymsg($id)
+  {
+    return view('contracts/message' ,['rate_id' => $id]);
+  }
 }

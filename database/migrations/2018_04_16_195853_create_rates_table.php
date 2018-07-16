@@ -27,7 +27,7 @@ class CreateRatesTable extends Migration
             $table->foreign('origin_port')->references('id')->on('harbors');
             $table->foreign('destiny_port')->references('id')->on('harbors');
             $table->foreign('carrier_id')->references('id')->on('carriers');
-            $table->foreign('contract_id')->references('id')->on('contracts');
+            $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->timestamps();
         });

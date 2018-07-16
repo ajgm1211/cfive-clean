@@ -23,7 +23,7 @@ class CreateLocalchargesTable extends Migration
             $table->softDeletes();
             $table->integer('currency_id')->unsigned();
             $table->foreign('surcharge_id')->references('id')->on('surcharges');
-            $table->foreign('contract_id')->references('id')->on('contracts');
+            $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->foreign('calculationtype_id')->references('id')->on('calculationtype');
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->foreign('typedestiny_id')->references('id')->on('typedestiny')->onDelete('cascade');
