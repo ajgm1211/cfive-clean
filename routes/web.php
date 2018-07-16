@@ -82,6 +82,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
   Route::get('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
   Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+  Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
+  Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+
+
 
   // Rates
   Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
@@ -133,18 +137,18 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
-    Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
-    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
-    Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
-    Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
-    Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
-    Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
-    Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
-    Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
-    Route::post('test', 'QuoteController@test')->name('quotes.test');
-    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
-    Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
+  Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
+  Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+  Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
+  Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
+  Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
+  Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+  Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
+  Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+  Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+  Route::post('test', 'QuoteController@test')->name('quotes.test');
+  Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+  Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
 
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');

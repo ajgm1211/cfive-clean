@@ -6,6 +6,7 @@ var DatatableHtmlTableDemo = function() {
   // demo initializer
   var demo = function() {
 
+
     var datatable = $('.m-datatable').mDatatable({
       data: {
         saveState: {cookie: false},
@@ -39,7 +40,7 @@ var DatatableHtmlTableDemo = function() {
         }
       },
       columns: [
-               {
+        {
           field: "Name",
           title: "Name",
           width: 60,
@@ -53,13 +54,13 @@ var DatatableHtmlTableDemo = function() {
         },
 
 
-             {
+        {
           field: "Currency",
           title: "Currency",
           width: 60,
           overflow: 'visible',
         },
-             {
+        {
           field: "Carrier",
           title: "Carrier",
           width: 60,
@@ -83,7 +84,7 @@ var DatatableHtmlTableDemo = function() {
           width: 35,
           overflow: 'visible',
         },
-        
+
 
         {
           field: 'Status',
@@ -103,7 +104,7 @@ var DatatableHtmlTableDemo = function() {
               status[row.Status].title + '</span>';
           },
         },
-          {
+        {
           field: 'status',
           title: 'status',
           width: 60,
@@ -123,10 +124,67 @@ var DatatableHtmlTableDemo = function() {
     });
 
 
-    $('#m_form_type').on('change', function() {
-      datatable.search($(this).val().toLowerCase(), 'Status');
+    var datatable2 =  $('.m-datatable2').mDatatable({
+      data: {
+        saveState: {cookie: false},
+        pageSize: 5,
+
+      },
+      layout: {
+        theme: 'default',
+        class: '',
+        scroll: true,
+        footer: false
+      },
+
+      sortable: true,
+
+      filterable: true,
+
+      pagination: true,
+
+      search: {
+        input: $('#generalSearch2'),
+      },
+      toolbar: {
+        // toolbar items
+        items: {
+          // pagination
+          pagination: {
+            pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+          }
+        }
+      },
+
+      columns: [
+        {
+          field: 'status',
+          title: 'status',
+          width: 60,
+          // callback function support for column rendering
+          template: function(row) {
+            var status = {
+              1: {'title': 'publish', 'state': 'success'},
+              2: {'title': 'draft', 'state': 'warning'},
+
+            };
+            return '<span class="m-badge m-badge--' + status[row.status].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
+              status[row.status].state + '">' +
+              status[row.status].title + '</span>';
+          },
+        },
+      ],
+
+
     });
 
+    $('#m_form_type').on('change', function() {
+      datatable.search($(this).val().toLowerCase(), 'status');
+    });
+
+    $('.m_form_type2').on('change', function() {
+      datatable2.search($(this).val().toLowerCase(), 'status');
+    });
     $('#m_form_status, #m_form_type').selectpicker();
 
   };
