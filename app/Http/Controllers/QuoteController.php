@@ -1473,9 +1473,17 @@ public function create()
   }else{
     $currency_name = '';
   }
+
   $currencies = Currency::pluck('alphacode','id');
   $currency_cfg = Currency::find($company_user->currency_id);
-  return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg]);
+  if(\Auth::user()->company_user_id){
+    if($currency_cfg->alphacode=='USD'){
+      $exchange = Currency::where('api_code_eur','EURUSD')->first();
+    }else{
+      $exchange = Currency::where('api_code','USDEUR')->first();
+    }
+  }
+  return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
 }
 
   /**
@@ -1501,9 +1509,9 @@ public function create()
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
       if($currency_cfg->alphacode=='USD'){
-          $exchange = Currency::where('api_code_eur','EURUSD')->first();
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
       }else{
-          $exchange = Currency::where('api_code','USDEUR')->first();
+        $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
@@ -1676,9 +1684,9 @@ public function create()
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
       if($currency_cfg->alphacode=='USD'){
-          $exchange = Currency::where('api_code_eur','EURUSD')->first();
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
       }else{
-          $exchange = Currency::where('api_code','USDEUR')->first();
+        $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
 
