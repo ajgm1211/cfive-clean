@@ -1523,7 +1523,7 @@ class ContractsController extends Controller
 
     public function UpdateSurchargeCorrect(Request $request){
         try {
-/*
+            /*
             $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
             $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
             $contractVar           =  $_REQUEST['contract_id'];
@@ -1545,11 +1545,11 @@ class ContractsController extends Controller
             $ammountVar            =  $_REQUEST['ammount'];
             $currencyVar           =  $_REQUEST['currency'];
             $carrierVarArr         =  $_REQUEST['carrier'];
-       // return response()->json(['message' => 'Ok']);
+            // return response()->json(['message' => 'Ok']);
             //*/
-            
-            
-            
+
+
+
             $SurchargeId = new LocalCharge();
             $SurchargeId  = LocalCharge::find($idSurchargeVar);
 
@@ -1572,7 +1572,7 @@ class ContractsController extends Controller
                 }
             }
 
-           LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+            LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
             foreach($carrierVarArr as $carrierVar){
                 LocalCharCarrier::create([
                     'carrier_id'        => $carrierVar,
@@ -1629,6 +1629,66 @@ class ContractsController extends Controller
         } catch (\Exception $e){
             return $arreglo = ['response'  => 0];
         } //*/
+    }
+
+    public function UploadFileNewContract(Request $request){
+         //dd($request);
+
+        //try {
+        $file = $request->file('file');
+        $ext = strtolower($file->getClientOriginalExtension());
+
+        $validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv')
+        );
+
+        if ($validator->fails()) {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+            return redirect()->route('contracts.edit',$request->contract_id);
+        }
+
+        //obtenemos el nombre del archivo
+        $nombre = $file->getClientOriginalName();
+        \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+
+        $contract = new Contract();
+        
+       /* $contract->name             = $request->name;
+        $contract->number           = $request->number;
+        $validity                   = explode('/',$request->validation_expire);
+        $contract->validity         = $validity[0];
+        $contract->expire           = $validity[1];
+        $contract->status           = 'Drash';
+        $contract->company_user_id  = \Auth::user()->company_user_id;
+        $contract->save();*/
+        
+        $errors=0;
+        Excel::selectSheetsByIndex(0)
+            ->Load(\Storage::disk('UpLoadFile')
+            ->url($nombre),function($reader) use($errors,$request) {
+                       // ->Load(\Storage::disk('UpLoadFile')->url($nombre))->byConfig('excel::import.sheets', function($sheet) {
+                       $reader->noHeading = true;
+                       //dd($reader->get());
+                       //dd($reader->select(array(2,3))->get());
+                       foreach($reader->get() as $read){
+                           dd(count($read));
+                           echo $read[0].' ';//
+                           echo $read[1].' ';//
+                           echo $read[2].' ';//
+                           echo $read[3].' ';//
+                           echo $read[4].' ';//
+                           echo $read[5].' ';//
+                           echo $read[6].'<br>';//
+                       }
+
+                   });
+        /*  }catch(\Exception $e){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'Error with the archive');
+            return redirect()->route('importaion.fcl');
+        }*/
     }
 
     public function updateLocalChar(Request $request, $id)
