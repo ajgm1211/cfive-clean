@@ -34,7 +34,8 @@ use App\TermAndCondition;
 use App\TermsPort;
 use App\StatusQuote;
 use Illuminate\Support\Facades\Input;
-
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 class QuoteController extends Controller
 {
   /**
@@ -1382,6 +1383,30 @@ class QuoteController extends Controller
 
       // fin calculo Global charges 
       //#######################################################################
+      // Armar los schedules
+      $url = "http://schedules.cargofive.com/schedule/".strtolower($data->carrier->name)."/".$data->port_origin->code."/".$data->port_destiny->code;
+
+      $client = new Client();
+      $res = $client->request('GET', $url, [
+
+      ]);
+      $schedules = Collection::make(json_decode($res->getBody()));
+      //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
+      $schedulesArr = new Collection();
+      $schedulesFin = new Collection();
+      if(!$schedules->isEmpty()){
+        foreach($schedules['schedules'] as $schedules){
+          $collectS = Collection::make($schedules);
+          $schedulesArr->push($collectS);
+        }
+        if(!$schedulesArr->isEmpty()){
+          $schedulesArr =  $schedulesArr->where('Etd','>=', '2018-07-24')->first();
+          $schedulesFin->push($schedulesArr);
+        }
+      }
+     
+
+      //#######################################################################
 
       //Formato subtotales y operacion total quote 
       $totalFreight =  number_format($totalFreight, 2, '.', '');
@@ -1448,6 +1473,9 @@ class QuoteController extends Controller
       $data->setAttribute('totalQuoteSin',$totalQuoteSin);
       $data->setAttribute('quoteCurrency',$quoteCurrency);
       $data->setAttribute('idCurrency',$idCurrency);
+      // SCHEDULES
+      $data->setAttribute('schedulesFin',$schedulesFin);
+      
 
 
 
