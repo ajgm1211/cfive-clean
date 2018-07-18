@@ -44,4 +44,8 @@ class Quote extends Model
     {
         return $this->hasManyThrough('App\Company','App\CompanyPrice','price_id','id','id','company_id');
     }
+     public function schedules()
+    {
+        return $this->hasMany('App\Schedule');
+    }
 }

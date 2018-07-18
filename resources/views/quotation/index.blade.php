@@ -435,7 +435,7 @@
                     <table class="table table-hover">
                       <tr class="thead-light">
                         <th><span class="portalphacode">Vessel</span></th>
-                        <th><span class="portalphacode">Etd</span></th>
+                        <th><span class="portalphacode">ETD</span></th>
                         <th><span class="portalphacode"><center>Transit Time</center></span>  </th>
                         <th><span class="portalphacode">ETA</span></th>
                         <th><span class="portalphacode">-</span></th>         
@@ -468,7 +468,7 @@
                         <td width='15%'>{{ $schedule['Eta'] }}</td>
                         <td width='10%'>      
                           <label class="m-checkbox m-checkbox--state-brand">
-                            <input type="checkbox"> 
+                            <input name="schedules[]" type="checkbox" value="{{ json_encode($schedule) }}"> 
                             <span></span>
                           </label>
                         </td>
