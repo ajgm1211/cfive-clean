@@ -93,7 +93,7 @@
                 <tbody>
                     @foreach ($quotes as $quote)
                     <tr>
-                        <td>{{$quote->status_quote_id }}</td>
+                        <td><span class="{{$quote->status->name}}">{{$quote->status->name }}</span></td>
                         @if(isset($quote->company))
                         <td>{{$quote->company->business_name }}</td>
                         @else
@@ -138,7 +138,7 @@
 
 @section('js')
 @parent
-<script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script>

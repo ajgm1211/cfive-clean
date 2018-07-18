@@ -137,6 +137,38 @@ CONTENTS:
     font-weight: lighter !important;
 }
 
+//Statuses labels
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > .Negotiated{
+  background-color: #659be0 !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > .Sent{
+  background-color: #031B4E !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > .Draft{
+  background-color: #bac3d0 !important;
+  color: #1d3a6e !important;
+  padding: 7px !important;
+}
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > .Win{
+  background-color: #26A69A !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.m-datatable.m-datatable--default > .m-datatable__table > .m-datatable__body .m-datatable__row > .m-datatable__cell > .Lost{
+  background-color: #ed6b75 !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
 /*
 ------------------------------------------------------------------------------------------------------------------------
 2. VERTICAL SCROLLBAR

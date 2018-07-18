@@ -206,6 +206,20 @@
                                                                     {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <br>
+                                                                    <label>Validity</label>
+                                                                    <div class="input-group date">
+                                                                        {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">
+                                                                                <i class="la la-calendar-check-o"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                             
                                                         </div>
                                                     </div>
                                                     <hr>
