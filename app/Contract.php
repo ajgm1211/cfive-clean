@@ -40,5 +40,9 @@ class Contract extends Model
     return $this->belongsTo('App\User');
     
   }
+    
+  public function FilesTmps(){
+    return $thid->hasMany('App\FileTmp');  
+  }
   
 }

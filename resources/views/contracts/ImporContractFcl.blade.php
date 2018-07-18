@@ -155,7 +155,7 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        {!! Form::select('origin',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin'])!!}
+                                        {!! Form::select('origin',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -176,7 +176,7 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="destinyinp" hidden="hidden" >
-                                        {!! Form::select('destiny',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny'])!!}
+                                        {!! Form::select('destiny',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">

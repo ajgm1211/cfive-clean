@@ -22,11 +22,13 @@ use App\LocalCharPort;
 use App\User;
 use App\TypeDestiny;
 use App\FailSurCharge;
+use App\FileTmp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadFileRateRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ContractsController extends Controller
 {
@@ -380,7 +382,12 @@ class ContractsController extends Controller
 
     public function UploadFileRateForContract(Request $request){
 
+        $nombre='';
+
         try {
+
+            $now = new \DateTime();
+            $now = $now->format('dmY_His');
             $file = $request->file('file');
             $ext = strtolower($file->getClientOriginalExtension());
 
@@ -397,7 +404,7 @@ class ContractsController extends Controller
 
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
-
+            $nombre = $now.'_'.$nombre;
 
             $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
             //dd(\Storage::disk('UpLoadFile')->url($nombre));
@@ -594,6 +601,7 @@ class ContractsController extends Controller
                     $request->session()->flash('message.title', 'Well done!');
                 }
             });
+            Storage::delete($nombre);
             Rate::onlyTrashed()->where('contract_id','=',$contract)
                 ->forceDelete();
             FailRate::onlyTrashed()->where('contract_id','=',$contract)
@@ -603,6 +611,7 @@ class ContractsController extends Controller
             //dd($res);*/
 
         } catch (\Illuminate\Database\QueryException $e) {
+            Storage::delete($nombre);
             Rate::onlyTrashed()->where('contract_id','=',$contract)
                 ->restore();
             FailRate::onlyTrashed()->where('contract_id','=',$contract)
@@ -929,7 +938,10 @@ class ContractsController extends Controller
 
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request);
+        $nombre='';
         try {
+            $now = new \DateTime();
+            $now = $now->format('dmY_His');
             $file = $request->file('file');
             $ext = strtolower($file->getClientOriginalExtension());
 
@@ -946,6 +958,7 @@ class ContractsController extends Controller
 
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
+            $nombre = $now.'_'.$nombre;
 
             $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
@@ -1199,6 +1212,7 @@ class ContractsController extends Controller
 
                 }
             });
+            Storage::delete($nombre);
             LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
                 ->forceDelete();
             FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
@@ -1206,6 +1220,7 @@ class ContractsController extends Controller
             return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
 
         } catch (\Illuminate\Database\QueryException $e) {
+            Storage::delete($nombre);
             LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
                 ->restore();
             FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
@@ -1629,12 +1644,14 @@ class ContractsController extends Controller
 
     public function UploadFileNewContract(Request $request){
         //dd($request);
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
 
         $request->type;
 
         $carrierVal = $request->carrier;
-        $destinyVal = $request->destiny;
-        $originVal  = $request->origin;
+        $destinyArr = $request->destiny;
+        $originArr  = $request->origin;
 
         $carrierBol = false;
         $destinyBol = false;
@@ -1644,7 +1661,7 @@ class ContractsController extends Controller
 
         $harbor  = harbor::all()->pluck('name');
         $carrier = carrier::all()->pluck('name');
-        //try {
+        // try {
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
 
@@ -1661,27 +1678,27 @@ class ContractsController extends Controller
 
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
+        $nombre = $now.'_'.$nombre;
         \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
         $contract     = new Contract();
-        $contracExist = Contract::where('name','=',$request->name)->where('number','=',$request->number)->first();
 
-        if(count($contracExist) <= 0){
+        $contract->name             = $request->name;
+        $contract->number           = $request->number;
+        $validity                   = explode('/',$request->validation_expire);
+        $contract->validity         = $validity[0];
+        $contract->expire           = $validity[1];
+        $contract->status           = 'incomplete';
+        $contract->company_user_id  = \Auth::user()->company_user_id;
+        $contract->save(); //*/
 
-            $contract->name             = $request->name;
-            $contract->number           = $request->number;
-            $validity                   = explode('/',$request->validation_expire);
-            $contract->validity         = $validity[0];
-            $contract->expire           = $validity[1];
-            $contract->status           = 'Draft';
-            $contract->company_user_id  = \Auth::user()->company_user_id;
+        $Contract_id = $contract->id;
 
-            $contract->save(); //*/
+        $fileTmp = new FileTmp();
+        $fileTmp->contract_id = $Contract_id;
+        $fileTmp->name_file   = $nombre;
+        $fileTmp->save();
 
-            $Contract_id = $contract->id;
-        } else {
-            $Contract_id = $contracExist['id'];
-        }
         $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
 
         if($request->DatOri == false){
@@ -1689,13 +1706,13 @@ class ContractsController extends Controller
         }
         else{
             $originBol = true;
-            $originVal;
+            $originArr;
         }
 
         if($request->DatDes == false){
             array_push($targetsArr,'Destiny');
         } else {
-            $destinyVal;
+            $destinyArr;
             $destinyBol = true;
         }
 
@@ -1716,7 +1733,7 @@ class ContractsController extends Controller
 
                        foreach($reader->get() as $read){
                            // dd($read);
-                           $columna= array('A','B','C','D','E','F','G','H');
+                           $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O');
                            for($i=0;$i<count($read);$i++){
                                $coordenates->push($columna[$i].' '.$read[$i]);
                            }
@@ -1727,10 +1744,10 @@ class ContractsController extends Controller
                    });
         $boxdinamy = [
             'existorigin'   => $originBol,
-            'origin'        => $originVal,
+            'origin'        => $originArr,
 
             'existdestiny'  => $destinyBol,
-            'destiny'       => $destinyVal,
+            'destiny'       => $destinyArr,
 
             'existcarrier'  => $carrierBol,
             'carrier'       => $carrierVal,
@@ -1745,14 +1762,15 @@ class ContractsController extends Controller
         //dd($data);
 
         return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data'));
-        /*  }catch(\Exception $e){
+        /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
             return redirect()->route('importaion.fcl');
-        }*/
+        }//*/
     }
 
     public function ProcessContractFcl(Request $request){
+        //Storage::delete($request->);
         dd($request);
     }
 

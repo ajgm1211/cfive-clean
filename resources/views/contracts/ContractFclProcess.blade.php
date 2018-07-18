@@ -107,13 +107,13 @@ new registration
                                 @if($value['existorigin'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="origin" class=" ">Origin</label>
-                                    {!! Form::select('origin',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin'])!!}                            
+                                    {!! Form::select('origin',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 @endif
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
-                                    {!! Form::select('destiny',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny'])!!}
+                                    {!! Form::select('destiny',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 @endif
                                 @if($value['existcarrier'] == true)
@@ -154,16 +154,17 @@ portlet sub title
                             </div>
                             @endforeach
                         </div>
+
+                    </div>
                         <div class="form-group m-form__group row">
-                            <div class="col-lg-12 col-lg-offset-4"></div>
-                            <div class="col-lg-12 col-lg-offset-12">
+
+                            <div class="col-lg-5 col-lg-offset-5"> </div>
+                            <div class="col-lg-2 col-lg-offset-2">
                                 <button type="submit" class="btn btn-primary form-control">
                                     Process
                                 </button>
                             </div>
                         </div>
-
-                    </div>
 
                 </div>
             </div>
