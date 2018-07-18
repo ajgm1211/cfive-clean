@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHarborsTable extends Migration
+class AddHarborsCopyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateHarborsTable extends Migration
      */
     public function up()
     {
-        Schema::create('harbors', function (Blueprint $table) {
+        Schema::create('harbors_copy', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('code');
             $table->string('coordinates')->nullable();
             $table->integer('country_id')->unsigned();
-            $table->json('varation')->nullable();
+            $table->json('varation');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ class CreateHarborsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('harbors');
+        Schema::dropIfExists('harbors_copy');
     }
 }

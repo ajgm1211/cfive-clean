@@ -451,26 +451,36 @@ class ContractsController extends Controller
 
                         $currenc = Currency::where('alphacode','=',$book->currency)->first();
                         $carrier = Carrier::where('name','=',$book->carrier)->first();
+                        $originExits = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+                            ->get();
 
-                        if(empty($book->$origin) != true){
+                        if(count($originExits) == 1){
                             $origB=true;
-                            $originV = $book->$origin;
+                            foreach($originExits as $originRc){
+                                $originV = $originRc['id'];
+                            }
                         }else{
-                            $originV = $book->$origin.'_E';
+                            $originV = $book->$origin.'_E_E';
                         }
 
-                        if(empty($book->$destination) != true ){
+                        $destinationExits = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+                            ->get();
+
+                        if(count($destinationExits) == 1){
                             $destiB=true;
-                            $destinationV = $book->$destination;
+                            foreach($destinationExits as $destinationRc){
+                                $destinationV = $destinationRc['id'];
+                            }
                         }else{
-                            $destinationV = $book->$destination.'_E';
+                            $destinationV = $book->$destination.'_E_E';
                         }
+
 
                         if(empty($carrier->id) != true){
                             $carriB=true;
                             $carrierV = $carrier->id;
                         }else{
-                            $carrierV = $book->carrier.'_E';
+                            $carrierV = $book->carrier.'_E_E';
                         }
 
                         if(empty($book->$twuenty) != true ){
@@ -478,7 +488,7 @@ class ContractsController extends Controller
                             $twuentyV = (int)$book->$twuenty;
                         }
                         else{
-                            $twuentyV = $book->$twuenty.'_E';
+                            $twuentyV = $book->$twuenty.'_E_E';
                         }
 
                         if(empty($book->$forty) != true ){
@@ -486,7 +496,7 @@ class ContractsController extends Controller
                             $fortyV = (int)$book->$forty;
                         }
                         else{
-                            $fortyV = $book->$forty.'_E';
+                            $fortyV = $book->$forty.'_E_E';
                         }
 
                         if(empty($book->$fortyhc) != true ){
@@ -494,7 +504,7 @@ class ContractsController extends Controller
                             $fortyhcV = (int)$book->$fortyhc;
                         }
                         else{
-                            $fortyhcV = $book->$fortyhc.'_E';
+                            $fortyhcV = $book->$fortyhc.'_E_E';
                         }
 
                         if(empty($currenc->id) != true){
@@ -502,7 +512,7 @@ class ContractsController extends Controller
                             $currencyV =  $currenc->id;
                         }
                         else{
-                            $currencyV = $book->currency.'_E';
+                            $currencyV = $book->currency.'_E_E';
                         }
 
                         if( $origB == true && $destiB == true
@@ -522,36 +532,49 @@ class ContractsController extends Controller
                             ]);
                         }
                         else{
+                            if($origB == true){
+                                $originV = $book->$origin;
+                            }
+                            if($destiB == true){
+                                $destinationV = $book->$destination;
+                            }
                             if($curreB == true){
                                 $currencyV = $book->currency;
                             }
                             if($carriB == true){
                                 $carrierV = $book->carrier;
                             }
-                            if($destiB == true){
-                                $destinationV = $book->$destination;
-                            }
-                            if($origB == true){
-                                $originV = $book->$origin;
-                            }
 
-                            $duplicateFail =  FailRate::where('origin_port','=',$originV)
-                                ->where('destiny_port','=',$destinationV)
-                                ->where('carrier_id','=',$carrierV)
-                                ->where('contract_id','=',$contract)
-                                ->count();
-                            if($duplicateFail <= 0){
-                                FailRate::create([
-                                    'origin_port'   => $originV,
-                                    'destiny_port'  => $destinationV,
-                                    'carrier_id'    => $carrierV,
-                                    'contract_id'   => $contract,
-                                    'twuenty'       => $twuentyV,
-                                    'forty'         => $fortyV,
-                                    'fortyhc'       => $fortyhcV,
-                                    'currency_id'   => $currencyV,
-                                ]);
-                                $errors++;
+
+                            if( empty($book->$origin) == true
+                               && empty($book->$destination) == true
+                               && empty($book->carrier) == true
+                               && empty($book->currency) == true
+                               && empty($book->$twuenty) == true
+                               && empty($book->$forty) == true
+                               && empty($book->$fortyhc) == true ) {
+
+                            }else{
+
+                                $duplicateFail =  FailRate::where('origin_port','=',$originV)
+                                    ->where('destiny_port','=',$destinationV)
+                                    ->where('carrier_id','=',$carrierV)
+                                    ->where('contract_id','=',$contract)
+                                    ->count();
+
+                                if($duplicateFail <= 0){
+                                    FailRate::create([
+                                        'origin_port'   => $originV,
+                                        'destiny_port'  => $destinationV,
+                                        'carrier_id'    => $carrierV,
+                                        'contract_id'   => $contract,
+                                        'twuenty'       => $twuentyV,
+                                        'forty'         => $fortyV,
+                                        'fortyhc'       => $fortyhcV,
+                                        'currency_id'   => $currencyV,
+                                    ]);
+                                    $errors++;
+                                }
                             }
                         }
                     }
@@ -598,7 +621,7 @@ class ContractsController extends Controller
         $carrierSelect = $objcarrier->all()->pluck('name','id');
         $harbor = $objharbor->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
-        //$rates = Rate::where('currency_id','=',$contract)->get();
+
         $rates = Rate::with('carrier','contract','port_origin','port_destiny')->where('contract_id','=',$id)->get();
         //dd($rates);
         $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
@@ -614,8 +637,10 @@ class ContractsController extends Controller
         $destinationA;
         $carrierA;
         $currencyA;
+        $twuentyA;
+        $fortyA;
+        $fortyhcA;
         $failrates = collect([]);
-
 
         foreach( $failratesFor as $failrate){
             $carrAIn;
@@ -629,9 +654,59 @@ class ContractsController extends Controller
             $classfortyhc ='color:green';
 
             $originA =  explode("_",$failrate['origin_port']);
+            //dd($originA);
             $destinationA = explode("_",$failrate['destiny_port']);
             $carrierA = explode("_",$failrate['carrier_id']);
             $currencyA = explode("_",$failrate['currency_id']);
+            $twuentyA = explode("_",$failrate['twuenty']);
+            $fortyA = explode("_",$failrate['forty']);
+            $fortyhcA = explode("_",$failrate['fortyhc']);
+
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            $originAIn = $originOb['id'];
+            $originC   = count($originA);
+            if($originC <= 1){
+                $originA = $originOb['name'];
+            } else{
+                $originA = $originA[0].' (error)';
+                $classdorigin='color:red';
+            }
+
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            $destinationAIn = $destinationOb['id'];
+            $destinationC   = count($destinationA);
+            if($destinationC <= 1){
+                $destinationA = $destinationOb['name'];
+            } else{
+                $destinationA = $destinationA[0].' (error)';
+                $classddestination='color:red';
+            }
+
+            $twuentyC   = count($twuentyA);
+            if($twuentyC <= 1){
+                $twuentyA = $twuentyA[0];
+            } else{
+                $twuentyA = $twuentyA[0].' (error)';
+                $classtwuenty='color:red';
+            }
+
+            $fortyC   = count($fortyA);
+            if($fortyC <= 1){
+                $fortyA = $fortyA[0];
+            } else{
+                $fortyA = $fortyA[0].' (error)';
+                $classforty='color:red';
+            }
+
+            $fortyhcC   = count($fortyhcA);
+            if($fortyhcC <= 1){
+                $fortyhcA = $fortyhcA[0];
+            } else{
+                $fortyhcA = $fortyhcA[0].' (error)';
+                $classfortyhc='color:red';
+            }
 
             $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
             $carrAIn = $carrierOb['id'];
@@ -658,27 +733,23 @@ class ContractsController extends Controller
 
                 $currencyA = $currencyA[0].' (error)';
                 $classcurrency='color:red';
-            }
-
-            $originLB = Harbor::where('id','=',$originA[0])->first();
-            $destinyLB =   Harbor::where('id','=',$destinationA[0])->first();
-            //            
+            }        
 
             $colec = ['rate_id'         =>  $failrate->id,
                       'contract_id'     =>  $id,
 
-                      'origin_portLb'   =>  $originLB['name'],
-                      'origin_port'     =>  $originA[0],   
+                      'origin_portLb'   =>  $originA,
+                      'origin_port'     =>  $originAIn,   
 
-                      'destiny_portLb'  =>  $destinyLB['name'],
-                      'destiny_port'    =>  $destinationA[0],     
+                      'destiny_portLb'  =>  $destinationA,
+                      'destiny_port'    =>  $destinationAIn,     
 
                       'carrierLb'       =>  $carrierA,
                       'carrierAIn'      =>  $carrAIn,
 
-                      'twuenty'         =>  $failrate['twuenty'],      
-                      'forty'           =>  $failrate['forty'],      
-                      'fortyhc'         =>  $failrate['fortyhc'],  
+                      'twuenty'         =>  $twuentyA,      
+                      'forty'           =>  $fortyA,      
+                      'fortyhc'         =>  $fortyhcA,  
 
                       'currency_id'     =>  $currencyA,
                       'currencyAIn'     =>  $pruebacurre,
@@ -697,10 +768,7 @@ class ContractsController extends Controller
 
         }
 
-        /*dd($failrates);
-        foreach($failrates as $cells){
-            echo $cells['carrier_id'].' '.$cells['currency_id'].'<br>';
-        }*/
+        //  dd($failrates);
         return view('contracts.FailRates',compact('rates','failrates','countfailrates','countrates','harbor','currency','carrierSelect'));
     }
 
@@ -927,6 +995,7 @@ class ContractsController extends Controller
 
                     $originVar      = $book->$originBook;
                     $destinationVar = $book->$destinationBook;
+
                     $ammountVar     = (int)$book->$amountBook;
                     $destinytypeVar = 3;
                     $surchargeVar ="";
@@ -943,26 +1012,36 @@ class ContractsController extends Controller
                     $calculationtype = CalculationType::where('name','like','%'.$book->$calculationtypeBook.'%')->first();
                     $currency = Currency::where('alphacode','=',$book->$currencyBook)->first();
 
+                    $originExits = Harbor::where('varation->type','like','%'.strtolower($originVar).'%')
+                        ->get();
+
+                    if(count($originExits) == 1){
+                        $originBol=true;
+                        foreach($originExits as $originRc){
+                            $originVar = $originRc['id'];
+                        }
+                    }else{
+                        $originVar = $originVar.'_E_E';
+                    }
+
+                    $destinationExits = Harbor::where('varation->type','like','%'.strtolower($destinationVar).'%')
+                        ->get();
+
+                    if(count($destinationExits) == 1){
+                        $destinationBol=true;
+                        foreach($destinationExits as $destinationRc){
+                            $destinationVar = $destinationRc['id'];
+                        }
+                    }else{
+                        $destinationVar = $destinationVar.'_E_E';
+                    }
+
                     if(empty($surcharge) != true){
                         $surchargeBol = true;
                         $surchargeVar = $surcharge['id'];
                     }
                     else{
                         $surchargeVar = $book->$surchargeBook.'_E_E';
-                    }
-
-                    if(empty($originVar) != true){
-                        $originBol = true;
-                    }
-                    else{
-                        $originVar = $originVar.'_E_E';
-                    }
-
-                    if(empty($destinationVar) != true){
-                        $destinationBol = true;
-                    }
-                    else{
-                        $destinationVar = $destinationVar.'_E_E';
                     }
 
                     if(empty($carrier) != true){
@@ -1044,11 +1123,8 @@ class ContractsController extends Controller
                                         ]);  
                                     }
 
-
-
                                 } else{
                                     //echo 'existe valor<br>';
-
                                 }
 
                             }
@@ -1188,6 +1264,27 @@ class ContractsController extends Controller
             $currencyA          =  explode("_",$failsurcharge['currency_id']);
             $carrierA           =  explode("_",$failsurcharge['carrier_id']);
 
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            $originAIn = $originOb['id'];
+            $originC   = count($originA);
+            if($originC <= 1){
+                $originA = $originOb['name'];
+            } else{
+                $originA = $originA[0].' (error)';
+                $classdorigin='color:red';
+            }
+
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            $destinationAIn = $destinationOb['id'];
+            $destinationC   = count($destinationA);
+            if($destinationC <= 1){
+                $destinationA = $destinationOb['name'];
+            } else{
+                $destinationA = $destinationA[0].' (error)';
+                $classddestination='color:red';
+            }
 
             $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
             $surcharAin  = $surchargeOb['id'];
@@ -1249,19 +1346,20 @@ class ContractsController extends Controller
             }
 
             $typedestinyLB    = TypeDestiny::where('id','=',$failsurcharge['typedestiny_id'])->first();
-
-            $originLB         = Harbor::where('id','=',$originA[0])->first();
+            ////////////////////////////////////////////////////////////////////////////////////
+            //$originLB         = Harbor::where('id','=',$originA[0])->first();
             $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
-
+            ////////////////////////////////////////////////////////////////////////////////////
             $arreglo = [
+                'failSrucharge_id'      => $failsurcharge->id,
                 'surchargelb'           => $surchargeA,
                 'surcharge_id'          => $surcharAin,
 
-                'origin_portLb'         => $originLB['name'],
-                'origin_port'           => $originA[0],
+                'origin_portLb'         => $originA,
+                'origin_port'           => $originAIn,
 
-                'destiny_portLb'        => $destinyLB['name'],
-                'destiny_port'          => $destinationA[0], 
+                'destiny_portLb'        => $destinationA,
+                'destiny_port'          => $destinationAIn, 
 
                 'carrierlb'            => $carrierA,
                 'carrier_id'           => $carrAIn,
@@ -1276,7 +1374,7 @@ class ContractsController extends Controller
                 'currencylb'            => $currencyA,
                 'currency_id'           => $currencyAIn,
 
-                'classsurcharge'       => $classsurcharger,
+                'classsurcharge'        => $classsurcharger,
                 'classorigin'           => $classdorigin,
                 'classdestiny'          => $classddestination,
                 'classcarrier'          => $classcarrier,
@@ -1285,7 +1383,7 @@ class ContractsController extends Controller
                 'classcurrency'         => $classcurrency,
 
             ];
-
+            //dd($arreglo);
 
             $failsurchargecoll->push($arreglo);
         }
@@ -1302,8 +1400,70 @@ class ContractsController extends Controller
                                                        'harbor',
                                                        'currency',
                                                        'calculationtypeselect',
-                                                       'goodsurcharges'
+                                                       'goodsurcharges',
+                                                       'id'
                                                       )); //*/
+    }
+
+    public function SaveCorrectedSurcharge(Request $request){
+
+        $idSurchargeVar        =    29;
+        $surchargeVar          =    2;
+        $contractVar           =    1;
+        $originVar             =    15;
+        $destinationVarArr     =    [77,12];
+        $typedestinyVar        =    3;
+        $calculationtypeVar    =    1;
+        $ammountVar            =    100;
+        $currencyVar           =    149;
+        $carrierVar            =    14;
+        //*/
+        /*
+        $idSurchargeVar        =    $_REQUEST['idSurcharge'];
+        $surchargeVar          =    $_REQUEST['surcharge'];
+        $contractVar           =    $_REQUEST['contract_id'];
+        $originVar             =    $_REQUEST['origin'];
+        $destinationVarArr     =    $_REQUEST['destination'];
+        $typedestinyVar        =    $_REQUEST['typedestiny'];
+        $calculationtypeVar    =    $_REQUEST['rate_id'];
+        $ammountVar            =    $_REQUEST['ammount'];
+        $currencyVar           =    $_REQUEST['currency'];
+        $carrierVar            =    $_REQUEST['carrier'];
+
+        //*/
+        //return $col = ['response'  => '1'];
+
+        $failSurcharge = new FailSurCharge();
+        $failSurcharge = FailSurCharge::find($idSurchargeVar);
+        $count=0;
+        $countArreglo = count($destinationVarArr);
+        
+        //->where('port_dest','=',$destinationVar);
+        
+        foreach($destinationVarArr as $destinationVar){
+            $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
+                ->where('typedestiny_id','=',$typedestinyVar)
+                ->where('contract_id','=',$contractVar)
+                ->where('calculationtype_id','=',$calculationtypeVar)
+                ->where('ammount','=',$ammountVar)
+                ->where('currency_id','=',$currencyVar)
+                ->whereHas('localcharcarriers',function($q) use($carrierVar){
+                    $q->where('carrier_id','=',$carrierVar);
+                })
+                ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
+                    $k->where('port_orig','=',$originVar);
+                })->get();
+            if($SurcharFull->isEmpty() != true){
+                
+                  $portdes =  LocalCharPort::where('port_dest','=',$SurcharFull->id)->get();
+                if($portdes->isEmpty()){
+                    dd($portdes);
+                }
+            }
+        }
+
+
+        dd($SurcharFull);
     }
 
     public function updateLocalChar(Request $request, $id)

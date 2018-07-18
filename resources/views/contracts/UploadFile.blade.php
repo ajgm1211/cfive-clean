@@ -60,7 +60,7 @@
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
-                        {!! Form::open(['route' => 'UploadFileRates.store','method' => 'post','class' => 'form-group m-form__group', 'files'=>true]) !!}
+                        {!! Form::open(['route' => 'UploadFile.store','method' => 'post','class' => 'form-group m-form__group', 'files'=>true]) !!}
                         <div class="form-group m-form__group row">
                             <label class="col-form-label col-lg-3 col-sm-12">
                                 Single File Upload
@@ -69,27 +69,6 @@
                             <div class="col-lg-4 col-md-9 col-sm-12">
                                 <input type="file" name="file" required>
                             </div>
-                            <!--      <div class="form-group m-form__group row">
-<label class="col-form-label col-lg-3 col-sm-12">
-Single File Upload
-</label>
-<div class="col-lg-4 col-md-9 col-sm-12">
-
-<div class="m-dropzone dropzone" action="inc/api/dropzone/upload.php" id="m-dropzone-one">
-<div class="m-dropzone__msg dz-message needsclick">
-<h3 class="m-dropzone__msg-title">
-Drop files here or click to upload.
-</h3>
-<span class="m-dropzone__msg-desc">
-This is just a demo dropzone. Selected files are
-<strong>
-not
-</strong>
-actually uploaded.
-</span>
-</div>
-</div>
-</div> -->
 
                             <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
@@ -121,7 +100,7 @@ actually uploaded.
 
     </div>
 </div>
-</div>
+
 
 @endsection
 

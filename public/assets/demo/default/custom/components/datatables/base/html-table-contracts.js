@@ -39,6 +39,12 @@ var DatatableHtmlTableDemo = function() {
         }
       },
       columns: [
+               {
+          field: "Name",
+          title: "Name",
+          width: 60,
+          overflow: 'visible',
+        },
         {
           field: "Number",
           title: "Number",
@@ -62,26 +68,27 @@ var DatatableHtmlTableDemo = function() {
         {
           field: "20'",
           title: "20'",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
         {
           field: "40'",
           title: "40'",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
         {
           field: "40'HC",
           title: "40'HC",
-          width: 60,
+          width: 35,
           overflow: 'visible',
         },
+        
 
         {
           field: 'Status',
           title: 'Status',
-          width: 60,
+          width: 40,
           // callback function support for column rendering
           template: function(row) {
             var status = {
@@ -94,6 +101,22 @@ var DatatableHtmlTableDemo = function() {
             return '<span class="m-badge m-badge--' + status[row.Status].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
               status[row.Status].state + '">' +
               status[row.Status].title + '</span>';
+          },
+        },
+          {
+          field: 'status',
+          title: 'status',
+          width: 60,
+          // callback function support for column rendering
+          template: function(row) {
+            var status = {
+              1: {'title': 'publish', 'state': 'success'},
+              2: {'title': 'draft', 'state': 'warning'},
+
+            };
+            return '<span class="m-badge m-badge--' + status[row.status].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' +
+              status[row.status].state + '">' +
+              status[row.status].title + '</span>';
           },
         },
       ],
