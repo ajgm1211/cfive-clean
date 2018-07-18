@@ -99,9 +99,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     
     //Contract FCL Importation
     
-    route::get('imporfcl',function(){
-       return view('contracts.ImporContractFcl');
-    })->name('importaion.fcl');
+    Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
+    Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
     Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
 });
 

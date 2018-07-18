@@ -142,7 +142,7 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatOri"  type="checkbox">
+                                                <input name="DatOri" id="originchk" type="checkbox">
                                                 <span></span>
                                             </span>
                                         </span>
@@ -154,13 +154,16 @@ new registration
                                             </span>
                                         </span>
                                     </label>
+                                    <div class="col-form-label" id="origininp" hidden="hidden" >
+                                        {!! Form::select('origin',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin'])!!}
+                                    </div>
                                 </div>
 
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatDes"  type="checkbox">
+                                                <input name="DatDes" id="destinychk" type="checkbox">
                                                 <span></span>
                                             </span>
                                         </span>
@@ -172,12 +175,15 @@ new registration
                                             </span>
                                         </span>
                                     </label>
+                                    <div class="col-form-label" id="destinyinp" hidden="hidden" >
+                                        {!! Form::select('destiny',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny'])!!}
+                                    </div>
                                 </div>
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatCar" type="checkbox">
+                                                <input name="DatCar" id="carrierchk" type="checkbox">
                                                 <span></span>
                                             </span>
                                         </span>
@@ -189,6 +195,9 @@ new registration
                                             </span>
                                         </span>
                                     </label>
+                                    <div class="col-form-label" hidden="hidden" id="carrierinp">
+                                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group m-form__group row"></div>
@@ -200,10 +209,10 @@ new registration
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
-                                    <div class="col-lg-4 col-lg-offset-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            Cargar
-                                        </button>
+                                <div class="col-lg-4 col-lg-offset-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Load
+                                    </button>
                                 </div>
                             </div>
 
@@ -229,6 +238,42 @@ new registration
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script>
+
+    $('.m-select2-general').select2({
+        placeholder: "Select an option"
+    });
+
+    $('#originchk').on('click',function(){
+        if($('#originchk').prop('checked')){
+            $('#origininp').removeAttr('hidden');
+            $('#origin').attr('required','required');
+        } else{
+            $('#origininp').attr('hidden','hidden');
+            $('#origin').removeAttr('required');
+        }
+    }); 
+
+    $('#destinychk').on('click',function(){
+        if($('#destinychk').prop('checked')){
+            $('#destinyinp').removeAttr('hidden');
+            $('#destiny').attr('required','required');
+        } else{
+            $('#destinyinp').attr('hidden','hidden');
+            $('#destiny').removeAttr('required');
+        }
+    });
+
+    $('#carrierchk').on('click',function(){
+        if($('#carrierchk').prop('checked')){
+            $('#carrierinp').removeAttr('hidden');
+            $('#carrier').attr('required','required');
+        } else{
+            $('#carrierinp').attr('hidden','hidden');
+            $('#carrier').removeAttr('required');
+        }
+    });
+
+
     jQuery(document).ready(function($){
         Dropzone.options.mss = {
             paramName: "file", // The name that will be used to transfer the file

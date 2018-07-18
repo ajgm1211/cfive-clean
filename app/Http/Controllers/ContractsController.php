@@ -1523,17 +1523,7 @@ class ContractsController extends Controller
 
     public function UpdateSurchargeCorrect(Request $request){
         try {
-            /*
-            $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
-            $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
-            $contractVar           =  $_REQUEST['contract_id'];
-            $originVarArr          =  $_REQUEST['origin'];
-            $destinationVarArr     =  $_REQUEST['destination'];
-            $typedestinyVar        =  $_REQUEST['typedestiny'];
-            $calculationtypeVar    =  $_REQUEST['calculationtype'];
-            $ammountVar            =  $_REQUEST['ammount'];
-            $currencyVar           =  $_REQUEST['currency'];
-            $carrierVarArr         =  $_REQUEST['carrier'];  */
+
 
             $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
             $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
@@ -1631,9 +1621,29 @@ class ContractsController extends Controller
         } //*/
     }
 
-    public function UploadFileNewContract(Request $request){
-         //dd($request);
+    public function LoadViewImporContractFcl(){
+        $harbor  = harbor::all()->pluck('name');
+        $carrier = carrier::all()->pluck('name');
+        return view('contracts.ImporContractFcl',compact('harbor','carrier'));
+    }
 
+    public function UploadFileNewContract(Request $request){
+        //dd($request);
+
+        $request->type;
+
+        $carrierVal = $request->carrier;
+        $destinyVal = $request->destiny;
+        $originVal  = $request->origin;
+
+        $carrierBol = false;
+        $destinyBol = false;
+        $originBol  = false;
+
+        $data= collect([]);
+
+        $harbor  = harbor::all()->pluck('name');
+        $carrier = carrier::all()->pluck('name');
         //try {
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
@@ -1642,7 +1652,7 @@ class ContractsController extends Controller
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
-
+        $Contract_id;
         if ($validator->fails()) {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
@@ -1653,42 +1663,97 @@ class ContractsController extends Controller
         $nombre = $file->getClientOriginalName();
         \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
-        $contract = new Contract();
-        
-       /* $contract->name             = $request->name;
-        $contract->number           = $request->number;
-        $validity                   = explode('/',$request->validation_expire);
-        $contract->validity         = $validity[0];
-        $contract->expire           = $validity[1];
-        $contract->status           = 'Drash';
-        $contract->company_user_id  = \Auth::user()->company_user_id;
-        $contract->save();*/
-        
-        $errors=0;
+        $contract     = new Contract();
+        $contracExist = Contract::where('name','=',$request->name)->where('number','=',$request->number)->first();
+
+        if(count($contracExist) <= 0){
+
+            $contract->name             = $request->name;
+            $contract->number           = $request->number;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->status           = 'Draft';
+            $contract->company_user_id  = \Auth::user()->company_user_id;
+
+            $contract->save(); //*/
+
+            $Contract_id = $contract->id;
+        } else {
+            $Contract_id = $contracExist['id'];
+        }
+        $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
+
+        if($request->DatOri == false){
+            array_push($targetsArr,'Origin');
+        }
+        else{
+            $originBol = true;
+            $originVal;
+        }
+
+        if($request->DatDes == false){
+            array_push($targetsArr,'Destiny');
+        } else {
+            $destinyVal;
+            $destinyBol = true;
+        }
+
+        if($request->DatCar == false){
+            array_push($targetsArr,'Carrier');
+        } else {
+            $carrierVal;
+            $carrierBol = true;
+        }
+        //dd($targetsArr);
+        //  dd($data);
+        $coordenates = collect([]);
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
-            ->url($nombre),function($reader) use($errors,$request) {
-                       // ->Load(\Storage::disk('UpLoadFile')->url($nombre))->byConfig('excel::import.sheets', function($sheet) {
+                   ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->noHeading = true;
-                       //dd($reader->get());
-                       //dd($reader->select(array(2,3))->get());
+                       $reader->ignoreEmpty();
+
                        foreach($reader->get() as $read){
-                           dd(count($read));
-                           echo $read[0].' ';//
-                           echo $read[1].' ';//
-                           echo $read[2].' ';//
-                           echo $read[3].' ';//
-                           echo $read[4].' ';//
-                           echo $read[5].' ';//
-                           echo $read[6].'<br>';//
+                           // dd($read);
+                           $columna= array('A','B','C','D','E','F','G','H');
+                           for($i=0;$i<count($read);$i++){
+                               $coordenates->push($columna[$i].' '.$read[$i]);
+                           }
+                           break;
                        }
+                       //dd($coordenates);
 
                    });
+        $boxdinamy = [
+            'existorigin'   => $originBol,
+            'origin'        => $originVal,
+
+            'existdestiny'  => $destinyBol,
+            'destiny'       => $destinyVal,
+
+            'existcarrier'  => $carrierBol,
+            'carrier'       => $carrierVal,
+
+            'Contract_id'   => $Contract_id,
+            'number'        => $request->number,
+            'name'          => $request->name,
+            'fileName'      => $nombre,
+            'validatiion'   => $request->validation_expire,
+        ];
+        $data->push($boxdinamy);
+        //dd($data);
+
+        return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data'));
         /*  }catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
             return redirect()->route('importaion.fcl');
         }*/
+    }
+
+    public function ProcessContractFcl(Request $request){
+        dd($request);
     }
 
     public function updateLocalChar(Request $request, $id)
