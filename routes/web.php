@@ -75,8 +75,9 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
-  //Route::get('add', 'ContractsController@add')->name('contracts.add');
-  Route::get('addT', 'ContractsController@add')->name('contracts.add');
+
+    //Route::get('add', 'ContractsController@add')->name('contracts.add');
+    Route::get('addT', 'ContractsController@add')->name('contracts.add');
   Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
   Route::put('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
   Route::get('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
@@ -84,8 +85,6 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
   Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
-
-
 
   // Rates
   Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
@@ -98,6 +97,14 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::PUT('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
   Route::get('FailedSubchargeForContracts/{id}','ContractsController@FailSubcharges')->name('Failed.Subcharge.For.Contracts');
   Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
+  Route::get('DestroySurchargeFailCorrectForContracts','ContractsController@DestroySurchargeFailCorrect')->name('Destroy.Surcharge.FailCorrect.For.Contracts');
+  Route::get('UpdateSurchargeForContracts','ContractsController@UpdateSurchargeCorrect')->name('Update.Surcharge.For.Contractss');
+
+  //Contract FCL Importation
+
+  Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
+  Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
+  Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');

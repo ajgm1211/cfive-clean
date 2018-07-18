@@ -1403,8 +1403,9 @@ class QuoteController extends Controller
           $collectS = Collection::make($schedules);
           $schedulesArr->push($collectS);
         }
-        if(!$schedulesArr->isEmpty()){
-          $schedulesArr =  $schedulesArr->where('Etd','>=', '2018-07-24')->first();
+        //'2018-07-24'
+        if(!$schedulesArr->isEmpty()){ 
+          $schedulesArr =  $schedulesArr->where('Etd','>=', $date)->first();
           $schedulesFin->push($schedulesArr);
         }
       }
