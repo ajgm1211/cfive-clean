@@ -16,10 +16,10 @@ class CreateContractsTable extends Migration
     Schema::create('contracts', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
-      $table->string('number')->unique();
+      $table->string('number');
       $table->date('validity');
       $table->date('expire');
-      $table->enum('status',['publish','draft'])->default('draft');
+      $table->enum('status',['publish','draft','incomplete'])->default('draft');
       $table->integer('company_user_id')->unsigned()->nullable();
       $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');  
       $table->timestamps();
