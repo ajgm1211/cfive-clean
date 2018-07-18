@@ -64,28 +64,31 @@
             <table class="m-datatable text-center title-quote"  id="html_table" >
                 <thead>
                     <tr class="title-quote">
-                        <th title="Field #1">
+                        <th title="Status">
                             Status
                         </th>
-                        <th title="Field #2">
+                        <th title="Client">
                             Client
                         </th>
-                        <th title="Field #3">
+                        <th title="Created">
                             Created
                         </th>
-                        <th title="Field #4">
+                        <th title="Owner">
                             Owner
                         </th>
-                        <th title="Field #5">
+                        <th title="Origin">
                             Origin
                         </th>
-                        <th title="Field #6">
+                        <th title="Destination">
                             Destination
                         </th>
-                        <th title="Field #7">
+                        <th title="Ammount">
                             Ammount
                         </th>
-                        <th title="Field #8">
+                        <th title="Type">
+                            Type
+                        </th>
+                        <th title="Options">
                             Options
                         </th>
                     </tr>
@@ -112,6 +115,15 @@
                         <td>{{$quote->destination_address }}</td>
                         @endif
                         <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} @if(isset($currency_cfg)) {{$currency_cfg->alphacode}} @endif</td>
+                        <td>
+                            @if($quote->type==1)
+                                <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
+                            @elseif($quote->type==2)
+                                <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
+                            @else
+                                <img src="{{asset('images/plane-blue.svg')}}" class="img img-responsive" width="21"> 
+                            @endif
+                        </td>
                         <td>
                             <a href="{{route('quotes.show',$quote->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
                                 <i class="la la-eye"></i>

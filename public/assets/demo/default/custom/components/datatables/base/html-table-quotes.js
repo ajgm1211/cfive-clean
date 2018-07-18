@@ -45,8 +45,12 @@ var DatatableHtmlTableDemo = function() {
         width: 80,        
         overflow: 'visible',
       },
-
-
+      {
+        field: "Client",
+        title: "Client",
+        width: 60,
+        overflow: 'visible',
+      },
       {
         field: "Created",
         title: "Created",
@@ -56,19 +60,31 @@ var DatatableHtmlTableDemo = function() {
       {
         field: "Origin",
         title: "Origin",
-        width: 60,
+        width: 80,
         overflow: 'visible',
       },
       {
         field: "Destination",
         title: "Destination",
-        width: 60,
+        width: 80,
         overflow: 'visible',
       },
       {
         field: "Ammount",
         title: "Ammount",
         width: 60,
+        overflow: 'visible',
+      },
+      {
+        field: "Type",
+        title: "Type",
+        width: 60,
+        overflow: 'visible',
+      },      
+      {
+        field: "Options",
+        title: "Options",
+        width: 150,
         overflow: 'visible',
       },
       ],

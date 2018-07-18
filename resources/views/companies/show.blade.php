@@ -47,7 +47,7 @@
                             <div class="col-md-12">
                                 <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                     <div class="m-portlet__body text-center">
-                                        <h2 class="size-20px" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> <a onclick="AbrirModal('edit',{{$company->id}})" href="#" class="pull-right"><i class="fa fa-edit"></i></a></h2>
+                                        <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> <a onclick="AbrirModal('edit',{{$company->id}})" href="#" class="pull-right"><i class="fa fa-edit"></i></a></h2>
                                         <br>
                                         <button class="btn btn-default">
                                             Actions
@@ -60,28 +60,30 @@
                             <div class="col-md-12">
                                 <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                     <div class="m-portlet__body">
-                                        <h4 class="size-16px"><b>About {{$company->business_name}}</b></h4>
-                                        <br>
-                                        <label><b>Name</b></label>
-                                        <p>{{$company->business_name}}</p>
+                                        <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#about_company" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>About {{$company->business_name}}</b></h4>
                                         <hr>
-                                        <label><b>Phone</b></label>
-                                        <p>{{$company->phone}}</p>
-                                        <hr>
-                                        <label><b>Address</b></label>
-                                        <p>{{$company->address}}</p>
-                                        <hr>
-                                        <label><b>Price level</b></label>
-                                        @if(isset($company->price_name) && count($company->price_name)>0)
-                                        <ul>
-                                            @foreach($company->price_name as $price)
-                                            <li style="margin-left: -25px;">{{$price->name}}</li>
-                                            @endforeach
-                                        </ul>
-                                        @else
-                                        <p>There are not associated prices</p>
-                                        @endif
-                                        <hr>
+                                        <div class="collapse" id="about_company">
+                                            <label><b>Name</b></label>
+                                            <p class="color-black">{{$company->business_name}}</p>
+                                            <hr>
+                                            <label><b>Phone</b></label>
+                                            <p class="color-black">{{$company->phone}}</p>
+                                            <hr>
+                                            <label><b>Address</b></label>
+                                            <p class="color-black">{{$company->address}}</p>
+                                            <hr>
+                                            <label><b>Price level</b></label>
+                                            @if(isset($company->price_name) && count($company->price_name)>0)
+                                            <ul>
+                                                @foreach($company->price_name as $price)
+                                                <li style="margin-left: -25px;" class="color-black">{{$price->name}}</li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            <p class="color-black">There are not associated prices</p>
+                                            @endif
+                                            <hr>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -90,22 +92,24 @@
                             <div class="col-md-12">
                                 <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                     <div class="m-portlet__body">
-                                        <h4 class="size-16px" style="color:black;"><b>Contacts</b></h4>
+                                        <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#company_contacts" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Contacts</b></h4>
                                         <hr>
-                                        @if(!$company->contact->isEmpty())
-                                        @foreach($company->contact as $contact)
-                                        <ul>
-                                            <li>{{$contact->first_name}} {{$contact->last_name}} <a href="#" data-contact-id="{{$contact->id}}" id="delete-contact"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
-                                        </ul>
-                                        @endforeach
-                                        @else
-                                        <p>No contacts</p>
-                                        @endif
-                                        <br>
-                                        <div class="text-center">
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
-                                                Add contact
-                                            </button>
+                                        <div class="collapse" id="company_contacts"> 
+                                            @if(!$company->contact->isEmpty())
+                                            @foreach($company->contact as $contact)
+                                            <ul>
+                                                <li>{{$contact->first_name}} {{$contact->last_name}} <a href="#" data-contact-id="{{$contact->id}}" id="delete-contact"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
+                                            </ul>
+                                            @endforeach
+                                            @else
+                                            <p>No contacts</p>
+                                            @endif
+                                            <br>
+                                            <div class="text-center">
+                                                <button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
+                                                    Add contact
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -113,22 +117,22 @@
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <table class="m-datatable" id="html_table" >
+                        <table class="m-datatable text-center" id="html_table" >
                             <thead>
                                 <tr>
-                                    <th title="Field #1">
+                                    <th title="Status">
                                         Status
                                     </th>
-                                    <th title="Field #3">
+                                    <th title="Created">
                                         Created
                                     </th>
-                                    <th title="Field #5">
+                                    <th title="Origin">
                                         Origin
                                     </th>
-                                    <th title="Field #6">
+                                    <th title="Destination">
                                         Destination
                                     </th>
-                                    <th title="Field #7">
+                                    <th title="Ammount">
                                         Ammount
                                     </th>
                                 </tr>
