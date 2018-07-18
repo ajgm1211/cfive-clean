@@ -169,7 +169,7 @@
                                                                 <div class="col-md-3">
                                                                     <label>Pick up date</label>
                                                                     <div class="input-group date">
-                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text">
                                                                                 <i class="la la-calendar-check-o"></i>
@@ -200,6 +200,20 @@
                                                                     {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <br>
+                                                                    <label>Validity</label>
+                                                                    <div class="input-group date">
+                                                                        {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">
+                                                                                <i class="la la-calendar-check-o"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -210,7 +224,6 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-lg-10">
-                                                            <br>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Company</label>
@@ -223,31 +236,6 @@
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Price level</label>
                                                                     {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="form-group m-form__group row" id="terms_box" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <label>
-                                                                    <b>TERMS & CONDITIONS</b>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div id="terms_box_import">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">                                             
-                                                                <div id="terms_box_export">
-
                                                                 </div>
                                                             </div>
                                                         </div>

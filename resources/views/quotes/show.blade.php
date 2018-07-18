@@ -60,7 +60,7 @@
                                     <div class="pull-right text-right" style="line-height: .5">                                
                                         <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
                                         <p><b>Date of issue:</b> {{$quote->created_at}}</p>
-                                        <p><b>Validity:</b> {{$quote->created_at}}</p>
+                                        <p><b>Validity:</b> {{$quote->validity}}</p>
                                     </div>
                                 </div>
                             </div>

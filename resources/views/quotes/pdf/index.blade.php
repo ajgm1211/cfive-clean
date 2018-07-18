@@ -14,7 +14,7 @@
         <div id="company">
             <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->id}}</b></span></div>
             <div><b>Date of issue:</b> {{$quote->created_at}}</div>
-            <div><b>Validity: </b>{{$quote->created_at}}</div>
+            <div><b>Validity: </b>{{$quote->validity}}</div>
         </div>
     </header>
     <main>
