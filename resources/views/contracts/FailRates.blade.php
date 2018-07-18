@@ -67,17 +67,17 @@
             <table class="table m-table m-table--head-separator-primary "  id="html_table" >
                 <thead >
                     <tr>
-                        <th >
+                        <th width="5%" >
                             Status
-                        </th>
-                        <th >
+                        </th >
+                        <th width="18%">
                             Origin
                         </th>
-                        <th >
+                        <th width="18%">
                             Destiny
                         </th>
 
-                        <th >
+                        <th width="10%">
                             Carrier
                         </th>
                         <th >
@@ -496,6 +496,7 @@
                         $('#fortylb'+idtr).attr('style','color:red');
                         $('#fortyhclb'+idtr).attr('style','color:red');
                         $('#currencylb'+idtr).attr('style','color:red');
+                        $('#trR'+idtr).attr('hidden','hidden');
                     }
                 });
             }

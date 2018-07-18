@@ -164,15 +164,14 @@ class UsersController extends Controller
 
     public function datahtml(){
         // temporal
-        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
-            $data = User::all();
+
+        if(Auth::user()->type == 'admin'  ){
+            $user = new User();
+            $data = $user->all();
         }
 
-        if(Auth::user()->type == 'company' ){
-            $data =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->get();
+        if(Auth::user()->type == 'company' || Auth::user()->type == 'subuser' ){
+            $data =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->get();
         }
 
         return view('users/indexhtml', ['arreglo' => $data]);

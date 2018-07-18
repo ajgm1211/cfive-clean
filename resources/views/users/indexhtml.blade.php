@@ -146,8 +146,9 @@
                                     3
                                 @endif
                             </td>
-                            <td>{{ $arr->companyUser->name }}</td>
+                            <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>
                             <td>@if($arr->state==1) Active @else Inactive @endif</td>
+                            @if(Auth::user()->type != 'subuser')
                             <td>
                                 <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                     <i class="la la-edit"></i>
@@ -164,6 +165,10 @@
                                     <i class="la la-user"></i>
                                 </a>
                             </td>
+                            @else
+                            <td>-</td>
+                            @endif
+                            
                         </tr>
                     @endforeach
                     </tbody>
