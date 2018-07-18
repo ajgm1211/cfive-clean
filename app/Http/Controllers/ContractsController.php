@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadFileRateRequest;
+use App\FileTmp;
+use Illuminate\Support\Facades\Storage;
 
 class ContractsController extends Controller
 {
@@ -1770,7 +1772,7 @@ class ContractsController extends Controller
             $request->session()->flash('message.content', 'Error with the archive');
             return redirect()->route('importaion.fcl');
         }//*/
-  }
+      }
 
   public function ProcessContractFcl(Request $request){
     //Storage::delete($request->);
