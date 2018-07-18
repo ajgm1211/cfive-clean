@@ -36,6 +36,7 @@ use App\StatusQuote;
 use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use App\Schedule;
 class QuoteController extends Controller
 {
   /**
@@ -84,6 +85,7 @@ class QuoteController extends Controller
     $info = json_decode($info);
     $form =$request->input('form');
     // dd($info);
+    $schedules = $request->input('schedules');
     $form = json_decode($form);
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
@@ -102,7 +104,7 @@ class QuoteController extends Controller
 
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency ]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules  ]);
 
   }
 
@@ -1404,7 +1406,7 @@ class QuoteController extends Controller
           $schedulesFin->push($schedulesArr);
         }
       }
-     
+
 
       //#######################################################################
 
@@ -1475,7 +1477,7 @@ class QuoteController extends Controller
       $data->setAttribute('idCurrency',$idCurrency);
       // SCHEDULES
       $data->setAttribute('schedulesFin',$schedulesFin);
-      
+
 
 
 
@@ -1549,7 +1551,7 @@ class QuoteController extends Controller
 	 */
   public function store(Request $request)
   {
-    //dd($request->all());
+
     $input = Input::all();
     $request->request->add(['owner' => \Auth::id()]);
     $quote=Quote::create($request->all());
@@ -1668,10 +1670,34 @@ class QuoteController extends Controller
       }
     }
 
+    if($input['schedule'] != 'null'){
+      $schedules = json_decode($input['schedule']);
+      foreach( $schedules as $schedule){ 
+        $sche = json_decode($schedule);
+        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+
+        $saveSchedule  = new Schedule();
+        $saveSchedule->vessel = $sche->Etd;
+        $saveSchedule->etd = $sche->Etd;
+        $saveSchedule->transit_time =  $dias;
+        $saveSchedule->eta = $sche->Eta;
+        $saveSchedule->type = 'direct';
+        $saveSchedule->quotes()->associate($quote);
+        $saveSchedule->save(); 
+      }
+    }
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
     return redirect()->route('quotes.index');
+  }
+
+
+  function dias_transcurridos($fecha_i,$fecha_f)
+  {
+    $dias	= (strtotime($fecha_i)-strtotime($fecha_f))/86400;
+    $dias 	= abs($dias); $dias = floor($dias);		
+    return intval($dias);
   }
 
   /**

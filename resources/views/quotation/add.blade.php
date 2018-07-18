@@ -778,40 +778,16 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="status_id" name="status_id" value="1">
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
-    {!! Form::close() !!}  @if(isset($form->price_id ))
-    @php
-    $priceID = $form->price_id;
-    @endphp
-    @else
-    @php
-    $priceID = "";
-    @endphp
-    @endif
-    <input type="hidden" class="form-control" id="incoterm" name="incoterm" value="{{ $form->incoterm }} ">
-    <input type="hidden" class="form-control" id="modality" name="modality" value="{{ $form->modality }} ">
-    <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $form->date }}">
-    <input type="hidden" class="form-control" id="origin_address" name="origin_address" value="{{ $form->origin_address }} ">
-    <input type="hidden" class="form-control" id="destination_address" name="destination_address" value="{{ $form->destination_address }} ">
-    <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id }} ">
-    <input type="hidden" class="form-control" id="origin_harbor_id" name="origin_harbor_id" value="{{ $info->origin_port }} ">
-    <input type="hidden" class="form-control" id="destination_harbor_id" name="destination_harbor_id" value="{{ $info->destiny_port }} ">
-    <input type="hidden" class="form-control" id="price_id" name="price_id" value="{{ $priceID }} ">
-    <input type="hidden" class="form-control" id="contact_id" name="contact_id" value="{{ $form->contact_id }} ">
-    <input type="hidden" class="form-control" id="qty_20" name="qty_20" value="{{ $form->twuenty }} ">
-    <input type="hidden" class="form-control" id="qty_40" name="qty_40" value="{{ $form->forty }} ">
-    <input type="hidden" class="form-control" id="qty_40_hc" name="qty_40_hc" value="{{ $form->fortyhc }} ">
-    <input type="hidden" class="form-control" id="pick_up_date" name="pick_up_date" value="{{ $form->date }} ">
-    <input type="hidden" class="form-control" id="status_id" name="status_id" value="1">
-    <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
-    <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
-    {!! Form::close() !!}
-
+    <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    {!! Form::close() !!}  
   </div>
 </div>
 @endsection
 
 @section('js')
 @parent
+
+  
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>
@@ -819,5 +795,6 @@ $subtotalDestiny = 0;
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+
 
 @stop
