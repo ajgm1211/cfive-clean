@@ -9593,6 +9593,10 @@ CONTENTS:
   color: #1d3a6e !important;
 }
 
+.color-black {
+  color: #333 !important;
+}
+
 /*** CUSTOMIZE DATATABLES ***/
 .m-datatable > .m-datatable__table > .m-datatable__head .m-datatable__row > .m-datatable__cell > span, .m-datatable > .m-datatable__table > .m-datatable__foot .m-datatable__row > .m-datatable__cell > span {
   font-size: 12px !important;

@@ -155,9 +155,9 @@
                                     <td>{{$origin_ammount->detail}}</td>
                                     <td>{{$origin_ammount->units}}</td>
                                     <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
-                                    <td>{{$origin_ammount->markup}}</td>
-                                    <td>{{$origin_ammount->total_ammount}}</td>
-                                    <td>{{$origin_ammount->total_ammount_2}}</td>
+                                    <td>{{$origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
+                                    <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
+                                    <td>{{$origin_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -198,9 +198,9 @@
                                     <td>{{$freight_ammount->detail}}</td>
                                     <td>{{$freight_ammount->units}}</td>
                                     <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
-                                    <td>{{$freight_ammount->markup}}</td>
-                                    <td>{{$freight_ammount->total_ammount}}</td>
-                                    <td>{{$freight_ammount->total_ammount_2}}</td>
+                                    <td>{{$freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
+                                    <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
+                                    <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -241,9 +241,9 @@
                                     <td>{{$destination_ammount->detail}}</td>
                                     <td>{{$destination_ammount->units}}</td>
                                     <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
-                                    <td>{{$destination_ammount->markup}}</td>
-                                    <td>{{$destination_ammount->total_ammount}}</td>
-                                    <td>{{$destination_ammount->total_ammount_2}}</td>
+                                    <td>{{$destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
+                                    <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
+                                    <td>{{$destination_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>
