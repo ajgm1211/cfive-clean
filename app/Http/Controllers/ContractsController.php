@@ -381,9 +381,16 @@ class ContractsController extends Controller
     $rate->update($requestForm);
   }
 
+
+
   public function UploadFileRateForContract(Request $request){
 
+    $nombre='';
+
     try {
+
+      $now = new \DateTime();
+      $now = $now->format('dmY_His');
       $file = $request->file('file');
       $ext = strtolower($file->getClientOriginalExtension());
 
@@ -400,7 +407,7 @@ class ContractsController extends Controller
 
       //obtenemos el nombre del archivo
       $nombre = $file->getClientOriginalName();
-
+      $nombre = $now.'_'.$nombre;
 
       $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
       //dd(\Storage::disk('UpLoadFile')->url($nombre));
@@ -597,6 +604,7 @@ class ContractsController extends Controller
           $request->session()->flash('message.title', 'Well done!');
         }
       });
+      Storage::delete($nombre);
       Rate::onlyTrashed()->where('contract_id','=',$contract)
         ->forceDelete();
       FailRate::onlyTrashed()->where('contract_id','=',$contract)
@@ -606,6 +614,7 @@ class ContractsController extends Controller
       //dd($res);*/
 
     } catch (\Illuminate\Database\QueryException $e) {
+      Storage::delete($nombre);
       Rate::onlyTrashed()->where('contract_id','=',$contract)
         ->restore();
       FailRate::onlyTrashed()->where('contract_id','=',$contract)
@@ -826,7 +835,7 @@ class ContractsController extends Controller
 
       if($twuentyB == true && $fortyB == true && $fortyhcB == true) {
 
-        Rate::create([
+        $idrate = Rate::create([
           'origin_port'   => $originV,
           'destiny_port'  => $destinationV,
           'carrier_id'    => $carrierV,
@@ -837,7 +846,7 @@ class ContractsController extends Controller
           'currency_id'   => $currencyV,
         ]); 
 
-        $failrate->delete();
+        $failrate->forceDelete();
 
         $origcolle   = Harbor::find($originV);
         $destcolle   = Harbor::find($destinationV);
@@ -852,6 +861,7 @@ class ContractsController extends Controller
                        'forty'     => $fortyV,
                        'fortyhc'   => $fortyhcV,
                        'currency'  => $currencolle->alphacode,
+                       'idrate'    => $idrate->id
                       ];
 
       }
@@ -866,55 +876,46 @@ class ContractsController extends Controller
   }
 
   public function UpdateRatesCorrect(Request $request){
+    try{
+      $rate_idR     = $_REQUEST['rate_id'];
+      $contract     = $_REQUEST['contract_id'];
+      $originR      = $_REQUEST['origin'];
+      $destinationR = $_REQUEST['destination'];
+      $carrierR     = $_REQUEST['carrier'];
+      $twuentyR     = $_REQUEST['twuenty'];
+      $fortyR       = $_REQUEST['forty'];
+      $fortyhcR     = $_REQUEST['fortyhc'];
+      $currencyR    = $_REQUEST['currency'];
 
-    $rate_idR     = $_REQUEST['rate_id'];
-    $contract     = $_REQUEST['contract_id'];
-    $originR      = $_REQUEST['origin'];
-    $destinationR = $_REQUEST['destination'];
-    $carrierR     = $_REQUEST['carrier'];
-    $twuentyR     = $_REQUEST['twuenty'];
-    $fortyR       = $_REQUEST['forty'];
-    $fortyhcR     = $_REQUEST['fortyhc'];
-    $currencyR    = $_REQUEST['currency'];
+      $rate = new Rate();
 
-    $rate = new Rate();
+      $rate = Rate::find($rate_idR);
+      $rate->origin_port   = $originR;
+      $rate->destiny_port  = $destinationR;
+      $rate->carrier_id    = $carrierR;
+      $rate->twuenty       = $twuentyR;
+      $rate->forty         = $fortyR;
+      $rate->fortyhc       = $fortyhcR;
+      $rate->currency_id   = $currencyR;
+      $rate->save();
 
-    /*$duplicate =  Rate::where('origin_port','=',$originR)
-            ->where('destiny_port','=',$destinationR)
-            ->where('carrier_id','=',$carrierR)
-            ->where('contract_id','=',$contract)
-            ->count();
-        //return $duplicate;
+      $origcolle   = Harbor::find($rate->origin_port);
+      $destcolle   = Harbor::find($rate->destiny_port);
+      $carriecolle = Carrier::find($rate->carrier_id);
+      $currencolle = Currency::find($rate->currency_id);
 
-        if($duplicate <= 0){*/
-    $rate = Rate::find($rate_idR);
-    $rate->origin_port   = $originR;
-    $rate->destiny_port  = $destinationR;
-    $rate->carrier_id    = $carrierR;
-    $rate->twuenty       = $twuentyR;
-    $rate->forty         = $fortyR;
-    $rate->fortyhc       = $fortyhcR;
-    $rate->currency_id   = $currencyR;
-    $rate->save();
-
-    $origcolle   = Harbor::find($rate->origin_port);
-    $destcolle   = Harbor::find($rate->destiny_port);
-    $carriecolle = Carrier::find($rate->carrier_id);
-    $currencolle = Currency::find($rate->currency_id);
-
-    return $col = ['response'  => '1',
-                   'origin'    => $origcolle->name,
-                   'destiny'   => $destcolle->name,
-                   'carrier'   => $carriecolle->name,
-                   'twuenty'   => $twuentyR,
-                   'forty'     => $fortyR,
-                   'fortyhc'   => $fortyhcR,
-                   'currency'  => $currencolle->alphacode,
-                  ];
-    /*}
-        else{
-            return $col = ['response'  => '2'];
-        }*/
+      return $col = ['response'  => '1',
+                     'origin'    => $origcolle->name,
+                     'destiny'   => $destcolle->name,
+                     'carrier'   => $carriecolle->name,
+                     'twuenty'   => $twuentyR,
+                     'forty'     => $fortyR,
+                     'fortyhc'   => $fortyhcR,
+                     'currency'  => $currencolle->alphacode,
+                    ];
+    }catch(\Exception $e){
+      return $col = ['response'  => '2'];
+    }
 
   }
 
@@ -926,13 +927,13 @@ class ContractsController extends Controller
     if($accion == 2){
       $rate = new Rate();
       $rate = Rate::find($rate_id);
-      $rate->delete();
+      $rate->forceDelete();
       return 2;
     }
     else if($accion == 1){
       $ratefail = new FailRate();
       $ratefail = FailRate::find($rate_id);
-      $ratefail->delete();
+      $ratefail->forceDelete();
       return 1;
 
     }
@@ -940,7 +941,10 @@ class ContractsController extends Controller
 
   public function UploadFileSubchargeForContract(Request $request){
     //dd($request);
+    $nombre='';
     try {
+      $now = new \DateTime();
+      $now = $now->format('dmY_His');
       $file = $request->file('file');
       $ext = strtolower($file->getClientOriginalExtension());
 
@@ -957,6 +961,7 @@ class ContractsController extends Controller
 
       //obtenemos el nombre del archivo
       $nombre = $file->getClientOriginalName();
+      $nombre = $now.'_'.$nombre;
 
       $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
@@ -1210,6 +1215,7 @@ class ContractsController extends Controller
 
         }
       });
+      Storage::delete($nombre);
       LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
         ->forceDelete();
       FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
@@ -1217,6 +1223,7 @@ class ContractsController extends Controller
       return redirect()->route('Failed.Subcharge.For.Contracts',$contract);
 
     } catch (\Illuminate\Database\QueryException $e) {
+      Storage::delete($nombre);
       LocalCharge::onlyTrashed()->where('contract_id','=',$contract)
         ->restore();
       FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
@@ -1252,6 +1259,7 @@ class ContractsController extends Controller
 
       $classdorigin           =  'color:green';
       $classddestination      =  'color:green';
+      $classtypedestiny       =  'color:green';
       $classcarrier           =  'color:green';
       $classsurcharger        =  'color:green';
       $classcalculationtype   =  'color:green';
@@ -1380,6 +1388,7 @@ class ContractsController extends Controller
         'classsurcharge'        => $classsurcharger,
         'classorigin'           => $classdorigin,
         'classdestiny'          => $classddestination,
+        'classtypedestiny'      => $classtypedestiny,
         'classcarrier'          => $classcarrier,
         'classcalculationtype'  => $classcalculationtype,
         'classammount'          => $classammount,
@@ -1410,64 +1419,364 @@ class ContractsController extends Controller
 
   public function SaveCorrectedSurcharge(Request $request){
 
-    $idSurchargeVar        =    29;
-    $surchargeVar          =    2;
-    $contractVar           =    1;
-    $originVar             =    15;
-    $destinationVarArr     =    [77,12];
-    $typedestinyVar        =    3;
-    $calculationtypeVar    =    1;
-    $ammountVar            =    100;
-    $currencyVar           =    149;
-    $carrierVar            =    14;
-    //*/
-    /*
-        $idSurchargeVar        =    $_REQUEST['idSurcharge'];
-        $surchargeVar          =    $_REQUEST['surcharge'];
-        $contractVar           =    $_REQUEST['contract_id'];
-        $originVar             =    $_REQUEST['origin'];
-        $destinationVarArr     =    $_REQUEST['destination'];
-        $typedestinyVar        =    $_REQUEST['typedestiny'];
-        $calculationtypeVar    =    $_REQUEST['rate_id'];
-        $ammountVar            =    $_REQUEST['ammount'];
-        $currencyVar           =    $_REQUEST['currency'];
-        $carrierVar            =    $_REQUEST['carrier'];
+    try {
 
-        //*/
-    //return $col = ['response'  => '1'];
 
-    $failSurcharge = new FailSurCharge();
-    $failSurcharge = FailSurCharge::find($idSurchargeVar);
-    $count=0;
-    $countArreglo = count($destinationVarArr);
+      $idSurchargeVar        =    $_REQUEST['idSurcharge'];
+      $surchargeVar          =    $_REQUEST['surcharge'];
+      $contractVar           =    $_REQUEST['contract_id'];
+      $originVarArr          =    $_REQUEST['origin'];
+      $destinationVarArr     =    $_REQUEST['destination'];
+      $typedestinyVar        =    $_REQUEST['typedestiny'];
+      $calculationtypeVar    =    $_REQUEST['calculationtype'];
+      $ammountVar            =    $_REQUEST['ammount'];
+      $currencyVar           =    $_REQUEST['currency'];
+      $carrierVarArr         =    $_REQUEST['carrier'];
+      //return $carrierVar;
+      //*/
 
-    //->where('port_dest','=',$destinationVar);
+      $failSurcharge = new FailSurCharge();
+      $failSurcharge = FailSurCharge::find($idSurchargeVar);
 
-    foreach($destinationVarArr as $destinationVar){
-      $SurcharFull = LocalCharge::where('surcharge_id','=',$surchargeVar)
-        ->where('typedestiny_id','=',$typedestinyVar)
-        ->where('contract_id','=',$contractVar)
-        ->where('calculationtype_id','=',$calculationtypeVar)
-        ->where('ammount','=',$ammountVar)
-        ->where('currency_id','=',$currencyVar)
-        ->whereHas('localcharcarriers',function($q) use($carrierVar){
-          $q->where('carrier_id','=',$carrierVar);
-        })
-        ->whereHas('localcharports', function($k) use($originVar,$destinationVar){
-          $k->where('port_orig','=',$originVar);
-        })->get();
-      if($SurcharFull->isEmpty() != true){
+      $SurchargeId = LocalCharge::create([
+        'surcharge_id'          => $surchargeVar,
+        'typedestiny_id'        => $typedestinyVar,
+        'contract_id'           => $contractVar,
+        'calculationtype_id'    => $calculationtypeVar,
+        'ammount'               => $ammountVar,
+        'currency_id'           => $currencyVar
+      ]);
 
-        $portdes =  LocalCharPort::where('port_dest','=',$SurcharFull->id)->get();
-        if($portdes->isEmpty()){
-          dd($portdes);
+      foreach($originVarArr as $originVar){
+        foreach($destinationVarArr as $destinationVar){
+          LocalCharPort::create([
+            'port_orig'         => $originVar,
+            'port_dest'         => $destinationVar,
+            'localcharge_id'    => $SurchargeId->id
+          ]);
         }
       }
+
+      foreach($carrierVarArr as $carrierVar){
+        LocalCharCarrier::create([
+          'carrier_id'        => $carrierVar,
+          'localcharge_id'    => $SurchargeId->id  
+        ]);
+      }
+      $failSurcharge->forceDelete(); //*/
+      $goodsurcharges     = LocalCharge::where('id','=',$SurchargeId->id)
+        //$goodsurcharges     = LocalCharge::where('id','=',16)
+        ->where('contract_id','=',$contractVar)
+        ->with('currency',
+               'calculationtype',
+               'surcharge',
+               'typedestiny',
+               'localcharcarriers.carrier',
+               'localcharports.portOrig',
+               'localcharports.portDest'
+              )->get();
+      $colle = collect([]);
+      foreach($goodsurcharges as $goodsurcharge){
+        //dd($goodsurcharge->calculationtype);
+        $portOri ='';
+        foreach($goodsurcharge->localcharports->pluck('portOrig')->unique()->pluck('name') as $name){
+          $portOri = $portOri.' '.$name.'.';
+        }
+
+        $portDest ='';
+        foreach($goodsurcharge->localcharports->pluck('portDest')->unique()->pluck('name') as $name){
+          $portDest = $portDest.' '.$name.'.';
+        }
+        $carriercoll ='';
+        foreach($goodsurcharge->localcharcarriers->pluck('carrier')->unique()->pluck('name') as $name){
+          $carriercoll = $carriercoll.' '.$name.'.';
+        }
+
+        $arreglo  = [
+          'surcharge_id'          => $goodsurcharge->id,
+          'surchargeLB'           => $goodsurcharge->surcharge['name'],
+
+          'typedestinyLB'         => $goodsurcharge->typedestiny['description'],
+
+          'calculationtypeLB'     => $goodsurcharge->calculationtype['name'],
+          'ammount'               => $goodsurcharge->ammount,
+          'currencyLB'            => $goodsurcharge->currency['alphacode'],
+
+          'port_origLB'           => $portOri,
+          'port_destLB'           => $portDest,
+          'carrier'               => $carriercoll,
+          'response'              => 1
+        ];
+        //dd($arreglo);
+        return $arreglo;
+      }
+    } catch (\Exception $e){
+      return $arreglo = ['response'  => '0'];
+    }
+  }
+
+  public function DestroySurchargeFailCorrect(Request $request){
+
+    try{
+      $surcharge_id   =  $_REQUEST['surcharge_id'];
+      $accion         =  $_REQUEST['accion'];
+
+      if($accion == 2){
+        $surcharge = new LocalCharge();
+        $surcharge = LocalCharge::find($surcharge_id);
+        $surcharge->forceDelete();
+        return 2;
+      }
+      else if($accion == 1){
+        $surchargefail = new FailSurCharge();
+        $surchargefail = FailSurCharge::find($surcharge_id);
+        $surchargefail->forceDelete();
+        return 1;
+
+      }
+    }catch(\Exception $e){
+      return 3;
+    }
+  }
+
+  public function UpdateSurchargeCorrect(Request $request){
+    try {
+
+
+      $surchargeVar          =  $_REQUEST['surcharge']; // id de la columna surchage_id
+      $idSurchargeVar        =  $_REQUEST['idSurcharge']; // id del localcherge
+      $contractVar           =  $_REQUEST['contract_id'];
+      $originVarArr          =  $_REQUEST['origin'];
+      $destinationVarArr     =  $_REQUEST['destination'];
+      $typedestinyVar        =  $_REQUEST['typedestiny'];
+      $calculationtypeVar    =  $_REQUEST['calculationtype'];
+      $ammountVar            =  $_REQUEST['ammount'];
+      $currencyVar           =  $_REQUEST['currency'];
+      $carrierVarArr         =  $_REQUEST['carrier'];
+      // return response()->json(['message' => 'Ok']);
+      //*/
+
+
+
+      $SurchargeId = new LocalCharge();
+      $SurchargeId  = LocalCharge::find($idSurchargeVar);
+
+      $SurchargeId->surcharge_id          = $surchargeVar;
+      $SurchargeId->typedestiny_id        = $typedestinyVar;
+      $SurchargeId->contract_id           = $contractVar;
+      $SurchargeId->calculationtype_id    = $calculationtypeVar;
+      $SurchargeId->ammount               = $ammountVar;
+      $SurchargeId->currency_id           = $currencyVar;
+      $SurchargeId->update();
+
+      LocalCharPort::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+      foreach($originVarArr as $originVar){
+        foreach($destinationVarArr as $destinationVar){
+          LocalCharPort::create([
+            'port_orig'         => $originVar,
+            'port_dest'         => $destinationVar,
+            'localcharge_id'    => $SurchargeId->id
+          ]); //
+        }
+      }
+
+      LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+      foreach($carrierVarArr as $carrierVar){
+        LocalCharCarrier::create([
+          'carrier_id'        => $carrierVar,
+          'localcharge_id'    => $SurchargeId->id  
+        ]); //
+      }
+
+      $goodsurcharges     = LocalCharge::where('id','=',$SurchargeId->id)
+        //$goodsurcharges     = LocalCharge::where('id','=',16)
+        ->where('contract_id','=',$contractVar)
+        ->with('currency',
+               'calculationtype',
+               'surcharge',
+               'typedestiny',
+               'localcharcarriers.carrier',
+               'localcharports.portOrig',
+               'localcharports.portDest'
+              )->get();
+
+      foreach($goodsurcharges as $goodsurcharge){
+        //dd($goodsurcharge->calculationtype);
+        $portOri ='';
+        foreach($goodsurcharge->localcharports->pluck('portOrig')->unique()->pluck('name') as $name){
+          $portOri = $portOri.' '.$name.'.';
+        }
+
+        $portDest ='';
+        foreach($goodsurcharge->localcharports->pluck('portDest')->unique()->pluck('name') as $name){
+          $portDest = $portDest.' '.$name.'.';
+        }
+        $carriercoll ='';
+        foreach($goodsurcharge->localcharcarriers->pluck('carrier')->unique()->pluck('name') as $name){
+          $carriercoll = $carriercoll.' '.$name.'.';
+        }
+
+        $arreglo  = [
+          'surcharge_id'          => $goodsurcharge->id,
+          'surchargeLB'           => $goodsurcharge->surcharge['name'],
+
+          'typedestinyLB'         => $goodsurcharge->typedestiny['description'],
+
+          'calculationtypeLB'     => $goodsurcharge->calculationtype['name'],
+          'ammount'               => $goodsurcharge->ammount,
+          'currencyLB'            => $goodsurcharge->currency['alphacode'],
+
+          'port_origLB'           => $portOri,
+          'port_destLB'           => $portDest,
+          'carrier'               => $carriercoll,
+          'response'              => 1
+        ];
+        //dd($arreglo);
+        return $arreglo;
+      }
+    } catch (\Exception $e){
+      return $arreglo = ['response'  => 0];
+    } //*/
+  }
+
+  public function LoadViewImporContractFcl(){
+    $harbor  = harbor::all()->pluck('name');
+    $carrier = carrier::all()->pluck('name');
+    return view('contracts.ImporContractFcl',compact('harbor','carrier'));
+  }
+
+  public function UploadFileNewContract(Request $request){
+    //dd($request);
+    $now = new \DateTime();
+    $now = $now->format('dmY_His');
+
+    $request->type;
+
+    $carrierVal = $request->carrier;
+    $destinyArr = $request->destiny;
+    $originArr  = $request->origin;
+
+    $carrierBol = false;
+    $destinyBol = false;
+    $originBol  = false;
+
+    $data= collect([]);
+
+    $harbor  = harbor::all()->pluck('name');
+    $carrier = carrier::all()->pluck('name');
+    // try {
+    $file = $request->file('file');
+    $ext = strtolower($file->getClientOriginalExtension());
+
+    $validator = \Validator::make(
+      array('ext' => $ext),
+      array('ext' => 'in:xls,xlsx,csv')
+    );
+    $Contract_id;
+    if ($validator->fails()) {
+      $request->session()->flash('message.nivel', 'danger');
+      $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+      return redirect()->route('contracts.edit',$request->contract_id);
     }
 
+    //obtenemos el nombre del archivo
+    $nombre = $file->getClientOriginalName();
+    $nombre = $now.'_'.$nombre;
+    \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
-    dd($SurcharFull);
+    $contract     = new Contract();
+
+    $contract->name             = $request->name;
+    $contract->number           = $request->number;
+    $validity                   = explode('/',$request->validation_expire);
+    $contract->validity         = $validity[0];
+    $contract->expire           = $validity[1];
+    $contract->status           = 'incomplete';
+    $contract->company_user_id  = \Auth::user()->company_user_id;
+    $contract->save(); //*/
+
+    $Contract_id = $contract->id;
+
+    $fileTmp = new FileTmp();
+    $fileTmp->contract_id = $Contract_id;
+    $fileTmp->name_file   = $nombre;
+    $fileTmp->save();
+
+    $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
+
+    if($request->DatOri == false){
+      array_push($targetsArr,'Origin');
+    }
+    else{
+      $originBol = true;
+      $originArr;
+    }
+
+    if($request->DatDes == false){
+      array_push($targetsArr,'Destiny');
+    } else {
+      $destinyArr;
+      $destinyBol = true;
+    }
+
+    if($request->DatCar == false){
+      array_push($targetsArr,'Carrier');
+    } else {
+      $carrierVal;
+      $carrierBol = true;
+    }
+    //dd($targetsArr);
+    //  dd($data);
+    $coordenates = collect([]);
+    Excel::selectSheetsByIndex(0)
+      ->Load(\Storage::disk('UpLoadFile')
+             ->url($nombre),function($reader) use($request,$coordenates) {
+               $reader->noHeading = true;
+               $reader->ignoreEmpty();
+
+               foreach($reader->get() as $read){
+                 // dd($read);
+                 $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O');
+                 for($i=0;$i<count($read);$i++){
+                   $coordenates->push($columna[$i].' '.$read[$i]);
+                 }
+                 break;
+               }
+               //dd($coordenates);
+
+             });
+    $boxdinamy = [
+      'existorigin'   => $originBol,
+      'origin'        => $originArr,
+
+      'existdestiny'  => $destinyBol,
+      'destiny'       => $destinyArr,
+
+      'existcarrier'  => $carrierBol,
+      'carrier'       => $carrierVal,
+
+      'Contract_id'   => $Contract_id,
+      'number'        => $request->number,
+      'name'          => $request->name,
+      'fileName'      => $nombre,
+      'validatiion'   => $request->validation_expire,
+    ];
+    $data->push($boxdinamy);
+    //dd($data);
+
+    return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data'));
+    /*}catch(\Exception $e){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'Error with the archive');
+            return redirect()->route('importaion.fcl');
+        }//*/
   }
+
+  public function ProcessContractFcl(Request $request){
+    //Storage::delete($request->);
+    dd($request);
+  }
+
 
   public function updateLocalChar(Request $request, $id)
   {
