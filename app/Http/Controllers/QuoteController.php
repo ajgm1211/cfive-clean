@@ -57,7 +57,9 @@ class QuoteController extends Controller
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('business_name','id');
     $countries = Country::all()->pluck('name','id');
-    return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]);
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
+    return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
 
 
   }
@@ -1494,6 +1496,7 @@ class QuoteController extends Controller
 
   }
 
+
   public function create()
   {
     $company_user_id=\Auth::user()->company_user_id;
@@ -1511,8 +1514,16 @@ class QuoteController extends Controller
     }
     $currencies = Currency::pluck('alphacode','id');
     $currency_cfg = Currency::find($company_user->currency_id);
-    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg]);
+    if(\Auth::user()->company_user_id){
+      if($currency_cfg->alphacode=='USD'){
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
+      }else{
+        $exchange = Currency::where('api_code','USDEUR')->first();
+      }
+    }
+  return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
   }
+
 
   /**
 	 * Show the form for editing the specified resource.
@@ -1536,11 +1547,15 @@ class QuoteController extends Controller
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
+      if($currency_cfg->alphacode=='USD'){
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
+      }else{
+        $exchange = Currency::where('api_code','USDEUR')->first();
+      }
     }
-
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
   }
 
   /**

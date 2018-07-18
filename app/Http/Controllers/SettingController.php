@@ -46,7 +46,7 @@ class SettingController extends Controller
             $company->phone = $request->phone;
             $company->currency_id = $request->currency_id;
             if($file != ""){
-                $company->logo = '/uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
             }
             $company->save();
 
@@ -59,7 +59,7 @@ class SettingController extends Controller
             $company->address=$request->address;
             $company->currency_id=$request->currency_id;
             if($file != ""){
-                $company->logo = '/uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
             }
             $company->update();
         }

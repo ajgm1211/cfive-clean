@@ -7,13 +7,6 @@
         <div class="col-md-2">
             <button class="btn btn-primary btn-block">Schedules</button>
         </div>
-        <div class="col-md-10" >
-            @if(isset($company_user->companyUser->currency_id))
-            <div class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-                <input type="text" id="currency_id" class="form-control " value="{{$currency_cfg->alphacode}}" disabled="true"/>
-            </div>
-            @endif
-        </div>
     </div>
     <br>
     @if(Session::has('message.nivel'))
@@ -36,7 +29,7 @@
     </div>
     @endif
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-10">
             @if(count($company_user->company_user_id)>0)
             <div class="row">
                 <div class="col-md-12">
@@ -176,7 +169,7 @@
                                                                 <div class="col-md-3">
                                                                     <label>Pick up date</label>
                                                                     <div class="input-group date">
-                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text">
                                                                                 <i class="la la-calendar-check-o"></i>
@@ -207,6 +200,20 @@
                                                                     {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <br>
+                                                                    <label>Validity</label>
+                                                                    <div class="input-group date">
+                                                                        {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text">
+                                                                                <i class="la la-calendar-check-o"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -217,7 +224,6 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-lg-10">
-                                                            <br>
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Company</label>
@@ -225,36 +231,11 @@
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 ol-xs-12">
                                                                     <label>Client</label>
-                                                                    {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control']) }}
+                                                                    {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Price level</label>
                                                                     {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                    <div class="form-group m-form__group row" id="terms_box" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <label>
-                                                                    <b>TERMS & CONDITIONS</b>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div id="terms_box_import">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">                                             
-                                                                <div id="terms_box_export">
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -315,34 +296,34 @@
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>
-                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" required/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text" required/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" required/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
-                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="..." required>
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency','required'=>true]) }}              
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" required/> 
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" required/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="..." required>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -424,7 +405,7 @@
 
                                                                         <tr>
                                                                             <td>
-                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
+                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]" required />
                                                                             </td>
                                                                             <td>
                                                                                 <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
@@ -676,6 +657,16 @@
             </div>
             @endif
         </div>
+        <div class="col-md-2">
+            <h3 class="title-quote size-16px">Settings</h3>
+            <hr>
+            <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
+            
+            <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
+            <hr>
+            <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
+            <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+        </div>        
     </div>
 </div>
 @endsection

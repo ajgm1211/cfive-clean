@@ -146,7 +146,7 @@
                                     3
                                 @endif
                             </td>
-                            <td></td>
+                            <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>
                             <td>@if($arr->state==1) Active @else Inactive @endif</td>
                             @if(Auth::user()->type != 'subuser')
                             <td>
