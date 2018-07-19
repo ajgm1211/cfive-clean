@@ -137,7 +137,7 @@
                     <span  class="gray cabezeras"  style=" float: right;">Destination </span> 
                   </th>
                   <th  width = '20%' title="Field #5">
-                    <span class="gray cabezeras"> Validity</span> 
+                    <span class="gray cabezeras"> Expire</span> 
                   </th>
                   <th  width = '20%' title="Field #6" >
                     <span class="gray cabezeras"  style=" float: right;">Price</span>  
@@ -201,7 +201,7 @@
 
                   <td width = '20%'>
 
-                    <span class="darkblue validate"> {{   \Carbon\Carbon::parse($formulario->date)->format('d M Y') }}</span>
+                    <span class="darkblue validate"> {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
                   </td>
                   <td width = '20%'>     
                     <div class="m-widget5" style="float:right;">
@@ -211,9 +211,11 @@
                       </span><br>
                       <button type="submit" class="btn boton btn-md">Select</button><br>
 
+                      @if(!$arr->schedulesFin->isEmpty())
                       <span class="workblue">Salling Schedules</span>  <a  id='schedule_l{{$loop->iteration}}'  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" onclick="schedules({{$loop->iteration}})"  title="Cancel" >
                       <i  class="la la-angle-down blue"></i>
                       </a>
+                      @endif
 
                     </div>
                   </td>
@@ -423,6 +425,11 @@
                       @endif
                       @endforeach
                       @endif
+                      <tr>
+                        <td colspan="4"></td>
+                        <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>
+                        <td> <span  class="darkblue px12" > {{ $arr->totalInland }} {{ $arr->quoteCurrency }}</span>  </td>
+                      </tr>
                     </table>
                   </td>
                 </tr>
@@ -445,7 +452,7 @@
                       @foreach($arr->schedulesFin as $schedule)
 
                       <tr>
-                        <td width='15%'>{{ $schedule['Vessel'] }}</td>
+                        <td width='15%'>{{ $schedule['VesselName'] }}</td>
                         <td width='15%'>{{ $schedule['Etd'] }}</td>
                         <td width='45%'>
                           <div class="row">
@@ -453,15 +460,16 @@
                               <span class="portcss"> {{$arr->port_origin->name  }}</span><br>            
                             </div>
                             <div class="col-md-4">
-                                     <center> 30 DAYS</center>
+                              <center> {{ $schedule['days'] }} Days</center>
                               <div class="progress m-progress--sm">    
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
-                            
+                              <center> {{ $schedule['type'] }} </center>
+
                             </div>
                             <div class="col-md-4">
                               <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
-                              
+
                             </div>
                           </div>                        
                         </td>
