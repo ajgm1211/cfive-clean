@@ -112,14 +112,23 @@
                 </div>
                 <div class="col-xl-4 order-1 order-xl-2 m--align-right">
                   <a href="{{ route('contracts.add') }}">
-
-
                     <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                       <span>
                         <span>
                           Add Contract
                         </span>
                         <i class="la la-plus"></i>
+                      </span>
+                    </button>
+                  </a>
+                  <a href="{{route('importaion.fcl')}}">
+
+                    <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                      <span>
+                        <span>
+                          Importation &nbsp;
+                        </span>
+                        <i class="la la-cloud-upload"></i>
                       </span>
                     </button>
                   </a>
@@ -196,8 +205,9 @@
                     <a href="{{ route("contracts.edit", $arr->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                       <i class="la la-edit"></i>
                     </a>
-
-                    <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $rates->id }})" >
+                    
+                    
+                    <a href="#" id="delete-rate" data-rate-id="{{$rates->id }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" >
                       <i class="la la-eraser"></i>
                     </a>
 
@@ -401,39 +411,4 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 <script src="/js/contracts.js"></script>
 
-<!--
-<script>
-
-function AbrirModal(action,id){
-
-if(action == "edit"){
-var url = '{{ route("contracts.edit", ":id") }}';
-url = url.replace(':id', id);
-
-
-$('.modal-body').load(url,function(){
-$('#m_select2_modal').modal({show:true});
-});
-}if(action == "add"){
-var url = '{{ route("contracts.add") }}';
-
-
-$('.modal-body').load(url,function(){
-$('#m_select2_modal').modal({show:true});
-});
-
-}
-if(action == "delete"){
-var url = '{{ route("contracts.msg", ":id") }}';
-url = url.replace(':id', id);
-
-$('.modal-body').load(url,function(){
-$('#m_select2_modal').modal({show:true});
-});
-
-}
-
-}
-</script>
--->
 @stop

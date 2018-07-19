@@ -56,3 +56,38 @@ $(document).on('click', '#delete-contract', function () {
 
   });
 });
+
+
+$(document).on('click', '#delete-rate', function () {
+  var id = $(this).attr('data-rate-id');
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+
+      $.ajax({
+        type: 'get',
+         url: 'contracts/delete-rates/' + id,
+        success: function(data) {
+          swal(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          $(theElement).closest('tr').remove();
+
+        },
+          error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+
+    }
+
+  });
+});
