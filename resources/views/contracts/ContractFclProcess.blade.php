@@ -107,13 +107,13 @@ new registration
                                 @if($value['existorigin'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="origin" class=" ">Origin</label>
-                                    {!! Form::select('origin',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
+                                    {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 @endif
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
-                                    {!! Form::select('destiny',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                    {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 @endif
                                 @if($value['existcarrier'] == true)
@@ -135,36 +135,35 @@ new registration
                                             <div class="m-portlet__head-title">
                                                 <h3 class="m-portlet__head-text">
                                                     {{$targets}}
-                                                    <!--<small>
-portlet sub title
-</small>-->
+                                                    <!--<small>portlet sub title</small>-->
                                                 </h3>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="m-portlet__body">
                                         <div class="col-md-12">
-                                            <label for="carrier" class=" ">Column  in the file excel</label>
+                                            <label for="" class="">Column  in the file excel</label>
                                         </div>
                                         <div class="col-md-12">
-                                            {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control'])!!}
+                                            {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control', 'id' => 'select'.$loop->iteration, 'onchange'=>'equals('.$loop->iteration.')'])!!}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                         </div>
-
+                        <input type="hidden" name="countTarges" id="countTarges" value="{{$countTarges}}" />
+                        <input type="hidden" name="pulsaciones" id="pulsaciones" value="0" />
                     </div>
-                        <div class="form-group m-form__group row">
+                    <div class="form-group m-form__group row">
 
-                            <div class="col-lg-5 col-lg-offset-5"> </div>
-                            <div class="col-lg-2 col-lg-offset-2">
-                                <button type="submit" class="btn btn-primary form-control">
-                                    Process
-                                </button>
-                            </div>
+                        <div class="col-lg-5 col-lg-offset-5"> </div>
+                        <div class="col-lg-2 col-lg-offset-2">
+                            <button type="submit" id="processid" class="btn btn-primary form-control">
+                                Process
+                            </button>
                         </div>
+                    </div>
 
                 </div>
             </div>
@@ -186,6 +185,9 @@ portlet sub title
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script>
+    $(document).ready(function(){
+        $('#processid').hide(); 
+    });
 
     $('.m-select2-general').select2({
         placeholder: "Select an option"
@@ -221,22 +223,54 @@ portlet sub title
         }
     });
 
+    function equals(lopp){
+        var countTarges =  $('#countTarges').val();
+        var valueselect =  $('#select'+lopp).val();
+        var duplicateB = false;
+        var duplicate;
+        var counti=0;
+        var pulsos;
+        var j;
+        var h;
+        var i;
 
-    jQuery(document).ready(function($){
-        Dropzone.options.mss = {
-            paramName: "file", // The name that will be used to transfer the file
-            maxFiles: 1,
-            maxFilesize: 5, // MB
-            addRemoveLinks: true,
-            accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                    done("Naha, you don't.");
-                } else { 
-                    done(); 
+        for(j=1;j <= countTarges; j++){
+            var parent = $('#select'+j).val();
+            for(h=1;h <= countTarges; h++){
+                if(h != j){
+                    var chieldren = $('#select'+h).val();
+                    counti++;
+                    if(parent == chieldren){
+                        duplicateB =true;
+                        break;
+                    }
                 }
-            }   
-        };
-    });
+            }
+        }
+
+        pulsos = $('#pulsaciones').val();
+        pulsos++;
+        $('#pulsaciones').attr('value',pulsos);
+
+        if(duplicateB != true){
+            $('#processid').show();
+            if(pulsos >= countTarges){
+                swal('Good job!','You can proceed','success');
+            }
+        }else {
+            for(i=1;i <= countTarges; i++){
+                if(lopp != i){
+                    var other = $('#select'+i).val();
+                    if(valueselect == other)
+                    {
+                        $('#processid').hide();
+                        swal('Error!','This column has already been selected','error');
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
 </script>
 
