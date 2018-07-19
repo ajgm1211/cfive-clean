@@ -1872,11 +1872,10 @@ class ContractsController extends Controller
 
   public function destroyRates(Request $request,$id)
   {
-    $rates = self::destroy($id);
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully delete the rate ');
-    return redirect()->action('ContractsController@index');
+    $rate = Rate::find($id);
+    $rate->delete();
+    return $rate;
+
   }
 
   public function destroymsg($id)

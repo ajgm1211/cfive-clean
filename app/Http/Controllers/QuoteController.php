@@ -1522,7 +1522,7 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-  return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
+    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
   }
 
 
@@ -1555,8 +1555,8 @@ class QuoteController extends Controller
       }
     }
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
+                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
   }
 
   /**
@@ -1686,20 +1686,22 @@ class QuoteController extends Controller
       }
     }
 
-    if($input['schedule'] != 'null'){
-      $schedules = json_decode($input['schedule']);
-      foreach( $schedules as $schedule){ 
-        $sche = json_decode($schedule);
-        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+    if(isset($input['schedule'])){
+      if($input['schedule'] != 'null'){
+        $schedules = json_decode($input['schedule']);
+        foreach( $schedules as $schedule){ 
+          $sche = json_decode($schedule);
+          $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
 
-        $saveSchedule  = new Schedule();
-        $saveSchedule->vessel = $sche->Etd;
-        $saveSchedule->etd = $sche->Etd;
-        $saveSchedule->transit_time =  $dias;
-        $saveSchedule->eta = $sche->Eta;
-        $saveSchedule->type = 'direct';
-        $saveSchedule->quotes()->associate($quote);
-        $saveSchedule->save(); 
+          $saveSchedule  = new Schedule();
+          $saveSchedule->vessel = $sche->Etd;
+          $saveSchedule->etd = $sche->Etd;
+          $saveSchedule->transit_time =  $dias;
+          $saveSchedule->eta = $sche->Eta;
+          $saveSchedule->type = 'direct';
+          $saveSchedule->quotes()->associate($quote);
+          $saveSchedule->save(); 
+        }
       }
     }
     $request->session()->flash('message.nivel', 'success');
