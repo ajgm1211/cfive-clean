@@ -1764,9 +1764,10 @@ class ContractsController extends Controller
       'validatiion'   => $request->validation_expire,
     ];
     $data->push($boxdinamy);
+      $countTarges = count($targetsArr);
     //dd($data);
 
-    return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data'));
+    return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges'));
     /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
