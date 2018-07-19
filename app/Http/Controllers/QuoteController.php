@@ -1707,7 +1707,7 @@ class QuoteController extends Controller
           $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
 
           $saveSchedule  = new Schedule();
-          $saveSchedule->vessel = $sche->Etd;
+          $saveSchedule->vessel = $sche->VesselName;
           $saveSchedule->etd = $sche->Etd;
           $saveSchedule->transit_time =  $dias;
           $saveSchedule->eta = $sche->Eta;
