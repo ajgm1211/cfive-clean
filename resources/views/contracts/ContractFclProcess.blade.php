@@ -107,21 +107,30 @@ new registration
                                 @if($value['existorigin'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="origin" class=" ">Origin</label>
-                                    {!! Form::select('origin',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
+                                    {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 @endif
+                                
+                                <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
+                                
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
-                                    {!! Form::select('destiny',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                    {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 @endif
+                                
+                                <input type="hidden" name="existdestiny" id="existdestiny" value="{{$value['existdestiny']}}" />
+                                
                                 @if($value['existcarrier'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="carrier" class=" ">Carrier</label>
                                     {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                 </div>
                                 @endif
+                                
+                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                                
                             </div>
                         </div>
                         @endforeach
@@ -135,36 +144,34 @@ new registration
                                             <div class="m-portlet__head-title">
                                                 <h3 class="m-portlet__head-text">
                                                     {{$targets}}
-                                                    <!--<small>
-portlet sub title
-</small>-->
+                                                    <!--<small>portlet sub title</small>-->
                                                 </h3>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="m-portlet__body">
                                         <div class="col-md-12">
-                                            <label for="carrier" class=" ">Column  in the file excel</label>
+                                            <label for="" class="">Column  in the file excel</label>
                                         </div>
                                         <div class="col-md-12">
-                                            {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control'])!!}
+                                            {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control', 'id' => 'select'.$loop->iteration, 'onchange'=>'equals('.$loop->iteration.')'])!!}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                         </div>
-
+                        <input type="hidden" name="countTarges" id="countTarges" value="{{$countTarges}}" />
                     </div>
-                        <div class="form-group m-form__group row">
+                    <div class="form-group m-form__group row">
 
-                            <div class="col-lg-5 col-lg-offset-5"> </div>
-                            <div class="col-lg-2 col-lg-offset-2">
-                                <button type="submit" class="btn btn-primary form-control">
-                                    Process
-                                </button>
-                            </div>
+                        <div class="col-lg-5 col-lg-offset-5"> </div>
+                        <div class="col-lg-2 col-lg-offset-2">
+                            <button type="submit" id="processid" class="btn btn-primary form-control">
+                                Process
+                            </button>
                         </div>
+                    </div>
 
                 </div>
             </div>
@@ -175,69 +182,10 @@ portlet sub title
 </div>
 <!--End::Main Portlet-->
 
-
-
-
-
-
-
 @endsection
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script>
-
-    $('.m-select2-general').select2({
-        placeholder: "Select an option"
-    });
-
-    $('#originchk').on('click',function(){
-        if($('#originchk').prop('checked')){
-            $('#origininp').removeAttr('hidden');
-            $('#origin').attr('required','required');
-        } else{
-            $('#origininp').attr('hidden','hidden');
-            $('#origin').removeAttr('required');
-        }
-    }); 
-
-    $('#destinychk').on('click',function(){
-        if($('#destinychk').prop('checked')){
-            $('#destinyinp').removeAttr('hidden');
-            $('#destiny').attr('required','required');
-        } else{
-            $('#destinyinp').attr('hidden','hidden');
-            $('#destiny').removeAttr('required');
-        }
-    });
-
-    $('#carrierchk').on('click',function(){
-        if($('#carrierchk').prop('checked')){
-            $('#carrierinp').removeAttr('hidden');
-            $('#carrier').attr('required','required');
-        } else{
-            $('#carrierinp').attr('hidden','hidden');
-            $('#carrier').removeAttr('required');
-        }
-    });
-
-
-    jQuery(document).ready(function($){
-        Dropzone.options.mss = {
-            paramName: "file", // The name that will be used to transfer the file
-            maxFiles: 1,
-            maxFilesize: 5, // MB
-            addRemoveLinks: true,
-            accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                    done("Naha, you don't.");
-                } else { 
-                    done(); 
-                }
-            }   
-        };
-    });
-
-</script>
+<script src="{{asset('js/Contracts/processFlcContract.js')}}" type="application/javascript"></script>
 
 @stop

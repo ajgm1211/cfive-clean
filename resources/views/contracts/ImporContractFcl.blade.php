@@ -155,7 +155,7 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        {!! Form::select('origin',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
+                                        {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -176,7 +176,7 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="destinyinp" hidden="hidden" >
-                                        {!! Form::select('destiny',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                        {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">
@@ -247,9 +247,11 @@ new registration
         if($('#originchk').prop('checked')){
             $('#origininp').removeAttr('hidden');
             $('#origin').attr('required','required');
+            $('#destinychk').attr('disabled','true');
         } else{
             $('#origininp').attr('hidden','hidden');
             $('#origin').removeAttr('required');
+            $('#destinychk').removeAttr('disabled');
         }
     }); 
 
@@ -257,9 +259,11 @@ new registration
         if($('#destinychk').prop('checked')){
             $('#destinyinp').removeAttr('hidden');
             $('#destiny').attr('required','required');
+            $('#originchk').attr('disabled','true');
         } else{
             $('#destinyinp').attr('hidden','hidden');
             $('#destiny').removeAttr('required');
+            $('#originchk').removeAttr('disabled');
         }
     });
 
