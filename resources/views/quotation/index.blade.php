@@ -119,6 +119,7 @@
   </div>
 
   <div class="col-xl-9">
+    @if(!$arreglo->isEmpty())
     <div  class="row">
       <div class="col-xl-11">
         <div class="m-portlet m-portlet--full-height ">
@@ -137,7 +138,7 @@
                     <span  class="gray cabezeras"  style=" float: right;">Destination </span> 
                   </th>
                   <th  width = '20%' title="Field #5">
-                    <span class="gray cabezeras"> Validity</span> 
+                    <span class="gray cabezeras"> Expire</span> 
                   </th>
                   <th  width = '20%' title="Field #6" >
                     <span class="gray cabezeras"  style=" float: right;">Price</span>  
@@ -149,6 +150,7 @@
         </div>
       </div>
     </div>
+
     @foreach ($arreglo as $key => $arr)
     @php
     $inl = 'false';
@@ -201,7 +203,7 @@
 
                   <td width = '20%'>
 
-                    <span class="darkblue validate"> {{   \Carbon\Carbon::parse($formulario->date)->format('d M Y') }}</span>
+                    <span class="darkblue validate"> {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
                   </td>
                   <td width = '20%'>     
                     <div class="m-widget5" style="float:right;">
@@ -211,9 +213,11 @@
                       </span><br>
                       <button type="submit" class="btn boton btn-md">Select</button><br>
 
+                      @if(!$arr->schedulesFin->isEmpty())
                       <span class="workblue">Salling Schedules</span>  <a  id='schedule_l{{$loop->iteration}}'  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" onclick="schedules({{$loop->iteration}})"  title="Cancel" >
                       <i  class="la la-angle-down blue"></i>
                       </a>
+                      @endif
 
                     </div>
                   </td>
@@ -423,6 +427,11 @@
                       @endif
                       @endforeach
                       @endif
+                      <tr>
+                        <td colspan="4"></td>
+                        <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>
+                        <td> <span  class="darkblue px12" > {{ $arr->totalInland }} {{ $arr->quoteCurrency }}</span>  </td>
+                      </tr>
                     </table>
                   </td>
                 </tr>
@@ -445,7 +454,7 @@
                       @foreach($arr->schedulesFin as $schedule)
 
                       <tr>
-                        <td width='15%'>{{ $schedule['Vessel'] }}</td>
+                        <td width='15%'>{{ $schedule['VesselName'] }}</td>
                         <td width='15%'>{{ $schedule['Etd'] }}</td>
                         <td width='45%'>
                           <div class="row">
@@ -453,15 +462,16 @@
                               <span class="portcss"> {{$arr->port_origin->name  }}</span><br>            
                             </div>
                             <div class="col-md-4">
-                                     <center> 30 DAYS</center>
+                              <center> {{ $schedule['days'] }} Days</center>
                               <div class="progress m-progress--sm">    
                                 <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                               </div>
-                            
+                              <center> {{ $schedule['type'] }} </center>
+
                             </div>
                             <div class="col-md-4">
                               <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
-                              
+
                             </div>
                           </div>                        
                         </td>
@@ -487,7 +497,98 @@
       </div>
     </div>
     @endforeach
+    @else
+
+    <!--end::Portlet-->
+
+
+    <div  class="row" style="margin-top:10%">
+      <div class="col-xl-11" >
+        <div class="m-portlet m-portlet m-portlet--head-solid-bg m-portlet--rounded">
+          <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+              <div class="m-portlet__head-title">
+                <span class="m-portlet__head-icon">
+                  <i class="flaticon-cogwheel-2"></i>
+                </span>
+                <h3 class="m-portlet__head-text m--font-brand">
+                  NO RATES FOUND !
+                </h3>
+              </div>			
+            </div>
+            <div class="m-portlet__head-tools">
+              <ul class="m-portlet__nav">
+                <li class="m-portlet__nav-item m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover">
+                  <a href="#" class="m-portlet__nav-link btn btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill   m-dropdown__toggle">
+                    <i class="la la-ellipsis-v"></i>
+                  </a>
+                  <div class="m-dropdown__wrapper">
+                    <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                    <div class="m-dropdown__inner">
+                      <div class="m-dropdown__body">
+                        <div class="m-dropdown__content">
+                          <ul class="m-nav">
+                            <li class="m-nav__section m-nav__section--first">
+                              <span class="m-nav__section-text">
+                                Quick Actions
+                              </span>
+                            </li>
+                            <li class="m-nav__item">
+                              <a href="{{route('contracts.index')}}"  class="m-nav__link">
+                                <i class="m-nav__link-icon flaticon-share"></i>
+                                <span class="m-nav__link-text">
+                                  View Rates
+                                </span>
+                              </a>
+                            </li>
+                            <li class="m-nav__item">
+                              <a href="{{route('quotes.index')}}" class="m-nav__link">
+                                <i class="m-nav__link-icon flaticon-share"></i>
+                                <span class="m-nav__link-text">
+                                 View Quotes
+                                </span>
+                              </a>
+                            </li>
+                            <li class="m-nav__item">
+                              <a href="" class="m-nav__link">
+                                <i class="m-nav__link-icon flaticon-share"></i>
+                                <span class="m-nav__link-text">
+                                  Generate Quote Automatic
+                                </span>
+                              </a>
+                            </li>
+                            </li>
+                          <li class="m-nav__separator m-nav__separator--fit"></li>
+                          <li class="m-nav__item">
+                            <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
+                              Cancel
+                            </a>
+                          </li>
+                          </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </div>
+      <div class="m-portlet__body">
+        <div class="m-alert m-alert--icon m-alert--outline alert alert-danger" role="alert">
+          <div class="m-alert__icon">
+            <i class="la la-warning"></i>
+          </div>
+          <div class="m-alert__text">
+            <strong>Well done!</strong> You successfully read this message.	
+          </div>	
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+
+@endif
+</div>
 </div>
 @endsection
 @section('js')
@@ -498,6 +599,7 @@
 <script src="/assets/plugins/datatables.min.js" type="text/javascript"></script>
 <script src="/assets/plugins/datatables.bootstrap.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/portlets/draggable.js" type="text/javascript"></script>
 <script>
   $(document).ready( function () {
     $('#sample_editable').DataTable();
