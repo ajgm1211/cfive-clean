@@ -247,9 +247,11 @@ new registration
         if($('#originchk').prop('checked')){
             $('#origininp').removeAttr('hidden');
             $('#origin').attr('required','required');
+            $('#destinychk').attr('disabled','true');
         } else{
             $('#origininp').attr('hidden','hidden');
             $('#origin').removeAttr('required');
+            $('#destinychk').removeAttr('disabled');
         }
     }); 
 
@@ -257,9 +259,11 @@ new registration
         if($('#destinychk').prop('checked')){
             $('#destinyinp').removeAttr('hidden');
             $('#destiny').attr('required','required');
+            $('#originchk').attr('disabled','true');
         } else{
             $('#destinyinp').attr('hidden','hidden');
             $('#destiny').removeAttr('required');
+            $('#originchk').removeAttr('disabled');
         }
     });
 
