@@ -1,12 +1,10 @@
-<!-- En caso de ser Subusuario precargamos el combo de editar con el valor correspondiente -->
 <div class="m-portlet">
-
     <!--begin::Form-->
-    {!! Form::open(['route' => 'surcharges.store']) !!}
+    {!! Form::model($saleterms, ['route' => ['saleterms.update', $saleterms], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
-            <div class="form-group m-form__group">
-                @include('surcharges.partials.form_surcharges')
+            <div class="form-group m-form__group">                
+                @include('saleTerms.partials.add_sale_term')
             </div>
         </div>
         <div class="m-portlet__foot m-portlet__foot--fit">
@@ -21,5 +19,3 @@
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
-
-<script src="/js/users.js"></script>

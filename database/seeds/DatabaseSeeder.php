@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TypedestinyTableSeeder::class);
         $this->call(StatusQuotesTableSeeder::class);
         $this->call(HarborsCopyTableSeeder::class);
+        $this->call(IncotermTableSeeder::class);
     }
 }

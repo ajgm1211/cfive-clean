@@ -1,16 +1,10 @@
-
-
 <div class="m-portlet">
-
-
     <!--begin::Form-->
     {!! Form::model($surcharges, ['route' => ['surcharges.update', $surcharges], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-                            @include('surcharges.partials.form_surcharges')
-
-
+                @include('surcharges.partials.form_surcharges')
             </div>
         </div>
         <div class="m-portlet__foot m-portlet__foot--fit">
@@ -25,6 +19,3 @@
     {!! Form::close() !!}
     <!--end::Form-->
 </div>
-
-
-

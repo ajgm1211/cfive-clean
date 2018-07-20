@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Schedule;
+use App\Incoterm;
 class QuoteController extends Controller
 {
   /**
@@ -1535,7 +1536,10 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
+
+    $incoterm = Incoterm::pluck('name','id');
+    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm]);
+
   }
 
 
@@ -1567,9 +1571,11 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
+    $incoterm = Incoterm::pluck('name','id');
+
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange]);
+                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm]);
+
   }
 
   /**
@@ -1582,7 +1588,8 @@ class QuoteController extends Controller
   {
 
     $input = Input::all();
-    $request->request->add(['owner' => \Auth::id()]);
+    $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id]);
     $quote=Quote::create($request->all());
 
     if($input['origin_ammount_charge']!=[null]) {

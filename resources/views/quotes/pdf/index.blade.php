@@ -126,7 +126,7 @@
                     <td>{{$freight_ammount->units}}</td>
                     <td>{{$freight_ammount->price_per_unit}}</td>
                     <td>{{$freight_ammount->total_ammount + ($freight_ammount->markup/$freight_ammount->units)}} {{$freight_ammount->currency->alphacode}}</td>
-                    <td>{{$freight_ammount->total_ammount_2}}</td>
+                    <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif<</td>
                 </tr>
                 @endforeach
             </tbody>
