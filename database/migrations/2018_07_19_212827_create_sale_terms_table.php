@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class TermsAndConditions extends Migration
+class CreateSaleTermsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class TermsAndConditions extends Migration
      */
     public function up()
     {
-        Schema::create('termsAndConditions', function (Blueprint $table) {
+        Schema::create('sale_terms', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('user_id')->unsigned();
-            $table->string('import');
-            $table->string('export');
+            $table->string('description'); 
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ class TermsAndConditions extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('termsAndConditions');
+        Schema::dropIfExists('sale_terms');
     }
 }

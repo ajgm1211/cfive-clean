@@ -143,9 +143,9 @@
                                     <td >Detail</td>
                                     <td >Units</td>
                                     <td >Price per unit</td>
-                                    <td >Markup</td>
                                     <td >Total</td>
-                                    <td >Total EUR</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,9 +155,9 @@
                                     <td>{{$origin_ammount->detail}}</td>
                                     <td>{{$origin_ammount->units}}</td>
                                     <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
-                                    <td>{{$origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
-                                    <td>{{$origin_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                    <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}/td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -168,7 +168,7 @@
                     <br/>
                     <h5 class="title-quote pull-right">
                         Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
-                        @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                        {{$quote->currencies->alphacode}}
                     </h5>
                 </div>
             </div>
@@ -186,9 +186,9 @@
                                     <td >Detail</td>
                                     <td >Units</td>
                                     <td >Price per unit</td>
-                                    <td >Markup</td>
                                     <td >Total</td>
-                                    <td >Total EUR</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -198,9 +198,9 @@
                                     <td>{{$freight_ammount->detail}}</td>
                                     <td>{{$freight_ammount->units}}</td>
                                     <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
-                                    <td>{{$freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
                                     <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
-                                    <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                    <td>{{$freight_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$freight_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -211,7 +211,7 @@
                     <br/>
                     <h5 class="title-quote pull-right">
                         Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_freight}}</span>&nbsp;
-                        @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                        {{$quote->currencies->alphacode}}
                     </h5>
                 </div>
             </div>
@@ -229,9 +229,9 @@
                                     <td >Detail</td>
                                     <td >Units</td>
                                     <td >Price per unit</td>
-                                    <td >Markup</td>
                                     <td >Total</td>
-                                    <td >Total EUR</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -241,9 +241,9 @@
                                     <td>{{$destination_ammount->detail}}</td>
                                     <td>{{$destination_ammount->units}}</td>
                                     <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
-                                    <td>{{$destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
                                     <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
-                                    <td>{{$destination_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                    <td>{{$destination_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$destination_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -254,7 +254,7 @@
                     <br/>
                     <h5 class="title-quote pull-right">
                         Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_destination}}</span>&nbsp;
-                        @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                        {{$quote->currencies->alphacode}}
                     </h5>
                 </div>
             </div>
@@ -262,7 +262,7 @@
                 <div class="col-md-12">
                     <hr>
                     <div class="form-group text-right">
-                        <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: {{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></button></h3>
+                        <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: {{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }} {{$quote->currencies->alphacode}}</b></button></h3>
                     </div>
                 </div>
                 <div class="col-md-12">
