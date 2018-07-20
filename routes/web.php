@@ -40,6 +40,7 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
   Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
   Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
 });
+
 Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
   Route::resource('mail-templates', 'EmailsTemplateController');
   Route::get('list', 'EmailsTemplateController@index')->name('emails-template.list');
@@ -50,15 +51,18 @@ Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function 
   Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
 
 });
+
 Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
   Route::resource('preferences', 'CompanyBrandingController');
   Route::get('config', 'CompanyBrandingController@edit')->name('company-brands.edit');
 });
+
 Route::group(['prefix' => 'mail', 'middleware' => ['auth']], function(){
   Route::resource('mail', 'MailSendController');
   Route::get('list', 'MailSendController@index')->name('mail.list');
   Route::get('send{id}', 'MailSendController@send')->name('mail.send');
 });
+
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
   Route::get('add', 'SurchargesController@add')->name('surcharges.add');
   Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
@@ -75,9 +79,8 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
-
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
-    Route::get('addT', 'ContractsController@add')->name('contracts.add');
+  Route::get('addT', 'ContractsController@add')->name('contracts.add');
   Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
   Route::put('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
   Route::get('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
@@ -111,6 +114,7 @@ Route::resource('UploadFile','FileHarborsPortsController');
 
 Route::resource('contracts', 'ContractsController')->middleware('auth');
 
+//Companies
 Route::middleware(['auth'])->prefix('companies')->group(function () {
   Route::get('add', 'CompanyController@add')->name('companies.add');
   Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
@@ -119,6 +123,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
+//Pricees
 Route::middleware(['auth'])->prefix('prices')->group(function () {
   Route::get('add', 'PriceController@add')->name('prices.add');
   Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
@@ -126,14 +131,14 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
-
+//Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
   Route::get('add', 'ContactController@add')->name('contacts.add');
   Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
-
 Route::resource('contacts', 'ContactController')->middleware('auth');
 
+//Inlands
 Route::middleware(['auth'])->prefix('inlands')->group(function () {
   Route::get('add', 'InlandsController@add')->name('inlands.add');
   Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
@@ -142,8 +147,8 @@ Route::middleware(['auth'])->prefix('inlands')->group(function () {
 });
 Route::resource('inlands', 'InlandsController')->middleware('auth');
 
+//Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
-
   Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
   Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
@@ -160,10 +165,20 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
+//Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
   Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
+
+//SaleTerms
+Route::middleware(['auth'])->prefix('saleterms')->group(function () {
+  Route::get('create', 'SaleTermController@create')->name('saleterms.create');
+  Route::get('msg/{sale_term_id}', 'SaleTermController@destroymsg')->name('saleterms.msg');
+  Route::get('delete/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.delete']);
+  Route::get('edit/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.edit']);
+});
+Route::resource('saleterms', 'SaleTermController')->middleware('auth');
 
 Auth::routes();
 

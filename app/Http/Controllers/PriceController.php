@@ -8,6 +8,7 @@ use App\FreightMarkup;
 use App\InlandChargeMarkup;
 use App\LocalChargeMarkup;
 use App\Price;
+use App\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -25,7 +26,8 @@ class PriceController extends Controller
   {
     $prices = Price::all();
     $companies = Company::all()->pluck('business_name','id');
-    return view('prices.add', ['prices' => $prices,'companies' => $companies]);
+    $currencies = Currency::all();
+    return view('prices.add', ['prices' => $prices,'companies' => $companies,'currencies'=>$currencies]);
   }
 
 
@@ -128,9 +130,10 @@ class PriceController extends Controller
       }
     }
     $companies = Company::all()->pluck('business_name','id');
+    $currencies = Currency::all();
     $local_charges = LocalChargeMarkup::where('price_id',$id)->get();
 
-    return view('prices.edit', compact('price','companies','selected_companies','local_charges'));
+    return view('prices.edit', compact('price','companies','selected_companies','local_charges','currencies'));
   }
 
   public function update(Request $request, $id)
