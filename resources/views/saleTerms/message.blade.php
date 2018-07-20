@@ -1,8 +1,8 @@
 <!--begin::Form-->
-{!! Form::open(['route' => ['saleterms.delete', $saleterm_id],'method' => 'PUT']) !!}
+{!! Form::open(['route' => ['delete-surcharges', $surcharge_id],'method' => 'PUT']) !!}
     <div class="m-form__section m-form__section--first">
         <div class="form-group m-form__group">
-         Are you sure you want to delete this record?
+         Are you sure you want to delete this surcharge?
      </div>
      </div>
      <div class="m-portlet__foot m-portlet__foot--fit">

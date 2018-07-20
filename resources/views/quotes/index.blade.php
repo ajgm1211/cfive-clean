@@ -114,7 +114,7 @@
                         @else
                         <td>{{$quote->destination_address }}</td>
                         @endif
-                        <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} @if(isset($currency_cfg)) {{$currency_cfg->alphacode}} @endif</td>
+                        <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
                         <td>
                             @if($quote->type==1)
                                 <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 

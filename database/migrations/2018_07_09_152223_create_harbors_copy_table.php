@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddHarborsCopyTable extends Migration
+class CreateHarborsCopyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class AddHarborsCopyTable extends Migration
             $table->string('code');
             $table->string('coordinates')->nullable();
             $table->integer('country_id')->unsigned();
-            $table->json('varation');
+            $table->string('varation');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->timestamps();
         });

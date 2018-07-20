@@ -1022,8 +1022,6 @@ $(document).on('click', '#delete-company', function () {
 
 // Pricing 
 $(document).on('click', '#delete-pricing', function () {
-
-
   var id = $(this).attr('data-pricing-id');
   var theElement = $(this);
   swal({
@@ -1063,9 +1061,48 @@ $(document).on('click', '#delete-pricing', function () {
         }
 
       });
-
     }
   });   
+});
+
+//SaleTerms
+
+$(document).on('click', '#delete-saleterm', function () {
+  var id = $(this).attr('data-saleterm-id');
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'saleterms/delete/' + id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            $(theElement).closest('tr').remove();
+          }else{
+            swal(
+              'Error!',
+              'Your can\'t delete this contact because have quotes related.',
+              'warning'
+            )
+            console.log(data.message);
+          }
+        }
+      });
+
+    }
+
+  });
 });
 
 $('#m_select2-edit-company').select2({

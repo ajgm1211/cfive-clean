@@ -166,7 +166,7 @@
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label>Incoterm</label>
-                                                                    {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control']) }}
+                                                                    {{ Form::select('incoterm',$incoterm,$quote->incoterm,['class'=>'m-select2-general form-control']) }}
                                                                 </div>
                                                                 <div class="col-md-5">
                                                                     <label>Delivery type</label>
@@ -303,9 +303,9 @@
                                                                             <td >Charge</td>
                                                                             <td >Detail</td>
                                                                             <td >Units</td>
-                                                                            <td >Price per unit</td>
-                                                                            <td >Markup</td>
+                                                                            <td >Price per unit</td>      
                                                                             <td >Total</td>
+                                                                            <td >Markup</td>
                                                                             <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                                                         </tr>
                                                                     </thead>
@@ -332,10 +332,10 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
@@ -367,11 +367,11 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
                                                                                 <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
                                                                             </td>
+                                                                            <td>
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                            </td>      
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
@@ -412,9 +412,9 @@
                                                                             <td >Charge</td>
                                                                             <td >Detail</td>
                                                                             <td >Units</td>
-                                                                            <td >Price per unit</td>
-                                                                            <td >Markup</td>
+                                                                            <td >Price per unit</td>      
                                                                             <td >Total</td>
+                                                                            <td >Markup</td>
                                                                             <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                                                         </tr>
                                                                     </thead>
@@ -441,10 +441,10 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
@@ -476,10 +476,10 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
@@ -521,8 +521,8 @@
                                                                             <td >Detail</td>
                                                                             <td >Units</td>
                                                                             <td >Price per unit</td>
-                                                                            <td >Markup</td>
                                                                             <td >Total</td>
+                                                                            <td >Markup</td>
                                                                             <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                                                                         </tr>
                                                                     </thead>
@@ -549,10 +549,10 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
@@ -584,10 +584,10 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">

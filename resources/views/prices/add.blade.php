@@ -160,10 +160,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -222,10 +221,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -247,10 +245,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -310,10 +307,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -335,10 +331,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -402,10 +397,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -464,10 +458,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -489,10 +482,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -552,10 +544,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -577,10 +568,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -644,10 +634,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="freight_currency_markup_3" name="freight_markup_currency[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -707,10 +696,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_3" name="local_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -733,10 +721,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="local_currency_markup_3_2" name="local_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -796,10 +783,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_3" name="inland_currency_import[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -821,10 +807,9 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         <select class="btn btn-default" id="inland_currency_markup_3_2" name="inland_currency_export[]">
-                                                                            <option value="usd">USD</option>
-                                                                            <option value="clp">CLP</option>
-                                                                            <option value="ars">ARS</option>
-                                                                            <option value="eur">EUR</option>
+                                                                            @foreach($currencies as $currency)
+                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
+                                                                            @endforeach
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -846,9 +831,9 @@
                             <button type="submit" class="btn btn-primary">
                                 Submit
                             </button>
-                            <button type="reset" class="btn btn-success">
+                            <a href="javascript:history.back()" class="btn btn-success">
                                 Cancel
-                            </button>
+                            </a>
                         </div>
                     </div>
                 {!! Form::close() !!}

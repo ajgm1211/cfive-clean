@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFilesTmpTable extends Migration
+class CreateTmpRatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,15 @@ class AddFilesTmpTable extends Migration
      */
     public function up()
     {
-        Schema::create('files_tmp', function (Blueprint $table) {
+        Schema::create('tmp_rates', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('contract_id')->unsigned();
-            $table->string('name_file');
-            $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
+            $table->string('PortOrigin');
+            $table->string('PortDestination');
+            $table->string('Carrier');
+            $table->string('Rate20');
+            $table->string('Rate40');
+            $table->string('Rate40HC');
+            $table->string('Currency');
             $table->timestamps();
         });
     }
@@ -29,6 +33,6 @@ class AddFilesTmpTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files_tmp');
+        Schema::dropIfExists('tmp_rates');
     }
 }
