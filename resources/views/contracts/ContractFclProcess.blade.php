@@ -110,18 +110,27 @@ new registration
                                     {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 @endif
+                                
+                                <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
+                                
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 @endif
+                                
+                                <input type="hidden" name="existdestiny" id="existdestiny" value="{{$value['existdestiny']}}" />
+                                
                                 @if($value['existcarrier'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="carrier" class=" ">Carrier</label>
                                     {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                 </div>
                                 @endif
+                                
+                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                                
                             </div>
                         </div>
                         @endforeach
@@ -153,7 +162,6 @@ new registration
                             @endforeach
                         </div>
                         <input type="hidden" name="countTarges" id="countTarges" value="{{$countTarges}}" />
-                        <input type="hidden" name="pulsaciones" id="pulsaciones" value="0" />
                     </div>
                     <div class="form-group m-form__group row">
 
@@ -174,104 +182,10 @@ new registration
 </div>
 <!--End::Main Portlet-->
 
-
-
-
-
-
-
 @endsection
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script>
-    $(document).ready(function(){
-        $('#processid').hide(); 
-    });
-
-    $('.m-select2-general').select2({
-        placeholder: "Select an option"
-    });
-
-    $('#originchk').on('click',function(){
-        if($('#originchk').prop('checked')){
-            $('#origininp').removeAttr('hidden');
-            $('#origin').attr('required','required');
-        } else{
-            $('#origininp').attr('hidden','hidden');
-            $('#origin').removeAttr('required');
-        }
-    }); 
-
-    $('#destinychk').on('click',function(){
-        if($('#destinychk').prop('checked')){
-            $('#destinyinp').removeAttr('hidden');
-            $('#destiny').attr('required','required');
-        } else{
-            $('#destinyinp').attr('hidden','hidden');
-            $('#destiny').removeAttr('required');
-        }
-    });
-
-    $('#carrierchk').on('click',function(){
-        if($('#carrierchk').prop('checked')){
-            $('#carrierinp').removeAttr('hidden');
-            $('#carrier').attr('required','required');
-        } else{
-            $('#carrierinp').attr('hidden','hidden');
-            $('#carrier').removeAttr('required');
-        }
-    });
-
-    function equals(lopp){
-        var countTarges =  $('#countTarges').val();
-        var valueselect =  $('#select'+lopp).val();
-        var duplicateB = false;
-        var duplicate;
-        var counti=0;
-        var pulsos;
-        var j;
-        var h;
-        var i;
-
-        for(j=1;j <= countTarges; j++){
-            var parent = $('#select'+j).val();
-            for(h=1;h <= countTarges; h++){
-                if(h != j){
-                    var chieldren = $('#select'+h).val();
-                    counti++;
-                    if(parent == chieldren){
-                        duplicateB =true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        pulsos = $('#pulsaciones').val();
-        pulsos++;
-        $('#pulsaciones').attr('value',pulsos);
-
-        if(duplicateB != true){
-            $('#processid').show();
-            if(pulsos >= countTarges){
-                swal('Good job!','You can proceed','success');
-            }
-        }else {
-            for(i=1;i <= countTarges; i++){
-                if(lopp != i){
-                    var other = $('#select'+i).val();
-                    if(valueselect == other)
-                    {
-                        $('#processid').hide();
-                        swal('Error!','This column has already been selected','error');
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-</script>
+<script src="{{asset('js/Contracts/processFlcContract.js')}}" type="application/javascript"></script>
 
 @stop
