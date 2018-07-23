@@ -1388,39 +1388,42 @@ class QuoteController extends Controller
       // fin calculo Global charges 
       //#######################################################################
       // Armar los schedules
-      $url = "http://schedules.cargofive.com/schedule/".strtolower($data->carrier->name)."/".$data->port_origin->code."/".$data->port_destiny->code;
+      try{
+        $url = "http://schedules.cargofive.com/schedule/".strtolower($data->carrier->name)."/".$data->port_origin->code."/".$data->port_destiny->code;
 
-      $client = new Client();
-      $res = $client->request('GET', $url, [
+        $client = new Client();
+        $res = $client->request('GET', $url, [
 
-      ]);
-      $schedules = Collection::make(json_decode($res->getBody()));
-      //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
-      $schedulesArr = new Collection();
-      $schedulesFin = new Collection();
-      if(!$schedules->isEmpty()){
-        foreach($schedules['schedules'] as $schedules){
-          $collectS = Collection::make($schedules);
-          $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
-          $collectS->put('days',$days);
-          if($schedules->Transfer > 1){
-            $collectS->put('type','Scale');
-          }else{
-            $collectS->put('type','Direct');
+        ]);
+        $schedules = Collection::make(json_decode($res->getBody()));
+        //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
+        $schedulesArr = new Collection();
+        $schedulesFin = new Collection();
+        if(!$schedules->isEmpty()){
+          foreach($schedules['schedules'] as $schedules){
+            $collectS = Collection::make($schedules);
+            $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
+            $collectS->put('days',$days);
+            if($schedules->Transfer > 1){
+              $collectS->put('type','Scale');
+            }else{
+              $collectS->put('type','Direct');
+            }
+
+            $schedulesArr->push($collectS);
           }
+          //'2018-07-24'
+          $dateSchedule = strtotime($date);
+          $dateSchedule =  date('Y-m-d',$dateSchedule);
 
-          $schedulesArr->push($collectS);
+          if(!$schedulesArr->isEmpty()){ 
+            $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
+            $schedulesFin->push($schedulesArr);
+          }
         }
-        //'2018-07-24'
-        $dateSchedule = strtotime($date);
-        $dateSchedule =  date('Y-m-d',$dateSchedule);
-
-        if(!$schedulesArr->isEmpty()){ 
-          $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-          $schedulesFin->push($schedulesArr);
-        }
+      }catch (\Guzzle\Http\Exception\ConnectException $e) {
+        
       }
-
 
 
 
