@@ -56,7 +56,9 @@ $subtotalDestiny = 0;
               <div class="panel-body">
 
                 <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span><br>
+                @if($form->origin_address != "")
                 <b>Address: </b> <span id="originA_input">  {{ $form->origin_address }}</span>
+                @endif
               </div>
             </div>
           </div>
@@ -65,7 +67,9 @@ $subtotalDestiny = 0;
               <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
               <div class="panel-body">
                 <b>Port: </b><span id="destination_input">{{ $info->port_destiny->name }}</span><br>
-               <b>Address: </b><span id="destinationA_input">{{   $form->destination_address }}</span>
+                @if($form->destination_address != "")
+                <b>Address: </b><span id="destinationA_input">{{   $form->destination_address }}</span>
+                @endif
 
               </div>
             </div>
