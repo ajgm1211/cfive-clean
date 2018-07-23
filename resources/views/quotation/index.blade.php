@@ -513,8 +513,8 @@
                   <i class="flaticon-cogwheel-2"></i>
                 </span>
                 <h3 class="m-portlet__head-text m--font-brand">
-                 <span class="darkblue"> NO RATES FOUND !</span>
-                      
+                  <span class="darkblue"> NO RATES FOUND !</span>
+
                 </h3>
               </div>			
             </div>
@@ -529,44 +529,40 @@
                     <div class="m-dropdown__inner">
                       <div class="m-dropdown__body">
                         <div class="m-dropdown__content">
-                          <ul class="m-nav">
-                            <li class="m-nav__section m-nav__section--first">
-                              <span class="workblue">
-                                Quick Actions
-                              </span><hr>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="{{route('contracts.index')}}"  class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="portalphacode">
-                                  View Rates
-                                </span>
-                              </a>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="{{route('quotes.index')}}" class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="portalphacode">
-                                  View Quotes
-                                </span>
-                              </a>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="" class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="portalphacode">
-                                  Generate Quote Automatic
-                                </span>
-                              </a>
-                            </li>
+                          <div class="m-demo">
+                            <div class="m-demo__preview">
+                              <div class="m-list-search">
+                                <div class="m-list-search__results">
+                                  <span class="m-list-search__result-category m-list-search__result-category--first">
+                                    Quick action
+                                  </span>
+                                  <a  href="{{route('quotes.index')}}" class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-interface-3 m--font-warning"></i></span>
+                                    <span class="m-list-search__result-item-text">
+                                      View rates                
+                                    </span>
 
-                            <li class="m-nav__separator m-nav__separator--fit"></li>
-                            <li class="m-nav__item">
-                              <a href="#" class="btn btn-outline-primary m-btn m-btn--pill m-btn--wide btn-sm">
-                                Cancel
-                              </a>
-                            </li>
-                          </ul>
+                                  </a>
+                                  <a href="{{route('contracts.index')}}"  class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-share m--font-success"></i></span>
+                                    <span class="m-list-search__result-item-text"> View quotes</span>
+
+                                  </a>
+                                  <a href="#" class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-paper-plane m--font-info"></i></span>
+                                    <span class="m-list-search__result-item-text">Quote automatic</span>
+
+                                  </a>
+                                  <hr>
+                                
+                                      <a href="#" class="btn btn-outline-prima m-btn m-btn--pill m-btn--wide btn-sm">
+                                        Cancel
+                                      </a>
+                                   
+                                </div>
+                              </div>
+                            </div>
+                          </div>                  
                         </div>
                       </div>
                     </div>
