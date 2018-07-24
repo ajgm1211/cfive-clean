@@ -547,6 +547,8 @@ $(document).on('click', '#create-quote', function (e) {
   var qty_40=$(".qty_40").val();
   var qty_40_hc=$(".qty_40_hc").val();
   var destination_harbor=$("#destination_harbor").val();
+  var destination_address=$("#destination_address").val();
+  var origin_address=$("#origin_address").val();
   $.ajax({
     type: 'get',
     url: 'get/harbor/id/' + origin_harbor,
@@ -575,7 +577,21 @@ $(document).on('click', '#create-quote', function (e) {
     $("#cargo_details_40_hc").html(qty_40_hc);
     $("#cargo_details_40_hc_p").removeClass('hide');
   }
+  if(origin_address!=''){
+    $("#origin_address_p").html(origin_address);
+    $("#origin_address_panel").removeClass('hide');
+  }else{
+    $("#origin_address_panel").addClass('hide');
+  }
+  if(destination_address!=''){
+    $("#destination_address_p").html(destination_address);
+    $("#destination_address_panel").removeClass('hide');
+  }else{
+    $("#destination_address_panel").addClass('hide');
+  }
+
 });
+
 $( document ).ready(function() {
   $( "select[name='company_id']" ).on('change', function() {
     var company_id = $(this).val();
@@ -1110,6 +1126,10 @@ $('#m_select2-edit-company').select2({
 });
 
 $('#price_level_company').select2({
+  placeholder: "Select an option"
+});
+
+$('#sale_term_id').select2({
   placeholder: "Select an option"
 });
 
