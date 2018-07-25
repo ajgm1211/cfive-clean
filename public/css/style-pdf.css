@@ -8,6 +8,7 @@
   src: url("/fonts/JosefinSans-Light.ttf") format("opentype");
 }
 
+
 .clearfix:after {
   content: "";
   display: table;
@@ -25,8 +26,7 @@ body {
   height: 29.7cm; 
   margin: 0 auto; 
   color: #555555;
-  background: #FFFFFF; 
-  font-family: JosefinSans Light,Arial !important; 
+  background: #FFFFFF;
   font-size: 12px !important;
 }
 

@@ -97,7 +97,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('DestroyRatesFailCorrectForContracts','ContractsController@DestroyRatesFailCorrect')->name('Destroy.Rates.FailCorrect.For.Contracts');
 
   // Surcharge
-  Route::PUT('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
+  Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
   Route::get('FailedSubchargeForContracts/{id}','ContractsController@FailSubcharges')->name('Failed.Subcharge.For.Contracts');
   Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
   Route::get('DestroySurchargeFailCorrectForContracts','ContractsController@DestroySurchargeFailCorrect')->name('Destroy.Surcharge.FailCorrect.For.Contracts');
@@ -107,7 +107,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
   Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
   Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
-  Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+  Route::put('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
@@ -161,6 +161,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::post('test', 'QuoteController@test')->name('quotes.test');
   Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
   Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
+  Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
 
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');

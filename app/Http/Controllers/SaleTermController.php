@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\SaleTerm;
+use App\Surcharge;
 
 class SaleTermController extends Controller
 {
     public function index()
-    {
-        $data = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->get();
-        return view('saleTerms/index', ['saleterms' => $data]);
+    {        
+        $surcharges = Surcharge::where('company_user_id','=',\Auth::user()->company_user_id)->with('companyUser')->get();
+        $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->get();
+        return view('surcharges/index', ['saleterms' => $saleterms,'surcharges'=>$surcharges]);
     }
 
     public function store(Request $request)
@@ -19,7 +21,7 @@ class SaleTermController extends Controller
         $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
         $saleterms=SaleTerm::create($request->all());
 
-        return redirect()->action('SaleTermController@index');
+        return redirect()->action('SurchargesController@index');
 
     }
 

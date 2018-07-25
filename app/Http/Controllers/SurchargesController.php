@@ -19,8 +19,8 @@ class SurchargesController extends Controller
     {
 
         $data = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->with('companyUser')->get();
-        $sale_terms = SaleTerm::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        return view('surcharges/index', ['arreglo' => $data,'sale_terms'=>$sale_terms]);
+        $saleterms = SaleTerm::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        return view('surcharges/index', ['surcharges' => $data,'saleterms'=>$saleterms]);
     }
 
     public function add()
