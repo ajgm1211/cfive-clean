@@ -120,6 +120,7 @@ class FileHarborsPortsController extends Controller
                     $prueba = Harbor_copy::create([
                         'name'          => $book->$portName, 
                         'code'          => $book->$codeport,
+                        'display_name'  => $book->$portName.', '.$book->$codeport,
                         'coordinates'   => $book->$location,
                         'country_id'    => $countryExist['id'],
                         'varation'      => $json
@@ -129,6 +130,7 @@ class FileHarborsPortsController extends Controller
                     $prueba = Harbor_copy::create([
                         'name'          => $book->$portName, 
                         'code'          => $book->$codeport,
+                        'display_name'  => $book->$portName.', '.$book->$codeport,
                         'coordinates'   => $book->$location,
                         'country_id'    => 248,
                         'varation'      => $json

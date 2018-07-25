@@ -17,6 +17,7 @@ class AddHarborsCopyTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('code');
+            $table->string('display_name')->nullable();
             $table->string('coordinates')->nullable();
             $table->integer('country_id')->unsigned();
             $table->json('varation');
