@@ -1116,8 +1116,6 @@ $('#price_level_company').select2({
 
 
 $(document).on('click', '#savecompany', function () {
-
-
   var $element = $('#addContactModal');
   $.ajax({
     type: 'POST',
@@ -1130,9 +1128,6 @@ $(document).on('click', '#savecompany', function () {
 
     },
     success: function(data) {
-
-
-
       $.ajax({
         url: "company/companies",
         dataType: 'json',
@@ -1153,6 +1148,54 @@ $(document).on('click', '#savecompany', function () {
           alert(request.responseText);
         }
       });
+    },
+    error: function (request, status, error) {
+      alert(request.responseText);
     }
+  });
+});
+
+
+
+$(document).on('click', '#savecontact', function () {
+  var $element = $('#contactModal');
+
+  $.ajax({
+    type: 'POST',
+    url: '/contacts',
+    data: {
+      'first_name' : $('.first_namec_input').val(),
+      'last_name' : $('.last_namec_input').val(),
+      'email' : $('.emailc_input').val(),
+      'phone' : $('.phonec_input').val(),
+      'company_id' : $('.companyc_input').val(),
+
+    },
+    success: function(data) {
+      $.ajax({
+          url: "company/companies",
+        dataType: 'json',
+        success: function(dataC) {
+           $('select[name="company_id"]').empty();
+          $.each(dataC, function(key, value) {
+            $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+          $('#contactModal').modal('hide');
+
+          swal(
+            'Done!',
+            'Status updated.',
+            'success'
+          )
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+    },
+    error: function (request, status, error) {
+      alert(request.responseText);
+    }
+
   });
 });
