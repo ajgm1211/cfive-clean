@@ -357,12 +357,12 @@
                     @endif
                   </td>
                   <td>
-                    <a href="{{ route("contracts.edit", $arr->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                    <a href="{{ route("contracts.edit", $contractG->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                       <i class="la la-edit"></i>
                     </a>
 
 
-                    <a  id="delete-contract" data-contract-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
+                    <a  id="delete-contract" data-contract-id="{{$contractG->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                       <i class="la la-eraser"></i>
                     </a>
 
