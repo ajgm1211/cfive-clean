@@ -16,7 +16,9 @@ $(document).on('click', '#delete-contract', function () {
         url: 'contracts/deleteContract/' + id,
         success: function(data) {
 
+
           if(data.message!= "SN"){
+
             swal({
               title: 'Warning!',
               text: "There are "+data.message+" rates associated with this contract and "+data.local+" charges. If you delete it, those rates  and charges will be deleted.",
@@ -41,6 +43,7 @@ $(document).on('click', '#delete-contract', function () {
                 });
               }
             });
+
           }else{
 
             $.ajax({
@@ -60,6 +63,7 @@ $(document).on('click', '#delete-contract', function () {
 
 
           }
+
         },
         error: function (request, status, error) {
           alert(request.responseText);
