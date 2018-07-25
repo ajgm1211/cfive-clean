@@ -235,6 +235,6 @@ new registration
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="{{asset('js/Contracts  /ImporContractFcl.js')}}"></script>
+<script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 
 @stop
