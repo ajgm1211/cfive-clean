@@ -520,14 +520,18 @@ $(document).on('change', '#delivery_type', function (e) {
   if($(this).val()==1){
     $("#origin_address_label").hide();
     $("#destination_address_label").hide();
+    $("#origin_address").val('');
+    $("#destination_address").val('');
   }
   if($(this).val()==2){
     $("#origin_address_label").hide();
     $("#destination_address_label").show();
+    $("#origin_address").val('');
   }
   if($(this).val()==3){
     $("#origin_address_label").show();
     $("#destination_address_label").hide();
+    $("#destination_address").val('');
   }
   if($(this).val()==4){
     $("#origin_address_label").show();

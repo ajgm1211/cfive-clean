@@ -39,7 +39,7 @@
                     </a>
                 </li>
                 <li class="nav-item m-tabs__item">
-                  <a class="nav-link m-tabs__link addS" data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                  <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                     <i class="la la-briefcase"></i>
                     List Sale Terms
                 </a>
@@ -144,7 +144,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane active" id="m_tabs_6_2" role="tabpanel">
+        <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
