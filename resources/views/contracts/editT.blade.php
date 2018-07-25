@@ -319,12 +319,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                             </div> 
                                         <td width='10%'> 
                                             <div id="divammount{{$loop->index}}" class="val"> {!! $localcharges->ammount !!} </div>
-                                            <div class="in" hidden="    true"> {!! Form::text('ammount[]', $localcharges->ammount, ['id' => 'ammount'.$loop->index ,'placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','disabled' => 'true']) !!}</div> 
+                                            <div class="in" hidden="    true"> {!! Form::text('ammount_select[]', $localcharges->ammount, ['id' => 'ammount'.$loop->index ,'placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','disabled' => 'true']) !!}</div> 
                                         </td>
                                         <td width='8%'>
                                             <div id="divcurrency{{$loop->index}}"  class="val"> {!! $localcharges->currency->alphacode !!} </div>
                                             <div class="in" hidden="true">
-                                                {{ Form::select('localcurrency_id[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
+                                                {{ Form::select('localcurrency_select[]', $currency,$localcharges->currency_id,['id' => 'localcurrency'.$loop->index ,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
                                             </div> 
                                         </td>
                                         <td width='12%'>

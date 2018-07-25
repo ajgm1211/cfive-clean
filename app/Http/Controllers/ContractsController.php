@@ -278,7 +278,7 @@ class ContractsController extends Controller
     $contract->update($requestForm);
 
     $details = $request->input('origin_id');
-    $detailscharges = $request->input('ammount');
+    $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
     $companies = $request->input('companies');
     $users = $request->input('users');
     $contador = 1;

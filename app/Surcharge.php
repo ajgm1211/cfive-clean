@@ -24,6 +24,13 @@ class Surcharge extends Model
 
     return $this->hasOne('App\GlobalCharge');
   }
+    public function SaleTermSurcharges()
+  {
+
+    return $this->hasOne('App\SaleTermSurcharge');
+  }
+  
+  
 
 
 }
