@@ -96,7 +96,7 @@
                 <tbody>
                     @foreach ($quotes as $quote)
                     <tr>
-                        <td><span class="{{$quote->status->name}}">{{$quote->status->name }}</span></td>
+                        <td><span class="{{$quote->status->name}}"  onclick="AbrirModal('change_status',{{$quote->id}})" style="cursor: pointer;">{{$quote->status->name }}</span></td>
                         @if(isset($quote->company))
                         <td>{{$quote->company->business_name }}</td>
                         @else
@@ -117,11 +117,11 @@
                         <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
                         <td>
                             @if($quote->type==1)
-                                <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
+                            <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
                             @elseif($quote->type==2)
-                                <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
+                            <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
                             @else
-                                <img src="{{asset('images/plane-blue.svg')}}" class="img img-responsive" width="21"> 
+                            <img src="{{asset('images/plane-blue.svg')}}" class="img img-responsive" width="21"> 
                             @endif
                         </td>
                         <td>
@@ -142,6 +142,30 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="modal fade" id="change_status_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                Change status
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">
+                                    &times;
+                                </span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -167,6 +191,13 @@
             url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#deletePriceModal').modal({show:true});
+            });
+        }
+        if(action == "change_status"){
+            var url = '{{ route("quotes.change_status", ":id") }}';
+            url = url.replace(':id', id);
+            $('.modal-body').load(url,function(){
+                $('#change_status_modal').modal({show:true});
             });
         }
     }

@@ -1730,7 +1730,8 @@ class QuoteController extends Controller
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
-    return redirect()->route('quotes.index');
+    //return redirect()->route('quotes.index');
+    return redirect()->action('QuoteController@show',$quote->id);
   }
 
 
@@ -2075,9 +2076,27 @@ class QuoteController extends Controller
   public function updateStatus(Request $request,$id)
   {
     $quote=Quote::findOrFail($id);
-    $quote->status_quote_id=$request->status_id;
+    $quote->status_quote_id=$request->status_quote_id;
     $quote->update();
 
-    return response()->json(['message' => 'Ok']);
+    $quotes = Quote::all();
+    $companies = Company::all()->pluck('business_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
+    $countries = Country::all()->pluck('name','id');
+
+    if($request->ajax()){
+      return response()->json(['message' => 'Ok']);
+    }else{
+      return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
+    }
+    
   }
+  public function changeStatus(Request $request)
+  {
+    $id = $request->id;
+    $quote=Quote::findOrFail($id);
+    $status_quotes=StatusQuote::pluck('name','id');
+
+    return view('quotes.changeStatus',compact('quote','status_quotes'));
+  }  
 }

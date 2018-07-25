@@ -139,7 +139,6 @@
 <script>
 
     function AbrirModal(action,id){
-
         if(action == "edit"){
             var url = '{{ route("saleterms.edit", ":id") }}';
             url = url.replace(':id', id);
@@ -160,9 +159,7 @@
             $('.modal-body').load(url,function(){
                 $('#m_modal_6').modal({show:true});
             });
-
         }
-
     }
 </script>
 

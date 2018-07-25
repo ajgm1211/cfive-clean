@@ -520,14 +520,18 @@ $(document).on('change', '#delivery_type', function (e) {
   if($(this).val()==1){
     $("#origin_address_label").hide();
     $("#destination_address_label").hide();
+    $("#origin_address").val('');
+    $("#destination_address").val('');
   }
   if($(this).val()==2){
     $("#origin_address_label").hide();
     $("#destination_address_label").show();
+    $("#origin_address").val('');
   }
   if($(this).val()==3){
     $("#origin_address_label").show();
     $("#destination_address_label").hide();
+    $("#destination_address").val('');
   }
   if($(this).val()==4){
     $("#origin_address_label").show();
@@ -547,6 +551,8 @@ $(document).on('click', '#create-quote', function (e) {
   var qty_40=$(".qty_40").val();
   var qty_40_hc=$(".qty_40_hc").val();
   var destination_harbor=$("#destination_harbor").val();
+  var destination_address=$("#destination_address").val();
+  var origin_address=$("#origin_address").val();
   $.ajax({
     type: 'get',
     url: 'get/harbor/id/' + origin_harbor,
@@ -575,7 +581,21 @@ $(document).on('click', '#create-quote', function (e) {
     $("#cargo_details_40_hc").html(qty_40_hc);
     $("#cargo_details_40_hc_p").removeClass('hide');
   }
+  if(origin_address!=''){
+    $("#origin_address_p").html(origin_address);
+    $("#origin_address_panel").removeClass('hide');
+  }else{
+    $("#origin_address_panel").addClass('hide');
+  }
+  if(destination_address!=''){
+    $("#destination_address_p").html(destination_address);
+    $("#destination_address_panel").removeClass('hide');
+  }else{
+    $("#destination_address_panel").addClass('hide');
+  }
+
 });
+
 $( document ).ready(function() {
   $( "select[name='company_id']" ).on('change', function() {
     var company_id = $(this).val();
@@ -875,11 +895,11 @@ $(document).on('click', '#send-pdf-quote', function () {
 
 $(document).on('change', '#status_quote_id', function () {
   var id = $('#quote-id').val();
-  var status_id = $('#status_quote_id').val();
+  var status_quote_id = $('#status_quote_id').val();
   $.ajax({
     type: 'POST',
     url: '/quotes/update/status/'+id,
-    data:{"status_id":status_id},
+    data:{"status_quote_id":status_quote_id},
     success: function(data) {
       $('#spin').hide();
 
@@ -1114,7 +1134,6 @@ $('#price_level_company').select2({
 });
 // companies 
 
-
 $(document).on('click', '#savecompany', function () {
   var $element = $('#addContactModal');
   $.ajax({
@@ -1199,3 +1218,9 @@ $(document).on('click', '#savecontact', function () {
 
   });
 });
+
+$('#sale_term_id').select2({
+  placeholder: "Select an option"
+});
+
+
