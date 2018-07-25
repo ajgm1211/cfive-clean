@@ -891,11 +891,11 @@ $(document).on('click', '#send-pdf-quote', function () {
 
 $(document).on('change', '#status_quote_id', function () {
   var id = $('#quote-id').val();
-  var status_id = $('#status_quote_id').val();
+  var status_quote_id = $('#status_quote_id').val();
   $.ajax({
     type: 'POST',
     url: '/quotes/update/status/'+id,
-    data:{"status_id":status_id},
+    data:{"status_quote_id":status_quote_id},
     success: function(data) {
       $('#spin').hide();
 

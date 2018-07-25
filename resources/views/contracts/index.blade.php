@@ -31,21 +31,6 @@
       </div>
     </div>
     @endif
-    <!--
-<div ng-app="">
-
-
-<button ng-click="showme=true">Mostrar</button>
-<button ng-click="showme=false">Ocultar</button> 
-
-<div class="wrapper">
-<p ng-hide="showme">Esto debe aparecer</p>
-<h2 ng-show="showme">Contenido oculto</h2>
-</div>
-
-</div>    
--->
-
     <div class="m-portlet m-portlet--tabs">
       <div class="m-portlet__head">
         <div class="m-portlet__head-tools">
