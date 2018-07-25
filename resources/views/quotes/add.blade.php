@@ -251,7 +251,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Origin Port</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="origin_input"></span>
                                                                 </div>
@@ -259,13 +259,31 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Destination Port</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="destination_input"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default hide" id="origin_address_panel">
+                                                                <div class="panel-heading title-quote size-14px"><b>Origin Address</b></div>
+                                                                <div class="panel-body">
+                                                                    <span id="origin_address_p"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default hide" id="destination_address_panel">
+                                                                <div class="panel-heading title-quote size-14px"><b>Destination Address</b></div>
+                                                                <div class="panel-body">
+                                                                    <span id="destination_address_p"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                    
                                                     <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
                                                         <div class="col-md-12">
                                                             <h5 class="title-quote size-14px">Cargo details</h5>
