@@ -1652,7 +1652,7 @@ class ContractsController extends Controller
         $now = new \DateTime();
         $now = $now->format('dmY_His');
 
-        $request->type;
+        $type = $request->type;
 
         $carrierVal = $request->carrier;
         $destinyArr = $request->destiny;
@@ -1767,7 +1767,7 @@ class ContractsController extends Controller
         $countTarges = count($targetsArr);
         //dd($data);
 
-        return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges'));
+        return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type'));
         /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
@@ -2017,10 +2017,12 @@ class ContractsController extends Controller
                                            }
                                        } else {
                                            if($origExiBol == true){
-                                               $originVal = $originVal;                                       
+                                               $originExits = Harbor::find($originVal);
+                                               $originVal = $originExits->name;                                       
                                            }
-                                           if($destiExitBol == true){    
-                                               $destinyVal = $destinyVal;
+                                           if($destiExitBol == true){  
+                                               $destinyExits = Harbor::find($destinyVal);
+                                               $destinyVal = $destinyExits->name;
                                            }
                                            FailRate::create([
                                                'origin_port'   => $originVal,
@@ -2058,6 +2060,10 @@ class ContractsController extends Controller
                                $request->session()->flash('message.title', 'Well done!');
                            }
                        });
+            $contract = new Contract();
+            $contract = Contract::find($request->Contract_id);
+            $contract->status = 'publish';
+            $contract->update();
             return redirect()->route('Failed.Rates.For.Contracts',$request->Contract_id);
             
         } catch(\Illuminate\Database\QueryException $e){
@@ -2073,6 +2079,10 @@ class ContractsController extends Controller
             return redirect()->route('importaion.fcl');
 
         }
+    }
+    
+    public function ProcessContractFclRatSurch(Request $request){
+        dd('llega');
     }
 
 
