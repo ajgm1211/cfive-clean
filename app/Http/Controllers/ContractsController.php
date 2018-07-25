@@ -633,7 +633,7 @@ class ContractsController extends Controller
         $objcurrency = new Currency();
         $objcarrier = new Carrier();
         $carrierSelect = $objcarrier->all()->pluck('name','id');
-        $harbor = $objharbor->all()->pluck('name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
 
         $rates = Rate::with('carrier','contract','port_origin','port_destiny')->where('contract_id','=',$id)->get();
@@ -1249,7 +1249,7 @@ class ContractsController extends Controller
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
-        $harbor                = $objharbor->all()->pluck('name','id');
+        $harbor                = $objharbor->all()->pluck('display_name','id');
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
@@ -1642,8 +1642,8 @@ class ContractsController extends Controller
     }
 
     public function LoadViewImporContractFcl(){
-        $harbor  = harbor::all()->pluck('name');
-        $carrier = carrier::all()->pluck('name');
+        $harbor  = harbor::all()->pluck('display_name','id');
+        $carrier = carrier::all()->pluck('name','id');
         return view('contracts.ImporContractFcl',compact('harbor','carrier'));
     }
 
@@ -1664,7 +1664,7 @@ class ContractsController extends Controller
 
         $data= collect([]);
 
-        $harbor  = harbor::all()->pluck('name','id');
+        $harbor  = harbor::all()->pluck('display_name','id');
         $carrier = carrier::all()->pluck('name','id');
         // try {
         $file = $request->file('file');
