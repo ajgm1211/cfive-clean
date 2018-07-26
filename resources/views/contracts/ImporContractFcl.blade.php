@@ -97,7 +97,7 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="1" type="radio" checked>
+                                                <input name="type" value="1" id="rdRate" type="radio" checked>
                                                 <span></span>
                                             </span>
                                         </span>
@@ -115,7 +115,7 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="2" type="radio" >
+                                                <input name="type" value="2" id="rdRateSurcharge" type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
@@ -129,6 +129,43 @@ new registration
                                     </label>
                                 </div>
 
+                            </div>
+                            <div class="form-group m-form__group row" hidden="hidden" id="divvaluescurren">
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesCurrency" value="2"  type="radio" >
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Values Only
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesCurrency" value="2"  type="radio" checked>
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Values With Currency
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                             <hr>
                             <div class="form-group m-form__group row">
@@ -200,7 +237,9 @@ new registration
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group m-form__group row"></div>
+                            <div class="form-group m-form__group row">
+
+                            </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-4">
                                 </div>
