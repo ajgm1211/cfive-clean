@@ -132,6 +132,16 @@ new registration
                                     {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                 </div>
                                 @endif
+                                
+                                @if($type == 2)
+                                <div class="col-2 col-form-label">
+                                    <label for="Charge" class=" ">Charge</label>
+                                    {!!  Form::text('chargeVal',null,['id'=>'chargeVal',
+                                    'placeholder'=>'References to Rate',
+                                    'required',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                                @endif
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
 
