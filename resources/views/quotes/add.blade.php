@@ -214,6 +214,15 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <br>
+                                                                    <label>Sale terms</label>
+                                                                    <div class="form-group">
+                                                                        {{ Form::select('sale_term_id',$saleterms,null,['class'=>'custom-select form-control','id' => 'sale_term_id','placeholder'=>'Choose an option']) }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -241,7 +250,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>                                        
                                         </div>
                                         <div class="tab-pane" id="m_portlet_tab_1_2">
                                             <br>
@@ -355,7 +364,7 @@
                                                                                 <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
@@ -442,7 +451,7 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" required/>
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.01" required/>
                                                                             </td>
                                                                             <td>
                                                                                 <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" required/> 
@@ -626,19 +635,20 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-lg-4 col-lg-offset-4">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Save
+                                                    </button>
+                                                    <button type="button" class="btn btn-success">
+                                                        Save and send
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <hr>
-                                <div class="form-group m-form__group row">
-                                    <div class="row">
-                                        <div class="col-lg-4 col-lg-offset-4">
-                                            <button type="submit" class="btn btn-primary">
-                                                Create Quote
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -679,7 +689,7 @@
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
-            
+            <input type="hidden" value="{{$currency_cfg->alphacode}}" id="currency_id">
             <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
             <hr>
             <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>

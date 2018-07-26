@@ -157,7 +157,7 @@
                                     <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
                                     <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
-                                    <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}/td>
+                                    <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
