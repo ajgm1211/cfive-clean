@@ -219,7 +219,16 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>                                                             
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <br>
+                                                                    <label>Sale terms</label>
+                                                                    <div class="form-group">
+                                                                        {{ Form::select('sale_term_id',$saleterms,$quote->sale_term_id,['class'=>'custom-select form-control','id' => 'sale_term_id','placeholder'=>'Choose an option']) }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -609,7 +618,7 @@
                                                         <div class="col-md-12">
                                                             <h5 class="title-quote pull-right">
                                                                 Sub-Total: <span id="sub_total_destination">{{$quote->sub_total_destination}}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value="{{$quote->sub_total_freight}}"  class="form-control"/>
+                                                                <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value="{{$quote->sub_total_destination}}"  class="form-control"/>
                                                                 <a class="btn addButtonDestination" style="vertical-align: middle">
                                                                     <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                 </a>

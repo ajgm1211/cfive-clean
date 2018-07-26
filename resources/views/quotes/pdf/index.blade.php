@@ -91,8 +91,16 @@
                     <td class="white">{{$origin_ammount->charge}}</td>
                     <td class="white">{{$origin_ammount->detail}}</td>
                     <td class="white">{{$origin_ammount->units}}</td>
+                    @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                    <td class="white">{{($origin_ammount->price_per_unit+$origin_ammount->markup)/$origin_ammount->units}}</td>
+                    @else
                     <td class="white">{{$origin_ammount->price_per_unit}}</td>
-                    <td class="white">{{$origin_ammount->total_ammount + ($origin_ammount->markup/$origin_ammount->units)}} {{$origin_ammount->currency->alphacode}}</td>
+                    @endif
+                    @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        <td>{{$origin_ammount->total_ammount }}
+                    @else
+                        <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}}
+                    @endif
                     <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                 </tr>
                 @endforeach
@@ -124,8 +132,17 @@
                     <td>{{$freight_ammount->charge}}</td>
                     <td>{{$freight_ammount->detail}}</td>
                     <td>{{$freight_ammount->units}}</td>
-                    <td>{{$freight_ammount->price_per_unit}}</td>
-                    <td>{{$freight_ammount->total_ammount + ($freight_ammount->markup/$freight_ammount->units)}} {{$freight_ammount->currency->alphacode}}</td>
+                    @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                    <td>{{($freight_ammount->price_per_unit  + $freight_ammount->markup) / $freight_ammount->units }}</td>
+                    @else
+                    <td>{{$freight_ammount->total_ammount_2 / $freight_ammount->units}}</td>
+                    @endif
+                    @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        <td>{{$freight_ammount->total_ammount }}
+                    @else
+                        <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}}
+                    @endif
+                    {{$freight_ammount->currency->alphacode}}</td>
                     <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif<</td>
                 </tr>
                 @endforeach
@@ -156,9 +173,17 @@
                 <tr class="text-center">
                     <td>{{$destination_ammount->charge}}</td>
                     <td>{{$destination_ammount->detail}}</td>
-                    <td>{{$destination_ammount->units}}</td>
-                    <td>{{$destination_ammount->price_per_unit}}</td>
-                    <td>{{$destination_ammount->total_ammount + ($destination_ammount->markup/$destination_ammount->units)}} {{$destination_ammount->currency->alphacode}}</td>
+                    <td>{{$destination_ammount->units}}</td>                  
+                    @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        <td>{{($destination_ammount->price_per_unit  + $destination_ammount->markup) / $destination_ammount->units }}</td>
+                    @else
+                        <td>{{$destination_ammount->total_ammount_2 / $destination_ammount->units}}</td>
+                    @endif                    
+                    @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        <td>{{$destination_ammount->total_ammount }}
+                    @else
+                        <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}}
+                    @endif                    
                     <td>{{$destination_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
                 </tr>
                 @endforeach

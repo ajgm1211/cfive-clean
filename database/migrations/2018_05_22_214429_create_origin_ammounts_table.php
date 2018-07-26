@@ -19,7 +19,7 @@ class CreateOriginAmmountsTable extends Migration
             $table->string('detail');
             $table->integer('units');
             $table->float('price_per_unit');
-            $table->float('markup');
+            $table->float('markup')->nullable();
             $table->integer('currency_id');
             $table->float('total_ammount');
             $table->float('total_ammount_2')->nullable();

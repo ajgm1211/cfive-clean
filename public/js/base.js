@@ -842,22 +842,29 @@ $(document).on("change keyup keydown", ".destination_total_ammount_2", function(
   $("#total_destination_ammount").change();
 });
 
-$(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_ammount, #total_destination_ammount", function() {
+$(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_ammount, #total_destination_ammount", function() {
 
   var total_origin=$("#total_origin_ammount").val();
   var total_freight=$("#total_freight_ammount").val();
   var total_destination=$("#total_destination_ammount").val();
   if(total_origin>0){
     total_origin=parseFloat(total_origin);
+  }else{
+    total_origin=0;
   }
   if(total_freight>0){
     total_freight=parseFloat(total_freight);
+  }else{
+    total_freight=0;
   }
   if(total_destination>0){
     total_destination=parseFloat(total_destination);
+  }else{
+    total_destination=0;
   }
 
-  sum = total_destination+total_origin+total_freight;
+  sum = total_origin+total_freight+total_destination;
+
   sum = parseFloat(sum);
   sum = sum.toFixed(2);
 
