@@ -507,7 +507,7 @@ class QuoteController extends Controller
         $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
       })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
 
-   
+
       foreach($localChar as $local){
 
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
@@ -1423,7 +1423,7 @@ class QuoteController extends Controller
           }
         }
       }catch (\Guzzle\Http\Exception\ConnectException $e) {
-        
+
       }
 
 
@@ -1592,6 +1592,7 @@ class QuoteController extends Controller
   {
 
     $input = Input::all();
+    dd($input);
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
     $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id]);
     $quote=Quote::create($request->all());
@@ -2090,7 +2091,7 @@ class QuoteController extends Controller
     }else{
       return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
-    
+
   }
   public function changeStatus(Request $request)
   {
@@ -2099,5 +2100,54 @@ class QuoteController extends Controller
     $status_quotes=StatusQuote::pluck('name','id');
 
     return view('quotes.changeStatus',compact('quote','status_quotes'));
-  }  
+  }
+  public function scheduleManual($orig_port,$dest_port)
+  {
+
+    $code_orig = $this->getHarborName($orig_port);
+    $code_dest = $this->getHarborName($dest_port);
+    $date  = '2018-07-24';
+    $carrier = 'maersk';
+
+    // Armar los schedules
+    try{
+      $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
+
+      $client = new Client();
+      $res = $client->request('GET', $url, [
+
+      ]);
+      $schedules = Collection::make(json_decode($res->getBody()));
+      //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
+      $schedulesArr = new Collection();
+      $schedulesFin = new Collection();
+      if(!$schedules->isEmpty()){
+        foreach($schedules['schedules'] as $schedules){
+          $collectS = Collection::make($schedules);
+          $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
+          $collectS->put('days',$days);
+          if($schedules->Transfer > 1){
+            $collectS->put('type','Scale');
+          }else{
+            $collectS->put('type','Direct');
+          }
+
+          $schedulesArr->push($collectS);
+           $schedulesFin->push($collectS);
+        }
+        //'2018-07-24'
+        $dateSchedule = strtotime($date);
+        $dateSchedule =  date('Y-m-d',$dateSchedule);
+
+        if(!$schedulesArr->isEmpty()){ 
+          $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
+         // $schedulesFin->push($collectS);
+        }
+      }
+    }catch (\Guzzle\Http\Exception\ConnectException $e) {
+
+    }
+
+    return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
+  }
 }
