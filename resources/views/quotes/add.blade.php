@@ -214,7 +214,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
+                                                            <!--<div class="row">
                                                                 <div class="col-md-4">
                                                                     <br>
                                                                     <label>Sale terms</label>
@@ -222,7 +222,7 @@
                                                                         {{ Form::select('sale_term_id',$saleterms,null,['class'=>'custom-select form-control','id' => 'sale_term_id','placeholder'=>'Choose an option']) }}
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div>-->
                                                         </div>
                                                     </div>
                                                     <hr>
