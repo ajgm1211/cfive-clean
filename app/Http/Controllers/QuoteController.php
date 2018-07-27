@@ -60,12 +60,18 @@ class QuoteController extends Controller
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('business_name','id');
     $countries = Country::all()->pluck('name','id');
-    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-    $currency_cfg = Currency::find($company_user->currency_id);
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }else{
+      $company_user='';
+      $currency_cfg = '';
+    }
+
     return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
-
-
   }
+
   public function automatic(){
 
     $quotes = Quote::all();
@@ -100,15 +106,11 @@ class QuoteController extends Controller
     $currency = Currency::all()->pluck('alphacode','id');
     $prices = Price::all()->pluck('name','id');
     $user = User::where('id',\Auth::id())->first();
-    if(count($company_user->companyUser)>0) {
-      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-    }else{
-      $currency_name = '';
-    }
+
 
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules  ]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules  ]);
 
   }
 
@@ -202,13 +204,13 @@ class QuoteController extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
 
-              ])->get();
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -296,13 +298,13 @@ class QuoteController extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
 
-              ])->get();
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -374,14 +376,14 @@ class QuoteController extends Controller
     $company_user_id =  \Auth::user()->company_user_id;
     $company_id = $request->input('company_id');
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
-        {
-          $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id){
-            $a->where('user_id', '=',$user_id);
-          })->orDoesntHave('contract_company_restriction')
-            ->whereHas('contract_company_restriction', function($a) use($company_id)                  {
-              $a->where('company_id', '=',$company_id);
-            })->orDoesntHave('contract_company_restriction');
-        })->get();
+    {
+      $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id){
+        $a->where('user_id', '=',$user_id);
+      })->orDoesntHave('contract_company_restriction')
+      ->whereHas('contract_company_restriction', function($a) use($company_id)                  {
+        $a->where('company_id', '=',$company_id);
+      })->orDoesntHave('contract_company_restriction');
+    })->get();
 
     $formulario = $request;
     $array20 = array('2','4','5');
@@ -1520,23 +1522,33 @@ class QuoteController extends Controller
 
   public function create()
   {
+    $company_user='';
+    $companies='';
+    $saleterms = '';
+    $currencies = '';
+    $currency_cfg = '';
+    $exchange = '';   
+    
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
-    $company_user=CompanyUser::find($company_user_id);
-    $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
-    $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
     $user = User::where('id',\Auth::id())->first();
-    if(count($company_user->companyUser)>0) {
-      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-    }else{
-      $currency_name = '';
+    $incoterm = Incoterm::pluck('name','id');
+    
+    if($company_user_id){
+      $company_user=CompanyUser::find($company_user_id);
+      $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
+      $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
     }
-    $currencies = Currency::pluck('alphacode','id');
-    $currency_cfg = Currency::find($company_user->currency_id);
-    if(\Auth::user()->company_user_id){
+
+    if($company_user){
+      $currencies = Currency::pluck('alphacode','id');
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+    if(\Auth::user()->company_user_id && $currency_cfg != ''){
       if($currency_cfg->alphacode=='USD'){
         $exchange = Currency::where('api_code_eur','EURUSD')->first();
       }else{
@@ -1544,8 +1556,7 @@ class QuoteController extends Controller
       }
     }
 
-    $incoterm = Incoterm::pluck('name','id');
-    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_name'=>$currency_name,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
+    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
 
   }
 
@@ -1582,7 +1593,7 @@ class QuoteController extends Controller
     $incoterm = Incoterm::pluck('name','id');
 
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
 
   }
 
@@ -1807,8 +1818,8 @@ class QuoteController extends Controller
 
 
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange]);
 
   }
 
@@ -1997,6 +2008,7 @@ class QuoteController extends Controller
     $quote_duplicate->owner=\Auth::id();
     $quote_duplicate->incoterm=$quote->incoterm;
     $quote_duplicate->modality=$quote->modality;
+    $quote_duplicate->currency_id=$quote->currency_id;
     $quote_duplicate->pick_up_date=$quote->pick_up_date;
     if($quote->origin_address){
       $quote_duplicate->origin_address=$quote->origin_address;
