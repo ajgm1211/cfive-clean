@@ -57,6 +57,7 @@ new registration
             {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
         @elseif($type == 2)
             {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!}
+            <input type="hidden" name="statustypecurren" value="{{$statustypecurren}}">
         @endif
         <div class="m-portlet__body">
             <div class="tab-content">
@@ -130,6 +131,16 @@ new registration
                                 <div class="col-2 col-form-label">
                                     <label for="carrier" class=" ">Carrier</label>
                                     {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                </div>
+                                @endif
+                                
+                                @if($type == 2)
+                                <div class="col-2 col-form-label">
+                                    <label for="Charge" class=" ">Charge</label>
+                                    {!!  Form::text('chargeVal',null,['id'=>'chargeVal',
+                                    'placeholder'=>'References to Rate',
+                                    'required',
+                                    'class'=>'form-control m-input'])!!}
                                 </div>
                                 @endif
 
