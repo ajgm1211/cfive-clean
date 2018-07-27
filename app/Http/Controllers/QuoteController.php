@@ -1592,7 +1592,7 @@ class QuoteController extends Controller
   {
 
     $input = Input::all();
-    dd($input);
+
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
     $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id]);
     $quote=Quote::create($request->all());
@@ -1714,6 +1714,7 @@ class QuoteController extends Controller
     if(isset($input['schedule'])){
       if($input['schedule'] != 'null'){
         $schedules = json_decode($input['schedule']);
+
         foreach( $schedules as $schedule){ 
           $sche = json_decode($schedule);
           $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
@@ -1727,6 +1728,24 @@ class QuoteController extends Controller
           $saveSchedule->quotes()->associate($quote);
           $saveSchedule->save(); 
         }
+      }
+    }
+    // Schedule manual 
+    if(isset($input['schedule_manual'])){
+      if($input['schedule_manual'] != 'null'){
+        $sche = json_decode($input['schedule_manual']);
+       // dd($sche);
+        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+
+        $saveSchedule  = new Schedule();
+        $saveSchedule->vessel = $sche->VesselName;
+        $saveSchedule->etd = $sche->Etd;
+        $saveSchedule->transit_time =  $dias;
+        $saveSchedule->eta = $sche->Eta;
+        $saveSchedule->type = 'direct';
+        $saveSchedule->quotes()->associate($quote);
+        $saveSchedule->save(); 
+
       }
     }
     $request->session()->flash('message.nivel', 'success');
@@ -2101,17 +2120,18 @@ class QuoteController extends Controller
 
     return view('quotes.changeStatus',compact('quote','status_quotes'));
   }
-  public function scheduleManual($orig_port,$dest_port)
+  public function scheduleManual($orig_port,$dest_port,$date_pick)
   {
 
     $code_orig = $this->getHarborName($orig_port);
     $code_dest = $this->getHarborName($dest_port);
-    $date  = '2018-07-24';
+    $date  = $date_pick;
     $carrier = 'maersk';
 
     // Armar los schedules
     try{
       $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
+
 
       $client = new Client();
       $res = $client->request('GET', $url, [
@@ -2133,20 +2153,22 @@ class QuoteController extends Controller
           }
 
           $schedulesArr->push($collectS);
-           $schedulesFin->push($collectS);
+
         }
         //'2018-07-24'
         $dateSchedule = strtotime($date);
         $dateSchedule =  date('Y-m-d',$dateSchedule);
 
         if(!$schedulesArr->isEmpty()){ 
+
           $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-         // $schedulesFin->push($collectS);
+          $schedulesFin->push($schedulesArr);
         }
       }
     }catch (\Guzzle\Http\Exception\ConnectException $e) {
 
     }
+
 
     return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
   }

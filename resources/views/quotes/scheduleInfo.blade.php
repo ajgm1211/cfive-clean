@@ -15,6 +15,7 @@
 
 
       @foreach($schedulesFin as $schedule)
+   
 
       <tr>
         <td width='15%'>{{ $schedule['VesselName'] }}</td>
@@ -22,7 +23,7 @@
         <td width='45%'>
           <div class="row">
             <div class="col-md-4">
-              <span class="portcss"> xx </span><br>            
+              <span class="portcss"> {{ strtoupper($code_orig->name) }} </span><br>            
             </div>
             <div class="col-md-4">
               <center> {{ $schedule['days'] }} Days</center>
@@ -33,7 +34,7 @@
 
             </div>
             <div class="col-md-4">
-              <span class="portcss">xxxx </span><br>
+              <span class="portcss">{{ strtoupper($code_dest->name) }} </span><br>
 
             </div>
           </div>                        
@@ -48,8 +49,9 @@
 
       </tr>
       @endforeach
+
     </table>
- 
+
   </div>
   <br>
   <div class="form-group m-form__group">

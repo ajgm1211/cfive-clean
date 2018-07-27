@@ -165,7 +165,7 @@
                                 <div class="col-md-3">
                                   <label>Pick up date</label>
                                   <div class="input-group date">
-                                    {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                    {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true']) !!}
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="la la-calendar-check-o"></i>
@@ -645,7 +645,7 @@
                                 </table>
                               </div>
                             </div>
-                            <input type="hidden" class="form-control" id="schedule" name="schedule" value="">
+                            <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
                           </div>
 
                         </div>
@@ -660,14 +660,15 @@
                             </span>
                           </a>
                           <br><br>
-                           <a  class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true" >
+                          <a  class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true" >
                             <span>
                               <i class="la la-remove"></i>
                               <span>Remove</span>
                             </span>
                           </a>
                         </div>
-                       
+
+
                       </div>
                     </div>
                   </div>
@@ -769,9 +770,32 @@
 
   function AbrirModal(action){
     if(action == "add"){
-      var url = '{{ route('quotes.schedule', ['orig_port' => 77, 'dest_port' => 122]) }}';
-      $('.modal-body').load(url,function(){
+
+      var orig_p = $('#origin_harbor').val();
+      var dest_p = $('#destination_harbor').val();
+      var date_p = $('.pick_up_date').val();
+      if(orig_p ==""){
+        msg('Sorry the origin port is empty');
+        return;
+      }
+      if(dest_p ==""){
+        msg('Sorry the destination port is empty');
+        return;
+      }
+      if(date_p ==""){
+        msg('Sorry the date is empty');
+        return;
+      }
+      var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
+      
+      url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
+ 
+      $('#spinner').show();
+      $('#scheduleModal').modal({show:true});
+      $('.modal-body').load(url, function (response, status, xhr) {
+
         $('#scheduleModal').modal({show:true});
+        $('#spinner').hide(); 
       });
     }
   }

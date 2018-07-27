@@ -1235,7 +1235,9 @@ $(document).on('click', '#select-schedule', function () {
 
       schevalues.push($valor);
     });
-  //  alert(schevalues);
+    
+   
+    //  alert(schevalues);
     $("#infoschedule").removeAttr('hidden');
     $(".removesche").removeAttr('hidden');
     $("#schedule").val(schevalues);
@@ -1250,3 +1252,24 @@ $(document).on('click', '.removesche', function () {
   $("#schedule").val('');
 });
 
+
+function msg(message){
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "0",
+    "hideDuration": "0",
+    "timeOut": "0",
+    "extendedTimeOut": "0",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
+ toastr.error(message,'IMPORTANT MESSAGE!');
+}
