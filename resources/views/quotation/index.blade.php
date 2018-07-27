@@ -2,6 +2,7 @@
 @section('css')
 @parent
 <link href="/css/quote.css" rel="stylesheet" type="text/css" />
+
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -512,14 +513,15 @@
                   <i class="flaticon-cogwheel-2"></i>
                 </span>
                 <h3 class="m-portlet__head-text m--font-brand">
-                  NO RATES FOUND !
+                  <span class="darkblue"> NO RATES FOUND !</span>
+
                 </h3>
               </div>			
             </div>
             <div class="m-portlet__head-tools">
               <ul class="m-portlet__nav">
                 <li class="m-portlet__nav-item m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover">
-                  <a href="#" class="m-portlet__nav-link btn btn-danger m-btn m-btn--icon m-btn--icon-only m-btn--pill   m-dropdown__toggle">
+                  <a href="#" class="m-portlet__nav-link btn btn-primary m-btn m-btn--icon m-btn--icon-only m-btn--pill   m-dropdown__toggle">
                     <i class="la la-ellipsis-v"></i>
                   </a>
                   <div class="m-dropdown__wrapper">
@@ -527,68 +529,64 @@
                     <div class="m-dropdown__inner">
                       <div class="m-dropdown__body">
                         <div class="m-dropdown__content">
-                          <ul class="m-nav">
-                            <li class="m-nav__section m-nav__section--first">
-                              <span class="m-nav__section-text">
-                                Quick Actions
-                              </span>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="{{route('contracts.index')}}"  class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="m-nav__link-text">
-                                  View Rates
-                                </span>
-                              </a>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="{{route('quotes.index')}}" class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="m-nav__link-text">
-                                 View Quotes
-                                </span>
-                              </a>
-                            </li>
-                            <li class="m-nav__item">
-                              <a href="" class="m-nav__link">
-                                <i class="m-nav__link-icon flaticon-share"></i>
-                                <span class="m-nav__link-text">
-                                  Generate Quote Automatic
-                                </span>
-                              </a>
-                            </li>
-                            </li>
-                          <li class="m-nav__separator m-nav__separator--fit"></li>
-                          <li class="m-nav__item">
-                            <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
-                              Cancel
-                            </a>
-                          </li>
-                          </ul>
+                          <div class="m-demo">
+                            <div class="m-demo__preview">
+                              <div class="m-list-search">
+                                <div class="m-list-search__results">
+                                  <span class="m-list-search__result-category m-list-search__result-category--first">
+                                    Quick action
+                                  </span>
+                                  <a  href="{{route('quotes.index')}}" class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-interface-3 m--font-warning"></i></span>
+                                    <span class="m-list-search__result-item-text">
+                                      View rates                
+                                    </span>
+
+                                  </a>
+                                  <a href="{{route('contracts.index')}}"  class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-share m--font-success"></i></span>
+                                    <span class="m-list-search__result-item-text"> View quotes</span>
+
+                                  </a>
+                                  <a href="#" class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon"><i class="flaticon-paper-plane m--font-info"></i></span>
+                                    <span class="m-list-search__result-item-text">Quote automatic</span>
+
+                                  </a>
+                                  <hr>
+                                
+                                      <a href="#" class="btn btn-outline-prima m-btn m-btn--pill m-btn--wide btn-sm">
+                                        Cancel
+                                      </a>
+                                   
+                                </div>
+                              </div>
+                            </div>
+                          </div>                  
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-        </div>
-      </div>
-      <div class="m-portlet__body">
-        <div class="m-alert m-alert--icon m-alert--outline alert alert-danger" role="alert">
-          <div class="m-alert__icon">
-            <i class="la la-warning"></i>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div class="m-alert__text">
-            <strong>Well done!</strong> You successfully read this message.	
-          </div>	
+          <div class="m-portlet__body">
+            <div class="m-alert m-alert--icon m-alert--outline alert alert-danger" role="alert">
+              <div class="m-alert__icon">
+                <i class="la la-warning"></i>
+              </div>
+              <div class="m-alert__text">
+                <strong>Well done!</strong> You successfully read this message.	
+              </div>	
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-@endif
-</div>
+    @endif
+  </div>
 </div>
 @endsection
 @section('js')

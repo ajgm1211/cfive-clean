@@ -54,7 +54,11 @@ $subtotalDestiny = 0;
             <div class="panel panel-default">
               <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
               <div class="panel-body">
-                <span id="origin_input">  {{ $info->port_origin->name }}</span>
+
+                <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span><br>
+                @if($form->origin_address != "")
+                <b>Address: </b> <span id="originA_input">  {{ $form->origin_address }}</span>
+                @endif
               </div>
             </div>
           </div>
@@ -62,7 +66,11 @@ $subtotalDestiny = 0;
             <div class="panel panel-default">
               <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
               <div class="panel-body">
-                <span id="destination_input">{{ $info->port_destiny->name }}</span>
+                <b>Port: </b><span id="destination_input">{{ $info->port_destiny->name }}</span><br>
+                @if($form->destination_address != "")
+                <b>Address: </b><span id="destinationA_input">{{   $form->destination_address }}</span>
+                @endif
+
               </div>
             </div>
           </div>
@@ -103,7 +111,7 @@ $subtotalDestiny = 0;
                   @endphp       
                   <tr>
                     <td>
-                      <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->origin->surcharge_name }} " />
+                      <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->origin->surcharge_terms }} " />
                     </td>
                     <td>
                       <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->origin->calculation_name }}"/>
@@ -143,7 +151,7 @@ $subtotalDestiny = 0;
                   @endphp           
                   <tr>
                     <td>
-                      <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->origin->surcharge_name }} " />
+                      <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->origin->surcharge_terms }} " />
                     </td>
                     <td>
                       <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->origin->calculation_name }}"/>
@@ -377,7 +385,7 @@ $subtotalDestiny = 0;
                   @endphp    
                   <tr>
                     <td>
-                      <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"  value="{{ $freight->freight->surcharge_name }}" />
+                      <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"  value="{{ $freight->freight->surcharge_terms }}" />
                     </td>
                     <td>
                       <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->freight->calculation_name }}" />
@@ -417,7 +425,7 @@ $subtotalDestiny = 0;
                   @endphp  
                   <tr>
                     <td>
-                      <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"  value="{{ $freight->freight->surcharge_name }}" />
+                      <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"  value="{{ $freight->freight->surcharge_terms }}" />
                     </td>
                     <td>
                       <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->freight->calculation_name }}" />
@@ -529,7 +537,7 @@ $subtotalDestiny = 0;
                   @endphp 
                   <tr>
                     <td>
-                      <input type="text" class="form-control"  id="destination_ammount_charge"  name="destination_ammount_charge[]"  value="{{ $destiny->destiny->surcharge_name }}" />
+                      <input type="text" class="form-control"  id="destination_ammount_charge"  name="destination_ammount_charge[]"  value="{{ $destiny->destiny->surcharge_terms }}" />
                     </td>
                     <td>
                       <input name="destination_ammount_detail[]" id="destination_ammount_detail"  class="form-control" type="text" value="{{ $destiny->destiny->calculation_name }}"/>
@@ -569,7 +577,7 @@ $subtotalDestiny = 0;
                   @endphp 
                   <tr>
                     <td>
-                      <input type="text" class="form-control"  id="destination_ammount_charge"  name="destination_ammount_charge[]"  value="{{ $destiny->destiny->surcharge_name }}" />
+                      <input type="text" class="form-control"  id="destination_ammount_charge"  name="destination_ammount_charge[]"  value="{{ $destiny->destiny->surcharge_terms }}" />
                     </td>
                     <td>
                       <input name="destination_ammount_detail[]" id="destination_ammount_detail"  class="form-control" type="text" value="{{ $destiny->destiny->calculation_name }}"/>
@@ -787,7 +795,7 @@ $subtotalDestiny = 0;
 @section('js')
 @parent
 
-  
+
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>

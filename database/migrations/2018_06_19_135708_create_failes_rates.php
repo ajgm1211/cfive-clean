@@ -18,11 +18,12 @@ class CreateFailesRates extends Migration
             $table->string('origin_port')->nullable();
             $table->string('destiny_port')->nullable();
             $table->string('carrier_id')->nullable();
-            $table->integer('contract_id')->nullable();
+            $table->integer('contract_id')->unsigned();
             $table->string('twuenty')->nullable();
             $table->string('forty')->nullable();
             $table->string('fortyhc')->nullable();
             $table->string('currency_id')->nullable();
+            $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
