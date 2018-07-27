@@ -57,6 +57,7 @@ new registration
             {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
         @elseif($type == 2)
             {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!}
+            <input type="hidden" name="statustypecurren" value="{{$statustypecurren}}">
         @endif
         <div class="m-portlet__body">
             <div class="tab-content">

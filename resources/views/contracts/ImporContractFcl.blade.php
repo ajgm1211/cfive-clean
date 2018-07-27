@@ -136,7 +136,7 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="2"  type="radio" >
+                                                <input name="valuesCurrency" value="1"  type="radio" >
                                                 <span></span>
                                             </span>
                                         </span>
