@@ -79,7 +79,7 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
-    //Route::get('add', 'ContractsController@add')->name('contracts.add');
+  //Route::get('add', 'ContractsController@add')->name('contracts.add');
   Route::get('addT', 'ContractsController@add')->name('contracts.add');
   Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
   Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
@@ -107,7 +107,9 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
   Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
   Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
-  Route::put('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+  Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
+  Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
@@ -117,6 +119,7 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 //Companies
 Route::middleware(['auth'])->prefix('companies')->group(function () {
   Route::get('add', 'CompanyController@add')->name('companies.add');
+  Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
   Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
   Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
   Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
@@ -134,6 +137,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
   Route::get('add', 'ContactController@add')->name('contacts.add');
+  Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
   Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
@@ -153,6 +157,8 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
   Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
   Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
+  Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
+  Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
   Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
   Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
   Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');

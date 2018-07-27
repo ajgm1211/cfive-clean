@@ -53,7 +53,11 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
+        @if($type == 1)
+            {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
+        @elseif($type == 2)
+            {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!}
+        @endif
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -110,27 +114,27 @@ new registration
                                     {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 @endif
-                                
+
                                 <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
-                                
+
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 @endif
-                                
+
                                 <input type="hidden" name="existdestiny" id="existdestiny" value="{{$value['existdestiny']}}" />
-                                
+
                                 @if($value['existcarrier'] == true)
                                 <div class="col-2 col-form-label">
                                     <label for="carrier" class=" ">Carrier</label>
                                     {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                 </div>
                                 @endif
-                                
-                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
-                                
+
+                                <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+
                             </div>
                         </div>
                         @endforeach

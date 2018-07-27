@@ -33,7 +33,7 @@
                 <div class="m-portlet__head">
                   <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-                      
+
                     </ul>
                   </div>
                 </div>
@@ -169,7 +169,7 @@
                               <div class="row">
                                 <div class="col-md-4" id="origin_harbor_label">
                                   <label>Origin port</label>
-                                  {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor']) }}
+                                  {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
                                 </div>
                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                   <label>Origin address</label>
@@ -180,7 +180,7 @@
                               <div class="row">
                                 <div class="col-md-4" id="destination_harbor_label">
                                   <label>Destination port</label>
-                                  {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor']) }}
+                                  {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
                                 </div>
                                 <div class="col-md-8" id="destination_address_label" style="display: none;">
                                   <label>Destination address</label>
@@ -203,11 +203,23 @@
                                 <div class="row">
                                   <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>Company</label>
-                                    {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}
+                                    {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
+                                    <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('add',0)">
+                                      <span>
+                                        <i class="la la-plus"></i>
+                                        <span>add </span>
+                                      </span>
+                                    </a>
                                   </div>
                                   <div class="col-md-4 col-sm-4 ol-xs-12">
                                     <label>Client</label>
-                                    {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                                    {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}<br><br>
+                                    <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
+                                      <span>
+                                        <i class="la la-plus"></i>
+                                        <span>add </span>
+                                      </span>
+                                    </a>
                                   </div>
                                   <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>Price level</label>
@@ -758,12 +770,16 @@
               </div>
             </div>
           </div>
+
           {!! Form::close() !!}
         </div>
       </div>
     </div>
   </div>
 </div>
+@include('contacts.partials.contactsModal');
+@include('companies.partials.companiesModal');
+
 @endsection
 
 @section('js')
@@ -795,6 +811,24 @@
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
+  }
+</script>
+<script>
+  function AbrirModal(action,id){
+
+    if(action == "add"){
+      var url = '{{ route("companies.addM") }}';
+      $('#modal-body').load(url,function(){
+        $('#companyModal').modal({show:true});
+      });
+    }
+    if(action == "addContact"){
+      var url = '{{ route("contacts.addCM") }}';
+      $('.modal-body').load(url,function(){
+        $('#contactModal').modal({show:true});
+      });
+    }
+
   }
 </script>
 @stop
