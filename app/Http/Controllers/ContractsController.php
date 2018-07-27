@@ -511,18 +511,41 @@ class ContractsController extends Controller
                     return redirect()->route('contracts.edit',$contract);   
                 }
                 foreach ($reader->get() as $book) {
+                    $originVdul = '';
+                    $destinationVdul = '';
+
                     $carrier = Carrier::where('name','=',$book->carrier)->first();
-                    $duplicate =  Rate::where('origin_port','=',$book->origin)
-                        ->where('destiny_port','=',$book->destination)
+                    $twuenty = "20";
+                    $forty = "40";
+                    $fortyhc = "40hc";
+                    $origin = "origin";
+                    $destination = "destiny";
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    $originExitsDul = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+                        ->get();
+                    if(count($originExitsDul) == 1){
+                        $origB=true;
+                        foreach($originExitsDul as $originRc){
+                            $originVdul = $originRc['id'];
+                        }
+                    }
+                    $destinationExitsDul = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+                        ->get();
+                    if(count($destinationExitsDul) == 1){
+                        $destiB=true;
+                        foreach($destinationExitsDul as $destinationRc){
+                            $destinationVdul = $destinationRc['id'];
+                        }
+                    }
+
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    $duplicate =  Rate::where('origin_port','=',$originVdul)
+                        ->where('destiny_port','=',$destinationVdul)
                         ->where('carrier_id','=',$carrier['id'])
                         ->where('contract_id','=',$contract)
                         ->count();
                     if($duplicate <= 0){
-                        $twuenty = "20";
-                        $forty = "40";
-                        $fortyhc = "40hc";
-                        $origin = "origin";
-                        $destination = "destiny";
                         $origB=false;
                         $destiB=false;
                         $carriB=false;
@@ -1596,12 +1619,14 @@ class ContractsController extends Controller
         $fileTmp->contract_id = $Contract_id;
         $fileTmp->name_file   = $nombre;
         $fileTmp->save();
+
+        $statustypecurren = $request->valuesCurrency;
         if($type == 1){
             $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
         }else if($type == 2){
-            if($request->valuesCurrency == 1){
+            if($statustypecurren == 1){
                 $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC", 4 => "Calculation Type", 5 => "Charge"];
-            } else if($request->valuesCurrency == 2){
+            } else if($statustypecurren == 2){
                 $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC", 3 => "Calculation Type", 4 => "Charge"];
             }
         }
@@ -1658,7 +1683,7 @@ class ContractsController extends Controller
         $data->push($boxdinamy);
         $countTarges = count($targetsArr);
         //dd($data);
-        return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type'));
+        return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren'));
         /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
@@ -1946,56 +1971,224 @@ class ContractsController extends Controller
     }
 
     public function ProcessContractFclRatSurch(Request $request){
-        // dd($request);
-
-        /*for($i=0;$i <= 3; $i++){
-            $obj = ['name' => 'taylor', 'framework' => 'laravel'];
-            $collection->push($obj);
-        }
-            $i=0;
-        foreach($collection as $ii){
-            $collection->forget($i);
-            $i++;
-        }*/
-
+        dd($request);
         $errors = 0;
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
                    ->url($request ->FileName),function($reader) use($request,$errors) {
                        $reader->noHeading = true;
                        $reader->ignoreEmpty();
-                       $reader->calculate(false);
 
-                       $currency        = "Currency";
-                       $twenty          = "20'";
-                       $forty           = "40'";
-                       $fortyhc         = "40'HC";
-                       $origin          = "origin";
-                       $originExc       = "Origin";
-                       $destiny         = "destiny";
-                       $destinyExc      = "Destiny";
-                       $carrier         = "Carrier";
-                       $CalculationType = "Calculation_Type";
-                       $Charge          = "Charge";
-                       $chargeVal       = $request->chargeVal;
+                       $currency            = "Currency";
+                       $twenty              = "20'";
+                       $forty               = "40'";
+                       $fortyhc             = "40'HC";
+                       $origin              = "origin";
+                       $originExc           = "Origin";
+                       $destiny             = "destiny";
+                       $destinyExc          = "Destiny";
+                       $carrier             = "Carrier";
+                       $CalculationType     = "Calculation_Type";
+                       $Charge              = "Charge";
+                       $statustypecurren    = "statustypecurren";
+                       $chargeVal           = $request->chargeVal;
+
+                       $ratescollection         = collect([]);
+                       $ratesFailcollection     = collect([]);
+                       $surcharcollection       = collect([]);
+                       $surcharFailcollection   = collect([]);
+
 
                        $i = 1;
-
-                       $ciclo = false;
-
                        foreach($reader->get() as $read){
-                               
+                           $carrierVal       = '';
+                           $originVal        = '';
+                           $destinyVal       = '';
+                           $origenFL         = '';
+                           $destinyFL        = '';
+                           $currencyVal      = '';
+                           $currencyValtwen  = '';
+                           $currencyValfor   = '';
+                           $currencyValforHC = '';
+                           $twentyVal        = '';
+                           $fortyVal         = '';
+                           $fortyhcVal       = '';
+                           $originBol        = false;
+                           $origExiBol       = false;
+                           $destinyBol       = false;
+                           $destiExitBol     = false;
+                           $carriExitBol     = false;
+                           $curreExiBol      = false;
+                           $curreExitwenBol  = false;
+                           $curreExiforBol   = false;
+                           $curreExiforHCBol = false;
+                           $twentyExiBol     = false;
+                           $fortyExiBol      = false;
+                           $fortyhcExiBol    = false;
+                           $carriBol         = false;
+                           //--------------------------------------------------------
                            if($i != 1){
                                if($read[$request->$Charge] == $chargeVal){
-                                // se inserta un nuevo rate                                   
+
+                                   //--------------- CARRIER -----------------------------------------------------------------
+                                   if($request->existcarrier == 1){
+                                       $carriExitBol = true;
+                                       $carriBol     = true;
+                                       $carrierVal = $request->carrier; // cuando se indica que no posee carrier 
+                                   } else {
+                                       $carrierVal = $read[$request->Carrier]; // cuando el carrier existe en el excel
+                                       $carrier = Carrier::where('name','=',$carrierVal)->first();
+                                       if(empty($carrier->id) != true){
+                                           $carriExitBol = true;
+                                           $carrierVal = $carrier->id;
+                                       }else{
+                                           $carrierVal = $carrierVal.'_E_E';
+                                       }
+                                   }
+
+                                   //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+                                   if($request->existorigin == 1){
+                                       $originBol = true;
+                                       $origExiBol = true; //segundo boolean para verificar campos errados
+                                       $randons = $request->$origin;
+                                   } else {
+                                       $originVal = $read[$request->$originExc];// hacer validacion de puerto en DB
+                                       $originExits = Harbor::where('varation->type','like','%'.strtolower($originVal).'%')
+                                           ->get();
+                                       if(count($originExits) == 1){
+                                           $origExiBol = true;
+                                           foreach($originExits as $originRc){
+                                               $originVal = $originRc['id'];
+                                           }
+                                       } else{
+                                           $originVal = $originVal.'_E_E';
+                                       }
+                                   }
+                                   //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                                   if($request->existdestiny == 1){
+                                       $destinyBol = true;
+                                       $destiExitBol = true; //segundo boolean para verificar campos errados
+                                       $randons = $request->$destiny;
+                                   } else {
+                                       $destinyVal = $read[$request->$destinyExc];// hacer validacion de puerto en DB
+                                       $destinationExits = Harbor::where('varation->type','like','%'.strtolower($destinyVal).'%')
+                                           ->get();
+                                       if(count($destinationExits) == 1){
+                                           $destiExitBol = true;
+                                           foreach($destinationExits as $destinationRc){
+                                               $destinyVal = $destinationRc['id'];
+                                           }
+                                       }else{
+                                           $destinyVal = $destinyVal.'_E_E';
+                                       }
+                                   }
+
+
+                                   if($request->$statustypecurren == 2){
+                                       // cargar  columna con el  valor y currency  juntos, se descompone
+                                       $valuesArr  = explode(' ',$read[$request->$twenty]);
+
+                                       //---------------- CURRENCY ---------------------------------------------------------------
+                                       $currenc = Currency::where('alphacode','=',$valuesArr[1])->first();
+                                       if(empty($currenc->id) != true){
+                                           $curreExitBol = true;
+                                           $currencyVal =  $currenc->id;
+                                       }
+                                       else{
+                                           $currencyVal = $valuesArr[1].'_E_E';
+                                       }
+                                   } else {
+                                       $currenc = Currency::where('alphacode','=',$read[$request->$currency])->first();
+                                       if(empty($currenc->id) != true){
+                                           $curreExitBol = true;
+                                           $currencyVal =  $currenc->id;
+                                       }
+                                       else{
+                                           $currencyVal = $valuesArr[1].'_E_E';
+                                       }
+                                   }
+
+
                                } else{
+                                   // se ejecuta la carga de los surcharges
                                    if($read[$request->$CalculationType] == 'PER_CONTAINER'){
-                                       // se itera tres veces si son ditinto los valores
-                                       
+                                       // se verifica si los valores son iguales 
+                                       // se crea un registro unico
+                                       if($read[$request->$twenty] == $read[$request->$forty] &&
+                                          $read[$request->$forty] == $read[$request->$fortyhc]){
+
+                                           // evaluamos si viene el valor con el currency juntos
+
+                                           if($request->$statustypecurren == 2){
+                                               // cargar  columna con el  valor y currency  juntos, se descompone
+                                               $valuesArr  = explode(' ',$read[$request->$twenty]);
+
+                                               //---------------- CURRENCY ---------------------------------------------------------------
+                                               $currenc = Currency::where('alphacode','=',$valuesArr[1])->first();
+                                               if(empty($currenc->id) != true){
+                                                   $curreExitBol = true;
+                                                   $currencyVal =  $currenc->id;
+                                               }
+                                               else{
+                                                   $currencyVal = $valuesArr[1].'_E_E';
+                                               }
+
+                                               //----------------  ---------------------------------------------------------------
+
+                                           }else{
+                                               // cargar por columna el currency un solo registro de los tre
+                                           }
+
+                                       } else {
+                                           // se crea un registro por cada carga
+                                           // se valida si el currency viene junto con el valor
+                                           if($request->$statustypecurren == 2){
+
+                                               $twentyArr  = explode(' ',$read[$request->$twenty]);
+                                               $fortyArr   = explode(' ',$read[$request->$forty]);
+                                               $fortyhcArr = explode(' ',$read[$request->$fortyhc]);
+
+                                               //---------------- CURRENCY 20'---------------------------------------------------------------
+                                               $currenctwen = Currency::where('alphacode','=',$twentyArr[1])->first();
+                                               if(empty($currenc->id) != true){
+                                                   $curreExitwenBol = true;
+                                                   $currencyValtwen =  $currenctwen->id;
+                                               }
+                                               else{
+                                                   $currencyValtwen = $twentyArr[1].'_E_E';
+                                               }
+
+                                               //---------------- CURRENCY 40'---------------------------------------------------------------
+                                               $currencfor = Currency::where('alphacode','=',$fortyArr[1])->first();
+                                               if(empty($currenc->id) != true){
+                                                   $curreExitwenBol = true;
+                                                   $currencyValfor =  $currencfor->id;
+                                               }
+                                               else{
+                                                   $currencyValfor = $fortyArr[1].'_E_E';
+                                               }
+
+                                               //---------------- CURRENCY 40'HC---------------------------------------------------------------
+                                               $currencforhc = Currency::where('alphacode','=',$fortyhcArr[1])->first();
+                                               if(empty($currenc->id) != true){
+                                                   $curreExitwenBol = true;
+                                                   $currencyValforHC =  $currencforhc->id;
+                                               }
+                                               else{
+                                                   $currencyValforHC = $fortyhcArr[1].'_E_E';
+                                               }
+
+
+                                           } else{
+                                               // corresponde a tres registros pero el currency viene especificado por la columna
+                                           }
+
+                                       }
+
                                    } else if($read[$request->$CalculationType] == 'PER_DOC'){
                                        //per_shipment
                                    }
-                                   echo 'se ejecuta la carga de los surcharge<br>';
+
                                }
                            }
                            $i++;
