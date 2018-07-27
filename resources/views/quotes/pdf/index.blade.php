@@ -43,7 +43,7 @@
         <div id="" class="clearfix">
             <div class="client" style="width: 150px;">
                 <div class="panel panel-default" style="width: 350px;">
-                    <div class="panel-heading title">Origin</div>
+                    <div class="panel-heading title">Origin port</div>
                     <div class="panel-body">
                         <span id="origin_input" style="color: #1D3A6E;">
                             {{$origin_harbor->name}}
@@ -53,7 +53,7 @@
             </div>
             <div class="company" style="float: right; width: 350px;">
                 <div class="panel panel-default" style="width: 350px; height: 83px;">
-                    <div class="panel-heading title">Destination</div>
+                    <div class="panel-heading title">Destination port</div>
                     <div class="panel-body">
                         <span id="destination_input" style="color: #1D3A6E;">
                             {{$destination_harbor->name}}
@@ -62,6 +62,34 @@
                 </div>
             </div>
         </div>
+        @if($quote->origin_address || $quote->destination_address)
+        <div id="" class="clearfix">
+            @if($quote->origin_address!='')
+            <div class="client" style="width: 150px;">
+                <div class="panel panel-default" style="width: 350px;">
+                    <div class="panel-heading title">Origin address</div>
+                    <div class="panel-body">
+                        <span id="origin_input" style="color: #1D3A6E;">
+                            {{$quote->origin_address}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if($quote->destination_address!='')
+            <div class="company" style="float: right; width: 350px;">
+                <div class="panel panel-default" style="width: 350px; height: 83px;">
+                    <div class="panel-heading title">Destination address</div>
+                    <div class="panel-body">
+                        <span id="destination_input" style="color: #1D3A6E;">
+                            {{$quote->destination_address}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+        @endif       
         <div id="details" class="clearfix details">
             <hr>
             <div class="company" style="color: #1D3A6E;">
@@ -72,6 +100,7 @@
             </div>
         </div>
         <hr>
+        @if(count($origin_ammounts)>0)
         <p class="title">Origin charges:</p>
         <br>
         <table border="0" cellspacing="0" cellpadding="0">
@@ -121,6 +150,8 @@
                 </tr>
             </tfoot>
         </table>
+        @endif
+        @if(count($freight_ammounts)>0)
         <p class="title">Freight charges:</p>
         <br>
         <table border="0" cellspacing="0" cellpadding="0">
@@ -170,6 +201,8 @@
                 </tr>
             </tfoot>
         </table>
+        @endif
+        @if(count($destination_ammounts)>0)
         <p class="title">Destination charges:</p>
         <br>
         <table border="0" cellspacing="0" cellpadding="0">
@@ -220,6 +253,7 @@
                 </tr>
             </tfoot>
         </table>
+        @endif
     </main>
     <div class="clearfix details">
         <hr>
