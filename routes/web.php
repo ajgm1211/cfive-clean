@@ -168,6 +168,8 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
   Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
   Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
+  Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
+  
 
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');

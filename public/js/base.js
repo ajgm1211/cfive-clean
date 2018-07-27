@@ -1199,10 +1199,10 @@ $(document).on('click', '#savecontact', function () {
     },
     success: function(data) {
       $.ajax({
-          url: "company/companies",
+        url: "company/companies",
         dataType: 'json',
         success: function(dataC) {
-           $('select[name="company_id"]').empty();
+          $('select[name="company_id"]').empty();
           $.each(dataC, function(key, value) {
             $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
@@ -1230,4 +1230,53 @@ $('#sale_term_id').select2({
   placeholder: "Select an option"
 });
 
+$(document).on('click', '#select-schedule', function () {
 
+  var schevalues = new Array();
+  var n = jQuery(".sche:checked").length;
+  if (n > 0){
+    jQuery(".sche:checked").each(function(){
+      $valor =  $(this).val();
+      var $obj = jQuery.parseJSON($valor);
+      $('#schetable > tbody:last-child').append("<tr><td>"+$obj['VesselName']+"</td><td>"+$obj['Etd']+"</td><td> <div class='col-md-4'><center> "+$obj['days']+" Days</center><div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> <center>"+$obj['type']+"</center></div></td><td>"+$obj['Eta']+"</td></tr>");
+
+      schevalues.push($valor);
+    });
+    
+   
+    //  alert(schevalues);
+    $("#infoschedule").removeAttr('hidden');
+    $(".removesche").removeAttr('hidden');
+    $("#schedule").val(schevalues);
+  }
+
+});
+
+$(document).on('click', '.removesche', function () {
+  $("#infoschedule").attr('hidden','true');
+  $(".removesche").attr('hidden','true');
+  $("#scheduleBody").text('');
+  $("#schedule").val('');
+});
+
+
+function msg(message){
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "0",
+    "hideDuration": "0",
+    "timeOut": "0",
+    "extendedTimeOut": "0",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
+ toastr.error(message,'IMPORTANT MESSAGE!');
+}
