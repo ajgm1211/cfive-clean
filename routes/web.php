@@ -30,6 +30,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
   Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
   Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
   Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+  Route::get('notifications', 'UsersController@notifications');
 });
 
 Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
