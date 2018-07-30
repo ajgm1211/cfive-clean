@@ -6,17 +6,21 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Contract;
+use App\User;
 
 class N_contracts extends Notification implements ShouldQueue
 {
   use Queueable;
 
-  protected $user;
+    protected $user;
+    protected $contract;
 
-  public function __construct($message)
-  {
-    $this->user = $message;
-  }
+    public function __construct(User $user, Contract $contract)
+    {
+        $this->user = $user;
+        $this->contract = $contract;    
+    }
   /**
      * Get the notification's delivery channels.
      *
@@ -46,8 +50,11 @@ class N_contracts extends Notification implements ShouldQueue
   public function toDatabase($notifiable)
   {
     return [
-      'id' => 1,
       
+      'id_user' => $this->user->id,
+      'name_user' => $this->user->name,
+      'id_company' => $this->user->company_user_id,
+      'number_contract' => $this->contract->number,
     ];
   }
 
