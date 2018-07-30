@@ -405,7 +405,7 @@ Events
                 <div class="tab-pane active" id="topbar_notifications_notifications" role="tabpanel">
                   <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
                     <div class="m-list-timeline m-list-timeline--skin-light">
-                      <div class="m-list-timeline__items">
+                      <div class="m-list-timeline__items notifications">
                         <div class="m-list-timeline__item">
                           <span class="m-list-timeline__badge"></span>
                           <span class="m-list-timeline__text">
@@ -430,7 +430,7 @@ Events
                             7 hrs
                           </span>
                         </div>
-                       
+
                       </div>
                     </div>
                   </div>
@@ -507,4 +507,5 @@ Production server down
 
   </ul>
 </div>
+
 
