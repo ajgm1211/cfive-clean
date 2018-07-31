@@ -875,31 +875,39 @@ $(document).on('click', '#send-pdf-quote', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
   var email_template_id = $('#email_template').val();
-  $.ajax({
-    type: 'POST',
-    url: '/quotes/send/pdf',
-    data:{"email_template_id":email_template_id,"id":id},
-    beforeSend: function () {
-      $('#spin').show();
-    },
-    success: function(data) {
-      $('#spin').hide();
-      $('#SendQuoteModal').modal('toggle');
-      if(data.message=='Ok'){
-        swal(
-          'Done!',
-          'Your message has been sent.',
-          'success'
-          )
-      }else{
-        swal(
-          'Error!',
-          'Your message has not been sent.',
-          'error'
-          )
+  if(email_template_id!=''){
+    $.ajax({
+      type: 'POST',
+      url: '/quotes/send/pdf',
+      data:{"email_template_id":email_template_id,"id":id},
+      beforeSend: function () {
+        $('#spin').show();
+      },
+      success: function(data) {
+        $('#spin').hide();
+        $('#SendQuoteModal').modal('toggle');
+        if(data.message=='Ok'){
+          swal(
+            'Done!',
+            'Your message has been sent.',
+            'success'
+            )
+        }else{
+          swal(
+            'Error!',
+            'Your message has not been sent.',
+            'error'
+            )
+        }
       }
-    }
-  });
+    });
+  }else{
+    swal(
+      '',
+      'Please choose an email template.',
+      'warning'
+      )
+  }
 });
 
 //Change Status Quote
@@ -933,18 +941,24 @@ $(document).on('change', '#status_quote_id', function () {
 //Select email template to send quote
 $(document).on('change', '#email_template', function () {
   var id = $('#email_template').val();
-  $.ajax({
-    type: 'GET',
-    url: '/templates/preview',
-    data:{"id":id},
-    success: function(data) {
-      $('#preview').html('<b>Subject:</b> '+data.subject+'<hr> <b>Body:</b><br><br>'+data.message);
-    }
-  });
+  if(id==''){
+    $('#preview').html('');
+    $('#btn_area').html('');
+  }else{
+    $.ajax({
+      type: 'GET',
+      url: '/templates/preview',
+      data:{"id":id},
+      success: function(data) {
+        $('#preview').html('<b>Subject:</b> '+data.subject+'<hr> <b>Body:</b><br><br>'+data.message);
+        $('#btn_area').html("<a href='/templates/edit/"+data.id+"' class='btn btn-sm btn-info' id='edit-template-btn'>Edit template</a>");
+      }
+    });
+  }
 });
 
 //Select2 email template in quotes
-$('#email_template').select2({
+$('#email_templte').select2({
   placeholder: "Select an option"
 });
 
