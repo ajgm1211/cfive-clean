@@ -130,6 +130,7 @@
                     <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 20\' Containers':''}}</p>
                 </div>
             </div>
+            @if(count($origin_ammounts)>0)
             <div class="row">
                 <div class="col-md-3">
                     <h5 class="title-quote size-14px">Origin ammounts</h5>
@@ -172,7 +173,9 @@
                     </h5>
                 </div>
             </div>
+            @endif
             <br/>
+            @if(count($freight_ammounts)>0)
             <div class="row">
                 <div class="col-md-3">
                     <h5 class="title-quote size-14px">Freight ammounts</h5>
@@ -215,7 +218,9 @@
                     </h5>
                 </div>
             </div>
+            @endif
             <br/>
+            @if(count($destination_ammounts)>0)
             <div class="row">
                 <div class="col-md-3">
                     <h5 class="title-quote size-14px">Destination ammounts</h5>
@@ -258,6 +263,7 @@
                     </h5>
                 </div>
             </div>
+            @endif
             <div class="row">
                 <div class="col-md-12">
                     <hr>

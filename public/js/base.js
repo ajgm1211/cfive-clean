@@ -943,6 +943,11 @@ $(document).on('change', '#email_template', function () {
   });
 });
 
+//Select2 email template in quotes
+$('#email_template').select2({
+  placeholder: "Select an option"
+});
+
 //Clients
 
 $(document).on('click', '#delete-contact', function () {
