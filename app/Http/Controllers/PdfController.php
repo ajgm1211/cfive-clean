@@ -18,6 +18,8 @@ use App\Harbor;
 use App\Price;
 use App\Quote;
 use App\User;
+use App\EmailTemplate;
+use App\Mail\SendQuotePdf;
 
 class PdfController extends Controller
 {
@@ -48,9 +50,9 @@ class PdfController extends Controller
         return $pdf->stream('quote');
     }
 
-    public function send_pdf_quote($id)
+    public function send_pdf_quote(Request $request)
     {
-        $quote = Quote::findOrFail($id);
+        $quote = Quote::findOrFail($request->id);
         $contact_email = Contact::find($quote->contact_id);
         $companies = Company::all()->pluck('business_name','id');
         $harbors = Harbor::all()->pluck('name','id');
@@ -73,16 +75,12 @@ class PdfController extends Controller
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
         if(count($contact_email)>0) {
-            \Mail::send('emails.quote_pdf', [], function ($message) use ($quote, $contact_email) {
-                $message->from('javila3090@gmail.com', 'Julio Avila');
-
-                $message->to($contact_email->email)->subject('Quote #' . $quote->id);
-
-                $message->attach('pdf/temp_' . $quote->id . '.pdf', [
-                    'as' => 'Quote.pdf',
-                    'mime' => 'application/pdf',
-                ]);
-            });
+            
+            $template = EmailTemplate::find($request->email_template_id);
+            $email=$contact_email->email;
+            
+            \Mail::to($contact_email->email)->send(new SendQuotePdf($template,$quote));
+            
             $quote->status_quote_id=2;
             $quote->update();
             return response()->json(['message' => 'Ok']);

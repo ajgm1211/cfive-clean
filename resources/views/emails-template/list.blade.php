@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
                         
-                            <a href="{{ route('emails-template.add') }}" type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                            <a href="{{ route('emails-template.add') }}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
@@ -87,11 +87,11 @@
                     </tr>
                     </thead>
                     <tbody> 
-                        @foreach ($data as $arr)
+                        @foreach ($templates as $arr)
                             <tr>
                                 <td>{{ $arr->name }}</td>
                                 <td>{{ $arr->subject }}</td>
-                                <td>{{ $arr->user_id }}</td>
+                                <td>{{ $arr->user->name }}</td>
                                 <td> 
                                     <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="View " onclick="AbrirModal('look',{{  $arr->id }})" >
                                         <i class="la la-search"></i>

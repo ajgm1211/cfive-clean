@@ -45,7 +45,7 @@ function save(id,idval){
         'Updated!',
         'Your rate has been updated.',
         'success'
-      )
+        )
       $("#save"+id).attr('hidden','true');
       $("#cancel"+id).attr('hidden','true');
       $("#edit"+id).removeAttr('hidden');
@@ -114,7 +114,7 @@ function save_l(id,idval){
         'Updated!',
         'Your local charge has been updated.',
         'success'
-      )
+        )
       $("#save_l"+id).attr('hidden','true');
       $("#cancel_l"+id).attr('hidden','true');
       $("#remove_l"+id).attr('hidden','true');
@@ -192,7 +192,7 @@ $(document).on('click', '#default-currency-submit', function () {
               'Done!',
               'Your choice has been saved.',
               'success'
-            )
+              )
           }
           $("#default-currency-submit").prop("disabled", false);
         }
@@ -225,7 +225,7 @@ $(document).on('click', '#delete-contact', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-          )
+            )
           $(theElement).closest('li').remove();
         }
       });
@@ -411,7 +411,7 @@ $(document).on('click', '#duplicate-quote', function (e) {
         'Success!',
         'The quote has been duplicated.',
         'success'
-      )
+        )
     }
   });
 });
@@ -432,7 +432,7 @@ $(document).on('change', '#origin_harbor', function (e) {
 
 $(document).on('click', '.addButtonOrigin', function (e) {
   var $template = $('#origin_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -440,7 +440,7 @@ $(document).on('click', '.addButtonOrigin', function (e) {
 });
 $(document).on('click', '.addButton', function (e) {
   var $template = $('#freight_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -466,7 +466,7 @@ $(document).on('click', '#delete-quote', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-          )
+            )
           $(theElement).closest('tr').remove();
         }
       });
@@ -477,7 +477,7 @@ $(document).on('click', '#delete-quote', function () {
 
 $(document).on('click', '.addButtonDestination', function (e) {
   var $template = $('#destination_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -874,9 +874,11 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
 $(document).on('click', '#send-pdf-quote', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
+  var email_template_id = $('#email_template').val();
   $.ajax({
-    type: 'GET',
-    url: '/quotes/send/pdf/'+id,
+    type: 'POST',
+    url: '/quotes/send/pdf',
+    data:{"email_template_id":email_template_id,"id":id},
     beforeSend: function () {
       $('#spin').show();
     },
@@ -888,18 +890,19 @@ $(document).on('click', '#send-pdf-quote', function () {
           'Done!',
           'Your message has been sent.',
           'success'
-        )
+          )
       }else{
         swal(
           'Error!',
           'Your message has not been sent.',
           'error'
-        )
+          )
       }
     }
   });
 });
 
+//Change Status Quote
 $(document).on('change', '#status_quote_id', function () {
   var id = $('#quote-id').val();
   var status_quote_id = $('#status_quote_id').val();
@@ -915,14 +918,27 @@ $(document).on('change', '#status_quote_id', function () {
           'Done!',
           'Status updated.',
           'success'
-        )
+          )
       }else{
         swal(
           'Error!',
           'Has ocurred an error.',
           'error'
-        )
+          )
       }
+    }
+  });
+});
+
+//Select email template to send quote
+$(document).on('change', '#email_template', function () {
+  var id = $('#email_template').val();
+  $.ajax({
+    type: 'GET',
+    url: '/templates/preview',
+    data:{"id":id},
+    success: function(data) {
+      $('#preview').html('<b>Subject:</b> '+data.subject+'<hr> <b>Body:</b><br><br>'+data.message);
     }
   });
 });
@@ -949,14 +965,14 @@ $(document).on('click', '#delete-contact', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-            )
+              )
             console.log(data.message);
           }
         }
@@ -1002,14 +1018,14 @@ $(document).on('click', '#delete-company', function () {
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
-                      )
+                        )
                       $(theElement).closest('tr').remove();
                     }else{
                       swal(
                         'Error!',
                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                         'error'
-                      )
+                        )
                       console.log(data.message);
                     }
                   }
@@ -1026,14 +1042,14 @@ $(document).on('click', '#delete-company', function () {
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                  )
+                    )
                   $(theElement).closest('tr').remove();
                 }else{
                   swal(
                     'Error!',
                     'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                     'warning'
-                  )
+                    )
                   console.log(data.message);
                 }
               }
@@ -1077,7 +1093,7 @@ $(document).on('click', '#delete-pricing', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
 
           }
@@ -1114,14 +1130,14 @@ $(document).on('click', '#delete-saleterm', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-            )
+              )
             console.log(data.message);
           }
         }
@@ -1168,7 +1184,7 @@ $(document).on('click', '#savecompany', function () {
             'Done!',
             'Status updated.',
             'success'
-          )
+            )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1212,7 +1228,7 @@ $(document).on('click', '#savecontact', function () {
             'Done!',
             'Status updated.',
             'success'
-          )
+            )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1243,7 +1259,7 @@ $(document).on('click', '#select-schedule', function () {
       schevalues.push($valor);
     });
     
-   
+
     //  alert(schevalues);
     $("#infoschedule").removeAttr('hidden');
     $(".removesche").removeAttr('hidden');
@@ -1278,6 +1294,6 @@ function msg(message){
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   };
- toastr.error(message,'IMPORTANT MESSAGE!');
+  toastr.error(message,'IMPORTANT MESSAGE!');
 }
 //
