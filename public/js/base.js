@@ -875,11 +875,14 @@ $(document).on('click', '#send-pdf-quote', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
   var email_template_id = $('#email_template').val();
+  var email_subject = $('#email-subject').val();
+  var email_body = $('#email-body').val();
+
   if(email_template_id!=''){
     $.ajax({
       type: 'POST',
       url: '/quotes/send/pdf',
-      data:{"email_template_id":email_template_id,"id":id},
+      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body},
       beforeSend: function () {
         $('#spin').show();
       },
@@ -887,6 +890,9 @@ $(document).on('click', '#send-pdf-quote', function () {
         $('#spin').hide();
         $('#SendQuoteModal').modal('toggle');
         if(data.message=='Ok'){
+          $('#subject-box').html('');
+          $('.editor').html('');
+          $('#textarea-box').hide();          
           swal(
             'Done!',
             'Your message has been sent.',
@@ -942,19 +948,52 @@ $(document).on('change', '#status_quote_id', function () {
 $(document).on('change', '#email_template', function () {
   var id = $('#email_template').val();
   if(id==''){
-    $('#preview').html('');
-    $('#btn_area').html('');
+    $('#subject-box').html('');
+    $('#textarea-box').hide();
+    $('.editor').html('');
   }else{
     $.ajax({
       type: 'GET',
       url: '/templates/preview',
       data:{"id":id},
       success: function(data) {
-        $('#preview').html('<b>Subject:</b> '+data.subject+'<hr> <b>Body:</b><br><br>'+data.message);
-        $('#btn_area').html("<a href='/templates/edit/"+data.id+"' class='btn btn-sm btn-info' id='edit-template-btn'>Edit template</a>");
+        $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
+        $('#textarea-box').show();
+
+        tinymce.init({
+          selector: "#email-body",
+          plugins: [
+          "advlist autolink lists link charmap print preview hr anchor pagebreak",
+          "searchreplace wordcount visualblocks visualchars code fullscreen",
+          "insertdatetime nonbreaking save table contextmenu directionality",
+          "emoticons paste textcolor colorpicker textpattern codesample",
+          "fullpage toc imagetools help"
+          ],
+          toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+          menubar: false,
+          toolbar_items_size: 'small',
+          paste_as_text: true,
+          browser_spellcheck: true,
+          statusbar: false,
+          height: 400,
+
+          style_formats: [{
+            title: 'Bold text',
+            inline: 'b'
+          }, ],
+
+        });
+        $('.editor').html(data.message).tinymce({
+         theme: "modern",
+       });
+        
       }
     });
   }
+});
+
+$(document).on('click', '#show_email_templates', function () {
+  $('#email_templates_box').show();
 });
 
 //Select2 email template in quotes

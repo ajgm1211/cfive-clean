@@ -28,8 +28,13 @@
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Preview:</b></label>
                     <div class="jumbotron">
-                        <div id="preview">
-
+                        <div id="subject-box">                            
+                            
+                        </div>
+                        <div id="textarea-box" style="display: none;">
+                            <label><b>Body:</b></label>
+                            <br>
+                            <textarea class="form-control editor" id="email-body"></textarea>
                         </div>
                     </div>
                     <div id="btn_area">

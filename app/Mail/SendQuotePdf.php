@@ -16,10 +16,10 @@ class SendQuotePdf extends Mailable
      *
      * @return void
      */
-    public function __construct($template,$quote)
+    public function __construct($subject,$body,$quote)
     {
-        $this->subject = $template->subject;
-        $this->text = $template->menssage;
+        $this->subject = $subject;
+        $this->text = $body;
         $this->quote_id = $quote->id;
         $this->created = $quote->created_at;
     }
