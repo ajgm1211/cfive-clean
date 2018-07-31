@@ -42,7 +42,7 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
 });
 
 Route::group(['prefix' => 'templates', 'middleware' => ['auth']], function () {
-  Route::get('edit{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
+  Route::get('edit/{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
   Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
   Route::get('preview', 'EmailsTemplateController@preview')->name('emails-template.preview');
   Route::get('msg/{id}', 'EmailsTemplateController@destroymsg')->name('emails-template.msg');

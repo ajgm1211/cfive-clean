@@ -32,8 +32,11 @@
 
                         </div>
                     </div>
+                    <div id="btn_area">
+                        
+                    </div>
                 </div>
-                <br>
+                <hr>
                 <div class="form-group m-form__group">
                     <button id="send-pdf-quote" class="btn btn-success">Send</button>
                     <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
