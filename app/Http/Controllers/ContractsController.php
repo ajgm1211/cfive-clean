@@ -2001,6 +2001,7 @@ class ContractsController extends Controller
 
 
                        $i = 1;
+                       $falli =0;
                        foreach($reader->get() as $read){
                            $carrierVal          = '';
                            $originVal           = '';
@@ -2103,7 +2104,7 @@ class ContractsController extends Controller
 
                                //---------------- 20' ------------------------------------------------------------------
 
-                               if(empty($twentyArr[0]) != true ){
+                               if(empty($twentyArr[0]) != true || $twentyArr[0] == '0'){
                                    $twentyExiBol = true;
                                    $twentyVal   = (int)$twentyArr[0];
                                }
@@ -2113,7 +2114,7 @@ class ContractsController extends Controller
 
                                //----------------- 40' -----------------------------------------------------------------
 
-                               if(empty($fortyArr[0]) != true ){
+                               if(empty($fortyArr[0]) != true || $fortyArr[0] == '0'){
                                    $fortyExiBol = true;
                                    $fortyVal   = (int)$fortyArr[0];
                                }
@@ -2123,7 +2124,7 @@ class ContractsController extends Controller
 
                                //----------------- 40'HC --------------------------------------------------------------
 
-                               if(empty($fortyhcArr[0]) != true ){
+                               if(empty($fortyhcArr[0]) != true || $fortyhcArr[0] == '0'){
                                    $fortyhcExiBol = true;
                                    $fortyhcVal   = (int)$fortyhcArr[0];
                                }
@@ -2192,8 +2193,14 @@ class ContractsController extends Controller
                                }
 
                                //------------------ CALCULATION TYPE ---------------------------------------------------
+                               $calculationvalvaration = '';
+                               if( $read[$request->$CalculationType] == 'PER_DOC'){
+                                   $calculationvalvaration = 'Per Shipment';
+                               } else {
+                                   $calculationvalvaration = $read[$request->$CalculationType];
+                               }
 
-                               $calculationtype = CalculationType::where('name','like','%'.$read[$request->$CalculationType].'%')->first();
+                               $calculationtype = CalculationType::where('name','like','%'.$calculationvalvaration.'%')->first();
                                if(empty($calculationtype) != true){
                                    $calculationtypeExiBol = true;
                                    $calculationtypeVal = $calculationtype['id'];
@@ -2204,7 +2211,7 @@ class ContractsController extends Controller
 
 
                                //------------------ TYPE ---------------------------------------------------------------
-                               if($read[$request->$Charge] == $chargeVal){
+                               if($read[$request->$Charge] != $chargeVal){
                                    $surchargelist = Surcharge::where('name','=', $read[$request->$Charge])->first();
                                    if(empty($surchargelist) != true){
                                        $surchargeVal = $surchargelist['id'];
@@ -2246,7 +2253,7 @@ class ContractsController extends Controller
                                                    $currencyVal = $currencyValtwen;
                                                }
 
-                                               $ratesArre =[
+                                               $ratesArre = Rate::create([
                                                    'origin_port'    => $originVal,
                                                    'destiny_port'   => $destinyVal,
                                                    'carrier_id'     => $carrierVal,
@@ -2255,12 +2262,12 @@ class ContractsController extends Controller
                                                    'forty'          => $fortyVal,
                                                    'fortyhc'        => $fortyhcVal,
                                                    'currency_id'    => $currencyVal
-                                               ];
-                                               dd($ratesArre);
+                                               ]);
+                                                //dd($ratesArre);
                                            } 
                                        }else {
                                            // fila por puerto, sin expecificar origen ni destino manualmente
-                                           $ratesArre =[
+                                           $ratesArre =  Rate::create([
                                                'origin_port'    => $originVal,
                                                'destiny_port'   => $destinyVal,
                                                'carrier_id'     => $carrierVal,
@@ -2269,14 +2276,16 @@ class ContractsController extends Controller
                                                'forty'          => $fortyVal,
                                                'fortyhc'        => $fortyhcVal,
                                                'currency_id'    => $currencyVal
-                                           ];
+                                           ]);
+
+                                           //dd($ratesArre);
                                        }
 
 
                                    } else{
                                        // se ejecuta la carga de los surcharges
                                        if($read[$request->$CalculationType] == 'PER_CONTAINER'){
-
+                                           //dd($read[$request->$twenty]);
                                            // se verifica si los valores son iguales 
                                            if($read[$request->$twenty] == $read[$request->$forty] &&
                                               $read[$request->$forty] == $read[$request->$fortyhc]){
@@ -2284,36 +2293,389 @@ class ContractsController extends Controller
                                                // evaluamos si viene el valor con el currency juntos
 
                                                if($request->$statustypecurren == 2){
-
-                                                   // cargar valor y currency  juntos, se trae la descomposicion
-
-                                               } else{
-
-                                                   // cargar el currency ya descompuesto, un solo registro de los tres
+                                                   $currencyVal = $currencyValtwen;
                                                }
 
+                                               $ammount = $twentyVal;
+                                               $SurchargArreG = LocalCharge::create([ // tabla localcharges
+                                                   'surcharge_id'       => $surchargeVal,
+                                                   'typedestiny_id'     => 3,
+                                                   'contract_id'        => $request->$contractId,
+                                                   'calculationtype_id' => $calculationtypeVal,
+                                                   'ammount'            => $ammount,
+                                                   'currency_id'        => $currencyVal
+                                               ]);
+
+                                               //---------------------------------- CAMBIAR POR ID -----------------------------------------------------------
+                                               $SurchargCarrArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                   'carrier_id'      => $carrierVal,
+                                                   'localcharge_id' => $SurchargArreG->id
+                                               ]);
+                                               //-------------------------------------------------------------------------------------------------------------
+
+                                               if($originBol == true || $destinyBol == true){
+                                                   foreach($randons as  $rando){
+                                                       //insert por arreglo de puerto
+                                                       if($originBol == true ){
+                                                           $originVal = $rando;
+                                                       } else {
+                                                           $destinyVal = $rando;
+                                                       }
+
+                                                       //---------------------------------- CAMBIAR POR ID -------------------------------
+
+                                                       $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargArreG->id
+                                                       ]);
+                                                       //---------------------------------------------------------------------------------
+
+                                                   } 
+                                               }else {
+                                                   // fila por puerto, sin expecificar origen ni destino manualmente
+                                                   $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports
+                                                       'port_orig'      => $originVal,
+                                                       'port_dest'      => $destinyVal,
+                                                       'localcharge_id' => $SurchargArreG->id
+                                                   ]);
+                                               }
+                                               //echo $i;
+                                               //dd($SurchargArreG);
+
                                            } else {
-                                               // se crea un registro por cada carga
+                                               // dd('llega No iguales');
+                                               // se crea un registro por cada carga o valor
                                                // se valida si el currency viene junto con el valor
 
                                                if($request->$statustypecurren == 2){
-
                                                    // cargar valor y currency  juntos, se trae la descomposicion
+                                                   // ----------------------- CARGA 20' -------------------------------------------
 
+                                                   $SurchargTWArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 2,
+                                                       'ammount'            => $twentyVal,
+                                                       'currency_id'        => $currencyValtwen
+                                                   ]);
+
+                                                   $SurchargCarrTWArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'      => $carrierVal,
+                                                       'localcharge_id' => $SurchargTWArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargTWArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargTWArreG->id
+                                                       ]);
+                                                   }
+
+                                                   //---------------------- CARGA 40' ----------------------------------------------------
+
+                                                   $SurchargFORArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 1,
+                                                       'ammount'            => $fortyVal,
+                                                       'currency_id'        => $currencyValfor
+                                                   ]);
+
+                                                   $SurchargCarrFORArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'      => $carrierVal,
+                                                       'localcharge_id' => $SurchargFORArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargFORArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargFORArreG->id
+                                                       ]);
+                                                   }
+
+                                                   // --------------------- CARGA 40'HC --------------------------------------------------
+
+                                                   $SurchargFORHCArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 3,
+                                                       'ammount'            => $fortyhcVal,
+                                                       'currency_id'        => $currencyValforHC
+                                                   ]);
+
+                                                   $SurchargCarrFORHCArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'      => $carrierVal,
+                                                       'localcharge_id' => $SurchargFORHCArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargFORHCArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargFORHCArreG->id
+                                                       ]);
+                                                   }
+
+                                                   //echo $i;
+                                                   //dd($SurchargArreG);
                                                } else{
 
                                                    // cargar el currency ya descompuesto, un solo registro de los tres
+
+                                                   // ----------------------- CARGA 20' -------------------------------------------
+
+                                                   $SurchargTWArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 2,
+                                                       'ammount'            => $twentyVal,
+                                                       'currency_id'        => $currencyVal
+                                                   ]);
+
+                                                   $SurchargCarrTWArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'      => $carrierVal,
+                                                       'localcharge_id' => $SurchargTWArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargTWArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargTWArreG->id
+                                                       ]);
+                                                   }
+
+                                                   //---------------------- CARGA 40' ----------------------------------------------------
+
+                                                   $SurchargFORArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 1,
+                                                       'ammount'            => $fortyVal,
+                                                       'currency_id'        => $currencyVal
+                                                   ]);
+
+                                                   $SurchargCarrFORArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'      => $carrierVal,
+                                                       'localcharge_id' => $SurchargFORArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargFORArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargFORArreG->id
+                                                       ]);
+                                                   }
+
+                                                   // --------------------- CARGA 40'HC --------------------------------------------------
+
+                                                   $SurchargFORHCArreG = LocalCharge::create([ // tabla localcharges
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'typedestiny_id'     => 3,
+                                                       'contract_id'        => $request->$contractId,
+                                                       'calculationtype_id' => 3,
+                                                       'ammount'            => $fortyhcVal,
+                                                       'currency_id'        => $currencyVal
+                                                   ]);
+
+                                                   $SurchargCarrFORHCArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                       'carrier_id'     => $carrierVal,
+                                                       'localcharge_id' => $SurchargFORHCArreG->id
+                                                   ]);
+
+                                                   if($originBol == true || $destinyBol == true){
+                                                       foreach($randons as  $rando){
+                                                           //insert por arreglo de puerto
+                                                           if($originBol == true ){
+                                                               $originVal = $rando;
+                                                           } else {
+                                                               $destinyVal = $rando;
+                                                           }
+
+                                                           $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                               'port_orig'      => $originVal,
+                                                               'port_dest'      => $destinyVal,
+                                                               'localcharge_id' => $SurchargFORHCArreG->id
+                                                           ]);
+                                                       } 
+
+                                                   } else {
+                                                       // fila por puerto, sin expecificar origen ni destino manualmente
+                                                       $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                           'port_orig'      => $originVal,
+                                                           'port_dest'      => $destinyVal,
+                                                           'localcharge_id' => $SurchargFORHCArreG->id
+                                                       ]);
+                                                   }
+
+                                                    //echo $i;
+                                                    //dd($SurchargFORHCArreG);
+
                                                }
 
                                            }
 
                                        } else if($read[$request->$CalculationType] == 'PER_DOC'){
                                            //per_shipment
+                                           $ammount = $twentyVal;
+                                           if($request->$statustypecurren == 2){
+                                               $currencyVal = $currencyValtwen;
+                                           } 
+
+                                           $SurchargPERArreG = LocalCharge::create([ // tabla localcharges
+                                               'surcharge_id'       => $surchargeVal,
+                                               'typedestiny_id'     => 3,
+                                               'contract_id'        => $request->$contractId,
+                                               'calculationtype_id' => $calculationtypeVal,
+                                               'ammount'            => $ammount,
+                                               'currency_id'        => $currencyVal
+                                           ]);
+
+                                           $SurchargCarrFORHCArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                               'carrier_id'     => $carrierVal,
+                                               'localcharge_id' => $SurchargPERArreG->id
+                                           ]);
+
+                                           if($originBol == true || $destinyBol == true){
+                                               foreach($randons as  $rando){
+                                                   //insert por arreglo de puerto
+                                                   if($originBol == true ){
+                                                       $originVal = $rando;
+                                                   } else {
+                                                       $destinyVal = $rando;
+                                                   }
+
+                                                   $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                       'port_orig'      => $originVal,
+                                                       'port_dest'      => $destinyVal,
+                                                       'localcharge_id' => $SurchargPERArreG->id
+                                                   ]);
+                                               } 
+
+                                           } else {
+                                               // fila por puerto, sin expecificar origen ni destino manualmente
+                                               $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                   'port_orig'      => $originVal,
+                                                   'port_dest'      => $destinyVal,
+                                                   'localcharge_id' => $SurchargPERArreG->id
+                                               ]);
+                                           }
+
+                                           // echo $i;
+                                           // dd($SurchargPERArreG);
                                        }
 
                                    }
                                } else {
                                    // van los fallidos
+                                   $ree =[
+                                       'fila1' =>$i,
+                                       'carr' => $carriExitBol,
+                                       'orig' => $origExiBol,
+                                       'dest' => $destiExitBol,
+                                       '20' => $twentyVal,
+                                       'for' => $fortyExiBol,
+                                       'forhc' => $fortyhcExiBol,
+                                       'calc' => $calculationtypeExiBol,
+                                       'curre' => $variantecurrency
+                                   ];
+                                   $ratescollection->push($ree);
+                                   $falli++;
+
 
                                }
                                //break;
@@ -2321,6 +2683,7 @@ class ContractsController extends Controller
                            //-------------------------- fin distinto del primer ciclo
                            $i++;
                        }
+                       //dd($ratescollection);
                    });
         // dd($collection);
     }
