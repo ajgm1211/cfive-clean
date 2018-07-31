@@ -41,16 +41,17 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
   Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
 });
 
-Route::group(['prefix' => 'mail-templates', 'middleware' => ['auth']], function () {
-  Route::resource('mail-templates', 'EmailsTemplateController');
-  Route::get('list', 'EmailsTemplateController@index')->name('emails-template.list');
+Route::group(['prefix' => 'templates', 'middleware' => ['auth']], function () {
   Route::get('edit{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
   Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
+  Route::get('preview', 'EmailsTemplateController@preview')->name('emails-template.preview');
   Route::get('msg/{id}', 'EmailsTemplateController@destroymsg')->name('emails-template.msg');
   Route::get('show/{id}', 'EmailsTemplateController@show')->name('emails-template.show');
+  Route::get('update/{id}', 'EmailsTemplateController@update')->name('emails-template.update');
   Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
 
 });
+Route::resource('templates', 'EmailsTemplateController')->middleware('auth');
 
 Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
   Route::resource('preferences', 'CompanyBrandingController');
@@ -163,7 +164,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
   Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
   Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
-  Route::get('send/pdf/{id}', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+  Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
   Route::post('test', 'QuoteController@test')->name('quotes.test');
   Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
   Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');

@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendQuotePdf extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($template,$quote)
+    {
+        $this->subject = $template->subject;
+        $this->text = $template->menssage;
+        $this->quote_id = $quote->id;
+        $this->created = $quote->created_at;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->from('info@cargofive.com')
+        ->view('emails.quote_pdf')
+        ->subject($this->subject)
+        ->with(['text' => $this->text])
+        ->attach('pdf/temp_' . $this->quote_id . '.pdf', [
+                    'as' => 'Quote_'.$this->quote_id.'_'.$this->created.'.pdf',
+                    'mime' => 'application/pdf',
+                ]);
+    }
+}

@@ -22,12 +22,21 @@
                     <b>Sending</b> &nbsp;<i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div class="form-group m-form__group">
-                    Do you want send this quote to selected contact?
+                    <label style="letter-spacing: 0.7px"><b>Email template</b></label>
+                    {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
+                </div>
+                <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>Preview:</b></label>
+                    <div class="jumbotron">
+                        <div id="preview">
+
+                        </div>
+                    </div>
                 </div>
                 <br>
                 <div class="form-group m-form__group">
-                    <button id="send-pdf-quote" class="btn btn-info">Yes</button>
-                    <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">No</button>
+                    <button id="send-pdf-quote" class="btn btn-success">Send</button>
+                    <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
                 </div>
                 <br>
             </div>

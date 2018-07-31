@@ -15,7 +15,7 @@
 
 
       @foreach($schedulesFin as $schedule)
-   
+      
 
       <tr>
         <td width='15%'>{{ $schedule['VesselName'] }}</td>
