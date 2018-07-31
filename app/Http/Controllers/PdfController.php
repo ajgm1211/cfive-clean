@@ -76,10 +76,10 @@ class PdfController extends Controller
 
         if(count($contact_email)>0) {
             
-            $template = EmailTemplate::find($request->email_template_id);
-            $email=$contact_email->email;
+            $subject = $request->subject;
+            $body = $request->body;
             
-            \Mail::to($contact_email->email)->send(new SendQuotePdf($template,$quote));
+            \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
             
             $quote->status_quote_id=2;
             $quote->update();

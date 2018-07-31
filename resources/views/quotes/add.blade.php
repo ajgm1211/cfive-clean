@@ -169,7 +169,7 @@
                                                                 <div class="col-md-3">
                                                                     <label>Pick up date</label>
                                                                     <div class="input-group date">
-                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true']) !!}
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text">
                                                                                 <i class="la la-calendar-check-o"></i>
@@ -256,7 +256,6 @@
                                             <br>
                                             <div class="row">
                                                 <div class="col-lg-12">
-
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
@@ -409,7 +408,6 @@
                                                             </h5>                                                            
                                                         </div>
                                                     </div>
-
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Freight ammounts</h5>
@@ -633,17 +631,90 @@
                                                             </h5>
                                                         </div>
                                                     </div>
+                                                    <!-- Schedules -->
+                                                    <div id="infoschedule" class="row" hidden="true">
+                                                       <div class="col-md-3">
+                                                            <h5 class="title-quote size-14px">Schedules</h5>
+                                                       </div>
+                                                       <div class="col-md-12">
+                                                            <div class="table-responsive">
+                                                                <table id="schetable" class="table table-bordered color-blue">
+                                                                     <thead class="title-quote text-center header-table">
+                                                                       <tr>
+                                                                         <th><span class="">Vessel</span></th>
+                                                                         <th><span class="">ETD</span></th>
+                                                                         <th><span class=""><center>Transit Time</center></span>  </th>
+                                                                         <th><span class="">ETA</span></th>
+
+                                                                       </tr>
+                                                                     </thead>
+                                                                     <tbody id="scheduleBody">
+
+
+                                                                     </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+                                                    </div>                                          
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <a class="btn btn-outline-accent btn-sm  m-btn m-btn--icon" onclick="AbrirModal('add')">
+                                                        <span>
+                                                            <i class="la la-plus"></i>
+                                                            <span>Schedules </span>
+                                                        </span>
+                                                    </a>
+                                                    <br>
+                                                    <br>
+                                                    <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true" >
+                                                        <span>
+                                                            <i class="la la-remove"></i>
+                                                            <span>Remove</span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>                                            
                                             <hr>
                                             <div class="row">
                                                 <div class="col-lg-4 col-lg-offset-4">
                                                     <button type="submit" class="btn btn-primary">
                                                         Save
                                                     </button>
-                                                    <button type="button" class="btn btn-success">
+                                                    <button type="button" class="btn btn-info" id="show_email_templates">
                                                         Save and send
                                                     </button>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row" id="email_templates_box" style="display: none">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group m-form__group">
+                                                        <label style="letter-spacing: 0.7px"><b>Email template</b></label>
+                                                        {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
+                                                    </div>
+                                                    <div class="form-group m-form__group">
+                                                        <label style="letter-spacing: 0.7px"><b>Preview:</b></label>
+                                                        <div class="jumbotron">
+                                                            <div id="subject-box">                            
+                                                                
+                                                            </div>
+                                                            <div id="textarea-box" style="display: none;">
+                                                                <label><b>Body:</b></label>
+                                                                <br>
+                                                                <textarea class="form-control editor" name="body" id="email-body"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                     <div class="form-group m-form__group">
+                                                        <button type="submit" class="btn btn-success" formaction="/quotes/store/email">
+                                                            Continue
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -701,6 +772,9 @@
         </div>        
     </div>
 </div>
+
+@include('quotes.partials.schedulesModal');
+
 @endsection
 
 @section('js')
@@ -712,26 +786,62 @@
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
+
     /*** GOOGLE MAPS API ***/
 
     var autocomplete;
+
     function initAutocomplete() {
         var geocoder = new google.maps.Geocoder();
         var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
         var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
-            //autocomplete.addListener('place_changed', fillInAddress);
-        }
+        //autocomplete.addListener('place_changed', fillInAddress);
+    }
 
-        function codeAddress(address) {
-            var geocoder;
-            geocoder.geocode( { 'address': address}, function(results, status) {
-                if (status == 'OK') {
-                    alert(results[0].geometry.location);
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
-        }
-    </script>
-    @stop
+    function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == 'OK') {
+                alert(results[0].geometry.location);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+    
+    function AbrirModal(action){
+       if(action == "add"){
+
+         var orig_p = $('#origin_harbor').val();
+         var dest_p = $('#destination_harbor').val();
+         var date_p = $('.pick_up_date').val();
+         if(orig_p ==""){
+           msg('Sorry the origin port is empty');
+           return;
+         }
+         if(dest_p ==""){
+           msg('Sorry the destination port is empty');
+           return;
+         }
+         if(date_p ==""){
+           msg('Sorry the date is empty');
+           return;
+         }
+         var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
+         
+         url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
+
+         $('#spinner').show();
+         $('#scheduleModal').modal({show:true});
+         $('.modal-body').load(url, function (response, status, xhr) {
+
+           $('#scheduleModal').modal({show:true});
+           $('#spinner').hide();
+         });
+       }
+    }
+</script>
+@stop
