@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use App\Contract;
 use App\User;
 
@@ -13,14 +14,15 @@ class N_contracts extends Notification implements ShouldQueue
 {
   use Queueable;
 
-    protected $user;
-    protected $contract;
+  protected $user;
+  protected $contract;
+  public $thread;
 
-    public function __construct(User $user, Contract $contract)
-    {
-        $this->user = $user;
-        $this->contract = $contract;    
-    }
+  public function __construct(User $user, Contract $contract)
+  {
+    $this->user = $user;
+    $this->contract = $contract;    
+  }
   /**
      * Get the notification's delivery channels.
      *
@@ -29,7 +31,7 @@ class N_contracts extends Notification implements ShouldQueue
      */
   public function via($notifiable)
   {
-    return ['database'];
+    return ['database','broadcast'];
   }
 
   /**
@@ -50,12 +52,22 @@ class N_contracts extends Notification implements ShouldQueue
   public function toDatabase($notifiable)
   {
     return [
-      
+
       'id_user' => $this->user->id,
       'name_user' => $this->user->name,
       'id_company' => $this->user->company_user_id,
       'number_contract' => $this->contract->number,
     ];
+  }
+  public function toBroadcast($notifiable)
+  {
+    return new BroadcastMessage([
+
+      'id_user' => $this->user->id,
+      'name_user' => $this->user->name,
+      'id_company' => $this->user->company_user_id,
+      'number_contract' => $this->contract->number,
+    ]);
   }
 
 
