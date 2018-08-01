@@ -327,7 +327,7 @@ Air Freight
               1 New
             </span>
             <span class="m-dropdown__header-subtitle">
-              User Notifications
+               Notifications
             </span>
           </div>
           <div class="m-dropdown__body">
@@ -347,12 +347,10 @@ Air Freight
                         <div class="m-list-timeline__item notificationsMenu">
                           <span class="m-list-timeline__badge"></span>
                           <span class="m-list-timeline__text">
-                            System error -
+                           No notifications
                       
                           </span>
-                          <span class="m-list-timeline__time">
-                            Ni ideas
-                          </span>
+                     
                         </div>
             
 
