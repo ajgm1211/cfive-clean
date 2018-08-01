@@ -55,6 +55,7 @@ if (token) {
 //     encrypted: true
 // });
 
+
 window.$ = window.jQuery = require('jquery');
 
 import Echo from 'laravel-echo'
@@ -67,11 +68,13 @@ window.Echo = new Echo({
 });
 
 
+var notifications = [];
 
 $(document).ready(function() {
 
   if(userId) {
     $.get('/users/notifications', function (data) {
+  
       addNotifications(data);
     });
   }
@@ -80,6 +83,7 @@ $(document).ready(function() {
   if(userId) {
     window.Echo.private('App.User.'+userId)
       .notification((notification) => {
+      $( "#newNotification" ).removeAttr('hidden');
       addNotifications([notification]);
     });
   }
@@ -88,8 +92,17 @@ $(document).ready(function() {
 
 function addNotifications(data) {
 
-  data.map(function (notification) {
+   notifications = _.concat(notifications, data);
+  
+  notifications.map(function (notification) {
 
-    $('.notifications').html("<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" Agrego el contrato numero "+notification.data.number_contract+" </span> <span class='m-list-timeline__time'> </span> </div>");
+    
+     var htmlElements = notifications.map(function (notification) {
+            var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" Agrego el contrato numero "+notification.data.number_contract+" </span> <span class='m-list-timeline__time'> </span> </div>";
+       return text;
+       
+        });
+
+    $('.notifications').html(htmlElements);
   });
 }

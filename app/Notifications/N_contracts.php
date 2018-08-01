@@ -40,6 +40,9 @@ class N_contracts extends Notification implements ShouldQueue
     return [
       'id' => $this->id,
       'read_at' => null,
+      'id_company' => $this->user->company_user_id,
+      'number_contract' => $this->contract->number,
+      'name_user' => $this->user->name,
       'data' => [
         'id_company' => $this->user->company_user_id,
         'number_contract' => $this->contract->number,

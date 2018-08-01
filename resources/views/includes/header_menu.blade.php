@@ -314,7 +314,8 @@ Air Freight
 
     <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true">
       <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
-        <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
+        <div id="newNotification" hidden="true">
+          <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span></div>
         <span class="m-nav__link-icon">
           <i class="flaticon-music-2"></i>
         </span>
@@ -323,11 +324,9 @@ Air Freight
         <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
         <div class="m-dropdown__inner">
           <div class="m-dropdown__header m--align-center" style="background: url(../../assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
-            <span class="m-dropdown__header-title">
-              1 New
-            </span>
+
             <span class="m-dropdown__header-subtitle">
-               Notifications
+              Notifications
             </span>
           </div>
           <div class="m-dropdown__body">
@@ -347,12 +346,12 @@ Air Freight
                         <div class="m-list-timeline__item notificationsMenu">
                           <span class="m-list-timeline__badge"></span>
                           <span class="m-list-timeline__text">
-                           No notifications
-                      
+                            No notifications
+
                           </span>
-                     
+
                         </div>
-            
+
 
                       </div>
                     </div>
