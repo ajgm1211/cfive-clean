@@ -1860,7 +1860,7 @@ class ContractsController extends Controller
                                        // fail rates
                                        if($carriExitBol == true){
                                            if($carriBol == true){
-                                               $carrier = Carrier::where('name','=',$request->carrier)->first(); 
+                                               $carrier = Carrier::find($request->carrier); 
                                                $carrierVal = $carrier['name'];  
                                            }else{
                                                $carrier = Carrier::where('name','=',$read[$request->Carrier])->first(); 
@@ -2016,6 +2016,8 @@ class ContractsController extends Controller
                            $surchargelist       = '';
                            $surchargeVal        = '';
 
+                           $calculationtypeValfail = '';
+
                            $twentyArr;
                            $fortyArr;
                            $fortyhcArr;
@@ -2038,6 +2040,7 @@ class ContractsController extends Controller
                            $carriBol                = false;
                            $calculationtypeExiBol   = false;
                            $variantecurrency        = false;
+                           $typeExiBol              = false;
 
                            //--------------------------------------------------------
                            if($i != 1){
@@ -2104,7 +2107,7 @@ class ContractsController extends Controller
 
                                //---------------- 20' ------------------------------------------------------------------
 
-                               if(empty($twentyArr[0]) != true || $twentyArr[0] == '0'){
+                               if(empty($twentyArr[0]) != true ){
                                    $twentyExiBol = true;
                                    $twentyVal   = (int)$twentyArr[0];
                                }
@@ -2114,7 +2117,7 @@ class ContractsController extends Controller
 
                                //----------------- 40' -----------------------------------------------------------------
 
-                               if(empty($fortyArr[0]) != true || $fortyArr[0] == '0'){
+                               if(empty($fortyArr[0]) != true ){
                                    $fortyExiBol = true;
                                    $fortyVal   = (int)$fortyArr[0];
                                }
@@ -2124,7 +2127,7 @@ class ContractsController extends Controller
 
                                //----------------- 40'HC --------------------------------------------------------------
 
-                               if(empty($fortyhcArr[0]) != true || $fortyhcArr[0] == '0'){
+                               if(empty($fortyhcArr[0]) != true ){
                                    $fortyhcExiBol = true;
                                    $fortyhcVal   = (int)$fortyhcArr[0];
                                }
@@ -2209,22 +2212,27 @@ class ContractsController extends Controller
                                    $calculationtypeVal = $read[$request->$CalculationType].'_E_E';
                                }
 
-
                                //------------------ TYPE ---------------------------------------------------------------
-                               if($read[$request->$Charge] != $chargeVal){
-                                   $surchargelist = Surcharge::where('name','=', $read[$request->$Charge])->first();
-                                   if(empty($surchargelist) != true){
-                                       $surchargeVal = $surchargelist['id'];
+
+                               if(empty($read[$request->$Charge]) != true){
+                                   $typeExiBol = true;
+                                   if($read[$request->$Charge] != $chargeVal){
+                                       $surchargelist = Surcharge::where('name','=', $read[$request->$Charge])->first();
+                                       if(empty($surchargelist) != true){
+                                           $surchargeVal = $surchargelist['id'];
+                                       }
+                                       else{
+                                           $companyUserId = \Auth::user()->company_user_id;
+                                           $surchargelist = Surcharge::create([
+                                               'name'              => $read[$request->$Charge],
+                                               'description'       => 'created in the import of the file',
+                                               'company_user_id'   => $companyUserId
+                                           ]);
+                                           $surchargeVal = $surchargelist->id;
+                                       }
                                    }
-                                   else{
-                                       $companyUserId = \Auth::user()->company_user_id;
-                                       $surchargelist = Surcharge::create([
-                                           'name'              => $read[$request->$Charge],
-                                           'description'       => 'created in the import of the file',
-                                           'company_user_id'   => $companyUserId
-                                       ]);
-                                       $surchargeVal = $surchargelist->id;
-                                   }
+                               } else {
+                                   $surchargeVal = $read[$request->$Charge].'_E_E';
                                }
                                //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2235,7 +2243,8 @@ class ContractsController extends Controller
                                   && $fortyExiBol   == true
                                   && $fortyhcExiBol == true
                                   && $calculationtypeExiBol == true
-                                  && $variantecurrency == true){
+                                  && $variantecurrency == true
+                                  && $typeExiBol       == true){
 
                                    if($read[$request->$Charge] == $chargeVal){
 
@@ -2263,10 +2272,14 @@ class ContractsController extends Controller
                                                    'fortyhc'        => $fortyhcVal,
                                                    'currency_id'    => $currencyVal
                                                ]);
-                                                //dd($ratesArre);
+                                               //dd($ratesArre);
                                            } 
                                        }else {
                                            // fila por puerto, sin expecificar origen ni destino manualmente
+                                           if($request->$statustypecurren == 2){
+                                               $currencyVal = $currencyValtwen;
+                                           }
+
                                            $ratesArre =  Rate::create([
                                                'origin_port'    => $originVal,
                                                'destiny_port'   => $destinyVal,
@@ -2520,7 +2533,7 @@ class ContractsController extends Controller
                                                        ]);
                                                    }
 
-                                                   //---------------------- CARGA 40' ----------------------------------------------------
+                                                   //---------------------- CARGA 40' -----------------------------------------------
 
                                                    $SurchargFORArreG = LocalCharge::create([ // tabla localcharges
                                                        'surcharge_id'       => $surchargeVal,
@@ -2561,7 +2574,7 @@ class ContractsController extends Controller
                                                        ]);
                                                    }
 
-                                                   // --------------------- CARGA 40'HC --------------------------------------------------
+                                                   // --------------------- CARGA 40'HC ---------------------------------------------
 
                                                    $SurchargFORHCArreG = LocalCharge::create([ // tabla localcharges
                                                        'surcharge_id'       => $surchargeVal,
@@ -2601,9 +2614,8 @@ class ContractsController extends Controller
                                                            'localcharge_id' => $SurchargFORHCArreG->id
                                                        ]);
                                                    }
-
-                                                    //echo $i;
-                                                    //dd($SurchargFORHCArreG);
+                                                   //echo $i;
+                                                   //dd($SurchargFORHCArreG);
 
                                                }
 
@@ -2662,28 +2674,643 @@ class ContractsController extends Controller
                                    }
                                } else {
                                    // van los fallidos
-                                   $ree =[
-                                       'fila1' =>$i,
-                                       'carr' => $carriExitBol,
-                                       'orig' => $origExiBol,
-                                       'dest' => $destiExitBol,
-                                       '20' => $twentyVal,
-                                       'for' => $fortyExiBol,
-                                       'forhc' => $fortyhcExiBol,
-                                       'calc' => $calculationtypeExiBol,
-                                       'curre' => $variantecurrency
-                                   ];
-                                   $ratescollection->push($ree);
-                                   $falli++;
 
+                                   //---------------------------- CARRIER  ---------------------------------------------------------
+
+                                   if($carriExitBol == true){
+                                       if($carriBol == true){
+                                           $carrier = Carrier::find($request->carrier); 
+                                           $carrierVal = $carrier['name'];  
+                                       }else{
+                                           $carrier = Carrier::where('name','=',$read[$request->Carrier])->first(); 
+                                           $carrierVal = $carrier['name']; 
+                                       }
+                                   }
+
+                                   //---------------------------- VALUES CURRENCY ---------------------------------------------------
+
+                                   if($curreExiBol == true){
+                                       $currencyVal = $read[$request->$currency];
+                                   }
+                                   if( $twentyExiBol == true){
+                                       $twentyVal = $read[$request->$twenty];
+                                   }
+                                   if( $fortyExiBol == true){
+                                       $fortyVal = $read[$request->$forty];
+                                   }
+                                   if( $fortyhcExiBol == true){
+                                       $fortyhcVal = $read[$request->$fortyhc];
+                                   }
+                                   if( $variantecurrency == true){
+                                       if($request->$statustypecurren == 2){
+                                           //------------ PARA RATES ------------------------
+                                           $currencyobj = Currency::find($currencyValtwen);
+                                           $currencyVal = $currencyobj['alphacode'];
+
+                                           //------------- PARA SURCHARGERS -----------------
+
+                                           if($curreExitwenBol == true){
+                                               $currencyTWobj   = Currency::find($currencyValtwen);
+                                               $currencyValtwen = $currencyTWobj['alphacode'];
+                                           }
+
+                                           if($curreExiforBol == true){
+                                               $currencyFORobj  = Currency::find($currencyValfor);
+                                               $currencyValfor  = $currencyFORobj['alphacode'];
+                                           }
+
+                                           if($curreExiforHCBol == true){
+                                               $currencyFORHCobj  = Currency::find($currencyValforHC);
+                                               $currencyValforHC  = $currencyFORHCobj['alphacode'];
+                                           }
+
+                                       } else {
+                                           $currencyobj = Currency::find($currencyVal);
+                                           $currencyVal = $currencyobj['alphacode'];
+                                       }
+                                   } 
+
+                                   //---------------------------- CALCULATION TYPE -------------------------------------------------
+
+                                   if($calculationtypeExiBol == true){
+                                       $calculationType =CalculationType::find($calculationtypeVal);
+                                       $calculationtypeVal = $calculationType['name'];
+                                   }
+
+                                   //---------------------------- TYPE -------------------------------------------------------------
+
+                                   if($typeExiBol == true){
+                                       $Surchargeobj = Surcharge::find($surchargeVal);
+                                       $surchargeVal = $Surchargeobj['name'];
+                                   }
+
+                                   //////////////////////////////////////////////////////////////////////////////////////////////
+                                   if($read[$request->$Charge] == $chargeVal){
+                                       // Rates Fallidos
+
+                                       if($originBol == true || $destinyBol == true){
+                                           foreach($randons as  $rando){
+                                               //insert por arreglo de puerto
+                                               if($originBol == true ){
+                                                   $originerr = Harbor::find($rando);
+                                                   $originVal = $originerr['name'];
+                                                   if($destiExitBol == true){    
+                                                       $destinyVal = $read[$request->$destinyExc];
+                                                   }
+                                               } else {
+                                                   $destinyerr = Harbor::find($rando);
+                                                   $destinyVal = $destinyerr['name'];
+                                                   if($origExiBol == true){
+                                                       $originVal = $read[$request->$originExc];                                      
+                                                   }
+                                               }
+                                               FailRate::create([
+                                                   'origin_port'   => $originVal,
+                                                   'destiny_port'  => $destinyVal,
+                                                   'carrier_id'    => $carrierVal,
+                                                   'contract_id'   => $request->Contract_id,
+                                                   'twuenty'       => $twentyVal,
+                                                   'forty'         => $fortyVal,
+                                                   'fortyhc'       => $fortyhcVal,
+                                                   'currency_id'   => $currencyVal,
+                                               ]);
+
+                                           }
+                                       } else {
+                                           if($origExiBol == true){
+                                               $originExits = Harbor::find($originVal);
+                                               $originVal = $originExits->name;                                       
+                                           }
+                                           if($destiExitBol == true){  
+                                               $destinyExits = Harbor::find($destinyVal);
+                                               $destinyVal = $destinyExits->name;
+                                           }
+                                           FailRate::create([
+                                               'origin_port'   => $originVal,
+                                               'destiny_port'  => $destinyVal,
+                                               'carrier_id'    => $carrierVal,
+                                               'contract_id'   => $request->Contract_id,
+                                               'twuenty'       => $twentyVal,
+                                               'forty'         => $fortyVal,
+                                               'fortyhc'       => $fortyhcVal,
+                                               'currency_id'   => $currencyVal,
+                                           ]);
+
+                                       } //*/
+
+                                       //////-------------------////////////////////////////////////-----------------------------
+                                   } else {
+                                       // Surcharges Fallidos
+                                       if($calculationtypeExiBol == true){
+                                           //
+                                           if($read[$request->$CalculationType] == 'PER_CONTAINER'){
+                                               // son tres cargas Per 20, Per 40, Per 40'HC
+
+                                               if($originBol == true || $destinyBol == true){
+                                                   foreach($randons as  $rando){
+                                                       //insert por arreglo de puerto
+                                                       if($originBol == true ){
+                                                           $originerr = Harbor::find($rando);
+                                                           $originVal = $originerr['name'];
+                                                           if($destiExitBol == true){    
+                                                               $destinyVal = $read[$request->$destinyExc];
+                                                           }
+                                                       } else {
+                                                           $destinyerr = Harbor::find($rando);
+                                                           $destinyVal = $destinyerr['name'];
+                                                           if($origExiBol == true){
+                                                               $originVal = $read[$request->$originExc];                                      
+                                                           }
+                                                       }
+                                                       // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
+
+                                                       if($read[$request->$twenty] == $read[$request->$forty] &&
+                                                          $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                           // -------- 20' ---------------------------------
+
+                                                           $calculationtypeValfail = 'Per 20 "';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValtwen;
+                                                           }
+
+                                                           $ree =[
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ];
+                                                           $ratescollection->push($ree);
+
+                                                           // -------- 40' ---------------------------------
+
+                                                           $calculationtypeValfail = 'Per 40 "';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValfor;
+                                                           }
+
+                                                           $ree =[
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ];
+                                                           $ratescollection->push($ree);
+
+                                                           // -------- 40'HC -------------------------------
+
+                                                           $calculationtypeValfail = '40HC';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValforHC;
+                                                           }
+
+                                                           $ree =[
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyhcVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ];
+                                                           $ratescollection->push($ree);
+                                                       } else{
+                                                           // -------- PER_CONTAINER -------------------------
+                                                           // se almacena uno solo porque todos los valores son iguales
+
+                                                           $calculationtypeValfail = 'Per Container';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValtwen;
+                                                           }
+
+                                                           $ree =[
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ];
+                                                           $ratescollection->push($ree);
+                                                       }
+                                                   }
+                                               } else {
+                                                   if($origExiBol == true){
+                                                       $originExits = Harbor::find($originVal);
+                                                       $originVal = $originExits->name;                                       
+                                                   }
+                                                   if($destiExitBol == true){  
+                                                       $destinyExits = Harbor::find($destinyVal);
+                                                       $destinyVal = $destinyExits->name;
+                                                   }
+
+                                                   // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
+
+                                                   if($read[$request->$twenty] == $read[$request->$forty] &&
+                                                      $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                       // -------- 20' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 20 "';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+
+                                                       // -------- 40' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 40 "';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValfor;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+
+                                                       // -------- 40'HC -------------------------------
+
+                                                       $calculationtypeValfail = '40HC';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValforHC;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyhcVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+                                                   } else{
+                                                       // -------- PER_CONTAINER -------------------------
+                                                       // se almacena uno solo porque todos los valores son iguales
+
+                                                       $calculationtypeValfail = 'Per Container';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+                                                   }
+                                               }
+
+                                           } else if ($read[$request->$CalculationType] == 'PER_DOC' 
+                                                      || $read[$request->$CalculationType] == 'Per Shipment'){
+                                               // es una sola carga Per Shipment
+
+                                               // multiples puertos o por seleccion
+                                               if($originBol == true || $destinyBol == true){
+                                                   foreach($randons as  $rando){
+                                                       //insert por arreglo de puerto
+                                                       if($originBol == true ){
+                                                           $originerr = Harbor::find($rando);
+                                                           $originVal = $originerr['name'];
+                                                           if($destiExitBol == true){    
+                                                               $destinyVal = $read[$request->$destinyExc];
+                                                           }
+                                                       } else {
+                                                           $destinyerr = Harbor::find($rando);
+                                                           $destinyVal = $destinyerr['name'];
+                                                           if($origExiBol == true){
+                                                               $originVal = $read[$request->$originExc];                                      
+                                                           }
+                                                       }
+
+                                                       $calculationtypeValfail = 'Per Shipment';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);                                                 
+
+                                                   }
+                                               } else {
+                                                   // puertos leidos del excel
+                                                   if($origExiBol == true){
+                                                       $originExits = Harbor::find($originVal);
+                                                       $originVal = $originExits->name;                                       
+                                                   }
+                                                   if($destiExitBol == true){  
+                                                       $destinyExits = Harbor::find($destinyVal);
+                                                       $destinyVal = $destinyExits->name;
+                                                   }
+
+                                                   $calculationtypeValfail = 'Per Shipment';
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValtwen;
+                                                   }
+
+                                                   $ree =[
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $twentyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ];
+                                                   $ratescollection->push($ree);
+                                               }
+
+                                           }
+                                       } else{
+                                           // se deconoce si es PER_CONTAINER O PER_DOC
+
+                                           if($originBol == true || $destinyBol == true){
+                                               foreach($randons as  $rando){
+                                                   //insert por arreglo de puerto
+                                                   if($originBol == true ){
+                                                       $originerr = Harbor::find($rando);
+                                                       $originVal = $originerr['name'];
+                                                       if($destiExitBol == true){    
+                                                           $destinyVal = $read[$request->$destinyExc];
+                                                       }
+                                                   } else {
+                                                       $destinyerr = Harbor::find($rando);
+                                                       $destinyVal = $destinyerr['name'];
+                                                       if($origExiBol == true){
+                                                           $originVal = $read[$request->$originExc];                                      
+                                                       }
+                                                   }
+                                                   // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
+
+                                                   if($read[$request->$twenty] == $read[$request->$forty] &&
+                                                      $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                       // -------- 20' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 20 "Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+
+                                                       // -------- 40' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 40 "Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValfor;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+
+                                                       // -------- 40'HC -------------------------------
+
+                                                       $calculationtypeValfail = '40HC Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValforHC;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyhcVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+                                                   } else{
+                                                       // -------- PER_CONTAINER -------------------------
+                                                       // se almacena uno solo porque todos los valores son iguales
+
+                                                       $calculationtypeValfail = 'Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       $ree =[
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ];
+                                                       $ratescollection->push($ree);
+                                                   }
+                                               }
+                                           } else {
+                                               if($origExiBol == true){
+                                                   $originExits = Harbor::find($originVal);
+                                                   $originVal = $originExits->name;                                       
+                                               }
+                                               if($destiExitBol == true){  
+                                                   $destinyExits = Harbor::find($destinyVal);
+                                                   $destinyVal = $destinyExits->name;
+                                               }
+
+                                               // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
+
+                                               if($read[$request->$twenty] == $read[$request->$forty] &&
+                                                  $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                   // -------- 20' ---------------------------------
+
+                                                   $calculationtypeValfail = 'Per 20 "Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValtwen;
+                                                   }
+
+                                                   $ree =[
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $twentyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ];
+                                                   $ratescollection->push($ree);
+
+                                                   // -------- 40' ---------------------------------
+
+                                                   $calculationtypeValfail = 'Per 40 "Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValfor;
+                                                   }
+
+                                                   $ree =[
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $fortyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ];
+                                                   $ratescollection->push($ree);
+
+                                                   // -------- 40'HC -------------------------------
+
+                                                   $calculationtypeValfail = '40HC Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValforHC;
+                                                   }
+
+                                                   $ree =[
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $fortyhcVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ];
+                                                   $ratescollection->push($ree);
+                                               } else{
+                                                   // -------- PER_CONTAINER -------------------------
+                                                   // se almacena uno solo porque todos los valores son iguales
+
+                                                   $calculationtypeValfail = 'Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValtwen;
+                                                   }
+
+                                                   $ree =[
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $twentyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ];
+                                                   $ratescollection->push($ree);
+                                               }
+                                           }
+                                       }
+
+                                   }
+                                   $falli++;
+                                   //echo $i;
+                                   //dd($ratescollection);
 
                                }
-                               //break;
                            }
                            //-------------------------- fin distinto del primer ciclo
                            $i++;
                        }
-                       //dd($ratescollection);
+                       echo $i;
+                       dd($ratescollection);
+
                    });
         // dd($collection);
     }
