@@ -113,11 +113,8 @@ class ContractsController extends Controller
     $contract->save();
     // NOTIFICACIONES
 
-    $user = auth()->user();
-
-
   
-    $user->notify(new N_contracts($user,$contract));
+
 
     $details = $request->input('origin_id');
     $detailscharges = $request->input('localcurrency_id');

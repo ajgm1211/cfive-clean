@@ -15,7 +15,7 @@ class N_general extends Notification
   protected $message;
 
 
-  public function __construct(User $user, 'message')
+  public function __construct(User $user, $message)
   {
     $this->user = $user;
     $this->message = $message;    

@@ -16,10 +16,15 @@ class ContractObserver
      */
   public function created(Contract $contract)
   {
-    $user = $post->user;
-    foreach ($user->followers as $follower) {
-      $follower->notify(new NewPost($user, $post));
+    $userLogin  = auth()->user();
+    $idCompany = $contract->company_user_id;
+
+    $users = User::all()->where('company_user_id','=',$idCompany);
+    $message = 'agrego el contrato :' . $contract->number ;
+    foreach ($users as $user) {
+      $user->notify(new N_general($userLogin,$message));
     }
+
   }
 
   /**
@@ -30,7 +35,17 @@ class ContractObserver
      */
   public function updated(Contract $contract)
   {
-    //
+    $userLogin  = auth()->user();
+    $idCompany = $contract->company_user_id;
+  
+
+    $users = User::all()->where('company_user_id','=',$idCompany);
+    $message = 'actualizo el contrato :' . $contract->number ;
+
+    foreach ($users as $user) {
+      $user->notify(new N_general($userLogin,$message));
+    }
+
   }
 
   /**
@@ -41,6 +56,13 @@ class ContractObserver
      */
   public function deleted(Contract $contract)
   {
-    //
+    $userLogin  = auth()->user();
+    $idCompany = $contract->company_user_id;
+
+    $users = User::all()->where('company_user_id','=',$idCompany);
+    $message = 'elimino el contrato :' . $contract->number ;
+    foreach ($users as $user) {
+      $user->notify(new N_general($userLogin,$message));
+    }
   }
 }
