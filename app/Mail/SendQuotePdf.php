@@ -31,7 +31,7 @@ class SendQuotePdf extends Mailable
      */
     public function build()
     {
-        return $this->from('info@cargofive.com')
+        return $this->from(\Auth::user()->email)
         ->view('emails.quote_pdf')
         ->subject($this->subject)
         ->with(['text' => $this->text])

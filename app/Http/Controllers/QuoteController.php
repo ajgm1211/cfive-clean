@@ -1940,10 +1940,7 @@ class QuoteController extends Controller
 
         }
       }
-      $request->session()->flash('message.nivel', 'success');
-      $request->session()->flash('message.title', 'Well done!');
-      $request->session()->flash('message.content', 'Register completed successfully!');
-    
+      
       if(isset($input['subject']) && isset($input['body'])){
         $subject = $input['subject'];
         $body = $input['body'];
@@ -1959,16 +1956,20 @@ class QuoteController extends Controller
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
         if(\Auth::user()->company_user_id){
-            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $currency_cfg = Currency::find($company_user->currency_id);
+          $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+          $currency_cfg = Currency::find($company_user->currency_id);
         }        
         $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
+          'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
         \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
       }
+
+      $request->session()->flash('message.nivel', 'success');
+      $request->session()->flash('message.title', 'Well done!');
+      $request->session()->flash('message.content', 'Register completed successfully!');
 
       return redirect()->action('QuoteController@show',$quote->id);
     }
