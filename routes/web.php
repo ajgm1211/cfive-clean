@@ -109,6 +109,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
   Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
   Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+  Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
 
 });
 
