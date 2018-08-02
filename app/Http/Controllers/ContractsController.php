@@ -1977,7 +1977,7 @@ class ContractsController extends Controller
             ->Load(\Storage::disk('UpLoadFile')
                    ->url($request ->FileName),function($reader) use($request,$errors) {
                        $reader->noHeading = true;
-                       $reader->ignoreEmpty();
+                       //$reader->ignoreEmpty();
 
                        $currency            = "Currency";
                        $twenty              = "20'";
@@ -2031,6 +2031,7 @@ class ContractsController extends Controller
                            $destiExitBol            = false;
                            $carriExitBol            = false;
                            $curreExiBol             = false;
+                           $curreExitBol            = false;
                            $curreExitwenBol         = false;
                            $curreExiforBol          = false;
                            $curreExiforHCBol        = false;
@@ -2181,13 +2182,13 @@ class ContractsController extends Controller
 
                                } else {
 
-                                   $currenc = Currency::where('alphacode','=',$read[$request->$currency])->first();
-                                   if(empty($currenc->id) != true){
+                                   if(empty($read[$request->$currency]) != true){
+                                       $currenc = Currency::where('alphacode','=',$read[$request->$currency])->first();
                                        $curreExitBol = true;
                                        $currencyVal =  $currenc->id;
                                    }
                                    else{
-                                       $currencyVal = $valuesArr[1].'_E_E';
+                                       $currencyVal = $read[$request->$currency].'_E_E';
                                    }
 
                                    if($curreExitBol == true ){
@@ -2199,11 +2200,13 @@ class ContractsController extends Controller
                                $calculationvalvaration = '';
                                if( $read[$request->$CalculationType] == 'PER_DOC'){
                                    $calculationvalvaration = 'Per Shipment';
-                               } else {
+                               } else if( $read[$request->$CalculationType] == 'PER_CONTAINER'){
+                                   $calculationvalvaration = 'Per Container';
+                               } else{
                                    $calculationvalvaration = $read[$request->$CalculationType];
                                }
 
-                               $calculationtype = CalculationType::where('name','like','%'.$calculationvalvaration.'%')->first();
+                               $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
                                if(empty($calculationtype) != true){
                                    $calculationtypeExiBol = true;
                                    $calculationtypeVal = $calculationtype['id'];
@@ -2826,69 +2829,7 @@ class ContractsController extends Controller
 
                                                        if($read[$request->$twenty] == $read[$request->$forty] &&
                                                           $read[$request->$forty] == $read[$request->$fortyhc]){
-                                                           // -------- 20' ---------------------------------
 
-                                                           $calculationtypeValfail = 'Per 20 "';
-
-                                                           if($request->$statustypecurren == 2){
-                                                               $currencyVal = $currencyValtwen;
-                                                           }
-
-                                                           $ree =[
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $twentyVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ];
-                                                           $ratescollection->push($ree);
-
-                                                           // -------- 40' ---------------------------------
-
-                                                           $calculationtypeValfail = 'Per 40 "';
-
-                                                           if($request->$statustypecurren == 2){
-                                                               $currencyVal = $currencyValfor;
-                                                           }
-
-                                                           $ree =[
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $fortyVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ];
-                                                           $ratescollection->push($ree);
-
-                                                           // -------- 40'HC -------------------------------
-
-                                                           $calculationtypeValfail = '40HC';
-
-                                                           if($request->$statustypecurren == 2){
-                                                               $currencyVal = $currencyValforHC;
-                                                           }
-
-                                                           $ree =[
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $fortyhcVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ];
-                                                           $ratescollection->push($ree);
-                                                       } else{
                                                            // -------- PER_CONTAINER -------------------------
                                                            // se almacena uno solo porque todos los valores son iguales
 
@@ -2898,7 +2839,7 @@ class ContractsController extends Controller
                                                                $currencyVal = $currencyValtwen;
                                                            }
 
-                                                           $ree =[
+                                                           FailSurCharge::create([
                                                                'surcharge_id'       => $surchargeVal,
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
@@ -2908,8 +2849,75 @@ class ContractsController extends Controller
                                                                'ammount'            => $twentyVal, //////
                                                                'currency_id'        => $currencyVal, //////
                                                                'carrier_id'         => $carrierVal
-                                                           ];
-                                                           $ratescollection->push($ree);
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+
+                                                       } else{
+
+
+                                                           // -------- 20' ---------------------------------
+
+                                                           $calculationtypeValfail = 'Per 20 "';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValtwen;
+                                                           }
+
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           // $ratescollection->push($ree);
+
+                                                           // -------- 40' ---------------------------------
+
+                                                           $calculationtypeValfail = 'Per 40 "';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValfor;
+                                                           }
+
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           // $ratescollection->push($ree);
+
+                                                           // -------- 40'HC -------------------------------
+
+                                                           $calculationtypeValfail = '40HC';
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValforHC;
+                                                           }
+
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyhcVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+
                                                        }
                                                    }
                                                } else {
@@ -2926,69 +2934,7 @@ class ContractsController extends Controller
 
                                                    if($read[$request->$twenty] == $read[$request->$forty] &&
                                                       $read[$request->$forty] == $read[$request->$fortyhc]){
-                                                       // -------- 20' ---------------------------------
 
-                                                       $calculationtypeValfail = 'Per 20 "';
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValtwen;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-
-                                                       // -------- 40' ---------------------------------
-
-                                                       $calculationtypeValfail = 'Per 40 "';
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValfor;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-
-                                                       // -------- 40'HC -------------------------------
-
-                                                       $calculationtypeValfail = '40HC';
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValforHC;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyhcVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-                                                   } else{
                                                        // -------- PER_CONTAINER -------------------------
                                                        // se almacena uno solo porque todos los valores son iguales
 
@@ -2998,7 +2944,7 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       $ree =[
+                                                       FailSurCharge::create([
                                                            'surcharge_id'       => $surchargeVal,
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
@@ -3008,8 +2954,73 @@ class ContractsController extends Controller
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
                                                            'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+
+                                                   } else{
+
+                                                       // -------- 20' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 20 "';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+
+                                                       // -------- 40' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 40 "';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValfor;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       // $ratescollection->push($ree);
+
+                                                       // -------- 40'HC -------------------------------
+
+                                                       $calculationtypeValfail = '40HC';
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValforHC;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyhcVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //  $ratescollection->push($ree);
                                                    }
                                                }
 
@@ -3041,7 +3052,7 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       $ree =[
+                                                       FailSurCharge::create([
                                                            'surcharge_id'       => $surchargeVal,
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
@@ -3051,8 +3062,8 @@ class ContractsController extends Controller
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
                                                            'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);                                                 
+                                                       ]);
+                                                       //$ratescollection->push($ree);                                                 
 
                                                    }
                                                } else {
@@ -3072,7 +3083,7 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValtwen;
                                                    }
 
-                                                   $ree =[
+                                                   FailSurCharge::create([
                                                        'surcharge_id'       => $surchargeVal,
                                                        'port_orig'          => $originVal,
                                                        'port_dest'          => $destinyVal,
@@ -3082,8 +3093,8 @@ class ContractsController extends Controller
                                                        'ammount'            => $twentyVal, //////
                                                        'currency_id'        => $currencyVal, //////
                                                        'carrier_id'         => $carrierVal
-                                                   ];
-                                                   $ratescollection->push($ree);
+                                                   ]);
+                                                   //  $ratescollection->push($ree);
                                                }
 
                                            }
@@ -3110,69 +3121,7 @@ class ContractsController extends Controller
 
                                                    if($read[$request->$twenty] == $read[$request->$forty] &&
                                                       $read[$request->$forty] == $read[$request->$fortyhc]){
-                                                       // -------- 20' ---------------------------------
 
-                                                       $calculationtypeValfail = 'Per 20 "Error fila'.$i;
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValtwen;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-
-                                                       // -------- 40' ---------------------------------
-
-                                                       $calculationtypeValfail = 'Per 40 "Error fila'.$i;
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValfor;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-
-                                                       // -------- 40'HC -------------------------------
-
-                                                       $calculationtypeValfail = '40HC Error fila'.$i;
-
-                                                       if($request->$statustypecurren == 2){
-                                                           $currencyVal = $currencyValforHC;
-                                                       }
-
-                                                       $ree =[
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyhcVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
-                                                   } else{
                                                        // -------- PER_CONTAINER -------------------------
                                                        // se almacena uno solo porque todos los valores son iguales
 
@@ -3182,7 +3131,7 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       $ree =[
+                                                       FailSurCharge::create([
                                                            'surcharge_id'       => $surchargeVal,
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
@@ -3192,8 +3141,74 @@ class ContractsController extends Controller
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
                                                            'carrier_id'         => $carrierVal
-                                                       ];
-                                                       $ratescollection->push($ree);
+                                                       ]);
+                                                       // $ratescollection->push($ree);
+
+                                                   } else{
+
+                                                       // -------- 20' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 20 "Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValtwen;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       // $ratescollection->push($ree);
+
+                                                       // -------- 40' ---------------------------------
+
+                                                       $calculationtypeValfail = 'Per 40 "Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValfor;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+
+                                                       // -------- 40'HC -------------------------------
+
+                                                       $calculationtypeValfail = '40HC Error fila'.$i;
+
+                                                       if($request->$statustypecurren == 2){
+                                                           $currencyVal = $currencyValforHC;
+                                                       }
+
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyhcVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+
                                                    }
                                                }
                                            } else {
@@ -3210,69 +3225,7 @@ class ContractsController extends Controller
 
                                                if($read[$request->$twenty] == $read[$request->$forty] &&
                                                   $read[$request->$forty] == $read[$request->$fortyhc]){
-                                                   // -------- 20' ---------------------------------
 
-                                                   $calculationtypeValfail = 'Per 20 "Error fila'.$i;
-
-                                                   if($request->$statustypecurren == 2){
-                                                       $currencyVal = $currencyValtwen;
-                                                   }
-
-                                                   $ree =[
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $twentyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ];
-                                                   $ratescollection->push($ree);
-
-                                                   // -------- 40' ---------------------------------
-
-                                                   $calculationtypeValfail = 'Per 40 "Error fila'.$i;
-
-                                                   if($request->$statustypecurren == 2){
-                                                       $currencyVal = $currencyValfor;
-                                                   }
-
-                                                   $ree =[
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $fortyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ];
-                                                   $ratescollection->push($ree);
-
-                                                   // -------- 40'HC -------------------------------
-
-                                                   $calculationtypeValfail = '40HC Error fila'.$i;
-
-                                                   if($request->$statustypecurren == 2){
-                                                       $currencyVal = $currencyValforHC;
-                                                   }
-
-                                                   $ree =[
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $fortyhcVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ];
-                                                   $ratescollection->push($ree);
-                                               } else{
                                                    // -------- PER_CONTAINER -------------------------
                                                    // se almacena uno solo porque todos los valores son iguales
 
@@ -3282,7 +3235,7 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValtwen;
                                                    }
 
-                                                   $ree =[
+                                                   FailSurCharge::create([
                                                        'surcharge_id'       => $surchargeVal,
                                                        'port_orig'          => $originVal,
                                                        'port_dest'          => $destinyVal,
@@ -3292,8 +3245,76 @@ class ContractsController extends Controller
                                                        'ammount'            => $twentyVal, //////
                                                        'currency_id'        => $currencyVal, //////
                                                        'carrier_id'         => $carrierVal
-                                                   ];
-                                                   $ratescollection->push($ree);
+                                                   ]);
+                                                   //$ratescollection->push($ree);
+
+
+
+                                               } else{
+
+                                                   // -------- 20' ---------------------------------
+
+                                                   $calculationtypeValfail = 'Per 20 "Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValtwen;
+                                                   }
+
+                                                   FailSurCharge::create([
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $twentyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ]);
+                                                   //$ratescollection->push($ree);
+
+                                                   // -------- 40' ---------------------------------
+
+                                                   $calculationtypeValfail = 'Per 40 "Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValfor;
+                                                   }
+
+                                                   FailSurCharge::create([
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $fortyVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ]);
+                                                   //$ratescollection->push($ree);
+
+                                                   // -------- 40'HC -------------------------------
+
+                                                   $calculationtypeValfail = '40HC Error fila'.$i;
+
+                                                   if($request->$statustypecurren == 2){
+                                                       $currencyVal = $currencyValforHC;
+                                                   }
+
+                                                   FailSurCharge::create([
+                                                       'surcharge_id'       => $surchargeVal,
+                                                       'port_orig'          => $originVal,
+                                                       'port_dest'          => $destinyVal,
+                                                       'typedestiny_id'     => 'freight',
+                                                       'contract_id'        => $request->Contract_id,
+                                                       'calculationtype_id' => $calculationtypeValfail,  //////
+                                                       'ammount'            => $fortyhcVal, //////
+                                                       'currency_id'        => $currencyVal, //////
+                                                       'carrier_id'         => $carrierVal
+                                                   ]);
+                                                   //$ratescollection->push($ree);
+
                                                }
                                            }
                                        }
@@ -3308,8 +3329,7 @@ class ContractsController extends Controller
                            //-------------------------- fin distinto del primer ciclo
                            $i++;
                        }
-                       echo $i;
-                       dd($ratescollection);
+                       dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
 
                    });
         // dd($collection);
