@@ -113,7 +113,7 @@ class ContractsController extends Controller
     $contract->save();
     // NOTIFICACIONES
 
-  
+
 
 
     $details = $request->input('origin_id');
