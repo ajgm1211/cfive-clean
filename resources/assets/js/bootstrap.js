@@ -98,7 +98,7 @@ function addNotifications(data) {
 
     
      var htmlElements = notifications.map(function (notification) {
-            var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+"  </span> <span class='m-list-timeline__time'> </span> </div>";
+            var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
        return text;
        
         });
