@@ -74,8 +74,15 @@ $(document).ready(function() {
 
   if(userId) {
     $.get('/users/notifications', function (data) {
-  
-      addNotifications(data);
+
+      if(data.length > 0 ){
+        addNotifications(data);
+        $( "#newNotification" ).removeAttr('hidden');
+      }else{
+        $( "#newNotification" ).attr('hidden','true');
+      } 
+
+
     });
   }
 
@@ -92,17 +99,32 @@ $(document).ready(function() {
 
 function addNotifications(data) {
 
-   notifications = _.concat(notifications, data);
-  
+  notifications = _.concat(notifications, data);
+
   notifications.map(function (notification) {
 
-    
-     var htmlElements = notifications.map(function (notification) {
-            var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
-       return text;
-       
-        });
+
+    var htmlElements = notifications.map(function (notification) {
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+      return text;
+
+    });
 
     $('.notifications').html(htmlElements);
   });
 }
+
+$(document).on('click', '#notifications', function () {
+
+  var theElement = $(this);
+  $.ajax({
+    type: 'get',
+    url: '/users/updatenot/',
+    success: function(data) {  
+      $( "#newNotification" ).attr('hidden','true');
+    }
+
+  });
+
+
+});
