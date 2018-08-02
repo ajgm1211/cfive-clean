@@ -214,6 +214,20 @@ class UsersController extends Controller
   }
   public function notifications()
   {
-    return auth()->user()->unreadNotifications()->get()->toArray();
+    return auth()->user()->unreadNotifications()->limit(4)->get()->toArray();
   }
+
+  public function updateNotifications()
+  {
+    $notifications =  auth()->user()->unreadNotifications()->limit(4)->get();
+    foreach($notifications as $notification ){
+      $notification->markAsRead();
+    }
+
+
+  }
+
+
+
+
 }
