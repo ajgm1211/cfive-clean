@@ -399,6 +399,31 @@ $(document).on('click', '#create-quote-back', function (e) {
   $("#create-quote").show();
 });
 
+//Load types
+$(document).on('click', '#fcl_type', function (e) {
+  $("#fcl_load").show();
+  $("#lcl_air_load").hide();
+});
+
+$(document).on('click', '#lcl_type', function (e) {
+  $("#lcl_air_load").show();
+  $("#fcl_load").hide();
+});
+
+$(document).on('click', '#air_type', function (e) {
+  $("#lcl_air_load").show();
+  $("#fcl_load").hide();
+});
+
+//Clone load lcl air form
+$(document).on('click', '#add_load_lcl', function (e) {
+  var $template = $('#lcl_load_template'),
+  $clone = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertBefore($template);
+});
 
 //Duplicate Quote
 $(document).on('click', '#duplicate-quote', function (e) {
@@ -975,7 +1000,7 @@ $(document).on('change', '#email_template', function () {
           paste_as_text: true,
           browser_spellcheck: true,
           statusbar: false,
-          height: 400,
+          height: 200,
 
           style_formats: [{
             title: 'Bold text',
