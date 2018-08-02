@@ -13981,7 +13981,12 @@ $(document).ready(function () {
   if (userId) {
     $.get('/users/notifications', function (data) {
 
-      addNotifications(data);
+      if (data.length > 0) {
+        addNotifications(data);
+        $("#newNotification").removeAttr('hidden');
+      } else {
+        $("#newNotification").attr('hidden', 'true');
+      }
     });
   }
 
@@ -14008,6 +14013,19 @@ function addNotifications(data) {
     $('.notifications').html(htmlElements);
   });
 }
+
+$(document).on('click', '#notifications', function () {
+
+  var theElement = $(this);
+  $.ajax({
+    type: 'get',
+    url: '/users/updatenot/',
+    success: function success(data) {
+      $("#newNotification").attr('hidden', 'true');
+    }
+
+  });
+});
 
 /***/ }),
 /* 14 */

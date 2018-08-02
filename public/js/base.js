@@ -1276,14 +1276,3 @@ function msg(message){
 
 // Notificaciones
 
-$(document).on('click', '#not', function () {
-
-      var theElement = $(this);
-      $.ajax({
-        type: 'get',
-        url: '/users/updatenot/',
-        success: function(data) {  
-   
-        }
-      });
-  });
