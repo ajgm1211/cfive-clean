@@ -1,6 +1,7 @@
 @section('js')
 <!--begin::Base Scripts -->
 
+<script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
 <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
 <script src="/assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
 <!--end::Base Scripts -->
@@ -14,7 +15,10 @@
 
 <script src="/assets/demo/default/custom/components/forms/wizard/wizard.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
-
-<!--end::Page Snippets -->
+@if(Auth::check())
+<script>
+  var userId = {{ Auth::user()->id }}
+</script>
+@endif
 
 @show
