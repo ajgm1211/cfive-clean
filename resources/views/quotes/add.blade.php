@@ -162,17 +162,17 @@
                                                                 <b>LOAD</b>
                                                             </label>
                                                         </div>
-                                                        <div class="col-lg-10">
-                                                            <ul class="nav nav-tabs">
-                                                                <li class="active">
-                                                                    <a href="#tab_1_1" data-toggle="tab"> Calculate by total shipment </a>
+                                                        <div class="col-lg-10">                                                            
+                                                            <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;"> Calculate by total shipment </a>
                                                                 </li>
-                                                                <li>
-                                                                    <a href="#tab_1_2" data-toggle="tab"> Calculate by packaging </a>
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
-                                                                <div class="tab-pane fade active in" id="tab_1_1">
+                                                                <div class="tab-pane fade active show" id="tab_1_1">
                                                                     <div class="row">
                                                                         <div class="col-md-4">
                                                                             <label>
@@ -182,7 +182,7 @@
                                                                                 <div class="input-group">
                                                                                     <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.01" class="total_quantity form-control" placeholder="" aria-label="...">
                                                                                     <div class="input-group-btn">
-                                                                                        <select class="form-control" name="type_cargo">
+                                                                                        <select class="form-control" id="type_cargo" name="type_cargo">
                                                                                             <option value="1">Pallets</option>
                                                                                             <option value="2">Packages</option>
                                                                                         </select>
@@ -284,7 +284,7 @@
                                                                             <select name="type_load_cargo[]" class="type_cargo form-control">
                                                                                 <option value="">Choose an option</option>
                                                                                 <option value="1">Pallets</option>
-                                                                                <option value="2">Bultos</option>
+                                                                                <option value="2">Packages</option>
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-2">
@@ -339,7 +339,7 @@
                                                                             <div id="saveActions" class="form-group">
                                                                                 <input type="hidden" name="save_action" value="save_and_back">
                                                                                 <div class="btn-group">
-                                                                                    <button type="button" id="add_load_lcl_air" class="addButton btn btn-info btn-xs">
+                                                                                    <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
                                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         <span data-value="save_and_back">Add load</span>
                                                                                     </button>
@@ -498,15 +498,38 @@
                                                                     </div>
                                                                 </div>
                                                             </div>                                                    
-                                                            <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
-                                                                <div class="col-md-12">
-                                                                    <h5 class="title-quote size-14px">Cargo details</h5>
-                                                                    <hr>
-                                                                    <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                                    <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
-                                                                    <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                            <div style="padding-top: 20px; padding-bottom: 20px;">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <h5 class="title-quote size-14px">Cargo details</h5>
+                                                                        <hr>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                        <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_cargo_type_p" class="hide"><b>Cargo type:</b> <span id="cargo_details_cargo_type"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_quantity_p" class="hide"><b>Total quantity:</b> <span id="cargo_details_total_quantity"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_weight_p" class="hide"><b>Total weight: </b> <span id="cargo_details_total_weight"></span> KG</div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <p id="cargo_details_total_volume_p" class="hide"><b>Total volume: </b> <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            <br>
                                                             <div class="row">
                                                                 <div class="col-md-3">
                                                                     <h5 class="title-quote size-14px">Origin ammounts</h5>
@@ -839,33 +862,33 @@
                                                             </div>
                                                             <!-- Schedules -->
                                                             <div id="infoschedule" class="row" hidden="true">
-                                                             <div class="col-md-3">
+                                                               <div class="col-md-3">
                                                                 <h5 class="title-quote size-14px">Schedules</h5>
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div class="table-responsive">
                                                                     <table id="schetable" class="table table-bordered color-blue">
-                                                                       <thead class="title-quote text-center header-table">
-                                                                         <tr>
-                                                                           <th><span class="">Vessel</span></th>
-                                                                           <th><span class="">ETD</span></th>
-                                                                           <th><span class=""><center>Transit Time</center></span>  </th>
-                                                                           <th><span class="">ETA</span></th>
+                                                                     <thead class="title-quote text-center header-table">
+                                                                       <tr>
+                                                                         <th><span class="">Vessel</span></th>
+                                                                         <th><span class="">ETD</span></th>
+                                                                         <th><span class=""><center>Transit Time</center></span>  </th>
+                                                                         <th><span class="">ETA</span></th>
 
-                                                                       </tr>
-                                                                   </thead>
-                                                                   <tbody id="scheduleBody">
+                                                                     </tr>
+                                                                 </thead>
+                                                                 <tbody id="scheduleBody">
 
 
-                                                                   </tbody>
-                                                               </table>
-                                                           </div>
-                                                       </div>
-                                                       <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
-                                                   </div>                                          
-                                               </div>
-                                           </div>
-                                           <div class="row">
+                                                                 </tbody>
+                                                             </table>
+                                                         </div>
+                                                     </div>
+                                                     <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+                                                 </div>                                          
+                                             </div>
+                                         </div>
+                                         <div class="row">
                                             <div class="col-md-2">
                                                 <a class="btn btn-outline-accent btn-sm  m-btn m-btn--icon" onclick="AbrirModal('add')">
                                                     <span>
@@ -1021,35 +1044,35 @@
     }
     
     function AbrirModal(action){
-     if(action == "add"){
+       if(action == "add"){
 
-       var orig_p = $('#origin_harbor').val();
-       var dest_p = $('#destination_harbor').val();
-       var date_p = $('.pick_up_date').val();
-       if(orig_p ==""){
-         msg('Sorry the origin port is empty');
-         return;
-     }
-     if(dest_p ==""){
-         msg('Sorry the destination port is empty');
-         return;
-     }
-     if(date_p ==""){
-         msg('Sorry the date is empty');
-         return;
-     }
-     var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
+         var orig_p = $('#origin_harbor').val();
+         var dest_p = $('#destination_harbor').val();
+         var date_p = $('.pick_up_date').val();
+         if(orig_p ==""){
+           msg('Sorry the origin port is empty');
+           return;
+       }
+       if(dest_p ==""){
+           msg('Sorry the destination port is empty');
+           return;
+       }
+       if(date_p ==""){
+           msg('Sorry the date is empty');
+           return;
+       }
+       var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
 
-     url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
+       url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
 
-     $('#spinner').show();
-     $('#scheduleModal').modal({show:true});
-     $('.modal-body').load(url, function (response, status, xhr) {
+       $('#spinner').show();
+       $('#scheduleModal').modal({show:true});
+       $('.modal-body').load(url, function (response, status, xhr) {
 
-         $('#scheduleModal').modal({show:true});
-         $('#spinner').hide();
-     });
- }
+           $('#scheduleModal').modal({show:true});
+           $('#spinner').hide();
+       });
+   }
 }
 </script>
 @stop

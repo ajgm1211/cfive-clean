@@ -403,16 +403,26 @@ $(document).on('click', '#create-quote-back', function (e) {
 $(document).on('click', '#fcl_type', function (e) {
   $("#fcl_load").show();
   $("#lcl_air_load").hide();
+  $("input[name=total_quantity]").val('');
+  $("input[name=total_weight]").val('');
+  $("input[name=total_volume]").val('');
 });
 
 $(document).on('click', '#lcl_type', function (e) {
   $("#lcl_air_load").show();
   $("#fcl_load").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');  
 });
 
 $(document).on('click', '#air_type', function (e) {
   $("#lcl_air_load").show();
   $("#fcl_load").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  
 });
 
 //Clone load lcl form
@@ -573,14 +583,37 @@ $(document).on('change', '#delivery_type', function (e) {
 $(document).on('click', '#create-quote', function (e) {
   var origin_harbor=$("#origin_harbor").val();
   var qty_20='';
+  var qty_40='';
+  var qty_40_hc='';
+  var total_quantity='';
+  var total_weight='';
+  var total_volume='';
+  var type_cargo='';
+
   if($(".qty_20").val()>0){
     qty_20=$(".qty_20").val();
-  }else{
-    qty_20='';
   }
-
-  var qty_40=$(".qty_40").val();
-  var qty_40_hc=$(".qty_40_hc").val();
+  if($(".qty_40").val()>0){
+    qty_40=$(".qty_40").val();
+  }
+  if($(".qty_40_hc").val()>0){
+    qty_40_hc=$(".qty_40_hc").val();
+  }
+  if($("#total_quantity").val()>0){
+    total_quantity=$("#total_quantity").val();
+  }
+  if($("#total_weight").val()>0){
+    total_weight=$("#total_weight").val();
+  }
+  if($("#total_volume").val()>0){
+    total_volume=$("#total_volume").val();
+  }
+  type_cargo=$("#type_cargo").val();
+  if(type_cargo==1){
+    type_cargo='Pallets';
+  }else{
+    type_cargo='Packages';
+  }
   var destination_harbor=$("#destination_harbor").val();
   var destination_address=$("#destination_address").val();
   var origin_address=$("#origin_address").val();
@@ -604,13 +637,41 @@ $(document).on('click', '#create-quote', function (e) {
   }else{
     $("#cargo_details_20_p").addClass('hide');
   }
-  if(qty_40!=''){
+  if(qty_40!='' || qty_40>0){
     $("#cargo_details_40").html(qty_40);
     $("#cargo_details_40_p").removeClass('hide');
+  }else{
+    $("#cargo_details_40_p").addClass('hide');
   }
-  if(qty_40_hc!=''){
+  if(qty_40_hc!='' || qty_40_hc>0){
     $("#cargo_details_40_hc").html(qty_40_hc);
     $("#cargo_details_40_hc_p").removeClass('hide');
+  }else{
+    $("#cargo_details_40_hc_p").addClass('hide');
+  }
+  if(total_quantity!='' && type_cargo!=''){
+    $("#cargo_details_cargo_type").html(" "+type_cargo);
+    $("#cargo_details_cargo_type_p").removeClass('hide');
+  }else{
+    $("#cargo_details_cargo_type_p").addClass('hide');
+  }
+  if(total_quantity!='' || total_quantity>0){
+    $("#cargo_details_total_quantity").html(" "+total_quantity);
+    $("#cargo_details_total_quantity_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_quantity_p").addClass('hide');
+  }
+  if(total_weight!='' || total_weight>0){
+    $("#cargo_details_total_weight").html(" "+total_weight);
+    $("#cargo_details_total_weight_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_weight_p").addClass('hide');
+  }
+  if(total_volume!='' || total_volume>0){
+    $("#cargo_details_total_volume").html(" "+total_volume);
+    $("#cargo_details_total_volume_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_volume_p").addClass('hide');
   }
   if(origin_address!=''){
     $("#origin_address_p").html(origin_address);
