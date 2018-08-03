@@ -1064,14 +1064,6 @@ public function UploadFileSubchargeForContract(Request $request){
         }else{
           $destinationVar = $destinationVar.'_E_E';
         }
-<<<<<<< HEAD
-        if(empty($surcharge) != true){
-          $surchargeBol = true;
-          $surchargeVar = $surcharge['id'];
-        }
-        else{
-          $surchargeVar = $book->$surchargeBook.'_E_E';
-=======
     }
     
     public function UploadFileSubchargeForContract(Request $request){
@@ -1465,7 +1457,6 @@ public function UploadFileSubchargeForContract(Request $request){
             ];
             //dd($arreglo);
             $failsurchargecoll->push($arreglo);
->>>>>>> 57f35363507752ce3dd2fb6b6558b2a9bbbfc500
         }
         if(empty($carrier) != true){
           $carrierBol = true;
@@ -2807,32 +2798,6 @@ public function ProcessContractFclRatSurch(Request $request){
                        //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
        });
         // dd($collection);
-<<<<<<< HEAD
-return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$request->Contract_id);
-}
-
-public function failRatesSurchrgesForNewContracts($id){
-
-  $objharbor          = new Harbor();
-  $objcurrency        = new Currency();
-  $objcarrier         = new Carrier();
-  $objsurcharge       = new Surcharge();
-  $objtypedestiny     = new TypeDestiny();
-  $objCalculationType = new CalculationType();
-  $objsurcharge       = new Surcharge();
-  $objCalculationType = new CalculationType();
-
-  $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-  $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
-  $carrierSelect         = $objcarrier->all()->pluck('name','id');
-  $harbor                = $objharbor->all()->pluck('display_name','id');
-  $currency              = $objcurrency->all()->pluck('alphacode','id');
-  $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-  $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-  $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
-  $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-
-=======
         return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$request->Contract_id);
     }
     public function failRatesSurchrgesForNewContracts($id){
@@ -2856,7 +2821,6 @@ public function failRatesSurchrgesForNewContracts($id){
         $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
         
->>>>>>> 57f35363507752ce3dd2fb6b6558b2a9bbbfc500
         //------------------------------- Rates ---------------------------------------------------------------
 
   $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
