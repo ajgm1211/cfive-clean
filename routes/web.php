@@ -22,7 +22,7 @@ Route::get('/home', function () {
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
-Route::middleware(['auth','company'])->prefix('users')->group(function () {
+Route::middleware(['auth'])->prefix('users')->group(function () {
   Route::resource('users', 'UsersController'); 
   Route::get('home', 'UsersController@datahtml')->name('users.home');
   Route::get('add', 'UsersController@add')->name('users.add');

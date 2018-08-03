@@ -215,7 +215,7 @@
         {{ csrf_field() }}
       </form>
     </li>
-    <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true">
+    <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
       <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
         <div id="newNotification" hidden="true">
           <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span></div>
