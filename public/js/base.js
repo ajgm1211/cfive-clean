@@ -415,14 +415,20 @@ $(document).on('click', '#air_type', function (e) {
   $("#fcl_load").hide();
 });
 
-//Clone load lcl air form
-$(document).on('click', '#add_load_lcl', function (e) {
-  var $template = $('#lcl_load_template'),
+//Clone load lcl form
+$(document).on('click', '#add_load_lcl_air', function (e) {
+  var $template = $('#lcl_air_load_template'),
   $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
   .insertBefore($template);
+});
+
+//Remove lcl closest row
+$(document).on('click', '.remove_lcl_air_load', function (e) {
+  var $row = $(this).closest('.row').remove();
+  $row.remove();
 });
 
 //Duplicate Quote
