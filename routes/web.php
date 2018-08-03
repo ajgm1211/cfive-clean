@@ -30,6 +30,8 @@ Route::middleware(['auth','company'])->prefix('users')->group(function () {
   Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
   Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
   Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+  Route::get('notifications', 'UsersController@notifications');
+  Route::get('updatenot', 'UsersController@updateNotifications');
 });
 
 Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
@@ -169,7 +171,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
   Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
   Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
-  
+
 
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');

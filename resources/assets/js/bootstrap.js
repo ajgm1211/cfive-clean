@@ -9,9 +9,9 @@ window.Popper = require('popper.js').default;
  */
 
 try {
-    window.$ = window.jQuery = require('jquery');
+  window.$ = window.jQuery = require('jquery');
 
-    require('bootstrap');
+  require('bootstrap');
 } catch (e) {}
 
 /**
@@ -33,9 +33,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -54,3 +54,77 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+
+window.$ = window.jQuery = require('jquery');
+
+import Echo from 'laravel-echo'
+window.Pusher = require('pusher-js');
+window.Echo = new Echo({
+  broadcaster: 'pusher',
+  key: "7b30149b695b6cf5cbb0",
+  cluster: "us2",
+  encrypted: true
+});
+
+
+var notifications = [];
+
+$(document).ready(function() {
+
+  if(userId) {
+    $.get('/users/notifications', function (data) {
+
+      if(data.length > 0 ){
+        addNotifications(data);
+        $( "#newNotification" ).removeAttr('hidden');
+      }else{
+        $( "#newNotification" ).attr('hidden','true');
+      } 
+
+
+    });
+  }
+
+  // check if there's a logged in user
+  if(userId) {
+    window.Echo.private('App.User.'+userId)
+      .notification((notification) => {
+      $( "#newNotification" ).removeAttr('hidden');
+      addNotifications([notification]);
+    });
+  }
+
+});
+
+function addNotifications(data) {
+
+  notifications = _.concat(notifications, data);
+
+  notifications.map(function (notification) {
+
+
+    var htmlElements = notifications.map(function (notification) {
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+      return text;
+
+    });
+
+    $('.notifications').html(htmlElements);
+  });
+}
+
+$(document).on('click', '#notifications', function () {
+
+  var theElement = $(this);
+  $.ajax({
+    type: 'get',
+    url: '/users/updatenot/',
+    success: function(data) {  
+      $( "#newNotification" ).attr('hidden','true');
+    }
+
+  });
+
+
+});
