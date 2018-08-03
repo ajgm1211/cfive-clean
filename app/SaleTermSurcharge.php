@@ -17,6 +17,5 @@ class SaleTermSurcharge extends Model
   {
     return $this->belongsTo('App\Surcharge');
   }
-
 }
 

@@ -8,7 +8,7 @@
 
                 <div class="form-group m-form__group">
                     {!! Form::label('sale_term_id', 'Sale Terms') !!}<br>
-                    {{ Form::select('sale_term_id[]',$sale_terms,@$selected_sale_terms_array,['class'=>'custom-select form-control','id' => 'sale_term_id','multiple'=>'true']) }}
+                    {{ Form::select('sale_term_id[]',$sale_terms,@$selected_sale_terms_array,['class'=>'custom-select form-control','id' => 'sale_term_id']) }}
                 </div>                
             </div>
         </div>

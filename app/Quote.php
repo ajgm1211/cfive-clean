@@ -8,7 +8,7 @@ class Quote extends Model
 {
     protected $fillable = ['owner','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id',
     'destination_harbor_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','status_quote_id','pick_up_date',
-    'delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination'];
+    'delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','sale_term_id'];
 
     public function company()
     {
@@ -33,6 +33,11 @@ class Quote extends Model
     public function status()
     {
         return $this->hasOne('App\StatusQuote','id','status_quote_id');
+    }
+
+    public function sale_term()
+    {
+        return $this->hasOne('App\SaleTerm','id','sale_term_id');
     }
 
     public function origin_harbor()

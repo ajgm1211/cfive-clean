@@ -8911,6 +8911,18 @@ class   HarborsTableSeeder extends Seeder
                 'created_at' => '2018-07-25 14:27:14',
                 'updated_at' => '2018-07-25 14:27:14',
             ),
+                241 => 
+            array (
+                'id' => 742,
+                'name' => 'ALL',
+                'code' => 'ALL',
+                'display_name' => 'ALL',
+                'coordinates' => '',
+                'country_id' => 1,
+                'varation' => '{"type": ["", ""]}',
+                'created_at' => '2018-07-25 14:27:14',
+                'updated_at' => '2018-07-25 14:27:14',
+            ),
         ));
         
         
