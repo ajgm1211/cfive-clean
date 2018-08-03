@@ -1782,15 +1782,15 @@ class QuoteController extends Controller
         $package_load->quote_id = $quote->id;
         $package_load->type_cargo = $type_cargo[$key];
         $package_load->quantity = $quantity[$key];
-        //if((isset($input['volume'])) && (count($input['volume'])>0)) {
-          $package_load->height = $height[$key];
-          $package_load->width = $width[$key];
-          $package_load->large = $large[$key];
-          $package_load->weight = $weight[$key];
-        //}
+        $package_load->height = $height[$key];
+        $package_load->width = $width[$key];
+        $package_load->large = $large[$key];
+        $package_load->weight = $weight[$key];
+        
         $package_load->save();
       }
     }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
@@ -1964,7 +1964,33 @@ class QuoteController extends Controller
 
         }
       }
+
+      //Storing packages loads details
+
+      if(isset($input['type_load_cargo']) && isset($input['quantity'])){
+        $quantity = array_values( array_filter($input['quantity']) );
+        $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+        $height = array_values( array_filter($input['height']) );
+        $width = array_values( array_filter($input['width']) );
+        $large = array_values( array_filter($input['large']) );
+        $weight = array_values( array_filter($input['weight']) );
+
+        foreach($type_cargo as $key=>$item){
+          $package_load = new PackageLoad();
+          $package_load->quote_id = $quote->id;
+          $package_load->type_cargo = $type_cargo[$key];
+          $package_load->quantity = $quantity[$key];
+          $package_load->height = $height[$key];
+          $package_load->width = $width[$key];
+          $package_load->large = $large[$key];
+          $package_load->weight = $weight[$key];
+
+          $package_load->save();
+        }
+      }
       
+      //Sending email
+
       if(isset($input['subject']) && isset($input['body'])){
         $subject = $input['subject'];
         $body = $input['body'];
