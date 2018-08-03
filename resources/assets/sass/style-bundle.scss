@@ -2655,9 +2655,10 @@ tbody.collapse.show {
   border-color: transparent; }
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #495057;
+  color: #1D3A6E !important;
   background-color: #fff;
-  border-color: #dee2e6 #dee2e6 #fff; }
+  border-bottom: 2px solid #1D3A6E;
+  border-color: #dee2e6 #dee2e6 #1D3A6E; }
 .nav-tabs .dropdown-menu {
   margin-top: -1px;
   border-top-left-radius: 0;
@@ -20318,14 +20319,14 @@ td > .m-checkbox.m-checkbox--single {
 .m-radio.m-radio--brand > span {
   border: 1px solid #bdc3d4; }
 .m-radio.m-radio--brand > span:after {
-  border: solid #716aca;
-  background: #716aca; }
+  border: solid #1D3A6E;
+  background: #1D3A6E; }
 .m-radio.m-radio--brand > input:disabled ~ span:after {
-  border-color: #716aca; }
+  border-color: #1D3A6E; }
 .m-radio.m-radio--brand > input:checked ~ span {
-  border: 1px solid #716aca; }
+  border: 1px solid #1D3A6E; }
 .m-radio.m-radio--brand.m-radio--check-bold > input:checked ~ span {
-  border: 2px solid #716aca; }
+  border: 2px solid #1D3A6E; }
 .m-radio.m-radio--brand > input:disabled ~ span {
   opacity: 0.6 ;
   filter: alpha(opacity=60) ; }
@@ -20343,7 +20344,7 @@ td > .m-checkbox.m-checkbox--single {
 .m-radio.m-radio--brand.m-radio--solid > input:focus ~ span {
   border: 1px solid transparent !important; }
 .m-radio.m-radio--brand.m-radio--solid > input:checked ~ span {
-  background: #716aca; }
+  background: #1D3A6E; }
 .m-radio.m-radio--metal.m-radio--disabled {
   opacity: 0.8 ;
   filter: alpha(opacity=80) ; }

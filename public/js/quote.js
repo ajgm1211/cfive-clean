@@ -21,8 +21,6 @@ function schedules(id){
     schedule.attr('hidden','true');
 
   }
-
-
 }
 
 

@@ -39,7 +39,7 @@
     ],
     toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
     templates: title,
-    external_plugins: { "nanospell": "http://localhost:8000/js/tinymce/plugins/nanospell/plugin.js" },
+    external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
     nanospell_server:"php",
     browser_spellcheck: true,
     relative_urls: false,

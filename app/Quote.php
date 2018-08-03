@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Quote extends Model
 {
     protected $fillable = ['owner','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id',
-    'destination_harbor_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','status_quote_id','pick_up_date',
+    'destination_harbor_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','total_quantity','total_weight','total_volume','type_cargo','status_quote_id','pick_up_date',
     'delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','sale_term_id'];
 
     public function company()

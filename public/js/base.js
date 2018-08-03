@@ -45,7 +45,7 @@ function save(id,idval){
         'Updated!',
         'Your rate has been updated.',
         'success'
-      )
+        )
       $("#save"+id).attr('hidden','true');
       $("#cancel"+id).attr('hidden','true');
       $("#edit"+id).removeAttr('hidden');
@@ -114,7 +114,7 @@ function save_l(id,idval){
         'Updated!',
         'Your local charge has been updated.',
         'success'
-      )
+        )
       $("#save_l"+id).attr('hidden','true');
       $("#cancel_l"+id).attr('hidden','true');
       $("#remove_l"+id).attr('hidden','true');
@@ -192,7 +192,7 @@ $(document).on('click', '#default-currency-submit', function () {
               'Done!',
               'Your choice has been saved.',
               'success'
-            )
+              )
           }
           $("#default-currency-submit").prop("disabled", false);
         }
@@ -225,7 +225,7 @@ $(document).on('click', '#delete-contact', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-          )
+            )
           $(theElement).closest('li').remove();
         }
       });
@@ -399,6 +399,47 @@ $(document).on('click', '#create-quote-back', function (e) {
   $("#create-quote").show();
 });
 
+//Load types
+$(document).on('click', '#fcl_type', function (e) {
+  $("#fcl_load").show();
+  $("#lcl_air_load").hide();
+  $("input[name=total_quantity]").val('');
+  $("input[name=total_weight]").val('');
+  $("input[name=total_volume]").val('');
+});
+
+$(document).on('click', '#lcl_type', function (e) {
+  $("#lcl_air_load").show();
+  $("#fcl_load").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');  
+});
+
+$(document).on('click', '#air_type', function (e) {
+  $("#lcl_air_load").show();
+  $("#fcl_load").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  
+});
+
+//Clone load lcl form
+$(document).on('click', '#add_load_lcl_air', function (e) {
+  var $template = $('#lcl_air_load_template'),
+  $clone = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertBefore($template);
+});
+
+//Remove lcl closest row
+$(document).on('click', '.remove_lcl_air_load', function (e) {
+  var $row = $(this).closest('.row').remove();
+  $row.remove();
+});
 
 //Duplicate Quote
 $(document).on('click', '#duplicate-quote', function (e) {
@@ -411,7 +452,7 @@ $(document).on('click', '#duplicate-quote', function (e) {
         'Success!',
         'The quote has been duplicated.',
         'success'
-      )
+        )
     }
   });
 });
@@ -432,7 +473,7 @@ $(document).on('change', '#origin_harbor', function (e) {
 
 $(document).on('click', '.addButtonOrigin', function (e) {
   var $template = $('#origin_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -440,7 +481,7 @@ $(document).on('click', '.addButtonOrigin', function (e) {
 });
 $(document).on('click', '.addButton', function (e) {
   var $template = $('#freight_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -466,7 +507,7 @@ $(document).on('click', '#delete-quote', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-          )
+            )
           $(theElement).closest('tr').remove();
         }
       });
@@ -477,7 +518,7 @@ $(document).on('click', '#delete-quote', function () {
 
 $(document).on('click', '.addButtonDestination', function (e) {
   var $template = $('#destination_ammounts'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -542,14 +583,37 @@ $(document).on('change', '#delivery_type', function (e) {
 $(document).on('click', '#create-quote', function (e) {
   var origin_harbor=$("#origin_harbor").val();
   var qty_20='';
+  var qty_40='';
+  var qty_40_hc='';
+  var total_quantity='';
+  var total_weight='';
+  var total_volume='';
+  var type_cargo='';
+
   if($(".qty_20").val()>0){
     qty_20=$(".qty_20").val();
-  }else{
-    qty_20='';
   }
-
-  var qty_40=$(".qty_40").val();
-  var qty_40_hc=$(".qty_40_hc").val();
+  if($(".qty_40").val()>0){
+    qty_40=$(".qty_40").val();
+  }
+  if($(".qty_40_hc").val()>0){
+    qty_40_hc=$(".qty_40_hc").val();
+  }
+  if($("#total_quantity").val()>0){
+    total_quantity=$("#total_quantity").val();
+  }
+  if($("#total_weight").val()>0){
+    total_weight=$("#total_weight").val();
+  }
+  if($("#total_volume").val()>0){
+    total_volume=$("#total_volume").val();
+  }
+  type_cargo=$("#type_cargo").val();
+  if(type_cargo==1){
+    type_cargo='Pallets';
+  }else{
+    type_cargo='Packages';
+  }
   var destination_harbor=$("#destination_harbor").val();
   var destination_address=$("#destination_address").val();
   var origin_address=$("#origin_address").val();
@@ -573,13 +637,41 @@ $(document).on('click', '#create-quote', function (e) {
   }else{
     $("#cargo_details_20_p").addClass('hide');
   }
-  if(qty_40!=''){
+  if(qty_40!='' || qty_40>0){
     $("#cargo_details_40").html(qty_40);
     $("#cargo_details_40_p").removeClass('hide');
+  }else{
+    $("#cargo_details_40_p").addClass('hide');
   }
-  if(qty_40_hc!=''){
+  if(qty_40_hc!='' || qty_40_hc>0){
     $("#cargo_details_40_hc").html(qty_40_hc);
     $("#cargo_details_40_hc_p").removeClass('hide');
+  }else{
+    $("#cargo_details_40_hc_p").addClass('hide');
+  }
+  if(total_quantity!='' && type_cargo!=''){
+    $("#cargo_details_cargo_type").html(" "+type_cargo);
+    $("#cargo_details_cargo_type_p").removeClass('hide');
+  }else{
+    $("#cargo_details_cargo_type_p").addClass('hide');
+  }
+  if(total_quantity!='' || total_quantity>0){
+    $("#cargo_details_total_quantity").html(" "+total_quantity);
+    $("#cargo_details_total_quantity_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_quantity_p").addClass('hide');
+  }
+  if(total_weight!='' || total_weight>0){
+    $("#cargo_details_total_weight").html(" "+total_weight);
+    $("#cargo_details_total_weight_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_weight_p").addClass('hide');
+  }
+  if(total_volume!='' || total_volume>0){
+    $("#cargo_details_total_volume").html(" "+total_volume);
+    $("#cargo_details_total_volume_p").removeClass('hide');
+  }else{
+    $("#cargo_details_total_volume_p").addClass('hide');
   }
   if(origin_address!=''){
     $("#origin_address_p").html(origin_address);
@@ -874,32 +966,49 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
 $(document).on('click', '#send-pdf-quote', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
-  $.ajax({
-    type: 'GET',
-    url: '/quotes/send/pdf/'+id,
-    beforeSend: function () {
-      $('#spin').show();
-    },
-    success: function(data) {
-      $('#spin').hide();
-      $('#SendQuoteModal').modal('toggle');
-      if(data.message=='Ok'){
-        swal(
-          'Done!',
-          'Your message has been sent.',
-          'success'
-        )
-      }else{
-        swal(
-          'Error!',
-          'Your message has not been sent.',
-          'error'
-        )
+  var email_template_id = $('#email_template').val();
+  var email_subject = $('#email-subject').val();
+  var email_body = $('#email-body').val();
+
+  if(email_template_id!=''){
+    $.ajax({
+      type: 'POST',
+      url: '/quotes/send/pdf',
+      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body},
+      beforeSend: function () {
+        $('#spin').show();
+      },
+      success: function(data) {
+        $('#spin').hide();
+        $('#SendQuoteModal').modal('toggle');
+        if(data.message=='Ok'){
+          $('#subject-box').html('');
+          $('.editor').html('');
+          $('#textarea-box').hide();          
+          swal(
+            'Done!',
+            'Your message has been sent.',
+            'success'
+            )
+        }else{
+          swal(
+            'Error!',
+            'Your message has not been sent.',
+            'error'
+            )
+        }
       }
-    }
-  });
+    });
+  }else{
+    swal(
+      '',
+      'Please choose an email template.',
+      'warning'
+      )
+  }
 });
 
+//Change Status Quote
 $(document).on('change', '#status_quote_id', function () {
   var id = $('#quote-id').val();
   var status_quote_id = $('#status_quote_id').val();
@@ -915,16 +1024,73 @@ $(document).on('change', '#status_quote_id', function () {
           'Done!',
           'Status updated.',
           'success'
-        )
+          )
       }else{
         swal(
           'Error!',
           'Has ocurred an error.',
           'error'
-        )
+          )
       }
     }
   });
+});
+
+//Select email template to send quote
+$(document).on('change', '#email_template', function () {
+  var id = $('#email_template').val();
+  if(id==''){
+    $('#subject-box').html('');
+    $('#textarea-box').hide();
+    $('.editor').html('');
+  }else{
+    $.ajax({
+      type: 'GET',
+      url: '/templates/preview',
+      data:{"id":id},
+      success: function(data) {
+        $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
+        $('#textarea-box').show();
+
+        tinymce.init({
+          selector: "#email-body",
+          plugins: [
+          "advlist autolink lists link charmap print preview hr anchor pagebreak",
+          "searchreplace wordcount visualblocks visualchars code fullscreen",
+          "insertdatetime nonbreaking save table contextmenu directionality",
+          "emoticons paste textcolor colorpicker textpattern codesample",
+          "fullpage toc imagetools help"
+          ],
+          toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+          menubar: false,
+          toolbar_items_size: 'small',
+          paste_as_text: true,
+          browser_spellcheck: true,
+          statusbar: false,
+          height: 200,
+
+          style_formats: [{
+            title: 'Bold text',
+            inline: 'b'
+          }, ],
+
+        });
+        $('.editor').html(data.message).tinymce({
+         theme: "modern",
+       });
+        
+      }
+    });
+  }
+});
+
+$(document).on('click', '#show_email_templates', function () {
+  $('#email_templates_box').show();
+});
+
+//Select2 email template in quotes
+$('#email_templte').select2({
+  placeholder: "Select an option"
 });
 
 //Clients
@@ -949,14 +1115,14 @@ $(document).on('click', '#delete-contact', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-            )
+              )
             console.log(data.message);
           }
         }
@@ -1002,14 +1168,14 @@ $(document).on('click', '#delete-company', function () {
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
-                      )
+                        )
                       $(theElement).closest('tr').remove();
                     }else{
                       swal(
                         'Error!',
                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                         'error'
-                      )
+                        )
                       console.log(data.message);
                     }
                   }
@@ -1026,14 +1192,14 @@ $(document).on('click', '#delete-company', function () {
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                  )
+                    )
                   $(theElement).closest('tr').remove();
                 }else{
                   swal(
                     'Error!',
                     'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                     'warning'
-                  )
+                    )
                   console.log(data.message);
                 }
               }
@@ -1077,7 +1243,7 @@ $(document).on('click', '#delete-pricing', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
 
           }
@@ -1114,14 +1280,14 @@ $(document).on('click', '#delete-saleterm', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-            )
+              )
             console.log(data.message);
           }
         }
@@ -1168,7 +1334,7 @@ $(document).on('click', '#savecompany', function () {
             'Done!',
             'Status updated.',
             'success'
-          )
+            )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1212,7 +1378,7 @@ $(document).on('click', '#savecontact', function () {
             'Done!',
             'Status updated.',
             'success'
-          )
+            )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1243,7 +1409,7 @@ $(document).on('click', '#select-schedule', function () {
       schevalues.push($valor);
     });
     
-   
+
     //  alert(schevalues);
     $("#infoschedule").removeAttr('hidden');
     $(".removesche").removeAttr('hidden');
@@ -1278,6 +1444,6 @@ function msg(message){
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   };
- toastr.error(message,'IMPORTANT MESSAGE!');
+  toastr.error(message,'IMPORTANT MESSAGE!');
 }
 //

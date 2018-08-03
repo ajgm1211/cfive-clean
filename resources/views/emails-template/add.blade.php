@@ -3,7 +3,7 @@
 @section('content')
 <div class="m-portlet">
     <!--begin::Form-->
-    {!! Form::open(['route' => 'mail-templates.store']) !!}
+    {!! Form::open(['route' => 'templates.store']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
@@ -14,7 +14,7 @@
             <br>
             <div class="m-form__actions m-form__actions">
                 {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-                <a type="button" class="btn btn-success" href="{{url()->previous()}}">
+                <a class="btn btn-danger" href="{{url()->previous()}}">
                     Cancel
                 </a>
             </div>
