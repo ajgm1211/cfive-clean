@@ -180,12 +180,12 @@
                                                                             </label>
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" id="packages" name="packages" min="0" step="0.01" class="weight form-control" placeholder="" aria-label="...">
+                                                                                    <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.01" class="total_quantity form-control" placeholder="" aria-label="...">
                                                                                     <div class="input-group-btn">
-                                                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pallets <span class="caret"></span></button>
-                                                                                        <ul class="dropdown-menu dropdown-menu-right">
-
-                                                                                        </ul>
+                                                                                        <select class="form-control" name="type_cargo">
+                                                                                            <option value="1">Pallets</option>
+                                                                                            <option value="2">Packages</option>
+                                                                                        </select>
                                                                                     </div><!-- /btn-group -->
                                                                                 </div><!-- /input-group -->
                                                                             </div>
@@ -196,7 +196,7 @@
                                                                             </label>
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" id="weight" name="weight" min="0" step="0.01" class="weight form-control" placeholder="" aria-label="...">
+                                                                                    <input type="number" id="total_weight" name="total_weight" min="0" step="0.01" class="total_weight form-control" placeholder="" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                                                                                         <ul class="dropdown-menu dropdown-menu-right">
@@ -211,7 +211,7 @@
                                                                             </label>
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 <div class="input-group">
-                                                                                    <input type="number" id="volume" name="volume" min="0" step="0.01" class="weight form-control" placeholder="" aria-label="...">
+                                                                                    <input type="number" id="total_volume" name="total_volume" min="0" step="0.01" class="total_volume form-control" placeholder="" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CM <span class="caret"></span></button>
                                                                                         <ul class="dropdown-menu dropdown-menu-right">
@@ -225,27 +225,27 @@
                                                                 <div class="tab-pane fade" id="tab_1_2">
                                                                     <div class="row">
                                                                         <div class="col-md-2">
-                                                                            <select name="type_cargo[]" class="type_cargo_air form-control">
+                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
                                                                                 <option value="">Choose an option</option>
                                                                                 <option value="1">Pallets</option>
-                                                                                <option value="2">Bultos</option>
+                                                                                <option value="2">Packages</option>
                                                                             </select>
-                                                                            <input type="hidden" id="total_air_pallets" name="total_pallets"/>
-                                                                            <input type="hidden" id="total_air_bultos" name="total_bultos"/>
+                                                                            <input type="hidden" id="total_pallets" name="total_pallets"/>
+                                                                            <input type="hidden" id="total_packages" name="total_packages"/>
                                                                         </div>
                                                                         <div class="col-md-2">
-                                                                            <input id="quantity_air" min="1" value="1" name="quantity_air[]" class="quantity_air form-control" type="number"/>
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="al_air form-control" min="0" name="al_air[]" id="al" type="number" placeholder="Alto"/>
+                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="an_air form-control" min="0" name="an_air[]" id="an" type="number" placeholder="Ancho"/>
+                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="la_air form-control" min="0" name="la_air[]" id="la" type="number" placeholder="Largo"/>
+                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
                                                                                     <div class="input-group-btn">
@@ -272,36 +272,34 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class="small"><span class="quantity_air_1"></span> <span class="volume_air_1"></span> <span class="weight_air_1"></span></p>
-                                                                            <input type="hidden" class="quantity_air_input" id="quantity_air_input" name="quantity_air_input[]"/>
-                                                                            <input type="hidden" class="volume_air_input" id="volume_air_input" name="volume_air_input[]"/>
-                                                                            <input type="hidden" class="weight_air_input" id="weight_air_input" name="weight_air_input[]"/>
-                                                                            <input type="hidden" class="type_cargo_air_input" id="type_cargo_air_input" name="type_cargo_air_input[]"/>
+                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span></p>
+                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
+                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
+                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
                                                                         </div>
                                                                     </div>                                                        
-                                                                    <div class="row hide" id="lcl_load_template" style="padding-top: 15px;">
+                                                                    <div class="row hide" id="lcl_air_load_template" style="padding-top: 15px;">
                                                                         <div class="col-md-2">
-                                                                            <select name="type_cargo[]" class="type_cargo_air form-control">
+                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
                                                                                 <option value="">Choose an option</option>
                                                                                 <option value="1">Pallets</option>
                                                                                 <option value="2">Bultos</option>
                                                                             </select>
-                                                                            <input type="hidden" id="total_air_pallets" name="total_pallets"/>
-                                                                            <input type="hidden" id="total_air_bultos" name="total_bultos"/>
                                                                         </div>
                                                                         <div class="col-md-2">
-                                                                            <input id="quantity_air" min="1" value="1" name="quantity_air[]" class="quantity_air form-control" type="number"/>
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="al_air form-control" min="0" name="al_air[]" id="al" type="number" placeholder="Alto"/>
+                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="an_air form-control" min="0" name="an_air[]" id="an" type="number" placeholder="Ancho"/>
+                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="la_air form-control" min="0" name="la_air[]" id="la" type="number" placeholder="Largo"/>
+                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
                                                                                     <div class="input-group-btn">
@@ -319,7 +317,7 @@
                                                                         </div>
                                                                         <div class="col-md-3">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="weight" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Peso" aria-label="...">
+                                                                                <input type="number" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Peso" aria-label="...">
                                                                                 <div class="input-group-btn">
                                                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                                                                                     <ul class="dropdown-menu dropdown-menu-right">
@@ -328,11 +326,11 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class="small"><span class="quantity_air_1"></span> <span class="volume_air_1"></span> <span class="weight_air_1"></span>   | <a><i class="fa fa-trash"></i></a></p>
-                                                                            <input type="hidden" class="quantity_air_input" id="quantity_air_input" name="quantity_air_input[]"/>
-                                                                            <input type="hidden" class="volume_air_input" id="volume_air_input" name="volume_air_input[]"/>
-                                                                            <input type="hidden" class="weight_air_input" id="weight_air_input" name="weight_air_input[]"/>
-                                                                            <input type="hidden" class="type_cargo_air_input" id="type_cargo_air_input" name="type_cargo_air_input[]"/>
+                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span>   | <a class="remove_lcl_air_load"><i class="fa fa-trash"></i></a></p>
+                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
+                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
+                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
                                                                         </div>
                                                                     </div>                                                            
                                                                     <div class="row">
@@ -341,7 +339,7 @@
                                                                             <div id="saveActions" class="form-group">
                                                                                 <input type="hidden" name="save_action" value="save_and_back">
                                                                                 <div class="btn-group">
-                                                                                    <button type="button" id="add_load_lcl" class="addButton btn btn-info btn-xs">
+                                                                                    <button type="button" id="add_load_lcl_air" class="addButton btn btn-info btn-xs">
                                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         <span data-value="save_and_back">Add load</span>
                                                                                     </button>
