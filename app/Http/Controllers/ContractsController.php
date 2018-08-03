@@ -970,6 +970,7 @@ class ContractsController extends Controller
             return 1;
         }
     }
+    
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request);
         $nombre='';
@@ -1229,7 +1230,6 @@ class ContractsController extends Controller
             return redirect()->route('contracts.edit',$request->contract_id);
         }
     }
-    
     public function FailSubcharges($id){
         $objharbor          = new Harbor();
         $objcurrency        = new Currency();
@@ -3334,7 +3334,6 @@ class ContractsController extends Controller
         // dd($collection);
         return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$request->Contract_id);
     }
-
     public function failRatesSurchrgesForNewContracts($id){
 
         $objharbor          = new Harbor();
