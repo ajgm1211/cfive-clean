@@ -18,17 +18,10 @@ class EmailsTemplateController extends Controller
      */
     public function index()
     {
-        $companyUser = CompanyUser::All();
-        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-        $template = EmailTemplate::All();
-        $data = $template->where('company', $company);
-        
-        foreach($data as $i){
-            $user = User::find($i->user_id);    
-            $i->user_id = $user->name;
-        }
 
-        return view('emails-template.list', compact('data'));
+        $templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->get();
+
+        return view('emails-template.list', compact('templates'));
     }
 
     /**
@@ -90,17 +83,15 @@ class EmailsTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        $companyUser = CompanyUser::All();
-        $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $template = new EmailTemplate();
         $template->name = $request->name;
         $template->subject = $request->subject;
         $template->menssage = $request->menssage;
         $template->user_id = Auth::user()->id;
-        $template->company = $company;
+        $template->company_user_id = Auth::user()->company_user_id;
         $template->save();
 
-        return redirect('mail-templates/list');
+        return redirect('templates');
         
     }
 
@@ -161,8 +152,20 @@ class EmailsTemplateController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You upgrade has been success ');
-        return redirect()->route('emails-template.list');
+        return redirect()->route('templates.index');
     }
+
+    /**
+     * Preview template
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function preview(Request $request)
+    {
+        $template = EmailTemplate::find($request->id);
+        return response()->json(['id'=>$template->id,'subject'=>$template->subject,'message'=>$template->menssage]);
+    }    
 
     /**
      * Remove the specified resource from storage.
@@ -183,7 +186,7 @@ class EmailsTemplateController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully delete : '.$template->name);
-        return redirect()->route('emails-template.list');
+        return redirect()->route('templates.index');
 
     }
 

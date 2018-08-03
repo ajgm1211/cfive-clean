@@ -7,7 +7,7 @@
  */
 ?>
 <div class="modal fade" id="SendQuoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
@@ -34,7 +34,7 @@
                         <div id="textarea-box" style="display: none;">
                             <label><b>Body:</b></label>
                             <br>
-                            <textarea class="form-control editor" id="email-body"></textarea>
+                            <textarea class="form-control editor" name="body" id="email-body"></textarea>
                         </div>
                     </div>
                     <div id="btn_area">
@@ -43,7 +43,9 @@
                 </div>
                 <hr>
                 <div class="form-group m-form__group">
-                    <button id="send-pdf-quote" class="btn btn-success">Send</button>
+                    <button type="submit" class="btn btn-success" formaction="/quotes/store/email">
+                        Save and send
+                    </button>
                     <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
                 </div>
                 <br>

@@ -20,6 +20,7 @@ class CreateQuotesTable extends Migration
             $table->date('validity')->nullable();
             $table->integer('modality');
             $table->date('pick_up_date');
+            $table->integer('type_cargo')->nullable();
             $table->string('origin_address')->nullable();
             $table->string('destination_address')->nullable();
             $table->integer('company_id')->unsigned();
@@ -38,6 +39,9 @@ class CreateQuotesTable extends Migration
             $table->string('qty_20')->nullable();
             $table->string('qty_40')->nullable();
             $table->string('qty_40_hc')->nullable();
+            $table->integer('total_quantity')->nullable();
+            $table->float('total_weight')->nullable();
+            $table->float('total_volume')->nullable();
             $table->string('delivery_type')->nullable();
             $table->float('sub_total_origin')->nullable();
             $table->float('sub_total_freight')->nullable();

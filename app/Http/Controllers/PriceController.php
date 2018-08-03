@@ -16,16 +16,15 @@ class PriceController extends Controller
 {
   public function index()
   {
-    $prices = Price::all();
-    //dd(json_encode($prices->company_name));
-    $companies = Company::all()->pluck('business_name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->get();
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     return view('prices/index', ['prices' => $prices,'companies' => $companies]);
   }
 
   public function add()
   {
-    $prices = Price::all();
-    $companies = Company::all()->pluck('business_name','id');
+    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->get();
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $currencies = Currency::all();
     return view('prices.add', ['prices' => $prices,'companies' => $companies,'currencies'=>$currencies]);
   }
@@ -129,7 +128,7 @@ class PriceController extends Controller
         $selected_companies []= $item->company_id;
       }
     }
-    $companies = Company::all()->pluck('business_name','id');
+    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $currencies = Currency::all();
     $local_charges = LocalChargeMarkup::where('price_id',$id)->get();
 

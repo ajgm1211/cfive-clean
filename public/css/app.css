@@ -14454,7 +14454,7 @@ select.selectpicker {
   line-height: 1.333;
   text-shadow: none;
   padding: 1px 5px;
-  background: #006bfa;
+  background: #ed5565;
   border-radius: 4px;
 }
 
@@ -34194,9 +34194,10 @@ tbody.collapse.show {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #495057;
+  color: #1D3A6E !important;
   background-color: #fff;
-  border-color: #dee2e6 #dee2e6 #fff;
+  border-bottom: 2px solid #1D3A6E;
+  border-color: #dee2e6 #dee2e6 #1D3A6E;
 }
 
 .nav-tabs .dropdown-menu {
@@ -58415,20 +58416,20 @@ td > .m-checkbox.m-checkbox--single {
 }
 
 .m-radio.m-radio--brand > span:after {
-  border: solid #716aca;
-  background: #716aca;
+  border: solid #1D3A6E;
+  background: #1D3A6E;
 }
 
 .m-radio.m-radio--brand > input:disabled ~ span:after {
-  border-color: #716aca;
+  border-color: #1D3A6E;
 }
 
 .m-radio.m-radio--brand > input:checked ~ span {
-  border: 1px solid #716aca;
+  border: 1px solid #1D3A6E;
 }
 
 .m-radio.m-radio--brand.m-radio--check-bold > input:checked ~ span {
-  border: 2px solid #716aca;
+  border: 2px solid #1D3A6E;
 }
 
 .m-radio.m-radio--brand > input:disabled ~ span {
@@ -58458,7 +58459,7 @@ td > .m-checkbox.m-checkbox--single {
 }
 
 .m-radio.m-radio--brand.m-radio--solid > input:checked ~ span {
-  background: #716aca;
+  background: #1D3A6E;
 }
 
 .m-radio.m-radio--metal.m-radio--disabled {
@@ -78170,6 +78171,10 @@ h3.m-subheader__title {
   padding: 25px 25px 0 25px;
 }
 
+.modal-dialog {
+  width: 700px !important;
+}
+
 .btn:hover {
   font-weight: 600 !important;
 }
@@ -78180,8 +78185,8 @@ h3.m-subheader__title {
 }
 
 .btn.btn-secondary {
-  background-color: #006BFA !important;
-  border-color: #006BFA !important;
+  background-color: #1D3A6E !important;
+  border-color: #1D3A6E !important;
 }
 
 .m-bootstrap-touchspin-brand .bootstrap-touchspin .btn.focus, .m-bootstrap-touchspin-brand .bootstrap-touchspin .btn:focus, .m-bootstrap-touchspin-brand .bootstrap-touchspin .btn:hover {

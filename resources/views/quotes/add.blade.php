@@ -68,7 +68,7 @@
                                                                     <label class="m-option">
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" value="1" type="radio">
+                                                                                <input name="type" value="1" id="fcl_type" type="radio">
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
@@ -85,7 +85,7 @@
                                                                     <label class="m-option">
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" value="2" type="radio">
+                                                                                <input name="type" value="2" id="lcl_type" type="radio">
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
@@ -102,7 +102,7 @@
                                                                     <label class="m-option">
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" value="3" type="radio">
+                                                                                <input name="type" value="3" id="air_type" type="radio">
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
@@ -116,7 +116,18 @@
                                                                     </label>
                                                                 </div>
                                                             </div>
+
                                                             <br>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group m-form__group row" id="fcl_load" style="display: none;">
+                                                        <div class="col-lg-2">
+                                                            <label>
+                                                                <b>LOAD</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-8">
                                                             <div class='row'>
                                                                 <div class="col-md-4">
                                                                     <label>
@@ -145,75 +156,272 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <hr>
-                                                    <div class="form-group m-form__group row">
+                                                    <div class="form-group m-form__group row" id="lcl_air_load" style="display: none;">
                                                         <div class="col-lg-2">
                                                             <label>
-                                                                <b>SERVICES</b>
+                                                                <b>LOAD</b>
                                                             </label>
                                                         </div>
-                                                        <div class="col-lg-10">
-                                                            <div class="row">
-                                                                <div class="col-md-2">
-                                                                    <label>Modality</label>
-                                                                    {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                                                        <div class="col-lg-10">                                                            
+                                                            <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;"> Calculate by total shipment </a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="tab-content">
+                                                                <div class="tab-pane fade active show" id="tab_1_1">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                Packages
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.01" class="total_quantity form-control" placeholder="" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <select class="form-control" id="type_cargo" name="type_cargo">
+                                                                                            <option value="1">Pallets</option>
+                                                                                            <option value="2">Packages</option>
+                                                                                        </select>
+                                                                                    </div><!-- /btn-group -->
+                                                                                </div><!-- /input-group -->
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                Total weight
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="total_weight" name="total_weight" min="0" step="0.01" class="total_weight form-control" placeholder="" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                                                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                                                        </ul>
+                                                                                    </div><!-- /btn-group -->
+                                                                                </div><!-- /input-group -->
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                Total volume
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" id="total_volume" name="total_volume" min="0" step="0.01" class="total_volume form-control" placeholder="" aria-label="...">
+                                                                                    <div class="input-group-btn">
+                                                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CM <span class="caret"></span></button>
+                                                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                                                        </ul>
+                                                                                    </div><!-- /btn-group -->
+                                                                                </div><!-- /input-group -->
+                                                                            </div>
+                                                                        </div>                                                                 
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-2">
-                                                                    <label>Incoterm</label>
-                                                                    {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
-                                                                </div>
-                                                                <div class="col-md-5">
-                                                                    <label>Delivery type</label>
-                                                                    {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Pick up date</label>
-                                                                    <div class="input-group date">
-                                                                        {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
-                                                                        <div class="input-group-append">
-                                                                            <span class="input-group-text">
-                                                                                <i class="la la-calendar-check-o"></i>
-                                                                            </span>
+                                                                <div class="tab-pane fade" id="tab_1_2">
+                                                                    <div class="row">
+                                                                        <div class="col-md-2">
+                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
+                                                                                <option value="">Choose an option</option>
+                                                                                <option value="1">Pallets</option>
+                                                                                <option value="2">Packages</option>
+                                                                            </select>
+                                                                            <input type="hidden" id="total_pallets" name="total_pallets"/>
+                                                                            <input type="hidden" id="total_packages" name="total_packages"/>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                                                                                <span class="xs-text">CM</span> <span class="caret"></span>
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu" role="menu">
+
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="input-group">
+                                                                                <input type="number" id="weight" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Weight" aria-label="...">
+                                                                                <div class="input-group-btn">
+                                                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                                                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                                                    </ul>
+                                                                                </div><!-- /btn-group -->
+                                                                            </div><!-- /input-group -->
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span></p>
+                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
+                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
+                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
+                                                                        </div>
+                                                                    </div>                                                        
+                                                                    <div class="row hide" id="lcl_air_load_template" style="padding-top: 15px;">
+                                                                        <div class="col-md-2">
+                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
+                                                                                <option value="">Choose an option</option>
+                                                                                <option value="1">Pallets</option>
+                                                                                <option value="2">Packages</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
+                                                                                </div>
+                                                                                <div class="btn-group" role="group">
+                                                                                    <div class="input-group-btn">
+                                                                                        <div class="btn-group">
+                                                                                            <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                                                                                <span class="xs-text">CM</span> <span class="caret"></span>
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu" role="menu">
+
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="input-group">
+                                                                                <input type="number" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Peso" aria-label="...">
+                                                                                <div class="input-group-btn">
+                                                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                                                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                                                    </ul>
+                                                                                </div><!-- /btn-group -->
+                                                                            </div><!-- /input-group -->
+                                                                        </div>
+                                                                        <div class="col-md-1">
+                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span>   | <a class="remove_lcl_air_load"><i class="fa fa-trash"></i></a></p>
+                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
+                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
+                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
+                                                                        </div>
+                                                                    </div>                                                            
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <br>
+                                                                            <div id="saveActions" class="form-group">
+                                                                                <input type="hidden" name="save_action" value="save_and_back">
+                                                                                <div class="btn-group">
+                                                                                    <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
+                                                                                        <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        <span data-value="save_and_back">Add load</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="form-group m-form__group row">
+                                                <div class="col-lg-2">
+                                                    <label>
+                                                        <b>SERVICES</b>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-10">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label>Modality</label>
+                                                            {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label>Incoterm</label>
+                                                            {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <label>Delivery type</label>
+                                                            {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label>Pick up date</label>
+                                                            <div class="input-group date">
+                                                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true']) !!}
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">
+                                                                        <i class="la la-calendar-check-o"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" id="origin_harbor_label">
+                                                            <label>Origin port</label>
+                                                            {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor','placeholder'=>'Select an option']) }}
+                                                        </div>
+                                                        <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                                            <label>Origin address</label>
+                                                            {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" id="destination_harbor_label">
+                                                            <label>Destination port</label>
+                                                            {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor','placeholder'=>'Select an option']) }}
+                                                        </div>
+                                                        <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                                            <label>Destination address</label>
+                                                            {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
                                                             <br>
-                                                            <div class="row">
-                                                                <div class="col-md-4" id="origin_harbor_label">
-                                                                    <label>Origin port</label>
-                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor','placeholder'=>'Select an option']) }}
-                                                                </div>
-                                                                <div class="col-md-8" id="origin_address_label" style="display: none;">
-                                                                    <label>Origin address</label>
-                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <div class="row">
-                                                                <div class="col-md-4" id="destination_harbor_label">
-                                                                    <label>Destination port</label>
-                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor','placeholder'=>'Select an option']) }}
-                                                                </div>
-                                                                <div class="col-md-8" id="destination_address_label" style="display: none;">
-                                                                    <label>Destination address</label>
-                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+                                                            <label>Validity</label>
+                                                            <div class="input-group date">
+                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text">
+                                                                        <i class="la la-calendar-check-o"></i>
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <br>
-                                                                    <label>Validity</label>
-                                                                    <div class="input-group date">
-                                                                        {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
-                                                                        <div class="input-group-append">
-                                                                            <span class="input-group-text">
-                                                                                <i class="la la-calendar-check-o"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        </div>
+                                                    </div>
                                                             <!--<div class="row">
                                                                 <div class="col-md-4">
                                                                     <br>
@@ -248,410 +456,503 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>                                        
-                                        </div>
-                                        <div class="tab-pane" id="m_portlet_tab_1_2">
-                                            <br>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Origin Port</b></div>
-                                                                <div class="panel-body">
-                                                                    <span id="origin_input"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Destination Port</b></div>
-                                                                <div class="panel-body">
-                                                                    <span id="destination_input"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="panel panel-default hide" id="origin_address_panel">
-                                                                <div class="panel-heading title-quote size-14px"><b>Origin Address</b></div>
-                                                                <div class="panel-body">
-                                                                    <span id="origin_address_p"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="panel panel-default hide" id="destination_address_panel">
-                                                                <div class="panel-heading title-quote size-14px"><b>Destination Address</b></div>
-                                                                <div class="panel-body">
-                                                                    <span id="destination_address_p"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>                                                    
-                                                    <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
-                                                        <div class="col-md-12">
-                                                            <h5 class="title-quote size-14px">Cargo details</h5>
-                                                            <hr>
-                                                            <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                            <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
-                                                            <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="m_portlet_tab_1_2">
+                                                    <br>
                                                     <div class="row">
-                                                        <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Origin ammounts</h5>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-bordered color-blue">
-                                                                    <thead class="title-quote text-center header-table">
-                                                                        <tr>
-                                                                            <td >Charge</td>
-                                                                            <td >Detail</td>
-                                                                            <td >Units</td>
-                                                                            <td >Price per unit</td>
-                                                                            <td >Total</td>
-                                                                            <td >Markup</td>
-                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        
-                                                                        <tr class="hide"  id="origin_ammounts">
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
-                                                                                        <a class="btn removeOriginButton">
-                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>                
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                        <div class="col-lg-12">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading title-quote size-14px"><b>Origin Port</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="origin_input"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading title-quote size-14px"><b>Destination Port</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="destination_input"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class="col-md-12">
-                                                            <h5 class="title-quote pull-right">
-                                                                Sub-Total: <span id="sub_total_origin"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value=""  class="form-control"/>
-                                                                <a class="btn addButtonOrigin" style="vertical-align: middle">
-                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                </a>
-                                                            </h5>                                                            
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Freight ammounts</h5>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-bordered color-blue">
-                                                                    <thead class="title-quote text-center header-table">
-                                                                        <tr>
-                                                                            <td >Charge</td>
-                                                                            <td >Detail</td>
-                                                                            <td >Units</td>
-                                                                            <td >Price per unit</td>
-                                                                            <td >Total</td>
-                                                                            <td >Markup</td>
-                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                        <tr>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]" required />
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text" required/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" required/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="..." required>
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency','required'=>true]) }}              
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.01" required/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" required/> 
-                                                                            </td>                      
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="..." required>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        
-                                                                        <tr class="hide"  id="freight_ammounts">
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}              
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="...">
-                                                                                        <a class="btn removeButton">
-                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>                
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="panel panel-default hide" id="origin_address_panel">
+                                                                        <div class="panel-heading title-quote size-14px"><b>Origin Address</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="origin_address_p"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="panel panel-default hide" id="destination_address_panel">
+                                                                        <div class="panel-heading title-quote size-14px"><b>Destination Address</b></div>
+                                                                        <div class="panel-body">
+                                                                            <span id="destination_address_p"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                    
+                                                            <div style="padding-top: 20px; padding-bottom: 20px;">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <h5 class="title-quote size-14px">Cargo details</h5>
+                                                                        <hr>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                        <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_cargo_type_p" class="hide"><b>Cargo type:</b> <span id="cargo_details_cargo_type"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_quantity_p" class="hide"><b>Total quantity:</b> <span id="cargo_details_total_quantity"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_weight_p" class="hide"><b>Total weight: </b> <span id="cargo_details_total_weight"></span> KG</div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <p id="cargo_details_total_volume_p" class="hide"><b>Total volume: </b> <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class="col-md-12">
-                                                            <h5 class="title-quote pull-right">
-                                                                Sub-Total: <span id="sub_total_freight"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value=""  class="form-control"/>
-                                                                <a class="btn addButton" style="vertical-align: middle">
-                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                </a>
-                                                            </h5>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Destination ammounts</h5>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-bordered color-blue">
-                                                                    <thead class="title-quote text-center header-table">
-                                                                        <tr>
-                                                                            <td >Charge</td>
-                                                                            <td >Detail</td>
-                                                                            <td >Units</td>
-                                                                            <td >Price per unit</td>
-                                                                            <td >Total</td>
-                                                                            <td >Markup</td>
-                                                                            <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5 class="title-quote size-14px">Origin ammounts</h5>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered color-blue">
+                                                                            <thead class="title-quote text-center header-table">
+                                                                                <tr>
+                                                                                    <td >Charge</td>
+                                                                                    <td >Detail</td>
+                                                                                    <td >Units</td>
+                                                                                    <td >Price per unit</td>
+                                                                                    <td >Total</td>
+                                                                                    <td >Markup</td>
+                                                                                    <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
 
-                                                                        <tr>
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                <tr class="hide"  id="origin_ammounts">
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                        
-                                                                        <tr class="hide"  id="destination_ammounts">
-                                                                            <td>
-                                                                                <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group">
-                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
-                                                                                    <div class="input-group-btn">
-                                                                                        <div class="btn-group">
-                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="form-group">
-                                                                                    <div class="input-group">
-                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
-                                                                                        <a class="btn removeButtonDestination">
-                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>                
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                                <a class="btn removeOriginButton">
+                                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>                
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-12">
+                                                                    <h5 class="title-quote pull-right">
+                                                                        Sub-Total: <span id="sub_total_origin"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                        <input type="hidden" id="total_origin_ammount" name="sub_total_origin" value=""  class="form-control"/>
+                                                                        <a class="btn addButtonOrigin" style="vertical-align: middle">
+                                                                            <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                        </a>
+                                                                    </h5>                                                            
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5 class="title-quote size-14px">Freight ammounts</h5>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered color-blue">
+                                                                            <thead class="title-quote text-center header-table">
+                                                                                <tr>
+                                                                                    <td >Charge</td>
+                                                                                    <td >Detail</td>
+                                                                                    <td >Units</td>
+                                                                                    <td >Price per unit</td>
+                                                                                    <td >Total</td>
+                                                                                    <td >Markup</td>
+                                                                                    <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]" required />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text" required/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" required/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="..." required>
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency','required'=>true]) }}              
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.01" required/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" required/> 
+                                                                                    </td>                      
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="..." required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                <tr class="hide"  id="freight_ammounts">
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}              
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="...">
+                                                                                                <a class="btn removeButton">
+                                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>                
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-12">
+                                                                    <h5 class="title-quote pull-right">
+                                                                        Sub-Total: <span id="sub_total_freight"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                        <input type="hidden" id="total_freight_ammount" name="sub_total_freight" value=""  class="form-control"/>
+                                                                        <a class="btn addButton" style="vertical-align: middle">
+                                                                            <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                        </a>
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <h5 class="title-quote size-14px">Destination ammounts</h5>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered color-blue">
+                                                                            <thead class="title-quote text-center header-table">
+                                                                                <tr>
+                                                                                    <td >Charge</td>
+                                                                                    <td >Detail</td>
+                                                                                    <td >Units</td>
+                                                                                    <td >Price per unit</td>
+                                                                                    <td >Total</td>
+                                                                                    <td >Markup</td>
+                                                                                    <td >Total @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                <tr class="hide"  id="destination_ammounts">
+                                                                                    <td>
+                                                                                        <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="input-group">
+                                                                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                            <div class="input-group-btn">
+                                                                                                <div class="btn-group">
+                                                                                                    {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <div class="input-group">
+                                                                                                <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                                <a class="btn removeButtonDestination">
+                                                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>                
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-12">
+                                                                    <h5 class="title-quote pull-right">
+                                                                        Sub-Total: <span id="sub_total_destination"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                        <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value=""  class="form-control"/>
+                                                                        <a class="btn addButtonDestination" style="vertical-align: middle">
+                                                                            <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                        </a>
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row'>
+                                                                <div class="col-md-12">
+                                                                    <h5 class="title-quote pull-right size-16px">
+                                                                        Total: <span id="total"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Schedules -->
+                                                            <div id="infoschedule" class="row" hidden="true">
+                                                               <div class="col-md-3">
+                                                                <h5 class="title-quote size-14px">Schedules</h5>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="table-responsive">
+                                                                    <table id="schetable" class="table table-bordered color-blue">
+                                                                     <thead class="title-quote text-center header-table">
+                                                                       <tr>
+                                                                         <th><span class="">Vessel</span></th>
+                                                                         <th><span class="">ETD</span></th>
+                                                                         <th><span class=""><center>Transit Time</center></span>  </th>
+                                                                         <th><span class="">ETA</span></th>
+
+                                                                     </tr>
+                                                                 </thead>
+                                                                 <tbody id="scheduleBody">
+
+
+                                                                 </tbody>
+                                                             </table>
+                                                         </div>
+                                                     </div>
+                                                     <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+                                                 </div>                                          
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                            <div class="col-md-2">
+                                                <a class="btn btn-outline-accent btn-sm  m-btn m-btn--icon" onclick="AbrirModal('add')">
+                                                    <span>
+                                                        <i class="la la-plus"></i>
+                                                        <span>Schedules </span>
+                                                    </span>
+                                                </a>
+                                                <br>
+                                                <br>
+                                                <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true" >
+                                                    <span>
+                                                        <i class="la la-remove"></i>
+                                                        <span>Remove</span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>                                            
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-lg-offset-4">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Save
+                                                </button>
+                                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
+                                                    Save and send
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                            <!--<div class="row" id="email_templates_box" style="display: none">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group m-form__group">
+                                                        <label style="letter-spacing: 0.7px"><b>Email template</b></label>
+                                                        {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
                                                     </div>
-                                                    <div class='row'>
-                                                        <div class="col-md-12">
-                                                            <h5 class="title-quote pull-right">
-                                                                Sub-Total: <span id="sub_total_destination"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                                <input type="hidden" id="total_destination_ammount" name="sub_total_destination" value=""  class="form-control"/>
-                                                                <a class="btn addButtonDestination" style="vertical-align: middle">
-                                                                    <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                </a>
-                                                            </h5>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class="col-md-12">
-                                                            <h5 class="title-quote pull-right size-16px">
-                                                                Total: <span id="total"></span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                                                            </h5>
+                                                    <div class="form-group m-form__group">
+                                                        <label style="letter-spacing: 0.7px"><b>Preview:</b></label>
+                                                        <div class="jumbotron">
+                                                            <div id="subject-box">                            
+                                                                
+                                                            </div>
+                                                            <div id="textarea-box" style="display: none;">
+                                                                <label><b>Body:</b></label>
+                                                                <br>
+                                                                <textarea class="form-control editor" name="body" id="email-body"></textarea>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="col-lg-4 col-lg-offset-4">
-                                                    <button type="submit" class="btn btn-primary">
-                                                        Save
-                                                    </button>
-                                                    <button type="button" class="btn btn-success">
-                                                        Save and send
-                                                    </button>
+                                                <div class="col-lg-12">
+                                                     <div class="form-group m-form__group">
+                                                        <button type="submit" class="btn btn-success" formaction="/quotes/store/email">
+                                                            Continue
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>                                
                             </div>
                         </div>
                     </div>
+                    @include('quotes.partials.submitQuoteEmailModal');
                     {!! Form::close() !!}
                 </div>
 
@@ -689,45 +990,89 @@
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
+            @if(isset($currency_cfg->alphacode))
             <input type="hidden" value="{{$currency_cfg->alphacode}}" id="currency_id">
+            @endif
             <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
             <hr>
             <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
+            @if(isset($currency_cfg->alphacode))
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            @endif
         </div>        
     </div>
 </div>
+
+
+@include('quotes.partials.schedulesModal');
+
 @endsection
 
 @section('js')
 @parent
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-<script src="/js/quote.js"></script>
+<script src="{{asset('/js/quote.js')}}"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
+
     /*** GOOGLE MAPS API ***/
 
     var autocomplete;
+
     function initAutocomplete() {
         var geocoder = new google.maps.Geocoder();
         var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
         var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
-            //autocomplete.addListener('place_changed', fillInAddress);
-        }
+        //autocomplete.addListener('place_changed', fillInAddress);
+    }
 
-        function codeAddress(address) {
-            var geocoder;
-            geocoder.geocode( { 'address': address}, function(results, status) {
-                if (status == 'OK') {
-                    alert(results[0].geometry.location);
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
-        }
-    </script>
-    @stop
+    function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == 'OK') {
+                alert(results[0].geometry.location);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+    
+    function AbrirModal(action){
+       if(action == "add"){
+
+         var orig_p = $('#origin_harbor').val();
+         var dest_p = $('#destination_harbor').val();
+         var date_p = $('.pick_up_date').val();
+         if(orig_p ==""){
+           msg('Sorry the origin port is empty');
+           return;
+       }
+       if(dest_p ==""){
+           msg('Sorry the destination port is empty');
+           return;
+       }
+       if(date_p ==""){
+           msg('Sorry the date is empty');
+           return;
+       }
+       var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
+
+       url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
+
+       $('#spinner').show();
+       $('#scheduleModal').modal({show:true});
+       $('.modal-body').load(url, function (response, status, xhr) {
+
+           $('#scheduleModal').modal({show:true});
+           $('#spinner').hide();
+       });
+   }
+}
+</script>
+@stop
