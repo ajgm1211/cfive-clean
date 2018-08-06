@@ -494,9 +494,9 @@ Load
 @parent
 
 <script type="application/x-javascript">
-    $(document).ready(function(){
-
-    });
+  $(document).ready( function () {
+    $('#sample_editable_1').DataTable();
+  } );
 </script>
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
