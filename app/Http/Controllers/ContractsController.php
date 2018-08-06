@@ -479,6 +479,7 @@ class ContractsController extends Controller
     public function UploadFileRateForContract(Request $request){
         $nombre='';
         try {
+
             $now = new \DateTime();
             $now = $now->format('dmY_His');
             $file = $request->file('file');
@@ -500,6 +501,11 @@ class ContractsController extends Controller
             $contract = $request->contract_id;
             $errors=0;
             Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+
+                $originResul  = '';
+                $destinResul  = '';
+                $currencResul = '';
+
                 if($reader->get()->isEmpty() != true){
                     Rate::where('contract_id','=',$contract)
                         ->delete();
@@ -521,7 +527,12 @@ class ContractsController extends Controller
                     $origin = "origin";
                     $destination = "destiny";
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    $originExitsDul = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+
+                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+                    $originResul = str_replace($caracteres,'',strtolower($book->$origin));
+
+                    $originExitsDul = Harbor::where('varation->type','like','%'.$originResul.'%')
                         ->get();
                     if(count($originExitsDul) == 1){
                         $origB=true;
@@ -529,7 +540,10 @@ class ContractsController extends Controller
                             $originVdul = $originRc['id'];
                         }
                     }
-                    $destinationExitsDul = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+
+                    $destinResul = str_replace($caracteres,'',strtolower($book->$destination));
+
+                    $destinationExitsDul = Harbor::where('varation->type','like','%'.$destinResul.'%')
                         ->get();
                     if(count($destinationExitsDul) == 1){
                         $destiB=true;
@@ -546,6 +560,9 @@ class ContractsController extends Controller
                         ->where('contract_id','=',$contract)
                         ->count();
                     if($duplicate <= 0){
+                        $originResul  = '';
+                        $destinResul  = '';
+                        $currencResul = '';
                         $origB=false;
                         $destiB=false;
                         $carriB=false;
@@ -560,9 +577,15 @@ class ContractsController extends Controller
                         $fortyV;
                         $fortyhcV;
                         $currencyV;
-                        $currenc = Currency::where('alphacode','=',$book->currency)->first();
-                        $carrier = Carrier::where('name','=',$book->carrier)->first();
-                        $originExits = Harbor::where('varation->type','like','%'.strtolower($book->$origin).'%')
+
+                        $currencResul = str_replace($caracteres,'',$book->currency);
+                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
+
+                        $carrierResul = str_replace($caracteres,'',$book->carrier);
+                        $carrier = Carrier::where('name','=',$carrierResul)->first();
+
+                        $originResul = str_replace($caracteres,'',strtolower($book->$origin));
+                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                             ->get();
                         if(count($originExits) == 1){
                             $origB=true;
@@ -572,7 +595,10 @@ class ContractsController extends Controller
                         }else{
                             $originV = $book->$origin.'_E_E';
                         }
-                        $destinationExits = Harbor::where('varation->type','like','%'.strtolower($book->$destination).'%')
+
+                        $destinResul = str_replace($caracteres,'',strtolower($book->$destination));
+                        //dd($destinResul);
+                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                             ->get();
                         if(count($destinationExits) == 1){
                             $destiB=true;
@@ -970,7 +996,7 @@ class ContractsController extends Controller
             return 1;
         }
     }
-    
+
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request);
         $nombre='';
@@ -1973,9 +1999,11 @@ class ContractsController extends Controller
     public function ProcessContractFclRatSurch(Request $request){
         //dd($request);
         $errors = 0;
+
+        $NameFile = $request ->FileName;
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
-                   ->url($request ->FileName),function($reader) use($request,$errors) {
+                   ->url($NameFile),function($reader) use($request,$errors,$NameFile) {
                        $reader->noHeading = true;
                        //$reader->ignoreEmpty();
 
@@ -1993,6 +2021,7 @@ class ContractsController extends Controller
                        $statustypecurren    = "statustypecurren";
                        $contractId          = "Contract_id";
                        $chargeVal           = $request->chargeVal;
+                       $contract_id         = $request->Contract_id;
 
                        $ratescollection         = collect([]);
                        $ratesFailcollection     = collect([]);
@@ -2838,18 +2867,19 @@ class ContractsController extends Controller
                                                            if($request->$statustypecurren == 2){
                                                                $currencyVal = $currencyValtwen;
                                                            }
-
-                                                           FailSurCharge::create([
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $twentyVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ]);
+                                                           if($twentyArr[0] != 0){
+                                                               FailSurCharge::create([
+                                                                   'surcharge_id'       => $surchargeVal,
+                                                                   'port_orig'          => $originVal,
+                                                                   'port_dest'          => $destinyVal,
+                                                                   'typedestiny_id'     => 'freight',
+                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'calculationtype_id' => $calculationtypeValfail,  //////
+                                                                   'ammount'            => $twentyVal, //////
+                                                                   'currency_id'        => $currencyVal, //////
+                                                                   'carrier_id'         => $carrierVal
+                                                               ]);
+                                                           }
                                                            //$ratescollection->push($ree);
 
                                                        } else{
@@ -2862,18 +2892,19 @@ class ContractsController extends Controller
                                                            if($request->$statustypecurren == 2){
                                                                $currencyVal = $currencyValtwen;
                                                            }
-
-                                                           FailSurCharge::create([
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $twentyVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ]);
+                                                           if($twentyArr[0] != 0){
+                                                               FailSurCharge::create([
+                                                                   'surcharge_id'       => $surchargeVal,
+                                                                   'port_orig'          => $originVal,
+                                                                   'port_dest'          => $destinyVal,
+                                                                   'typedestiny_id'     => 'freight',
+                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'calculationtype_id' => $calculationtypeValfail,  //////
+                                                                   'ammount'            => $twentyVal, //////
+                                                                   'currency_id'        => $currencyVal, //////
+                                                                   'carrier_id'         => $carrierVal
+                                                               ]);
+                                                           }
                                                            // $ratescollection->push($ree);
 
                                                            // -------- 40' ---------------------------------
@@ -2884,17 +2915,19 @@ class ContractsController extends Controller
                                                                $currencyVal = $currencyValfor;
                                                            }
 
-                                                           FailSurCharge::create([
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $fortyVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ]);
+                                                           if($fortyArr[0] != 0){
+                                                               FailSurCharge::create([
+                                                                   'surcharge_id'       => $surchargeVal,
+                                                                   'port_orig'          => $originVal,
+                                                                   'port_dest'          => $destinyVal,
+                                                                   'typedestiny_id'     => 'freight',
+                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'calculationtype_id' => $calculationtypeValfail,  //////
+                                                                   'ammount'            => $fortyVal, //////
+                                                                   'currency_id'        => $currencyVal, //////
+                                                                   'carrier_id'         => $carrierVal
+                                                               ]);
+                                                           }
                                                            // $ratescollection->push($ree);
 
                                                            // -------- 40'HC -------------------------------
@@ -2905,17 +2938,19 @@ class ContractsController extends Controller
                                                                $currencyVal = $currencyValforHC;
                                                            }
 
-                                                           FailSurCharge::create([
-                                                               'surcharge_id'       => $surchargeVal,
-                                                               'port_orig'          => $originVal,
-                                                               'port_dest'          => $destinyVal,
-                                                               'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
-                                                               'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $fortyhcVal, //////
-                                                               'currency_id'        => $currencyVal, //////
-                                                               'carrier_id'         => $carrierVal
-                                                           ]);
+                                                           if($fortyhcArr[0] != 0){
+                                                               FailSurCharge::create([
+                                                                   'surcharge_id'       => $surchargeVal,
+                                                                   'port_orig'          => $originVal,
+                                                                   'port_dest'          => $destinyVal,
+                                                                   'typedestiny_id'     => 'freight',
+                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'calculationtype_id' => $calculationtypeValfail,  //////
+                                                                   'ammount'            => $fortyhcVal, //////
+                                                                   'currency_id'        => $currencyVal, //////
+                                                                   'carrier_id'         => $carrierVal
+                                                               ]);
+                                                           }
                                                            //$ratescollection->push($ree);
 
                                                        }
@@ -2943,19 +2978,20 @@ class ContractsController extends Controller
                                                        if($request->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
-
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //$ratescollection->push($ree);
+                                                       if($twentyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+                                                       }
 
                                                    } else{
 
@@ -2967,19 +3003,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //$ratescollection->push($ree);
-
+                                                       if($twentyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+                                                       }
                                                        // -------- 40' ---------------------------------
 
                                                        $calculationtypeValfail = 'Per 40 "';
@@ -2988,18 +3025,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValfor;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       // $ratescollection->push($ree);
+                                                       if($fortyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           // $ratescollection->push($ree);
+                                                       }
 
                                                        // -------- 40'HC -------------------------------
 
@@ -3009,18 +3048,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValforHC;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyhcVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //  $ratescollection->push($ree);
+                                                       if($fortyhcArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyhcVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //  $ratescollection->push($ree);
+                                                       }
                                                    }
                                                }
 
@@ -3052,18 +3093,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //$ratescollection->push($ree);                                                 
+                                                       if($twentyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);                    
+                                                       }
 
                                                    }
                                                } else {
@@ -3082,19 +3125,20 @@ class ContractsController extends Controller
                                                    if($request->$statustypecurren == 2){
                                                        $currencyVal = $currencyValtwen;
                                                    }
-
-                                                   FailSurCharge::create([
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $twentyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ]);
-                                                   //  $ratescollection->push($ree);
+                                                   if($twentyArr[0] != 0){
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //  $ratescollection->push($ree);
+                                                   }
                                                }
 
                                            }
@@ -3131,18 +3175,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       // $ratescollection->push($ree);
+                                                       if($twentyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           // $ratescollection->push($ree);
+                                                       }
 
                                                    } else{
 
@@ -3153,20 +3199,20 @@ class ContractsController extends Controller
                                                        if($request->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
-
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $twentyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       // $ratescollection->push($ree);
-
+                                                       if($twentyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $twentyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           // $ratescollection->push($ree);
+                                                       }
                                                        // -------- 40' ---------------------------------
 
                                                        $calculationtypeValfail = 'Per 40 "Error fila '.$i.'_E_E';
@@ -3175,18 +3221,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValfor;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //$ratescollection->push($ree);
+                                                       if($fortyArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+                                                       }
 
                                                        // -------- 40'HC -------------------------------
 
@@ -3196,19 +3244,20 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValforHC;
                                                        }
 
-                                                       FailSurCharge::create([
-                                                           'surcharge_id'       => $surchargeVal,
-                                                           'port_orig'          => $originVal,
-                                                           'port_dest'          => $destinyVal,
-                                                           'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
-                                                           'calculationtype_id' => $calculationtypeValfail,  //////
-                                                           'ammount'            => $fortyhcVal, //////
-                                                           'currency_id'        => $currencyVal, //////
-                                                           'carrier_id'         => $carrierVal
-                                                       ]);
-                                                       //$ratescollection->push($ree);
-
+                                                       if($fortyhcArr[0] != 0){
+                                                           FailSurCharge::create([
+                                                               'surcharge_id'       => $surchargeVal,
+                                                               'port_orig'          => $originVal,
+                                                               'port_dest'          => $destinyVal,
+                                                               'typedestiny_id'     => 'freight',
+                                                               'contract_id'        => $request->Contract_id,
+                                                               'calculationtype_id' => $calculationtypeValfail,  //////
+                                                               'ammount'            => $fortyhcVal, //////
+                                                               'currency_id'        => $currencyVal, //////
+                                                               'carrier_id'         => $carrierVal
+                                                           ]);
+                                                           //$ratescollection->push($ree);
+                                                       }
                                                    }
                                                }
                                            } else {
@@ -3235,19 +3284,20 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValtwen;
                                                    }
 
-                                                   FailSurCharge::create([
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $twentyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ]);
-                                                   //$ratescollection->push($ree);
-
+                                                   if($twentyArr[0] != 0){
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+                                                   }
 
 
                                                } else{
@@ -3260,18 +3310,20 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValtwen;
                                                    }
 
-                                                   FailSurCharge::create([
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $twentyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ]);
-                                                   //$ratescollection->push($ree);
+                                                   if($twentyArr[0] != 0){
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $twentyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+                                                   }
 
                                                    // -------- 40' ---------------------------------
 
@@ -3281,18 +3333,20 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValfor;
                                                    }
 
-                                                   FailSurCharge::create([
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $fortyVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ]);
-                                                   //$ratescollection->push($ree);
+                                                   if($fortyArr[0] != 0){
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+                                                   }
 
                                                    // -------- 40'HC -------------------------------
 
@@ -3302,19 +3356,20 @@ class ContractsController extends Controller
                                                        $currencyVal = $currencyValforHC;
                                                    }
 
-                                                   FailSurCharge::create([
-                                                       'surcharge_id'       => $surchargeVal,
-                                                       'port_orig'          => $originVal,
-                                                       'port_dest'          => $destinyVal,
-                                                       'typedestiny_id'     => 'freight',
-                                                       'contract_id'        => $request->Contract_id,
-                                                       'calculationtype_id' => $calculationtypeValfail,  //////
-                                                       'ammount'            => $fortyhcVal, //////
-                                                       'currency_id'        => $currencyVal, //////
-                                                       'carrier_id'         => $carrierVal
-                                                   ]);
-                                                   //$ratescollection->push($ree);
-
+                                                   if($fortyhcArr[0] != 0){
+                                                       FailSurCharge::create([
+                                                           'surcharge_id'       => $surchargeVal,
+                                                           'port_orig'          => $originVal,
+                                                           'port_dest'          => $destinyVal,
+                                                           'typedestiny_id'     => 'freight',
+                                                           'contract_id'        => $request->Contract_id,
+                                                           'calculationtype_id' => $calculationtypeValfail,  //////
+                                                           'ammount'            => $fortyhcVal, //////
+                                                           'currency_id'        => $currencyVal, //////
+                                                           'carrier_id'         => $carrierVal
+                                                       ]);
+                                                       //$ratescollection->push($ree);
+                                                   }
                                                }
                                            }
                                        }
@@ -3329,9 +3384,18 @@ class ContractsController extends Controller
                            //-------------------------- fin distinto del primer ciclo
                            $i++;
                        }
+                       $contractData = new Contract();
+                       $contractData = Contract::find($contract_id);
+                       $contractData->status = 'publish';
+                       $contractData->update();
+
+
                        //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
                    });
         // dd($collection);
+        Storage::Delete($NameFile);
+        $FileTmp = new FileTmp();
+        $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
         return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$request->Contract_id);
     }
     public function failRatesSurchrgesForNewContracts($id){
@@ -3344,7 +3408,7 @@ class ContractsController extends Controller
         $objCalculationType = new CalculationType();
         $objsurcharge       = new Surcharge();
         $objCalculationType = new CalculationType();
-        
+
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
@@ -3354,7 +3418,7 @@ class ContractsController extends Controller
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->all()->pluck('name','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-        
+
         //------------------------------- Rates ---------------------------------------------------------------
 
         $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
@@ -3481,7 +3545,7 @@ class ContractsController extends Controller
             $carrAIn = "";
             $failrates->push($colec);
         }
-        
+
         //------------------------------- Surcharge -----------------------------------------------------------
 
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
@@ -3489,7 +3553,7 @@ class ContractsController extends Controller
 
         $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->get();
         $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
-        
+
         $failsurchargecoll = collect([]);
         foreach($failsurchargeS as $failsurcharge){
             $classdorigin           =  'color:green';
@@ -3565,7 +3629,7 @@ class ContractsController extends Controller
                 $ammountA       = $ammountA[0].' (error)';
                 $classammount   = 'color:red';
             }
-            
+
             $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
             $currencyAIn  = $currencyOb['id'];
             $currencyC    = count($currencyA);
@@ -3576,7 +3640,7 @@ class ContractsController extends Controller
                 $currencyA      = $currencyA[0].' (error)';
                 $classcurrency  = 'color:red';
             }
-            
+
             $typedestinyLB    = TypeDestiny::where('description','=',$failsurcharge['typedestiny_id'])->first();
 
             $destinyLB        = Harbor::where('id','=',$destinationA[0])->first();
@@ -3612,23 +3676,23 @@ class ContractsController extends Controller
         }
         //dd($failsurchargecoll);
         //------------------------------------ Return ---------------------------------------------------------
-        
+
         return  view('contracts.FailRatesSurchargerNewC',compact('rates',
-                                                       'failrates',
-                                                       'countfailrates',
-                                                       'countrates',
-                                                       'goodsurcharges',
-                                                       'failsurchargecoll',
-                                                       'countfailsurcharge',
-                                                       'countgoodsurcharge',
-                                                       'typedestiny',
-                                                       'surchargeSelect',
-                                                       'carrierSelect',
-                                                       'harbor',
-                                                       'currency',
-                                                       'calculationtypeselect',
-                                                       'id'
-                                                      )); //*/
+                                                                 'failrates',
+                                                                 'countfailrates',
+                                                                 'countrates',
+                                                                 'goodsurcharges',
+                                                                 'failsurchargecoll',
+                                                                 'countfailsurcharge',
+                                                                 'countgoodsurcharge',
+                                                                 'typedestiny',
+                                                                 'surchargeSelect',
+                                                                 'carrierSelect',
+                                                                 'harbor',
+                                                                 'currency',
+                                                                 'calculationtypeselect',
+                                                                 'id'
+                                                                )); //*/
     }
 
 }
