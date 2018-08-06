@@ -45,7 +45,7 @@ function save(id,idval){
         'Updated!',
         'Your rate has been updated.',
         'success'
-        )
+      )
       $("#save"+id).attr('hidden','true');
       $("#cancel"+id).attr('hidden','true');
       $("#edit"+id).removeAttr('hidden');
@@ -114,7 +114,7 @@ function save_l(id,idval){
         'Updated!',
         'Your local charge has been updated.',
         'success'
-        )
+      )
       $("#save_l"+id).attr('hidden','true');
       $("#cancel_l"+id).attr('hidden','true');
       $("#remove_l"+id).attr('hidden','true');
@@ -192,7 +192,7 @@ $(document).on('click', '#default-currency-submit', function () {
               'Done!',
               'Your choice has been saved.',
               'success'
-              )
+            )
           }
           $("#default-currency-submit").prop("disabled", false);
         }
@@ -225,7 +225,7 @@ $(document).on('click', '#delete-contact', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-            )
+          )
           $(theElement).closest('li').remove();
         }
       });
@@ -382,8 +382,8 @@ $(document).on('change', '#type_local_markup_3', function (e) {
 });
 
 /********
-  Quotes
-  ********/
+    Quotes
+    ********/
 
 
 //Btn back
@@ -422,13 +422,13 @@ $(document).on('click', '#air_type', function (e) {
   $("input[name=qty_20]").val('');
   $("input[name=qty_40]").val('');
   $("input[name=qty_40_hc]").val('');
-  
+
 });
 
 //Clone load lcl form
 $(document).on('click', '#add_load_lcl_air', function (e) {
   var $template = $('#lcl_air_load_template'),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -452,7 +452,7 @@ $(document).on('click', '#duplicate-quote', function (e) {
         'Success!',
         'The quote has been duplicated.',
         'success'
-        )
+      )
     }
   });
 });
@@ -473,7 +473,7 @@ $(document).on('change', '#origin_harbor', function (e) {
 
 $(document).on('click', '.addButtonOrigin', function (e) {
   var $template = $('#origin_ammounts'),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -481,7 +481,7 @@ $(document).on('click', '.addButtonOrigin', function (e) {
 });
 $(document).on('click', '.addButton', function (e) {
   var $template = $('#freight_ammounts'),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -507,7 +507,7 @@ $(document).on('click', '#delete-quote', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-            )
+          )
           $(theElement).closest('tr').remove();
         }
       });
@@ -518,7 +518,7 @@ $(document).on('click', '#delete-quote', function () {
 
 $(document).on('click', '.addButtonDestination', function (e) {
   var $template = $('#destination_ammounts'),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -688,8 +688,17 @@ $(document).on('click', '#create-quote', function (e) {
 
 });
 
+
+
 $( document ).ready(function() {
-  $( "select[name='company_id']" ).on('change', function() {
+
+
+  $("select[name='company_id']").val('');
+  //$("select[name='company_id']").select2('val','');
+
+  $('#select2-m_select2_2_modal-container').text('Please an option');
+
+  $("select[name='company_id']").on('change', function() {
     var company_id = $(this).val();
     if(company_id) {
       $.ajax({
@@ -989,13 +998,13 @@ $(document).on('click', '#send-pdf-quote', function () {
             'Done!',
             'Your message has been sent.',
             'success'
-            )
+          )
         }else{
           swal(
             'Error!',
             'Your message has not been sent.',
             'error'
-            )
+          )
         }
       }
     });
@@ -1004,7 +1013,7 @@ $(document).on('click', '#send-pdf-quote', function () {
       '',
       'Please choose an email template.',
       'warning'
-      )
+    )
   }
 });
 
@@ -1024,13 +1033,13 @@ $(document).on('change', '#status_quote_id', function () {
           'Done!',
           'Status updated.',
           'success'
-          )
+        )
       }else{
         swal(
           'Error!',
           'Has ocurred an error.',
           'error'
-          )
+        )
       }
     }
   });
@@ -1055,11 +1064,11 @@ $(document).on('change', '#email_template', function () {
         tinymce.init({
           selector: "#email-body",
           plugins: [
-          "advlist autolink lists link charmap print preview hr anchor pagebreak",
-          "searchreplace wordcount visualblocks visualchars code fullscreen",
-          "insertdatetime nonbreaking save table contextmenu directionality",
-          "emoticons paste textcolor colorpicker textpattern codesample",
-          "fullpage toc imagetools help"
+            "advlist autolink lists link charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime nonbreaking save table contextmenu directionality",
+            "emoticons paste textcolor colorpicker textpattern codesample",
+            "fullpage toc imagetools help"
           ],
           toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
           menubar: false,
@@ -1076,9 +1085,9 @@ $(document).on('change', '#email_template', function () {
 
         });
         $('.editor').html(data.message).tinymce({
-         theme: "modern",
-       });
-        
+          theme: "modern",
+        });
+
       }
     });
   }
@@ -1115,14 +1124,14 @@ $(document).on('click', '#delete-contact', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-              )
+            )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-              )
+            )
             console.log(data.message);
           }
         }
@@ -1168,14 +1177,14 @@ $(document).on('click', '#delete-company', function () {
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
-                        )
+                      )
                       $(theElement).closest('tr').remove();
                     }else{
                       swal(
                         'Error!',
                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                         'error'
-                        )
+                      )
                       console.log(data.message);
                     }
                   }
@@ -1192,14 +1201,14 @@ $(document).on('click', '#delete-company', function () {
                     'Deleted!',
                     'Your file has been deleted.',
                     'success'
-                    )
+                  )
                   $(theElement).closest('tr').remove();
                 }else{
                   swal(
                     'Error!',
                     'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                     'warning'
-                    )
+                  )
                   console.log(data.message);
                 }
               }
@@ -1243,7 +1252,7 @@ $(document).on('click', '#delete-pricing', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-              )
+            )
             $(theElement).closest('tr').remove();
 
           }
@@ -1280,14 +1289,14 @@ $(document).on('click', '#delete-saleterm', function () {
               'Deleted!',
               'Your file has been deleted.',
               'success'
-              )
+            )
             $(theElement).closest('tr').remove();
           }else{
             swal(
               'Error!',
               'Your can\'t delete this contact because have quotes related.',
               'warning'
-              )
+            )
             console.log(data.message);
           }
         }
@@ -1334,7 +1343,7 @@ $(document).on('click', '#savecompany', function () {
             'Done!',
             'Status updated.',
             'success'
-            )
+          )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1372,13 +1381,15 @@ $(document).on('click', '#savecontact', function () {
           $.each(dataC, function(key, value) {
             $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
-          $('#contactModal').modal('hide');
 
+          $('#contactModal').modal('hide');
+      
+         
           swal(
             'Done!',
             'Status updated.',
             'success'
-            )
+          )
         },
         error: function (request, status, error) {
           alert(request.responseText);
@@ -1390,6 +1401,7 @@ $(document).on('click', '#savecontact', function () {
     }
 
   });
+
 });
 
 $('#sale_term_id').select2({
@@ -1408,7 +1420,7 @@ $(document).on('click', '#select-schedule', function () {
 
       schevalues.push($valor);
     });
-    
+
 
     //  alert(schevalues);
     $("#infoschedule").removeAttr('hidden');
