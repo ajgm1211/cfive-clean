@@ -398,7 +398,7 @@ $subtotalDestiny = 0;
                         <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
                         <div class="input-group-btn">
                           <div class="btn-group">
-                            {{ Form::select('freight_ammount_currency[]',$currency,$freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}              
+                            {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}              
                           </div>
                         </div>
                       </div>
@@ -438,7 +438,7 @@ $subtotalDestiny = 0;
                         <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
                         <div class="input-group-btn">
                           <div class="btn-group">
-                            {{ Form::select('freight_ammount_currency[]',$currency,$freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}              
+                            {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}              
                           </div>
                         </div>
                       </div>
