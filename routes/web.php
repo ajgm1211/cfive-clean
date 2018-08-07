@@ -70,7 +70,7 @@ Route::group(['prefix' => 'mail', 'middleware' => ['auth']], function(){
 Route::middleware(['auth'])->prefix('surcharges')->group(function () {
   Route::get('add', 'SurchargesController@add')->name('surcharges.add');
   Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
-  Route::put('delete-surcharges/{surcharge_id}', ['uses' => 'SurchargesController@destroySubcharge', 'as' => 'delete-surcharges']);
+  Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 

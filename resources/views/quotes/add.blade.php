@@ -239,13 +239,13 @@
                                                                         <div class="col-md-4">
                                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
+                                                                                    <input class="height form-control" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
+                                                                                    <input class="width form-control" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
+                                                                                    <input class="large form-control" min="0" name="large[]" id="large" type="number" placeholder="L"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
                                                                                     <div class="input-group-btn">
@@ -272,11 +272,8 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span></p>
-                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
-                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
-                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
+                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>                                                        
                                                                     <div class="row hide" id="lcl_air_load_template" style="padding-top: 15px;">
@@ -326,11 +323,8 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class="small"><span class="quantity_1"></span> <span class="volume_1"></span> <span class="weight_1"></span>   | <a class="remove_lcl_air_load"><i class="fa fa-trash"></i></a></p>
-                                                                            <input type="hidden" class="quantity_input" id="quantity_input" name="quantity_input[]"/>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume_input[]"/>
-                                                                            <input type="hidden" class="weight_input" id="weight_input" name="weight_input[]"/>
-                                                                            <input type="hidden" class="type_cargo_input" id="type_cargo_input" name="type_cargo_input[]"/>
+                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>                                                            
                                                                     <div class="row">
@@ -912,9 +906,11 @@
                                                 <button type="submit" class="btn btn-primary">
                                                     Save
                                                 </button>
+                                                @if($email_templates)
                                                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
                                                     Save and send
                                                 </button>
+                                                @endif
                                             </div>
                                         </div>
                                         <hr>
@@ -952,7 +948,9 @@
                             </div>
                         </div>
                     </div>
+                    @if($email_templates)
                     @include('quotes.partials.submitQuoteEmailModal');
+                    @endif
                     {!! Form::close() !!}
                 </div>
 
@@ -1005,6 +1003,7 @@
 
 
 @include('quotes.partials.schedulesModal');
+
 
 @endsection
 

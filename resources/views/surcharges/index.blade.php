@@ -53,8 +53,6 @@
                 <div class="row align-items-center">
                     <div class="col-xl-8 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
-
-
                             <div class="col-md-4">
                                 <div class="m-input-icon m-input-icon--left">
                                     <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
@@ -68,7 +66,6 @@
                         </div>
                     </div>
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-
                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-plus"></i>
@@ -77,8 +74,6 @@
                                 </span>
                             </span>
                         </button>
-
-
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                     </div>
                 </div>
@@ -109,7 +104,7 @@
                                 <i class="la la-edit"></i>
                             </a>
 
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " onclick="AbrirModal('delete',{{  $arr->id }})" >
+                            <a href="#" id="delete-surcharge" data-surcharge-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" >
                                 <i class="la la-eraser"></i>
                             </a>
 
@@ -268,13 +263,14 @@
 </div>
 </div>
 </div>
-</div>
+
 @endsection
 
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-saleterms.js" type="text/javascript"></script>
+<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script>
 
     function AbrirModal(action,id){
