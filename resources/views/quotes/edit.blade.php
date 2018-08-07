@@ -299,7 +299,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
+                                                    @if(count($origin_ammounts)>0)
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Origin ammounts</h5>
@@ -408,7 +408,8 @@
                                                             </h5>                                                            
                                                         </div>
                                                     </div>
-
+                                                    @endif
+                                                    @if(count($freight_ammounts)>0)
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Freight ammounts</h5>
@@ -517,6 +518,8 @@
                                                             </h5>
                                                         </div>
                                                     </div>
+                                                    @endif
+                                                    @if(count($destination_ammounts)>0)
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Destination ammounts</h5>
@@ -625,6 +628,7 @@
                                                             </h5>
                                                         </div>
                                                     </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -659,7 +663,9 @@
         </div>
     </div>
 </div>
+
 @include('quotes.partials.sendQuoteModal');
+
 @endsection
 
 @section('js')
@@ -671,5 +677,7 @@
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="s/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 
 @stop

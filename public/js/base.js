@@ -203,6 +203,47 @@ $(document).on('click', '#default-currency-submit', function () {
   });
 });
 
+//Surcharges
+
+$(document).on('click', '#delete-surcharge', function () {
+  var id = $(this).attr('data-surcharge-id');
+
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'surcharges/delete/' + id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+              )
+            $(theElement).closest('tr').remove();
+          }else{
+            swal(
+              'Error!',
+              'Your can\'t delete this surcharge because have sale terms related.',
+              'warning'
+              )
+            console.log(data.message);
+          }
+        }
+      });
+    }
+  });
+});
+
+//Contacts
+
 $(document).on('click', '.remove', function () {
   $(this).closest('tr').remove();
 });
@@ -719,6 +760,7 @@ $( document ).ready(function() {
   });
 });
 
+//Calculando origin ammounts
 $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -775,6 +817,7 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
 });
 
 
+//Calculando freight ammounts
 $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -829,6 +872,7 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
   });
 });
 
+//Calculando destinations ammounts
 $(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -884,6 +928,8 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
     });
   });
 });
+
+//Calculando total origin
 $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -898,6 +944,7 @@ $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   $("#total_origin_ammount").change();
 });
 
+//Calculando total freight
 $(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -910,6 +957,7 @@ $(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
   $("#total_freight_ammount").change();
 });
 
+//Calculando total destination
 $(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -961,6 +1009,68 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
   sum = sum.toFixed(2);
 
   $("#total").html(" "+sum);
+});
+
+
+//Calcular el volumen individual
+$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", function(){
+    var sumAl = 0;
+    var sumAn = 0;
+    var sumLa = 0;
+    var sumQ = 0;
+    var result = 0;
+    var width = 0;
+    var length = 0;
+    var thickness = 0;
+    var quantity = 0;
+    var volume = 10;
+    $( ".width" ).each(function() {
+        $( this).each(function() {
+            width = $(this).val();
+            if (!isNaN(width)) {
+                width = parseInt(width);
+            }
+        });
+    });
+    $( ".height" ).each(function() {
+        $( this).each(function() {
+            thickness = $(this).val();
+            if (!isNaN(thickness)) {
+                thickness = parseInt(thickness);
+            }
+        });
+    });
+    $( ".quantity" ).each(function() {
+        $( this).each(function() {
+            quantity = $(this).val();
+            if (!isNaN(quantity)) {
+                quantity = parseInt(quantity);
+            }
+        });
+    });
+    $( ".large" ).each(function() {
+        $( this).each(function() {
+            length = $(this).val();
+            if (!isNaN(length)) {
+                length = parseInt(length);
+            }
+            thickness = $(this).closest('.row').find('.height').val();
+            length = $(this).closest('.row').find('.large').val();
+            width = $(this).closest('.row').find('.width').val();
+            quantity = $(this).closest('.row').find('.quantity').val();
+            console.log(thickness+length+width+quantity)
+
+            if(thickness > 0 || length > 0 || quantity > 0) {
+                  volume = Math.round(thickness * length * width * quantity / 10000) / 100;
+                if (isNaN(volume)) {
+                  volume = 0;
+                }
+            }
+            $(this).closest('.row').find('.volume').html('Volume: '+volume + " m<sup>3</sup>");
+            $(this).closest('.row').find('.volume_input').val(volume);
+            $(this).closest('.row').find('.volume_input').change();
+        });
+    });
 });
 
 $(document).on('click', '#send-pdf-quote', function () {
@@ -1292,9 +1402,7 @@ $(document).on('click', '#delete-saleterm', function () {
           }
         }
       });
-
     }
-
   });
 });
 
