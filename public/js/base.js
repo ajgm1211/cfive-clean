@@ -701,6 +701,7 @@ $( document ).ready(function() {
   $("select[name='company_id']").on('change', function() {
     var company_id = $(this).val();
     if(company_id) {
+       $('select[name="contact_id"]').empty();
       $.ajax({
         url: "company/contact/id/"+company_id,
         dataType: 'json',
