@@ -1598,36 +1598,38 @@ class QuoteController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-  public function edit($id)
-  {
-    $quote = Quote::findOrFail($id);
-    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-    $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
-    $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
-    $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
-    $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-    $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
-    $currencies = Currency::pluck('alphacode','id');
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $currency_cfg = Currency::find($company_user->currency_id);
-      if($currency_cfg->alphacode=='USD'){
-        $exchange = Currency::where('api_code_eur','EURUSD')->first();
-      }else{
-        $exchange = Currency::where('api_code','USDEUR')->first();
-      }
-    }
-    $incoterm = Incoterm::pluck('name','id');
+ public function edit($id)
+ {
+   $email_templates='';
 
-    return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
+   $quote = Quote::findOrFail($id);
+   $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
+   $harbors = Harbor::all()->pluck('name','id');
+   $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+   $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+   $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+   $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+   $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+   $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+   $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+   $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
+   $currencies = Currency::pluck('alphacode','id');
+   if(\Auth::user()->company_user_id){
+     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+     $currency_cfg = Currency::find($company_user->currency_id);
+     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+     if($currency_cfg->alphacode=='USD'){
+       $exchange = Currency::where('api_code_eur','EURUSD')->first();
+     }else{
+       $exchange = Currency::where('api_code','USDEUR')->first();
+     }
+   }
+   $incoterm = Incoterm::pluck('name','id');
 
-  }
+   return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
+     'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates]);
 
+ }
   /**
 	 * Store a newly created resource in storage.
 	 *
