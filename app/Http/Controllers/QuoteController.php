@@ -1574,6 +1574,8 @@ class QuoteController extends Controller
 	 */
   public function edit($id)
   {
+    $email_templates='';
+
     $quote = Quote::findOrFail($id);
     $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
@@ -1589,6 +1591,7 @@ class QuoteController extends Controller
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
+      $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
       if($currency_cfg->alphacode=='USD'){
         $exchange = Currency::where('api_code_eur','EURUSD')->first();
       }else{
@@ -1598,7 +1601,7 @@ class QuoteController extends Controller
     $incoterm = Incoterm::pluck('name','id');
 
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates]);
 
   }
 
@@ -2062,6 +2065,8 @@ class QuoteController extends Controller
     $status_quotes=StatusQuote::all()->pluck('name','id');
     $currencies = Currency::pluck('alphacode','id');
 
+    $package_loads = PackageLoad::where('quote_id',$id)->get();
+
     if(\Auth::user()->company_user_id){
       $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
@@ -2084,7 +2089,7 @@ class QuoteController extends Controller
 
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
       'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates]);
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads]);
 
   }
 

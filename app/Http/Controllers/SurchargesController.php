@@ -99,9 +99,15 @@ public function update(Request $request, $id)
 
 public function destroy($id)
 {
-    $surcharges = Surcharge::find($id);
-    $surcharges->delete();
-    return $surcharges;
+    try {
+        $surcharge = Surcharge::find($id);
+        $surcharge->delete();
+
+        return response()->json(['message' => 'Ok']);
+    }
+    catch (\Exception $e) {
+        return response()->json(['message' => $e]);
+    }    
 }
 
 public function destroySubcharge(Request $request,$id)

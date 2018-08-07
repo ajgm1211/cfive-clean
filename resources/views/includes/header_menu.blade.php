@@ -71,14 +71,6 @@
                 Surchargers list
               </span>
             </a>
-          </li>
-          <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-            <a  href="{{route('saleterms.index')}}" class="m-menu__link ">
-              <i class="m-menu__link-icon flaticon-business"></i>
-              <span class="m-menu__link-text">
-                Sale terms list
-              </span>
-            </a>
           </li>                    
         </ul>
       </div>
