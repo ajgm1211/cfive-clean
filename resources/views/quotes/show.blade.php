@@ -176,7 +176,7 @@
                                     <td>{{$package_load->width}} cm</td>
                                     <td>{{$package_load->large}} cm</td>
                                     <td>{{$package_load->weight}} kg</td>
-                                    <td></td>
+                                    <td>{{$package_load->volume}} m<sup>3</sup></td>
                                 </tr>
                                 @endforeach
                             </tbody>

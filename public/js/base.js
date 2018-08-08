@@ -478,7 +478,7 @@ $(document).on('click', '#add_load_lcl_air', function (e) {
 
 //Remove lcl closest row
 $(document).on('click', '.remove_lcl_air_load', function (e) {
-  var $row = $(this).closest('.row').remove();
+  var $row = $(this).closest('.template').remove();
   $row.remove();
 });
 
@@ -1011,7 +1011,6 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
   $("#total").html(" "+sum);
 });
 
-
 //Calcular el volumen individual
 $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", function(){
     var sumAl = 0;
@@ -1023,7 +1022,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", fun
     var length = 0;
     var thickness = 0;
     var quantity = 0;
-    var volume = 10;
+    var volume = 0;
     $( ".width" ).each(function() {
         $( this).each(function() {
             width = $(this).val();
@@ -1066,9 +1065,9 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", fun
                   volume = 0;
                 }
             }
-            $(this).closest('.row').find('.volume').html('Volume: '+volume + " m<sup>3</sup>");
-            $(this).closest('.row').find('.volume_input').val(volume);
-            $(this).closest('.row').find('.volume_input').change();
+            $(this).closest('.template').find('.volume').html("Volume: "+volume+" m<sup>3</sup>");
+            $(this).closest('.template').find('.volume_input').val(volume);
+            $(this).closest('.template').find('.volume_input').change();
         });
     });
 });

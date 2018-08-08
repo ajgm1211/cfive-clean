@@ -3,11 +3,6 @@
 @section('content')
 
 <div class="m-content">
-    <div class="row">
-        <div class="col-md-2">
-            <button class="btn btn-primary btn-block">Schedules</button>
-        </div>
-    </div>
     <br>
     @if(Session::has('message.nivel'))
     <div class="col-md-12">
@@ -223,9 +218,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="tab_1_2">
-                                                                    <div class="row">
+                                                                    <div class="row template">
                                                                         <div class="col-md-2">
-                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
+                                                                            <select name="type_load_cargo[] size-12px" class="type_cargo form-control size-12px">
                                                                                 <option value="">Choose an option</option>
                                                                                 <option value="1">Pallets</option>
                                                                                 <option value="2">Packages</option>
@@ -234,24 +229,25 @@
                                                                             <input type="hidden" id="total_packages" name="total_packages"/>
                                                                         </div>
                                                                         <div class="col-md-2">
-                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
                                                                         </div>
-                                                                        <div class="col-md-4">
+                                                                        <div class="col-md-5" >
                                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="height form-control" min="0" name="height[]" id="height" type="number" placeholder="H"/>
+                                                                                    <input class="height form-control size-12px" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="width form-control" min="0" name="width[]" id="width" type="number" placeholder="W"/>
+                                                                                    <input class="width form-control size-12px" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="large form-control" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                                                                                    <input class="large form-control size-12px" min="0" name="large[]" id="large" type="number" placeholder="L"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
+
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
                                                                                             <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
-                                                                                                <span class="xs-text">CM</span> <span class="caret"></span>
+                                                                                                <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                                                                             </button>
                                                                                             <ul class="dropdown-menu" role="menu">
 
@@ -261,10 +257,10 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-3">
+                                                                        <div class="col-md-2">
                                                                             <div class="input-group">
-                                                                                <input type="number" id="weight" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Weight" aria-label="...">
-                                                                                <div class="input-group-btn">
+                                                                                <input type="number" id="weight" name="weight[]" min="0" step="0.01" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                                                                                <!--<div class="input-group-btn">
                                                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                                                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                                                     </ul>
@@ -276,33 +272,33 @@
                                                                             <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>                                                        
-                                                                    <div class="row hide" id="lcl_air_load_template" style="padding-top: 15px;">
+                                                                    <div class="row template hide" id="lcl_air_load_template" style="padding-top: 15px;">
                                                                         <div class="col-md-2">
-                                                                            <select name="type_load_cargo[]" class="type_cargo form-control">
+                                                                            <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
                                                                                 <option value="">Choose an option</option>
                                                                                 <option value="1">Pallets</option>
                                                                                 <option value="2">Packages</option>
                                                                             </select>
                                                                         </div>
                                                                         <div class="col-md-2">
-                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control" type="number"/>
+                                                                            <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
                                                                         </div>
-                                                                        <div class="col-md-4">
+                                                                        <div class="col-md-5">
                                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="height form-control" min="0" name="height[]" id="al" type="number" placeholder="Height"/>
+                                                                                    <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="width form-control" min="0" name="width[]" id="an" type="number" placeholder="Width"/>
+                                                                                    <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
-                                                                                    <input class="large form-control" min="0" name="large[]" id="la" type="number" placeholder="Large"/>
+                                                                                    <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
                                                                                 </div>
                                                                                 <div class="btn-group" role="group">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
                                                                                             <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
-                                                                                                <span class="xs-text">CM</span> <span class="caret"></span>
+                                                                                                <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                                                                             </button>
                                                                                             <ul class="dropdown-menu" role="menu">
 
@@ -312,10 +308,10 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-3">
+                                                                        <div class="col-md-2">
                                                                             <div class="input-group">
-                                                                                <input type="number" name="weight[]" min="0" step="0.01" class="weight form-control" placeholder="Peso" aria-label="...">
-                                                                                <div class="input-group-btn">
+                                                                                <input type="number" name="weight[]" min="0" step="0.01" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                                                                                <!--<div class="input-group-btn">
                                                                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                                                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                                                     </ul>
@@ -324,6 +320,7 @@
                                                                         </div>
                                                                         <div class="col-md-1">
                                                                             <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                            <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
                                                                             <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>                                                            
@@ -371,7 +368,7 @@
                                                         <div class="col-md-3">
                                                             <label>Pick up date</label>
                                                             <div class="input-group date">
-                                                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true']) !!}
+                                                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true','autocomplete'=>'off']) !!}
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text">
                                                                         <i class="la la-calendar-check-o"></i>
@@ -407,7 +404,7 @@
                                                             <br>
                                                             <label>Validity</label>
                                                             <div class="input-group date">
-                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true','autocomplete'=>'off']) !!}
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text">
                                                                         <i class="la la-calendar-check-o"></i>
