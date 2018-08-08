@@ -2237,38 +2237,68 @@ class ContractsController extends Controller
 
                                    //---------------- CURRENCY 20' + value ---------------------------------------------
 
-                                   $currencResultwen = str_replace($caracteres,'',$twentyArr[1]);
+                                   if(count($twentyArr) > 1){
+                                       $currencResultwen = str_replace($caracteres,'',$twentyArr[1]);
+                                   } else {
+                                       $currencResultwen = '';
+                                   }
+
                                    $currenctwen = Currency::where('alphacode','=',$currencResultwen)->first();
+                                   
                                    if(empty($currenctwen->id) != true){
                                        $curreExitwenBol = true;
                                        $currencyValtwen =  $currenctwen->id;
                                    }
                                    else{
-                                       $currencyValtwen = $twentyArr[1].'_E_E';
+                                       if(count($twentyArr) > 1){
+                                           $currencyValtwen = $twentyArr[1].'_E_E';
+                                       } else{
+                                           $currencyValtwen = '_E_E';
+                                       }
                                    }
 
                                    //---------------- CURRENCY 40'------------------------------------------------------
 
-                                   $currencResulfor = str_replace($caracteres,'',$fortyArr[1]);
+                                   if(count($fortyArr) > 1){
+                                       $currencResulfor = str_replace($caracteres,'',$fortyArr[1]);
+                                   } else{
+                                       $currencResulfor = '';
+                                   }
+
                                    $currencfor = Currency::where('alphacode','=',$currencResulfor)->first();
+                                   
                                    if(empty($currencfor->id) != true){
                                        $curreExiforBol = true;
                                        $currencyValfor =  $currencfor->id;
                                    }
                                    else{
-                                       $currencyValfor = $fortyArr[1].'_E_E';
+                                       if(count($fortyArr) > 1){
+                                           $currencyValfor = $fortyArr[1].'_E_E';
+                                       } else {
+                                           $currencyValfor = '_E_E';
+                                       }
                                    }
 
                                    //---------------- CURRENCY 40'HC----------------------------------------------------
 
-                                   $currencResulforhc = str_replace($caracteres,'',$fortyhcArr[1]);
+                                   if(count($fortyhcArr) > 1){
+                                       $currencResulforhc = str_replace($caracteres,'',$fortyhcArr[1]);
+                                   } else {
+                                       $currencResulforhc = '';
+                                   }
+                                   
                                    $currencforhc = Currency::where('alphacode','=',$currencResulforhc)->first();
+                                   
                                    if(empty($currencforhc->id) != true){
                                        $curreExiforHCBol = true;
                                        $currencyValforHC =  $currencforhc->id;
                                    }
                                    else{
-                                       $currencyValforHC = $fortyhcArr[1].'_E_E';
+                                       if(count($fortyhcArr) > 1){
+                                           $currencyValforHC = $fortyhcArr[1].'_E_E';
+                                       } else{
+                                           $currencyValforHC = '';
+                                       }
                                    }
 
                                    if($curreExitwenBol == true && $curreExiforBol == true && $curreExiforHCBol == true){
@@ -3196,6 +3226,26 @@ class ContractsController extends Controller
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
+                                                       if($twentyVal != 0){
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValtwen;
+                                                           } 
+                                                           $ammount = $twentyVal;
+
+                                                       } else if ($fortyVal != 0){
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValfor;
+                                                           } 
+                                                           $ammount = $fortyVal;
+
+                                                       }else {
+
+                                                           if($request->$statustypecurren == 2){
+                                                               $currencyVal = $currencyValforHC;
+                                                           } 
+                                                           $ammount = $fortyhcVal;
+                                                       }
+
                                                        if($twentyArr[0] != 0){
                                                            FailSurCharge::create([
                                                                'surcharge_id'       => $surchargeVal,
@@ -3204,7 +3254,7 @@ class ContractsController extends Controller
                                                                'typedestiny_id'     => 'freight',
                                                                'contract_id'        => $request->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
-                                                               'ammount'            => $twentyVal, //////
+                                                               'ammount'            => $ammount, //////
                                                                'currency_id'        => $currencyVal, //////
                                                                'carrier_id'         => $carrierVal
                                                            ]);
