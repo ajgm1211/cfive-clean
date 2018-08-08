@@ -65,13 +65,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     <div class="m-portlet__head-tools">
                         <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
                             <li class="nav-item m-tabs__item">
-                                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
+                                <a class="nav-link m-tabs__link " data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                     <i class="la la-cog"></i>
                                     Routes
                                 </a>
                             </li>
                             <li class="nav-item m-tabs__item">
-                                <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                                     <i class="la la-briefcase"></i>
                                     Surcharges
                                 </a>
@@ -87,7 +87,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 </div>
                 <div class="m-portlet__body">
                     <div class="tab-content">
-                        <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
+                        <div class="tab-pane " id="m_tabs_6_1" role="tabpanel">
                             <a  id="new" class="">
 
                                 <button type="button" class="btn btn-brand">
@@ -138,7 +138,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                 </thead>
                                 <tbody>
 
-
+       <!--
                                     @foreach ($contracts->rates as $rates)
 
                                     <tr id='tr{{++$loop->index}}' disabled='true'>
@@ -202,6 +202,8 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 
                                     @endforeach
 
+-->
+
                                     <tr   id='tclone' hidden="true" >
                                         <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
                                         <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
@@ -218,7 +220,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     </tr>
                             </table>
                         </div>
-                        <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
+                        <div class="tab-pane active" id="m_tabs_6_2" role="tabpanel">
                             <a  id="newL" class="">
 
                                 <button type="button" class="btn btn-brand">
@@ -269,7 +271,8 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($contracts->localcharges as $localcharges)
+                                  
+                                    @foreach ($localchar as $localcharges)
                                     <tr id='tr_l{{++$loop->index}}'>
                                         <td width='10%'>
                                             <div id="divtype{{$loop->index}}"  class="val">{!! $localcharges->surcharge->name !!}</div>
@@ -345,9 +348,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                         </td>
                                     </tr>
                                     @endforeach
-
+                                  
+                                  
+                                  
+                                  
                                 </tbody>
                             </table>
+                            {{ $localchar->links() }}
 
                             <table hidden="true">
                                 <tr   id='tclone2' hidden="true"  >
@@ -495,7 +502,10 @@ Load
 
 <script type="application/x-javascript">
   $(document).ready( function () {
-    $('#sample_editable_1').DataTable();
+    $('#sample_editable_1').DataTable({
+      paging: false,
+      
+    });
   } );
 </script>
 
