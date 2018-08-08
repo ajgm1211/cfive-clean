@@ -21,6 +21,7 @@ class CreatePackageLoadsTable extends Migration
             $table->float('width');
             $table->float('large');
             $table->float('weight');
+            $table->float('volume');
             $table->integer('quote_id')->unsigned();
             $table->foreign('quote_id')->references('id')->on('quotes')->onDelete('cascade');            
             $table->timestamps();

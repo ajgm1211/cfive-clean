@@ -16,9 +16,9 @@ class CreateSaleTermSurchargesTable extends Migration
         Schema::create('sale_term_surcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('sale_term_id')->unsigned();
-            $table->foreign('sale_term_id')->references('id')->on('sale_terms');
+            $table->foreign('sale_term_id')->references('id')->on('sale_terms')->onDelete('cascade');
             $table->integer('surcharge_id')->unsigned();
-            $table->foreign('surcharge_id')->references('id')->on('surcharges');
+            $table->foreign('surcharge_id')->references('id')->on('surcharges')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1616,8 +1616,16 @@ class QuoteController extends Controller
 
     $input = Input::all();
 
+    $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+    $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+    $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+
+    $sum_markup_origin=array_sum($total_markup_origin);
+    $sum_markup_freight=array_sum($total_markup_freight);
+    $sum_markup_destination=array_sum($total_markup_destination);
+
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
     $quote=Quote::create($request->all());
 
     if($input['origin_ammount_charge']!=[null]) {
@@ -1779,6 +1787,7 @@ class QuoteController extends Controller
       $width = array_values( array_filter($input['width']) );
       $large = array_values( array_filter($input['large']) );
       $weight = array_values( array_filter($input['weight']) );
+      $volume = array_values( array_filter($input['volume']) );
       
       foreach($type_cargo as $key=>$item){
         $package_load = new PackageLoad();
@@ -1789,6 +1798,7 @@ class QuoteController extends Controller
         $package_load->width = $width[$key];
         $package_load->large = $large[$key];
         $package_load->weight = $weight[$key];
+        $package_load->volume = $volume[$key];
         
         $package_load->save();
       }
@@ -1977,6 +1987,7 @@ class QuoteController extends Controller
         $width = array_values( array_filter($input['width']) );
         $large = array_values( array_filter($input['large']) );
         $weight = array_values( array_filter($input['weight']) );
+        $volume = array_values( array_filter($input['volume']) );
 
         foreach($type_cargo as $key=>$item){
           $package_load = new PackageLoad();
@@ -1987,6 +1998,7 @@ class QuoteController extends Controller
           $package_load->width = $width[$key];
           $package_load->large = $large[$key];
           $package_load->weight = $weight[$key];
+          $package_load->volume = $volume[$key];
 
           $package_load->save();
         }
