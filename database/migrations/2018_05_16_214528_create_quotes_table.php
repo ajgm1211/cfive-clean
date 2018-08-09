@@ -35,6 +35,8 @@ class CreateQuotesTable extends Migration
             $table->foreign('contact_id')->references('id')->on('contacts');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency');
+            $table->integer('carrier_id')->unsigned();
+            $table->foreign('carrier_id')->references('id')->on('carriers');            
             $table->integer('type')->unsigned();
             $table->string('qty_20')->nullable();
             $table->string('qty_40')->nullable();

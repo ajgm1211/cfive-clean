@@ -121,7 +121,17 @@
                     </div>
                 </div>
             </div>
-
+            <div style="padding-top: 20px; padding-bottom: 20px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="title-quote size-14px">Carrier</h5>
+                        <hr>
+                    </div>
+                    <div class="col-md-12">
+                        <p>{{$quote->carrier->name}}</p>
+                    </div>
+                </div>
+            </div>
             <div style="padding-top: 20px; padding-bottom: 20px;">
                 <div class="row">
                     <div class="col-md-12">
