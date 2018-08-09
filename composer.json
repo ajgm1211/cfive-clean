@@ -19,7 +19,7 @@
         "maatwebsite/excel": "2.*",
         "orangehill/iseed": "dev-master",
         "pusher/pusher-php-server": "^3.1",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "^8.7"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

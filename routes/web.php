@@ -114,6 +114,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
   Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
   Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
+  
+  // DATATABLES
+  
+  Route::get('eloquent/object-data', 'ContractsController@data')->name('localchar.table');;
 
 });
 
