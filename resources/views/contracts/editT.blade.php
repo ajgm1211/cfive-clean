@@ -244,7 +244,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 <thead>
                   <tr>
                     <th>Type</th>
+                    <th>Origin Port</th>
+                    <th>Destination Port</th>
                     <th>Change Type</th>
+                    <th>Carrier</th>
+                    <th>Calculation Type</th>
                     <th>Ammount</th>
                     <th>Currency</th>
 
@@ -406,48 +410,53 @@ Load
 <script src="/js/editcontracts.js"></script>
 <script>                 
   $(function() {
+
     $('#users-table').DataTable({
       ajax:  "{{ route('localchar.table') }}",
       columns: [
         {data: 'type', name: 'type'},
+        {data: 'port_orig', name: 'port_orig'},
+        {data: 'port_dest', name: 'port_dest'},
         {data: 'changetype', name: 'changetype'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'calculation_type', name: 'calculation_type'},
         {data: 'ammount', name: 'ammount'},
         {data: 'currency', name: 'currency'}
       ]
-   ,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "deferLoading": 57,
-        "processing": true,
-        "dom": 'Bfrtip',
-        "paging": true,
-        buttons: [
-            {
-                extend: 'copyHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3]
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3]
-                }
-            },
-            {
-                extend: 'pdfHtml5',
-                exportOptions: {
-                    columns: [0, 1, 2, 3]
-                }
-            }
-        ]
+      ,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "deferLoading": 57,
+      "processing": true,
+      "dom": 'Bfrtip',
+      "paging": true,
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
 
 
     });
-    });  
+  });  
 </script>
 
 @stop
