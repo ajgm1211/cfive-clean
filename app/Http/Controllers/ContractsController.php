@@ -224,20 +224,44 @@ class ContractsController extends Controller
   public function data()
   {
 
-    $localchar = LocalCharge::where('contract_id',4)->with('localcharports.portOrig','localcharports.portDest','localcharcarriers')->get();
-  
+    $localchar = LocalCharge::where('contract_id',4)->get();
+
 
     return \DataTables::collection($localchar)
       ->addColumn('type', function (LocalCharge $localchar) {
-                              return $localchar->surcharge->name;
-                          })
+        return $localchar->surcharge->name;
+      })
+      ->addColumn('calculation_type', function (LocalCharge $localchar) {
+        return $localchar->calculationtype->name;
+      })
       ->addColumn('changetype', function (LocalCharge $localchar) {
-                              return $localchar->typedestiny->description;
-                          })
+        return $localchar->typedestiny->description;
+      })
       ->addColumn('currency', function (LocalCharge $localchar) {
-                              return $localchar->currency->alphacode ;
-                          })->make(true);
+        return $localchar->currency->alphacode ;
+      })
+      ->addColumn('port_orig', function (LocalCharge $localchar) {
+        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('name'));
+      })
+      ->addColumn('port_dest', function (LocalCharge $localchar) {
+        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('name'));
+      })
+      ->addColumn('carrier', function (LocalCharge $localchar) {
+        return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
+      })
+      ->make(true);
   }
+  /*
+          return $localchar->localcharports->unique()->map(function ($portOrig) {
+          return $portOrig->portOrig->name;
+      ->addColumn('title', function (LocalCharge $localchar) {
+        return $localchar->localcharports->map(function ($portOrig) {
+          return $portOrig->pluck('port_orig')->unique()->pluck('name');
+        })->implode('<br>');
+      })
+
+*/
+
 
   public function edit($id)
   {
