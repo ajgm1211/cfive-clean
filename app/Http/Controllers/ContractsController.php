@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadFileRateRequest;
 use App\FileTmp;
 use Illuminate\Support\Facades\Storage;
+use Yajra\Datatables\Datatables;
 
 class ContractsController extends Controller
 {
@@ -218,21 +219,40 @@ class ContractsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  public function edit($id)
+
+
+  public function data()
   {
-    $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->paginate('15')->first();
-    
-    
+
+    $localchar = LocalCharge::where('contract_id',4)->with('localcharports.portOrig','localcharports.portDest','localcharcarriers')->get();
   
 
+    return \DataTables::collection($localchar)
+      ->addColumn('type', function (LocalCharge $localchar) {
+                              return $localchar->surcharge->name;
+                          })
+      ->addColumn('changetype', function (LocalCharge $localchar) {
+                              return $localchar->typedestiny->description;
+                          })
+      ->addColumn('currency', function (LocalCharge $localchar) {
+                              return $localchar->currency->alphacode ;
+                          })->make(true);
+  }
+
+  public function edit($id)
+  {
+    $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->first();
+
+
+
+    /*
     $contracts = Contract::where('id',$id)->with(['localcharges' => function ($q) {
       $q->with('localcharports','localcharcarriers')->paginate('25');
     }])->firstOrFail();   
-    
-    $localchar = LocalCharge::where('contract_id',$id)->with('localcharports.portOrig','localcharports.portDest','localcharcarriers')->paginate('20');
-    
 
-  
+    $localchar = LocalCharge::where('contract_id',$id)->with('localcharports.portOrig','localcharports.portDest','localcharcarriers')->paginate('20');
+
+    */
 
 
     $objtypedestiny = new TypeDestiny();
@@ -271,8 +291,8 @@ class ContractsController extends Controller
                                  $q->where('company_user_id', '=', Auth::user()->company_user_id);
                                })->pluck('Name','id');
     }
-  //dd($contracts);
-    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','localchar'));
+    //dd($contracts);
+    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
   }
   /**
      * Update the specified resource in storage.
