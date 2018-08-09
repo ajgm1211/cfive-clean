@@ -400,7 +400,7 @@
                     }
                     else if(data.response == 2){
                         //duplicado
-                        swal("Error!", "Error Rate!", "warning");
+                        swal("Error Rate! ", "Error! The Rate already exist", "warning");
                     }
 
                 }

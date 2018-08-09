@@ -477,30 +477,31 @@ class ContractsController extends Controller
 
 
     public function UploadFileRateForContract(Request $request){
+        $requestobj = $request;
         $nombre='';
         try {
 
             $now = new \DateTime();
             $now = $now->format('dmY_His');
-            $file = $request->file('file');
+            $file = $requestobj->file('file');
             $ext = strtolower($file->getClientOriginalExtension());
             $validator = \Validator::make(
                 array('ext' => $ext),
                 array('ext' => 'in:xls,xlsx,csv')
             );
             if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('contracts.edit',$request->contract_id);
+                $requestobj->session()->flash('message.nivel', 'danger');
+                $requestobj->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+                return redirect()->route('contracts.edit',$requestobj->contract_id);
             }
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
             $nombre = $now.'_'.$nombre;
             $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
             //dd(\Storage::disk('UpLoadFile')->url($nombre));
-            $contract = $request->contract_id;
+            $contract = $requestobj->contract_id;
             $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
 
                 $originResul  = '';
                 $destinResul  = '';
@@ -512,8 +513,8 @@ class ContractsController extends Controller
                     FailRate::where('contract_id','=',$contract)
                         ->delete();
                 } else{
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.content', 'The file is it empty');
+                    $requestobj->session()->flash('message.nivel', 'danger');
+                    $requestobj->session()->flash('message.content', 'The file is it empty');
                     return redirect()->route('contracts.edit',$contract);   
                 }
                 foreach ($reader->get() as $book) {
@@ -720,18 +721,18 @@ class ContractsController extends Controller
                     }
                 } //***
                 if($errors > 0){
-                    $request->session()->flash('message.content', 'You successfully added the rate ');
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.title', 'Well done!');
+                    $requestobj->session()->flash('message.content', 'You successfully added the rate ');
+                    $requestobj->session()->flash('message.nivel', 'danger');
+                    $requestobj->session()->flash('message.title', 'Well done!');
                     if($errors == 1){
-                        $request->session()->flash('message.content', $errors.' fee is not charged correctly');
+                        $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
                     }else{
-                        $request->session()->flash('message.content', $errors.' Rates did not load correctly');
+                        $requestobj->session()->flash('message.content', $errors.' Rates did not load correctly');
                     }
                 }
                 else{
-                    $request->session()->flash('message.nivel', 'success');
-                    $request->session()->flash('message.title', 'Well done!');
+                    $requestobj->session()->flash('message.nivel', 'success');
+                    $requestobj->session()->flash('message.title', 'Well done!');
                 }
             });
             Storage::delete($nombre);
@@ -747,9 +748,9 @@ class ContractsController extends Controller
                 ->restore();
             FailRate::onlyTrashed()->where('contract_id','=',$contract)
                 ->restore();
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('contracts.edit',$request->contract_id);
+            $requestobj->session()->flash('message.nivel', 'danger');
+            $requestobj->session()->flash('message.content', 'There was an error loading the file');
+            return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
     }
     public function FailedRates($id){
@@ -1018,20 +1019,21 @@ class ContractsController extends Controller
 
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request);
+        $requestobj = $request;
         $nombre='';
         try {
             $now = new \DateTime();
             $now = $now->format('dmY_His');
-            $file = $request->file('file');
+            $file = $requestobj->file('file');
             $ext = strtolower($file->getClientOriginalExtension());
             $validator = \Validator::make(
                 array('ext' => $ext),
                 array('ext' => 'in:xls,xlsx,csv')
             );
             if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('contracts.edit',$request->contract_id);
+                $requestobj->session()->flash('message.nivel', 'danger');
+                $requestobj->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+                return redirect()->route('contracts.edit',$requestobj->contract_id);
             }
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
@@ -1039,15 +1041,15 @@ class ContractsController extends Controller
             $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
             $contract = $request->contract_id;
             $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$request) {
+            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
                 if($reader->get()->isEmpty() != true){
                     LocalCharge::where('contract_id','=',$contract)
                         ->delete();
                     FailSurCharge::where('contract_id','=',$contract)
                         ->delete();
                 } else{
-                    $request->session()->flash('message.nivel', 'danger');
-                    $request->session()->flash('message.content', 'The file is it empty');
+                    $requestobj->session()->flash('message.nivel', 'danger');
+                    $requestobj->session()->flash('message.content', 'The file is it empty');
                     return redirect()->route('contracts.edit',$contract);   
                 }
                 $i=1;
@@ -1242,18 +1244,18 @@ class ContractsController extends Controller
                         $errors++;
                     }
                     if($errors > 0){
-                        $request->session()->flash('message.content', 'You successfully added the rate ');
-                        $request->session()->flash('message.nivel', 'danger');
-                        $request->session()->flash('message.title', 'Well done!');
+                        $requestobj->session()->flash('message.content', 'You successfully added the rate ');
+                        $requestobj->session()->flash('message.nivel', 'danger');
+                        $requestobj->session()->flash('message.title', 'Well done!');
                         if($errors == 1){
-                            $request->session()->flash('message.content', $errors.' Subcharge is not charged correctly');
+                            $requestobj->session()->flash('message.content', $errors.' Subcharge is not charged correctly');
                         }else{
-                            $request->session()->flash('message.content', $errors.' Subcharge did not load correctly');
+                            $requestobj->session()->flash('message.content', $errors.' Subcharge did not load correctly');
                         }
                     }
                     else{
-                        $request->session()->flash('message.nivel', 'success');
-                        $request->session()->flash('message.title', 'Well done!');
+                        $requestobj->session()->flash('message.nivel', 'success');
+                        $requestobj->session()->flash('message.title', 'Well done!');
                     }
                     $i++;
                 }
@@ -1270,9 +1272,9 @@ class ContractsController extends Controller
                 ->restore();
             FailSurCharge::onlyTrashed()->where('contract_id','=',$contract)
                 ->restore();
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('contracts.edit',$request->contract_id);
+            $requestobj->session()->flash('message.nivel', 'danger');
+            $requestobj->session()->flash('message.content', 'There was an error loading the file');
+            return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
     }
     public function FailSubcharges($id){
@@ -1738,11 +1740,12 @@ class ContractsController extends Controller
     }
     public function ProcessContractFcl(Request $request){
         //dd($request);
+        $requestobj = $request;
         try{
             $errors = 0;
             Excel::selectSheetsByIndex(0)
                 ->Load(\Storage::disk('UpLoadFile')
-                       ->url($request ->FileName),function($reader) use($request,$errors) {
+                       ->url($requestobj ->FileName),function($reader) use($requestobj,$errors) {
                            $reader->noHeading = true;
                            $reader->ignoreEmpty();
                            $currency   = "Currency";
@@ -1787,12 +1790,12 @@ class ContractsController extends Controller
                                if($i != 1){
                                    // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
                                    //--------------- CARRIER -----------------------------------------------------------------
-                                   if($request->existcarrier == 1){
+                                   if($requestobj->existcarrier == 1){
                                        $carriExitBol = true;
                                        $carriBol     = true;
-                                       $carrierVal = $request->carrier; // cuando se indica que no posee carrier 
+                                       $carrierVal = $requestobj->carrier; // cuando se indica que no posee carrier 
                                    } else {
-                                       $carrierVal = $read[$request->Carrier]; // cuando el carrier existe en el excel
+                                       $carrierVal = $read[$requestobj->Carrier]; // cuando el carrier existe en el excel
                                        $carrierResul = str_replace($caracteres,'',$carrierVal);
                                        $carrier = Carrier::where('name','=',$carrierResul)->first();
                                        if(empty($carrier->id) != true){
@@ -1803,12 +1806,12 @@ class ContractsController extends Controller
                                        }
                                    }
                                    //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
-                                   if($request->existorigin == 1){
+                                   if($requestobj->existorigin == 1){
                                        $originBol = true;
                                        $origExiBol = true; //segundo boolean para verificar campos errados
-                                       $randons = $request->$origin;
+                                       $randons = $requestobj->$origin;
                                    } else {
-                                       $originVal = $read[$request->$originExc];// hacer validacion de puerto en DB
+                                       $originVal = $read[$requestobj->$originExc];// hacer validacion de puerto en DB
                                        $originResul = str_replace($caracteres,'',strtolower($originVal));
                                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                                            ->get();
@@ -1822,12 +1825,12 @@ class ContractsController extends Controller
                                        }
                                    }
                                    //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
-                                   if($request->existdestiny == 1){
+                                   if($requestobj->existdestiny == 1){
                                        $destinyBol = true;
                                        $destiExitBol = true; //segundo boolean para verificar campos errados
-                                       $randons = $request->$destiny;
+                                       $randons = $requestobj->$destiny;
                                    } else {
-                                       $destinyVal = $read[$request->$destinyExc];// hacer validacion de puerto en DB
+                                       $destinyVal = $read[$requestobj->$destinyExc];// hacer validacion de puerto en DB
                                        $destinResul = str_replace($caracteres,'',strtolower($destinyVal));
                                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                                            ->get();
@@ -1841,44 +1844,44 @@ class ContractsController extends Controller
                                        }
                                    }
                                    //---------------- CURRENCY ---------------------------------------------------------------
-                                   $currencResul = str_replace($caracteres,'',$read[$request->$currency]);
+                                   $currencResul = str_replace($caracteres,'',$read[$requestobj->$currency]);
                                    $currenc = Currency::where('alphacode','=',$currencResul)->first();
                                    if(empty($currenc->id) != true){
                                        $curreExiBol = true;
                                        $currencyVal =  $currenc->id;
                                    }
                                    else{
-                                       $currencyVal = $read[$request->$currency].'_E_E';
+                                       $currencyVal = $read[$requestobj->$currency].'_E_E';
                                    }
                                    //dd($currencyVal);
                                    //---------------- 20' ---------------------------------------------------------------
-                                   if(empty($read[$request->$twenty]) != true || (int)$read[$request->$twenty] == 0){
+                                   if(empty($read[$requestobj->$twenty]) != true || (int)$read[$requestobj->$twenty] == 0){
                                        $twentyExiBol = true;
-                                       $twentyVal = (int)$read[$request->$twenty];
+                                       $twentyVal = (int)$read[$requestobj->$twenty];
                                    }
                                    else{
-                                       $twentyVal = $read[$request->$twenty].'_E_E';
+                                       $twentyVal = $read[$requestobj->$twenty].'_E_E';
                                    }
                                    //---------------- 40' ---------------------------------------------------------------
-                                   if(empty($read[$request->$forty]) != true || (int)$read[$request->$forty] == 0){
+                                   if(empty($read[$requestobj->$forty]) != true || (int)$read[$requestobj->$forty] == 0){
                                        $fortyExiBol = true;
-                                       $fortyVal = (int)$read[$request->$forty];
+                                       $fortyVal = (int)$read[$requestobj->$forty];
                                    }
                                    else{
-                                       $fortyVal = $read[$request->$forty].'_E_E';
+                                       $fortyVal = $read[$requestobj->$forty].'_E_E';
                                    }
                                    //---------------- 40'HC -------------------------------------------------------------
-                                   if(empty($read[$request->$fortyhc]) != true || (int)$read[$request->$fortyhc] == 0){
+                                   if(empty($read[$requestobj->$fortyhc]) != true || (int)$read[$requestobj->$fortyhc] == 0){
                                        $fortyhcExiBol = true;
-                                       $fortyhcVal = (int)$read[$request->$fortyhc];
+                                       $fortyhcVal = (int)$read[$requestobj->$fortyhc];
                                    }
                                    else{
-                                       $fortyhcVal = $read[$request->$fortyhc].'_E_E';
+                                       $fortyhcVal = $read[$requestobj->$fortyhc].'_E_E';
                                    }
 
-                                   if((int)$read[$request->$twenty] == 0
-                                      && (int)$read[$request->$forty] == 0
-                                      && (int)$read[$request->$fortyhc] == 0){
+                                   if((int)$read[$requestobj->$twenty] == 0
+                                      && (int)$read[$requestobj->$forty] == 0
+                                      && (int)$read[$requestobj->$fortyhc] == 0){
                                        $values = false;
                                    }
 
@@ -1903,7 +1906,7 @@ class ContractsController extends Controller
                                                    'origin_port'   => $originVal,
                                                    'destiny_port'  => $destinyVal,
                                                    'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $request->Contract_id,
+                                                   'contract_id'   => $requestobj->Contract_id,
                                                    'twuenty'       => $twentyVal,
                                                    'forty'         => $fortyVal,
                                                    'fortyhc'       => $fortyhcVal,
@@ -1916,7 +1919,7 @@ class ContractsController extends Controller
                                                'origin_port'   => $originVal,
                                                'destiny_port'  => $destinyVal,
                                                'carrier_id'    => $carrierVal,
-                                               'contract_id'   => $request->Contract_id,
+                                               'contract_id'   => $requestobj->Contract_id,
                                                'twuenty'       => $twentyVal,
                                                'forty'         => $fortyVal,
                                                'fortyhc'       => $fortyhcVal,
@@ -1927,28 +1930,28 @@ class ContractsController extends Controller
                                        // fail rates
                                        if($carriExitBol == true){
                                            if($carriBol == true){
-                                               $carrier = Carrier::find($request->carrier); 
+                                               $carrier = Carrier::find($requestobj->carrier); 
                                                $carrierVal = $carrier['name'];  
                                            }else{
-                                               $carrier = Carrier::where('name','=',$read[$request->Carrier])->first(); 
+                                               $carrier = Carrier::where('name','=',$read[$requestobj->Carrier])->first(); 
                                                $carrierVal = $carrier['name']; 
                                            }
                                        }
                                        if($curreExiBol == true){
-                                           $currencyVal = $read[$request->$currency];
+                                           $currencyVal = $read[$requestobj->$currency];
                                        }
                                        if( $twentyExiBol == true){
-                                           $twentyVal = $read[$request->$twenty];
+                                           $twentyVal = $read[$requestobj->$twenty];
                                        }
                                        if( $fortyExiBol == true){
-                                           $fortyVal = $read[$request->$forty];
+                                           $fortyVal = $read[$requestobj->$forty];
                                        }
                                        if( $fortyhcExiBol == true){
-                                           $fortyhcVal = $read[$request->$fortyhc];
+                                           $fortyhcVal = $read[$requestobj->$fortyhc];
                                        }
-                                       if((int)$read[$request->$twenty] == 0
-                                          && (int)$read[$request->$forty] == 0
-                                          && (int)$read[$request->$fortyhc] == 0){
+                                       if((int)$read[$requestobj->$twenty] == 0
+                                          && (int)$read[$requestobj->$forty] == 0
+                                          && (int)$read[$requestobj->$fortyhc] == 0){
 
                                        } else {
 
@@ -1959,20 +1962,20 @@ class ContractsController extends Controller
                                                        $originerr = Harbor::find($rando);
                                                        $originVal = $originerr['name'];
                                                        if($destiExitBol == true){    
-                                                           $destinyVal = $read[$request->$destinyExc];
+                                                           $destinyVal = $read[$requestobj->$destinyExc];
                                                        }
                                                    } else {
                                                        $destinyerr = Harbor::find($rando);
                                                        $destinyVal = $destinyerr['name'];
                                                        if($origExiBol == true){
-                                                           $originVal = $read[$request->$originExc];                                      
+                                                           $originVal = $read[$requestobj->$originExc];                                      
                                                        }
                                                    }
                                                    FailRate::create([
                                                        'origin_port'   => $originVal,
                                                        'destiny_port'  => $destinyVal,
                                                        'carrier_id'    => $carrierVal,
-                                                       'contract_id'   => $request->Contract_id,
+                                                       'contract_id'   => $requestobj->Contract_id,
                                                        'twuenty'       => $twentyVal,
                                                        'forty'         => $fortyVal,
                                                        'fortyhc'       => $fortyhcVal,
@@ -1992,7 +1995,7 @@ class ContractsController extends Controller
                                                    'origin_port'   => $originVal,
                                                    'destiny_port'  => $destinyVal,
                                                    'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $request->Contract_id,
+                                                   'contract_id'   => $requestobj->Contract_id,
                                                    'twuenty'       => $twentyVal,
                                                    'forty'         => $fortyVal,
                                                    'fortyhc'       => $fortyhcVal,
@@ -2007,50 +2010,51 @@ class ContractsController extends Controller
                                $i++;
                            }
 
-                           Storage::delete($request->FileName);
-                           FileTmp::where('contract_id','=',$request->Contract_id)->delete();
+                           Storage::delete($requestobj->FileName);
+                           FileTmp::where('contract_id','=',$requestobj->Contract_id)->delete();
                            if($errors > 0){
-                               $request->session()->flash('message.content', 'You successfully added the rate ');
-                               $request->session()->flash('message.nivel', 'danger');
-                               $request->session()->flash('message.title', 'Well done!');
+                               $requestobj->session()->flash('message.content', 'You successfully added the rate ');
+                               $requestobj->session()->flash('message.nivel', 'danger');
+                               $requestobj->session()->flash('message.title', 'Well done!');
                                if($errors == 1){
-                                   $request->session()->flash('message.content', $errors.' fee is not charged correctly');
+                                   $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
                                }else{
-                                   $request->session()->flash('message.content', $errors.' Rates did not load correctly');
+                                   $requestobj->session()->flash('message.content', $errors.' Rates did not load correctly');
                                }
                            }
                            else{
-                               $request->session()->flash('message.nivel', 'success');
-                               $request->session()->flash('message.title', 'Well done!');
+                               $requestobj->session()->flash('message.nivel', 'success');
+                               $requestobj->session()->flash('message.title', 'Well done!');
                            }
                        });
             $contract = new Contract();
             $contract = Contract::find($request->Contract_id);
             $contract->status = 'publish';
             $contract->update();
-            return redirect()->route('Failed.Rates.For.Contracts',$request->Contract_id);
+            return redirect()->route('Failed.Rates.For.Contracts',$requestobj->Contract_id);
 
         } catch(\Illuminate\Database\QueryException $e){
 
             Storage::delete($request->FileName);
-            FileTmp::where('contract_id','=',$request->Contract_id)->delete();
+            FileTmp::where('contract_id','=',$requestobj->Contract_id)->delete();
             $contractobj = new Contract();
-            $contractobj = Contract::find($request->Contract_id);
+            $contractobj = Contract::find($requestobj->Contract_id);
             $contractobj->delete();
 
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'There was an error loading the file');
+            $requestobj->session()->flash('message.nivel', 'danger');
+            $requestobj->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('importaion.fcl');
         }
     }
     public function ProcessContractFclRatSurch(Request $request){
         //dd($request);
+        $requestobj = $request;
         $errors = 0;
+        $NameFile = $requestobj ->FileName;
 
-        $NameFile = $request ->FileName;
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
-                   ->url($NameFile),function($reader) use($request,$errors,$NameFile) {
+                   ->url($NameFile),function($reader) use($requestobj,$errors,$NameFile) {
                        $reader->noHeading = true;
                        //$reader->ignoreEmpty();
 
@@ -2067,8 +2071,8 @@ class ContractsController extends Controller
                        $Charge              = "Charge";
                        $statustypecurren    = "statustypecurren";
                        $contractId          = "Contract_id";
-                       $chargeVal           = $request->chargeVal;
-                       $contract_id         = $request->Contract_id;
+                       $chargeVal           = $requestobj->chargeVal;
+                       $contract_id         = $requestobj->Contract_id;
 
                        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
@@ -2130,12 +2134,12 @@ class ContractsController extends Controller
                            if($i != 1){
 
                                //--------------- CARRIER -----------------------------------------------------------------
-                               if($request->existcarrier == 1){
+                               if($requestobj->existcarrier == 1){
                                    $carriExitBol = true;
                                    $carriBol     = true;
-                                   $carrierVal = $request->carrier; // cuando se indica que no posee carrier 
+                                   $carrierVal = $requestobj->carrier; // cuando se indica que no posee carrier 
                                } else {
-                                   $carrierVal = $read[$request->Carrier]; // cuando el carrier existe en el excel
+                                   $carrierVal = $read[$requestobj->Carrier]; // cuando el carrier existe en el excel
                                    $carrierResul = str_replace($caracteres,'',$carrierVal);
                                    $carrier = Carrier::where('name','=',$carrierResul)->first();
                                    if(empty($carrier->id) != true){
@@ -2148,12 +2152,12 @@ class ContractsController extends Controller
 
                                //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
 
-                               if($request->existorigin == 1){
+                               if($requestobj->existorigin == 1){
                                    $originBol = true;
                                    $origExiBol = true; //segundo boolean para verificar campos errados
-                                   $randons = $request->$origin;
+                                   $randons = $requestobj->$origin;
                                } else {
-                                   $originVal = $read[$request->$originExc];// hacer validacion de puerto en DB
+                                   $originVal = $read[$requestobj->$originExc];// hacer validacion de puerto en DB
                                    $originResul = str_replace($caracteres,'',strtolower($originVal));
                                    $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                                        ->get();
@@ -2167,12 +2171,12 @@ class ContractsController extends Controller
                                    }
                                }
                                //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
-                               if($request->existdestiny == 1){
+                               if($requestobj->existdestiny == 1){
                                    $destinyBol = true;
                                    $destiExitBol = true; //segundo boolean para verificar campos errados
-                                   $randons = $request->$destiny;
+                                   $randons = $requestobj->$destiny;
                                } else {
-                                   $destinyVal = $read[$request->$destinyExc];// hacer validacion de puerto en DB
+                                   $destinyVal = $read[$requestobj->$destinyExc];// hacer validacion de puerto en DB
                                    $destinResul = str_replace($caracteres,'',strtolower($destinyVal));
                                    $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                                        ->get();
@@ -2188,9 +2192,9 @@ class ContractsController extends Controller
 
                                //---------------- CURRENCY VALUES ------------------------------------------------------
 
-                               $twentyArr  = explode(' ',$read[$request->$twenty]);
-                               $fortyArr   = explode(' ',$read[$request->$forty]);
-                               $fortyhcArr = explode(' ',$read[$request->$fortyhc]);
+                               $twentyArr  = explode(' ',$read[$requestobj->$twenty]);
+                               $fortyArr   = explode(' ',$read[$requestobj->$forty]);
+                               $fortyhcArr = explode(' ',$read[$requestobj->$fortyhc]);
 
                                //---------------- 20' ------------------------------------------------------------------
 
@@ -2231,7 +2235,7 @@ class ContractsController extends Controller
                                //---------------- CURRENCY ------------------------------------------------------------
 
 
-                               if($request->$statustypecurren == 2){
+                               if($requestobj->$statustypecurren == 2){
 
                                    // cargar  columna con el  valor y currency  juntos, se descompone
 
@@ -2307,14 +2311,14 @@ class ContractsController extends Controller
 
                                } else {
 
-                                   if(empty($read[$request->$currency]) != true){
-                                       $currencResul= str_replace($caracteres,'',$read[$request->$currency]);
+                                   if(empty($read[$requestobj->$currency]) != true){
+                                       $currencResul= str_replace($caracteres,'',$read[$requestobj->$currency]);
                                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
                                        $curreExitBol = true;
                                        $currencyVal =  $currenc->id;
                                    }
                                    else{
-                                       $currencyVal = $read[$request->$currency].'_E_E';
+                                       $currencyVal = $read[$requestobj->$currency].'_E_E';
                                    }
 
                                    if($curreExitBol == true ){
@@ -2324,12 +2328,12 @@ class ContractsController extends Controller
 
                                //------------------ CALCULATION TYPE ---------------------------------------------------
                                $calculationvalvaration = '';
-                               if( $read[$request->$CalculationType] == 'PER_DOC'){
+                               if( $read[$requestobj->$CalculationType] == 'PER_DOC'){
                                    $calculationvalvaration = 'Per Shipment';
-                               } else if( $read[$request->$CalculationType] == 'PER_CONTAINER'){
+                               } else if( $read[$requestobj->$CalculationType] == 'PER_CONTAINER'){
                                    $calculationvalvaration = 'Per Container';
                                } else{
-                                   $calculationvalvaration = $read[$request->$CalculationType];
+                                   $calculationvalvaration = $read[$requestobj->$CalculationType];
                                }
 
                                $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
@@ -2338,15 +2342,15 @@ class ContractsController extends Controller
                                    $calculationtypeVal = $calculationtype['id'];
                                }
                                else{
-                                   $calculationtypeVal = $read[$request->$CalculationType].'_E_E';
+                                   $calculationtypeVal = $read[$requestobj->$CalculationType].'_E_E';
                                }
 
                                //------------------ TYPE ---------------------------------------------------------------
 
-                               if(empty($read[$request->$Charge]) != true){
+                               if(empty($read[$requestobj->$Charge]) != true){
                                    $typeExiBol = true;
-                                   if($read[$request->$Charge] != $chargeVal){
-                                       $surchargelist = Surcharge::where('name','=', $read[$request->$Charge])
+                                   if($read[$requestobj->$Charge] != $chargeVal){
+                                       $surchargelist = Surcharge::where('name','=', $read[$requestobj->$Charge])
                                            ->where('company_user_id','=', \Auth::user()->company_user_id)
                                            ->first();
                                        if(empty($surchargelist) != true){
@@ -2355,7 +2359,7 @@ class ContractsController extends Controller
                                        else{
                                            $companyUserId = \Auth::user()->company_user_id;
                                            $surchargelist = Surcharge::create([
-                                               'name'              => $read[$request->$Charge],
+                                               'name'              => $read[$requestobj->$Charge],
                                                'description'       => 'created in the import of the file',
                                                'company_user_id'   => $companyUserId
                                            ]);
@@ -2363,7 +2367,7 @@ class ContractsController extends Controller
                                        }
                                    }
                                } else {
-                                   $surchargeVal = $read[$request->$Charge].'_E_E';
+                                   $surchargeVal = $read[$requestobj->$Charge].'_E_E';
                                }
                                //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2378,7 +2382,7 @@ class ContractsController extends Controller
                                   && $typeExiBol       == true
                                   && $values == true){
 
-                                   if($read[$request->$Charge] == $chargeVal){
+                                   if($read[$requestobj->$Charge] == $chargeVal){
 
                                        // Se carga un Rate nuevo
                                        if($originBol == true || $destinyBol == true){
@@ -2390,7 +2394,7 @@ class ContractsController extends Controller
                                                    $destinyVal = $rando;
                                                }
 
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    $currencyVal = $currencyValtwen;
                                                }
 
@@ -2398,7 +2402,7 @@ class ContractsController extends Controller
                                                    'origin_port'    => $originVal,
                                                    'destiny_port'   => $destinyVal,
                                                    'carrier_id'     => $carrierVal,
-                                                   'contract_id'    => $request->$contractId,
+                                                   'contract_id'    => $requestobj->$contractId,
                                                    'twuenty'        => $twentyVal,
                                                    'forty'          => $fortyVal,
                                                    'fortyhc'        => $fortyhcVal,
@@ -2408,7 +2412,7 @@ class ContractsController extends Controller
                                            } 
                                        }else {
                                            // fila por puerto, sin expecificar origen ni destino manualmente
-                                           if($request->$statustypecurren == 2){
+                                           if($requestobj->$statustypecurren == 2){
                                                $currencyVal = $currencyValtwen;
                                            }
 
@@ -2416,7 +2420,7 @@ class ContractsController extends Controller
                                                'origin_port'    => $originVal,
                                                'destiny_port'   => $destinyVal,
                                                'carrier_id'     => $carrierVal,
-                                               'contract_id'    => $request->$contractId,
+                                               'contract_id'    => $requestobj->$contractId,
                                                'twuenty'        => $twentyVal,
                                                'forty'          => $fortyVal,
                                                'fortyhc'        => $fortyhcVal,
@@ -2429,15 +2433,15 @@ class ContractsController extends Controller
 
                                    } else{
                                        // se ejecuta la carga de los surcharges
-                                       if($read[$request->$CalculationType] == 'PER_CONTAINER'){
+                                       if($read[$requestobj->$CalculationType] == 'PER_CONTAINER'){
                                            //dd($read[$request->$twenty]);
                                            // se verifica si los valores son iguales 
-                                           if($read[$request->$twenty] == $read[$request->$forty] &&
-                                              $read[$request->$forty] == $read[$request->$fortyhc]){
+                                           if($read[$requestobj->$twenty] == $read[$requestobj->$forty] &&
+                                              $read[$requestobj->$forty] == $read[$requestobj->$fortyhc]){
 
                                                // evaluamos si viene el valor con el currency juntos
 
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    $currencyVal = $currencyValtwen;
                                                }
 
@@ -2446,7 +2450,7 @@ class ContractsController extends Controller
                                                    $SurchargArreG = LocalCharge::create([ // tabla localcharges
                                                        'surcharge_id'       => $surchargeVal,
                                                        'typedestiny_id'     => 3,
-                                                       'contract_id'        => $request->$contractId,
+                                                       'contract_id'        => $requestobj->$contractId,
                                                        'calculationtype_id' => $calculationtypeVal,
                                                        'ammount'            => $ammount,
                                                        'currency_id'        => $currencyVal
@@ -2494,14 +2498,14 @@ class ContractsController extends Controller
                                                // se crea un registro por cada carga o valor
                                                // se valida si el currency viene junto con el valor
 
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    // cargar valor y currency  juntos, se trae la descomposicion
                                                    // ----------------------- CARGA 20' -------------------------------------------
                                                    if($twentyVal != 0){
                                                        $SurchargTWArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 2,
                                                            'ammount'            => $twentyVal,
                                                            'currency_id'        => $currencyValtwen
@@ -2543,7 +2547,7 @@ class ContractsController extends Controller
                                                        $SurchargFORArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 1,
                                                            'ammount'            => $fortyVal,
                                                            'currency_id'        => $currencyValfor
@@ -2586,7 +2590,7 @@ class ContractsController extends Controller
                                                        $SurchargFORHCArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 3,
                                                            'ammount'            => $fortyhcVal,
                                                            'currency_id'        => $currencyValforHC
@@ -2635,7 +2639,7 @@ class ContractsController extends Controller
                                                        $SurchargTWArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 2,
                                                            'ammount'            => $twentyVal,
                                                            'currency_id'        => $currencyVal
@@ -2678,7 +2682,7 @@ class ContractsController extends Controller
                                                        $SurchargFORArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 1,
                                                            'ammount'            => $fortyVal,
                                                            'currency_id'        => $currencyVal
@@ -2721,7 +2725,7 @@ class ContractsController extends Controller
                                                        $SurchargFORHCArreG = LocalCharge::create([ // tabla localcharges
                                                            'surcharge_id'       => $surchargeVal,
                                                            'typedestiny_id'     => 3,
-                                                           'contract_id'        => $request->$contractId,
+                                                           'contract_id'        => $requestobj->$contractId,
                                                            'calculationtype_id' => 3,
                                                            'ammount'            => $fortyhcVal,
                                                            'currency_id'        => $currencyVal
@@ -2763,29 +2767,29 @@ class ContractsController extends Controller
 
                                            }
 
-                                       } else if($read[$request->$CalculationType] == 'PER_DOC'){
+                                       } else if($read[$requestobj->$CalculationType] == 'PER_DOC'){
                                            //per_shipment
                                            if($twentyVal != 0){
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    $currencyVal = $currencyValtwen;
                                                } 
                                                $ammount = $twentyVal;
 
                                            } else if ($fortyVal != 0){
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    $currencyVal = $currencyValfor;
                                                } 
                                                $ammount = $fortyVal;
 
                                            }else {
 
-                                               if($request->$statustypecurren == 2){
+                                               if($requestobj->$statustypecurren == 2){
                                                    $currencyVal = $currencyValforHC;
                                                } 
                                                $ammount = $fortyhcVal;
                                            }
                                            /*
-                                           if($request->$statustypecurren == 2){
+                                           if($requestobj->$statustypecurren == 2){
                                                $currencyVal = $currencyValforHC;
                                            } */
 
@@ -2793,7 +2797,7 @@ class ContractsController extends Controller
                                                $SurchargPERArreG = LocalCharge::create([ // tabla localcharges
                                                    'surcharge_id'       => $surchargeVal,
                                                    'typedestiny_id'     => 3,
-                                                   'contract_id'        => $request->$contractId,
+                                                   'contract_id'        => $requestobj->$contractId,
                                                    'calculationtype_id' => $calculationtypeVal,
                                                    'ammount'            => $ammount,
                                                    'currency_id'        => $currencyVal
@@ -2841,10 +2845,10 @@ class ContractsController extends Controller
 
                                    if($carriExitBol == true){
                                        if($carriBol == true){
-                                           $carrier = Carrier::find($request->carrier); 
+                                           $carrier = Carrier::find($requestobj->carrier); 
                                            $carrierVal = $carrier['name'];  
                                        }else{
-                                           $carrier = Carrier::where('name','=',$read[$request->Carrier])->first(); 
+                                           $carrier = Carrier::where('name','=',$read[$requestobj->Carrier])->first(); 
                                            $carrierVal = $carrier['name']; 
                                        }
                                    }
@@ -2852,19 +2856,19 @@ class ContractsController extends Controller
                                    //---------------------------- VALUES CURRENCY ---------------------------------------------------
 
                                    if($curreExiBol == true){
-                                       $currencyVal = $read[$request->$currency];
+                                       $currencyVal = $read[$requestobj->$currency];
                                    }
                                    if( $twentyExiBol == true){
-                                       $twentyVal = $read[$request->$twenty];
+                                       $twentyVal = $read[$requestobj->$twenty];
                                    }
                                    if( $fortyExiBol == true){
-                                       $fortyVal = $read[$request->$forty];
+                                       $fortyVal = $read[$requestobj->$forty];
                                    }
                                    if( $fortyhcExiBol == true){
-                                       $fortyhcVal = $read[$request->$fortyhc];
+                                       $fortyhcVal = $read[$requestobj->$fortyhc];
                                    }
                                    if( $variantecurrency == true){
-                                       if($request->$statustypecurren == 2){
+                                       if($requestobj->$statustypecurren == 2){
                                            //------------ PARA RATES ------------------------
                                            $currencyobj = Currency::find($currencyValtwen);
                                            $currencyVal = $currencyobj['alphacode'];
@@ -2907,7 +2911,7 @@ class ContractsController extends Controller
                                    }
 
                                    //////////////////////////////////////////////////////////////////////////////////////////////
-                                   if($read[$request->$Charge] == $chargeVal){
+                                   if($read[$requestobj->$Charge] == $chargeVal){
                                        // Rates Fallidos
                                        if($twentyVal == 0 && $fortyVal == 0 && $fortyhcVal == 0){
 
@@ -2920,20 +2924,20 @@ class ContractsController extends Controller
                                                        $originerr = Harbor::find($rando);
                                                        $originVal = $originerr['name'];
                                                        if($destiExitBol == true){    
-                                                           $destinyVal = $read[$request->$destinyExc];
+                                                           $destinyVal = $read[$requestobj->$destinyExc];
                                                        }
                                                    } else {
                                                        $destinyerr = Harbor::find($rando);
                                                        $destinyVal = $destinyerr['name'];
                                                        if($origExiBol == true){
-                                                           $originVal = $read[$request->$originExc];                                      
+                                                           $originVal = $read[$requestobj->$originExc];                                      
                                                        }
                                                    }
                                                    FailRate::create([
                                                        'origin_port'   => $originVal,
                                                        'destiny_port'  => $destinyVal,
                                                        'carrier_id'    => $carrierVal,
-                                                       'contract_id'   => $request->Contract_id,
+                                                       'contract_id'   => $requestobj->Contract_id,
                                                        'twuenty'       => $twentyVal,
                                                        'forty'         => $fortyVal,
                                                        'fortyhc'       => $fortyhcVal,
@@ -2954,7 +2958,7 @@ class ContractsController extends Controller
                                                    'origin_port'   => $originVal,
                                                    'destiny_port'  => $destinyVal,
                                                    'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $request->Contract_id,
+                                                   'contract_id'   => $requestobj->Contract_id,
                                                    'twuenty'       => $twentyVal,
                                                    'forty'         => $fortyVal,
                                                    'fortyhc'       => $fortyhcVal,
@@ -2968,7 +2972,7 @@ class ContractsController extends Controller
                                        // Surcharges Fallidos
                                        if($calculationtypeExiBol == true){
                                            //
-                                           if($read[$request->$CalculationType] == 'PER_CONTAINER'){
+                                           if($read[$requestobj->$CalculationType] == 'PER_CONTAINER'){
                                                // son tres cargas Per 20, Per 40, Per 40'HC
 
                                                if($originBol == true || $destinyBol == true){
@@ -2978,26 +2982,26 @@ class ContractsController extends Controller
                                                            $originerr = Harbor::find($rando);
                                                            $originVal = $originerr['name'];
                                                            if($destiExitBol == true){    
-                                                               $destinyVal = $read[$request->$destinyExc];
+                                                               $destinyVal = $read[$requestobj->$destinyExc];
                                                            }
                                                        } else {
                                                            $destinyerr = Harbor::find($rando);
                                                            $destinyVal = $destinyerr['name'];
                                                            if($origExiBol == true){
-                                                               $originVal = $read[$request->$originExc];                                      
+                                                               $originVal = $read[$requestobj->$originExc];                                      
                                                            }
                                                        }
                                                        // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
-                                                       if($read[$request->$twenty] == $read[$request->$forty] &&
-                                                          $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                       if($read[$requestobj->$twenty] == $read[$requestobj->$forty] &&
+                                                          $read[$requestobj->$forty] == $read[$requestobj->$fortyhc]){
 
                                                            // -------- PER_CONTAINER -------------------------
                                                            // se almacena uno solo porque todos los valores son iguales
 
                                                            $calculationtypeValfail = 'Per Container';
 
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValtwen;
                                                            }
                                                            if($twentyArr[0] != 0){
@@ -3006,7 +3010,7 @@ class ContractsController extends Controller
                                                                    'port_orig'          => $originVal,
                                                                    'port_dest'          => $destinyVal,
                                                                    'typedestiny_id'     => 'freight',
-                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'contract_id'        => $requestobj->Contract_id,
                                                                    'calculationtype_id' => $calculationtypeValfail,  //////
                                                                    'ammount'            => $twentyVal, //////
                                                                    'currency_id'        => $currencyVal, //////
@@ -3022,7 +3026,7 @@ class ContractsController extends Controller
 
                                                            $calculationtypeValfail = 'Per 20 "';
 
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValtwen;
                                                            }
                                                            if($twentyArr[0] != 0){
@@ -3031,7 +3035,7 @@ class ContractsController extends Controller
                                                                    'port_orig'          => $originVal,
                                                                    'port_dest'          => $destinyVal,
                                                                    'typedestiny_id'     => 'freight',
-                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'contract_id'        => $requestobj->Contract_id,
                                                                    'calculationtype_id' => $calculationtypeValfail,  //////
                                                                    'ammount'            => $twentyVal, //////
                                                                    'currency_id'        => $currencyVal, //////
@@ -3044,7 +3048,7 @@ class ContractsController extends Controller
 
                                                            $calculationtypeValfail = 'Per 40 "';
 
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValfor;
                                                            }
 
@@ -3054,7 +3058,7 @@ class ContractsController extends Controller
                                                                    'port_orig'          => $originVal,
                                                                    'port_dest'          => $destinyVal,
                                                                    'typedestiny_id'     => 'freight',
-                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'contract_id'        => $requestobj->Contract_id,
                                                                    'calculationtype_id' => $calculationtypeValfail,  //////
                                                                    'ammount'            => $fortyVal, //////
                                                                    'currency_id'        => $currencyVal, //////
@@ -3067,7 +3071,7 @@ class ContractsController extends Controller
 
                                                            $calculationtypeValfail = '40HC';
 
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValforHC;
                                                            }
 
@@ -3077,7 +3081,7 @@ class ContractsController extends Controller
                                                                    'port_orig'          => $originVal,
                                                                    'port_dest'          => $destinyVal,
                                                                    'typedestiny_id'     => 'freight',
-                                                                   'contract_id'        => $request->Contract_id,
+                                                                   'contract_id'        => $requestobj->Contract_id,
                                                                    'calculationtype_id' => $calculationtypeValfail,  //////
                                                                    'ammount'            => $fortyhcVal, //////
                                                                    'currency_id'        => $currencyVal, //////
@@ -3100,15 +3104,15 @@ class ContractsController extends Controller
 
                                                    // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
-                                                   if($read[$request->$twenty] == $read[$request->$forty] &&
-                                                      $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                   if($read[$requestobj->$twenty] == $read[$requestobj->$forty] &&
+                                                      $read[$requestobj->$forty] == $read[$requestobj->$fortyhc]){
 
                                                        // -------- PER_CONTAINER -------------------------
                                                        // se almacena uno solo porque todos los valores son iguales
 
                                                        $calculationtypeValfail = 'Per Container';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
                                                        if($twentyArr[0] != 0){
@@ -3117,7 +3121,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $twentyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3132,7 +3136,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = 'Per 20 "';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
@@ -3142,7 +3146,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $twentyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3154,7 +3158,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = 'Per 40 "';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValfor;
                                                        }
 
@@ -3164,7 +3168,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $fortyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3177,7 +3181,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = '40HC';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValforHC;
                                                        }
 
@@ -3187,7 +3191,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $fortyhcVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3198,8 +3202,8 @@ class ContractsController extends Controller
                                                    }
                                                }
 
-                                           } else if ($read[$request->$CalculationType] == 'PER_DOC' 
-                                                      || $read[$request->$CalculationType] == 'Per Shipment'){
+                                           } else if ($read[$requestobj->$CalculationType] == 'PER_DOC' 
+                                                      || $read[$requestobj->$CalculationType] == 'Per Shipment'){
                                                // es una sola carga Per Shipment
 
                                                // multiples puertos o por seleccion
@@ -3210,37 +3214,37 @@ class ContractsController extends Controller
                                                            $originerr = Harbor::find($rando);
                                                            $originVal = $originerr['name'];
                                                            if($destiExitBol == true){    
-                                                               $destinyVal = $read[$request->$destinyExc];
+                                                               $destinyVal = $read[$requestobj->$destinyExc];
                                                            }
                                                        } else {
                                                            $destinyerr = Harbor::find($rando);
                                                            $destinyVal = $destinyerr['name'];
                                                            if($origExiBol == true){
-                                                               $originVal = $read[$request->$originExc];                                      
+                                                               $originVal = $read[$requestobj->$originExc];                                      
                                                            }
                                                        }
 
                                                        $calculationtypeValfail = 'Per Shipment';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
                                                        if($twentyVal != 0){
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValtwen;
                                                            } 
                                                            $ammount = $twentyVal;
 
                                                        } else if ($fortyVal != 0){
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValfor;
                                                            } 
                                                            $ammount = $fortyVal;
 
                                                        }else {
 
-                                                           if($request->$statustypecurren == 2){
+                                                           if($requestobj->$statustypecurren == 2){
                                                                $currencyVal = $currencyValforHC;
                                                            } 
                                                            $ammount = $fortyhcVal;
@@ -3252,7 +3256,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $ammount, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3275,7 +3279,7 @@ class ContractsController extends Controller
 
                                                    $calculationtypeValfail = 'Per Shipment';
 
-                                                   if($request->$statustypecurren == 2){
+                                                   if($requestobj->$statustypecurren == 2){
                                                        $currencyVal = $currencyValtwen;
                                                    }
                                                    if($twentyArr[0] != 0){
@@ -3284,7 +3288,7 @@ class ContractsController extends Controller
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
                                                            'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
+                                                           'contract_id'        => $requestobj->Contract_id,
                                                            'calculationtype_id' => $calculationtypeValfail,  //////
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
@@ -3305,26 +3309,26 @@ class ContractsController extends Controller
                                                        $originerr = Harbor::find($rando);
                                                        $originVal = $originerr['name'];
                                                        if($destiExitBol == true){    
-                                                           $destinyVal = $read[$request->$destinyExc];
+                                                           $destinyVal = $read[$requestobj->$destinyExc];
                                                        }
                                                    } else {
                                                        $destinyerr = Harbor::find($rando);
                                                        $destinyVal = $destinyerr['name'];
                                                        if($origExiBol == true){
-                                                           $originVal = $read[$request->$originExc];                                      
+                                                           $originVal = $read[$requestobj->$originExc];                                      
                                                        }
                                                    }
                                                    // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
-                                                   if($read[$request->$twenty] == $read[$request->$forty] &&
-                                                      $read[$request->$forty] == $read[$request->$fortyhc]){
+                                                   if($read[$requestobj->$twenty] == $read[$requestobj->$forty] &&
+                                                      $read[$requestobj->$forty] == $read[$requestobj->$fortyhc]){
 
                                                        // -------- PER_CONTAINER -------------------------
                                                        // se almacena uno solo porque todos los valores son iguales
 
                                                        $calculationtypeValfail = 'Error fila '.$i.'_E_E';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
 
@@ -3334,7 +3338,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $twentyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3349,7 +3353,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = 'Per 20 "Error fila '.$i.'_E_E';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValtwen;
                                                        }
                                                        if($twentyArr[0] != 0){
@@ -3358,7 +3362,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $twentyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3370,7 +3374,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = 'Per 40 "Error fila '.$i.'_E_E';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValfor;
                                                        }
 
@@ -3380,7 +3384,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $fortyVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3393,7 +3397,7 @@ class ContractsController extends Controller
 
                                                        $calculationtypeValfail = '40HC Error fila '.$i.'_E_E';
 
-                                                       if($request->$statustypecurren == 2){
+                                                       if($requestobj->$statustypecurren == 2){
                                                            $currencyVal = $currencyValforHC;
                                                        }
 
@@ -3403,7 +3407,7 @@ class ContractsController extends Controller
                                                                'port_orig'          => $originVal,
                                                                'port_dest'          => $destinyVal,
                                                                'typedestiny_id'     => 'freight',
-                                                               'contract_id'        => $request->Contract_id,
+                                                               'contract_id'        => $requestobj->Contract_id,
                                                                'calculationtype_id' => $calculationtypeValfail,  //////
                                                                'ammount'            => $fortyhcVal, //////
                                                                'currency_id'        => $currencyVal, //////
@@ -3425,8 +3429,8 @@ class ContractsController extends Controller
 
                                                // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
-                                               if($read[$request->$twenty] == $read[$request->$forty] &&
-                                                  $read[$request->$forty] == $read[$request->$fortyhc]){
+                                               if($read[$requestobj->$twenty] == $read[$requestobj->$forty] &&
+                                                  $read[$requestobj->$forty] == $read[$requestobj->$fortyhc]){
 
                                                    // -------- PER_CONTAINER -------------------------
                                                    // se almacena uno solo porque todos los valores son iguales
@@ -3443,7 +3447,7 @@ class ContractsController extends Controller
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
                                                            'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
+                                                           'contract_id'        => $requestobj->Contract_id,
                                                            'calculationtype_id' => $calculationtypeValfail,  //////
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
@@ -3459,7 +3463,7 @@ class ContractsController extends Controller
 
                                                    $calculationtypeValfail = 'Per 20 "Error fila '.$i.'_E_E';
 
-                                                   if($request->$statustypecurren == 2){
+                                                   if($requestobj->$statustypecurren == 2){
                                                        $currencyVal = $currencyValtwen;
                                                    }
 
@@ -3469,7 +3473,7 @@ class ContractsController extends Controller
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
                                                            'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
+                                                           'contract_id'        => $requestobj->Contract_id,
                                                            'calculationtype_id' => $calculationtypeValfail,  //////
                                                            'ammount'            => $twentyVal, //////
                                                            'currency_id'        => $currencyVal, //////
@@ -3482,7 +3486,7 @@ class ContractsController extends Controller
 
                                                    $calculationtypeValfail = 'Per 40 "Error fila '.$i.'_E_E';
 
-                                                   if($request->$statustypecurren == 2){
+                                                   if($requestobj->$statustypecurren == 2){
                                                        $currencyVal = $currencyValfor;
                                                    }
 
@@ -3492,7 +3496,7 @@ class ContractsController extends Controller
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
                                                            'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
+                                                           'contract_id'        => $requestobj->Contract_id,
                                                            'calculationtype_id' => $calculationtypeValfail,  //////
                                                            'ammount'            => $fortyVal, //////
                                                            'currency_id'        => $currencyVal, //////
@@ -3505,7 +3509,7 @@ class ContractsController extends Controller
 
                                                    $calculationtypeValfail = '40HC Error fila '.$i.'_E_E';
 
-                                                   if($request->$statustypecurren == 2){
+                                                   if($requestobj->$statustypecurren == 2){
                                                        $currencyVal = $currencyValforHC;
                                                    }
 
@@ -3515,7 +3519,7 @@ class ContractsController extends Controller
                                                            'port_orig'          => $originVal,
                                                            'port_dest'          => $destinyVal,
                                                            'typedestiny_id'     => 'freight',
-                                                           'contract_id'        => $request->Contract_id,
+                                                           'contract_id'        => $requestobj->Contract_id,
                                                            'calculationtype_id' => $calculationtypeValfail,  //////
                                                            'ammount'            => $fortyhcVal, //////
                                                            'currency_id'        => $currencyVal, //////
@@ -3549,7 +3553,7 @@ class ContractsController extends Controller
         Storage::Delete($NameFile);
         $FileTmp = new FileTmp();
         $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
-        return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$request->Contract_id);
+        return redirect()->route('Fail.Rates.Surchrges.For.New.Contracts',$requestobj->Contract_id);
     }
     public function failRatesSurchrgesForNewContracts($id){
 
