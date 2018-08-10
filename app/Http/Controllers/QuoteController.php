@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Company;
 use App\CompanyPrice;
 use App\CompanyUser;
@@ -28,8 +26,10 @@ use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
 use App\MergeTag;
+use App\Airport;
 use GoogleMaps;
 use App\Inland;
+use App\Carrier;
 use App\TermAndCondition;
 use App\TermsPort;
 use App\StatusQuote;
@@ -41,8 +41,8 @@ use App\Incoterm;
 use App\SaleTerm;
 use App\EmailTemplate;
 use App\PackageLoad;
+use App\Airline;
 use App\Mail\SendQuotePdf;
-
 class QuoteController extends Controller
 {
   /**
@@ -52,18 +52,13 @@ class QuoteController extends Controller
 	 */
   public function index()
   {
-
-
     $company_user_id = \Auth::user()->company_user_id;
-
     $quotes = Quote::whereHas('user', function($q) use($company_user_id){
       $q->where('company_user_id','=',$company_user_id);
     })->get();
-
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('business_name','id');
     $countries = Country::all()->pluck('name','id');
-
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
@@ -71,12 +66,9 @@ class QuoteController extends Controller
       $company_user='';
       $currency_cfg = '';
     }
-
     return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
   }
-
   public function automatic(){
-
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
     $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
@@ -91,10 +83,8 @@ class QuoteController extends Controller
     }
     $currencies = Currency::all()->pluck('alphacode','id');
     return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
-
   }
   public function test(Request $request){
-
     $info =$request->input('info');
     $info = json_decode($info);
     $form =$request->input('form');
@@ -109,21 +99,16 @@ class QuoteController extends Controller
     $currency = Currency::all()->pluck('alphacode','id');
     $prices = Price::all()->pluck('name','id');
     $user = User::where('id',\Auth::id())->first();
-
-
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
     return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules  ]);
-
   }
-
   public function skipPluck($pluck)
   {
     $skips = ["[","]","\""];
     return str_replace($skips, ' ',$pluck);
   }
   public function ratesCurrency($id,$typeCurrency){
-
     $rates = Currency::where('id','=',$id)->get();
     foreach($rates as $rate){
       if($typeCurrency == "USD"){
@@ -132,7 +117,6 @@ class QuoteController extends Controller
         $rateC = $rate->rates_eur;
       }
     }
-
     return $rateC;
   }
   public function listRate(Request $request)
@@ -1548,7 +1532,6 @@ class QuoteController extends Controller
 
   }
 
-
   public function create()
   {
     $company_user='';
@@ -1558,27 +1541,26 @@ class QuoteController extends Controller
     $currency_cfg = '';
     $exchange = '';
     $email_templates = '';
-
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
+    $airports = Airport::all()->pluck('name','id');
+    $carriers = Carrier::all()->pluck('name','id');
+    $airlines = Airline::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
     $user = User::where('id',\Auth::id())->first();
     $incoterm = Incoterm::pluck('name','id');
-
     if($company_user_id){
       $company_user=CompanyUser::find($company_user_id);
       $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
       $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
       $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
     }
-
     if($company_user){
       $currencies = Currency::pluck('alphacode','id');
       $currency_cfg = Currency::find($company_user->currency_id);
     }
-
     if(\Auth::user()->company_user_id && $currency_cfg != ''){
       if($currency_cfg->alphacode=='USD'){
         $exchange = Currency::where('api_code_eur','EURUSD')->first();
@@ -1586,23 +1568,17 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-
-    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates]);
-
+    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
   }
-
-
   /**
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-
   public function edit($id)
   {
     $email_templates='';
-
     $quote = Quote::findOrFail($id);
     $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
@@ -1615,6 +1591,9 @@ class QuoteController extends Controller
     $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
     $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
     $currencies = Currency::pluck('alphacode','id');
+    $carriers = Carrier::pluck('name','id');
+    $airlines = Airline::pluck('name','id');
+    $airports = Airport::pluck('name','id');
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
@@ -1626,13 +1605,9 @@ class QuoteController extends Controller
       }
     }
     $incoterm = Incoterm::pluck('name','id');
-
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates]);
-
+                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
   }
-
-
   /**
 	 * Store a newly created resource in storage.
 	 *
@@ -1641,13 +1616,16 @@ class QuoteController extends Controller
 	 */
   public function store(Request $request)
   {
-
     $input = Input::all();
-
+    $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+    $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+    $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+    $sum_markup_origin=array_sum($total_markup_origin);
+    $sum_markup_freight=array_sum($total_markup_freight);
+    $sum_markup_destination=array_sum($total_markup_destination);
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
     $quote=Quote::create($request->all());
-
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
       $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
@@ -1685,7 +1663,6 @@ class QuoteController extends Controller
         $origin_ammount->save();
       }
     }
-
     if($input['freight_ammount_charge']!=[null]) {
       $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
       $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
@@ -1723,7 +1700,6 @@ class QuoteController extends Controller
         $freight_ammount->save();
       }
     }
-
     if($input['destination_ammount_charge']!=[null]) {
       $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
       $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
@@ -1761,15 +1737,12 @@ class QuoteController extends Controller
         $destination_ammount->save();
       }
     }
-
     if(isset($input['schedule'])){
       if($input['schedule'] != 'null'){
         $schedules = json_decode($input['schedule']);
-
         foreach( $schedules as $schedule){ 
           $sche = json_decode($schedule);
           $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
-
           $saveSchedule  = new Schedule();
           $saveSchedule->vessel = $sche->VesselName;
           $saveSchedule->etd = $sche->Etd;
@@ -1787,7 +1760,6 @@ class QuoteController extends Controller
         $sche = json_decode($input['schedule_manual']);
         // dd($sche);
         $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
-
         $saveSchedule  = new Schedule();
         $saveSchedule->vessel = $sche->VesselName;
         $saveSchedule->etd = $sche->Etd;
@@ -1796,10 +1768,8 @@ class QuoteController extends Controller
         $saveSchedule->type = 'direct';
         $saveSchedule->quotes()->associate($quote);
         $saveSchedule->save(); 
-
       }
     }
-
     if(isset($input['type_load_cargo']) && isset($input['quantity'])){
       $quantity = array_values( array_filter($input['quantity']) );
       $type_cargo = array_values( array_filter($input['type_load_cargo']) );
@@ -1807,7 +1777,7 @@ class QuoteController extends Controller
       $width = array_values( array_filter($input['width']) );
       $large = array_values( array_filter($input['large']) );
       $weight = array_values( array_filter($input['weight']) );
-
+      $volume = array_values( array_filter($input['volume']) );
       foreach($type_cargo as $key=>$item){
         $package_load = new PackageLoad();
         $package_load->quote_id = $quote->id;
@@ -1817,18 +1787,17 @@ class QuoteController extends Controller
         $package_load->width = $width[$key];
         $package_load->large = $large[$key];
         $package_load->weight = $weight[$key];
-
+        $package_load->total_weight = $weight[$key]*$quantity[$key];
+        $package_load->volume = $volume[$key];
         $package_load->save();
       }
     }
-
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
     return redirect()->action('QuoteController@show',$quote->id);
   }
-
   /**
    * Store a newly created resource in storage.
    *
@@ -1837,13 +1806,10 @@ class QuoteController extends Controller
    */
   public function storeWithEmail(Request $request)
   {
-
     $input = Input::all();
-
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
     $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2]);
     $quote=Quote::create($request->all());
-
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
       $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
@@ -1881,7 +1847,6 @@ class QuoteController extends Controller
         $origin_ammount->save();
       }
     }
-
     if($input['freight_ammount_charge']!=[null]) {
       $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
       $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
@@ -1919,7 +1884,6 @@ class QuoteController extends Controller
         $freight_ammount->save();
       }
     }
-
     if($input['destination_ammount_charge']!=[null]) {
       $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
       $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
@@ -1957,15 +1921,12 @@ class QuoteController extends Controller
         $destination_ammount->save();
       }
     }
-
     if(isset($input['schedule'])){
       if($input['schedule'] != 'null'){
         $schedules = json_decode($input['schedule']);
-
         foreach( $schedules as $schedule){ 
           $sche = json_decode($schedule);
           $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
-
           $saveSchedule  = new Schedule();
           $saveSchedule->vessel = $sche->VesselName;
           $saveSchedule->etd = $sche->Etd;
@@ -1983,7 +1944,6 @@ class QuoteController extends Controller
         $sche = json_decode($input['schedule_manual']);
         // dd($sche);
         $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
-
         $saveSchedule  = new Schedule();
         $saveSchedule->vessel = $sche->VesselName;
         $saveSchedule->etd = $sche->Etd;
@@ -1992,12 +1952,9 @@ class QuoteController extends Controller
         $saveSchedule->type = 'direct';
         $saveSchedule->quotes()->associate($quote);
         $saveSchedule->save(); 
-
       }
     }
-
     //Storing packages loads details
-
     if(isset($input['type_load_cargo']) && isset($input['quantity'])){
       $quantity = array_values( array_filter($input['quantity']) );
       $type_cargo = array_values( array_filter($input['type_load_cargo']) );
@@ -2005,7 +1962,7 @@ class QuoteController extends Controller
       $width = array_values( array_filter($input['width']) );
       $large = array_values( array_filter($input['large']) );
       $weight = array_values( array_filter($input['weight']) );
-
+      $volume = array_values( array_filter($input['volume']) );
       foreach($type_cargo as $key=>$item){
         $package_load = new PackageLoad();
         $package_load->quote_id = $quote->id;
@@ -2015,13 +1972,11 @@ class QuoteController extends Controller
         $package_load->width = $width[$key];
         $package_load->large = $large[$key];
         $package_load->weight = $weight[$key];
-
+        $package_load->volume = $volume[$key];
         $package_load->save();
       }
     }
-
     //Sending email
-
     if(isset($input['subject']) && isset($input['body'])){
       $subject = $input['subject'];
       $body = $input['body'];
@@ -2044,25 +1999,19 @@ class QuoteController extends Controller
                                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
       $pdf = \App::make('dompdf.wrapper');
       $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
-
       \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
     }
-
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
-
     return redirect()->action('QuoteController@show',$quote->id);
   }
-
-
   function dias_transcurridos($fecha_i,$fecha_f)
   {
     $dias	= (strtotime($fecha_i)-strtotime($fecha_f))/86400;
     $dias 	= abs($dias); $dias = floor($dias);		
     return intval($dias);
   }
-
   /**
 	 * Display the specified resource.
 	 *
@@ -2071,7 +2020,6 @@ class QuoteController extends Controller
 	 */
   public function show($id)
   {
-
     $currency_cfg='';
     $company_user='';
     $email_templates='';
@@ -2080,7 +2028,6 @@ class QuoteController extends Controller
     $prices='';
     $terms_origin='';
     $terms_destination='';
-
     $quote = Quote::findOrFail($id);
     $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
@@ -2092,9 +2039,7 @@ class QuoteController extends Controller
     $user = User::where('id',\Auth::id())->with('companyUser')->first();
     $status_quotes=StatusQuote::all()->pluck('name','id');
     $currencies = Currency::pluck('alphacode','id');
-
     $package_loads = PackageLoad::where('quote_id',$id)->get();
-
     if(\Auth::user()->company_user_id){
       $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
@@ -2113,15 +2058,10 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-
-
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads]);
-
-
   }
-
   /**
 	 * Update the specified resource in storage.
 	 *
@@ -2134,11 +2074,10 @@ class QuoteController extends Controller
     $input = Input::all();
     $quote = Quote::find($id);
     $quote->update($request->all());
-
     OriginAmmount::where('quote_id',$quote->id)->delete();
     FreightAmmount::where('quote_id',$quote->id)->delete();
     DestinationAmmount::where('quote_id',$quote->id)->delete();
-
+    PackageLoad::where('quote_id',$quote->id)->delete();
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
       $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
@@ -2176,7 +2115,6 @@ class QuoteController extends Controller
         $origin_ammount->save();
       }
     }
-
     if($input['freight_ammount_charge']!=[null]) {
       $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
       $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
@@ -2214,7 +2152,6 @@ class QuoteController extends Controller
         $freight_ammount->save();
       }
     }
-
     if($input['destination_ammount_charge']!=[null]) {
       $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
       $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
@@ -2252,44 +2189,57 @@ class QuoteController extends Controller
         $destination_ammount->save();
       }
     }
-
+    if(isset($input['type_load_cargo']) && isset($input['quantity'])){
+      $quantity = array_values( array_filter($input['quantity']) );
+      $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+      $height = array_values( array_filter($input['height']) );
+      $width = array_values( array_filter($input['width']) );
+      $large = array_values( array_filter($input['large']) );
+      $weight = array_values( array_filter($input['weight']) );
+      $volume = array_values( array_filter($input['volume']) );
+      foreach($type_cargo as $key=>$item){
+        $package_load = new PackageLoad();
+        $package_load->quote_id = $quote->id;
+        $package_load->type_cargo = $type_cargo[$key];
+        $package_load->quantity = $quantity[$key];
+        $package_load->height = $height[$key];
+        $package_load->width = $width[$key];
+        $package_load->large = $large[$key];
+        $package_load->weight = $weight[$key];
+        $package_load->total_weight = $weight[$key]*$quantity[$key];
+        $package_load->volume = $volume[$key];
+        $package_load->save();
+      }
+    }
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register updated successfully!');
     return redirect()->route('quotes.index');
   }
-
   /**
 	 * Remove the specified resource from storage.
 	 *
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-
   public function destroy($id)
   {
     $quote = Quote::find($id);
     $quote->delete();
-
     return $quote;
   }
-
   public function getHarborName($id)
   {
     $harbor = Harbor::findOrFail($id);
     return $harbor;
   }
-
   public function getQuoteTerms($id)
   {
     $terms = TermAndCondition::where('harbor_id',$id)->first();
     return $terms;
-
   }
-
   public function duplicate(Request $request,$id)
   {
-
     $quotes = Quote::all();
     $quote = Quote::findOrFail($id);
     $companies = Company::all()->pluck('business_name','id');
@@ -2302,7 +2252,6 @@ class QuoteController extends Controller
     $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
     $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
     $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-
     $quote_duplicate = new Quote();
     $quote_duplicate->owner=\Auth::id();
     $quote_duplicate->incoterm=$quote->incoterm;
@@ -2354,7 +2303,6 @@ class QuoteController extends Controller
     $quote_duplicate->status_quote_id=$quote->status_quote_id;
     $quote_duplicate->type=$quote->type;
     $quote_duplicate->save();
-
     foreach ($origin_ammounts as $origin){
       $origin_ammount_duplicate = new OriginAmmount();
       $origin_ammount_duplicate->charge=$origin->charge;
@@ -2370,7 +2318,6 @@ class QuoteController extends Controller
       $origin_ammount_duplicate->quote_id=$quote_duplicate->id;
       $origin_ammount_duplicate->save();
     }
-
     foreach ($freight_ammounts as $freight){
       $freight_ammount_duplicate = new FreightAmmount();
       $freight_ammount_duplicate->charge=$freight->charge;
@@ -2386,7 +2333,6 @@ class QuoteController extends Controller
       $freight_ammount_duplicate->quote_id=$quote_duplicate->id;
       $freight_ammount_duplicate->save();
     }
-
     foreach ($destination_ammounts as $destination){
       $destination_ammount_duplicate = new DestinationAmmount();
       $destination_ammount_duplicate->charge=$destination->charge;
@@ -2408,49 +2354,39 @@ class QuoteController extends Controller
       return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
   }
-
   public function updateStatus(Request $request,$id)
   {
     $quote=Quote::findOrFail($id);
     $quote->status_quote_id=$request->status_quote_id;
     $quote->update();
-
     $quotes = Quote::all();
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
-
     if($request->ajax()){
       return response()->json(['message' => 'Ok']);
     }else{
       return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
     }
-
   }
   public function changeStatus(Request $request)
   {
     $id = $request->id;
     $quote=Quote::findOrFail($id);
     $status_quotes=StatusQuote::pluck('name','id');
-
     return view('quotes.changeStatus',compact('quote','status_quotes'));
   }
   public function scheduleManual($orig_port,$dest_port,$date_pick)
   {
-
     $code_orig = $this->getHarborName($orig_port);
     $code_dest = $this->getHarborName($dest_port);
     $date  = $date_pick;
     $carrier = 'maersk';
-
     // Armar los schedules
     try{
       $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
-
-
       $client = new Client();
       $res = $client->request('GET', $url, [
-
       ]);
       $schedules = Collection::make(json_decode($res->getBody()));
       //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
@@ -2466,25 +2402,18 @@ class QuoteController extends Controller
           }else{
             $collectS->put('type','Direct');
           }
-
           $schedulesArr->push($collectS);
-
         }
         //'2018-07-24'
         $dateSchedule = strtotime($date);
         $dateSchedule =  date('Y-m-d',$dateSchedule);
-
         if(!$schedulesArr->isEmpty()){ 
-
           $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
           $schedulesFin->push($schedulesArr);
         }
       }
     }catch (\Guzzle\Http\Exception\ConnectException $e) {
-
     }
-
-
     return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
   }
 }
