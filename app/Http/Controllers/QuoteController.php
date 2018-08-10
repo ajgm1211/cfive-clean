@@ -119,7 +119,7 @@ class QuoteController extends Controller
     }
     return $rateC;
   }
-  public function listRate(Request $request)
+   public function listRate(Request $request)
   {
 
     $company_user_id=\Auth::user()->company_user_id;
@@ -1522,14 +1522,10 @@ class QuoteController extends Controller
 
     }
 
-
-
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
-
-
   }
 
   public function create()
