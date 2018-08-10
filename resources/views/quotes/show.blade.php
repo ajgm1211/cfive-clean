@@ -131,13 +131,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                     <p id="cargo_details_20_p">{{$quote->qty_20 != '' ? $quote->qty_20.' x 20\' Containers':''}}</p>
-                     <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 20\' Containers':''}}</p>
-                     <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 20\' Containers':''}}</p>
-                 </div>
-             </div>
-              @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                 <div class="row">
+                        <p id="cargo_details_20_p">{{$quote->qty_20 != '' ? $quote->qty_20.' x 20\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 20\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 20\' Containers':''}}</p>
+                    </div>
+                </div>
+                @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                <div class="row">
                     <div class="col-md-3">
                         <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->type_cargo == 1 ? 'Pallets' : 'Packages'}}</div>
                     </div>
@@ -151,199 +151,231 @@
                         <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.'m<sup>3</sup>' : ''!!}</p>
                     </div>
                 </div>
-            @endif            
-        </div>
-        @if(count($origin_ammounts)>0)
-        <div class="row">
-            <div class="col-md-3">
-                <h5 class="title-quote size-14px">Origin ammounts</h5>
-            </div>
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered color-blue">
-                        <thead class="title-quote text-center header-table">
-                            <tr>
-                                <td >Charge</td>
-                                <td >Detail</td>
-                                <td >Units</td>
-                                <td >Price per unit</td>
-                                <td >Total</td>
-                                <td >Markup</td>
-                                <td >Total {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($origin_ammounts as $origin_ammount)
-                            <tr class="text-center">
-                                <td>{{$origin_ammount->charge}}</td>
-                                <td>{{$origin_ammount->detail}}</td>
-                                <td>{{$origin_ammount->units}}</td>
-                                <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
-                                <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
-                                <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
-                                <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <br/>
-                <h5 class="title-quote pull-right">
-                    Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
-                    {{$quote->currencies->alphacode}}
-                </h5>
-            </div>
-        </div>
-        @endif
-        <br/>
-        @if(count($freight_ammounts)>0)
-        <div class="row">
-            <div class="col-md-3">
-                <h5 class="title-quote size-14px">Freight ammounts</h5>
-            </div>
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered color-blue">
-                        <thead class="title-quote text-center header-table">
-                            <tr>
-                                <td >Charge</td>
-                                <td >Detail</td>
-                                <td >Units</td>
-                                <td >Price per unit</td>
-                                <td >Total</td>
-                                <td >Markup</td>
-                                <td >Total {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($freight_ammounts as $freight_ammount)
-                            <tr class="text-center">
-                                <td>{{$freight_ammount->charge}}</td>
-                                <td>{{$freight_ammount->detail}}</td>
-                                <td>{{$freight_ammount->units}}</td>
-                                <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
-                                <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
-                                <td>{{$freight_ammount->markup}} {{$quote->currencies->alphacode}}</td>
-                                <td>{{$freight_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <br/>
-                <h5 class="title-quote pull-right">
-                    Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_freight}}</span>&nbsp;
-                    {{$quote->currencies->alphacode}}
-                </h5>
-            </div>
-        </div>
-        @endif
-        <br/>
-        @if(count($destination_ammounts)>0)
-        <div class="row">
-            <div class="col-md-3">
-                <h5 class="title-quote size-14px">Destination ammounts</h5>
-            </div>
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered color-blue">
-                        <thead class="title-quote text-center header-table">
-                            <tr>
-                                <td >Charge</td>
-                                <td >Detail</td>
-                                <td >Units</td>
-                                <td >Price per unit</td>
-                                <td >Total</td>
-                                <td >Markup</td>
-                                <td >Total {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($destination_ammounts as $destination_ammount)
-                            <tr class="text-center">
-                                <td>{{$destination_ammount->charge}}</td>
-                                <td>{{$destination_ammount->detail}}</td>
-                                <td>{{$destination_ammount->units}}</td>
-                                <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
-                                <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
-                                <td>{{$destination_ammount->markup}} {{$quote->currencies->alphacode}}</td>
-                                <td>{{$destination_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <br/>
-                <h5 class="title-quote pull-right">
-                    Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_destination}}</span>&nbsp;
-                    {{$quote->currencies->alphacode}}
-                </h5>
-            </div>
-        </div>
-        @endif
-        <div class="row">
-            <div class="col-md-12">
-                <hr>
-                <div class="form-group text-right">
-                    <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: {{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }} {{$quote->currencies->alphacode}}</b></button></h3>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group text-left">
-                    <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12">      
-                        <div class="header-table title-quote size-14px" style="padding-left: 10px;">
-                            <b>Terms & conditions</b>                
-                        </div>
-                    </div>
-                </div>
-                <br/>
+                @endif
+                @if(!empty($package_loads) && count($package_loads)>0)
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group ">
-
-                            @if(isset($terms_origin) && $terms_origin->count()>0)                             
-                            <h5 class="title-quote">Origin harbor</h5>
-                            @foreach($terms_origin as $v)
-                            {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                            @endforeach
-                            @endif
-                            @if(isset($terms_destination) && $terms_destination->count()>0)
-                            <h5 class="title-quote">Destination harbor</h5>
-                            @foreach($terms_destination as $v)
-                            {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                            @endforeach
-                            @endif
+                        <table class="table table-bordered color-blue">
+                            <thead class="title-quote text-center header-table">
+                                <tr>
+                                    <td >Type cargo</td>
+                                    <td >Quantity</td>
+                                    <td >Height</td>
+                                    <td >Width</td>
+                                    <td >Large</td>
+                                    <td >Weight</td>
+                                    <td >Volume</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($package_loads as $package_load)
+                                <tr class="text-center">
+                                    <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
+                                    <td>{{$package_load->quantity}}</td>
+                                    <td>{{$package_load->height}} cm</td>
+                                    <td>{{$package_load->width}} cm</td>
+                                    <td>{{$package_load->large}} cm</td>
+                                    <td>{{$package_load->weight}} kg</td>
+                                    <td></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>                    
+                </div>
+                @endif
+            </div>
+            @if(count($origin_ammounts)>0)
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="title-quote size-14px">Origin ammounts</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered color-blue">
+                            <thead class="title-quote text-center header-table">
+                                <tr>
+                                    <td >Charge</td>
+                                    <td >Detail</td>
+                                    <td >Units</td>
+                                    <td >Price per unit</td>
+                                    <td >Total</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($origin_ammounts as $origin_ammount)
+                                <tr class="text-center">
+                                    <td>{{$origin_ammount->charge}}</td>
+                                    <td>{{$origin_ammount->detail}}</td>
+                                    <td>{{$origin_ammount->units}}</td>
+                                    <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
+                                    <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
+                                    <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <br/>
+                    <h5 class="title-quote pull-right">
+                        Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_origin}}</span>&nbsp;
+                        {{$quote->currencies->alphacode}}
+                    </h5>
+                </div>
+            </div>
+            @endif
+            <br/>
+            @if(count($freight_ammounts)>0)
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="title-quote size-14px">Freight ammounts</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered color-blue">
+                            <thead class="title-quote text-center header-table">
+                                <tr>
+                                    <td >Charge</td>
+                                    <td >Detail</td>
+                                    <td >Units</td>
+                                    <td >Price per unit</td>
+                                    <td >Total</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($freight_ammounts as $freight_ammount)
+                                <tr class="text-center">
+                                    <td>{{$freight_ammount->charge}}</td>
+                                    <td>{{$freight_ammount->detail}}</td>
+                                    <td>{{$freight_ammount->units}}</td>
+                                    <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
+                                    <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
+                                    <td>{{$freight_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$freight_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <br/>
+                    <h5 class="title-quote pull-right">
+                        Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_freight}}</span>&nbsp;
+                        {{$quote->currencies->alphacode}}
+                    </h5>
+                </div>
+            </div>
+            @endif
+            <br/>
+            @if(count($destination_ammounts)>0)
+            <div class="row">
+                <div class="col-md-3">
+                    <h5 class="title-quote size-14px">Destination ammounts</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered color-blue">
+                            <thead class="title-quote text-center header-table">
+                                <tr>
+                                    <td >Charge</td>
+                                    <td >Detail</td>
+                                    <td >Units</td>
+                                    <td >Price per unit</td>
+                                    <td >Total</td>
+                                    <td >Markup</td>
+                                    <td >Total {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($destination_ammounts as $destination_ammount)
+                                <tr class="text-center">
+                                    <td>{{$destination_ammount->charge}}</td>
+                                    <td>{{$destination_ammount->detail}}</td>
+                                    <td>{{$destination_ammount->units}}</td>
+                                    <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
+                                    <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
+                                    <td>{{$destination_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$destination_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <br/>
+                    <h5 class="title-quote pull-right">
+                        Sub-Total: <span id="sub_total_origin">{{$quote->sub_total_destination}}</span>&nbsp;
+                        {{$quote->currencies->alphacode}}
+                    </h5>
+                </div>
+            </div>
+            @endif
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <div class="form-group text-right">
+                        <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: {{$quote->sub_total_origin + $quote->sub_total_freight + $quote->sub_total_destination }} {{$quote->currencies->alphacode}}</b></button></h3>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group text-left">
+                        <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">      
+                            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                                <b>Terms & conditions</b>                
+                            </div>
                         </div>
                     </div>
-                </div> 
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group ">
+
+                                @if(isset($terms_origin) && $terms_origin->count()>0)                             
+                                <h5 class="title-quote">Origin harbor</h5>
+                                @foreach($terms_origin as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
+                                @if(isset($terms_destination) && $terms_destination->count()>0)
+                                <h5 class="title-quote">Destination harbor</h5>
+                                @foreach($terms_destination as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
+                            </div>
+                        </div>
+                    </div> 
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-2">
-        <h3 class="title-quote size-16px">Settings</h3>
-        <hr>
-        <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
+        <div class="col-md-2">
+            <h3 class="title-quote size-16px">Settings</h3>
+            <hr>
+            <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
 
-        <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
-        <hr>
-        <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
-        <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
+            <hr>
+            <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
+            <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+        </div>
     </div>
-</div>
 </div>
 @include('quotes.partials.sendQuoteModal');
 @endsection
