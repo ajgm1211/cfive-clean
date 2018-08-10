@@ -117,7 +117,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   
   // DATATABLES
   
-  Route::get('eloquent/object-data', 'ContractsController@data')->name('localchar.table');;
+  Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
+  Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
 
 });
 

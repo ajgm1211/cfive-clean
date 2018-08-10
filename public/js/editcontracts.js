@@ -245,5 +245,12 @@ $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
 
+$(".test").on("click", function() {
+  alert('here');
+ var row = $(this).parents('tr').attr('id');
+  
+  alert(row);
+});
+
 
 
