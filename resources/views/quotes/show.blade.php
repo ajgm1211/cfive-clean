@@ -100,20 +100,30 @@
                     <div class="form-group m-form__group row">
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
+                                <div class="panel-heading title-quote size-14px"><b>Origin {{$quote->type_cargo==2 ? ' Airport':' Port'}}</b></div>
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
-                                        {{$origin_harbor->name}}
+                                        @if($quote->origin_harbor_id!='')
+                                            {{$quote->origin_harbor->name}}
+                                        @endif
+                                        @if($quote->origin_airport_id!='')
+                                            {{$quote->origin_airport->name}}
+                                        @endif
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
+                                <div class="panel-heading title-quote size-14px"><b>Destination {{$quote->type_cargo==2 ? ' Airport':' Port'}}</b></div>
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
-                                        {{$destination_harbor->name}}
+                                        @if($quote->destination_harbor_id!='')
+                                            {{$quote->destination_harbor->name}}
+                                        @endif
+                                        @if($quote->destination_airport_id!='')
+                                            {{$quote->destination_airport->name}}
+                                        @endif                                        
                                     </span>
                                 </div>
                             </div>
@@ -124,7 +134,7 @@
             <div style="padding-top: 20px; padding-bottom: 20px;">
                 <div class="row">
                     <div class="col-md-12">
-                        <h5 class="title-quote size-14px">Carrier</h5>
+                        <h5 class="title-quote size-14px">{{$quote->type_cargo==2 ? ' Airline':' Carrier'}}</h5>
                         <hr>
                     </div>
                     <div class="col-md-12">

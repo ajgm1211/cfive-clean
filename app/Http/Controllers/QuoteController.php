@@ -28,6 +28,7 @@ use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
 use App\MergeTag;
+use App\Airport;
 use GoogleMaps;
 use App\Inland;
 use App\Carrier;
@@ -1538,6 +1539,7 @@ class QuoteController extends Controller
         $quotes = Quote::all();
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
+        $airports = Airport::all()->pluck('name','id');
         $carriers = Carrier::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
         $user = User::where('id',\Auth::id())->first();
@@ -1563,7 +1565,7 @@ class QuoteController extends Controller
             }
         }
 
-        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers]);
+        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports]);
 
     }
 
@@ -1591,6 +1593,7 @@ class QuoteController extends Controller
         $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
         $currencies = Currency::pluck('alphacode','id');
         $carriers = Carrier::pluck('name','id');
+        $airports = Airport::pluck('name','id');
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
@@ -1604,7 +1607,7 @@ class QuoteController extends Controller
         $incoterm = Incoterm::pluck('name','id');
 
         return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers]);
+                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports]);
 
     }
 
