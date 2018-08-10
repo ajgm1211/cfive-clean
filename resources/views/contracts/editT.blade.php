@@ -201,6 +201,23 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 </tr>
 
               </table>
+
+              <table>
+                <tr   id='tclone' hidden="true" >
+                  <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                  <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
+                  <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
+
+                  <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
+                  <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
+                  <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                  <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
+                  <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"  >
+                    <i class="la la-eraser" ></i>
+                    </a>
+                  </td>
+                </tr>
+              </table>
             </div>
             <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
               <div class="row">
@@ -431,7 +448,7 @@ Load
 
 
     });
-  
+
 
   });  
 </script>
