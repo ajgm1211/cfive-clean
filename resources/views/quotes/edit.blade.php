@@ -5,15 +5,15 @@
 <div class="m-content">
     <div class="row">
         <!--<div class="col-md-1">
-            <a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary btn-block">Schedules</button>
-        </div>
-        <div class="col-md-1">
-            <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
-            <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
-        </div>-->
+<a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
+</div>
+<div class="col-md-2">
+<button class="btn btn-primary btn-block">Schedules</button>
+</div>
+<div class="col-md-1">
+<button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
+<input type="hidden" id="quote-id" value="{{$quote->id}}"/>
+</div>-->
     </div>
     <br>
     @if(Session::has('message.nivel'))
@@ -71,14 +71,14 @@
                                                         <div class="col-lg-10">
                                                             <div class='row'>
                                                                 <div class="col-md-4">
-                                                                    <label class="m-option">
+                                                                    <label class="m-option" >
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" value="1" id="fcl_type" type="radio" {!! $quote->type == 1 ? 'checked':'' !!}>
+                                                                                <input name="type" value="1" id="fcl_type" type="radio" {!! $quote->type == 1 ? 'checked':'disabled' !!}>
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
-                                                                        <span class="m-option__label">
+                                                                        <span class="m-option__label" >
                                                                             <span class="m-option__head">
                                                                                 <span class="m-option__title">
                                                                                     FCL
@@ -91,7 +91,7 @@
                                                                     <label class="m-option">
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" id="lcl_type" value="2" type="radio" {!! $quote->type == 2 ? 'checked':'' !!}>
+                                                                                <input name="type" id="lcl_type" value="2" type="radio" {!! $quote->type == 2 ? 'checked':'disabled' !!}>
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
@@ -108,7 +108,7 @@
                                                                     <label class="m-option">
                                                                         <span class="m-option__control">
                                                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                                                <input name="type" value="3" id="air_type" type="radio" {!! $quote->type == 3 ? 'checked':'' !!}>
+                                                                                <input name="type" value="3" id="air_type" type="radio" {!! $quote->type == 3 ? 'checked':'disabled' !!}>
                                                                                 <span></span>
                                                                             </span>
                                                                         </span>
@@ -126,7 +126,7 @@
                                                     </div>
                                                     <hr>
 
-                                                    <div class="form-group m-form__group row" id="fcl_load" style="display: none;">
+                                                    <div class="form-group m-form__group row" id="fcl_load" {{$quote->type!=1 ? 'style=display:none':''}}>
                                                         <div class="col-lg-2">
                                                             <label>
                                                                 <b>LOAD</b>
@@ -163,7 +163,7 @@
                                                     </div>
 
 
-                                                    <div class="form-group m-form__group row" id="lcl_air_load" >
+                                                    <div class="form-group m-form__group row" id="lcl_air_load" {{$quote->type==1 ? 'style=display:none;':''}}>
                                                         <div class="col-lg-2">
                                                             <label>
                                                                 <b>LOAD</b>
@@ -440,7 +440,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-4" id="origin_harbor_label">
                                                                     <label>Origin port</label>
-                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor']) }}
+                                                                    {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor']) }}
                                                                 </div>
                                                                 <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                                     <label>Origin address</label>
@@ -451,7 +451,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-4" id="destination_harbor_label">
                                                                     <label>Destination port</label>
-                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor']) }}
+                                                                    {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor']) }}
                                                                 </div>
                                                                 <div class="col-md-8" id="destination_address_label" style="display: none;">
                                                                     <label>Destination address</label>
@@ -473,13 +473,20 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-4" id="carrier_label" {{$quote->type==3 ? 'style=display:none;':''}}>
                                                                     <br>
                                                                     <label>Carrier</label>
                                                                     <div class="form-group">
                                                                         {{ Form::select('carrier_id',$carriers,$quote->carrier_id,['class'=>'custom-select form-control','id' => 'carrier_id','placeholder'=>'Choose an option']) }}
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-4" id="airline_label" {{$quote->type!=3 ? 'style=display:none;':''}}>
+                                                                    <br>
+                                                                    <label>Airline</label>
+                                                                    <div class="form-group">
+                                                                        {{ Form::select('airline_id',$airlines,$quote->airline_id,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
+                                                                    </div>
+                                                                </div>                  
                                                             </div>
                                                         </div>
                                                     </div>
@@ -736,7 +743,7 @@
                                                             </h5>                                                            
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Freight ammounts</h5>
@@ -832,7 +839,7 @@
                                                                         </tr>
                                                                     </tbody>
                                                                     @else
-                                                                                                                                        <tbody>
+                                                                    <tbody>
 
                                                                         <tr>
                                                                             <td>
@@ -923,8 +930,8 @@
                                                             </h5>
                                                         </div>
                                                     </div>
-                                                    
-                                                    
+
+
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Destination ammounts</h5>
@@ -944,7 +951,7 @@
                                                                         </tr>
                                                                     </thead>
                                                                     @if(count($destination_ammounts)>0)
-                                                                        <tbody>
+                                                                    <tbody>
                                                                         @foreach($destination_ammounts as $destination_ammount)
                                                                         <tr>
                                                                             <td>
@@ -1020,7 +1027,7 @@
                                                                         </tr>
                                                                     </tbody>
                                                                     @else
-                                                                        <tbody>
+                                                                    <tbody>
 
                                                                         <tr>
                                                                             <td>
@@ -1157,7 +1164,7 @@
 <script src="/js/quote.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-<script src="s/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>

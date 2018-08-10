@@ -428,13 +428,20 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-4" id="carrier_label">
                                                             <br>
                                                             <label>Carrier</label>
                                                             <div class="form-group">
                                                                 {{ Form::select('carrier_id',$carriers,null,['class'=>'custom-select form-control','id' => 'carrier_id','placeholder'=>'Choose an option']) }}
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-4" id="airline_label" style="display:none;">
+                                                            <br>
+                                                            <label>Airline</label>
+                                                            <div class="form-group">
+                                                                {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
+                                                            </div>
+                                                        </div>                                                        
                                                     </div>
                                                 </div>
                                             </div>
