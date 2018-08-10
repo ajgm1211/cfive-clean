@@ -18,9 +18,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group m-form__group text-center" id="spin" style="display: none;">
-                    <b>Sending</b> &nbsp;<i class="fa fa-spinner fa-spin"></i>
-                </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Email template</b></label>
                     {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
@@ -44,6 +41,7 @@
                 <hr>
                 <div class="form-group m-form__group">
                     <button id="send-pdf-quote" class="btn btn-success">Send</button>
+                    <button id="send-pdf-quote-sending" class="btn btn-success" style="display:none" disabled><i class="fa fa-spinner fa-spin"></i> &nbsp; Sending</button>
                     <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
                 </div>
                 <br>

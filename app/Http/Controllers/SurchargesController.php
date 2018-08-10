@@ -40,14 +40,12 @@ class SurchargesController extends Controller
         $surcharges->company_user_id =Auth::user()->company_user_id ;
         $surcharges->save();
 
-        if (count($request->input("sale_term_id")) > 0) {
-          foreach ($request->input("sale_term_id") as $v) {
+        if (!empty($request->input("sale_term_id"))) {
             $sale_term_surcharge = new SaleTermSurcharge();
-            $sale_term_surcharge->sale_term_id = $v;
+            $sale_term_surcharge->sale_term_id = $request->input("sale_term_id");
             $sale_term_surcharge->surcharge_id = $surcharges->id;
             $sale_term_surcharge->save();
         }
-    }
 
     return redirect()->action('SurchargesController@index');
 
@@ -80,15 +78,15 @@ public function update(Request $request, $id)
     $surcharges = Surcharge::find($id);
     $surcharges->update($requestForm);
 
-
-    if (count($request->input("sale_term_id")) > 0) {
+    //dd($request->input("sale_term_id"));
+    if (!empty($request->input("sale_term_id"))) {
         SaleTermSurcharge::where('surcharge_id',$surcharges->id)->delete();
-        foreach ($request->input("sale_term_id") as $v) {
-            $sale_term_surcharge = new SaleTermSurcharge();
-            $sale_term_surcharge->sale_term_id = $v;
-            $sale_term_surcharge->surcharge_id = $surcharges->id;
-            $sale_term_surcharge->save();
-        }
+        //foreach ($request->input("sale_term_id") as $v) {
+        $sale_term_surcharge = new SaleTermSurcharge();
+        $sale_term_surcharge->sale_term_id = $request->input("sale_term_id");
+        $sale_term_surcharge->surcharge_id = $surcharges->id;
+        $sale_term_surcharge->save();
+        //}
     }
 
     $request->session()->flash('message.nivel', 'success');
