@@ -176,7 +176,7 @@
                                                                     <a href="#tab_1_1" class="nav-link {{$quote->total_quantity!='' || $quote->total_weight!='' ? 'active':''}}" data-toggle="tab" style=" font-weight: bold;"> Calculate by total shipment </a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
+                                                                    <a href="#tab_1_2" class="nav-link {{$quote->packages->count() > 0 ? 'active' : ''}}" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
@@ -231,7 +231,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="tab-pane fade" id="tab_1_2">
+                                                                <div class="tab-pane fade {{$quote->packages->count() > 0 ? 'active show' : ''}}" id="tab_1_2">
                                                                     @if($quote->packages->count() > 0)
                                                                     @foreach($quote->packages as $item)
                                                                     <div class="row template">
@@ -281,7 +281,7 @@
                                                                         </div>
                                                                         <div class="col-md-1">
                                                                             <p class=""><span class="quantity"></span> <span class="volume"> {{$item->volume}} m<sup>3</sup></span> <span class="weight"></span></p>
-                                                                            <input type="hidden" class="volume_input" id="volume_input"  name="volume[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="{{$quote->volume}}" name="volume[]"/>
                                                                         </div>
                                                                     </div>
                                                                     @endforeach

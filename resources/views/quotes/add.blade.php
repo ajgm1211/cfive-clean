@@ -359,9 +359,13 @@
                                                             <label>Incoterm</label>
                                                             {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-5" id="delivery_type_label">
                                                             <label>Delivery type</label>
                                                             {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+                                                        </div>
+                                                        <div class="col-md-5" id="delivery_type_air_label" style="display: none;">
+                                                            <label>Delivery type</label>
+                                                            {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
                                                         </div>
                                                         <div class="col-md-3">
                                                             <label>Pick up date</label>
@@ -377,9 +381,15 @@
                                                     </div>
                                                     <br>
                                                     <div class="row">
-                                                        <div class="col-md-4" id="origin_harbor_label">
-                                                            <label>Origin port</label>
-                                                            {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor','placeholder'=>'Select an option']) }}
+                                                        <div class="col-md-4">
+                                                            <div id="origin_harbor_label">
+                                                                <label>Origin port</label>
+                                                                {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor','placeholder'=>'Select an option']) }}
+                                                            </div>
+                                                            <div id="origin_airport_label" style="display:none;">
+                                                                <label>Origin airport</label>
+                                                                {{ Form::select('origin_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'origin_airport','placeholder'=>'Select an option']) }}
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-8" id="origin_address_label" style="display: none;">
                                                             <label>Origin address</label>
@@ -388,9 +398,15 @@
                                                     </div>
                                                     <br>
                                                     <div class="row">
-                                                        <div class="col-md-4" id="destination_harbor_label">
-                                                            <label>Destination port</label>
-                                                            {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor','placeholder'=>'Select an option']) }}
+                                                        <div class="col-md-4">
+                                                            <div id="destination_harbor_label">
+                                                                <label>Destination port</label>
+                                                                {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor','placeholder'=>'Select an option']) }}
+                                                            </div>
+                                                            <div id="destination_airport_label" style="display:none;">
+                                                                <label>Destination airport</label>
+                                                                {{ Form::select('destination_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'destination_airport','placeholder'=>'Select an option']) }}
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-8" id="destination_address_label" style="display: none;">
                                                             <label>Destination address</label>
