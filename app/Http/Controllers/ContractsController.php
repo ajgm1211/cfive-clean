@@ -221,10 +221,10 @@ class ContractsController extends Controller
      */
 
 
-  public function data()
+  public function data($id)
   {
 
-    $localchar = LocalCharge::where('contract_id',4)->get();
+    $localchar = LocalCharge::where('contract_id',$id)->get();
 
 
     return \DataTables::collection($localchar)
@@ -248,8 +248,44 @@ class ContractsController extends Controller
       })
       ->addColumn('carrier', function (LocalCharge $localchar) {
         return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
+      })->
+      addColumn('options', function (LocalCharge $localchar) {
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '>
+          <i class='la la-edit'></i>
+          </a>
+            <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
+          <i id='rm_l' class='la la-times-circle'></i>
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+  }
+
+  public function dataRates($id){
+
+    $rate = Rate::where('contract_id',$id)->get();
+    
+    return \DataTables::collection($rate)
+  
+      ->addColumn('currency', function (Rate $rate) {
+        return $rate->currency->alphacode ;
       })
-      ->make(true);
+      ->addColumn('port_orig', function (Rate $rate) {
+        return $rate->port_origin->name;
+      })
+      ->addColumn('port_dest', function (Rate $rate) {
+          return $rate->port_destiny->name;
+      })
+      ->addColumn('carrier', function (Rate $rate) {
+          return $rate->carrier->name;
+      })->
+      addColumn('options', function (Rate $rate) {
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '>
+          <i class='la la-edit'></i>
+          </a>
+            <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
+          <i id='rm_l' class='la la-times-circle'></i>
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+
   }
   /*
           return $localchar->localcharports->unique()->map(function ($portOrig) {

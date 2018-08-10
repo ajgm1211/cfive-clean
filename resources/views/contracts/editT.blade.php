@@ -65,13 +65,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
           <div class="m-portlet__head-tools">
             <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
               <li class="nav-item m-tabs__item">
-                <a class="nav-link m-tabs__link " data-toggle="tab" href="#m_tabs_6_1" role="tab">
+                <a class="nav-link m-tabs__link active " data-toggle="tab" href="#m_tabs_6_1" role="tab">
                   <i class="la la-cog"></i>
                   Routes
                 </a>
               </li>
               <li class="nav-item m-tabs__item">
-                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                <a class="nav-link m-tabs__link " data-toggle="tab" href="#m_tabs_6_2" role="tab">
                   <i class="la la-briefcase"></i>
                   Surcharges
                 </a>
@@ -87,7 +87,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
         </div>
         <div class="m-portlet__body">
           <div class="tab-content">
-            <div class="tab-pane " id="m_tabs_6_1" role="tabpanel">
+            <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
               <a  id="new" class="">
 
                 <button type="button" class="btn btn-brand">
@@ -105,7 +105,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 Failed Rates
                 <i class="fa flaticon-tool-1"></i>
               </a>
-              <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
+              <table class="table m-table m-table--head-separator-primary" id="rateTable" width="100%">
                 <thead>
                   <tr>
                     <th title="Field #1">
@@ -138,89 +138,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 </thead>
                 <tbody>
 
-                  <!--
-@foreach ($contracts->rates as $rates)
 
-<tr id='tr{{++$loop->index}}' disabled='true'>
-<td width='15%' > 
-<div id='divoriginport{{$loop->index}}' class='val'>{{$rates->port_origin->name}}</div>
-<div class='in' hidden="true">
-{{ Form::select('origin_id[]', $harbor,$rates->port_origin->id,['id' => 'origin'.$loop->index,'class'=>'m-select2-general form-control', 'disabled' => 'true' ,'style' => 'width:100%;']) }} 
-</div>
-</td>
-<td  width='15%' >  
-<div  id='divdestinyport{{$loop->index}}' class='val'>   {{$rates->port_destiny->name}} </div>
-<div class='in' hidden="true">  
-{{ Form::select('destiny_id[]', $harbor,$rates->port_destiny->id,['id' => 'destiny'.$loop->index,'class'=>'m-select2-general form-control' ,'disabled' => 'true' ,'style' => 'width:100%;']) }}
-</div>
-</td>
-<td  width='10%' >
-<div id='divcarrier{{$loop->index}}' class='val'>  {{$rates->carrier->name }} </div>
-<div class='in' hidden="true"> 
-{{ Form::select('carrier_id[]', $carrier,$rates->carrier->id,['id' => 'carrier'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
-</div>
-</td>
-<td  width='10%' >
-<div  id='divtwuenty{{$loop->index}}' class='val'>  {{$rates->twuenty  }}  </div>
-<div class='in' hidden="true">  
-{!! Form::text('twuenty[]', $rates->twuenty, ['id' => 'twuenty'.$loop->index,'placeholder' => 'Please enter the 20','class' => 'form-control m-input', 'disabled' =>  'true' ]) !!} 
-</div>
-</td>
-<td  width='10%'>
-<div id='divforty{{$loop->index}}' class='val'>  {{$rates->forty  }}  </div>
-<div class='in' hidden="true"> 
-{!! Form::text('forty[]', $rates->forty, ['id' => 'forty'.$loop->index,'placeholder' => 'Please enter the 40','class' => 'form-control m-input' ,'disabled' =>  'true']) !!} 
-</div>
-</td>
-<td  width='10%'  >
-<div id='divfortyhc{{$loop->index}}' class='val'>{{ $rates->fortyhc}}  </div>
-<div class='in' hidden="true">
-{!! Form::text('fortyhc[]', $rates->fortyhc, ['id' => 'fortyhc'.$loop->index,'placeholder' => '40HC','class' => 'form-control','disabled' =>  'true' ]) !!}  
-</div>
-</td>
-<td  width='15%' >
-<div id='divalphacode{{$loop->index}}' class='val'> {{$rates->currency->alphacode}}   </div>
-<div class='in' hidden="true">
-{{ Form::select('currency_id[]', $currency,$rates->currency->id,['id' => 'currency'.$loop->index,'class'=>'m-select2-general form-control','disabled' => 'true']) }}
-</div>
-</td>
-<td   width='10%'>      
-<a  id='edit{{$loop->index}}' onclick="display({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-<i class="la la-edit"></i>
-</a>
-
-<a  id='save{{$loop->index}}' onclick="save({{$loop->index}},{{$rates->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
-<i class="la la-save"></i>
-</a>
-
-<a  id='cancel{{$loop->index}}' onclick="cancel({{$loop->index}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
-<i class="la la-reply"></i>
-</a>
-
-</td>
-</tr>
-
-@endforeach
-
--->
-
-                  <tr   id='tclone' hidden="true" >
-                    <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                    <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'custom-select form-control']) }}</td>
-                    <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control']) }}</td>
-
-                    <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} </td>
-                    <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input']) !!} </td>
-                    <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
-                    <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control']) }}</td>
-                    <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete"  >
-                      <i class="la la-eraser" ></i>
-                      </a>
-                    </td>
-                  </tr>
+                </tbody>
               </table>
             </div>
-            <div class="tab-pane active" id="m_tabs_6_2" role="tabpanel">
+            <div class="tab-pane " id="m_tabs_6_2" role="tabpanel">
               <a  id="newL" class="">
 
                 <button type="button" class="btn btn-brand">
@@ -251,6 +173,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     <th>Calculation Type</th>
                     <th>Ammount</th>
                     <th>Currency</th>
+                    <th>Options</th>
 
                   </tr>
                 </thead>
@@ -412,7 +335,7 @@ Load
   $(function() {
 
     $('#users-table').DataTable({
-      ajax:  "{{ route('localchar.table') }}",
+      ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
         {data: 'type', name: 'type'},
         {data: 'port_orig', name: 'port_orig'},
@@ -421,7 +344,8 @@ Load
         {data: 'carrier', name: 'carrier'},
         {data: 'calculation_type', name: 'calculation_type'},
         {data: 'ammount', name: 'ammount'},
-        {data: 'currency', name: 'currency'}
+        {data: 'currency', name: 'currency'},
+        {data: 'options', name: 'options'}
       ]
       ,
       "lengthChange": false,
@@ -433,6 +357,7 @@ Load
       "processing": true,
       "dom": 'Bfrtip',
       "paging": true,
+
       buttons: [
         {
           extend: 'copyHtml5',
@@ -456,6 +381,58 @@ Load
 
 
     });
+
+
+    $('#rateTable').DataTable({
+      ajax:  "{{ route('rate.table',['id' => $id]) }}",
+      columns: [
+
+
+        {data: 'port_orig', name: 'port_orig'},
+        {data: 'port_dest', name: 'port_dest'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'twuenty', name: 'twuenty'},
+        {data: 'forty', name: 'forty'},
+        {data: 'fortyhc', name: 'fortyhc'},
+        {data: 'currency', name: 'currency'},
+        {data: 'options', name: 'options'}
+      ]
+      ,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "deferLoading": 57,
+      "processing": true,
+      "dom": 'Bfrtip',
+      "paging": true,
+
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
+
+
+    });
+  
+
   });  
 </script>
 
