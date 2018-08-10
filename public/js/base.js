@@ -203,47 +203,6 @@ $(document).on('click', '#default-currency-submit', function () {
   });
 });
 
-//Surcharges
-
-$(document).on('click', '#delete-surcharge', function () {
-  var id = $(this).attr('data-surcharge-id');
-
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: 'surcharges/delete/' + id,
-        success: function(data) {
-          if(data.message=='Ok'){
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-              )
-            $(theElement).closest('tr').remove();
-          }else{
-            swal(
-              'Error!',
-              'Your can\'t delete this surcharge because have sale terms related.',
-              'warning'
-              )
-            console.log(data.message);
-          }
-        }
-      });
-    }
-  });
-});
-
-//Contacts
-
 $(document).on('click', '.remove', function () {
   $(this).closest('tr').remove();
 });
@@ -423,8 +382,8 @@ $(document).on('change', '#type_local_markup_3', function (e) {
 });
 
 /********
-    Quotes
-    ********/
+  Quotes
+  ********/
 
 
 //Btn back
@@ -440,47 +399,6 @@ $(document).on('click', '#create-quote-back', function (e) {
   $("#create-quote").show();
 });
 
-//Load types
-$(document).on('click', '#fcl_type', function (e) {
-  $("#fcl_load").show();
-  $("#lcl_air_load").hide();
-  $("input[name=total_quantity]").val('');
-  $("input[name=total_weight]").val('');
-  $("input[name=total_volume]").val('');
-});
-
-$(document).on('click', '#lcl_type', function (e) {
-  $("#lcl_air_load").show();
-  $("#fcl_load").hide();
-  $("input[name=qty_20]").val('');
-  $("input[name=qty_40]").val('');
-  $("input[name=qty_40_hc]").val('');  
-});
-
-$(document).on('click', '#air_type', function (e) {
-  $("#lcl_air_load").show();
-  $("#fcl_load").hide();
-  $("input[name=qty_20]").val('');
-  $("input[name=qty_40]").val('');
-  $("input[name=qty_40_hc]").val('');
-
-});
-
-//Clone load lcl form
-$(document).on('click', '#add_load_lcl_air', function (e) {
-  var $template = $('#lcl_air_load_template'),
-      $clone = $template
-  .clone()
-  .removeClass('hide')
-  .removeAttr('id')
-  .insertBefore($template);
-});
-
-//Remove lcl closest row
-$(document).on('click', '.remove_lcl_air_load', function (e) {
-  var $row = $(this).closest('.row').remove();
-  $row.remove();
-});
 
 //Duplicate Quote
 $(document).on('click', '#duplicate-quote', function (e) {
@@ -602,18 +520,14 @@ $(document).on('change', '#delivery_type', function (e) {
   if($(this).val()==1){
     $("#origin_address_label").hide();
     $("#destination_address_label").hide();
-    $("#origin_address").val('');
-    $("#destination_address").val('');
   }
   if($(this).val()==2){
     $("#origin_address_label").hide();
     $("#destination_address_label").show();
-    $("#origin_address").val('');
   }
   if($(this).val()==3){
     $("#origin_address_label").show();
     $("#destination_address_label").hide();
-    $("#destination_address").val('');
   }
   if($(this).val()==4){
     $("#origin_address_label").show();
@@ -624,40 +538,15 @@ $(document).on('change', '#delivery_type', function (e) {
 $(document).on('click', '#create-quote', function (e) {
   var origin_harbor=$("#origin_harbor").val();
   var qty_20='';
-  var qty_40='';
-  var qty_40_hc='';
-  var total_quantity='';
-  var total_weight='';
-  var total_volume='';
-  var type_cargo='';
-
   if($(".qty_20").val()>0){
     qty_20=$(".qty_20").val();
-  }
-  if($(".qty_40").val()>0){
-    qty_40=$(".qty_40").val();
-  }
-  if($(".qty_40_hc").val()>0){
-    qty_40_hc=$(".qty_40_hc").val();
-  }
-  if($("#total_quantity").val()>0){
-    total_quantity=$("#total_quantity").val();
-  }
-  if($("#total_weight").val()>0){
-    total_weight=$("#total_weight").val();
-  }
-  if($("#total_volume").val()>0){
-    total_volume=$("#total_volume").val();
-  }
-  type_cargo=$("#type_cargo").val();
-  if(type_cargo==1){
-    type_cargo='Pallets';
   }else{
-    type_cargo='Packages';
+    qty_20='';
   }
+
+  var qty_40=$(".qty_40").val();
+  var qty_40_hc=$(".qty_40_hc").val();
   var destination_harbor=$("#destination_harbor").val();
-  var destination_address=$("#destination_address").val();
-  var origin_address=$("#origin_address").val();
   $.ajax({
     type: 'get',
     url: 'get/harbor/id/' + origin_harbor,
@@ -678,71 +567,19 @@ $(document).on('click', '#create-quote', function (e) {
   }else{
     $("#cargo_details_20_p").addClass('hide');
   }
-  if(qty_40!='' || qty_40>0){
+  if(qty_40!=''){
     $("#cargo_details_40").html(qty_40);
     $("#cargo_details_40_p").removeClass('hide');
-  }else{
-    $("#cargo_details_40_p").addClass('hide');
   }
-  if(qty_40_hc!='' || qty_40_hc>0){
+  if(qty_40_hc!=''){
     $("#cargo_details_40_hc").html(qty_40_hc);
     $("#cargo_details_40_hc_p").removeClass('hide');
-  }else{
-    $("#cargo_details_40_hc_p").addClass('hide');
   }
-  if(total_quantity!='' && type_cargo!=''){
-    $("#cargo_details_cargo_type").html(" "+type_cargo);
-    $("#cargo_details_cargo_type_p").removeClass('hide');
-  }else{
-    $("#cargo_details_cargo_type_p").addClass('hide');
-  }
-  if(total_quantity!='' || total_quantity>0){
-    $("#cargo_details_total_quantity").html(" "+total_quantity);
-    $("#cargo_details_total_quantity_p").removeClass('hide');
-  }else{
-    $("#cargo_details_total_quantity_p").addClass('hide');
-  }
-  if(total_weight!='' || total_weight>0){
-    $("#cargo_details_total_weight").html(" "+total_weight);
-    $("#cargo_details_total_weight_p").removeClass('hide');
-  }else{
-    $("#cargo_details_total_weight_p").addClass('hide');
-  }
-  if(total_volume!='' || total_volume>0){
-    $("#cargo_details_total_volume").html(" "+total_volume);
-    $("#cargo_details_total_volume_p").removeClass('hide');
-  }else{
-    $("#cargo_details_total_volume_p").addClass('hide');
-  }
-  if(origin_address!=''){
-    $("#origin_address_p").html(origin_address);
-    $("#origin_address_panel").removeClass('hide');
-  }else{
-    $("#origin_address_panel").addClass('hide');
-  }
-  if(destination_address!=''){
-    $("#destination_address_p").html(destination_address);
-    $("#destination_address_panel").removeClass('hide');
-  }else{
-    $("#destination_address_panel").addClass('hide');
-  }
-
 });
-
-
-
 $( document ).ready(function() {
-
-
-  $("select[name='company_id']").val('');
-  //$("select[name='company_id']").select2('val','');
-
-  $('#select2-m_select2_2_modal-container').text('Please an option');
-
-  $("select[name='company_id']").on('change', function() {
+  $( "select[name='company_id']" ).on('change', function() {
     var company_id = $(this).val();
     if(company_id) {
-       $('select[name="contact_id"]').empty();
       $.ajax({
         url: "company/contact/id/"+company_id,
         dataType: 'json',
@@ -770,7 +607,6 @@ $( document ).ready(function() {
   });
 });
 
-//Calculando origin ammounts
 $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -827,7 +663,6 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
 });
 
 
-//Calculando freight ammounts
 $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -882,7 +717,6 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
   });
 });
 
-//Calculando destinations ammounts
 $(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
   var sum = 0;
   var total_amount = 0;
@@ -938,8 +772,6 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
     });
   });
 });
-
-//Calculando total origin
 $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -954,7 +786,6 @@ $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
   $("#total_origin_ammount").change();
 });
 
-//Calculando total freight
 $(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -967,7 +798,6 @@ $(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
   $("#total_freight_ammount").change();
 });
 
-//Calculando total destination
 $(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
   var sum = 0;
   var total = 0;
@@ -992,150 +822,64 @@ $(document).on("change keyup keydown", ".destination_total_ammount_2", function(
   $("#total_destination_ammount").change();
 });
 
-$(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_ammount, #total_destination_ammount", function() {
+$(document).on("change keyup keydown", "#total_origin_ammount, #total_freight_ammount, #total_destination_ammount", function() {
 
   var total_origin=$("#total_origin_ammount").val();
   var total_freight=$("#total_freight_ammount").val();
   var total_destination=$("#total_destination_ammount").val();
   if(total_origin>0){
     total_origin=parseFloat(total_origin);
-  }else{
-    total_origin=0;
   }
   if(total_freight>0){
     total_freight=parseFloat(total_freight);
-  }else{
-    total_freight=0;
   }
   if(total_destination>0){
     total_destination=parseFloat(total_destination);
-  }else{
-    total_destination=0;
   }
 
-  sum = total_origin+total_freight+total_destination;
-
+  sum = total_destination+total_origin+total_freight;
   sum = parseFloat(sum);
   sum = sum.toFixed(2);
 
   $("#total").html(" "+sum);
 });
 
-
-//Calcular el volumen individual
-$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", function(){
-    var sumAl = 0;
-    var sumAn = 0;
-    var sumLa = 0;
-    var sumQ = 0;
-    var result = 0;
-    var width = 0;
-    var length = 0;
-    var thickness = 0;
-    var quantity = 0;
-    var volume = 10;
-    $( ".width" ).each(function() {
-        $( this).each(function() {
-            width = $(this).val();
-            if (!isNaN(width)) {
-                width = parseInt(width);
-            }
-        });
-    });
-    $( ".height" ).each(function() {
-        $( this).each(function() {
-            thickness = $(this).val();
-            if (!isNaN(thickness)) {
-                thickness = parseInt(thickness);
-            }
-        });
-    });
-    $( ".quantity" ).each(function() {
-        $( this).each(function() {
-            quantity = $(this).val();
-            if (!isNaN(quantity)) {
-                quantity = parseInt(quantity);
-            }
-        });
-    });
-    $( ".large" ).each(function() {
-        $( this).each(function() {
-            length = $(this).val();
-            if (!isNaN(length)) {
-                length = parseInt(length);
-            }
-            thickness = $(this).closest('.row').find('.height').val();
-            length = $(this).closest('.row').find('.large').val();
-            width = $(this).closest('.row').find('.width').val();
-            quantity = $(this).closest('.row').find('.quantity').val();
-            console.log(thickness+length+width+quantity)
-
-            if(thickness > 0 || length > 0 || quantity > 0) {
-                  volume = Math.round(thickness * length * width * quantity / 10000) / 100;
-                if (isNaN(volume)) {
-                  volume = 0;
-                }
-            }
-            $(this).closest('.row').find('.volume').html('Volume: '+volume + " m<sup>3</sup>");
-            $(this).closest('.row').find('.volume_input').val(volume);
-            $(this).closest('.row').find('.volume_input').change();
-        });
-    });
-});
-
 $(document).on('click', '#send-pdf-quote', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
-  var email_template_id = $('#email_template').val();
-  var email_subject = $('#email-subject').val();
-  var email_body = $('#email-body').val();
-
-  if(email_template_id!=''){
-    $.ajax({
-      type: 'POST',
-      url: '/quotes/send/pdf',
-      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body},
-      beforeSend: function () {
-        $('#spin').show();
-      },
-      success: function(data) {
-        $('#spin').hide();
-        $('#SendQuoteModal').modal('toggle');
-        if(data.message=='Ok'){
-          $('#subject-box').html('');
-          $('.editor').html('');
-          $('#textarea-box').hide();          
-          swal(
-            'Done!',
-            'Your message has been sent.',
-            'success'
-          )
-        }else{
-          swal(
-            'Error!',
-            'Your message has not been sent.',
-            'error'
-          )
-        }
+  $.ajax({
+    type: 'GET',
+    url: '/quotes/send/pdf/'+id,
+    beforeSend: function () {
+      $('#spin').show();
+    },
+    success: function(data) {
+      $('#spin').hide();
+      $('#SendQuoteModal').modal('toggle');
+      if(data.message=='Ok'){
+        swal(
+          'Done!',
+          'Your message has been sent.',
+          'success'
+        )
+      }else{
+        swal(
+          'Error!',
+          'Your message has not been sent.',
+          'error'
+        )
       }
-    });
-  }else{
-    swal(
-      '',
-      'Please choose an email template.',
-      'warning'
-    )
-  }
+    }
+  });
 });
 
-//Change Status Quote
 $(document).on('change', '#status_quote_id', function () {
   var id = $('#quote-id').val();
-  var status_quote_id = $('#status_quote_id').val();
+  var status_id = $('#status_quote_id').val();
   $.ajax({
     type: 'POST',
     url: '/quotes/update/status/'+id,
-    data:{"status_quote_id":status_quote_id},
+    data:{"status_id":status_id},
     success: function(data) {
       $('#spin').hide();
 
@@ -1154,63 +898,6 @@ $(document).on('change', '#status_quote_id', function () {
       }
     }
   });
-});
-
-//Select email template to send quote
-$(document).on('change', '#email_template', function () {
-  var id = $('#email_template').val();
-  if(id==''){
-    $('#subject-box').html('');
-    $('#textarea-box').hide();
-    $('.editor').html('');
-  }else{
-    $.ajax({
-      type: 'GET',
-      url: '/templates/preview',
-      data:{"id":id},
-      success: function(data) {
-        $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
-        $('#textarea-box').show();
-
-        tinymce.init({
-          selector: "#email-body",
-          plugins: [
-            "advlist autolink lists link charmap print preview hr anchor pagebreak",
-            "searchreplace wordcount visualblocks visualchars code fullscreen",
-            "insertdatetime nonbreaking save table contextmenu directionality",
-            "emoticons paste textcolor colorpicker textpattern codesample",
-            "fullpage toc imagetools help"
-          ],
-          toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-          menubar: false,
-          toolbar_items_size: 'small',
-          paste_as_text: true,
-          browser_spellcheck: true,
-          statusbar: false,
-          height: 200,
-
-          style_formats: [{
-            title: 'Bold text',
-            inline: 'b'
-          }, ],
-
-        });
-        $('.editor').html(data.message).tinymce({
-          theme: "modern",
-        });
-
-      }
-    });
-  }
-});
-
-$(document).on('click', '#show_email_templates', function () {
-  $('#email_templates_box').show();
-});
-
-//Select2 email template in quotes
-$('#email_templte').select2({
-  placeholder: "Select an option"
 });
 
 //Clients
@@ -1412,7 +1099,9 @@ $(document).on('click', '#delete-saleterm', function () {
           }
         }
       });
+
     }
+
   });
 });
 
@@ -1423,148 +1112,3 @@ $('#m_select2-edit-company').select2({
 $('#price_level_company').select2({
   placeholder: "Select an option"
 });
-// companies 
-
-$(document).on('click', '#savecompany', function () {
-  var $element = $('#addContactModal');
-  $.ajax({
-    type: 'POST',
-    url: '/companies',
-    data: {
-      'business_name' : $('.business_name_input').val(),
-      'phone' : $('.phone_input').val(),
-      'address' : $('.address_input').val(),
-      'email' : $('.email_input').val(),
-
-    },
-    success: function(data) {
-      $.ajax({
-        url: "company/companies",
-        dataType: 'json',
-        success: function(dataC) {
-          $('select[name="company_id"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-          $('#companyModal').modal('hide');
-
-          swal(
-            'Done!',
-            'Status updated.',
-            'success'
-          )
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseText);
-    }
-  });
-});
-
-
-
-$(document).on('click', '#savecontact', function () {
-  var $element = $('#contactModal');
-
-  $.ajax({
-    type: 'POST',
-    url: '/contacts',
-    data: {
-      'first_name' : $('.first_namec_input').val(),
-      'last_name' : $('.last_namec_input').val(),
-      'email' : $('.emailc_input').val(),
-      'phone' : $('.phonec_input').val(),
-      'company_id' : $('.companyc_input').val(),
-
-    },
-    success: function(data) {
-      $.ajax({
-        url: "company/companies",
-        dataType: 'json',
-        success: function(dataC) {
-          $('select[name="company_id"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-
-          $('#contactModal').modal('hide');
-      
-         
-          swal(
-            'Done!',
-            'Status updated.',
-            'success'
-          )
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseText);
-    }
-
-  });
-
-});
-
-$('#sale_term_id').select2({
-  placeholder: "Select an option"
-});
-
-$(document).on('click', '#select-schedule', function () {
-
-  var schevalues = new Array();
-  var n = jQuery(".sche:checked").length;
-  if (n > 0){
-    jQuery(".sche:checked").each(function(){
-      $valor =  $(this).val();
-      var $obj = jQuery.parseJSON($valor);
-      $('#schetable > tbody:last-child').append("<tr><td>"+$obj['VesselName']+"</td><td>"+$obj['Etd']+"</td><td> <div class='col-md-4'><center> "+$obj['days']+" Days</center><div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> <center>"+$obj['type']+"</center></div></td><td>"+$obj['Eta']+"</td></tr>");
-
-      schevalues.push($valor);
-    });
-
-
-    //  alert(schevalues);
-    $("#infoschedule").removeAttr('hidden');
-    $(".removesche").removeAttr('hidden');
-    $("#schedule").val(schevalues);
-  }
-
-});
-
-$(document).on('click', '.removesche', function () {
-  $("#infoschedule").attr('hidden','true');
-  $(".removesche").attr('hidden','true');
-  $("#scheduleBody").text('');
-  $("#schedule").val('');
-});
-
-
-function msg(message){
-  toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": false,
-    "positionClass": "toast-bottom-right",
-    "preventDuplicates": true,
-    "onclick": null,
-    "showDuration": "0",
-    "hideDuration": "0",
-    "timeOut": "0",
-    "extendedTimeOut": "0",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-  };
-  toastr.error(message,'IMPORTANT MESSAGE!');
-}
-
