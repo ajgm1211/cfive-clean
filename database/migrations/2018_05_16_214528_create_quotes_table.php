@@ -40,7 +40,9 @@ class CreateQuotesTable extends Migration
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->integer('carrier_id')->unsigned()->nullable();
-            $table->foreign('carrier_id')->references('id')->on('carriers');  
+            $table->foreign('carrier_id')->references('id')->on('carriers');
+            $table->integer('airline_id')->unsigned()->nullable();
+            $table->foreign('airline_id')->references('id')->on('airlines');              
             $table->integer('type')->unsigned();
             $table->string('qty_20')->nullable();
             $table->string('qty_40')->nullable();

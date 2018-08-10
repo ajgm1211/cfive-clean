@@ -66,7 +66,7 @@ class PdfController extends Controller
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
-        $package_loads = PackageLoad::where('quote_id',$id)->get();
+        $package_loads = PackageLoad::where('quote_id',$request->id)->get();
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);

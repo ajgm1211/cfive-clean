@@ -448,7 +448,11 @@ $(document).on('click', '#fcl_type', function (e) {
     $("#delivery_type_air_label").hide();
     $("#fcl_load").show();
     $("#origin_harbor_label").show();
-    $("#destination_harbor_label").show();    
+    $("#destination_harbor_label").show();
+    $("#airline_label").hide();
+    $("#carrier_label").show();
+    $("#airline_id").prop( "disabled", true );
+    $("#carrier_id").prop( "disabled", false );    
     $("#lcl_air_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -465,6 +469,10 @@ $(document).on('click', '#lcl_type', function (e) {
     $("#lcl_air_load").show();
     $("#origin_harbor_label").show();
     $("#destination_harbor_label").show();
+    $("#airline_label").hide();
+    $("#carrier_label").show();
+    $("#airline_id").prop( "disabled", true );
+    $("#carrier_id").prop( "disabled", false );    
     $("#fcl_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -481,6 +489,10 @@ $(document).on('click', '#air_type', function (e) {
     $("#lcl_air_load").show();
     $("#origin_airport_label").show();
     $("#destination_airport_label").show();
+    $("#airline_label").show();
+    $("#carrier_label").hide();
+    $("#airline_id").prop( "disabled", false );
+    $("#carrier_id").prop( "disabled", true );   
     $("#fcl_load").hide();
     $("#origin_harbor_label").hide();
     $("#destination_harbor_label").hide();
@@ -1132,15 +1144,20 @@ $(document).on('click', '#send-pdf-quote', function () {
             url: '/quotes/send/pdf',
             data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body},
             beforeSend: function () {
-                $('#spin').show();
+                $('#send-pdf-quote').hide();
+                $('#send-pdf-quote-sending').show();
             },
             success: function(data) {
                 $('#spin').hide();
-                $('#SendQuoteModal').modal('toggle');
+                $('#send-pdf-quote').show();
+                $('#send-pdf-quote-sending').hide();
                 if(data.message=='Ok'){
+                    $('#SendQuoteModal').modal('toggle');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
                     $('#subject-box').html('');
                     $('.editor').html('');
-                    $('#textarea-box').hide();          
+                    $('#textarea-box').hide();         
                     swal(
                         'Done!',
                         'Your message has been sent.',
@@ -1546,7 +1563,17 @@ $(document).on('click', '#savecontact', function () {
     });
 });
 
+//Select 2
+
 $('#sale_term_id').select2({
+    placeholder: "Select an option"
+});
+
+$('#airline_id').select2({
+    placeholder: "Select an option"
+});
+
+$('#carrier_id').select2({
     placeholder: "Select an option"
 });
 

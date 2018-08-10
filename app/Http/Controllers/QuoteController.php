@@ -43,6 +43,7 @@ use App\Incoterm;
 use App\SaleTerm;
 use App\EmailTemplate;
 use App\PackageLoad;
+use App\Airline;
 use App\Mail\SendQuotePdf;
 
 class QuoteController extends Controller
@@ -1541,6 +1542,7 @@ class QuoteController extends Controller
         $countries = Country::all()->pluck('name','id');
         $airports = Airport::all()->pluck('name','id');
         $carriers = Carrier::all()->pluck('name','id');
+        $airlines = Airline::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
         $user = User::where('id',\Auth::id())->first();
         $incoterm = Incoterm::pluck('name','id');
@@ -1565,7 +1567,7 @@ class QuoteController extends Controller
             }
         }
 
-        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports]);
+        return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
 
     }
 
@@ -1593,6 +1595,7 @@ class QuoteController extends Controller
         $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
         $currencies = Currency::pluck('alphacode','id');
         $carriers = Carrier::pluck('name','id');
+        $airlines = Airline::pluck('name','id');
         $airports = Airport::pluck('name','id');
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
@@ -1607,7 +1610,7 @@ class QuoteController extends Controller
         $incoterm = Incoterm::pluck('name','id');
 
         return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports]);
+                                    'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
 
     }
 
@@ -1803,6 +1806,7 @@ class QuoteController extends Controller
                 $package_load->width = $width[$key];
                 $package_load->large = $large[$key];
                 $package_load->weight = $weight[$key];
+                $package_load->total_weight = $weight[$key]*$quantity[$key];
                 $package_load->volume = $volume[$key];
 
                 $package_load->save();
@@ -2260,6 +2264,7 @@ class QuoteController extends Controller
                 $package_load->width = $width[$key];
                 $package_load->large = $large[$key];
                 $package_load->weight = $weight[$key];
+                $package_load->total_weight = $weight[$key]*$quantity[$key];
                 $package_load->volume = $volume[$key];
 
                 $package_load->save();
