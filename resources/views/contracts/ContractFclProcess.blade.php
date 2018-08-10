@@ -140,7 +140,8 @@ new registration
                                     {!!  Form::text('chargeVal',null,['id'=>'chargeVal',
                                     'placeholder'=>'References to Rate',
                                     'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    'class'=>'form-control m-input',
+                                    'onkeyup' => 'javascript:this.value=this.value.toUpperCase();'])!!}
                                 </div>
                                 @endif
 

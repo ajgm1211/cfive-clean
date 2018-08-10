@@ -357,16 +357,9 @@
                             $('#strgoodinputSur').attr('value',b);
                             $('#strgoodSur').text(b);
                         }
-                        $('.tdBTU'+idtr).attr('hidden','hidden');
-                        $('.icon'+idtr).attr('style','color:gray');
+                        //$('.tdBTU'+idtr).attr('hidden','hidden');
+                        //$('.icon'+idtr).attr('style','color:gray');
 
-                        /*  $('#originlb'+idtr).attr('style','color:red');
-                        $('#destinylb'+idtr).attr('style','color:red');
-                        $('#carrierlb'+idtr).attr('style','color:red');
-                        $('#twuentylb'+idtr).attr('style','color:red');
-                        $('#fortylb'+idtr).attr('style','color:red');
-                        $('#fortyhclb'+idtr).attr('style','color:red');
-                        $('#currencylb'+idtr).attr('style','color:red');*/
                         $('#trRSur'+idtr).attr('hidden','hidden');
                         if( data == 3){
                             swal("Error!", "wrong field in the Surcharge!", "error");
