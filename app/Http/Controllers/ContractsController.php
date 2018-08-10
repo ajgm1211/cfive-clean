@@ -220,9 +220,8 @@ class ContractsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
-  public function data($id)
-  {
+  // FUNCIONES PARA EL DATATABLE
+  public function data($id){
 
     $localchar = LocalCharge::where('contract_id',$id)->get();
 
@@ -257,14 +256,14 @@ class ContractsController extends Controller
           <i id='rm_l' class='la la-times-circle'></i>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
-  }
+  }// local charges en edit
 
   public function dataRates($id){
 
     $rate = Rate::where('contract_id',$id)->get();
-    
+
     return \DataTables::collection($rate)
-  
+
       ->addColumn('currency', function (Rate $rate) {
         return $rate->currency->alphacode ;
       })
@@ -272,10 +271,10 @@ class ContractsController extends Controller
         return $rate->port_origin->name;
       })
       ->addColumn('port_dest', function (Rate $rate) {
-          return $rate->port_destiny->name;
+        return $rate->port_destiny->name;
       })
       ->addColumn('carrier', function (Rate $rate) {
-          return $rate->carrier->name;
+        return $rate->carrier->name;
       })->
       addColumn('options', function (Rate $rate) {
         return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '>
@@ -287,33 +286,83 @@ class ContractsController extends Controller
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
   }
-  /*
-          return $localchar->localcharports->unique()->map(function ($portOrig) {
-          return $portOrig->portOrig->name;
-      ->addColumn('title', function (LocalCharge $localchar) {
-        return $localchar->localcharports->map(function ($portOrig) {
-          return $portOrig->pluck('port_orig')->unique()->pluck('name');
-        })->implode('<br>');
+
+  public function contractRates(){
+
+    $contractRate = Rate::whereHas('contract', function($q)
+                                   {
+                                     $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                   })->with('contract')->get();
+
+
+
+
+    return \DataTables::collection($contractRate)
+
+      ->addColumn('name', function (Rate $contractRate) {
+        return $contractRate->contract->name;
       })
+      ->addColumn('number', function (Rate $contractRate) {
+        return $contractRate->contract->number;
+      })
+      ->addColumn('status', function (Rate $contractRate) {
+        return $contractRate->contract->status;
+      })
+      ->addColumn('currency', function (Rate $contractRate) {
+        return $contractRate->currency->alphacode ;
+      })
+      ->addColumn('port_orig', function (Rate $contractRate) {
+        return $contractRate->port_origin->name;
+      })
+      ->addColumn('port_dest', function (Rate $contractRate) {
+        return $contractRate->port_destiny->name;
+      })
+      ->addColumn('carrier', function (Rate $contractRate) {
+        return $contractRate->carrier->name;
+      })
+      ->addColumn('validity', function (Rate $contractRate) {
+        return $contractRate->contract->validity ." / ".$contractRate->contract->expire;
+      })
+      ->addColumn('options', function (Rate $contractRate) {
+        return "<a href='contracts/".$contractRate->contract->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                      <i class='la la-edit'></i>
+                    </a>
 
-*/
+                    <a href='#' id='delete-rate' data-rate-id='$contractRate->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                      <i class='la la-eraser'></i>
+                    </a>
+
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+
+  }
+
+  public function contractTable(){
+
+    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
 
 
-  public function edit($id)
+
+    return \DataTables::collection($contractG)
+
+      ->addColumn('options', function (Contract $contractG) {
+        return "      <a href='contracts/".$contractG->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                      <i class='la la-edit'></i>
+                    </a>
+                    <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
+                      <i class='la la-eraser'></i>
+                    </a>
+
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+
+  }
+
+
+
+    public function edit($id)
   {
-    $contracts = Contract::where('id',$id)->with('rates','localcharges.localcharports','localcharges.localcharcarriers')->first();
-
-
-
-    /*
-    $contracts = Contract::where('id',$id)->with(['localcharges' => function ($q) {
-      $q->with('localcharports','localcharcarriers')->paginate('25');
-    }])->firstOrFail();   
-
-    $localchar = LocalCharge::where('contract_id',$id)->with('localcharports.portOrig','localcharports.portDest','localcharcarriers')->paginate('20');
-
-    */
-
+    $contracts = Contract::where('id',$id)->first();
 
     $objtypedestiny = new TypeDestiny();
     $objcountry = new Country();
