@@ -207,17 +207,17 @@
                                     <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('add',0)">
                                       <span>
                                         <i class="la la-plus"></i>
-                                        <span>add </span>
+                                        <span>Add Company</span>
                                       </span>
                                     </a>
                                   </div>
                                   <div class="col-md-4 col-sm-4 ol-xs-12">
-                                    <label>Client</label>
+                                    <label>Contact</label>
                                     {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}<br><br>
                                     <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
                                       <span>
                                         <i class="la la-plus"></i>
-                                        <span>add </span>
+                                        <span>Add Contact</span>
                                       </span>
                                     </a>
                                   </div>
@@ -297,7 +297,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Origin ammounts</h5>
+                                  <h5>Origin Amounts</h5>
                                 </div>
                               </div>
                               <hr>
@@ -446,7 +446,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Freight ammounts</h5>
+                                  <h5>Freight Amounts</h5>
                                 </div>
                               </div>
                               <hr>
@@ -606,7 +606,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Destination ammounts</h5>
+                                  <h5>Destination Amounts</h5>
                                 </div>
                               </div>
                               <hr>

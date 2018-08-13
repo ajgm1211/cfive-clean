@@ -43,13 +43,13 @@
             <li class="nav-item m-tabs__item">
               <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                 <i class="la la-cog"></i>
-                List Rates 
+                FCL Rates
               </a>
             </li>
             <li class="nav-item m-tabs__item">
               <a class="nav-link m-tabs__link addS" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                 <i class="la la-briefcase"></i>
-                List Contracts
+                FCL Contracts
               </a>
             </li>
 
@@ -118,7 +118,7 @@
                     Origin Port
                   </th>
                   <th title="Field #5">
-                    Destiny Port
+                    Destination Port
                   </th>
                   <th title="Field #6" >
                     20'
@@ -213,7 +213,7 @@
                     <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                       <span>
                         <span>
-                          Importation &nbsp;
+                          Importat &nbsp;
                         </span>
                         <i class="la la-cloud-upload"></i>
                       </span>
