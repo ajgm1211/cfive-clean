@@ -540,6 +540,13 @@
                                                                 <p id="cargo_details_total_volume_p" class="hide"><b>Total volume: </b> <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
                                                             </div>
                                                         </div>
+                                                        <div class="row" id="label_package_loads" style="display:none;">
+                                                            <div class="col-md-12">
+                                                                <table>
+                                                                    <div id="table_package_loads"></div>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
