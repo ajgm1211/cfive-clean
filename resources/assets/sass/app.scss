@@ -645,3 +645,13 @@ th#options-limit-fcl {
   color: #595959;
   display: none !important;
 }
+
+
+@media (min-width: 993px) {
+.m-portlet.m-portlet--full-height.result-automatic {
+  height: calc(100% - 5rem) !important;
+}}
+
+.m-portlet result-automatic {
+  margin-bottom: 0rem !important;
+}
