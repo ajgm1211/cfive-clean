@@ -170,13 +170,13 @@
                                                             </label>
                                                         </div>
 
-                                                        <div class="col-lg-10">                                                            
+                                                        <div class="col-lg-10">
                                                             <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
                                                                 <li class="nav-item">
-                                                                    <a href="#tab_1_1" class="nav-link {{$quote->total_quantity!='' || $quote->total_weight!='' ? 'active':''}}" data-toggle="tab" style=" font-weight: bold;"> Calculate by total shipment </a>
+                                                                    <a href="#tab_1_1" class="nav-link {{$quote->total_quantity!='' || $quote->total_weight!='' ? 'active':''}}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a href="#tab_1_2" class="nav-link {{$quote->packages->count() > 0 ? 'active' : ''}}" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
+                                                                    <a href="#tab_1_2" class="nav-link {{$quote->packages->count() > 0 ? 'active' : ''}}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
@@ -281,7 +281,7 @@
                                                                         </div>
                                                                         <div class="col-md-1">
                                                                             <p class=""><span class="quantity"></span> <span class="volume"> {{$item->volume}} m<sup>3</sup></span> <span class="weight"></span></p>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" value="{{$quote->volume}}" name="volume[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="{{$item->volume}}" name="volume[]"/>
                                                                         </div>
                                                                     </div>
                                                                     @endforeach
@@ -502,17 +502,16 @@
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Company</label>
-                                                                    {{ Form::select('company_id',$companies,$quote->company_id,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }}
+                                                                    {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 ol-xs-12">
                                                                     <label>Client</label>
-                                                                    {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control']) }}
+                                                                    {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Price level</label>
                                                                     {{ Form::select('price_id',$prices,$quote->price_id,['class'=>'m-select2-general form-control']) }}
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -531,7 +530,12 @@
                                                                         <div class="panel-heading"><b>Origin</b></div>
                                                                         <div class="panel-body">
                                                                             <span id="origin_input">
-                                                                                {{$origin_harbor->name}}
+                                                                                @if($quote->origin_harbor_id!='')
+                                                                                {{$quote->origin_harbor->name}}
+                                                                                @endif
+                                                                                @if($quote->origin_airport_id!='')
+                                                                                {{$quote->origin_airport->name}}
+                                                                                @endif
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -541,19 +545,53 @@
                                                                         <div class="panel-heading"><b>Destination</b></div>
                                                                         <div class="panel-body">
                                                                             <span id="destination_input">
-                                                                                {{$destination_harbor->name}}
+                                                                                @if($quote->destination_harbor_id!='')
+                                                                                {{$quote->destination_harbor->name}}
+                                                                                @endif
+                                                                                @if($quote->destination_airport_id!='')
+                                                                                {{$quote->destination_airport->name}}
+                                                                                @endif
                                                                             </span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
-                                                                <div class="col-md-12">
-                                                                    <h5>Cargo details</h5>
-                                                                    <hr>
-                                                                    <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                                    <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
-                                                                    <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                            <div style="padding-top: 20px; padding-bottom: 20px;">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <h5 class="title-quote size-14px">Cargo details</h5>
+                                                                        <hr>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                        <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+                                                                        <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                        <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_cargo_type_p" class="hide"><b>Cargo type:</b> <span id="cargo_details_cargo_type"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_quantity_p" class="hide"><b>Total quantity:</b> <span id="cargo_details_total_quantity"></span></div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div id="cargo_details_total_weight_p" class="hide"><b>Total weight: </b> <span id="cargo_details_total_weight"></span> KG</div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <p id="cargo_details_total_volume_p" class="hide"><b>Total volume: </b> <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" id="label_package_loads" style="display:none;">
+                                                                    <div class="col-md-12">
+                                                                        <table>
+                                                                            <div id="table_package_loads"></div>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

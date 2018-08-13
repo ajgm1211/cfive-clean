@@ -16,7 +16,7 @@
                 @include('contacts.partials.form_add_contacts')
                 <div class="form-group m-form__group">
                     {!! Form::label('company_id', 'Company') !!}<br>
-                    {{ Form::select('company_id',$companies,$contact->company->id,['class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
+                    {{ Form::select('compan_id',$companies,$contact->company->id,['class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
                 </div>
             </div>
         </div>

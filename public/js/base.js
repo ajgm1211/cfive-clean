@@ -631,9 +631,6 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
     }
 });
 
-$('.m-select2-general').select2({
-    placeholder: "Select an option"
-});
 $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
         $("#origin_address_label").hide();
@@ -689,6 +686,12 @@ $(document).on('click', '#create-quote', function (e) {
     var total_weight='';
     var total_volume='';
     var type_cargo='';
+    var quantity='';
+    var height='';
+    var width='';
+    var large='';
+    var weight='';
+    var volume='';
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
@@ -708,6 +711,7 @@ $(document).on('click', '#create-quote', function (e) {
     if($("#total_volume").val()>0){
         total_volume=$("#total_volume").val();
     }
+
     type_cargo=$("#type_cargo").val();
     if(type_cargo==1){
         type_cargo='Pallets';
@@ -790,13 +794,13 @@ $(document).on('click', '#create-quote', function (e) {
 
 $( document ).ready(function() {
     $("select[name='company_id']").val('');
-  
+
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
-          $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').empty();
             $.ajax({
-                url: "company/contact/id/"+company_id,
+                url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
                 success: function(data) {
                     $('select[name="client"]').empty();
@@ -806,7 +810,7 @@ $( document ).ready(function() {
                 }
             });
             $.ajax({
-                url: "company/price/id/"+company_id,
+                url: "/quotes/company/price/id/"+company_id,
                 dataType: 'json',
                 success: function(data) {
                     $('select[name="price_id"]').empty();
@@ -1212,6 +1216,8 @@ $(document).on('change', '#status_quote_id', function () {
     });
 });
 
+/** EMAIL TEMPLATES **/
+
 //Select email template to send quote
 $(document).on('change', '#email_template', function () {
     var id = $('#email_template').val();
@@ -1269,7 +1275,7 @@ $('#email_templte').select2({
     placeholder: "Select an option"
 });
 
-//Clients
+/** CLIENTS **/
 
 $(document).on('click', '#delete-contact', function () {
     var id = $(this).attr('data-contact-id');
@@ -1309,7 +1315,7 @@ $(document).on('click', '#delete-contact', function () {
     });
 });
 
-//Companies
+/** COMPANIES **/
 
 $(document).on('click', '#delete-company', function () {
     var id = $(this).attr('data-company-id');
@@ -1566,7 +1572,7 @@ $(document).on('click', '#savecontact', function () {
     });
 });
 
-//Select 2
+/** SELECT2 **/
 
 $('#sale_term_id').select2({
     placeholder: "Select an option"
@@ -1579,6 +1585,12 @@ $('#airline_id').select2({
 $('#carrier_id').select2({
     placeholder: "Select an option"
 });
+
+$('.m-select2-general').select2({
+    placeholder: "Select an option"
+});
+
+/** SCHEDULES **/
 
 $(document).on('click', '#select-schedule', function () {
 
@@ -1610,6 +1622,8 @@ $(document).on('click', '.removesche', function () {
 });
 
 
+/** FUNCTIONS **/
+
 function msg(message){
     toastr.options = {
         "closeButton": true,
@@ -1629,4 +1643,14 @@ function msg(message){
         "hideMethod": "fadeOut"
     };
     toastr.error(message,'IMPORTANT MESSAGE!');
+}
+
+function change_tab(tab){
+    if(tab==2){
+        $("#total_quantity").val('');
+        $("#total_weight").val('');
+        $("#total_volume").val('');
+    }else{
+        $(this).closest('.packages_section').prop('disabled',true);
+    }
 }
