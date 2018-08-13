@@ -74,11 +74,16 @@ $(document).ready(function() {
   if(userId) {
     $.get('/users/notifications', function (data) {
 
+
       if(data.length > 0 ){
         addNotifications(data);
-        $( "#newNotification" ).removeAttr('hidden');
+        $( ".newNotification" ).removeAttr('hidden');
+        $( ".noNotification" ).attr('hidden','true');
+
+
       }else{
-        $( "#newNotification" ).attr('hidden','true');
+        $( ".newNotification" ).attr('hidden','true');
+        $( ".noNotification" ).removeAttr('hidden');
       } 
 
 
@@ -89,7 +94,9 @@ $(document).ready(function() {
   if(userId) {
     window.Echo.private('App.User.'+userId)
       .notification((notification) => {
-      $( "#newNotification" ).removeAttr('hidden');
+      $( ".newNotification" ).removeAttr('hidden');
+      $( ".noNotification" ).attr('hidden','true');
+
       addNotifications([notification]);
     });
   }
@@ -120,7 +127,8 @@ $(document).on('click', '#notifications', function () {
     type: 'get',
     url: '/users/updatenot/',
     success: function(data) {  
-      $( "#newNotification" ).attr('hidden','true');
+        $( ".newNotification" ).attr('hidden','true');
+        $( ".noNotification" ).removeAttr('hidden');
     }
 
   });

@@ -13981,9 +13981,11 @@ $(document).ready(function () {
 
       if (data.length > 0) {
         addNotifications(data);
-        $("#newNotification").removeAttr('hidden');
+        $(".newNotification").removeAttr('hidden');
+        $(".noNotification").attr('hidden', 'true');
       } else {
-        $("#newNotification").attr('hidden', 'true');
+        $(".newNotification").attr('hidden', 'true');
+        $(".noNotification").removeAttr('hidden');
       }
     });
   }
@@ -13991,7 +13993,9 @@ $(document).ready(function () {
   // check if there's a logged in user
   if (userId) {
     window.Echo.private('App.User.' + userId).notification(function (notification) {
-      $("#newNotification").removeAttr('hidden');
+      $(".newNotification").removeAttr('hidden');
+      $(".noNotification").attr('hidden', 'true');
+
       addNotifications([notification]);
     });
   }
@@ -14019,7 +14023,8 @@ $(document).on('click', '#notifications', function () {
     type: 'get',
     url: '/users/updatenot/',
     success: function success(data) {
-      $("#newNotification").attr('hidden', 'true');
+      $(".newNotification").attr('hidden', 'true');
+      $(".noNotification").removeAttr('hidden');
     }
 
   });
