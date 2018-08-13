@@ -34,7 +34,7 @@
                         <a  href="{{route('contacts.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-                                Contacs
+                                Contacts
                             </span>
                         </a>
                     </li>
@@ -68,7 +68,7 @@
                         <a  href="{{route('surcharges.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
-                                Surchargers list
+                                Surcharge List
                             </span>
                         </a>
                     </li>
