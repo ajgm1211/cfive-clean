@@ -125,20 +125,20 @@
     @if(!$arreglo->isEmpty())
     <div  class="row">
       <div class="col-xl-12">
-        <div class="m-portlet m-portlet--full-height ">
+        <div class="m-portlet m-portlet--full-height">
 
           <div class="m-portlet__body">
             <table  class="table m-table m-table--head-separator-primary"  border="0" id="">
               <thead>
                 <tr>
                   <th  width = '20%' title="Field #2">
-                    <span class="darkblue cabezeras">Sort By: </span>
+                    <span class="darkblue cabezeras">Carrier</span>
                   </th>
                   <th  width = '20%' title="Field #3">
-                    <span class="gray cabezeras">Origin </span>
+                    <span class="gray cabezeras">Origin</span>
                   </th>
                   <th  width = '20%' title="Field #4" >
-                    <span  class="gray cabezeras"  style=" float: right;">Destination </span> 
+                    <span  class="gray cabezeras"  style=" float: right;">Destination</span>
                   </th>
                   <th  width = '20%' title="Field #5">
                     <span class="gray cabezeras"> Expire</span> 
@@ -158,9 +158,9 @@
     @php
     $inl = 'false';
     @endphp
-    <div  class="row">
+    <div  class="row result-automatic">
       <div class="col-xl-12">
-        <div class="m-portlet m-portlet--full-height ">
+        <div class="m-portlet m-portlet--full-height result-automatic">
           <div class="m-portlet__body">
             {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
             <table  class="table m-table m-table--head-separator-primary" border="0" id="sample_editable">
@@ -504,9 +504,8 @@
 
     <!--end::Portlet-->
 
-
     <div  class="row" style="margin-top:10%">
-      <div class="col-xl-11" >
+      <div class="col-xl-12" >
         <div class="m-portlet m-portlet m-portlet--head-solid-bg m-portlet--rounded">
           <div class="m-portlet__head">
             <div class="m-portlet__head-caption">
@@ -515,7 +514,7 @@
                   <i class="flaticon-cogwheel-2"></i>
                 </span>
                 <h3 class="m-portlet__head-text m--font-brand">
-                  <span class="darkblue"> NO RATES FOUND !</span>
+                  <span class="darkblue">NO RATES HAVE BEEN FOUND.</span>
 
                 </h3>
               </div>			
@@ -579,7 +578,7 @@
                 <i class="la la-warning"></i>
               </div>
               <div class="m-alert__text">
-                <strong>Well done!</strong> You successfully read this message.	
+                <strong>Bu</strong> You successfully read this message.
               </div>	
             </div>
           </div>

@@ -207,17 +207,17 @@
                                     <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('add',0)">
                                       <span>
                                         <i class="la la-plus"></i>
-                                        <span>add </span>
+                                        <span>Add Company</span>
                                       </span>
                                     </a>
                                   </div>
                                   <div class="col-md-4 col-sm-4 ol-xs-12">
-                                    <label>Client</label>
+                                    <label>Contact</label>
                                     {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}<br><br>
                                     <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
                                       <span>
                                         <i class="la la-plus"></i>
-                                        <span>add </span>
+                                        <span>Add Contact</span>
                                       </span>
                                     </a>
                                   </div>

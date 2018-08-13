@@ -646,8 +646,12 @@ th#options-limit-fcl {
   display: none !important;
 }
 
-thead {
-  background: #f4f3f8;
-  color: #1d3a6e !important;
-  font-size: 12px !important;
+
+@media (min-width: 993px) {
+.m-portlet.m-portlet--full-height.result-automatic {
+  height: calc(100% - 5rem) !important;
+}}
+
+.m-portlet result-automatic {
+  margin-bottom: 0rem !important;
 }
