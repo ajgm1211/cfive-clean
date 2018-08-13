@@ -297,7 +297,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Origin ammounts</h5>
+                                  <h5>Origin Amounts</h5>
                                 </div>
                               </div>
                               <hr>
@@ -446,7 +446,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Freight ammounts</h5>
+                                  <h5>Freight Amounts</h5>
                                 </div>
                               </div>
                               <hr>
@@ -606,7 +606,7 @@
                             <div class="col-md-12">
                               <div class="row">
                                 <div class="col-md-3">
-                                  <h5>Destination ammounts</h5>
+                                  <h5>Destination Amounts</h5>
                                 </div>
                               </div>
                               <hr>
