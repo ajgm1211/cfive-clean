@@ -11,6 +11,7 @@
 
 <div class="row">
 
+{{--
   <div class="col-xl-3">
     <!--begin:: Widgets/Authors Profit-->
     <div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
@@ -118,11 +119,12 @@
     </div>
     <!--end:: Widgets/Authors Profit--> 
   </div>
+--}}
 
-  <div class="col-xl-9">
+  <div class="col-xl-12">
     @if(!$arreglo->isEmpty())
     <div  class="row">
-      <div class="col-xl-11">
+      <div class="col-xl-12">
         <div class="m-portlet m-portlet--full-height ">
 
           <div class="m-portlet__body">
@@ -157,7 +159,7 @@
     $inl = 'false';
     @endphp
     <div  class="row">
-      <div class="col-xl-11">
+      <div class="col-xl-12">
         <div class="m-portlet m-portlet--full-height ">
           <div class="m-portlet__body">
             {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
