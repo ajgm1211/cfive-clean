@@ -250,7 +250,7 @@ class ContractsController extends Controller
         return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
       })->
       addColumn('options', function (LocalCharge $localchar) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '>
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$localchar->id)'>
           <i class='la la-edit'></i>
           </a>
             <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
@@ -278,7 +278,7 @@ class ContractsController extends Controller
         return $rate->carrier->name;
       })->
       addColumn('options', function (Rate $rate) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '>
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$rate->id)'>
           <i class='la la-edit'></i>
           </a>
             <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
@@ -517,7 +517,16 @@ class ContractsController extends Controller
     return redirect()->action('ContractsController@index');
 
   }
-
+  public function editRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = Rate::find($id);
+    return view('contracts.editRates', compact('rates','harbor','carrier','currency'));
+  }
   public function updateRates(Request $request, $id){
     $requestForm = $request->all();
     $rate = Rate::find($id);
@@ -525,9 +534,28 @@ class ContractsController extends Controller
   }
 
 
+  public function editLocalChar($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objtypedestiny = new TypeDestiny();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $localcharges = LocalCharge::find($id);
+    return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
+  }
+
   public function updateLocalChar(Request $request, $id)
   {
     $localC = LocalCharge::find($id);
+
     $localC->surcharge_id = $request->input('surcharge_id');
     $localC->typedestiny_id  = $request->input('changetype');
     $localC->calculationtype_id = $request->input('calculationtype_id');
@@ -597,7 +625,7 @@ class ContractsController extends Controller
       return response()->json(['message' => $e]);
     }
 
-  
+
   }
 
   public function destroyLocalCharges($id)

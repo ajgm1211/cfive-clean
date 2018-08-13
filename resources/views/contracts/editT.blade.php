@@ -337,6 +337,50 @@ Load
       </div>
     </div>
   </div>
+
+
+  <div class="modal fade" id="modalRates" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">
+            Edit Rates
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalLocalcharge" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">
+            Edit Surcharges
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 @endsection
 @section('js')
@@ -451,6 +495,37 @@ Load
 
 
   });  
+</script>
+
+<script>
+  function AbrirModal(action,id){
+
+    if(action == "editRate"){
+      var url = '{{ route("edit-rates", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#modalRates').modal({show:true});
+      });
+
+    }
+    if(action == "editLocalCharge"){
+      var url = '{{ route("edit-local-charge", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#modalLocalcharge').modal({show:true});
+      });
+
+    }
+  }
+</script>
+<script>
+  $('.m-select2-general').select2({
+    placeholder: "Select an option"
+  });
+  $('#originRate').select2({
+    placeholder: "Select an option"
+  });
+
 </script>
 
 @stop
