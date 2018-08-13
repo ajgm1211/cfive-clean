@@ -7,7 +7,7 @@
 @section('title', 'Contracts')
 @section('content')
 @php
-$validation_expire = 'Please enter validation date';
+$validation_expire = 'Please enter validity date';
 @endphp
 <div class="m-content">
 
@@ -46,7 +46,7 @@ $validation_expire = 'Please enter validation date';
               <li class="nav-item m-tabs__item">
                 <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                   <i class="la la-cog"></i>
-                  Routes
+                  Ocean Freight
                 </a>
               </li>
               <li class="nav-item m-tabs__item">
@@ -82,7 +82,7 @@ $validation_expire = 'Please enter validation date';
                       Origin Port
                     </th>
                     <th title="Field #2">
-                      Destiny Port
+                      Destination Port
                     </th>
                     <th title="Field #3">
                       Carrier
@@ -162,10 +162,10 @@ $validation_expire = 'Please enter validation date';
                       Origin Port
                     </th>
                     <th title="Field #2">
-                      Destiny  Port
+                      Destination Port
                     </th>
                     <th title="Field #3">
-                      Changetype
+                      Charge Type
                     </th>
                     <th title="Field #4">
                       Carrier
@@ -174,7 +174,7 @@ $validation_expire = 'Please enter validation date';
                       Calculation type
                     </th>
                     <th title="Field #8">
-                      Ammount
+                      Amount
                     </th>
                     <th title="Field #9">
                       Currency
