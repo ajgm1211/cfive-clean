@@ -1,5 +1,5 @@
 @php
-$validation_expire = 'Please enter validation date';
+$validation_expire = 'Please enter valididity date';
 @endphp
 @extends('layouts.app')
 @section('title', 'New Inland')
