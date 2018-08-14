@@ -38,8 +38,8 @@ class Kernel extends HttpKernel
     ],
 
 
-        'api' => [
-            //'throttle:1000,1',
+    'api' => [
+            'throttle:60,1',
             'bindings',
         ],
     ];

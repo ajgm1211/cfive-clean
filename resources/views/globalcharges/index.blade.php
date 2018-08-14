@@ -14,7 +14,7 @@
       <div class="m-portlet__head-caption">
         <div class="m-portlet__head-title">
           <h3 class="m-portlet__head-text">
-            List  Global Charges 
+            Global Charges
           </h3>
         </div>
       </div>
@@ -65,10 +65,10 @@
                     Origin Port
                   </th>
                   <th title="Field #2">
-                    Destiny Port
+                    Destination Port
                   </th>
                   <th title="Field #3">
-                    Changetype
+                    Charge Type
                   </th>
                   <th title="Field #4">
                     Carrier
@@ -77,7 +77,7 @@
                     Calculation type
                   </th>
                   <th title="Field #8">
-                    Ammount
+                    Amount
                   </th>
                   <th title="Field #9">
                     Currency

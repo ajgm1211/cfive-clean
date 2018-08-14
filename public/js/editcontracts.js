@@ -173,7 +173,7 @@ $("#new").on("click", function() {
     var $template = $('#tclone');
     $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
     $myClone.find("select").select2();
-    $("#sample_editable_2").append($myClone);
+    $("#rateTable").append($myClone);
     // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
     // $clone = $template.clone().removeAttr('hidden').removeAttr('id').insertBefore($template);
 
@@ -189,7 +189,7 @@ $("#newL").on("click", function() {
     $myClone.find(".portOrig").attr('name', 'port_origlocal'+$ids+'[]');
     $myClone.find(".portDest").attr('name', 'port_destlocal'+$ids+'[]');
     $myClone.find(".carrier").attr('name', 'localcarrier_id'+$ids+'[]');
-    $("#sample_editable_1").append($myClone);
+    $("#users-table").append($myClone);
 
 
 });
@@ -243,6 +243,13 @@ $(document).on('click', '.m_sweetalert_demo_8', function (e) {
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
+});
+
+$(".test").on("click", function() {
+  alert('here');
+ var row = $(this).parents('tr').attr('id');
+  
+  alert(row);
 });
 
 

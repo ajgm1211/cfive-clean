@@ -9,12 +9,12 @@
             {{ Form::select('irelandports[]', $harbor,null,['class'=>'m-select2-general form-control port','multiple' => 'multiple']) }}
         </div>
         <div class="col-lg-4">
-            {!! Form::label('validation_expire', 'Validation') !!}
+            {!! Form::label('validation_expire', 'Validity') !!}
             {!! Form::text('validation_expire', $validation_expire, ['placeholder' => 'Please enter validation  date','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
         </div>
         <div class="col-lg-2">
       
-                {!! Form::label('change', 'Change Type') !!}<br>
+                {!! Form::label('change', 'Charge Type') !!}<br>
                 {{ Form::select('status',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
 
        

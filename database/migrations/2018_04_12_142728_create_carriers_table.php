@@ -16,7 +16,7 @@ class CreateCarriersTable extends Migration
         Schema::create('carriers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('image')->nullable();;
+            $table->string('image')->nullable();
 
 
         });
