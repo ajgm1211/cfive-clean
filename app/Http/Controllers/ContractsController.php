@@ -531,6 +531,9 @@ class ContractsController extends Controller
     $requestForm = $request->all();
     $rate = Rate::find($id);
     $rate->update($requestForm);
+     return redirect()->back()->with('editRate','true');
+
+
   }
 
 
@@ -590,7 +593,7 @@ class ContractsController extends Controller
       $detailcarrier->localcharge_id = $id;
       $detailcarrier->save();
     }
-
+     return redirect()->back()->with('localchar','true');
   }
 
 
