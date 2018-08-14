@@ -366,7 +366,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         if(empty($read[$requestobj[$Charge]]) != true){
                             $typeExiBol = true;
                             if($read[$requestobj[$Charge]] != $chargeVal){
-                                dd($companyUserIdVal);
                                 $surchargelist = Surcharge::where('name','=', $read[$requestobj[$Charge]])
                                     ->where('company_user_id','=', $companyUserIdVal)
                                     ->first();
@@ -1558,10 +1557,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     //-------------------------- fin distinto del primer ciclo
                     $i++;
                 }
-                $contractData = new Contract();
-                $contractData = Contract::find($contract_id);
-                $contractData->status = 'publish';
-                $contractData->update();
 
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
