@@ -36,7 +36,71 @@ $subtotalDestiny = 0;
     {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
     <br>
     <div class="row">
+      <input type="hidden" id="quote-id" value=""/>
+
+      <div class="col-md-2 col-xs-4">
+        <a href="" target="_blank" class="btn btn-primary btn-block">PDF</a>
+      </div>
+      <div class="col-md-2 col-xs-4" >
+        <button id="duplicate-quote" class="btn btn-primary btn-block">Save</button>
+
+      </div>
+      <div class="col-md-2 col-xs-4" >
+        <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
+      </div>
+
+    </div>
+    <hr><br><br>
+    <div class="row">
       <div class="col-lg-10">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-portlet__body">
+              <div class="m-portlet__head" style="min-height: 100px;">
+                <div class="m-portlet__head-tools">
+                  <div class="col-md-12" style="margin-top: 20px;">
+                    <div class="pull-left text-left" style="line-height: .5;">
+                      <img src="/uploads/logos/{{$user->companyUser->logo}}" class="img img-responsive" width="300px" ><br>
+                    </div>
+                    <div class="pull-right text-right" style="line-height: .5">                                
+
+                      <p><b>Date of issue:</b> {{ $form->date }} </p>
+                      <p><b>Validity: </b>  {{ $info->contract->expire }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="m-portlet__body">
+              <div class="m-portlet__head" style="min-height: 150px;">
+                <div class="m-portlet__head-tools">
+                  <div class="col-md-12">
+                    <div class="pull-left text-left" style="line-height: .5">
+                      <br><br>
+                      <p><b>From:</b></p>
+                      <p>{{$user->name}}</p>
+                      <p><b>{{$user->companyUser->name}}</b></p>
+                      <p>{{$user->companyUser->address}}</p>
+                      <p>{{$user->companyUser->phone}}</p>
+                    </div>
+                    <div class="pull-right text-right" style="line-height: .5">
+                      <p><b>To:</b></p>
+                      <p class="name size-12px">{{$contactInfo->first_name.' '.$contactInfo->last_name}}</p>
+                      <p><b>{{$companyInfo->business_name}}</b></p>
+                      <p>{{$companyInfo->address}}</p>
+                      <p>{{$companyInfo->phone}}</p>
+                      <p><a href="mailto:{{$companyInfo->email}}">{{$companyInfo->email}}</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-lg-12">
             <div class="m-portlet__body">
@@ -737,17 +801,22 @@ $subtotalDestiny = 0;
                           </a>
                         </h5>
                       </div>
-                    </div>
+                    </div><br>
+                    <hr>
                     <div class='row'>
                       <div class="col-md-12">
-                        <h5 class="title-quote pull-right size-16px">
+                        @php
+                        $totalQ = explode(" ",$info->totalQuote);
+                        @endphp
 
-                          Total: 
-                          @php
-                          $totalQ = explode(" ",$info->totalQuote);
-                          @endphp
-                          <span id="total">{{$totalQ[0]}}</span>&nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif
-                        </h5>
+                        <div class="form-group text-right">
+                          <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: <span id="total">{{$totalQ[0]}}</span> &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></button></h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group text-left">
+                        <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
                       </div>
                     </div>
                   </div>
@@ -775,18 +844,18 @@ $subtotalDestiny = 0;
       </div>        
 
     </div>
-                      <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
-                          <button type="submit" class="btn btn-primary">
-                            Save
-                          </button>
-                          @if($email_templates)
-                          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
-                            Save and send
-                          </button>
-                          @endif
-                        </div>
-                      </div>
+    <div class="row">
+      <div class="col-lg-4 col-lg-offset-4">
+        <button type="submit" class="btn btn-primary">
+          Save
+        </button>
+        @if($email_templates)
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
+          Save and send
+        </button>
+        @endif
+      </div>
+    </div>
     @if(isset($form->price_id ))
     @php
     $priceID = $form->price_id;
