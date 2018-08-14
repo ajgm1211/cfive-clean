@@ -2194,7 +2194,7 @@ class ContractsController extends Controller
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId =\Auth::user()->company_user_id;
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId);
-        return 'Importado';
+        return 'Importado';        
     }
 
     public function failRatesSurchrgesForNewContracts($id){
