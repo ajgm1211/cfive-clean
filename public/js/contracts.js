@@ -78,6 +78,7 @@ $(document).on('click', '#delete-contract', function () {
 
 $(document).on('click', '#delete-rate', function () {
   var id = $(this).attr('data-rate-id');
+
   var theElement = $(this);
   swal({
     title: 'Are you sure?',

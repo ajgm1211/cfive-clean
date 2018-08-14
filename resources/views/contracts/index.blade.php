@@ -1,4 +1,9 @@
 @extends('layouts.app')
+@section('css')
+@parent
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+@endsection
+
 @section('title', 'Contracts')
 @section('content')
 
@@ -38,13 +43,13 @@
             <li class="nav-item m-tabs__item">
               <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                 <i class="la la-cog"></i>
-                List Rates 
+                FCL Rates
               </a>
             </li>
             <li class="nav-item m-tabs__item">
               <a class="nav-link m-tabs__link addS" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                 <i class="la la-briefcase"></i>
-                List Contracts
+                FCL Contracts
               </a>
             </li>
 
@@ -61,37 +66,11 @@
                   <div class="form-group m-form__group row align-items-center">
 
                     <div class="col-md-4">
-                      <div class="m-form__group m-form__group--inline">
-                        <div class="m-form__label">
-                          <label class="m-label m-label--single">
-                            Status:
-                          </label>
-                        </div>
-                        <div class="m-form__control">
-                          <select class="form-control m-bootstrap-select" id="m_form_type">
-                            <option value="">
-                              All
-                            </option>
-                            <option value="1">
-                              Publish
-                            </option>
-                            <option value="2">
-                              Drafts
-                            </option>
-                          </select>
-                        </div>
-                      </div>
+             
                       <div class="d-md-none m--margin-bottom-10"></div>
                     </div>
                     <div class="col-md-4">
-                      <div class="m-input-icon m-input-icon--left">
-                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
-                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                          <span>
-                            <i class="la la-search"></i>
-                          </span>
-                        </span>
-                      </div>
+         
                     </div>
                   </div>
                 </div>
@@ -122,7 +101,7 @@
                 </div>
               </div>
             </div>
-            <table class="m-datatable"  id="html_table" >
+            <table class="table m-table m-table--head-separator-primary" id="tableRates" >
               <thead>
                 <tr>
                   <th title="Field #1">
@@ -131,6 +110,7 @@
                   <th title="Field #2">
                     Number
                   </th>
+
                   <th title="Field #3">
                     Carrier
                   </th>
@@ -138,7 +118,7 @@
                     Origin Port
                   </th>
                   <th title="Field #5">
-                    Destiny Port
+                    Destination Port
                   </th>
                   <th title="Field #6" >
                     20'
@@ -166,40 +146,7 @@
               </thead>
               <tbody>
 
-                @foreach ($arreglo as $arr)
 
-                @foreach ($arr->rates as $rates)
-                <tr>
-                  <td>{{ $arr->name }}</td>
-                  <td>{{ $arr->number }}</td>
-                  <td>{{ $rates->carrier->name }}</td>
-                  <td>{{$rates->port_origin->name  }}</td>
-                  <td>{{$rates->port_destiny->name  }}</td>
-                  <td>{{$rates->twuenty  }}</td>
-                  <td>{{$rates->forty  }}</td>
-                  <td>{{$rates->fortyhc  }}</td>
-                  <td>{{$rates->currency->alphacode  }}</td>
-                  <td>{{ $arr->validity}} -  {{$arr->expire}}</td>
-                  <td>@if($arr->status == "publish")
-                    1
-                    @else
-                    2
-                    @endif
-                  </td>
-                  <td>
-                    <a href="{{ route("contracts.edit", $arr->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                      <i class="la la-edit"></i>
-                    </a>
-                    
-                    
-                    <a href="#" id="delete-rate" data-rate-id="{{$rates->id }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" >
-                      <i class="la la-eraser"></i>
-                    </a>
-
-                  </td>
-                </tr>
-                @endforeach
-                @endforeach
               </tbody>
             </table>
 
@@ -241,37 +188,10 @@
                   <div class="form-group m-form__group row align-items-center">
 
                     <div class="col-md-4">
-                      <div class="m-form__group m-form__group--inline">
-                        <div class="m-form__label">
-                          <label class="m-label m-label--single">
-                            Status:
-                          </label>
-                        </div>
-                        <div class="m-form__control">
-                          <select class="form-control m-bootstrap-select m_form_type2" id="m_form_type">
-                            <option value="">
-                              All
-                            </option>
-                            <option value="1">
-                              Publish
-                            </option>
-                            <option value="2">
-                              Drafts
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="d-md-none m--margin-bottom-10"></div>
+                     
                     </div>
                     <div class="col-md-4">
-                      <div class="m-input-icon m-input-icon--left">
-                        <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch2">
-                        <span class="m-input-icon__icon m-input-icon__icon--left">
-                          <span>
-                            <i class="la la-search"></i>
-                          </span>
-                        </span>
-                      </div>
+                  
                     </div>
                   </div>
                 </div>
@@ -293,7 +213,7 @@
                     <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                       <span>
                         <span>
-                          Importation &nbsp;
+                          Importat &nbsp;
                         </span>
                         <i class="la la-cloud-upload"></i>
                       </span>
@@ -304,7 +224,7 @@
                 </div>
               </div>
             </div>
-            <table class="m-datatable2"  id="" >
+             <table class="table m-table m-table--head-separator-primary"  id="tableContracts" >
               <thead>
                 <tr>
                   <th title="Field #1">
@@ -329,32 +249,7 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach($contractG as $contractG)
-                <tr>
-                  <td>{{ $contractG->name }}</td>
-                  <td>{{ $contractG->number }}</td>
-                  <td>{{ $contractG->validity}}</td>
-                  <td>{{$contractG->expire}}</td>
-                  <td>@if($arr->status == "publish")
-                    1
-                    @else
-                    2
-                    @endif
-                  </td>
-                  <td>
-                    <a href="{{ route("contracts.edit", $contractG->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                      <i class="la la-edit"></i>
-                    </a>
-
-
-                    <a  id="delete-contract" data-contract-id="{{$contractG->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
-                      <i class="la la-eraser"></i>
-                    </a>
-
-
-                  </td>
-                </tr>
-                @endforeach
+       
 
               </tbody>
             </table>
@@ -394,6 +289,113 @@
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script src="/js/contracts.js"></script>
+<script>                 
+  $(function() {
+
+
+    $('#tableRates').DataTable({
+      ajax:  "{{ route('contract.table') }}",
+      columns: [
+
+        {data: 'name', name: 'name'},
+        {data: 'number', name: 'number'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'port_orig', name: 'port_orig'},
+        {data: 'port_dest', name: 'port_dest'},
+        {data: 'twuenty', name: 'twuenty'},
+        {data: 'forty', name: 'forty'},
+        {data: 'fortyhc', name: 'fortyhc'},
+        {data: 'currency', name: 'currency'},
+
+        {data: 'validity', name: 'validity'},
+        {data: 'status', name: 'status'},
+        {data: 'options', name: 'options'}
+      ]
+      ,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "deferLoading": 57,
+      "processing": true,
+      "dom": 'Bfrtip',
+      "paging": true,
+
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
+
+
+    });
+    
+    $('#tableContracts').DataTable({
+      ajax:  "{{ route('contract.tableG') }}",
+      columns: [        
+        {data: 'name', name: 'name'},
+        {data: 'number', name: 'number'},
+        {data: 'validity', name: 'validity'},
+        {data: 'expire', name: 'expire'},
+        {data: 'status', name: 'status'},
+        {data: 'options', name: 'options'}
+      ]
+      ,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "deferLoading": 57,
+      "processing": true,
+      "dom": 'Bfrtip',
+      "paging": true,
+
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
+
+
+    });
+
+
+  });  
+</script>
 
 @stop

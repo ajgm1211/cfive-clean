@@ -71,7 +71,7 @@
                             <a href="{{route('prices.add')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>
-                                        Add Price
+                                        Add Price Level
                                     </span>
                                     <i class="la la-plus"></i>
                                 </span>

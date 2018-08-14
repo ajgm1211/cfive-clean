@@ -106,11 +106,15 @@
                         <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
                         @if($quote->origin_harbor)
                         <td>{{$quote->origin_harbor->name }}</td>
+                        @elseif($quote->origin_airport)
+                        <td>{{$quote->origin_airport->name }}</td>
                         @else
                         <td>{{$quote->origin_address }}</td>
                         @endif
                         @if($quote->destination_harbor)
                         <td>{{$quote->destination_harbor->name }}</td>
+                        @elseif($quote->destination_airport)
+                        <td>{{$quote->destination_airport->name }}</td>
                         @else
                         <td>{{$quote->destination_address }}</td>
                         @endif

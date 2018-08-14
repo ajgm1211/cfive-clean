@@ -8,8 +8,9 @@
             <div class="form-group m-form__group">
                 @include('surcharges.partials.form_surcharges')
                 <div class="form-group m-form__group">
-                    {!! Form::label('sale_term_id', 'Sale Terms') !!}<br>
-                    {{ Form::select('sale_term_id[]',$sale_terms,null,['class'=>'custom-select form-control','id' => 'sale_term_id']) }}
+                    {!! Form::label('sale_term_id', 'Sale Terms') !!}<br> 
+                    {{ Form::select('sale_term_id',$sale_terms,null,['class'=>'custom-select form-control','id' => 'sale_term_id','placeholder'=>'Select an option']) }}
+
                 </div>
             </div>
         </div>

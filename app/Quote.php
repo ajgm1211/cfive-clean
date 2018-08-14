@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quote extends Model
 {
-    protected $fillable = ['owner','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id',
-    'destination_harbor_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','total_quantity','total_weight','total_volume','type_cargo','status_quote_id','pick_up_date',
-    'delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','sale_term_id'];
+    protected $fillable = ['owner','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id','destination_harbor_id','origin_airport_id','destination_airport_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','total_quantity','total_weight','total_volume','type_cargo','status_quote_id','pick_up_date','delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','total_markup_origin','total_markup_freight','total_markup_destination','sale_term_id','carrier_id','airline_id'];
 
     public function company()
     {
@@ -18,6 +16,16 @@ class Quote extends Model
     public function contact()
     {
         return $this->belongsTo('App\Contact');
+    }
+
+    public function carrier()
+    {
+        return $this->belongsTo('App\Carrier');
+    }
+
+    public function airline()
+    {
+        return $this->belongsTo('App\Airline');
     }
 
     public function user()
@@ -50,6 +58,16 @@ class Quote extends Model
         return $this->hasOne('App\Harbor','id','destination_harbor_id');
     }
 
+    public function origin_airport()
+    {
+        return $this->hasOne('App\Airport','id','origin_airport_id');
+    }
+
+    public function destination_airport()
+    {
+        return $this->hasOne('App\Airport','id','destination_airport_id');
+    }    
+
     public function company_name()
     {
         return $this->hasManyThrough('App\Company','App\CompanyPrice','price_id','id','id','company_id');
@@ -57,6 +75,10 @@ class Quote extends Model
     public function schedules()
     {
         return $this->hasMany('App\Schedule');
+    }
+    public function packages()
+    {
+        return $this->hasMany('App\PackageLoad','quote_id');
     }
     public function currencies()
     {

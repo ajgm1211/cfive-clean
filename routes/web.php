@@ -115,6 +115,12 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
   Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
 
+  // DATATABLES
+
+  Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
+  Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
+  Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
+  Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
