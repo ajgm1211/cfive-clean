@@ -54,6 +54,9 @@ class CreateQuotesTable extends Migration
             $table->float('sub_total_origin')->nullable();
             $table->float('sub_total_freight')->nullable();
             $table->float('sub_total_destination')->nullable();
+            $table->float('total_markup_origin')->nullable();
+            $table->float('total_markup_freight')->nullable();
+            $table->float('total_markup_destination')->nullable();            
             $table->integer('status_quote_id')->unsigned()->default(1);
             $table->foreign('status_quote_id')->references('id')->on('status_quotes');
             $table->integer('sale_term_id')->unsigned()->nullable();

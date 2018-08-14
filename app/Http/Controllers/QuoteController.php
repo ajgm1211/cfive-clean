@@ -101,7 +101,24 @@ class QuoteController extends Controller
     $user = User::where('id',\Auth::id())->first();
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules  ]);
+      if($company_user_id){
+      $company_user=CompanyUser::find($company_user_id);
+      $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+      $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
+      $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
+    }
+    if($company_user){
+      $currencies = Currency::pluck('alphacode','id');
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+    if(\Auth::user()->company_user_id && $currency_cfg != ''){
+      if($currency_cfg->alphacode=='USD'){
+        $exchange = Currency::where('api_code_eur','EURUSD')->first();
+      }else{
+        $exchange = Currency::where('api_code','USDEUR')->first();
+      }
+    }
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates]);
   }
   public function skipPluck($pluck)
   {
