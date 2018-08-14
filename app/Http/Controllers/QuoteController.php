@@ -88,8 +88,17 @@ class QuoteController extends Controller
     $info =$request->input('info');
     $info = json_decode($info);
     $form =$request->input('form');
+
+
+
+
     $schedules = $request->input('schedules');
     $form = json_decode($form);
+
+
+    $companiesInfo = Company::where('id','=',$form->company_id)->first();  
+    $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
+
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
     $company_user=CompanyUser::find($company_user_id);
@@ -98,10 +107,10 @@ class QuoteController extends Controller
     $countries = Country::all()->pluck('name','id');
     $currency = Currency::all()->pluck('alphacode','id');
     $prices = Price::all()->pluck('name','id');
-    $user = User::where('id',\Auth::id())->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
     $currencies = Currency::all();
     $currency_cfg = Currency::find($company_user->currency_id);
-      if($company_user_id){
+    if($company_user_id){
       $company_user=CompanyUser::find($company_user_id);
       $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
       $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
@@ -118,7 +127,7 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ]);
   }
   public function skipPluck($pluck)
   {
@@ -136,7 +145,7 @@ class QuoteController extends Controller
     }
     return $rateC;
   }
-   public function listRate(Request $request)
+  public function listRate(Request $request)
   {
 
     $company_user_id=\Auth::user()->company_user_id;
