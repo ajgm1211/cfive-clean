@@ -527,5 +527,24 @@ Load
   });
 
 </script>
+@if(session('editRate'))
+<script>
+
+  swal(
+    'Done!',
+    'Rate updated.',
+    'success'
+  )
+</script>
+@endif
+@if(session('localchar'))
+<script>
+  swal(
+    'Done!',
+    'Local Charge updated.',
+    'success'
+  )
+</script>
+@endif
 
 @stop
