@@ -16,12 +16,13 @@
                 @include('contacts.partials.form_add_contacts')
                 <div class="form-group m-form__group">
                     {!! Form::label('company_id', 'Company') !!}<br>
-                    {{ Form::select('compan_id',$companies,$contact->company->id,['class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
+                    {{ Form::select('company_id',$companies,$contact->company->id,['class'=>'custom-select form-control','id' => 'm_select2_2_modal']) }}
                 </div>
             </div>
         </div>
         <div class="m-portlet__foot m-portlet__foot--fit">
             <div class="m-form__actions m-form__actions">
+                <br>
                 {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
                 <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">Cancel</span>

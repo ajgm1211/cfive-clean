@@ -686,12 +686,16 @@ $(document).on('click', '#create-quote', function (e) {
     var total_weight='';
     var total_volume='';
     var type_cargo='';
-    var quantity='';
-    var height='';
-    var width='';
-    var large='';
-    var weight='';
-    var volume='';
+    var quantity = new Array();
+    var height = new Array();
+    var width = new Array();
+    var large = new Array();
+    var weight = new Array();
+    var volume = new Array();
+    var type_cargo = new Array();
+    var myTableDiv = document.getElementById("label_package_loads");
+    var table = document.createElement('table');
+    var tableBody = document.createElement('tbody');
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
@@ -710,6 +714,106 @@ $(document).on('click', '#create-quote', function (e) {
     }
     if($("#total_volume").val()>0){
         total_volume=$("#total_volume").val();
+    }
+
+    //Creating table to loads by packages
+    table.appendChild(tableBody);
+
+    var heading = new Array();
+    heading[0] = "Quantity";
+    heading[1] = "Height";
+    heading[2] = "Width";
+    heading[3] = "Large";
+    heading[4] = "Weight";
+    heading[5] = "Volume";
+
+    $(".type_cargo").each(function(){
+        if($(this).val()==1){
+            type_cargo.push('Pallets');
+        }else{
+            type_cargo.push('Packages');
+        }
+    });
+
+    $(".quantity").each(function(){
+        if($(this).val()!=''){
+            quantity.push($(this).val());
+        }
+    });
+
+    $(".height").each(function(){
+        if($(this).val()!=''){
+            height.push($(this).val());
+        }
+    });
+
+    $(".width").each(function(){
+        if($(this).val()!=''){
+            width.push($(this).val());
+        }
+    });
+
+    $(".large").each(function(){
+        if($(this).val()!=''){
+            large.push($(this).val());
+        }
+    });
+
+    $(".volume_input").each(function(){
+        if($(this).val()!=''){
+            volume.push($(this).val()+" cm3");
+        }
+    });
+
+    $(".weight").each(function(){
+        if($(this).val()!=''){
+            weight.push($(this).val()+" kg");
+        }
+    });
+
+    var q2 = new Array();
+
+    for (i = 0; i < quantity.length; i++) {
+        for (i = 0; i < height.length; i++) {
+            for (i = 0; i < width.length; i++) {
+                for (i = 0; i < large.length; i++) {
+                    for (i = 0; i < weight.length; i++) {
+                        for (i = 0; i < volume.length; i++) {
+                            q2[i] = new Array (quantity[i],height[i],width[i],large[i],weight[i],volume[i]);
+                        }
+                    }
+                }
+            }
+        }   
+    }   
+
+    //TABLE COLUMNS
+    var tr = document.createElement('tr');
+    tableBody.appendChild(tr);
+    for (i = 0; i < heading.length; i++) {
+        var th = document.createElement('th')
+        th.width = '75';
+        th.setAttribute('class','header-table title-quote');
+        th.appendChild(document.createTextNode(heading[i]));
+        tr.appendChild(th);
+    }
+
+    //TABLE ROWS
+    for (i = 0; i < q2.length; i++) {
+        var tr = document.createElement('tr');
+        for (j = 0; j < q2[i].length; j++) {
+            var td = document.createElement('td')
+            td.appendChild(document.createTextNode(q2[i][j]));
+            tr.appendChild(td)
+        }
+        tableBody.appendChild(tr);
+    }
+
+    //Adding table body to table
+    if(q2.length>0){
+        table.setAttribute('class', 'table table-bordered color-blue text-center')
+        $("#label_package_loads table").empty();
+        myTableDiv.appendChild(table);
     }
 
     type_cargo=$("#type_cargo").val();
@@ -793,7 +897,7 @@ $(document).on('click', '#create-quote', function (e) {
 });
 
 $( document ).ready(function() {
-    $("select[name='company_id']").val('');
+    //$("select[name='company_id']").val('');
 
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
@@ -1590,6 +1694,10 @@ $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
 
+$('.select2-company_id').select2({
+    placeholder: "Select an option"
+});
+
 /** SCHEDULES **/
 
 $(document).on('click', '#select-schedule', function () {
@@ -1653,4 +1761,49 @@ function change_tab(tab){
     }else{
         $(this).closest('.packages_section').prop('disabled',true);
     }
+}
+
+function addTable() {
+    var myTableDiv = document.getElementById("metric_results")
+    var table = document.createElement('TABLE')
+    var tableBody = document.createElement('TBODY')
+
+    table.border = '1'
+    table.appendChild(tableBody);
+
+    var heading = new Array();
+    heading[0] = "Request Type"
+    heading[1] = "Group A"
+    heading[2] = "Groub B"
+    heading[3] = "Group C"
+    heading[4] = "Total"
+
+    var stock = new Array()
+    stock[0] = new Array("Cars", "88.625", "85.50", "85.81", "987")
+    stock[1] = new Array("Veggies", "88.625", "85.50", "85.81", "988")
+    stock[2] = new Array("Colors", "88.625", "85.50", "85.81", "989")
+    stock[3] = new Array("Numbers", "88.625", "85.50", "85.81", "990")
+    stock[4] = new Array("Requests", "88.625", "85.50", "85.81", "991")
+
+    //TABLE COLUMNS
+    var tr = document.createElement('TR');
+    tableBody.appendChild(tr);
+    for (i = 0; i < heading.length; i++) {
+        var th = document.createElement('TH')
+        th.width = '75';
+        th.appendChild(document.createTextNode(heading[i]));
+        tr.appendChild(th);
+    }
+
+    //TABLE ROWS
+    for (i = 0; i < stock.length; i++) {
+        var tr = document.createElement('TR');
+        for (j = 0; j < stock[i].length; j++) {
+            var td = document.createElement('TD')
+            td.appendChild(document.createTextNode(stock[i][j]));
+            tr.appendChild(td)
+        }
+        tableBody.appendChild(tr);
+    }  
+    myTableDiv.appendChild(table)
 }
