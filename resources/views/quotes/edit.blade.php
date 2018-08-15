@@ -398,11 +398,9 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>
-
 
                                                     <div class="form-group m-form__group row">
                                                         <div class="col-lg-2">
@@ -502,7 +500,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                                                     <label>Company</label>
-                                                                    {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'m-select2-general form-control','required'=>true]) }}
+                                                                    {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'select2-company_id form-control','required'=>true]) }}
                                                                 </div>
                                                                 <div class="col-md-4 col-sm-4 ol-xs-12">
                                                                     <label>Client</label>
@@ -586,19 +584,18 @@
                                                                         <p id="cargo_details_total_volume_p" class="hide"><b>Total volume: </b> <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row" id="label_package_loads" style="display:none;">
-                                                                    <div class="col-md-12">
-                                                                        <table>
-                                                                            <div id="table_package_loads"></div>
-                                                                        </table>
+                                                                <div class="row">
+                                                                    <div class="col-md-12" id="label_package_loads">
+                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-12">
                                                             <h5 class="title-quote size-14px">Origin ammounts</h5>
+                                                            <hr>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
@@ -783,8 +780,9 @@
                                                     </div>
 
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-12">
                                                             <h5 class="title-quote size-14px">Freight ammounts</h5>
+                                                            <hr>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
@@ -971,8 +969,9 @@
 
 
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-12">
                                                             <h5 class="title-quote size-14px">Destination ammounts</h5>
+                                                            <hr>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">

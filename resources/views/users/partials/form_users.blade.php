@@ -22,25 +22,35 @@
                 <option value="subuser">Subuser</option>
             </select>
         </div>
+    @else
+        <div class="form-group m-form__group">
+            <select class="form-control" name="type">
+                <option value="">Choose a type</option>
+                <option value="company">Company</option>
+                <option value="subuser">Subuser</option>
+            </select>
+        </div>
     @endif
 @else
-    <div class="form-group m-form__group">
-        <select class="form-control" name="type">
-            <option value="">Choose a type</option>
-            <option value="admin" {{$user->type=='admin' ? 'selected':''}}>Admin</option>
-            <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
-            <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
-        </select>
-    </div>
+    @if( Auth::user()->type == 'admin')
+        <div class="form-group m-form__group">
+            <select class="form-control" name="type">
+                <option value="">Choose a type</option>
+                <option value="admin" {{$user->type=='admin' ? 'selected':''}}>Admin</option>
+                <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
+                <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
+            </select>
+        </div>
+    @else
+        <div class="form-group m-form__group">
+            <select class="form-control" name="type">
+                <option value="">Choose a type</option>
+                <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
+                <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
+            </select>
+        </div>
+    @endif
 @endif
-@if( Auth::user()->type == 'company'   )
-    <div class="form-group m-form__group">
-        <select class="form-control" name="type">
-            <option value="subuser">Sub-user</option>
-        </select>
-    </div>
-@endif
-
 
 
 
