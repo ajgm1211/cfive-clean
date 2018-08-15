@@ -1857,7 +1857,7 @@ class ContractsController extends Controller
                            }
                            break;
                        }
-                       
+
                    });
         $boxdinamy = [
             'existorigin'   => $originBol,
@@ -2194,9 +2194,11 @@ class ContractsController extends Controller
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId =\Auth::user()->company_user_id;
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId);
-        return 'Importado';
+        return redirect()->route('redirect.Processed.Information');
     }
-
+    public function redirectProcessedInformation(){
+        return view('.contracts.ProcessedInformation');
+    }
     public function failRatesSurchrgesForNewContracts($id){
 
         $objharbor          = new Harbor();
