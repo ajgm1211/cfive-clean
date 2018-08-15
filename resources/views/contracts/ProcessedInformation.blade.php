@@ -45,12 +45,18 @@
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
-                    <div class="col-xl-8 order-2 order-xl-1 conten_load">
-                        muestra
-                        <div class="load">
-                        
-                        </div>
-                       
+                    <div class="col-xl-12 order-2 order-xl-1 conten_load">
+                        <center>
+                            <div class="form-group">
+                                <div class="col-sm-6"></div>
+                                <div class="col-sm-6">
+                                    <img src="{{asset('images/ship.gif')}}" style="height:170px">
+                                </div>
+                                <div class="col-md-12">
+                                    We will notify you when the file has been processed
+                                </div>
+                            </div>
+                        </center>
                     </div>
 
                 </div>
