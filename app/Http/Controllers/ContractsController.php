@@ -18,6 +18,7 @@ use App\CalculationType;
 use App\LocalCharge;
 use App\Surcharge;
 use App\LocalCharCarrier;
+use App\CompanyUser;
 use App\LocalCharPort;
 use App\User;
 use App\TypeDestiny;
@@ -1762,18 +1763,20 @@ class ContractsController extends Controller
     }
 
     public function LoadViewImporContractFcl(){
-        $harbor  = harbor::all()->pluck('display_name','id');
-        $carrier = carrier::all()->pluck('name','id');
-        return view('contracts.ImporContractFcl',compact('harbor','carrier'));
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        return view('contracts.ImporContractFcl',compact('harbor','carrier','companysUser'));
     }
     public function UploadFileNewContract(Request $request){
         //dd($request);
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $type = $request->type;
-        $carrierVal = $request->carrier;
-        $destinyArr = $request->destiny;
-        $originArr  = $request->origin;
+        $carrierVal     = $request->carrier;
+        $destinyArr     = $request->destiny;
+        $originArr      = $request->origin;
+        $CompanyUserId  = $request->CompanyUserId;
         $carrierBol = false;
         $destinyBol = false;
         $originBol  = false;
@@ -1804,7 +1807,7 @@ class ContractsController extends Controller
         $contract->validity         = $validity[0];
         $contract->expire           = $validity[1];
         $contract->status           = 'incomplete';
-        $contract->company_user_id  = \Auth::user()->company_user_id;
+        $contract->company_user_id  = $CompanyUserId;
         $contract->save(); //*/
         $Contract_id = $contract->id;
         $fileTmp = new FileTmp();
@@ -2193,7 +2196,8 @@ class ContractsController extends Controller
 
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId =\Auth::user()->company_user_id;
-        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId);
+        $UserId =\Auth::user()->id;
+        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId);
         return redirect()->route('redirect.Processed.Information');
     }
     public function redirectProcessedInformation(){
@@ -2493,5 +2497,12 @@ class ContractsController extends Controller
                                                                  'calculationtypeselect',
                                                                  'id'
                                                                 )); //*/
+    }
+
+    public function LoadViewRequestImporContractFcl(){
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $user   = \Auth::user();
+        return view('contracts.Requests.NewRequest',compact('harbor','carrier','user'));
     }
 }

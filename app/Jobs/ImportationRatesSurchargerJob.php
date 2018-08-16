@@ -34,22 +34,23 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UploadFileRateRequest;
 use App\FileTmp;
 use Illuminate\Support\Facades\Storage;
-use Yajra\Datatables\Datatables;
+use App\Notifications\N_general;
 
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $request,$companyUserId;
+    public $request,$companyUserId,$UserId;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($request,$companyUserId)
+    public function __construct($request,$companyUserId,$UserId)
     {
-        $this->request = $request;
-        $this->companyUserId = $companyUserId;
+        $this->request          = $request;
+        $this->companyUserId    = $companyUserId;
+        $this->UserId           = $UserId;
 
     }
 
@@ -1565,9 +1566,14 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $contractData = Contract::find($requestobj['Contract_id']);
         $contractData->status = 'publish';
         $contractData->update();
+        
         Storage::Delete($NameFile);
         $FileTmp = new FileTmp();
         $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
+        
+        $userNotifique = User::find($this->UserId);
+        $message = 'The file imported was processed :' . $contractData->number ;
+        $userNotifique->notify(new N_general($userNotifique,$message));
 
 
     }
