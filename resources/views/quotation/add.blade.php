@@ -40,7 +40,9 @@ $subtotalDestiny = 0;
 
       <div class="col-md-2 col-xs-4" >
         @if($email_templates)
-<a href="#" class="btn btn-primary btn-block">Save and send</a>
+        <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#SendQuoteModal">
+          Save and send
+        </button>
         @endif
 
       </div>
@@ -916,6 +918,9 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    @if($email_templates)
+    @include('quotes.partials.submitQuoteEmailModal');
+    @endif
     {!! Form::close() !!}  
   </div>
 </div>
