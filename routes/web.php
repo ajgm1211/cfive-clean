@@ -116,6 +116,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
     Route::get('RedirectProcessedInformation/','ContractsController@redirectProcessedInformation')->name('redirect.Processed.Information');
 
+    //New Request Importation
+    Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
+    Route::resource('RequestImportation','NewContractRequestsController');
+
     // DATATABLES
 
     Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');

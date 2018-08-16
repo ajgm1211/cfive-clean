@@ -8,7 +8,15 @@
 @section('content')
 
 <div class="m-content">
-
+    @if (count($errors) > 0)
+    <div id="notificationError" class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     @if(Session::has('message.nivel'))
 
     <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
@@ -34,7 +42,8 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation New Contract 
+
+                        New import request for new contract
                         <!--<small>
 new registration
 </small>-->
@@ -53,7 +62,7 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true])!!}
+        {!! Form::open(['route'=>'RequestImportation.store','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -85,16 +94,8 @@ new registration
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                             </div>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-2"> </div>
-                                <div class="col-lg-3">
-                                    <label for="numberid" class=" ">Company User</label>
-                                    {!!  Form::select('CompanyUserId',$companysUser,null,['id'=>'CompanyUserId',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
-                            </div>
-                            <hr>
+                            <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
+                            <input type="hidden" name="user" value="{{$user->id}}" />
                             <hr>
                             <div class="form-group m-form__group row">
 
