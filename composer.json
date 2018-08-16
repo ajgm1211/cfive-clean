@@ -20,6 +20,7 @@
         "orangehill/iseed": "dev-master",
         "predis/predis": "^1.1",
         "pusher/pusher-php-server": "^3.1",
+        "spatie/laravel-permission": "^2.14",
         "yajra/laravel-datatables-oracle": "^8.7"
     },
     "require-dev": {

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RegisterController extends Controller
 {
@@ -75,6 +77,7 @@ class RegisterController extends Controller
             'lastname' => $data['lastname']
 
         ]);
+       $user->assignRole('company');
 
         VerifyUser::create([
             'user_id' => $user->id,

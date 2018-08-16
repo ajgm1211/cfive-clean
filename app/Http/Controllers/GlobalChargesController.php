@@ -37,7 +37,7 @@ class GlobalChargesController extends Controller
     $objcalculation = new CalculationType();
     $objsurcharge = new Surcharge();
     $objtypedestiny = new TypeDestiny();
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $calculationT = $objcalculation->all()->pluck('name','id');

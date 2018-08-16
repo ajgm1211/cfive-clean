@@ -35,16 +35,20 @@ class ContractObserver
      */
   public function updated(Contract $contract)
   {
-    $userLogin  = auth()->user();
-    $idCompany = $contract->company_user_id;
-  
 
-    $users = User::all()->where('company_user_id','=',$idCompany);
-    $message = 'actualizo el contrato :' . $contract->number ;
+    if(auth()->user() != null ){
+      $userLogin  = auth()->user();
+      $idCompany = $contract->company_user_id;
+      $users = User::all()->where('company_user_id','=',$idCompany);
+      $message = 'actualizo el contrato :' . $contract->number ;
 
-    foreach ($users as $user) {
-      $user->notify(new N_general($userLogin,$message));
+      foreach ($users as $user) {
+        $user->notify(new N_general($userLogin,$message));
+      }
+
     }
+
+
 
   }
 
