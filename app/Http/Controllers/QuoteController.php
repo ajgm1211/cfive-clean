@@ -79,7 +79,7 @@ class QuoteController extends Controller
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
     $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
@@ -95,22 +95,16 @@ class QuoteController extends Controller
     $info =$request->input('info');
     $info = json_decode($info);
     $form =$request->input('form');
-
-
-    
-
     $schedules = $request->input('schedules');
     $form = json_decode($form);
 
- 
     $companiesInfo = Company::where('id','=',$form->company_id)->first();  
     $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
-
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
     $company_user=CompanyUser::find($company_user_id);
     $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
     $currency = Currency::all()->pluck('alphacode','id');
     $prices = Price::all()->pluck('name','id');
@@ -1583,7 +1577,7 @@ class QuoteController extends Controller
     $email_templates = '';
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
     $airports = Airport::all()->pluck('name','id');
     $carriers = Carrier::all()->pluck('name','id');
@@ -1621,7 +1615,7 @@ class QuoteController extends Controller
     $email_templates='';
     $quote = Quote::findOrFail($id);
     $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -2022,7 +2016,7 @@ class QuoteController extends Controller
       $body = $input['body'];
       $contact_email = Contact::find($quote->contact_id);
       $companies = Company::all()->pluck('business_name','id');
-      $harbors = Harbor::all()->pluck('name','id');
+      $harbors = Harbor::all()->pluck('display_name','id');
       $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
       $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
       $prices = Price::all()->pluck('name','id');
@@ -2069,7 +2063,7 @@ class QuoteController extends Controller
     $terms_origin='';
     $terms_destination='';
     $quote = Quote::findOrFail($id);
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
@@ -2283,7 +2277,7 @@ class QuoteController extends Controller
     $quotes = Quote::all();
     $quote = Quote::findOrFail($id);
     $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -2401,7 +2395,7 @@ class QuoteController extends Controller
     $quote->update();
     $quotes = Quote::all();
     $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
+    $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
     if($request->ajax()){
       return response()->json(['message' => 'Ok']);

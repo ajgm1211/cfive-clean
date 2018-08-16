@@ -101,7 +101,7 @@
                             <td>{{ $arr->provider }}</td>
                             <td>
                                 @foreach($arr->inlandports as $inlandports)
-                                    {{ $inlandports->ports->name }}
+                                    {{ $inlandports->ports->display_name }}
                                 @endforeach
                             </td>
                             <td>
