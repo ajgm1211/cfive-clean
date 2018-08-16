@@ -54,7 +54,7 @@
                                   <label class="m-option">
                                     <span class="m-option__control">
                                       <span class="m-radio m-radio--brand m-radio--check-bold">
-                                        <input name="type" value="1" required='true' type="radio">
+                                        <input name="type"   checked='true' value="1" required='true' type="radio">
                                         <span></span>
                                       </span>
                                     </span>
@@ -67,40 +67,7 @@
                                     </span>
                                   </label>
                                 </div>
-                                <div class="col-md-4">
-                                  <label class="m-option">
-                                    <span class="m-option__control">
-                                      <span class="m-radio m-radio--brand m-radio--check-bold">
-                                        <input name="type" value="2" type="radio">
-                                        <span></span>
-                                      </span>
-                                    </span>
-                                    <span class="m-option__label">
-                                      <span class="m-option__head">
-                                        <span class="m-option__title">
-                                          LCL
-                                        </span>
-                                      </span>
-                                    </span>
-                                  </label>
-                                </div>
-                                <div class="col-md-4">
-                                  <label class="m-option">
-                                    <span class="m-option__control">
-                                      <span class="m-radio m-radio--brand m-radio--check-bold">
-                                        <input name="type" value="3" type="radio">
-                                        <span></span>
-                                      </span>
-                                    </span>
-                                    <span class="m-option__label">
-                                      <span class="m-option__head">
-                                        <span class="m-option__title">
-                                          AIR
-                                        </span>
-                                      </span>
-                                    </span>
-                                  </label>
-                                </div>
+                                
                               </div>
                               <br>
                               <div class='row'>

@@ -241,10 +241,10 @@ class ContractsController extends Controller
         return $localchar->currency->alphacode ;
       })
       ->addColumn('port_orig', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('name'));
+        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('display_name'));
       })
       ->addColumn('port_dest', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('name'));
+        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('display_name'));
       })
       ->addColumn('carrier', function (LocalCharge $localchar) {
         return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
@@ -269,10 +269,10 @@ class ContractsController extends Controller
         return $rate->currency->alphacode ;
       })
       ->addColumn('port_orig', function (Rate $rate) {
-        return $rate->port_origin->name;
+        return $rate->port_origin->display_name;
       })
       ->addColumn('port_dest', function (Rate $rate) {
-        return $rate->port_destiny->name;
+        return $rate->port_destiny->display_name;
       })
       ->addColumn('carrier', function (Rate $rate) {
         return $rate->carrier->name;
@@ -313,10 +313,10 @@ class ContractsController extends Controller
         return $contractRate->currency->alphacode ;
       })
       ->addColumn('port_orig', function (Rate $contractRate) {
-        return $contractRate->port_origin->name;
+        return $contractRate->port_origin->display_name;
       })
       ->addColumn('port_dest', function (Rate $contractRate) {
-        return $contractRate->port_destiny->name;
+        return $contractRate->port_destiny->display_name;
       })
       ->addColumn('carrier', function (Rate $contractRate) {
         return $contractRate->carrier->name;

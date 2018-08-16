@@ -12,6 +12,8 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Password;
 use App\Mail\VerifyMail;
 use App\VerifyUser;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UsersController extends Controller
 {
@@ -45,12 +47,16 @@ class UsersController extends Controller
   {
 
     if($request->type == "subuser"){
+
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
     }
 
     $user = new User($request->all());
     $user->password = bcrypt($request->password);
     $user->save();
+    if($request->type == "subuser"){
+      $user->assignRole('subuser');
+    }
 
 
     VerifyUser::create([
@@ -216,7 +222,7 @@ class UsersController extends Controller
   {
     return auth()->user()->unreadNotifications()->limit(4)->get()->toArray();
   }
-    
+
   public function updateNotifications()
   {
     $notifications =  auth()->user()->unreadNotifications()->limit(4)->get();

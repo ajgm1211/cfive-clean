@@ -53,9 +53,16 @@ class QuoteController extends Controller
   public function index()
   {
     $company_user_id = \Auth::user()->company_user_id;
-    $quotes = Quote::whereHas('user', function($q) use($company_user_id){
-      $q->where('company_user_id','=',$company_user_id);
-    })->get();
+    if(\Auth::user()->hasRole('subuser')){
+      $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+        $q->where('company_user_id','=',$company_user_id);
+      })->get();
+    }else{
+      $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+        $q->where('company_user_id','=',$company_user_id);
+      })->get();
+    }
+
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('business_name','id');
     $countries = Country::all()->pluck('name','id');
@@ -90,12 +97,12 @@ class QuoteController extends Controller
     $form =$request->input('form');
 
 
-
+    
 
     $schedules = $request->input('schedules');
     $form = json_decode($form);
 
-
+ 
     $companiesInfo = Company::where('id','=',$form->company_id)->first();  
     $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
 
@@ -127,7 +134,18 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ]);
+    if(\Auth::user()->company_user_id){
+      $terms_origin = TermsPort::where('port_id',$info->origin_port)->with('term')->whereHas('term', function($q)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+      })->get();
+      $terms_destination = TermsPort::where('port_id',$info->destiny_port)->with('term')->whereHas('term', function($q)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+      })->get();
+
+    }
+
+
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
   }
   public function skipPluck($pluck)
   {

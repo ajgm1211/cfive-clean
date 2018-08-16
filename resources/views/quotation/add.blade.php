@@ -36,18 +36,22 @@ $subtotalDestiny = 0;
     {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
     <br>
     <div class="row">
-      <input type="hidden" id="quote-id" value=""/>
 
+
+      <div class="col-md-2 col-xs-4" >
+        @if($email_templates)
+<a href="#" class="btn btn-primary btn-block">Save and send</a>
+        @endif
+
+      </div>
       <div class="col-md-2 col-xs-4">
-        <a href="" target="_blank" class="btn btn-primary btn-block">PDF</a>
+        <a href="#"  class="btn btn-primary btn-block">PDF</a>
       </div>
       <div class="col-md-2 col-xs-4" >
-        <button id="duplicate-quote" class="btn btn-primary btn-block">Save</button>
+        <button id="duplicate-quote" type="submit" class="btn btn-primary btn-block">Save</button>
 
       </div>
-      <div class="col-md-2 col-xs-4" >
-        <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
-      </div>
+
 
     </div>
     <hr><br><br>
@@ -144,9 +148,15 @@ $subtotalDestiny = 0;
                             <hr>
                           </div>
                         </div>
+                        @if($form->twuenty > 0)
                         <p id="cargo_details_20_p" ><span id="cargo_details_20"></span> {{ $form->twuenty }} x 20' Containers</p>
+                        @endif
+                        @if($form->forty > 0)
                         <p id="cargo_details_40_p" ><span id="cargo_details_40"></span> {{ $form->forty }} x 40' Containers</p>
+                        @endif
+                        @if($form->fortyhc > 0)
                         <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
+                        @endif
                         <p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>
 
                       </div>
@@ -814,9 +824,43 @@ $subtotalDestiny = 0;
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-12">
-                      <div class="form-group text-left">
-                        <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+                    <div class = 'row'>  
+                      <div class="col-md-12">
+                        <div class="form-group text-left">
+                          <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-12">      
+                            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                              <b>Terms & conditions</b>                
+                            </div>
+                          </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group ">
+
+                              @if(isset($terms_origin) && $terms_origin->count()>0)                             
+                              <h5 class="title-quote">Origin harbor</h5>
+                              @foreach($terms_origin as $v)
+                              {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                              @endforeach
+                              @endif
+                              @if(isset($terms_destination) && $terms_destination->count()>0)
+                              <h5 class="title-quote">Destination harbor</h5>
+                              @foreach($terms_destination as $v)
+                              {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                              @endforeach
+                              @endif
+                            </div>
+                          </div>
+                        </div> 
                       </div>
                     </div>
                   </div>
@@ -844,18 +888,7 @@ $subtotalDestiny = 0;
       </div>        
 
     </div>
-    <div class="row">
-      <div class="col-lg-4 col-lg-offset-4">
-        <button type="submit" class="btn btn-primary">
-          Save
-        </button>
-        @if($email_templates)
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
-          Save and send
-        </button>
-        @endif
-      </div>
-    </div>
+
     @if(isset($form->price_id ))
     @php
     $priceID = $form->price_id;

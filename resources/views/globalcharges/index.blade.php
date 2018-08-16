@@ -100,7 +100,7 @@
                   <td>
                     <div id="divport{{$loop->index}}"  class="val">
 
-                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('name') ) !!} 
+                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('display_name') ) !!} 
                     </div>
 
                     <div class="in" hidden="true">
@@ -111,7 +111,7 @@
                   <td>
                     <div id="divportDest{{$loop->index}}"  class="val">
 
-                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('name') ) !!} 
+                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('display_name') ) !!} 
                     </div>
 
                     <div class="in" hidden="true">
