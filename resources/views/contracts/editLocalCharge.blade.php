@@ -1,74 +1,112 @@
-
 <div class="m-portlet">
 
-
-
-
-
-
-  <!--begin::Form-->
   {{ Form::model($localcharges, array('route' => array('update-local-charge', $localcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
   <div class="m-portlet__body">
-    <div class="m-form__section m-form__section--first">
-      <div class="form-group m-form__group">
-        {!! Form::label('type', 'Type') !!}
+    <div class="form-group m-form__group row">
+      <div class="col-lg-4">
+        <label>
+          {!! Form::label('type', 'Type') !!}
+        </label>
         {{ Form::select('surcharge_id', $surcharge,$localcharges->surcharge_id,['id' => 'type','class'=>'m-select2-general form-control ','style' => 'width:100%;']) }}
       </div>
-      <div class="form-group m-form__group">
+      <div class="col-lg-4">
         {!! Form::label('orig', 'Origin Port') !!}
         {{ Form::select('port_origlocal[]', $harbor,$localcharges->localcharports->pluck('port_orig'),['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
       </div>
-      <div class="form-group m-form__group">
+      <div class="col-lg-4">
         {!! Form::label('dest', 'Destination Port') !!}
-        {{ Form::select('port_destlocal[]', $harbor,$localcharges->localcharports->pluck('port_dest'),['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
+
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('port_destlocal[]', $harbor,$localcharges->localcharports->pluck('port_dest'),['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-info-circle"></i>
+            </span>
+          </span>
+        </div>
+
+
       </div>
-      <div class="form-group m-form__group">
+    </div>
+    <div class="form-group m-form__group row">
+      <div class="col-lg-4">
         {!! Form::label('typed', 'Destination type') !!}
         {{ Form::select('changetype',$typedestiny, $localcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control','style' => 'width:100%;']) }}
       </div>
-
-      <div class="form-group m-form__group">
+      <div class="col-lg-4">
         {!! Form::label('carrierL', 'Carrier') !!}
-        {{ Form::select('carrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('carrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-info-circle"></i>
+            </span>
+          </span>
+        </div>
+
       </div>
-      <div class="form-group m-form__group">
+      <div class="col-lg-4">
         {!! Form::label('calculationt', 'Calculation Type') !!}
-        {{ Form::select('calculationtype_id', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('calculationtype_id', $calculationT,$localcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-map-marker"></i>
+            </span>
+          </span>
+        </div>
 
       </div>
-      <div class="form-group m-form__group">
-        {!! Form::label('ammountL', 'Ammount') !!}
-        {!! Form::text('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
-      </div> 
-
-      <div class="form-group m-form__group">
-        {!! Form::label('currencyl', 'Currency') !!}
-        {{ Form::select('currency_id', $currency,$localcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
-      </div>
-
     </div>
-    <br>
-    <hr>
-    <div class="m-portlet__foot m-portlet__foot--fit">
-      <div class="m-form__actions m-form__actions">
-        {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
-        <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">Cancel</span>
-        </button>
+    <div class="form-group m-form__group row">
+      <div class="col-lg-4">
+        {!! Form::label('ammountL', 'Ammount') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {!! Form::text('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-bookmark-o"></i>
+            </span>
+          </span>
+        </div>
+
       </div>
+      <div class="col-lg-4">
+        {!! Form::label('currencyl', 'Currency') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('currency_id', $currency,$localcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-bookmark-o"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>  
+  <br>
+  <hr>
+  <div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+      {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">Cancel</span>
+      </button>
     </div>
   </div>
   {!! Form::close() !!}
-  <!--end::Form-->
 </div>
 
 <script>
-  $('.m-select2-general').select2({
-    placeholder: "Select an option"
-  });
 
-  $('#originRate').select2({
-    placeholder: "Select an option"
-  });
+
+    $('.m-select2-general').select2({
+      placeholder: "Select an option"
+    });
+
+
+
+
 
 </script>

@@ -148,16 +148,7 @@ var Select2 = function() {
   }
 
   var modalDemos = function() {
-    $('#modalRates').on('shown.bs.modal', function () {
 
-      // basic
-      $('#originRate').select2({
-        placeholder: "Select a port",
-        minimumResultsForSearch: Infinity
-      });
-
-
-    });
     $('#m_select2_modal').on('shown.bs.modal', function () {
       // basic
       $('#m_select2_1_modal').select2({

@@ -339,8 +339,8 @@ Load
   </div>
 
 
-  <div class="modal fade" id="modalRates" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal fade bd-example-modal-lg"  id="modalRates"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
@@ -352,19 +352,20 @@ Load
             </span>
           </button>
         </div>
-        <div class="modal-body">
+        <div id = 'rate-body' class="modal-body">
 
         </div>
 
       </div>
     </div>
   </div>
-  <div class="modal fade" id="modalLocalcharge" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+  
+  <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
-            Edit Surcharges
+            Edit Local Charges
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">
@@ -379,6 +380,8 @@ Load
       </div>
     </div>
   </div>
+  
+  
 </div>
 
 </div>
@@ -503,7 +506,7 @@ Load
     if(action == "editRate"){
       var url = '{{ route("edit-rates", ":id") }}';
       url = url.replace(':id', id);
-      $('.modal-body').load(url,function(){
+      $('#rate-body').load(url,function(){
         $('#modalRates').modal({show:true});
       });
 
@@ -517,16 +520,9 @@ Load
 
     }
   }
-</script>
-<script>
-  $('.m-select2-general').select2({
-    placeholder: "Select an option"
-  });
-  $('#originRate').select2({
-    placeholder: "Select an option"
-  });
 
 </script>
+
 @if(session('editRate'))
 <script>
 
@@ -546,5 +542,7 @@ Load
   )
 </script>
 @endif
+
+
 
 @stop
