@@ -1479,6 +1479,9 @@ $('#m_select2-edit-company').select2({
 $('#price_level_company').select2({
     placeholder: "Select an option"
 });
+$('#users_company').select2({
+    placeholder: "Select an option"
+});
 // companies 
 
 $(document).on('click', '#savecompany', function () {
