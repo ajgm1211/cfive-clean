@@ -25,7 +25,7 @@ class InlandsController extends Controller
   public function add(){
 
     $objharbor = new Harbor();
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
     return view('inland/add', compact('harbor','currency'));
@@ -140,7 +140,7 @@ class InlandsController extends Controller
     $currency = $objcurrency->all()->pluck('alphacode','id');
 
     $objharbor = new Harbor();
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     return view('inland/edit', compact('harbor','inland','currency'));
 
   }
