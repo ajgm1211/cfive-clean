@@ -46,9 +46,14 @@ class UsersController extends Controller
   public function store(Request $request)
   {
 
+
     if($request->type == "subuser"){
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
+    }
+
+    if(\Auth::user()->type=='company' && $request->type == 'company'){
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);   
     }
 
     $user = new User($request->all());
@@ -57,6 +62,7 @@ class UsersController extends Controller
     if($request->type == "subuser"){
       $user->assignRole('subuser');
     }
+
 
 
     VerifyUser::create([
@@ -86,10 +92,9 @@ class UsersController extends Controller
 
   public function add()
   {
-    $user = new User();
-    $companyall = User::all('id','type')->where('type', '=', 'company')->pluck('name_company', 'id');
-    return view('users.add',compact('companyall'));
+    return view('users.add');
   }
+
   public function resetPass(Request $request,$user)
   {
     $user = User::find($user);
@@ -126,11 +131,12 @@ class UsersController extends Controller
   {
     $requestForm = $request->all();
     $user = User::find($id);
-
     $user->update($requestForm);
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You upgrade has been success ');
+
     return redirect()->route('users.home');
   }
 
@@ -228,12 +234,7 @@ class UsersController extends Controller
     $notifications =  auth()->user()->unreadNotifications()->limit(4)->get();
     foreach($notifications as $notification ){
       $notification->markAsRead();
+
     }
-
-
   }
-
-
-
-
 }

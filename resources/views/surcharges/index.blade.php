@@ -87,7 +87,9 @@
                         <th title="Field #2">
                             Description
                         </th>
-
+                        <th title="Field #2">
+                            Sale term
+                        </th>
                         <th title="Field #6">
                             Options
                         </th>
@@ -99,6 +101,7 @@
                     <tr>
                         <td>{{ $arr->name }}</td>
                         <td>{{ $arr->description }}</td>
+                        <td>{{ $arr->saleterm['name']}}</td>
                         <td>
                             <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                 <i class="la la-edit"></i>

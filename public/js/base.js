@@ -459,6 +459,12 @@ $(document).on('click', '#fcl_type', function (e) {
     $("input[name=total_quantity]").val('');
     $("input[name=total_weight]").val('');
     $("input[name=total_volume]").val('');
+    $('#lcl_air_load').find('.quantity').val('');
+    $('#lcl_air_load').find('.height').val('');
+    $('#lcl_air_load').find('.width').val('');
+    $('#lcl_air_load').find('.large').val('');
+    $('#lcl_air_load').find('.weight').val('');
+    $('#lcl_air_load').find('.volume').val('');
 });
 
 $(document).on('click', '#lcl_type', function (e) {
@@ -478,7 +484,7 @@ $(document).on('click', '#lcl_type', function (e) {
     $("#destination_airport_label").hide();
     $("input[name=qty_20]").val('');
     $("input[name=qty_40]").val('');
-    $("input[name=qty_40_hc]").val('');  
+    $("input[name=qty_40_hc]").val('');
 });
 
 $(document).on('click', '#air_type', function (e) {
@@ -631,9 +637,6 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
     }
 });
 
-$('.m-select2-general').select2({
-    placeholder: "Select an option"
-});
 $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
         $("#origin_address_label").hide();
@@ -689,6 +692,16 @@ $(document).on('click', '#create-quote', function (e) {
     var total_weight='';
     var total_volume='';
     var type_cargo='';
+    var quantity = new Array();
+    var height = new Array();
+    var width = new Array();
+    var large = new Array();
+    var weight = new Array();
+    var volume = new Array();
+    var type_cargo = new Array();
+    var myTableDiv = document.getElementById("label_package_loads");
+    var table = document.createElement('table');
+    var tableBody = document.createElement('tbody');
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
@@ -708,6 +721,109 @@ $(document).on('click', '#create-quote', function (e) {
     if($("#total_volume").val()>0){
         total_volume=$("#total_volume").val();
     }
+
+    //Creating table to loads by packages
+    table.appendChild(tableBody);
+
+    var heading = new Array();
+    heading[0] = "Quantity";
+    heading[1] = "Height";
+    heading[2] = "Width";
+    heading[3] = "Large";
+    heading[4] = "Weight";
+    heading[5] = "Volume";
+
+    $(".type_cargo").each(function(){
+        if($(this).val()==1){
+            type_cargo.push('Pallets');
+        }else{
+            type_cargo.push('Packages');
+        }
+    });
+
+    $(".quantity").each(function(){
+        if($(this).val()!=''){
+            quantity.push($(this).val());
+        }
+    });
+
+    $(".height").each(function(){
+        if($(this).val()!=''){
+            height.push($(this).val());
+        }
+    });
+
+    $(".width").each(function(){
+        if($(this).val()!=''){
+            width.push($(this).val());
+        }
+    });
+
+    $(".large").each(function(){
+        if($(this).val()!=''){
+            large.push($(this).val());
+        }
+    });
+
+    $(".volume_input").each(function(){
+        if($(this).val()!=''){
+            volume.push($(this).val()+" cm3");
+        }
+    });
+
+    $(".weight").each(function(){
+        if($(this).val()!=''){
+            weight.push($(this).val()+" kg");
+        }
+    });
+
+    var q2 = new Array();
+
+    for (i = 0; i < quantity.length; i++) {
+        for (i = 0; i < height.length; i++) {
+            for (i = 0; i < width.length; i++) {
+                for (i = 0; i < large.length; i++) {
+                    for (i = 0; i < weight.length; i++) {
+                        for (i = 0; i < volume.length; i++) {
+                            if((quantity[i]!=undefined) && (height[i]!=undefined) && (width[i]!=undefined) && (large[i]!=undefined) && (weight[i]!=undefined)){
+                                q2[i] = new Array (quantity[i],height[i],width[i],large[i],weight[i],volume[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }   
+    }   
+
+    //TABLE COLUMNS
+    var tr = document.createElement('tr');
+    tableBody.appendChild(tr);
+    for (i = 0; i < heading.length; i++) {
+        var th = document.createElement('th')
+        th.width = '75';
+        th.setAttribute('class','header-table title-quote');
+        th.appendChild(document.createTextNode(heading[i]));
+        tr.appendChild(th);
+    }
+
+    //TABLE ROWS
+    for (i = 0; i < q2.length; i++) {
+        var tr = document.createElement('tr');
+        for (j = 0; j < q2[i].length; j++) {
+            var td = document.createElement('td')
+            td.appendChild(document.createTextNode(q2[i][j]));
+            tr.appendChild(td)
+        }
+        tableBody.appendChild(tr);
+    }
+
+    //Adding table body to table
+    if(q2.length>0){
+        table.setAttribute('class', 'table table-bordered color-blue text-center')
+        $("#label_package_loads table").empty();
+        myTableDiv.appendChild(table);
+    }
+
     type_cargo=$("#type_cargo").val();
     if(type_cargo==1){
         type_cargo='Pallets';
@@ -789,14 +905,14 @@ $(document).on('click', '#create-quote', function (e) {
 });
 
 $( document ).ready(function() {
-    $("select[name='company_id']").val('');
-  
+    //$("select[name='company_id']").val('');
+
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
-          $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').empty();
             $.ajax({
-                url: "company/contact/id/"+company_id,
+                url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
                 success: function(data) {
                     $('select[name="client"]').empty();
@@ -806,7 +922,7 @@ $( document ).ready(function() {
                 }
             });
             $.ajax({
-                url: "company/price/id/"+company_id,
+                url: "/quotes/company/price/id/"+company_id,
                 dataType: 'json',
                 success: function(data) {
                     $('select[name="price_id"]').empty();
@@ -1212,6 +1328,8 @@ $(document).on('change', '#status_quote_id', function () {
     });
 });
 
+/** EMAIL TEMPLATES **/
+
 //Select email template to send quote
 $(document).on('change', '#email_template', function () {
     var id = $('#email_template').val();
@@ -1269,7 +1387,7 @@ $('#email_templte').select2({
     placeholder: "Select an option"
 });
 
-//Clients
+/** CLIENTS **/
 
 $(document).on('click', '#delete-contact', function () {
     var id = $(this).attr('data-contact-id');
@@ -1309,7 +1427,7 @@ $(document).on('click', '#delete-contact', function () {
     });
 });
 
-//Companies
+/** COMPANIES **/
 
 $(document).on('click', '#delete-company', function () {
     var id = $(this).attr('data-company-id');
@@ -1569,7 +1687,7 @@ $(document).on('click', '#savecontact', function () {
     });
 });
 
-//Select 2
+/** SELECT2 **/
 
 $('#sale_term_id').select2({
     placeholder: "Select an option"
@@ -1582,6 +1700,16 @@ $('#airline_id').select2({
 $('#carrier_id').select2({
     placeholder: "Select an option"
 });
+
+$('.m-select2-general').select2({
+    placeholder: "Select an option"
+});
+
+$('.select2-company_id').select2({
+    placeholder: "Select an option"
+});
+
+/** SCHEDULES **/
 
 $(document).on('click', '#select-schedule', function () {
 
@@ -1613,6 +1741,8 @@ $(document).on('click', '.removesche', function () {
 });
 
 
+/** FUNCTIONS **/
+
 function msg(message){
     toastr.options = {
         "closeButton": true,
@@ -1632,4 +1762,19 @@ function msg(message){
         "hideMethod": "fadeOut"
     };
     toastr.error(message,'IMPORTANT MESSAGE!');
+}
+
+function change_tab(tab){
+    if(tab==2){
+        $("#total_quantity").val('');
+        $("#total_weight").val('');
+        $("#total_volume").val('');
+    }else{
+        $('#lcl_air_load').find('.quantity').val('');
+        $('#lcl_air_load').find('.height').val('');
+        $('#lcl_air_load').find('.width').val('');
+        $('#lcl_air_load').find('.large').val('');
+        $('#lcl_air_load').find('.weight').val('');
+        $('#lcl_air_load').find('.volume').val('');
+    }
 }

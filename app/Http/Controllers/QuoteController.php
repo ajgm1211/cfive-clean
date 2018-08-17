@@ -45,13 +45,8 @@ use App\Airline;
 use App\Mail\SendQuotePdf;
 class QuoteController extends Controller
 {
-  /**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-  public function index()
-  {
+
+  public function index(){
     $company_user_id = \Auth::user()->company_user_id;
     if(\Auth::user()->hasRole('subuser')){
       $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
@@ -75,11 +70,12 @@ class QuoteController extends Controller
     }
     return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
   }
+
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
     $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
@@ -97,7 +93,6 @@ class QuoteController extends Controller
     $form =$request->input('form');
     $schedules = $request->input('schedules');
     $form = json_decode($form);
-
     $companiesInfo = Company::where('id','=',$form->company_id)->first();  
     $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
     $company_user_id=\Auth::user()->company_user_id;
@@ -135,16 +130,14 @@ class QuoteController extends Controller
       $terms_destination = TermsPort::where('port_id',$info->destiny_port)->with('term')->whereHas('term', function($q)  {
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
-
     }
-
-
     return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
   }
   public function skipPluck($pluck)
   {
     $skips = ["[","]","\""];
     return str_replace($skips, ' ',$pluck);
+
   }
   public function ratesCurrency($id,$typeCurrency){
     $rates = Currency::where('id','=',$id)->get();
@@ -157,9 +150,10 @@ class QuoteController extends Controller
     }
     return $rateC;
   }
-  public function listRate(Request $request)
+  // COTIZACION AUTOMATICA
+  
+   public function listRate(Request $request)
   {
-
     $company_user_id=\Auth::user()->company_user_id;
     $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
     $typeCurrency =  $company->companyUser->currency->alphacode ;
@@ -171,7 +165,6 @@ class QuoteController extends Controller
     //$typeCurrency = 'USD';
     // valores de los markup en Freight 
     $price_id = $request->input('price_id');
-
     $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
       $q->where('price_id', '=',$price_id);
     })->with('freight_markup','local_markup','inland_markup')->get();
@@ -188,7 +181,6 @@ class QuoteController extends Controller
       $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
       $freighAmmount =  $this->skipPluck($fclFreight->pluck('fixed_markup'));
       // Local y global
-
       $fclLocal = $freight->local_markup->where('price_type_id','=',1);
       if($request->modality == "1"){
         $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
@@ -197,11 +189,8 @@ class QuoteController extends Controller
         $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
         $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
       }
-
       // Inlands 
-
       $fclInland = $freight->inland_markup->where('price_type_id','=',1);
-
       if($request->modality == "1"){
         $inlandPercentage = intval($this->skipPluck($fclInland->pluck('percent_markup_export')));
         $inlandAmmount =  intval($this->skipPluck($fclInland->pluck('fixed_markup_export')));
@@ -209,19 +198,14 @@ class QuoteController extends Controller
         $inlandPercentage = intval($this->skipPluck($fclInland->pluck('percent_markup_import')));
         $inlandAmmount =  intval($this->skipPluck($fclInland->pluck('fixed_markup_import')));
       }
-
     }
-
-
     //--------------------------------------
     // Calculo de los inlands
     if($delivery_type == "2" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
       })->where('company_user_id','=',$company_user_id)->with('inlandports.ports','inlanddetails.currency')->get();
-
       foreach($inlands as $inlandsValue){
-
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -234,46 +218,36 @@ class QuoteController extends Controller
                 'destination'     => $destination,
                 'mode' => 'driving' ,
                 'language' => 'es',
-
               ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-
                 foreach($inlandsValue->inlanddetails as $details){
-
-
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('twuenty') * $details->ammount) / $rateI;
-
                       //  echo $monto;
                       //echo '<br>';
-
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('forty') * $details->ammount) / $rateI;
-
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
-
                     }
                   }
-
                 }
                 // MARKUPS 
                 if($inlandPercentage != 0){
-
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
                   $markup = number_format($markup, 2, '.', '');
                   $monto += $markup ;
@@ -284,8 +258,6 @@ class QuoteController extends Controller
                   $monto += $markup;
                   $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
-
-
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
                   $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
@@ -306,16 +278,12 @@ class QuoteController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo 
       }
-
     }
-
     if($delivery_type == "3" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
         $q->whereIn('port', $origin_port);
       })->where('company_user_id','=',$company_user_id)->with('inlandports.ports','inlanddetails.currency')->get();
-
       foreach($inlands as $inlandsValue){
-
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -328,15 +296,12 @@ class QuoteController extends Controller
                 'destination'     => $destination,
                 'mode' => 'driving' ,
                 'language' => 'es',
-
               ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-
                 foreach($inlandsValue->inlanddetails as $details){
-
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                     $distancia = intval($km[0]);
@@ -354,14 +319,11 @@ class QuoteController extends Controller
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
-
                     }
                   }
-
                 }
                 // MARKUPS 
                 if($inlandPercentage != 0){
-
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
                   $markup = number_format($markup, 2, '.', '');
                   $monto += $markup ;
@@ -392,15 +354,12 @@ class QuoteController extends Controller
         });
         // dd($inlandOrigin); // filtraor por el minimo 
       }
-
     }
     // Fin del calculo de los inlands 
-
     $date =  $request->input('date');
     $user_id =  \Auth::id();
     $company_user_id =  \Auth::user()->company_user_id;
     $company_id = $request->input('company_id');
-
     /*$arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
     {
       $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id)->whereHas('contract_user_restriction', function($a) use($user_id){
@@ -414,8 +373,6 @@ class QuoteController extends Controller
     {
       $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
     })->get();
-
-
     $formulario = $request;
     $array20 = array('2','4','5');
     $array40 =  array('1','4','5');
@@ -429,23 +386,18 @@ class QuoteController extends Controller
       $totalDestiny =0;
       $totalQuote= 0;
       $totalAmmount = 0;
-
       $collectionOrig = new Collection();
       $collectionDest = new Collection();
       $collectionFreight = new Collection();
-
       $collectionGloOrig = new Collection();
       $collectionGloDest = new Collection();
       $collectionGloFreight = new Collection();
-
       $collectionRate = new Collection();
-
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
       $subtotal = 0;
       $orig_port = array($data->origin_port);
       $dest_port = array($data->destiny_port);
       $carrier[] = $data->carrier_id;
-
       // Calculo de los rates
       if($request->input('twuenty') != "0") {
         $subtotalT = $formulario->twuenty *  $data->twuenty;
@@ -459,20 +411,16 @@ class QuoteController extends Controller
           $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
           $markup =$freighAmmount;
-
           $markup = number_format($markup, 2, '.', '');
           $totalT += $markup;
           $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
-
         $totalT =  number_format($totalT, 2, '.', '');
         $totalFreight += $totalT;
         $totalRates += $totalT;
         $array = array('type'=>'Ocean Freight 20 ', 'cantidad' => $formulario->twuenty,'detail'=>'Container 20', 'price' => $data->twuenty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id );
         $array = array_merge($array,$arraymarkupT);
-
         $collectionRate->push($array);
-
         $data->setAttribute('montT',$array);
       }
       if($request->input('forty') != "0") {
@@ -491,14 +439,12 @@ class QuoteController extends Controller
           $totalF += $markup;
           $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
-
         $totalF =  number_format($totalF, 2, '.', '');
         $totalFreight += $totalF;
         $totalRates += $totalF;
         $array = array('type'=>'Ocean Freight 40', 'cantidad' => $formulario->forty,'detail'=>'Container 40', 'price' => $data->forty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalF , 'total' =>$totalF." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupF);
         $collectionRate->push($array);
-
         $data->setAttribute('montF',$array);
       }
       if($request->input('fortyhc') != "0") {
@@ -517,7 +463,6 @@ class QuoteController extends Controller
           $totalFHC += $markup;
           $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
         }
-
         $totalFHC =  number_format($totalFHC, 2, '.', '');
         $totalFreight += $totalFHC;
         $totalRates += $totalFHC;
@@ -525,27 +470,18 @@ class QuoteController extends Controller
         $array = array_merge($array,$arraymarkupFH);
         $data->setAttribute('montFHC',$array);
         $collectionRate->push($array);
-
-
-
       }
-
       $data->setAttribute('rates',$collectionRate);
-
       // id de los ALL 
       array_push($orig_port,742);
       array_push($dest_port,742);
-
       //  calculo de los local charges en freight , origin y destiny 
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
         $q->whereIn('carrier_id', $carrier);
       })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
         $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
       })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
-
-
       foreach($localChar as $local){
-
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
         // Condicion para enviar los terminos de venta o compra 
         if(isset($local->surcharge->SaleTermSurcharges->saleterm->name)){
@@ -553,22 +489,17 @@ class QuoteController extends Controller
         }else{
           $terminos = $local->surcharge->name;
         }
-
         if(in_array($local->calculationtype_id, $array20)){
           if($request->input('twuenty') != "0") {
             foreach($local->localcharcarriers as $carrierGlobal){
               if($carrierGlobal->carrier_id == $data->carrier_id ){
                 if($local->typedestiny_id == '1'){  
-
                   $subtotal_local = $formulario->twuenty *  $local->ammount;
                   $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
                   // MARKUP
                   if($localPercentage != 0){
-
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-
                     $markup = number_format($markup, 2, '.', '');
-
                     $totalAmmount += $markup ;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($localPercentage%)") ;
                   }else{
@@ -577,20 +508,14 @@ class QuoteController extends Controller
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
-
-
                   $totalOrigin += $totalAmmount ;
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-
                   $arregloOrig = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local , 'cantidadT' => $formulario->twuenty , 'idCurrency' => $local->currency->id);
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupT);
                   $origTwuenty["origin"] = $arregloOrig;
-
                   $collectionOrig->push($origTwuenty);
-
                 }
-
                 if($local->typedestiny_id == '2'){
                   $subtotal_local = $formulario->twuenty *  $local->ammount;
                   $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
@@ -609,7 +534,6 @@ class QuoteController extends Controller
                   $totalDestiny += $totalAmmount;
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-
                   $arregloDest =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\'  Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $formulario->twuenty , 'idCurrency' => $local->currency->id );
                   $arregloDest = array_merge($arregloDest,$arraymarkupT);
                   $destTwuenty["destiny"] =$arregloDest;
@@ -618,7 +542,6 @@ class QuoteController extends Controller
                 if($local->typedestiny_id == '3'){
                   $subtotal_local = $formulario->twuenty *  $local->ammount;
                   $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount;
-
                   // MARKUP
                   if($localPercentage != 0){
                     $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -633,10 +556,8 @@ class QuoteController extends Controller
                   }
                   $totalFreight += $totalAmmount;
                   $FreightCharges += $totalAmmount;
-
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local , 'cantidadT' => $formulario->twuenty , 'idCurrency' => $local->currency->id);
                   $arregloFreight = array_merge($arregloFreight,$arraymarkupT);
                   $freighTwuenty["freight"] = $arregloFreight;
@@ -646,8 +567,6 @@ class QuoteController extends Controller
             }
           }
         }
-
-
         if(in_array($local->calculationtype_id, $array40)){
           if($request->input('forty') != "0") {
             foreach($local->localcharcarriers as $carrierGlobal){
@@ -690,15 +609,10 @@ class QuoteController extends Controller
                   }
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-
                   $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id);
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupF);
-
                   $origForty["origin"] =$arregloOrig;
                   $collectionOrig->push($origForty);
-
-
-
                 }
                 if($local->typedestiny_id == '2'){
                   if($local->calculationtype_id == "4"  ){
@@ -738,20 +652,16 @@ class QuoteController extends Controller
                   }
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-
                   $arregloDest =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->forty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'40\'  Local ' , 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id  );
                   $arregloDest = array_merge($arregloDest,$arraymarkupF);
                   $destForty["destiny"] =$arregloDest;
                   $collectionDest->push($destForty);
-
-
                 }
                 if($local->typedestiny_id == '3'){
                   if($local->calculationtype_id == "4"  ){
                     $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
                     $totalAmmount = (($formulario->forty *  $local->ammount) * 2 ) / $rateMount ;
                     $cantidadT = $formulario->forty + $formulario->forty;
-
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -766,12 +676,10 @@ class QuoteController extends Controller
                     }
                     $totalFreight += $totalAmmount;
                     $FreightCharges += $totalAmmount;
-
                   }else{
                     $subtotal_local = $formulario->forty *  $local->ammount;
                     $totalAmmount = ($formulario->forty *  $local->ammount)/ $rateMount ;
                     $cantidadT = $formulario->forty;
-
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -786,7 +694,6 @@ class QuoteController extends Controller
                     }
                     $totalFreight += $totalAmmount;
                     $FreightCharges += $totalAmmount;
-
                   }
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -794,8 +701,6 @@ class QuoteController extends Controller
                   $arregloFreight = array_merge($arregloFreight,$arraymarkupF);
                   $freighForty["freight"] = $arregloFreight;
                   $collectionFreight->push($freighForty);
-
-
                 }
               }
             }
@@ -847,9 +752,6 @@ class QuoteController extends Controller
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupFH);
                   $origFortyHc["origin"] =$arregloOrig;
                   $collectionOrig->push($origFortyHc);
-
-
-
                 }
                 if($local->typedestiny_id == '2'){
                   if($local->calculationtype_id == "4"  ){
@@ -893,15 +795,12 @@ class QuoteController extends Controller
                   $arregloDest  = array_merge($arregloDest,$arraymarkupFH);
                   $destFortyHc["destiny"] = $arregloDest;
                   $collectionDest->push($destFortyHc);
-
-
                 }
                 if($local->typedestiny_id == '3'){
                   if($local->calculationtype_id == "4"  ){
                     $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
                     $totalAmmount = (($formulario->fortyhc *  $local->ammount) * 2) / $rateMount ;
                     $cantidadT = $formulario->fortyhc + $formulario->fortyhc;
-
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -916,12 +815,10 @@ class QuoteController extends Controller
                     }
                     $totalFreight += $totalAmmount;
                     $FreightCharges += $totalAmmount;
-
                   }else{
                     $subtotal_local = $formulario->fortyhc *  $local->ammount;
                     $totalAmmount = ($formulario->fortyhc *  $local->ammount) / $rateMount;
                     $cantidadT = $formulario->fortyhc;
-
                     // MARKUP
                     if($localPercentage != 0){
                       $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -936,7 +833,6 @@ class QuoteController extends Controller
                     }
                     $totalFreight += $totalAmmount;
                     $FreightCharges += $totalAmmount;
-
                   }
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
@@ -944,7 +840,6 @@ class QuoteController extends Controller
                   $arregloFreight = array_merge($arregloFreight,$arraymarkupFH);
                   $freighFortyHc["freight"] = $arregloFreight;
                   $collectionFreight->push($freighFortyHc);
-
                 }
               }
             }
@@ -954,7 +849,6 @@ class QuoteController extends Controller
           foreach($local->localcharcarriers as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id ){
               if($local->typedestiny_id == '1'){
-
                 $subtotal_local =  $local->ammount;
                 $totalAmmount =  $local->ammount  / $rateMount;
                 $cantidadT = 1;
@@ -977,7 +871,6 @@ class QuoteController extends Controller
                 $arregloOrig = array_merge($arregloOrig,$arraymarkupPC);
                 $origPer["origin"] =$arregloOrig;
                 $collectionOrig->push($origPer);
-
               }
               if($local->typedestiny_id == '2'){
                 $subtotal_local =  $local->ammount;
@@ -1002,13 +895,11 @@ class QuoteController extends Controller
                 $arregloDest = array_merge($arregloDest,$arraymarkupPC);
                 $destPer["destiny"] = $arregloDest;
                 $collectionDest->push($destPer);
-
               }
               if($local->typedestiny_id == '3'){
                 $subtotal_local =  $local->ammount;
                 $totalAmmount =  $local->ammount  / $rateMount;
                 $cantidadT = 1;
-
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1021,20 +912,15 @@ class QuoteController extends Controller
                   $totalAmmount += $markup;
                   $arraymarkupPC = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                 }
-
                 //$totalAmmount =  $local->ammout  / $rateMount;
-
                 $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                 $totalFreight += $totalAmmount;
                 $FreightCharges += $totalAmmount;
-
                 $arregloPC = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id  );
                 $arregloPC = array_merge($arregloPC,$arraymarkupPC);
                 $freightPer["freight"] = $arregloPC;
                 $collectionFreight->push($freightPer);
-
-
               }
             }
           }
@@ -1048,9 +934,7 @@ class QuoteController extends Controller
       })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
         $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
       })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
-
       foreach($globalChar as $global){
-
         $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
         // Condicion para enviar los terminos de venta o compra 
         if(isset($global->surcharge->SaleTermSurcharges->saleterm->name)){
@@ -1058,13 +942,11 @@ class QuoteController extends Controller
         }else{
           $terminos = $global->surcharge->name;
         }
-
         if(in_array($global->calculationtype_id, $array20)){
           if($request->input('twuenty') != "0") {
             foreach($global->globalcharcarrier as $carrierGlobal){
               if($carrierGlobal->carrier_id == $data->carrier_id ){
                 if($global->typedestiny_id == '1'){
-
                   $subtotal_global = $formulario->twuenty *  $global->ammount;
                   $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG ;
                   $cantidadT = $formulario->twuenty;
@@ -1080,16 +962,13 @@ class QuoteController extends Controller
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
-
                   $totalOrigin += $totalAmmount ;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                   $arregloOrig = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\' Global '  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'idCurrency' => $global->currency->id);
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupT);
-
                   $origTwuentyGlo["origin"] = $arregloOrig;
                   $collectionGloOrig->push($origTwuentyGlo);
-
                 }
                 if($global->typedestiny_id == '2'){
                   $subtotal_global = $formulario->twuenty *  $global->ammount;
@@ -1107,14 +986,11 @@ class QuoteController extends Controller
                     $totalAmmount += $markup;
                     $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
                   }
-
-
                   $totalDestiny += $totalAmmount;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                   $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ', 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'idCurrency' => $global->currency->id);
                   $arregloDest = array_merge($arregloDest,$arraymarkupT);
-
                   $destTwuentyGlo["destiny"] = $arregloDest;
                   $collectionGloDest->push($destTwuentyGlo);
                 }
@@ -1136,7 +1012,6 @@ class QuoteController extends Controller
                   }
                   $totalFreight += $totalAmmount;
                   $FreightCharges += $totalAmmount;
-
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                   $arregloFreight =  array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'idCurrency' => $global->currency->id);
@@ -1157,7 +1032,6 @@ class QuoteController extends Controller
                     $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
                     $totalAmmount = (($formulario->forty *  $global->ammount) * 2 ) / $rateMountG ;
                     $cantidadT = $formulario->forty +  $formulario->forty  ;
-
                     $totalOrigin += $totalAmmount ;
                   }else{
                     $subtotal_global = $formulario->forty *  $global->ammount;
@@ -1183,7 +1057,6 @@ class QuoteController extends Controller
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupF);
                   $origFortyGlo["origin"] =$arregloOrig;
                   $collectionGloOrig->push($origFortyGlo);
-
                 }
                 if($global->typedestiny_id == '2'){
                   if($global->calculationtype_id == "4"  ){
@@ -1221,12 +1094,10 @@ class QuoteController extends Controller
                     $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
                     $totalAmmount = (($formulario->forty *  $global->ammount) * 2 ) / $rateMountG ;
                     $cantidadT = $formulario->forty +  $formulario->forty  ;
-
                   }else{
                     $subtotal_global = $formulario->forty *  $global->ammount;
                     $totalAmmount = ($formulario->forty *  $global->ammount) / $rateMountG;
                     $cantidadT = $formulario->forty;
-
                   }
                   // MARKUP
                   if($localPercentage != 0){
@@ -1263,7 +1134,6 @@ class QuoteController extends Controller
                     $totalAmmount = (($formulario->fortyhc *  $global->ammount) * 2)  / $rateMountG ;
                     $totalOrigin += $totalAmmount ;
                     $cantidadT = $formulario->fortyhc +  $formulario->fortyhc  ;
-
                   }else{
                     $subtotal_global =  $formulario->fortyhc *  $global->ammount;
                     $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
@@ -1288,7 +1158,6 @@ class QuoteController extends Controller
                   $arregloOrig = array_merge($arregloOrig,$arraymarkupFH);
                   $origFortyHcGlo["origin"] =$arregloOrig;
                   $collectionGloOrig->push($origFortyHcGlo);
-
                 }
                 if($global->typedestiny_id == '2'){
                   if($global->calculationtype_id == "4"  ){
@@ -1296,7 +1165,6 @@ class QuoteController extends Controller
                     $totalAmmount = (($formulario->fortyhc *  $global->ammount) * 2)  / $rateMountG ;
                     $totalDestiny += $totalAmmount;
                     $cantidadT = $formulario->fortyhc +  $formulario->fortyhc  ;
-
                   }else{
                     $subtotal_global =  $formulario->fortyhc *  $global->ammount;
                     $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
@@ -1331,7 +1199,6 @@ class QuoteController extends Controller
                     $subtotal_global =  $formulario->fortyhc *  $global->ammount;
                     $totalAmmount = ($formulario->fortyhc *  $global->ammount) / $rateMountG;
                     $cantidadT = $formulario->fortyhc;
-
                   }
                   // MARKUP
                   if($localPercentage != 0){
@@ -1413,7 +1280,6 @@ class QuoteController extends Controller
                 $subtotal_global = $global->ammount;
                 $totalAmmount =  $global->ammount / $rateMountG;
                 $cantidadT = 1;
-
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1430,7 +1296,6 @@ class QuoteController extends Controller
                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                 $totalFreight += $totalAmmount;
                 $FreightCharges += $totalAmmount;
-
                 $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => "-" , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtype->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=> 'Shipment Global ', 'subtotal_global' => $subtotal_global, 'cantidadT' => $cantidadT, 'idCurrency' => $global->currency->id);
                 $arregloFreight = array_merge($arregloFreight,$arraymarkupPC);
                 $freightPerGlo["freight"] = $arregloFreight;
@@ -1440,16 +1305,13 @@ class QuoteController extends Controller
           }
         }
       }
-
       // fin calculo Global charges 
       //#######################################################################
       // Armar los schedules
       try{
         $url = "http://schedules.cargofive.com/schedule/".strtolower($data->carrier->name)."/".$data->port_origin->code."/".$data->port_destiny->code;
-
         $client = new Client();
         $res = $client->request('GET', $url, [
-
         ]);
         $schedules = Collection::make(json_decode($res->getBody()));
         //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
@@ -1465,26 +1327,19 @@ class QuoteController extends Controller
             }else{
               $collectS->put('type','Direct');
             }
-
             $schedulesArr->push($collectS);
           }
           //'2018-07-24'
           $dateSchedule = strtotime($date);
           $dateSchedule =  date('Y-m-d',$dateSchedule);
-
           if(!$schedulesArr->isEmpty()){ 
             $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
             $schedulesFin->push($schedulesArr);
           }
         }
       }catch (\Guzzle\Http\Exception\ConnectException $e) {
-
       }
-
-
-
       //#######################################################################
-
       //Formato subtotales y operacion total quote 
       $totalFreight =  number_format($totalFreight, 2, '.', '');
       $FreightCharges =  number_format($FreightCharges, 2, '.', '');
@@ -1492,7 +1347,6 @@ class QuoteController extends Controller
       $totalDestiny =  number_format($totalDestiny, 2, '.', '');
       $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
       // Variables suma de todo los origin o destiny 
-
       $totalChargeDest = 0;
       $totalChargeOrig = 0;
       $totalInland = 0;
@@ -1518,10 +1372,8 @@ class QuoteController extends Controller
       }else{
         $inlandDestiny =  array();
       }
-
       $totalChargeOrig += $totalOrigin;
       $totalChargeDest += $totalDestiny;
-
       $totalFreight = $totalFreight." ".$typeCurrency;
       $totalOrigin = $totalOrigin." ".$typeCurrency;
       $totalDestiny = $totalDestiny." ".$typeCurrency;
@@ -1529,13 +1381,9 @@ class QuoteController extends Controller
       $totalQuote = $totalQuote." ".$typeCurrency;
       $quoteCurrency = $typeCurrency;
       $totalInland = number_format($totalInland, 2, ',', '');
-
-
-
       $data->setAttribute('globalOrig',$collectionGloOrig);
       $data->setAttribute('globalDest',$collectionGloDest);
       $data->setAttribute('globalFreight',$collectionGloFreight);
-
       $data->setAttribute('localOrig',$collectionOrig);
       $data->setAttribute('localDest',$collectionDest);
       $data->setAttribute('localFreight',$collectionFreight);
@@ -1557,15 +1405,14 @@ class QuoteController extends Controller
       $data->setAttribute('idCurrency',$idCurrency);
       // SCHEDULES
       $data->setAttribute('schedulesFin',$schedulesFin);
-
     }
-
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
   }
-
+  
+  // FIN COTIZACION AUTOMATICA
   public function create()
   {
     $company_user='';
@@ -1577,7 +1424,7 @@ class QuoteController extends Controller
     $email_templates = '';
     $company_user_id=\Auth::user()->company_user_id;
     $quotes = Quote::all();
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $airports = Airport::all()->pluck('name','id');
     $carriers = Carrier::all()->pluck('name','id');
@@ -1603,19 +1450,14 @@ class QuoteController extends Controller
       }
     }
     return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
+
   }
-  /**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-  public function edit($id)
-  {
+
+  public function edit($id){
     $email_templates='';
     $quote = Quote::findOrFail($id);
     $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -1641,13 +1483,9 @@ class QuoteController extends Controller
     $incoterm = Incoterm::pluck('name','id');
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines]);
+
   }
-  /**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
+
   public function store(Request $request)
   {
     $input = Input::all();
@@ -1804,14 +1642,16 @@ class QuoteController extends Controller
         $saveSchedule->save(); 
       }
     }
-    if(isset($input['type_load_cargo']) && isset($input['quantity'])){
-      $quantity = array_values( array_filter($input['quantity']) );
-      $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-      $height = array_values( array_filter($input['height']) );
-      $width = array_values( array_filter($input['width']) );
-      $large = array_values( array_filter($input['large']) );
-      $weight = array_values( array_filter($input['weight']) );
-      $volume = array_values( array_filter($input['volume']) );
+
+    $quantity = array_values( array_filter($input['quantity']) );
+    $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+    $height = array_values( array_filter($input['height']) );
+    $width = array_values( array_filter($input['width']) );
+    $large = array_values( array_filter($input['large']) );
+    $weight = array_values( array_filter($input['weight']) );
+    $volume = array_values( array_filter($input['volume']) );
+
+    if(count($quantity)>0){
       foreach($type_cargo as $key=>$item){
         $package_load = new PackageLoad();
         $package_load->quote_id = $quote->id;
@@ -1832,12 +1672,6 @@ class QuoteController extends Controller
     //return redirect()->route('quotes.index');
     return redirect()->action('QuoteController@show',$quote->id);
   }
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function storeWithEmail(Request $request)
   {
     $input = Input::all();
@@ -2016,7 +1850,7 @@ class QuoteController extends Controller
       $body = $input['body'];
       $contact_email = Contact::find($quote->contact_id);
       $companies = Company::all()->pluck('business_name','id');
-      $harbors = Harbor::all()->pluck('display_name','id');
+      $harbors = Harbor::all()->pluck('name','id');
       $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
       $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
       $prices = Price::all()->pluck('name','id');
@@ -2046,12 +1880,7 @@ class QuoteController extends Controller
     $dias 	= abs($dias); $dias = floor($dias);		
     return intval($dias);
   }
-  /**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+
   public function show($id)
   {
     $currency_cfg='';
@@ -2063,7 +1892,7 @@ class QuoteController extends Controller
     $terms_origin='';
     $terms_destination='';
     $quote = Quote::findOrFail($id);
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
@@ -2096,13 +1925,7 @@ class QuoteController extends Controller
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads]);
   }
-  /**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+
   public function update(Request $request, $id)
   {
     $input = Input::all();
@@ -2223,14 +2046,17 @@ class QuoteController extends Controller
         $destination_ammount->save();
       }
     }
-    if(isset($input['type_load_cargo']) && isset($input['quantity'])){
-      $quantity = array_values( array_filter($input['quantity']) );
-      $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-      $height = array_values( array_filter($input['height']) );
-      $width = array_values( array_filter($input['width']) );
-      $large = array_values( array_filter($input['large']) );
-      $weight = array_values( array_filter($input['weight']) );
-      $volume = array_values( array_filter($input['volume']) );
+
+    $quantity = array_values( array_filter($input['quantity']) );
+    $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+    $height = array_values( array_filter($input['height']) );
+    $width = array_values( array_filter($input['width']) );
+    $large = array_values( array_filter($input['large']) );
+    $weight = array_values( array_filter($input['weight']) );
+    $volume = array_values( array_filter($input['volume']) );
+
+    //dd($quantity);
+    if(count($quantity)>0){
       foreach($type_cargo as $key=>$item){
         $package_load = new PackageLoad();
         $package_load->quote_id = $quote->id;
@@ -2250,12 +2076,7 @@ class QuoteController extends Controller
     $request->session()->flash('message.content', 'Register updated successfully!');
     return redirect()->route('quotes.index');
   }
-  /**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+
   public function destroy($id)
   {
     $quote = Quote::find($id);
@@ -2277,7 +2098,7 @@ class QuoteController extends Controller
     $quotes = Quote::all();
     $quote = Quote::findOrFail($id);
     $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -2395,7 +2216,7 @@ class QuoteController extends Controller
     $quote->update();
     $quotes = Quote::all();
     $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('display_name','id');
+    $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     if($request->ajax()){
       return response()->json(['message' => 'Ok']);
