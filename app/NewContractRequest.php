@@ -16,4 +16,8 @@ class NewContractRequest extends Model
                            'created',
                            'type',
                            'data'];
+    
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

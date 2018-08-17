@@ -16,8 +16,9 @@ class NewContractRequestsController extends Controller
      */
     public function index()
     {
-        $Ncontract = NewContractRequest::all();
-        dd($Ncontract);
+        $Ncontracts = NewContractRequest::with('user')->get();
+        //dd($Ncontracts);
+        return view('contracts.Requests.index',compact('Ncontracts'));
     }
 
     /**
