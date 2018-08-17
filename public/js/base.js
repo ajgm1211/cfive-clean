@@ -685,6 +685,11 @@ $(document).on('change', '#delivery_type_air', function (e) {
 
 $(document).on('click', '#create-quote', function (e) {
     var origin_harbor=$("#origin_harbor").val();
+    var destination_harbor=$("#destination_harbor").val();
+    var destination_address=$("#destination_address").val();
+    var origin_address=$("#origin_address").val();
+    var origin_airport=$("#origin_airport").val();
+    var destination_airport=$("#destination_airport").val();
     var qty_20='';
     var qty_40='';
     var qty_40_hc='';
@@ -830,23 +835,42 @@ $(document).on('click', '#create-quote', function (e) {
     }else{
         type_cargo='Packages';
     }
-    var destination_harbor=$("#destination_harbor").val();
-    var destination_address=$("#destination_address").val();
-    var origin_address=$("#origin_address").val();
-    $.ajax({
-        type: 'get',
-        url: 'get/harbor/id/' + origin_harbor,
-        success: function(data) {
-            $("#origin_input").html(data.name);
-        }
-    });
-    $.ajax({
-        type: 'get',
-        url: 'get/harbor/id/' + destination_harbor,
-        success: function(data) {
-            $("#destination_input").html(data.name);
-        }
-    });
+    if(origin_harbor!=''){
+        $.ajax({
+            type: 'get',
+            url: 'get/harbor/id/' + origin_harbor,
+            success: function(data) {
+                $("#origin_input").html(data.name);
+            }
+        });
+    }
+    if(destination_harbor!=''){
+        $.ajax({
+            type: 'get',
+            url: 'get/harbor/id/' + destination_harbor,
+            success: function(data) {
+                $("#destination_input").html(data.name);
+            }
+        });
+    }
+    if(origin_airport!=''){
+        $.ajax({
+            type: 'get',
+            url: 'get/airport/id/' + origin_airport,
+            success: function(data) {
+                $("#origin_input").html(data.name);
+            }
+        });
+    }
+    if(destination_airport!=''){
+        $.ajax({
+            type: 'get',
+            url: 'get/airport/id/' + destination_airport,
+            success: function(data) {
+                $("#destination_input").html(data.name);
+            }
+        });
+    }
     if(qty_20!='' || qty_20>0){
         $("#cargo_details_20").html(qty_20);
         $("#cargo_details_20_p").removeClass('hide');
