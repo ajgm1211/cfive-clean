@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(HarborsCopyTableSeeder::class);
         $this->call(IncotermTableSeeder::class);
         $this->call(RolesTableSeeder::class);
+        $this->call(ModelHasRolesTableSeeder::class);
     }
 }
