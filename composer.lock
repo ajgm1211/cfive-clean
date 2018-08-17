@@ -191,7 +191,11 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
             "time": "2018-08-16T22:11:39+00:00"
+=======
+            "time": "2018-08-16 22:11:39"
+>>>>>>> ceee65aa6a77cabd4855c2387ee13966fb1adb07
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -682,7 +686,11 @@
                 "validation",
                 "validator"
             ],
+<<<<<<< HEAD
             "time": "2018-08-16T20:49:45+00:00"
+=======
+            "time": "2018-08-16 20:49:45"
+>>>>>>> ceee65aa6a77cabd4855c2387ee13966fb1adb07
         },
         {
             "name": "erusev/parsedown",
@@ -2931,7 +2939,11 @@
                 "security",
                 "spatie"
             ],
+<<<<<<< HEAD
             "time": "2018-08-16T00:21:46+00:00"
+=======
+            "time": "2018-08-16 00:21:46"
+>>>>>>> ceee65aa6a77cabd4855c2387ee13966fb1adb07
         },
         {
             "name": "studio-42/elfinder",
