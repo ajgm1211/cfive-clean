@@ -521,7 +521,7 @@ class ContractsController extends Controller
     $objcarrier = new Carrier();
     $objharbor = new Harbor();
     $objcurrency = new Currency();
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $rates = Rate::find($id);
@@ -548,7 +548,7 @@ class ContractsController extends Controller
     $calculationT = $objcalculation->all()->pluck('name','id');
     $typedestiny = $objtypedestiny->all()->pluck('description','id');
     $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $localcharges = LocalCharge::find($id);
