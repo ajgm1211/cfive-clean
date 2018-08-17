@@ -11,17 +11,6 @@
         {{ Form::select('origin_id', $harbor,$rates->port_origin->id,['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;']) }} 
       </div>
       <div class="col-lg-4">
-        {!! Form::label('twuenty', '20 \' ') !!}
-        {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
-      </div>
-      <div class="col-lg-4">
-        {!! Form::label('carrier', 'Carrier') !!}
-        {{ Form::select('carrier_id', $carrier,$rates->carrier->id,['id' => 'carrier','class'=>'m-select2-general form-control']) }}
-
-      </div>
-    </div>
-    <div class="form-group m-form__group row">
-      <div class="col-lg-4">
         {!! Form::label('destination_port', 'Destination Port') !!}
         <div class="m-input-icon m-input-icon--right">
           {{ Form::select('destiny_id', $harbor,$rates->port_destiny->id,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
@@ -33,10 +22,28 @@
         </div>
 
       </div>
+      <div class="col-lg-4">
+        {!! Form::label('carrier', 'Carrier') !!}
+        {{ Form::select('carrier_id', $carrier,$rates->carrier->id,['id' => 'carrier','class'=>'m-select2-general form-control']) }}
+
+      </div>
+    </div>
+    <div class="form-group m-form__group row">
+      <div class="col-lg-4">
+        {!! Form::label('twuenty', '20 \' ') !!}
+        {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
+      </div>
+
 
       <div class="col-lg-4">
         {!! Form::label('forty', '40  \' ') !!}
         {!! Form::number('forty', $rates->forty, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
+
+      </div>
+      <div class="col-lg-4">
+
+        {!! Form::label('fortyhc', '40 HC \' ') !!}
+        {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
 
       </div>
 
@@ -55,12 +62,7 @@
         </div>
 
       </div>
-      <div class="col-lg-4">
 
-        {!! Form::label('fortyhc', '40 HC \' ') !!}
-        {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control m-select2-general']) !!}
-
-      </div>
 
     </div>
   </div>  
@@ -84,9 +86,9 @@
 <script>
 
 
-    $('.m-select2-general').select2({
-   
-    });
+  $('.m-select2-general').select2({
+
+  });
 
 
 </script>
