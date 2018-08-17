@@ -66,7 +66,7 @@ class ContractsController extends Controller
     $objsurcharge = new Surcharge();
     $objtypedestiny = new TypeDestiny();
 
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $country = $objcountry->all()->pluck('name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
@@ -374,7 +374,7 @@ class ContractsController extends Controller
     $objcalculation = new CalculationType();
     $objsurcharge = new Surcharge();
 
-    $harbor = $objharbor->all()->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
     $country = $objcountry->all()->pluck('name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
