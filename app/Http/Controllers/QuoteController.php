@@ -43,6 +43,7 @@ use App\EmailTemplate;
 use App\PackageLoad;
 use App\Airline;
 use App\Mail\SendQuotePdf;
+
 class QuoteController extends Controller
 {
     /**
@@ -1766,7 +1767,7 @@ class QuoteController extends Controller
                 $saveSchedule->save(); 
             }
         }
-        
+
         $quantity = array_values( array_filter($input['quantity']) );
         $type_cargo = array_values( array_filter($input['type_load_cargo']) );
         $height = array_values( array_filter($input['height']) );
@@ -1774,7 +1775,7 @@ class QuoteController extends Controller
         $large = array_values( array_filter($input['large']) );
         $weight = array_values( array_filter($input['weight']) );
         $volume = array_values( array_filter($input['volume']) );
-        
+
         if(count($quantity)>0){
             foreach($type_cargo as $key=>$item){
                 $package_load = new PackageLoad();
@@ -2233,6 +2234,11 @@ class QuoteController extends Controller
     {
         $harbor = Harbor::findOrFail($id);
         return $harbor;
+    }    
+    public function getAirportName($id)
+    {
+        $airport = Airport::findOrFail($id);
+        return $airport;
     }
     public function getQuoteTerms($id)
     {

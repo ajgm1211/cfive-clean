@@ -477,7 +477,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Origin Port</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="origin_input"></span>
                                                                 </div>
@@ -485,7 +485,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Destination Port</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="destination_input"></span>
                                                                 </div>
