@@ -2498,7 +2498,7 @@ class ContractsController extends Controller
                                                                  'id'
                                                                 )); //*/
     }
-
+    
     public function LoadViewRequestImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
