@@ -314,28 +314,34 @@
             @endif
         </main>
         <div class="clearfix details">
-            <hr>
             <div class="company">
                 <p class="title text-right" style="color: #01194F;"><b>TOTAL: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
             </div>
+            <hr>
         </div>
         <div class="clearfix">
+            <br>
             <p class="title">Terms and conditions</p>
             <hr>            
             @if(isset($terms_origin) && $terms_origin->count()>0)
-            <div class="company">
-                <h5 class="title-quote">Origin</h5>
-                @foreach($terms_origin as $v)
-                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                @endforeach
+            <div class=" row">
+                <div class="col-md-12">
+                    <p class="title">Origin</p>
+                    @foreach($terms_origin as $v)
+                    {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                    @endforeach
+                </div>
             </div>
             @endif
+            <br>
             @if(isset($terms_destination) && $terms_destination->count()>0)
-            <div class="company">
-                <h5 class="title-quote">Destination</h5>
-                @foreach($terms_destination as $v)
-                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                @endforeach
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="title">Destination</p>
+                    @foreach($terms_destination as $v)
+                    {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                    @endforeach
+                </div>
             </div>
             @endif
         </div>
