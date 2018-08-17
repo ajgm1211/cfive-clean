@@ -918,6 +918,17 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    
+        <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
+        <input type="hidden" class="form-control" id="height" name="height[]">
+        <input type="hidden" class="form-control" id="width" name="width[]">
+        <input type="hidden" class="form-control" id="large" name="large[]">
+        <input type="hidden" class="form-control" id="weight" name="weight[]">
+        <input type="hidden" class="form-control" id="volume" name="volume[]">
+
+       <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+    
+    
     @if($email_templates)
     @include('quotes.partials.submitQuoteEmailModal');
     @endif
