@@ -31,6 +31,7 @@ use App\FileTmp;
 use App\Jobs\ImportationRatesSurchargerJob;
 use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
+use App\CompanyUser;
 
 class ContractsController extends Controller
 {
