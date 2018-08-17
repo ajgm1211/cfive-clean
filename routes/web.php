@@ -83,20 +83,20 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
+    //Route::get('add', 'ContractsController@add')->name('contracts.add');
+    Route::get('addT', 'ContractsController@add')->name('contracts.add');
+    Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
+    Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+    Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
+    Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
+    Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
+    Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
+    Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+    Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
+    Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
 
-  //Route::get('add', 'ContractsController@add')->name('contracts.add');
-  Route::get('addT', 'ContractsController@add')->name('contracts.add');
-  Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
-  Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
-   Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
-  Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
-  Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
-  Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
-  Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
-  Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
-  Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+    // Rates
 
-  // Rates
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
     Route::get('FailedRatesForContracts/{id}','ContractsController@FailedRates')->name('Failed.Rates.For.Contracts');
     Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
@@ -123,13 +123,12 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
     Route::resource('RequestImportation','NewContractRequestsController');
 
-  // DATATABLES
+    // DATATABLES
 
-  Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
-  Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
-  Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
-  Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
-
+    Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
+    Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
+    Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
+    Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
@@ -175,6 +174,7 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
     Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+    Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
     Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
@@ -206,6 +206,7 @@ Route::middleware(['auth'])->prefix('saleterms')->group(function () {
     Route::get('delete/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.delete']);
     Route::get('edit/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.edit']);
 });
+
 Route::resource('saleterms', 'SaleTermController')->middleware('auth');
 
 Auth::routes();
