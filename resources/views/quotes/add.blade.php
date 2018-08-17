@@ -158,10 +158,10 @@
                                                         <div class="col-lg-10">                                                            
                                                             <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
                                                                 <li class="nav-item">
-                                                                    <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;"> Calculate by total shipment </a>
+                                                                    <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
                                                                 </li>
                                                                 <li class="nav-item">
-                                                                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Calculate by packaging </a>
+                                                                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
@@ -330,7 +330,7 @@
                                                                                 <div class="btn-group">
                                                                                     <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
                                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                                        <span data-value="save_and_back">Add load</span>
+                                                                                        <span>Add load</span>
                                                                                     </button>
                                                                                 </div>
                                                                             </div>

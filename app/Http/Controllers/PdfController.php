@@ -21,18 +21,15 @@ use App\User;
 use App\EmailTemplate;
 use App\PackageLoad;
 use App\Mail\SendQuotePdf;
+use App\TermsPort;
 
 class PdfController extends Controller
 {
     public function quote($id)
     {
         $quote = Quote::where('id',$id)->with('contact')->first();
-        $companies = Company::all()->pluck('business_name','id');
-        $harbors = Harbor::all()->pluck('name','id');
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-        $prices = Price::all()->pluck('name','id');
-        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
         $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
@@ -42,13 +39,19 @@ class PdfController extends Controller
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
+            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();
+            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();
         }
 
-        $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads]);
+        $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
+        
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
+        
         return $pdf->stream('quote');
     }
 
@@ -72,18 +75,18 @@ class PdfController extends Controller
             $currency_cfg = Currency::find($company_user->currency_id);
         }        
         $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads]);
+                                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads]);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
         if(count($contact_email)>0) {
-            
+
             $subject = $request->subject;
             $body = $request->body;
-            
+
             \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
-            
+
             $quote->status_quote_id=2;
             $quote->update();
             return response()->json(['message' => 'Ok']);

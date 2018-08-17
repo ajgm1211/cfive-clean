@@ -319,6 +319,26 @@
                 <p class="title text-right" style="color: #01194F;"><b>TOTAL: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
             </div>
         </div>
+        <div class="clearfix">
+            <p class="title">Terms and conditions</p>
+            <hr>            
+            @if(isset($terms_origin) && $terms_origin->count()>0)
+            <div class="company">
+                <h5 class="title-quote">Origin</h5>
+                @foreach($terms_origin as $v)
+                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                @endforeach
+            </div>
+            @endif
+            @if(isset($terms_destination) && $terms_destination->count()>0)
+            <div class="company">
+                <h5 class="title-quote">Destination</h5>
+                @foreach($terms_destination as $v)
+                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                @endforeach
+            </div>
+            @endif
+        </div>
         <footer>
             Cargofive &copy; {{date('Y')}}
         </footer>
