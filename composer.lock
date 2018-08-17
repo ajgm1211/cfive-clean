@@ -116,16 +116,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.64.12",
+            "version": "3.64.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1006a0bfacb1e1cd69cee92f53a80143cd59dd5e"
+                "reference": "aadc68842a5dd1d3fb7faaee8a8a8eaaf0fd6065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1006a0bfacb1e1cd69cee92f53a80143cd59dd5e",
-                "reference": "1006a0bfacb1e1cd69cee92f53a80143cd59dd5e",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/aadc68842a5dd1d3fb7faaee8a8a8eaaf0fd6065",
+                "reference": "aadc68842a5dd1d3fb7faaee8a8a8eaaf0fd6065",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +192,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-08-14 22:18:41"
+            "time": "2018-08-16 22:11:39"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -630,16 +630,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "8790f594151ca6a2010c6218e09d96df67173ad3"
+                "reference": "54859fabea8b3beecbb1a282888d5c990036b9e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/8790f594151ca6a2010c6218e09d96df67173ad3",
-                "reference": "8790f594151ca6a2010c6218e09d96df67173ad3",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/54859fabea8b3beecbb1a282888d5c990036b9e3",
+                "reference": "54859fabea8b3beecbb1a282888d5c990036b9e3",
                 "shasum": ""
             },
             "require": {
@@ -683,7 +683,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2018-04-10 10:11:19"
+            "time": "2018-08-16 20:49:45"
         },
         {
             "name": "erusev/parsedown",
@@ -2872,16 +2872,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.14.0",
+            "version": "2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "5a40d8ba8b7af83ff149d075351616027a0b771f"
+                "reference": "40cd73d227da96fa31bb4905f1f37444dee6d74a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/5a40d8ba8b7af83ff149d075351616027a0b771f",
-                "reference": "5a40d8ba8b7af83ff149d075351616027a0b771f",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/40cd73d227da96fa31bb4905f1f37444dee6d74a",
+                "reference": "40cd73d227da96fa31bb4905f1f37444dee6d74a",
                 "shasum": ""
             },
             "require": {
@@ -2932,7 +2932,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2018-08-13 15:28:03"
+            "time": "2018-08-16 00:21:46"
         },
         {
             "name": "studio-42/elfinder",
