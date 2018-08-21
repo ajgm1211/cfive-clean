@@ -960,6 +960,38 @@ $( document ).ready(function() {
             $('select[name="price_id"]').empty();
         }
     });
+  // QUOTE ADD BUG
+  $("select[name='company_id_quote']").val('');
+
+  $( "select[name='company_id_quote']" ).on('change', function() {
+        var company_id = $(this).val();
+        if(company_id) {
+            $('select[name="contact_id"]').empty();
+            $.ajax({
+                url: "/quotes/company/contact/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="client"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+            $.ajax({
+                url: "/quotes/company/price/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="price_id"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+        }else{
+            $('select[name="client"]').empty();
+            $('select[name="price_id"]').empty();
+        }
+    });
 });
 
 //Calculando origin ammounts

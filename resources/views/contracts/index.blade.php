@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('css')
 @parent
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 
 @section('title', 'Contracts')
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary" id="tableRates" >
+                        <table class="table tableData" id="tableRates" >
                             <thead>
                                 <tr>
                                     <th title="Field #1">
@@ -156,7 +156,7 @@
                                         Validity
                                     </th>
                                     <th title="Field #11">
-                                        status
+                                        Status
                                     </th>
                                     <th title="Field #12">
                                         Options
@@ -254,7 +254,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary"  id="tableContracts" >
+                        <table class="table tableData"  id="tableContracts" >
                             <thead>
                                 <tr>
                                     <th title="Field #1">
@@ -270,7 +270,7 @@
                                         Expire
                                     </th>
                                     <th title="Field #11">
-                                        status
+                                        Status
                                     </th>
                                     <th title="Field #12">
                                         Options
@@ -320,7 +320,7 @@
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contracts.js"></script>
 <script>                 
     $(function() {
