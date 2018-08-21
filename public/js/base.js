@@ -962,7 +962,7 @@ $( document ).ready(function() {
     });
   // QUOTE ADD BUG
   $("select[name='company_id_quote']").val('');
-
+  $('#select2-m_select2_2_modal-container').text('Please an option');
   $( "select[name='company_id_quote']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
