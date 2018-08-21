@@ -20,6 +20,7 @@ class AddNewcontractrequestTable extends Migration
             $table->string('validation');
             $table->integer('company_user_id')->unsigned();
             $table->string('namefile');
+            $table->enum('status',['Pending','Processing','Done'])->default('Pending');
             $table->integer('user_id')->unsigned();
             $table->date('created');
             $table->json('type');
