@@ -117,7 +117,7 @@ class NewContractRequestsController extends Controller
         $Ncontract->type            = $type;
         $Ncontract->data            = $data;
         $Ncontract->save();
-        
+
         $user = User::find($request->user);
         $admins = User::where('type','admin')->get();
         $message = 'has created an new request: '.$Ncontract->id;
