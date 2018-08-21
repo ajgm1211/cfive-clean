@@ -121,7 +121,9 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     //New Request Importation
     Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
+    
     Route::resource('RequestImportation','NewContractRequestsController');
+    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
 
     // DATATABLES
 
