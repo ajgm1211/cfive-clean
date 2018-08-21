@@ -65,9 +65,9 @@ $subtotalDestiny = 0;
               <div class="m-portlet__head" style="min-height: 100px;">
                 <div class="m-portlet__head-tools">
                   <div class="col-md-12" style="margin-top: 20px;">
-                    <div class="pull-left text-left" style="line-height: .5;">
-                      <img src="/uploads/logos/{{$user->companyUser->logo}}" class="img img-responsive" width="300px" ><br>
-                    </div>
+                             <div class="pull-left text-left" style="line-height: .5;">
+                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                    </div>
                     <div class="pull-right text-right" style="line-height: .5">                                
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
