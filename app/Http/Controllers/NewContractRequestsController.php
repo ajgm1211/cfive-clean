@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\NewContractRequest;
 use App\User;
 use App\CompanyUser;
+use App\Harbor;
+use App\Carrier;
 use App\Notifications\N_general;
 use Illuminate\Support\Facades\Storage;
 
@@ -138,43 +140,87 @@ class NewContractRequestsController extends Controller
         $type = json_decode($Ncontracts->type);
         $data = json_decode($Ncontracts->data);
 
+        //dd($data);
+
         $surchargeBol       = false;
         $rateBol            = false; 
         $ValuesSomeBol      = false; 
         $ValuesWithCurreBol = false; 
-        $rateBol            = false; 
+        $ValCarrierBol      = false; 
+        $ValuesDestinyBol   = false; 
+        $ValuesOriginBol    = false; 
 
         $contenSurchar          = '';
         $contenRate             = '';
         $contenValuesSome       = '';
         $contenValuesWithCurre  = '';
+        $contenValuesCarrier    = '';
+        $contenValuesDestiny    = '';
+        $contenValuesOrigin     = '';
 
         //dd($type);
         if($type->type == 2){
             $surchargeBol = true;
             $contenSurchar = 'El archivo contiene Rates + Surchargers';
-            
+
             if($type->values == 1){
                 $contenValuesSome = 'Las columnas valores solo contiene los valores';
                 $ValuesSomeBol = true;
-                
+
             } else if($type->values == 2){
                 $contenValuesWithCurre = 'Las columnas de los valores, contienen los currency';
                 $ValuesWithCurreBol = true;
             }
         } else if($type->type == 1){
+            $rateBol = true;
+            $contenRate = 'El archivo contiene solo Rates';
+        }
 
+        if($data->DatCar){
+            $ValCarrierBol = true;
+            $carrierObj = Carrier::find($data->carrier);
+            $contenValuesCarrier = 'El archivo no contiene la columna Carrier. Carrier: '.$carrierObj->name;
+        }
+
+        if($data->DatDes){
+            $ValuesDestinyBol = true;
+            $destinos ='';
+            foreach($data->destiny as $origen){
+                $destinosObj = Harbor::find($destinos);
+                $destinos  = $destinos.$destinosObj->display_name.'.. ';
+            }
+            $contenValuesDestiny = 'El archivo no contiene la columna Destino. Destino: '.$destinos;
+        }
+
+        if($data->DatOri){
+            $ValuesOriginBol = true;
+            $origenes ='';
+            foreach($data->origin as $origen){
+                $origenObj = Harbor::find($origen);
+                $origenes  = $origenes.''.$origenObj->display_name.'.. ';
+            }
+            $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: '.$origenes;
         }
 
         $ColectionFinal = collect([]);
 
         $Contenido = [
             'surchargeBol'          => $surchargeBol,
+            'contenSurchar'         => $contenSurchar,
             'rateBol'               => $rateBol,
-            'ValuesSomeBol'         => $surValuesSome,
+            'contenRate'            => $contenRate,
+            'ValuesSomeBol'         => $ValuesSomeBol,
             'contenValuesSome'      => $contenValuesSome,
-            'ValuesWithCurreBol'    => $surValuesWithCurre,
-            'contenValuesWithCurre' => $contenValuesWithCurre
+            'ValuesWithCurreBol'    => $ValuesWithCurreBol,
+            'contenValuesWithCurre' => $contenValuesWithCurre,
+
+            'ValCarrierBol'         => $ValCarrierBol,
+            'contenValuesCarrier'   => $contenValuesCarrier,
+            'ValuesDestinyBol'      => $ValuesDestinyBol,
+            'contenValuesDestiny'   => $contenValuesDestiny,
+
+            'ValuesOriginBol'       => $ValuesOriginBol,
+            'contenValuesOrigin'    => $contenValuesOrigin
 
         ];
 
