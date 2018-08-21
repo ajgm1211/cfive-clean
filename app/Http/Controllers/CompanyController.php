@@ -89,7 +89,7 @@ class CompanyController extends Controller
     $company = Company::find($id);
     $company->update($request->all());
 
-    
+
     if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
       $company_price = CompanyPrice::where('company_id',$company->id)->delete();
       foreach ($input['price_id'] as $key => $item) {            
@@ -99,9 +99,9 @@ class CompanyController extends Controller
         $company_price->save();
       }
     }
-     $company_price = GroupUserCompany::where('company_id',$company->id)->delete();
+    $company_price = GroupUserCompany::where('company_id',$company->id)->delete();
     if ((isset($input['users'])) && ($input['users'][0] != null)) {
-     
+
       foreach ($input['users'] as $key => $item) {            
         $userCompany_group = new GroupUserCompany();
         $userCompany_group->user_id= $input['users'][$key];
@@ -154,7 +154,8 @@ class CompanyController extends Controller
   }
 
   public function getCompanies(){
-    $companies = Company::all()->pluck('business_name','id');
+    $company_user_id=\Auth::user()->company_user_id;
+    $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     return $companies;
   }
 }

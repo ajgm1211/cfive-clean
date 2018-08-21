@@ -866,13 +866,13 @@ $subtotalDestiny = 0;
                               @if(isset($terms_origin) && $terms_origin->count()>0)                             
                               <h5 class="title-quote">Origin harbor</h5>
                               @foreach($terms_origin as $v)
-                              {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                              {!! $form->modality==1 ? $v->term->import : $v->term->export!!}
                               @endforeach
                               @endif
                               @if(isset($terms_destination) && $terms_destination->count()>0)
                               <h5 class="title-quote">Destination harbor</h5>
                               @foreach($terms_destination as $v)
-                              {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                              {!! $form->modality==1 ? $v->term->import : $v->term->export!!}
                               @endforeach
                               @endif
                             </div>
@@ -920,7 +920,7 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $info->contract->expire }}">
     <input type="hidden" class="form-control" id="origin_address" name="origin_address" value="{{ $form->origin_address }} ">
     <input type="hidden" class="form-control" id="destination_address" name="destination_address" value="{{ $form->destination_address }} ">
-    <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id }} ">
+    <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id_quote }} ">
     <input type="hidden" class="form-control" id="origin_harbor_id" name="origin_harbor_id" value="{{ $info->origin_port }} ">
     <input type="hidden" class="form-control" id="destination_harbor_id" name="destination_harbor_id" value="{{ $info->destiny_port }} ">
     <input type="hidden" class="form-control" id="price_id" name="price_id" value="{{ $priceID }} ">
@@ -945,7 +945,7 @@ $subtotalDestiny = 0;
 
 
     @if($email_templates)
-    @include('quotes.partials.submitQuoteEmailModal');
+    @include('quotes.partials.submitQuoteEmailModal')
     @endif
     {!! Form::close() !!}  
   </div>
