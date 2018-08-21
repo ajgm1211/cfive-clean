@@ -15,20 +15,20 @@
         </div>
 
         @if(Session::has('message.nivel'))
-            <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
-                <div class="m-alert__icon">
-                    <i class="la la-warning"></i>
-                </div>
-                <div class="m-alert__text">
-                    <strong>
-                        {{ session('message.title') }} 
-                    </strong>
-                    {{ session('message.content') }} 
-                </div>
-                <div class="m-alert__close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-                </div>
+        <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+            <div class="m-alert__icon">
+                <i class="la la-warning"></i>
             </div>
+            <div class="m-alert__text">
+                <strong>
+                    {{ session('message.title') }} 
+                </strong>
+                {{ session('message.content') }} 
+            </div>
+            <div class="m-alert__close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
         @endif
 
         <div class="m-portlet__body">
@@ -93,8 +93,8 @@
                             </a>
 
                             <button id="delete-saleterm" data-saleterm-id="{{$item->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
-                                    <i class="la la-eraser"></i>
-                                </button>
+                                <i class="la la-eraser"></i>
+                            </button>
 
                         </td>
                     </tr>
@@ -128,7 +128,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 @endsection
 

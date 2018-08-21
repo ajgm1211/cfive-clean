@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Request Of Importation
+                        Importation Request
                     </h3>
                 </div>
             </div>
@@ -53,13 +53,13 @@
                                         Id
                                     </th>
                                     <th width="4%" >
-                                        Name Contract
+                                        Contract Name
                                     </th>
                                     <th width="4%" >
-                                        Number Contract
+                                        Contract Number
                                     </th>
                                     <th width="4%" >
-                                        Validation Contract
+                                        Contract Validation
                                     </th>
                                     <th width="3%" >
                                         Date
@@ -101,16 +101,11 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 @endsection
 
