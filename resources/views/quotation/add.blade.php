@@ -54,7 +54,6 @@ $subtotalDestiny = 0;
 
       </div>
 
-
     </div>
     <hr><br><br>
     <div class="row">
@@ -65,9 +64,9 @@ $subtotalDestiny = 0;
               <div class="m-portlet__head" style="min-height: 100px;">
                 <div class="m-portlet__head-tools">
                   <div class="col-md-12" style="margin-top: 20px;">
-                             <div class="pull-left text-left" style="line-height: .5;">
-                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
-                                    </div>
+                    <div class="pull-left text-left" style="line-height: .5;">
+                      <img src="/uploads/logos/{{$user->companyUser->logo}}" class="img img-responsive" width="300px" ><br>
+                    </div>
                     <div class="pull-right text-right" style="line-height: .5">                                
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
@@ -109,23 +108,19 @@ $subtotalDestiny = 0;
         </div>
         <div class="row">
           <div class="col-lg-12">
-            <div class="m-portlet__body">
+            <div class="">
               <div class="row">
-                <div class="m-portlet m-portlet--tabs">
-                  <div class="m-portlet__head">
-                  </div>
+                <div class="container">
+                  <br>
+                  <br>
                   <div class="m-portlet__body">
-
                     <div class="row">
                       <div class="col-md-6">
                         <div class="panel panel-default">
                           <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
                           <div class="panel-body">
 
-                            <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span><br>
-                            @if($form->origin_address != "")
-                            <b>Address: </b> <span id="originA_input">  {{ $form->origin_address }}</span>
-                            @endif
+                            <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span>
                           </div>
                         </div>
                       </div>
@@ -133,14 +128,34 @@ $subtotalDestiny = 0;
                         <div class="panel panel-default">
                           <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
                           <div class="panel-body">
-                            <b>Port: </b><span id="destination_input">{{ $info->port_destiny->name }}</span><br>
-                            @if($form->destination_address != "")
-                            <b>Address: </b><span id="destinationA_input">{{   $form->destination_address }}</span>
-                            @endif
-
+                            <b>Port: </b><span id="destination_input">{{ $info->port_destiny->name }}</span>
                           </div>
                         </div>
                       </div>
+                      @if($form->origin_address != "")
+                      <div class="col-md-6">
+                        <div class="panel panel-default" id="destination_address_panel">
+                          <div class="panel-heading title-quote size-14px"><b>Origin Address</b></div>
+                          <div class="panel-body">
+                            <span id="destinationA_input">
+                              {{$form->origin_address}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      @endif                                            
+                      @if($form->destination_address != "")
+                      <div class="col-md-6">
+                        <div class="panel panel-default" id="destination_address_panel">
+                          <div class="panel-heading title-quote size-14px"><b>Destination Address</b></div>
+                          <div class="panel-body">
+                            <span id="destinationA_input">
+                              {{$form->destination_address}}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      @endif               
                     </div>
                     <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
                       <div class="col-md-12">
@@ -918,22 +933,23 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
-    
-        <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
-        <input type="hidden" class="form-control" id="height" name="height[]">
-        <input type="hidden" class="form-control" id="width" name="width[]">
-        <input type="hidden" class="form-control" id="large" name="large[]">
-        <input type="hidden" class="form-control" id="weight" name="weight[]">
-        <input type="hidden" class="form-control" id="volume" name="volume[]">
 
-       <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
-    
-    
+    <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
+    <input type="hidden" class="form-control" id="height" name="height[]">
+    <input type="hidden" class="form-control" id="width" name="width[]">
+    <input type="hidden" class="form-control" id="large" name="large[]">
+    <input type="hidden" class="form-control" id="weight" name="weight[]">
+    <input type="hidden" class="form-control" id="volume" name="volume[]">
+
+    <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+
+
     @if($email_templates)
     @include('quotes.partials.submitQuoteEmailModal');
     @endif
     {!! Form::close() !!}  
   </div>
+
 </div>
 @endsection
 

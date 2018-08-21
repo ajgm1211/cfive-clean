@@ -23,6 +23,7 @@
         </div>
     </div>
     @endif
+
     <div class="row">
         <div class="col-md-10">
             @if(count($company_user->company_user_id)>0)
@@ -34,7 +35,19 @@
                             <div class="m-portlet m-portlet--tabs">
                                 <div class="m-portlet__head">
                                     <div class="m-portlet__head-tools">
-                                        <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
+                                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left m-tabs-line-danger" role="tablist">
+                                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Save
+                                                </button>
+                                                @if($email_templates)
+                                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
+                                                    Save and send
+                                                </button>
+                                                @endif
+                                            </li>
+                                        </ul>
+                                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist">
                                             <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
                                                 <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
                                                     Next
@@ -477,7 +490,7 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Origin Port</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="origin_input"></span>
                                                                 </div>
@@ -485,7 +498,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="panel panel-default">
-                                                                <div class="panel-heading title-quote size-14px"><b>Destination Port</b></div>
+                                                                <div class="panel-heading title-quote size-14px"><b>Destination</b></div>
                                                                 <div class="panel-body">
                                                                     <span id="destination_input"></span>
                                                                 </div>
@@ -924,7 +937,7 @@
                                                 </div>
                                             </div>                                            
                                             <hr>
-                                            <div class="row">
+                                            <!--<div class="row">
                                                 <div class="col-lg-4 col-lg-offset-4">
                                                     <button type="submit" class="btn btn-primary">
                                                         Save
@@ -936,35 +949,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <hr>
-                                            <!--<div class="row" id="email_templates_box" style="display: none">
-<div class="col-lg-12">
-<div class="form-group m-form__group">
-<label style="letter-spacing: 0.7px"><b>Email template</b></label>
-{{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
-</div>
-<div class="form-group m-form__group">
-<label style="letter-spacing: 0.7px"><b>Preview:</b></label>
-<div class="jumbotron">
-<div id="subject-box">                            
-
-</div>
-<div id="textarea-box" style="display: none;">
-<label><b>Body:</b></label>
-<br>
-<textarea class="form-control editor" name="body" id="email-body"></textarea>
-</div>
-</div>
-</div>
-</div>
-<div class="col-lg-12">
-<div class="form-group m-form__group">
-<button type="submit" class="btn btn-success" formaction="/quotes/store/email">
-Continue
-</button>
-</div>
-</div>
-</div>-->
+                                            <hr>-->
                                         </div>
                                     </div>
                                 </div>                                
@@ -976,7 +961,6 @@ Continue
                     @endif
                     {!! Form::close() !!}
                 </div>
-
             </div>
             @else
             <div class="row">
