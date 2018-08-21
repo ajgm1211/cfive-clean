@@ -93,7 +93,7 @@ class QuoteController extends Controller
         $form =$request->input('form');
         $schedules = $request->input('schedules');
         $form = json_decode($form);
-        $companiesInfo = Company::where('id','=',$form->company_id)->first();  
+        $companiesInfo = Company::where('id','=',$form->company_id_quote)->first();  
         $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
         $company_user_id=\Auth::user()->company_user_id;
         $quotes = Quote::all();
