@@ -65,9 +65,9 @@ $subtotalDestiny = 0;
               <div class="m-portlet__head" style="min-height: 100px;">
                 <div class="m-portlet__head-tools">
                   <div class="col-md-12" style="margin-top: 20px;">
-                    <div class="pull-left text-left" style="line-height: .5;">
-                      <img src="/uploads/logos/{{$user->companyUser->logo}}" class="img img-responsive" width="300px" ><br>
-                    </div>
+                             <div class="pull-left text-left" style="line-height: .5;">
+                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                    </div>
                     <div class="pull-right text-right" style="line-height: .5">                                
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
@@ -918,6 +918,17 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    
+        <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
+        <input type="hidden" class="form-control" id="height" name="height[]">
+        <input type="hidden" class="form-control" id="width" name="width[]">
+        <input type="hidden" class="form-control" id="large" name="large[]">
+        <input type="hidden" class="form-control" id="weight" name="weight[]">
+        <input type="hidden" class="form-control" id="volume" name="volume[]">
+
+       <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+    
+    
     @if($email_templates)
     @include('quotes.partials.submitQuoteEmailModal');
     @endif
