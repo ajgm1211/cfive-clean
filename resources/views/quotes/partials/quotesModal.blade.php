@@ -54,7 +54,7 @@
             </div>
             {!! Form::close() !!}
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
                     Close
                 </button>
             </div>
