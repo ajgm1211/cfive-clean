@@ -74,7 +74,14 @@ class QuoteController extends Controller
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
-    $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
+
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');

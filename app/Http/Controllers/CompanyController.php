@@ -21,14 +21,21 @@ class CompanyController extends Controller
      */
   public function index()
   {
+    $company_user_id=\Auth::user()->company_user_id;
     $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-    $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->with('groupUserCompanies.user')->get();
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->where('owner',\Auth::user()->id)->with('groupUserCompanies.user','user')->get();
+
+    }else{
+      $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->with('groupUserCompanies.user','user')->get();
+    }
+
     return view('companies/index', ['companies' => $companies,'users'=>$users]);
   }
 
   public function add()
   {
-    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->pluck('name','id');
+    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     return view('companies.add', compact('prices','users'));
   }
@@ -50,6 +57,7 @@ class CompanyController extends Controller
   {
     $input = Input::all();
     $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
+    $request->request->add(['owner' => \Auth::user()->id]);
     $company=Company::create($request->all());
 
     if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
@@ -77,8 +85,10 @@ class CompanyController extends Controller
 
   public function edit($id)
   {
-    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->pluck('name','id');
     $company = Company::find($id);
+
+    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->where('id','!=',$company->owner)->pluck('name','id');
+
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     return view('companies.edit', compact('company','prices','users'));
   }
@@ -155,6 +165,15 @@ class CompanyController extends Controller
 
   public function getCompanies(){
     $company_user_id=\Auth::user()->company_user_id;
+
+
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
     $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     return $companies;
   }
