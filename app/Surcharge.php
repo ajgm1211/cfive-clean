@@ -28,9 +28,5 @@ class Surcharge extends Model
   {
     return $this->hasOne('App\SaleTerm','id','sale_term_id');
   }
-  public function SaleTermSurcharges()
-  {
 
-    return $this->hasOne('App\SaleTermSurcharge');
-  }
 }

@@ -480,12 +480,12 @@ class QuoteController extends Controller
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
-            })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
+            })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.saleterm')->get();
             foreach($localChar as $local){
                 $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
                 // Condicion para enviar los terminos de venta o compra 
-                if(isset($local->surcharge->SaleTermSurcharges->saleterm->name)){
-                    $terminos = $local->surcharge->SaleTermSurcharges->saleterm->name;
+                if(isset($local->surcharge->saleterm->name)){
+                    $terminos = $local->surcharge->saleterm->name;
                 }else{
                     $terminos = $local->surcharge->name;
                 }
@@ -933,12 +933,12 @@ class QuoteController extends Controller
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
-            })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
+            })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
             foreach($globalChar as $global){
                 $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
                 // Condicion para enviar los terminos de venta o compra 
-                if(isset($global->surcharge->SaleTermSurcharges->saleterm->name)){
-                    $terminos = $global->surcharge->SaleTermSurcharges->saleterm->name;
+                if(isset($global->surcharge->saleterm->name)){
+                    $terminos = $global->surcharge->saleterm->name;
                 }else{
                     $terminos = $global->surcharge->name;
                 }
