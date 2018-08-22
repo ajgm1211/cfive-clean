@@ -2112,12 +2112,17 @@ class QuoteController extends Controller
         $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+        $packaging_loads = PackageLoad::where('quote_id',$quote->id)->get();
+
         $quote_duplicate = new Quote();
         $quote_duplicate->owner=\Auth::id();
         $quote_duplicate->incoterm=$quote->incoterm;
         $quote_duplicate->modality=$quote->modality;
         $quote_duplicate->currency_id=$quote->currency_id;
         $quote_duplicate->pick_up_date=$quote->pick_up_date;
+        if($quote->validity){
+            $quote_duplicate->validity=$quote->validity;
+        }
         if($quote->origin_address){
             $quote_duplicate->origin_address=$quote->origin_address;
         }
@@ -2160,7 +2165,23 @@ class QuoteController extends Controller
         if($quote->sub_total_destination){
             $quote_duplicate->sub_total_destination=$quote->sub_total_destination;
         }
+        if($quote->total_markut_origin){
+            $quote_duplicate->total_markut_origin=$quote->total_markut_origin;
+        }
+        if($quote->total_markut_freight){
+            $quote_duplicate->total_markut_freight=$quote->total_markut_freight;
+        }
+        if($quote->total_markut_destination){
+            $quote_duplicate->total_markut_destination=$quote->total_markut_destination;
+        }
+        if($quote->carrier_id){
+            $quote_duplicate->carrier_id=$quote->carrier_id;
+        }
+        if($quote->airline_id){
+            $quote_duplicate->airline_id=$quote->airline_id;
+        }        
         $quote_duplicate->status_quote_id=$quote->status_quote_id;
+        $quote_duplicate->type_cargo=$quote->type_cargo;
         $quote_duplicate->type=$quote->type;
         $quote_duplicate->save();
         foreach ($origin_ammounts as $origin){
@@ -2208,10 +2229,25 @@ class QuoteController extends Controller
             $destination_ammount_duplicate->quote_id=$quote_duplicate->id;
             $destination_ammount_duplicate->save();
         }
+
+        foreach ($packaging_loads as $packaging_load){
+            $packaging_load_duplicate = new PackageLoad();
+            $packaging_load_duplicate->type_cargo=$packaging_load->type_cargo;
+            $packaging_load_duplicate->quantity=$packaging_load->quantity;
+            $packaging_load_duplicate->height=$packaging_load->height;
+            $packaging_load_duplicate->width=$packaging_load->width;
+            $packaging_load_duplicate->large=$packaging_load->large;
+            $packaging_load_duplicate->weight=$packaging_load->weight;
+            $packaging_load_duplicate->total_weight=$packaging_load->total_weight;
+            $packaging_load_duplicate->volume=$packaging_load->volume;
+            $packaging_load_duplicate->quote_id=$quote_duplicate->id;
+            $packaging_load_duplicate->save();
+        }
+
         if($request->ajax()){
             return response()->json(['message' => 'Ok']);
         }else{
-            return redirect()->route('quotes.index', compact(['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors]));
+            return redirect()->action('QuoteController@show',$quote_duplicate->id);
         }
     }
     public function updateStatus(Request $request,$id)

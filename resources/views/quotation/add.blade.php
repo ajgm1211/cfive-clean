@@ -120,7 +120,6 @@ $subtotalDestiny = 0;
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
                                                     <div class="panel-body">
-
                                                         <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span>
                                                     </div>
                                                 </div>
@@ -175,7 +174,7 @@ $subtotalDestiny = 0;
                                                 @if($form->fortyhc > 0)
                                                 <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
                                                 @endif
-                                                <p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>
+                                                <!--<p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>-->
 
                                             </div>
                                         </div>
@@ -838,7 +837,7 @@ $subtotalDestiny = 0;
                                                 @endphp
 
                                                 <div class="form-group text-right">
-                                                    <h3 class="size-16px color-blue"><button id="total" class="btn btn-primary"><b>Total: <span id="total">{{$totalQ[0]}}</span> &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></button></h3>
+                                                    <h3 class="size-16px color-blue"><button type="button" id="total" class="btn btn-primary"><b>Total: <span id="total">{{$totalQ[0]}}</span> &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></button></h3>
                                                 </div>
                                             </div>
                                         </div>

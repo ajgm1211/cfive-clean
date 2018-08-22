@@ -587,7 +587,7 @@
                                                                                 <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
@@ -614,7 +614,7 @@
                                                                             </td>
                                                                         </tr>
 
-                                                                        <tr class="hide"  id="origin_ammounts">
+                                                                        <tr class="hide" id="origin_ammounts">
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
                                                                             </td>
@@ -695,7 +695,7 @@
                                                                                 <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text" required/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" required/>
+                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.01" required/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
@@ -722,7 +722,7 @@
                                                                             </td>
                                                                         </tr>
 
-                                                                        <tr class="hide"  id="freight_ammounts">
+                                                                        <tr class="hide" id="freight_ammounts">
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
                                                                             </td>
@@ -730,7 +730,7 @@
                                                                                 <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                                <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.01"/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
@@ -794,7 +794,6 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
                                                                         <tr>
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
@@ -803,7 +802,7 @@
                                                                                 <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.01"/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
@@ -830,7 +829,7 @@
                                                                             </td>
                                                                         </tr>
 
-                                                                        <tr class="hide"  id="destination_ammounts">
+                                                                        <tr class="hide" id="destination_ammounts">
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
                                                                             </td>
@@ -838,7 +837,7 @@
                                                                                 <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.01"/>
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">

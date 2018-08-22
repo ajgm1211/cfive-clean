@@ -102,7 +102,7 @@
                         @else
                         <td>---</td>
                         @endif
-                        <td>{{$quote->created_at }}</td>
+                        <td>{{ date_format($quote->created_at, 'M d, Y H:i')}}</td>
                         <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
                         @if($quote->origin_harbor)
                         <td>{{$quote->origin_harbor->display_name }}</td>
