@@ -9,7 +9,7 @@ function setearRouteKey($key)
   if(!empty($user)){
     $hash = $user->companyUser->hash;
   }else{
-    $hash = 'MySecretSalt';
+    $hash = 'cargofivepapa';
   }
   $hashids = new \Hashids\Hashids($hash);
 
@@ -22,7 +22,7 @@ function obtenerRouteKey($key)
   if(!empty($user)){
     $hash =$user->companyUser->hash;
   }else{
-    $hash = 'MySecretSalt';
+    $hash = 'cargofivepapa';
   }
   $hashids = new \Hashids\Hashids($hash);
   $key = $hashids->decode($key);
