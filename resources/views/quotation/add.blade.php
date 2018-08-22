@@ -47,10 +47,12 @@ $subtotalDestiny = 0;
 
       </div>
       <div class="col-md-2 col-xs-4">
-        <a href="#"  class="btn btn-primary btn-block">PDF</a>
+       
+        <button id="store-pdf" value="submit-pdf"  onClick="parent.location='{{ route('quotes.index') }}'" formtarget="_blank"  name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save and PDF</button>
+
       </div>
       <div class="col-md-2 col-xs-4" >
-        <button id="duplicate-quote" type="submit" class="btn btn-primary btn-block">Save</button>
+        <button id="store" value="submit" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save</button>
 
       </div>
 
