@@ -150,6 +150,7 @@ class NewContractRequestsController extends Controller
         $ValCarrierBol      = false; 
         $ValuesDestinyBol   = false; 
         $ValuesOriginBol    = false; 
+        $tarjetBol          = false; 
 
         $contenSurchar          = '';
         $contenRate             = '';
@@ -198,11 +199,15 @@ class NewContractRequestsController extends Controller
             $origenes ='';
             foreach($data->origin as $origen){
                 $origenObj = Harbor::find($origen);
-                $origenes  = $origenes.''.$origenObj->display_name.'.. ';
+                $origenes  = $origenes.''.$origenObj->display_name.'...  ';
             }
             $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: '.$origenes;
         }
 
+        if($ValuesOriginBol == true || $ValuesDestinyBol == true || $ValCarrierBol == true){
+            $tarjetBol = true;
+        }
+        
         $colectionFinal = collect([]);
 
         $Contenido = [
@@ -218,6 +223,7 @@ class NewContractRequestsController extends Controller
             'contenSurchar'         => $contenSurchar,
             'rateBol'               => $rateBol,
             'contenRate'            => $contenRate,
+            
             'ValuesSomeBol'         => $ValuesSomeBol,
             'contenValuesSome'      => $contenValuesSome,
             'ValuesWithCurreBol'    => $ValuesWithCurreBol,
@@ -229,7 +235,8 @@ class NewContractRequestsController extends Controller
             'contenValuesDestiny'   => $contenValuesDestiny,
 
             'ValuesOriginBol'       => $ValuesOriginBol,
-            'contenValuesOrigin'    => $contenValuesOrigin
+            'contenValuesOrigin'    => $contenValuesOrigin,
+            'tarjetBol'             => $tarjetBol
 
         ];
 
