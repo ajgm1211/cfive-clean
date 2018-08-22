@@ -52,10 +52,13 @@
                                     <th width="1%" >
                                         Id
                                     </th>
+                                    <th width="3%" >
+                                        Company
+                                    </th>
                                     <th width="4%" >
                                         Contract Name
                                     </th>
-                                    <th width="4%" >
+                                    <th width="3%" >
                                         Contract Number
                                     </th>
                                     <th width="4%" >
@@ -80,6 +83,9 @@
                                 <tr>
                                     <td>
                                         {{$loop->iteration}}
+                                    </td>
+                                    <td>
+                                        {{$Ncontract->companyuser->name}}
                                     </td>
                                     <td id="{{'thnamec'.$loop->iteration}}">
                                         {{$Ncontract->namecontract}}
@@ -179,7 +185,7 @@
 
 <script type="application/x-javascript" src="/js/RequestContracts/Request.Index.Status.js">
 
-  
+
 </script>
 
 @stop

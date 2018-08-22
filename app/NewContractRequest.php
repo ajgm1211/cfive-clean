@@ -20,4 +20,8 @@ class NewContractRequest extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+    
+    public function companyuser(){
+        return $this->belongsTo('App\CompanyUser','company_user_id');
+    }
 }

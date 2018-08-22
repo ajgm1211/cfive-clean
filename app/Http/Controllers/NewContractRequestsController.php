@@ -17,7 +17,7 @@ class NewContractRequestsController extends Controller
 
     public function index()
     {
-        $Ncontracts = NewContractRequest::with('user')->get();
+        $Ncontracts = NewContractRequest::with('user','companyuser')->get();
         //dd($Ncontracts);
         return view('contracts.Requests.index',compact('Ncontracts'));
     }
@@ -136,7 +136,8 @@ class NewContractRequestsController extends Controller
 
     public function edit($id)
     {
-        $Ncontracts = NewContractRequest::find($id);
+        $Ncontracts = NewContractRequest::with('companyuser','user')->find($id);
+        //dd($Ncontracts);
         $type = json_decode($Ncontracts->type);
         $data = json_decode($Ncontracts->data);
 
@@ -185,8 +186,8 @@ class NewContractRequestsController extends Controller
         if($data->DatDes){
             $ValuesDestinyBol = true;
             $destinos ='';
-            foreach($data->destiny as $origen){
-                $destinosObj = Harbor::find($destinos);
+            foreach($data->destiny as $destiny){
+                $destinosObj = Harbor::find($destiny);
                 $destinos  = $destinos.$destinosObj->display_name.'.. ';
             }
             $contenValuesDestiny = 'El archivo no contiene la columna Destino. Destino: '.$destinos;
@@ -202,9 +203,17 @@ class NewContractRequestsController extends Controller
             $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: '.$origenes;
         }
 
-        $ColectionFinal = collect([]);
+        $colectionFinal = collect([]);
 
         $Contenido = [
+            'namecontract'          => $Ncontracts->namecontract,
+            'numbercontract'        => $Ncontracts->numbercontract,
+            'validation'            => $Ncontracts->validation,
+            'company'               => $Ncontracts->companyuser->name,
+            'status'                => $Ncontracts->status,
+            'User'                  => $Ncontracts->user->name.' '.$Ncontracts->user->lastname,
+            'created'               => $Ncontracts->created,
+            
             'surchargeBol'          => $surchargeBol,
             'contenSurchar'         => $contenSurchar,
             'rateBol'               => $rateBol,
@@ -224,8 +233,10 @@ class NewContractRequestsController extends Controller
 
         ];
 
-        $ColectionFinal->push($Contenido);
-        dd($ColectionFinal);
+        $colectionFinal->push($Contenido);
+        //dd($ColectionFinal);
+        
+        return view('contracts.Requests.DetailNewRequest',compact('colectionFinal'));
     }
 
 
