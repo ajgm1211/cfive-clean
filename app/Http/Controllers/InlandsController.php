@@ -167,6 +167,7 @@ class InlandsController extends Controller
      */
   public function update(Request $request, $id)
   {
+    $id = obtenerRouteKey($id);
     $inland = Inland::find($id);
     $inland->provider = $request->input('provider');
     $inland->type = $request->input('type');

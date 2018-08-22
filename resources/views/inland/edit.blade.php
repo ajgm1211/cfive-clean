@@ -27,7 +27,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
     </div>
     @endif
     <div class="m-portlet__body">
-      {!! Form::model($inland, ['route' => ['inlands.update', $inland], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
+      {!! Form::model($inland, ['route' => ['inlands.update', setearRouteKey($inland->id)], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
       <div class="row">
         <div class="m-portlet__body">
           <div class="form-group m-form__group row">
