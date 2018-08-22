@@ -96,6 +96,9 @@ All
             <th title="Field #4">
               Address
             </th>
+            <th title="Field #4">
+              Owner
+            </th>
             <th title="Field #5">
               Associated Users
             </th>
@@ -117,6 +120,7 @@ All
             <td>{{$company->phone }}</td>
             <td>{{$company->email }}</td>
             <td>{{$company->address  }}</td>
+            <td>{{$company->user->name  }}</td>
             <td>
               @foreach($company->groupUserCompanies as $groupUser)
               <ul>
