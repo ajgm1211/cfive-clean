@@ -13,8 +13,14 @@
             </div>
             <div id="company">
                 <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->id}}</b></span></div>
-                <div><b>Date of issue:</b> {{$quote->created_at}}</div>
-                <div><b>Validity: </b>{{$quote->validity}}</div>
+                <div><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
+                @if($quote->validity!='')
+                @php
+                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
+                $validity = $date->format('M d, Y');
+                @endphp
+                <div><b>Valid up to: </b>{{$validity}}</div>
+                @endif
             </div>
         </header>
         <main>
@@ -104,9 +110,9 @@
                 <hr>
                 <div class="company" style="color: #1D3A6E;">
                     <p class="title"><b>Cargo details:</b></p>
-                    <p>{!! $quote->qty_20 != '' ? $quote->qty_20.' x 20\' container':'' !!}</p>
-                    <p>{!! $quote->qty_40 != '' ? $quote->qty_40.' x 40\' container':'' !!}</p>
-                    <p>{!! $quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
+                    <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
+                    <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
+                    <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
 
                     @if($quote->total_quantity!='' && $quote->total_quantity>0)
                     <div class="row">

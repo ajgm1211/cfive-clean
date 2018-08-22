@@ -16,7 +16,7 @@
         </div>
         <div class="col-md-2 col-xs-4" >
             <button id="duplicate-quote" class="btn btn-primary btn-block">Duplicate</button>
-            
+
         </div>
         <div class="col-md-2 col-xs-4" >
             <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
@@ -59,8 +59,14 @@
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">                                
                                         <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
-                                        <p><b>Date of issue:</b> {{$quote->created_at}}</p>
-                                        <p><b>Validity:</b> {{$quote->validity}}</p>
+                                        <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
+                                        @if($quote->validity!='')
+                                        @php
+                                        $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
+                                        $validity = $date->format('M d, Y');
+                                        @endphp
+                                        <p><b>Validity:</b>  Valid up to {{$validity}}</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -104,10 +110,10 @@
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
                                         @if($quote->origin_harbor_id!='')
-                                            Port: {{$quote->origin_harbor->name}}
+                                        Port: {{$quote->origin_harbor->name}}
                                         @endif
                                         @if($quote->origin_airport_id!='')
-                                            Airport: {{$quote->origin_airport->name}}
+                                        Airport: {{$quote->origin_airport->name}}
                                         @endif
                                     </span>
                                 </div>
@@ -119,10 +125,10 @@
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
                                         @if($quote->destination_harbor_id!='')
-                                            Port: {{$quote->destination_harbor->name}}
+                                        Port: {{$quote->destination_harbor->name}}
                                         @endif
                                         @if($quote->destination_airport_id!='')
-                                            Airport: {{$quote->destination_airport->name}}
+                                        Airport: {{$quote->destination_airport->name}}
                                         @endif                                        
                                     </span>
                                 </div>
@@ -139,10 +145,10 @@
                     </div>
                     <div class="col-md-12">
                         @if($quote->carrier_id!='')
-                            <p>{{$quote->carrier->name}}</p>
+                        <p>{{$quote->carrier->name}}</p>
                         @endif
                         @if($quote->airline_id!='')
-                            <p>{{$quote->airline->name}}</p>
+                        <p>{{$quote->airline->name}}</p>
                         @endif
                     </div>
                 </div>
