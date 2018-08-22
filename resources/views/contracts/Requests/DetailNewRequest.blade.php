@@ -114,7 +114,98 @@
                             </div>
                             <hr>
 
-                            <div class="form-group m-form__group row"></div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2">
+                                    <label class=""><b>DETAILS:</b></label>
+                                </div>
+
+                                <div class="col-lg-4">
+
+                                    <div class="m-portlet m-portlet--creative m-portlet--bordered-semi">
+                                        <div class="m-portlet__head">
+                                            <div class="m-portlet__head-caption">
+                                                <div class="m-portlet__head-title">
+                                                    <span class="m-portlet__head-icon">
+                                                        <i class="la la-check-square"></i>
+                                                    </span>
+                                                    <h3 class="m-portlet__head-text">
+                                                        Type Of Selection
+                                                    </h3>
+                                                    <h2 class="m-portlet__head-label m-portlet__head-label--accent">
+                                                        <span>
+                                                            Type
+                                                        </span>
+                                                    </h2>
+                                                </div>
+                                            </div>
+                                            <div class="m-portlet__head-tools">
+                                            </div>
+                                        </div>
+                                        <div class="m-portlet__body" style="font-size:17px">
+                                            <ul>
+                                                @if($colection['surchargeBol'])
+                                                <li> {{$colection['contenSurchar']}}</li>
+                                                <br>
+                                                @if($colection['ValuesSomeBol'])
+
+                                                <li> {{$colection['contenValuesSome']}}</li>
+
+                                                @elseif($colection['ValuesWithCurreBol'])
+
+                                                <li> {{$colection['contenValuesWithCurre']}}</li>
+
+                                                @endif
+
+                                                @elseif($colection['rateBol'])
+                                                <li> {{$colection['contenRate']}}</li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    @if($colection['tarjetBol'])
+                                    <div class="m-portlet m-portlet--creative m-portlet--bordered-semi">
+                                        <div class="m-portlet__head">
+                                            <div class="m-portlet__head-caption">
+                                                <div class="m-portlet__head-title">
+                                                    <span class="m-portlet__head-icon">
+                                                        <i class="flaticon-statistics"></i>
+                                                    </span>
+                                                    <h3 class="m-portlet__head-text">
+                                                        Type Of Selection
+                                                    </h3>
+                                                    <h2 class="m-portlet__head-label m-portlet__head-label--primary">
+                                                        <span>
+                                                            Data
+                                                        </span>
+                                                    </h2>
+                                                </div>
+                                            </div>
+                                            <div class="m-portlet__head-tools">
+                                            </div>
+                                        </div>
+                                        <div class="m-portlet__body" style="font-size:17px">
+                                            <ul>
+                                                @if($colection['ValCarrierBol'])
+                                                <li>{{$colection['contenValuesCarrier']}}</li>
+                                                @endif
+                                                
+                                                @if($colection['ValuesOriginBol'])
+                                                <br>
+                                                <li>{{$colection['contenValuesOrigin']}}</li>
+                                                @endif
+                                                
+                                                @if($colection['ValuesDestinyBol'])
+                                                <br>
+                                                <li>{{$colection['contenValuesDestiny']}}</li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
                             <hr>
                             <div class="form-group m-form__group row"></div>
                             @endforeach
