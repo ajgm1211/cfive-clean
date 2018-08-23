@@ -124,6 +124,12 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     
     Route::resource('RequestImportation','NewContractRequestsController');
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+    
+    //Developer Datatables
+    
+     Route::get('FailedRatesForContractsDeveloper/{id}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+    
+    Route::get('FailedRatesForContractsDeveloperView/{id}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
 
     // DATATABLES
 
