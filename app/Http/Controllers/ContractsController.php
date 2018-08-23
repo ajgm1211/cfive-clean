@@ -2553,7 +2553,7 @@ class ContractsController extends Controller
 
     }
 
-    public function FailedRatesDeveloperLoad($id){
+    public function FailedRatesDeveloperLoad($id,$selector){
 
         //$id se refiere al id del contracto
         $objharbor = new Harbor();
@@ -2564,7 +2564,6 @@ class ContractsController extends Controller
         $rates = Rate::with('carrier','contract','port_origin','port_destiny','currency')->where('contract_id','=',$id)->get();
         //dd($rates);
 
-        $failratesFor = FailRate::where('contract_id','=',$id)->get();
 
         $originV;
         $destinationV;
@@ -2578,121 +2577,140 @@ class ContractsController extends Controller
         $fortyA;
         $fortyhcA;
         $failrates = collect([]);
-        foreach( $failratesFor as $failrate){
-            $carrAIn;
-            $pruebacurre = "";
-            $originA        = explode("_",$failrate['origin_port']);
-            $destinationA   = explode("_",$failrate['destiny_port']);
-            $carrierA       = explode("_",$failrate['carrier_id']);
-            $currencyA      = explode("_",$failrate['currency_id']);
-            $twuentyA       = explode("_",$failrate['twuenty']);
-            $fortyA         = explode("_",$failrate['forty']);
-            $fortyhcA       = explode("_",$failrate['fortyhc']);
-            
-            $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                ->first();
-            //$originAIn = $originOb['id'];
-            $originC   = count($originA);
-            if($originC <= 1){
-                $originA = $originOb['name'];
-            } else{
-                $originA = $originA[0].' (error)';
-                $classdorigin='color:red';
+        $ratescol = collect([]);
+        if($selector == 1){
+            $failratesFor = FailRate::where('contract_id','=',$id)->get();
+            foreach( $failratesFor as $failrate){
+                $carrAIn;
+                $pruebacurre = "";
+                $originA        = explode("_",$failrate['origin_port']);
+                $destinationA   = explode("_",$failrate['destiny_port']);
+                $carrierA       = explode("_",$failrate['carrier_id']);
+                $currencyA      = explode("_",$failrate['currency_id']);
+                $twuentyA       = explode("_",$failrate['twuenty']);
+                $fortyA         = explode("_",$failrate['forty']);
+                $fortyhcA       = explode("_",$failrate['fortyhc']);
+
+                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                    ->first();
+                //$originAIn = $originOb['id'];
+                $originC   = count($originA);
+                if($originC <= 1){
+                    $originA = $originOb['name'];
+                } else{
+                    $originA = $originA[0].' (error)';
+                    $classdorigin='color:red';
+                }
+
+                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                    ->first();
+                //$destinationAIn = $destinationOb['id'];
+                $destinationC   = count($destinationA);
+                if($destinationC <= 1){
+                    $destinationA = $destinationOb['name'];
+                } else{
+                    $destinationA = $destinationA[0].' (error)';
+                }
+
+                $twuentyC   = count($twuentyA);
+                if($twuentyC <= 1){
+                    $twuentyA = $twuentyA[0];
+                } else{
+                    $twuentyA = $twuentyA[0].' (error)';
+                }
+
+                $fortyC   = count($fortyA);
+                if($fortyC <= 1){
+                    $fortyA = $fortyA[0];
+                } else{
+                    $fortyA = $fortyA[0].' (error)';
+                }
+
+                $fortyhcC   = count($fortyhcA);
+                if($fortyhcC <= 1){
+                    $fortyhcA = $fortyhcA[0];
+                } else{
+                    $fortyhcA = $fortyhcA[0].' (error)';
+                }
+
+                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+                //$carrAIn = $carrierOb['id'];
+                $carrierC = count($carrierA);
+                if($carrierC <= 1){
+                    //dd($carrierAIn);
+                    $carrierA = $carrierA[0];
+                }
+                else{
+                    $carrierA = $carrierA[0].' (error)';
+                }
+                $currencyC = count($currencyA);
+                if($currencyC <= 1){
+                    $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
+                    //$pruebacurre = $currenc['id'];
+                    $currencyA = $currencyA[0];
+                }
+                else{
+                    $currencyA = $currencyA[0].' (error)';
+                }        
+                $colec = ['id'              =>  $failrate->id,
+                          'contract_id'     =>  $id,
+                          'origin_portLb'   =>  $originA,       //
+                          'destiny_portLb'  =>  $destinationA,  // 
+                          'carrierLb'       =>  $carrierA,      //
+                          'twuenty'         =>  $twuentyA,      //    
+                          'forty'           =>  $fortyA,        //  
+                          'fortyhc'         =>  $fortyhcA,      //
+                          'currency_id'     =>  $currencyA,     //
+                         ];
+
+                $pruebacurre = "";
+                $carrAIn = "";
+                $failrates->push($colec);
+
             }
+            return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
+                return '<a href="#edit-'.$failrate['id'].'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                &nbsp;
+                <a href="#delet-'.$failrate['id'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
+            })
+            ->editColumn('id', 'ID: {{$id}}')->toJson();
             
-            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                ->first();
-            //$destinationAIn = $destinationOb['id'];
-            $destinationC   = count($destinationA);
-            if($destinationC <= 1){
-                $destinationA = $destinationOb['name'];
-            } else{
-                $destinationA = $destinationA[0].' (error)';
-            }
             
-            $twuentyC   = count($twuentyA);
-            if($twuentyC <= 1){
-                $twuentyA = $twuentyA[0];
-            } else{
-                $twuentyA = $twuentyA[0].' (error)';
-            }
             
-            $fortyC   = count($fortyA);
-            if($fortyC <= 1){
-                $fortyA = $fortyA[0];
-            } else{
-                $fortyA = $fortyA[0].' (error)';
+        } else if($selector == 2){
+
+
+            foreach($rates as $rate){
+                $originRate     = '';
+                $detinyRate     = '';
+                $carrierRate    = '';
+                $currencyRate   = '';
+
+                $originRate     = $rate['port_origin']['name'];
+                $detinyRate     = $rate['port_destiny']['name'];
+                $carrierRate    = $rate['carrier']['name'];
+                $currencyRate   = $rate->Currency->alphacode;
+
+                $colec = ['id'              =>  $rate->id,
+                          'contract_id'     =>  $id,            //
+                          'origin_portLb'   =>  $originRate,    //
+                          'destiny_portLb'  =>  $detinyRate,    //
+                          'carrierLb'       =>  $carrierRate,   //
+                          'twuenty'         =>  $rate->twuenty, //    
+                          'forty'           =>  $rate->forty,   //  
+                          'fortyhc'         =>  $rate->fortyhc, //
+                          'currency_id'     =>  $currencyRate,  //
+                         ];
+                $ratescol->push($colec);
             }
-            
-            $fortyhcC   = count($fortyhcA);
-            if($fortyhcC <= 1){
-                $fortyhcA = $fortyhcA[0];
-            } else{
-                $fortyhcA = $fortyhcA[0].' (error)';
-            }
-            
-            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
-            //$carrAIn = $carrierOb['id'];
-            $carrierC = count($carrierA);
-            if($carrierC <= 1){
-                //dd($carrierAIn);
-                $carrierA = $carrierA[0];
-            }
-            else{
-                $carrierA = $carrierA[0].' (error)';
-            }
-            $currencyC = count($currencyA);
-            if($currencyC <= 1){
-                $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
-                //$pruebacurre = $currenc['id'];
-                $currencyA = $currencyA[0];
-            }
-            else{
-                $currencyA = $currencyA[0].' (error)';
-            }        
-            $colec = ['rate_id'         =>  $failrate->id,
-                      'contract_id'     =>  $id,
-                      'origin_portLb'   =>  $originA,       //
-                      'destiny_portLb'  =>  $destinationA,  // 
-                      'carrierLb'       =>  $carrierA,      //
-                      'twuenty'         =>  $twuentyA,      //    
-                      'forty'           =>  $fortyA,        //  
-                      'fortyhc'         =>  $fortyhcA,      //
-                      'currency_id'     =>  $currencyA,     //
-                     ];
-            
-            $pruebacurre = "";
-            $carrAIn = "";
-            $failrates->push($colec);
-            
+        return DataTables::of($ratescol)->addColumn('action', function ($ratescol) {
+                return '
+                <a href="#edit-'.$ratescol['id'].'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                &nbsp;
+                <a href="#delet-'.$ratescol['id'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
+            })
+            ->editColumn('id', 'ID: {{$id}}')->toJson();
         }
-
-
-        foreach($rates as $rate){
-            $originRate     = '';
-            $detinyRate     = '';
-            $carrierRate    = '';
-            $currencyRate   = '';
-
-            $originRate     = $rate['port_origin']['name'];
-            $detinyRate     = $rate['port_destiny']['name'];
-            $carrierRate    = $rate['carrier']['name'];
-            $currencyRate   = $rate->Currency->alphacode;
-
-            $colec = ['rate_id'         =>  $rate->id,
-                      'contract_id'     =>  $id,            //
-                      'origin_portLb'   =>  $originRate,    //
-                      'destiny_portLb'  =>  $detinyRate,    //
-                      'carrierLb'       =>  $carrierRate,   //
-                      'twuenty'         =>  $rate->twuenty, //    
-                      'forty'           =>  $rate->forty,   //  
-                      'fortyhc'         =>  $rate->fortyhc, //
-                      'currency_id'     =>  $currencyRate,  //
-                     ];
-            $failrates->push($colec);
-        }
-
-        return DataTables::of($failrates)->toJson();
     }
 
 }

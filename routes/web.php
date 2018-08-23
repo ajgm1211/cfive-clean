@@ -129,7 +129,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     
      Route::get('FailedRatesForContractsDeveloper/{id}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
     
-    Route::get('FailedRatesForContractsDeveloperView/{id}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
 
     // DATATABLES
 

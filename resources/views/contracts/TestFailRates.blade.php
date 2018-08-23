@@ -64,6 +64,7 @@
                 </label>
             </div>
             <!--<button onclick="prueba()">prueba</button>-->
+            @if($countfailrates > 0)
             <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                 <thead >
                     <tr>
@@ -74,11 +75,29 @@
                         <th>40</th>
                         <th>40'hc</th>
                         <th>currency</th>
+                        <th>option</th>
                     </tr>
                 </thead>
 
             </table>
+            @endif
             <!--begin: Search Form -->
+            
+               <table class="table m-table m-table--head-separator-primary"  id="myatest2" >
+                <thead >
+                    <tr>
+                        <th>origin</th>
+                        <th>destiny</th>
+                        <th>carrier</th>
+                        <th>20</th>
+                        <th>40</th>
+                        <th>40'hc</th>
+                        <th>currency</th>
+                        <th>option</th>
+                    </tr>
+                </thead>
+
+            </table>
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
 
@@ -103,7 +122,7 @@
         $('#myatest').DataTable({
             processing: true,
             //serverSide: true,
-            ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",$id) !!}',
+            ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,1]) !!}',
             columns: [
                 { data: 'origin_portLb', name: 'origin_portLb' },
                 { data: 'destiny_portLb', name: 'destiny_portLb' },
@@ -112,6 +131,32 @@
                 { data: 'forty', name: "forty" },
                 { data: 'fortyhc', name: "fortyhc" },
                 { data: 'currency_id', name: 'currency_id' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "deferLoading": 57,
+            "autoWidth": false,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true
+        });
+        
+          $('#myatest2').DataTable({
+            processing: true,
+            //serverSide: true,
+            ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,2]) !!}',
+            columns: [
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'carrierLb', name: 'carrierLb' },
+                { data: 'twuenty', name: 'twuenty' },
+                { data: 'forty', name: "forty" },
+                { data: 'fortyhc', name: "fortyhc" },
+                { data: 'currency_id', name: 'currency_id' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             "lengthChange": false,
             "searching": true,
