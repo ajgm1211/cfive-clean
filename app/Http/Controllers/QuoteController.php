@@ -1675,7 +1675,8 @@ class QuoteController extends Controller
       }
     }
     if($input['btnsubmit'] == 'submit-pdf'){
-      return redirect()->route('quotes.pdf', ['quote_id' => $quote->id]);
+        return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
+
 
     }
     $request->session()->flash('message.nivel', 'success');
@@ -1893,8 +1894,11 @@ class QuoteController extends Controller
     return intval($dias);
   }
 
-  public function show($id)
+  public function show(Request $request,$id)
   {
+    
+   
+
     $currency_cfg='';
     $company_user='';
     $email_templates='';
@@ -1933,6 +1937,7 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
+
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads]);
