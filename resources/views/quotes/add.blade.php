@@ -45,6 +45,9 @@
                                                     Save and send
                                                 </button>
                                                 @endif
+                                                <button type="submit" class="btn btn-success" formaction="/quotes/store/pdf">
+                                                    PDF
+                                                </button>
                                             </li>
                                         </ul>
                                         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist">
@@ -919,8 +922,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-2">
-                                                    <a class="btn btn-outline-accent btn-sm  m-btn m-btn--icon" onclick="AbrirModal('add')">
-                                                        <span>
+                                                    <a class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('add')">
+                                                        <span style="color: white;">
                                                             <i class="la la-plus"></i>
                                                             <span>Schedules </span>
                                                         </span>
@@ -937,18 +940,18 @@
                                             </div>                                            
                                             <hr>
                                             <!--<div class="row">
-                                                <div class="col-lg-4 col-lg-offset-4">
-                                                    <button type="submit" class="btn btn-primary">
-                                                        Save
-                                                    </button>
-                                                    @if($email_templates)
-                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
-                                                        Save and send
-                                                    </button>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <hr>-->
+<div class="col-lg-4 col-lg-offset-4">
+<button type="submit" class="btn btn-primary">
+Save
+</button>
+@if($email_templates)
+<button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
+Save and send
+</button>
+@endif
+</div>
+</div>
+<hr>-->
                                         </div>
                                     </div>
                                 </div>                                

@@ -81,7 +81,7 @@ All
           </div>
         </div>
       </div>
-      <table class="m-datatable"  id="html_table" >
+      <table class="m-datatable text-center" id="html_table" >
         <thead>
           <tr>
             <th title="Field #1">
@@ -97,13 +97,13 @@ All
               Address
             </th>
             <th title="Field #5">
-              Associated Users
+              Owners
             </th>
             <th title="Field #5">
-              Associated Contacts
+              Contacts
             </th>
             <th title="Field #6">
-              Associated Price Level
+              Price Levels
             </th>
             <th title="Field #12">
               Options
@@ -124,13 +124,7 @@ All
               </ul>
               @endforeach
             </td>
-            <td>
-              @foreach($company->contact as $contact)
-              <ul>
-                <li>{{$contact->first_name}} {{$contact->last_name}}</li>
-              </ul>
-              @endforeach
-            </td>
+            <td>{{$company->contact->count()}}</td>
             <td>
               @foreach($company->price_name as $price)
               <ul>

@@ -190,6 +190,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
     Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
     Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
+    Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

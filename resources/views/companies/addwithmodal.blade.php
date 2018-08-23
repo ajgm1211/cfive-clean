@@ -1,4 +1,3 @@
->
 <!--begin::Form-->
 {!! Form::open(['route' => 'companies.store','class' => 'form-group m-form__group']) !!}
 
