@@ -772,7 +772,7 @@ $(document).on('click', '#create-quote', function (e) {
 
     $(".volume_input").each(function(){
         if($(this).val()!=''){
-            volume.push($(this).val()+" cm3");
+            volume.push($(this).val()+" m3");
         }
     });
 
