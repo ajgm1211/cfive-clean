@@ -379,7 +379,27 @@ class QuoteController extends Controller
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
     {
       $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
-    })->get();
+    });
+
+    // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
+    if($request->input('twuenty') != "0" ){
+      $arreglo->where('twuenty' , '!=' , "0");
+
+    }
+    if($request->input('forty') != "0"){
+      $arreglo->where('forty' , '!=' , "0");
+    }
+
+    if($request->input('fortyhc') != "0"){
+      $arreglo->where('fortyhc' , '!=' , "0");
+    }
+
+    $arreglo = $arreglo->get();
+
+    // Fin condiciones del cero
+
+
+
     $formulario = $request;
     $array20 = array('2','4','5');
     $array40 =  array('1','4','5');
@@ -1675,7 +1695,7 @@ class QuoteController extends Controller
       }
     }
     if($input['btnsubmit'] == 'submit-pdf'){
-        return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
+      return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
 
 
     }
@@ -1896,8 +1916,8 @@ class QuoteController extends Controller
 
   public function show(Request $request,$id)
   {
-    
-   
+
+
 
     $currency_cfg='';
     $company_user='';
