@@ -89,7 +89,7 @@
                                         @if(!$company->groupUserCompanies->isEmpty())
                                         @foreach($company->groupUserCompanies as $groupUser)
                                         <ul>
-                                            <li>{{$groupUser->first_name}} {{$groupUser->last_name}} <a href="#" data-contact-id="{{$groupUser->id}}" id="delete-owner"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
+                                            <li>{{$groupUser->user->name}} {{$groupUser->user->lastname}} <a href="#" data-contact-id="{{$groupUser->id}}" id="delete-owner"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
                                         </ul>
                                         @endforeach
                                         @else

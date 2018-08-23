@@ -862,17 +862,16 @@ $subtotalDestiny = 0;
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group ">
-
-                                                            @if(isset($terms_origin) && $terms_origin->count()>0)                             
+                                                            @if(isset($terms_origin) && $terms_origin->count()>0)  
                                                             <h5 class="title-quote">Origin harbor</h5>
                                                             @foreach($terms_origin as $v)
-                                                            {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                                            {!! $form->modality==1 ? $v->term->import : $v->term->export!!}
                                                             @endforeach
                                                             @endif
                                                             @if(isset($terms_destination) && $terms_destination->count()>0)
                                                             <h5 class="title-quote">Destination harbor</h5>
                                                             @foreach($terms_destination as $v)
-                                                            {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                                            {!! $form->modality==1 ? $v->term->import : $v->term->export!!}
                                                             @endforeach
                                                             @endif
                                                         </div>
@@ -883,12 +882,10 @@ $subtotalDestiny = 0;
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-2">
                 <h3 class="title-quote size-16px">Settings</h3>
                 <hr>
@@ -934,7 +931,7 @@ $subtotalDestiny = 0;
         <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
         <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
         @if($email_templates)
-        @include('quotes.partials.submitQuoteEmailModal');
+        @include('quotes.partials.submitQuoteEmailModal')
         @endif
         {!! Form::close() !!}  
     </div>
