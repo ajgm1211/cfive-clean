@@ -57,7 +57,7 @@
                                     <div class="pull-left text-left" style="line-height: .5;">
                                         <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
                                     </div>
-                                    <div class="pull-right text-right" style="line-height: .5">                                
+                                    <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
                                         <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                         @if($quote->validity!='')
@@ -425,6 +425,10 @@
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+@if(isset($pdf))
+    <script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
+@endif
+
 
 @stop
 

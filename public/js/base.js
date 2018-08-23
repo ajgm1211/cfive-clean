@@ -1214,7 +1214,7 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
 });
 
 //Calcular el volumen individual
-$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", function(){
+$(document).on("change", ".quantity, .height ,.width ,.large,.weight", function(){
     var sumAl = 0;
     var sumAn = 0;
     var sumLa = 0;
@@ -1224,6 +1224,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", fun
     var length = 0;
     var thickness = 0;
     var quantity = 0;
+    var weight = 0;
     var volume = 0;
     $( ".width" ).each(function() {
         $( this).each(function() {
@@ -1249,29 +1250,93 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large", fun
             }
         });
     });
+    $( ".weight" ).each(function() {
+        $(this).each(function() {
+            weight = $(this).val();
+            if (weight!='') {
+                weight = parseFloat(weight);
+            }
+        });
+    });
+
     $( ".large" ).each(function() {
         $( this).each(function() {
             length = $(this).val();
             if (!isNaN(length)) {
                 length = parseInt(length);
             }
-            thickness = $(this).closest('.row').find('.height').val();
-            length = $(this).closest('.row').find('.large').val();
-            width = $(this).closest('.row').find('.width').val();
-            quantity = $(this).closest('.row').find('.quantity').val();
-            console.log(thickness+length+width+quantity)
+        });
+        thickness = $(this).closest('.row').find('.height').val();
+        length = $(this).closest('.row').find('.large').val();
+        width = $(this).closest('.row').find('.width').val();
+        quantity = $(this).closest('.row').find('.quantity').val();
+        weight = $(this).closest('.row').find('.weight').val();
 
-            if(thickness > 0 || length > 0 || quantity > 0) {
-                volume = Math.round(thickness * length * width * quantity / 10000) / 100;
-                if (isNaN(volume)) {
-                    volume = 0;
-                }
+        if(thickness > 0 || length > 0 || quantity > 0) {
+            volume = Math.round(thickness * length * width * quantity / 10000) / 100;
+            if (isNaN(volume)) {
+                volume = 0;
             }
+        }
+        if($( this).val()!=''){
             $(this).closest('.template').find('.volume').html("Volume: "+volume+" m<sup>3</sup>");
             $(this).closest('.template').find('.volume_input').val(volume);
-            $(this).closest('.template').find('.volume_input').change();
-        });
+        }
+        $(this).closest('.template').find('.quantity_input').val(quantity);
+        $(this).closest('.template').find('.weight_input').val(weight);
+        $(this).closest('.template').find('.volume_input').change();
+        $(this).closest('.template').find('.quantity_input').change();
+        $(this).closest('.template').find('.weight_input').change();
     });
+});
+
+$(document).on("change keydown keyup", ".quantity_input", function(){
+    var sum = 0;
+    //iterate through each textboxes and add the values
+    $(".quantity_input").each(function() {
+        //add only if the value is number      
+        if ($(this).val()>0 && $(this).val()!='') {
+            sum += parseInt($(this).val());
+            console.log($(this).val());
+        }
+        else if ($(this).val().length != 0){
+            $(this).css("background-color", "red");
+        }
+    });
+    $("#total_quantity_pkg").html(sum + " un");
+    $("#total_quantity_input").val(sum);
+});
+
+$(document).on("change keydown keyup", ".volume_input", function(){
+    var sum = 0;
+    //iterate through each textboxes and add the values
+    $(".volume_input").each(function() {
+        //add only if the value is number      
+        if ($(this).val()>0 && $(this).val()!='') {
+            sum += parseInt($(this).val());
+            console.log($(this).val());
+        }
+        else if ($(this).val().length != 0){
+            $(this).css("background-color", "red");
+        }
+    });
+
+    $("#total_volume_pkg").html((sum) + " m3");
+    $("#total_volume_input").val(sum);
+});
+
+$(document).on("change keydown keyup", ".weight_input", function(){
+    var sum = 0;
+    //iterate through each textboxes and add the values
+    $(".weight_input").each(function() {
+        //add only if the value is number      
+        if ($(this).val()>0 && $(this).val()!='') {
+            sum += parseInt($(this).val());
+            console.log($(this).val());
+        }
+    });
+    $("#total_weight_pkg").html(sum + " kg");
+    $("#total_weight_input").val(sum);
 });
 
 $(document).on('click', '#send-pdf-quote', function () {
