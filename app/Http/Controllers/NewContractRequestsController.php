@@ -207,7 +207,7 @@ class NewContractRequestsController extends Controller
         if($ValuesOriginBol == true || $ValuesDestinyBol == true || $ValCarrierBol == true){
             $tarjetBol = true;
         }
-        
+
         $colectionFinal = collect([]);
 
         $Contenido = [
@@ -218,12 +218,12 @@ class NewContractRequestsController extends Controller
             'status'                => $Ncontracts->status,
             'User'                  => $Ncontracts->user->name.' '.$Ncontracts->user->lastname,
             'created'               => $Ncontracts->created,
-            
+
             'surchargeBol'          => $surchargeBol,
             'contenSurchar'         => $contenSurchar,
             'rateBol'               => $rateBol,
             'contenRate'            => $contenRate,
-            
+
             'ValuesSomeBol'         => $ValuesSomeBol,
             'contenValuesSome'      => $contenValuesSome,
             'ValuesWithCurreBol'    => $ValuesWithCurreBol,
@@ -242,7 +242,7 @@ class NewContractRequestsController extends Controller
 
         $colectionFinal->push($Contenido);
         //dd($ColectionFinal);
-        
+
         return view('contracts.Requests.DetailNewRequest',compact('colectionFinal'));
     }
 
@@ -259,6 +259,16 @@ class NewContractRequestsController extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
             $Ncontract->save();
+
+            if($Ncontract->status == 'Done'){
+
+                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                $message = 'The request was processed N°: ' . $Ncontract->id;
+                foreach ($users as $user) {
+                    $user->notify(new N_general(\Auth::user(),$message));
+                }
+            }
+
             return response()->json($data=['status'=>1,'data'=>$status]);
         } catch (\Exception $e){
             return response()->json($data=['status'=>2]);;
