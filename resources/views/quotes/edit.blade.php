@@ -519,6 +519,51 @@
                                         <div class="tab-pane" id="m_portlet_tab_1_2">
                                             <br>
                                             <div class="row">
+                                                <div class="col-md-12">
+                                                    <div style="min-height: 100px;">
+                                                        <div style="margin-top: 20px;">
+                                                            <div class="pull-left text-left" style="line-height: .5;">
+                                                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                                            </div>
+                                                            <div class="pull-right text-right" style="line-height: .5">
+                                                                <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
+                                                                <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
+                                                                @if($quote->validity!='')
+                                                                @php
+                                                                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
+                                                                $validity = $date->format('M d, Y');
+                                                                @endphp
+                                                                <p><b>Validity:</b>  Valid up to {{$validity}}</p>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div style="min-height: 150px;">
+                                                        <div class="pull-left text-left" style="line-height: .5">
+                                                            <p><b>From:</b></p>
+                                                            <p>{{$user->name}}</p>
+                                                            <p><b>{{$user->companyUser->name}}</b></p>
+                                                            <p>{{$user->companyUser->address}}</p>
+                                                            <p>{{$user->companyUser->phone}}</p>
+                                                        </div>
+                                                        <div class="pull-right text-right" style="line-height: .5">
+                                                            <p><b>To:</b></p>
+                                                            <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
+                                                            <p><b>{{$quote->company->business_name}}</b></p>
+                                                            <p>{{$quote->company->address}}</p>
+                                                            <p>{{$quote->company->phone}}</p>
+                                                            <p><a href="mailto:{{$quote->company->email}}">{{$quote->company->email}}</a></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -586,7 +631,7 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-12" id="label_package_loads">
-                                                                        
+
                                                                     </div>
                                                                 </div>
                                                             </div>
