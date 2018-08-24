@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('css')
 @parent
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 
 @section('title', 'Contracts')
@@ -105,7 +105,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 Failed Rates
                 <i class="fa flaticon-tool-1"></i>
               </a>
-              <table class="table m-table m-table--head-separator-primary" id="rateTable" width="100%">
+              <a href="{{route('Failed.Rates.Developer.For.Contracts',$id)}}" class="btn btn-info">
+                Failed Rates Developer
+                <i class="fa flaticon-tool-1"></i>
+              </a>
+              <table  class="table tableData" id="rateTable" width="100%">
                 <thead>
                   <tr>
                     <th title="Field #1">
@@ -161,7 +165,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 <i class="fa flaticon-tool-1"></i>
               </a>
               <br><br><br>
-              <table class="table m-table m-table--head-separator-primary" id="users-table" width="100%" >
+              <table class="table tableData" id="users-table" width="100%" >
 
                 <thead>
                   <tr>
@@ -359,7 +363,7 @@ Load
       </div>
     </div>
   </div>
-  
+
   <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -380,8 +384,8 @@ Load
       </div>
     </div>
   </div>
-  
-  
+
+
 </div>
 
 </div>
@@ -390,8 +394,7 @@ Load
 @parent
 
 
-
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/editcontracts.js"></script>

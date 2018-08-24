@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="m-content">
-  <div class="m-portlet m-portlet--mobile">
+  <div class="container m-portlet--mobile">
     @if(Session::has('message.nivel'))
     <div class="col-md-12">
       <br>
@@ -23,7 +23,7 @@
       </div>
     </div>
     @endif
-    <div class="m-portlet__body">
+    <div class="">
       <div class="row">
         <div class="col-xl-12">
           {!! Form::open(['route' => 'quotes.listRate','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
@@ -33,7 +33,6 @@
                 <div class="m-portlet__head">
                   <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-
                     </ul>
                   </div>
                 </div>
@@ -170,9 +169,9 @@
                                 <div class="row">
                                   <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>Company</label>
-                                    {{ Form::select('company_id', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
-                                    <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('add',0)">
-                                      <span>
+                                    {{ Form::select('company_id_quote', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
+                                    <a  class="btn btn-primary btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('add',0)">
+                                      <span style="color:white;">
                                         <i class="la la-plus"></i>
                                         <span>Add Company</span>
                                       </span>
@@ -181,8 +180,8 @@
                                   <div class="col-md-4 col-sm-4 ol-xs-12">
                                     <label>Contact</label>
                                     {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}<br><br>
-                                    <a  class="btn btn-outline-accent btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
-                                      <span>
+                                    <a  class="btn btn-primary btn-sm 	m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
+                                      <span style="color:white;">
                                         <i class="la la-plus"></i>
                                         <span>Add Contact</span>
                                       </span>

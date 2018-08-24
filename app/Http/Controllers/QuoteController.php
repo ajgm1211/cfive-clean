@@ -74,7 +74,14 @@ class QuoteController extends Controller
     public function automatic(){
         $quotes = Quote::all();
         $company_user_id=\Auth::user()->company_user_id;
-        $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+        if(\Auth::user()->hasRole('subuser')){
+            $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+                $q->where('user_id',\Auth::user()->id);
+            })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+        }else{
+            $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+        }
+
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
@@ -93,7 +100,7 @@ class QuoteController extends Controller
         $form =$request->input('form');
         $schedules = $request->input('schedules');
         $form = json_decode($form);
-        $companiesInfo = Company::where('id','=',$form->company_id)->first();  
+        $companiesInfo = Company::where('id','=',$form->company_id_quote)->first();  
         $contactInfo = Contact::where('id','=',$form->contact_id)->first();  
         $company_user_id=\Auth::user()->company_user_id;
         $quotes = Quote::all();
@@ -372,7 +379,27 @@ class QuoteController extends Controller
         $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id) 
     {
         $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
-    })->get();
+    });
+
+        // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
+        if($request->input('twuenty') != "0" ){
+            $arreglo->where('twuenty' , '!=' , "0");
+
+        }
+        if($request->input('forty') != "0"){
+            $arreglo->where('forty' , '!=' , "0");
+        }
+
+        if($request->input('fortyhc') != "0"){
+            $arreglo->where('fortyhc' , '!=' , "0");
+        }
+
+        $arreglo = $arreglo->get();
+
+        // Fin condiciones del cero
+
+
+
         $formulario = $request;
         $array20 = array('2','4','5');
         $array40 =  array('1','4','5');
@@ -480,12 +507,12 @@ class QuoteController extends Controller
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
-            })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
+            })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.saleterm')->get();
             foreach($localChar as $local){
                 $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
                 // Condicion para enviar los terminos de venta o compra 
-                if(isset($local->surcharge->SaleTermSurcharges->saleterm->name)){
-                    $terminos = $local->surcharge->SaleTermSurcharges->saleterm->name;
+                if(isset($local->surcharge->saleterm->name)){
+                    $terminos = $local->surcharge->saleterm->name;
                 }else{
                     $terminos = $local->surcharge->name;
                 }
@@ -933,12 +960,12 @@ class QuoteController extends Controller
                 $q->whereIn('carrier_id', $carrier);
             })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
-            })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.SaleTermSurcharges.saleterm')->get();
+            })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
             foreach($globalChar as $global){
                 $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
                 // Condicion para enviar los terminos de venta o compra 
-                if(isset($global->surcharge->SaleTermSurcharges->saleterm->name)){
-                    $terminos = $global->surcharge->SaleTermSurcharges->saleterm->name;
+                if(isset($global->surcharge->saleterm->name)){
+                    $terminos = $global->surcharge->saleterm->name;
                 }else{
                     $terminos = $global->surcharge->name;
                 }
@@ -1489,6 +1516,7 @@ class QuoteController extends Controller
     public function store(Request $request)
     {
         $input = Input::all();
+
         $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
         $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
         $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
@@ -1665,6 +1693,11 @@ class QuoteController extends Controller
                 $package_load->volume = $volume[$key];
                 $package_load->save();
             }
+        }
+        if($input['btnsubmit'] == 'submit-pdf'){
+            return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
+
+
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -1881,8 +1914,11 @@ class QuoteController extends Controller
         return intval($dias);
     }
 
-    public function show($id)
+    public function show(Request $request,$id)
     {
+
+
+
         $currency_cfg='';
         $company_user='';
         $email_templates='';
@@ -1921,6 +1957,7 @@ class QuoteController extends Controller
                 $exchange = Currency::where('api_code','USDEUR')->first();
             }
         }
+
         return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                     'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
                                     'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads]);
