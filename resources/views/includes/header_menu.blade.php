@@ -34,7 +34,7 @@
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('contacts.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon la la-users"></i>
                             <span class="m-menu__link-text">
                                 Contacts
                             </span>
@@ -60,7 +60,7 @@
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('contracts.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-file"></i>
                             <span class="m-menu__link-text">
                                 Sea Freight FCL
                             </span>
@@ -68,7 +68,7 @@
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('surcharges.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-list-1"></i>
                             <span class="m-menu__link-text">
                                 Surcharge List
                             </span>
@@ -104,7 +104,7 @@ Load Ports
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('globalcharges.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon la la-globe"></i>
                             <span class="m-menu__link-text">
                                 Sea Freight FCL
                             </span>
@@ -130,7 +130,7 @@ Load Ports
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('inlands.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon la la-truck"></i>
                             <span class="m-menu__link-text">
                                 Sea Freight FCL
                             </span>
@@ -156,7 +156,7 @@ Load Ports
                 <ul class="m-menu__subnav">
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('prices.index') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon la la-sellsy"></i>
                             <span class="m-menu__link-text">
                                 Price levels
                             </span>
@@ -165,7 +165,7 @@ Load Ports
                     @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('settings.index') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-profile"></i>
                             <span class="m-menu__link-text">
                                 Company's Profile
                             </span>
@@ -173,7 +173,7 @@ Load Ports
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('terms.list') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-warning-sign"></i>
                             <span class="m-menu__link-text">
                                 Terms & Conditions
                             </span>
@@ -182,7 +182,7 @@ Load Ports
                     @endif
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('templates.index') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon fa fa-envelope-square"></i>
                             <span class="m-menu__link-text">
                                 Email templates
                             </span>
@@ -190,20 +190,22 @@ Load Ports
                     </li>
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('users.home') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-users"></i>
                             <span class="m-menu__link-text">
                                 Users
                             </span>
                         </a>
                     </li>
+                    @role('administrator')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <i class="m-menu__link-icon flaticon-folder-3"></i>
                             <span class="m-menu__link-text">
                                 Request Importation
                             </span>
                         </a>
                     </li>
+                    @endrole
                 </ul>
             </div>
         </li>

@@ -430,6 +430,15 @@
 @endif
 
 
+@if(session('pdf'))
+
+<script>
+
+ window.open('{{ route('quotes.pdf', ['id' => $quote->id]) }}');
+
+</script>
+@endif
+
 @stop
 
 

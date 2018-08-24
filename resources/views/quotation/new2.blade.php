@@ -23,7 +23,7 @@
       </div>
     </div>
     @endif
-    <div class="m-portlet__body">
+    <div class="">
       <div class="row">
         <div class="col-xl-12">
           {!! Form::open(['route' => 'quotes.listRate','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
@@ -33,7 +33,6 @@
                 <div class="m-portlet__head">
                   <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
-
                     </ul>
                   </div>
                 </div>

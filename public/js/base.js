@@ -925,13 +925,44 @@ $(document).on('click', '#create-quote', function (e) {
     }else{
         $("#destination_address_panel").addClass('hide');
     }
-
 });
 
 $( document ).ready(function() {
-    //$("select[name='company_id']").val('');
 
     $( "select[name='company_id']" ).on('change', function() {
+        var company_id = $(this).val();
+        if(company_id) {
+            $('select[name="contact_id"]').empty();
+            $.ajax({
+                url: "/quotes/company/contact/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="client"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+            $.ajax({
+                url: "/quotes/company/price/id/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    $('select[name="price_id"]').empty();
+                    $.each(data, function(key, value) {
+                        $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+        }else{
+            $('select[name="client"]').empty();
+            $('select[name="price_id"]').empty();
+        }
+    });
+
+    // CLEARING COMPANIES SELECT
+    $("select[name='company_id_quote']").val('');
+    $('#select2-m_select2_2_modal-container').text('Please an option');
+    $( "select[name='company_id_quote']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
             $('select[name="contact_id"]').empty();

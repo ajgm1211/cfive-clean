@@ -135,6 +135,7 @@ class InlandsController extends Controller
 
   public function edit($id)
   {
+    $id = obtenerRouteKey($id);
     $inland = Inland::with('inlandports.ports','inlanddetails.currency')->get()->find($id);
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
@@ -166,6 +167,7 @@ class InlandsController extends Controller
      */
   public function update(Request $request, $id)
   {
+    $id = obtenerRouteKey($id);
     $inland = Inland::find($id);
     $inland->provider = $request->input('provider');
     $inland->type = $request->input('type');

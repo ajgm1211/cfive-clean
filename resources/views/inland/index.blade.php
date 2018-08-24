@@ -115,7 +115,7 @@
                             <td>{{ $arr->validity }}</td>
                             <td>{{ $arr->expire }}</td>
                             <td>
-                                <a href="{{ route("inlands.edit", $arr->id) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                <a href="{{ route("inlands.edit", setearRouteKey($arr->id)) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>
                                 </a>
 

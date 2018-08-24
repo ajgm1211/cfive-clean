@@ -157,6 +157,18 @@ h3.m-subheader__title{
   background-color: #FF5F48 !important;
 }
 
+// --- Datatable v 10 .9 customize 
+
+
+.tableData>tbody>tr:nth-child(even)>td {
+   background-color: #faf9fc; // Choose your own color here
+ }
+
+.tableData>tbody>tr:hover {
+    background-color:  #f4f3f8;
+ }
+
+
 //--- Tabs customize ---
 
 .nav-tabs .nav-link {
