@@ -18,19 +18,43 @@ class ContactController extends Controller
     $contacts = Contact::whereHas('company', function ($query) {
       $query->where('company_user_id', '=', \Auth::user()->company_user_id);
     })->get();
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
+
 
     return view('contacts/index', ['contacts' => $contacts,'companies'=>$companies]);
   }
 
   public function add()
   {
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
+
     return view('contacts.add', ['companies'=>$companies]);
   }
   public function addWithModal()
   {
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
     return view('contacts.addwithmodal', ['companies'=>$companies]);
   }
 
@@ -48,7 +72,14 @@ class ContactController extends Controller
   public function edit($id)
   {
     $contact = Contact::find($id);
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
 
     return view('contacts.edit', compact('contact','companies'));
   }
