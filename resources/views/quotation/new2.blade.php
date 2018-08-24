@@ -169,7 +169,7 @@
                                 <div class="row">
                                   <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>Company</label>
-                                    {{ Form::select('company_id', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
+                                    {{ Form::select('company_id_quote', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
                                     <a  class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('add',0)">
                                       <span style="color: white;">
                                         <i class="la la-plus"></i>
