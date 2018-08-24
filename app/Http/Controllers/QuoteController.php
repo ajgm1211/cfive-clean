@@ -1841,6 +1841,7 @@ class QuoteController extends Controller
                 $package_load->width = $width[$key];
                 $package_load->large = $large[$key];
                 $package_load->weight = $weight[$key];
+                $package_load->total_weight = $weight[$key]*$quantity[$key];
                 $package_load->volume = $volume[$key];
                 $package_load->save();
             }
@@ -2529,6 +2530,7 @@ class QuoteController extends Controller
                 $package_load->width = $width[$key];
                 $package_load->large = $large[$key];
                 $package_load->weight = $weight[$key];
+                $package_load->total_weight = $weight[$key]*$quantity[$key];
                 $package_load->volume = $volume[$key];
                 $package_load->save();
             }

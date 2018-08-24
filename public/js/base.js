@@ -1214,7 +1214,7 @@ $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_am
 });
 
 //Calcular el volumen individual
-$(document).on("change", ".quantity, .height ,.width ,.large,.weight", function(){
+$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
     var sumAl = 0;
     var sumAn = 0;
     var sumLa = 0;
@@ -1283,7 +1283,7 @@ $(document).on("change", ".quantity, .height ,.width ,.large,.weight", function(
             $(this).closest('.template').find('.volume_input').val(volume);
         }
         $(this).closest('.template').find('.quantity_input').val(quantity);
-        $(this).closest('.template').find('.weight_input').val(weight);
+        $(this).closest('.template').find('.weight_input').val(weight*quantity);
         $(this).closest('.template').find('.volume_input').change();
         $(this).closest('.template').find('.quantity_input').change();
         $(this).closest('.template').find('.weight_input').change();
