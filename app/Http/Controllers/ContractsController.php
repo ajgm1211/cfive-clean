@@ -2549,7 +2549,7 @@ class ContractsController extends Controller
         //$id se refiere al id del contracto
         $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
-        return view('contracts.TestFailRates',compact('countfailrates','countrates','id'));
+        return view('contracts.TestFailRates2',compact('countfailrates','countrates','id'));
 
     }
 
@@ -2661,6 +2661,7 @@ class ContractsController extends Controller
                           'forty'           =>  $fortyA,        //  
                           'fortyhc'         =>  $fortyhcA,      //
                           'currency_id'     =>  $currencyA,     //
+                          'operation'       =>  '1'
                          ];
 
                 $pruebacurre = "";
@@ -2668,10 +2669,36 @@ class ContractsController extends Controller
                 $failrates->push($colec);
 
             }
+            
+           /* foreach($rates as $rate){
+                $originRate     = '';
+                $detinyRate     = '';
+                $carrierRate    = '';
+                $currencyRate   = '';
+
+                $originRate     = $rate['port_origin']['name'];
+                $detinyRate     = $rate['port_destiny']['name'];
+                $carrierRate    = $rate['carrier']['name'];
+                $currencyRate   = $rate->Currency->alphacode;
+
+                $colec = ['id'              =>  $rate->id,
+                          'contract_id'     =>  $id,            //
+                          'origin_portLb'   =>  $originRate,    //
+                          'destiny_portLb'  =>  $detinyRate,    //
+                          'carrierLb'       =>  $carrierRate,   //
+                          'twuenty'         =>  $rate->twuenty, //    
+                          'forty'           =>  $rate->forty,   //  
+                          'fortyhc'         =>  $rate->fortyhc, //
+                          'currency_id'     =>  $currencyRate,  //
+                          'operation'       =>  '2'
+                         ];
+                $failrates->push($colec);
+            }*/
+            
             return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
-                return '<a href="#edit-'.$failrate['id'].'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                return '<a href="#edit-'.$failrate['id'].'-'.$failrate['operation'].'-" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
                 &nbsp;
-                <a href="#delet-'.$failrate['id'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
+                <a href="#delet-'.$failrate['id'].'-'.$failrate['operation'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
             })
             ->editColumn('id', 'ID: {{$id}}')->toJson();
             
