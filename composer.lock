@@ -4,13 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "hash": "9ee30a5395f0e46e1dc84f85638eb34d",
+    "hash": "daa12dd15e548cb59d04581a25494c26",
     "content-hash": "3c099ff5976c3ad70bfa2661dec55fae",
-=======
-    "hash": "a6226e0ffa87b9ce19da12ba282ab3df",
-    "content-hash": "53a0fee9eeea211437dda83341f730fa",
->>>>>>> origin/lblanco
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -121,29 +116,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-<<<<<<< HEAD
-            "version": "3.65.0",
+            "version": "3.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0daae6292e8355156a9be73bc1cc4dd7075cac0d"
+                "reference": "661ab047454a8f136f817f122330b299ceaad607"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0daae6292e8355156a9be73bc1cc4dd7075cac0d",
-                "reference": "0daae6292e8355156a9be73bc1cc4dd7075cac0d",
-=======
-            "version": "3.65.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "70235697503c6b0501e58e5898f9825d800fe647"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/70235697503c6b0501e58e5898f9825d800fe647",
-                "reference": "70235697503c6b0501e58e5898f9825d800fe647",
->>>>>>> origin/lblanco
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/661ab047454a8f136f817f122330b299ceaad607",
+                "reference": "661ab047454a8f136f817f122330b299ceaad607",
                 "shasum": ""
             },
             "require": {
@@ -210,11 +192,7 @@
                 "s3",
                 "sdk"
             ],
-<<<<<<< HEAD
-            "time": "2018-08-20 20:24:35"
-=======
-            "time": "2018-08-21 20:10:44"
->>>>>>> origin/lblanco
+            "time": "2018-08-23 20:35:47"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -987,7 +965,6 @@
                 "url"
             ],
             "time": "2017-03-20 17:10:46"
-<<<<<<< HEAD
         },
         {
             "name": "hashids/hashids",
@@ -1054,8 +1031,6 @@
                 "youtube"
             ],
             "time": "2018-03-12 16:30:09"
-=======
->>>>>>> origin/lblanco
         },
         {
             "name": "intervention/image",
@@ -1732,11 +1707,7 @@
                 "sftp",
                 "storage"
             ],
-<<<<<<< HEAD
-            "time": "2018-05-07 08:44:23"
-=======
             "time": "2018-08-22 07:45:22"
->>>>>>> origin/lblanco
         },
         {
             "name": "league/flysystem-cached-adapter",
@@ -2967,23 +2938,23 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.16.0",
+            "version": "2.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "364b48d59eba89700bc413a71ad3763ce3140d40"
+                "reference": "32d1b2a8e3cd2d68e0bc572be3d9d416b56fa07f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/364b48d59eba89700bc413a71ad3763ce3140d40",
-                "reference": "364b48d59eba89700bc413a71ad3763ce3140d40",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/32d1b2a8e3cd2d68e0bc572be3d9d416b56fa07f",
+                "reference": "32d1b2a8e3cd2d68e0bc572be3d9d416b56fa07f",
                 "shasum": ""
             },
             "require": {
-                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0|~5.6.0",
-                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0",
+                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
+                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
+                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
+                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0|~5.7.0",
                 "php": ">=7.0"
             },
             "require-dev": {
@@ -3027,7 +2998,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2018-08-20 18:54:54"
+            "time": "2018-08-24 13:39:52"
         },
         {
             "name": "studio-42/elfinder",
@@ -5382,11 +5353,7 @@
                 "testing",
                 "xunit"
             ],
-<<<<<<< HEAD
-            "time": "2018-08-07 06:44:28"
-=======
             "time": "2018-08-22 06:39:21"
->>>>>>> origin/lblanco
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
