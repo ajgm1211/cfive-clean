@@ -35,298 +35,298 @@ use App\CompanyUser;
 
 class ContractsController extends Controller
 {
-  /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-  public function index()
-  {
-    $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
-    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+    public function index()
+    {
+        $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+        $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
 
 
-    return view('contracts/index', compact('arreglo','contractG'));
-  }
+        return view('contracts/index', compact('arreglo','contractG'));
+    }
 
-  /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-  public function add()
-  {
-    $objcountry = new Country();
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-    $objtypedestiny = new TypeDestiny();
+    public function add()
+    {
+        $objcountry = new Country();
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $objtypedestiny = new TypeDestiny();
 
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $country = $objcountry->all()->pluck('name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
-    $contacts = Contact::whereHas('company', function ($query) {
-      $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-    })->pluck('first_name','id');
-    if(Auth::user()->type == 'company' ){
-      $users =  User::whereHas('companyUser', function($q)
-                               {
-                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                               })->pluck('Name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $country = $objcountry->all()->pluck('name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+        $contacts = Contact::whereHas('company', function ($query) {
+            $query->where('company_user_id', '=', \Auth::user()->company_user_id);
+        })->pluck('first_name','id');
+        if(Auth::user()->type == 'company' ){
+            $users =  User::whereHas('companyUser', function($q)
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
+        }
+        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
+            $users =  User::whereHas('companyUser', function($q)
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
+        }
+
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
+
     }
-    if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
-      $users =  User::whereHas('companyUser', function($q)
-                               {
-                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                               })->pluck('Name','id');
+
+    public function create()
+    {
+        //
     }
 
-    return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
-
-  }
-
-  public function create()
-  {
-    //
-  }
-
-  /**
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-  public function store(Request $request)
-  {
-    $contract = new Contract($request->all());
-    $contract->company_user_id =Auth::user()->company_user_id;
-    $validation = explode('/',$request->validation_expire);
-    $contract->validity = $validation[0];
-    $contract->expire = $validation[1];
-    $contract->save();
-
-    $details = $request->input('origin_id');
-    $detailscharges = $request->input('localcurrency_id');
-    $companies = $request->input('companies');
-    $users = $request->input('users');
-    // For Each de los rates
-    $contador = 1;
-    foreach($details as $key => $value)
+    public function store(Request $request)
     {
-      if(!empty($request->input('twuenty.'.$key))) {
-        $rates = new Rate();
-        $rates->origin_port = $request->input('origin_id.'.$key);
-        $rates->destiny_port = $request->input('destiny_id.'.$key);
-        $rates->carrier_id = $request->input('carrier_id.'.$key);
-        $rates->twuenty = $request->input('twuenty.'.$key);
-        $rates->forty = $request->input('forty.'.$key);
-        $rates->fortyhc = $request->input('fortyhc.'.$key);
-        $rates->currency_id = $request->input('currency_id.'.$key);
-        $rates->contract()->associate($contract);
-        $rates->save();
-      }
-    }
-    // For Each de los localcharge
+        $contract = new Contract($request->all());
+        $contract->company_user_id =Auth::user()->company_user_id;
+        $validation = explode('/',$request->validation_expire);
+        $contract->validity = $validation[0];
+        $contract->expire = $validation[1];
+        $contract->save();
 
-    foreach($detailscharges as $key2 => $value)
-    {
-      if(!empty($request->input('ammount.'.$key2))) {
-        $localcharge = new LocalCharge();
-        $localcharge->surcharge_id = $request->input('type.'.$key2);
-        $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
-        $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
-        $localcharge->ammount = $request->input('ammount.'.$key2);
-        $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-        $localcharge->contract()->associate($contract);
-        $localcharge->save();
-
-        $detailportOrig = $request->input('port_origlocal'.$contador);
-        $detailportDest = $request->input('port_destlocal'.$contador);
-
-        $detailcarrier = $request->input('localcarrier_id'.$contador);
-        foreach($detailcarrier as $c => $value)
+        $details = $request->input('origin_id');
+        $detailscharges = $request->input('localcurrency_id');
+        $companies = $request->input('companies');
+        $users = $request->input('users');
+        // For Each de los rates
+        $contador = 1;
+        foreach($details as $key => $value)
         {
-          $detailcarrier = new LocalCharCarrier();
-          $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
-          $detailcarrier->localcharge()->associate($localcharge);
-          $detailcarrier->save();
+            if(!empty($request->input('twuenty.'.$key))) {
+                $rates = new Rate();
+                $rates->origin_port = $request->input('origin_id.'.$key);
+                $rates->destiny_port = $request->input('destiny_id.'.$key);
+                $rates->carrier_id = $request->input('carrier_id.'.$key);
+                $rates->twuenty = $request->input('twuenty.'.$key);
+                $rates->forty = $request->input('forty.'.$key);
+                $rates->fortyhc = $request->input('fortyhc.'.$key);
+                $rates->currency_id = $request->input('currency_id.'.$key);
+                $rates->contract()->associate($contract);
+                $rates->save();
+            }
         }
-        foreach($detailportOrig as $orig => $value)
+        // For Each de los localcharge
+
+        foreach($detailscharges as $key2 => $value)
         {
-          foreach($detailportDest as $dest => $value)
-          {
-            $detailport = new LocalCharPort();
-            $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-            $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-            $detailport->localcharge()->associate($localcharge);
-            $detailport->save();
-          }
+            if(!empty($request->input('ammount.'.$key2))) {
+                $localcharge = new LocalCharge();
+                $localcharge->surcharge_id = $request->input('type.'.$key2);
+                $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
+                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
+                $localcharge->ammount = $request->input('ammount.'.$key2);
+                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+                $localcharge->contract()->associate($contract);
+                $localcharge->save();
 
+                $detailportOrig = $request->input('port_origlocal'.$contador);
+                $detailportDest = $request->input('port_destlocal'.$contador);
+
+                $detailcarrier = $request->input('localcarrier_id'.$contador);
+                foreach($detailcarrier as $c => $value)
+                {
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+                }
+                foreach($detailportOrig as $orig => $value)
+                {
+                    foreach($detailportDest as $dest => $value)
+                    {
+                        $detailport = new LocalCharPort();
+                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                        $detailport->localcharge()->associate($localcharge);
+                        $detailport->save();
+                    }
+
+                }
+                $contador++;
+            }
         }
-        $contador++;
-      }
+
+        if(!empty($companies)){
+            foreach($companies as $key3 => $value)
+            {
+                $contract_company_restriction = new ContractCompanyRestriction();
+                $contract_company_restriction->company_id=$value;
+                $contract_company_restriction->contract_id=$contract->id;
+                $contract_company_restriction->save();
+            }
+        }
+
+        if(!empty($users)){
+            foreach($users as $key4 => $value)
+            {
+                $contract_client_restriction = new ContractUserRestriction();
+                $contract_client_restriction->user_id=$value;
+                $contract_client_restriction->contract_id=$contract->id;
+                $contract_client_restriction->save();
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+
+        return redirect()->action('ContractsController@index');
+
     }
 
-    if(!empty($companies)){
-      foreach($companies as $key3 => $value)
-      {
-        $contract_company_restriction = new ContractCompanyRestriction();
-        $contract_company_restriction->company_id=$value;
-        $contract_company_restriction->contract_id=$contract->id;
-        $contract_company_restriction->save();
-      }
-    }
-
-    if(!empty($users)){
-      foreach($users as $key4 => $value)
-      {
-        $contract_client_restriction = new ContractUserRestriction();
-        $contract_client_restriction->user_id=$value;
-        $contract_client_restriction->contract_id=$contract->id;
-        $contract_client_restriction->save();
-      }
-    }
-
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
-
-    return redirect()->action('ContractsController@index');
-
-  }
-
-  /**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  public function show($id)
-  {
-    //
-  }
+    public function show($id)
+    {
+        //
+    }
 
-  /**
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
 
-  // FUNCIONES PARA EL DATATABLE
-  public function data($id){
+    // FUNCIONES PARA EL DATATABLE
+    public function data($id){
 
-    $localchar = LocalCharge::where('contract_id',$id)->get();
+        $localchar = LocalCharge::where('contract_id',$id)->get();
 
 
-    return \DataTables::collection($localchar)
-      ->addColumn('type', function (LocalCharge $localchar) {
-        return $localchar->surcharge->name;
-      })
-      ->addColumn('calculation_type', function (LocalCharge $localchar) {
-        return $localchar->calculationtype->name;
-      })
-      ->addColumn('changetype', function (LocalCharge $localchar) {
-        return $localchar->typedestiny->description;
-      })
-      ->addColumn('currency', function (LocalCharge $localchar) {
-        return $localchar->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('display_name'));
-      })
-      ->addColumn('port_dest', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('display_name'));
-      })
-      ->addColumn('carrier', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
-      })->
-      addColumn('options', function (LocalCharge $localchar) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$localchar->id)'>
+        return \DataTables::collection($localchar)
+            ->addColumn('type', function (LocalCharge $localchar) {
+                return $localchar->surcharge->name;
+            })
+            ->addColumn('calculation_type', function (LocalCharge $localchar) {
+                return $localchar->calculationtype->name;
+            })
+            ->addColumn('changetype', function (LocalCharge $localchar) {
+                return $localchar->typedestiny->description;
+            })
+            ->addColumn('currency', function (LocalCharge $localchar) {
+                return $localchar->currency->alphacode ;
+            })
+            ->addColumn('port_orig', function (LocalCharge $localchar) {
+                return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('display_name'));
+            })
+            ->addColumn('port_dest', function (LocalCharge $localchar) {
+                return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('display_name'));
+            })
+            ->addColumn('carrier', function (LocalCharge $localchar) {
+                return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
+            })->
+            addColumn('options', function (LocalCharge $localchar) {
+                return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$localchar->id)'>
           <i class='la la-edit'></i>
           </a>
             <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
           <i id='rm_l' class='la la-times-circle'></i>
         ";
-      }) ->setRowId('id')->rawColumns(['options'])->make(true);
-  }// local charges en edit
+            }) ->setRowId('id')->rawColumns(['options'])->make(true);
+    }// local charges en edit
 
-  public function dataRates($id){
+    public function dataRates($id){
 
-    $rate = Rate::where('contract_id',$id)->get();
+        $rate = Rate::where('contract_id',$id)->get();
 
-    return \DataTables::collection($rate)
+        return \DataTables::collection($rate)
 
-      ->addColumn('currency', function (Rate $rate) {
-        return $rate->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (Rate $rate) {
-        return $rate->port_origin->display_name;
-      })
-      ->addColumn('port_dest', function (Rate $rate) {
-        return $rate->port_destiny->display_name;
-      })
-      ->addColumn('carrier', function (Rate $rate) {
-        return $rate->carrier->name;
-      })->
-      addColumn('options', function (Rate $rate) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$rate->id)'>
+            ->addColumn('currency', function (Rate $rate) {
+                return $rate->currency->alphacode ;
+            })
+            ->addColumn('port_orig', function (Rate $rate) {
+                return $rate->port_origin->display_name;
+            })
+            ->addColumn('port_dest', function (Rate $rate) {
+                return $rate->port_destiny->display_name;
+            })
+            ->addColumn('carrier', function (Rate $rate) {
+                return $rate->carrier->name;
+            })->
+            addColumn('options', function (Rate $rate) {
+                return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$rate->id)'>
           <i class='la la-edit'></i>
           </a>
             <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
           <i id='rm_l' class='la la-times-circle'></i>
         ";
-      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+            }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
-  }
+    }
 
-  public function contractRates(){
+    public function contractRates(){
 
-    $contractRate = Rate::whereHas('contract', function($q)
-                                   {
-                                     $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                   })->with('contract')->get();
-
-
+        $contractRate = Rate::whereHas('contract', function($q)
+                                       {
+                                           $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                       })->with('contract')->get();
 
 
-    return \DataTables::collection($contractRate)
 
-      ->addColumn('name', function (Rate $contractRate) {
-        return $contractRate->contract->name;
-      })
-      ->addColumn('number', function (Rate $contractRate) {
-        return $contractRate->contract->number;
-      })
-      ->addColumn('status', function (Rate $contractRate) {
-        return $contractRate->contract->status;
-      })
-      ->addColumn('currency', function (Rate $contractRate) {
-        return $contractRate->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (Rate $contractRate) {
-        return $contractRate->port_origin->display_name;
-      })
-      ->addColumn('port_dest', function (Rate $contractRate) {
-        return $contractRate->port_destiny->display_name;
-      })
-      ->addColumn('carrier', function (Rate $contractRate) {
-        return $contractRate->carrier->name;
-      })
-      ->addColumn('validity', function (Rate $contractRate) {
-        return $contractRate->contract->validity ." / ".$contractRate->contract->expire;
-      })
-      ->addColumn('options', function (Rate $contractRate) {
-        return "<a href='contracts/".$contractRate->contract->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+
+        return \DataTables::collection($contractRate)
+
+            ->addColumn('name', function (Rate $contractRate) {
+                return $contractRate->contract->name;
+            })
+            ->addColumn('number', function (Rate $contractRate) {
+                return $contractRate->contract->number;
+            })
+            ->addColumn('status', function (Rate $contractRate) {
+                return $contractRate->contract->status;
+            })
+            ->addColumn('currency', function (Rate $contractRate) {
+                return $contractRate->currency->alphacode ;
+            })
+            ->addColumn('port_orig', function (Rate $contractRate) {
+                return $contractRate->port_origin->display_name;
+            })
+            ->addColumn('port_dest', function (Rate $contractRate) {
+                return $contractRate->port_destiny->display_name;
+            })
+            ->addColumn('carrier', function (Rate $contractRate) {
+                return $contractRate->carrier->name;
+            })
+            ->addColumn('validity', function (Rate $contractRate) {
+                return $contractRate->contract->validity ." / ".$contractRate->contract->expire;
+            })
+            ->addColumn('options', function (Rate $contractRate) {
+                return "<a href='contracts/".$contractRate->contract->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
 
@@ -335,20 +335,20 @@ class ContractsController extends Controller
                     </a>
 
         ";
-      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+            }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
-  }
+    }
 
-  public function contractTable(){
+    public function contractTable(){
 
-    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
 
 
 
-    return \DataTables::collection($contractG)
+        return \DataTables::collection($contractG)
 
-      ->addColumn('options', function (Contract $contractG) {
-        return "      <a href='contracts/".$contractG->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+            ->addColumn('options', function (Contract $contractG) {
+                return "      <a href='contracts/".$contractG->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
                     <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
@@ -356,302 +356,309 @@ class ContractsController extends Controller
                     </a>
 
         ";
-      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+            }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
-  }
-
-
-
-  public function edit($id)
-  {
-    $contracts = Contract::where('id',$id)->first();
-
-    $objtypedestiny = new TypeDestiny();
-    $objcountry = new Country();
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $country = $objcountry->all()->pluck('name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
-    $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
-    if(!empty($company_restriction)){
-      $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
     }
-    if(!empty($user_restriction)){
-      $user = User::where('id',$user_restriction->user_id)->select('id')->first();
+
+
+
+    public function edit($id)
+    {
+        $contracts = Contract::where('id',$id)->first();
+
+        $objtypedestiny = new TypeDestiny();
+        $objcountry = new Country();
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $country = $objcountry->all()->pluck('name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
+        $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
+        if(!empty($company_restriction)){
+            $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
+        }
+        if(!empty($user_restriction)){
+            $user = User::where('id',$user_restriction->user_id)->select('id')->first();
+        }
+        $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+        if(Auth::user()->type == 'company' ){
+            $users =  User::whereHas('companyUser', function($q)
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
+        }
+        if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
+            $users =  User::whereHas('companyUser', function($q)
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
+        }
+        //dd($contracts);
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
     }
-    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
-    if(Auth::user()->type == 'company' ){
-      $users =  User::whereHas('companyUser', function($q)
-                               {
-                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                               })->pluck('Name','id');
-    }
-    if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
-      $users =  User::whereHas('companyUser', function($q)
-                               {
-                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                               })->pluck('Name','id');
-    }
-    //dd($contracts);
-    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
-  }
-  /**
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */ 
-  public function update(Request $request, $id)
-  {
-    $requestForm = $request->all();
-    $contract = Contract::find($id);
-    $validation = explode('/',$request->validation_expire);
-    $contract->validity = $validation[0];
-    $contract->expire = $validation[1];
-    $contract->update($requestForm);
-
-    $details = $request->input('origin_id');
-    $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
-    $companies = $request->input('companies');
-    $users = $request->input('users');
-    $contador = 1;
-    // for each rates 
-    foreach($details as $key => $value)
+    public function update(Request $request, $id)
     {
-      if(!empty($request->input('twuenty.'.$key))) {
+        $requestForm = $request->all();
+        $contract = Contract::find($id);
+        $validation = explode('/',$request->validation_expire);
+        $contract->validity = $validation[0];
+        $contract->expire = $validation[1];
+        $contract->update($requestForm);
 
-        $rates = new Rate();
-        $rates->origin_port = $request->input('origin_id.'.$key);
-        $rates->destiny_port = $request->input('destiny_id.'.$key);
-        $rates->carrier_id = $request->input('carrier_id.'.$key);
-        $rates->twuenty = $request->input('twuenty.'.$key);
-        $rates->forty = $request->input('forty.'.$key);
-        $rates->fortyhc = $request->input('fortyhc.'.$key);
-        $rates->currency_id = $request->input('currency_id.'.$key);
-        $rates->contract()->associate($contract);
-        $rates->save();
-
-      }
-    }
-
-    // For Each de los localcharge
-
-    foreach($detailscharges as $key2 => $value)
-    {
-      if(!empty($request->input('ammount.'.$key2))) {
-        $localcharge = new LocalCharge();
-        $localcharge->surcharge_id = $request->input('type.'.$key2);
-        $localcharge->typedestiny_id  = $request->input('changetype.'.$key2);
-        $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
-        $localcharge->ammount = $request->input('ammount.'.$key2);
-        $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-        $localcharge->contract()->associate($contract);
-        $localcharge->save();
-        $detailportOrig = $request->input('port_origlocal'.$contador);
-        $detailportDest = $request->input('port_destlocal'.$contador);
-        $detailcarrier = $request->input('localcarrier_id'.$contador);
+        $details = $request->input('origin_id');
+        $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
         $companies = $request->input('companies');
-        foreach($detailcarrier as $c => $value)
+        $users = $request->input('users');
+        $contador = 1;
+        // for each rates 
+        foreach($details as $key => $value)
         {
-          $detailcarrier = new LocalCharCarrier();
-          $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
-          $detailcarrier->localcharge()->associate($localcharge);
-          $detailcarrier->save();
+            if(!empty($request->input('twuenty.'.$key))) {
+
+                $rates = new Rate();
+                $rates->origin_port = $request->input('origin_id.'.$key);
+                $rates->destiny_port = $request->input('destiny_id.'.$key);
+                $rates->carrier_id = $request->input('carrier_id.'.$key);
+                $rates->twuenty = $request->input('twuenty.'.$key);
+                $rates->forty = $request->input('forty.'.$key);
+                $rates->fortyhc = $request->input('fortyhc.'.$key);
+                $rates->currency_id = $request->input('currency_id.'.$key);
+                $rates->contract()->associate($contract);
+                $rates->save();
+
+            }
         }
-        foreach($detailportOrig as $orig => $value)
+
+        // For Each de los localcharge
+
+        foreach($detailscharges as $key2 => $value)
         {
-          foreach($detailportDest as $dest => $value)
-          {
+            if(!empty($request->input('ammount.'.$key2))) {
+                $localcharge = new LocalCharge();
+                $localcharge->surcharge_id = $request->input('type.'.$key2);
+                $localcharge->typedestiny_id  = $request->input('changetype.'.$key2);
+                $localcharge->calculationtype_id = $request->input('calculationtype.'.$key2);
+                $localcharge->ammount = $request->input('ammount.'.$key2);
+                $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+                $localcharge->contract()->associate($contract);
+                $localcharge->save();
+                $detailportOrig = $request->input('port_origlocal'.$contador);
+                $detailportDest = $request->input('port_destlocal'.$contador);
+                $detailcarrier = $request->input('localcarrier_id'.$contador);
+                $companies = $request->input('companies');
+                foreach($detailcarrier as $c => $value)
+                {
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+                }
+                foreach($detailportOrig as $orig => $value)
+                {
+                    foreach($detailportDest as $dest => $value)
+                    {
 
 
-            $detailport = new LocalCharPort();
-            $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-            $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-            $detailport->localcharge()->associate($localcharge);
-            $detailport->save();
-          }
+                        $detailport = new LocalCharPort();
+                        $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                        $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                        $detailport->localcharge()->associate($localcharge);
+                        $detailport->save();
+                    }
+
+                }
+                $contador++;
+            }
+        }
+
+        if(!empty($companies)){
+            ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
+
+            foreach($companies as $key3 => $value)
+            {
+                $contract_company_restriction = new ContractCompanyRestriction();
+                $contract_company_restriction->company_id=$value;
+                $contract_company_restriction->contract_id=$contract->id;
+                $contract_company_restriction->save();
+            }
+        }
+
+        if(!empty($users)){
+            ContractUserRestriction::where('contract_id',$contract->id)->delete();
+
+            foreach($users as $key4 => $value)
+            {
+                $contract_client_restriction = new ContractUserRestriction();
+                $contract_client_restriction->user_id=$value;
+                $contract_client_restriction->contract_id=$contract->id;
+                $contract_client_restriction->save();
+            }
 
         }
-        $contador++;
-      }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully update this contract.');
+        return redirect()->action('ContractsController@index');
+
     }
-
-    if(!empty($companies)){
-      ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
-
-      foreach($companies as $key3 => $value)
-      {
-        $contract_company_restriction = new ContractCompanyRestriction();
-        $contract_company_restriction->company_id=$value;
-        $contract_company_restriction->contract_id=$contract->id;
-        $contract_company_restriction->save();
-      }
+    public function editRates($id){
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $rates = Rate::find($id);
+        return view('contracts.editRates', compact('rates','harbor','carrier','currency'));
     }
+    public function updateRates(Request $request, $id){
+        $requestForm = $request->all();
+        $rate = Rate::find($id);
+        $rate->update($requestForm);
+        return redirect()->back()->with('editRate','true');
 
-    if(!empty($users)){
-      ContractUserRestriction::where('contract_id',$contract->id)->delete();
-
-      foreach($users as $key4 => $value)
-      {
-        $contract_client_restriction = new ContractUserRestriction();
-        $contract_client_restriction->user_id=$value;
-        $contract_client_restriction->contract_id=$contract->id;
-        $contract_client_restriction->save();
-      }
 
     }
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully update this contract.');
-    return redirect()->action('ContractsController@index');
 
-  }
-  public function editRates($id){
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $rates = Rate::find($id);
-    return view('contracts.editRates', compact('rates','harbor','carrier','currency'));
-  }
-  public function updateRates(Request $request, $id){
-    $requestForm = $request->all();
-    $rate = Rate::find($id);
-    $rate->update($requestForm);
-     return redirect()->back()->with('editRate','true');
+    public function editLocalChar($id){
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objtypedestiny = new TypeDestiny();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
 
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $localcharges = LocalCharge::find($id);
+        return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
+    }
 
-  }
-
-
-  public function editLocalChar($id){
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objtypedestiny = new TypeDestiny();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-    
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $localcharges = LocalCharge::find($id);
-    return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
-  }
-
-  public function updateLocalChar(Request $request, $id)
-  {
-    $localC = LocalCharge::find($id);
-
-    $localC->surcharge_id = $request->input('surcharge_id');
-    $localC->typedestiny_id  = $request->input('changetype');
-    $localC->calculationtype_id = $request->input('calculationtype_id');
-    $localC->ammount = $request->input('ammount');
-    $localC->currency_id = $request->input('currency_id');
-    $localC->update();
-
-    $detailportOrig = $request->input('port_origlocal');
-    $detailportDest = $request->input('port_destlocal');
-    $carrier = $request->input('carrier_id');
-    $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
-    $deleteCarrier->delete();
-    $deletePort = LocalCharPort::where("localcharge_id",$id);
-    $deletePort->delete();
-
-    foreach($detailportOrig as $orig => $valueOrig)
+    public function updateLocalChar(Request $request, $id)
     {
-      foreach($detailportDest as $dest => $valueDest)
-      {
-        $detailport = new LocalCharPort();
-        $detailport->port_orig = $valueOrig;
-        $detailport->port_dest = $valueDest;
-        $detailport->localcharge_id = $id;
-        $detailport->save();
-      }
+        $localC = LocalCharge::find($id);
 
+        $localC->surcharge_id = $request->input('surcharge_id');
+        $localC->typedestiny_id  = $request->input('changetype');
+        $localC->calculationtype_id = $request->input('calculationtype_id');
+        $localC->ammount = $request->input('ammount');
+        $localC->currency_id = $request->input('currency_id');
+        $localC->update();
+
+        $detailportOrig = $request->input('port_origlocal');
+        $detailportDest = $request->input('port_destlocal');
+        $carrier = $request->input('carrier_id');
+        $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort = LocalCharPort::where("localcharge_id",$id);
+        $deletePort->delete();
+
+        foreach($detailportOrig as $orig => $valueOrig)
+        {
+            foreach($detailportDest as $dest => $valueDest)
+            {
+                $detailport = new LocalCharPort();
+                $detailport->port_orig = $valueOrig;
+                $detailport->port_dest = $valueDest;
+                $detailport->localcharge_id = $id;
+                $detailport->save();
+            }
+
+        }
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new LocalCharCarrier();
+            $detailcarrier->carrier_id = $key;
+            $detailcarrier->localcharge_id = $id;
+            $detailcarrier->save();
+        }
+        return redirect()->back()->with('localchar','true');
     }
-    foreach($carrier as $key)
+
+
+    public function destroy($id)
     {
-      $detailcarrier = new LocalCharCarrier();
-      $detailcarrier->carrier_id = $key;
-      $detailcarrier->localcharge_id = $id;
-      $detailcarrier->save();
-    }
-     return redirect()->back()->with('localchar','true');
-  }
-
-
-  public function destroy($id)
-  {
-    $rate = Rate::find($id);
-    $rate->delete();
-    return $rate;
-  }
-
-  public function deleteContract($id){
-
-    $contract = Contract::find($id);
-    if(isset($contract->rates)){
-      if(isset($contract->localcharges)){
-        return response()->json(['message' => count($contract->rates),'local' => count($contract->localcharges) ]);
-      }else{
-        return response()->json(['message' => count($contract->rates),'local' => 0]);
-      }
-    }
-    return response()->json(['message' => 'SN','local' => 0]);
-  }
-  public function destroyContract($id){
-
-    try { 
-      $contract = Contract::find($id);
-      $contract->delete();
-
-      return response()->json(['message' => 'Ok']);
-    }
-    catch (\Exception $e) {
-      return response()->json(['message' => $e]);
+        $rate = Rate::find($id);
+        $rate->delete();
+        return $rate;
     }
 
+    public function deleteContract($id){
 
-  }
+        $contract = Contract::find($id);
+        if(isset($contract->rates)){
+            if(isset($contract->localcharges)){
+                return response()->json(['message' => count($contract->rates),'local' => count($contract->localcharges) ]);
+            }else{
+                return response()->json(['message' => count($contract->rates),'local' => 0]);
+            }
+        }
+        return response()->json(['message' => 'SN','local' => 0]);
+    }
+    public function destroyContract($id){
 
-  public function destroyLocalCharges($id)
-  {
-    $local = LocalCharge::find($id);
-    $local->delete();
-  }
+        try { 
 
-  public function destroyRates(Request $request,$id)
-  {
-    $rate = Rate::find($id);
-    $rate->delete();
-    return $rate;
+            $FileTmp = FileTmp::where('contract_id',$id)->first();
+            if(count($FileTmp) > 0){
+                Storage::Delete($FileTmp->name_file);
+                $FileTmp->delete();
+            }
 
-  }
+            $contract = Contract::find($id);
+            $contract->delete();
 
-  public function destroymsg($id)
-  {
-    return view('contracts/message' ,['rate_id' => $id]);
-  }
-  
-  
+            return response()->json(['message' => 'Ok']);
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => $e]);
+        }
+
+
+    }
+
+    public function destroyLocalCharges($id)
+    {
+        $local = LocalCharge::find($id);
+        $local->delete();
+    }
+
+    public function destroyRates(Request $request,$id)
+    {
+        $rate = Rate::find($id);
+        $rate->delete();
+        return $rate;
+
+    }
+
+    public function destroymsg($id)
+    {
+        return view('contracts/message' ,['rate_id' => $id]);
+    }
+
+
     public function UploadFileRateForContract(Request $request){
         $requestobj = $request;
         $nombre='';
@@ -2529,7 +2536,7 @@ class ContractsController extends Controller
                                                                  'id'
                                                                 )); //*/
     }
-    
+
     public function LoadViewRequestImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
@@ -2537,5 +2544,200 @@ class ContractsController extends Controller
         return view('contracts.Requests.NewRequest',compact('harbor','carrier','user'));
     }
 
+    // esta version esta en desarrollo y pruebas --------------------------------------
+    public function FailedRatesDeveloper($id){
+        //$id se refiere al id del contracto
+        $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
+        $countfailrates = FailRate::where('contract_id','=',$id)->count();
+        return view('contracts.TestFailRates2',compact('countfailrates','countrates','id'));
+
+    }
+
+    public function FailedRatesDeveloperLoad($id,$selector){
+
+        //$id se refiere al id del contracto
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcarrier = new Carrier();
+
+
+        $rates = Rate::with('carrier','contract','port_origin','port_destiny','currency')->where('contract_id','=',$id)->get();
+        //dd($rates);
+
+
+        $originV;
+        $destinationV;
+        $carrierV;
+        $currencyV;
+        $originA;
+        $destinationA;
+        $carrierA;
+        $currencyA;
+        $twuentyA;
+        $fortyA;
+        $fortyhcA;
+        $failrates = collect([]);
+        $ratescol = collect([]);
+        if($selector == 1){
+            $failratesFor = FailRate::where('contract_id','=',$id)->get();
+            foreach( $failratesFor as $failrate){
+                $carrAIn;
+                $pruebacurre = "";
+                $originA        = explode("_",$failrate['origin_port']);
+                $destinationA   = explode("_",$failrate['destiny_port']);
+                $carrierA       = explode("_",$failrate['carrier_id']);
+                $currencyA      = explode("_",$failrate['currency_id']);
+                $twuentyA       = explode("_",$failrate['twuenty']);
+                $fortyA         = explode("_",$failrate['forty']);
+                $fortyhcA       = explode("_",$failrate['fortyhc']);
+
+                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                    ->first();
+                //$originAIn = $originOb['id'];
+                $originC   = count($originA);
+                if($originC <= 1){
+                    $originA = $originOb['name'];
+                } else{
+                    $originA = $originA[0].' (error)';
+                    $classdorigin='color:red';
+                }
+
+                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                    ->first();
+                //$destinationAIn = $destinationOb['id'];
+                $destinationC   = count($destinationA);
+                if($destinationC <= 1){
+                    $destinationA = $destinationOb['name'];
+                } else{
+                    $destinationA = $destinationA[0].' (error)';
+                }
+
+                $twuentyC   = count($twuentyA);
+                if($twuentyC <= 1){
+                    $twuentyA = $twuentyA[0];
+                } else{
+                    $twuentyA = $twuentyA[0].' (error)';
+                }
+
+                $fortyC   = count($fortyA);
+                if($fortyC <= 1){
+                    $fortyA = $fortyA[0];
+                } else{
+                    $fortyA = $fortyA[0].' (error)';
+                }
+
+                $fortyhcC   = count($fortyhcA);
+                if($fortyhcC <= 1){
+                    $fortyhcA = $fortyhcA[0];
+                } else{
+                    $fortyhcA = $fortyhcA[0].' (error)';
+                }
+
+                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+                //$carrAIn = $carrierOb['id'];
+                $carrierC = count($carrierA);
+                if($carrierC <= 1){
+                    //dd($carrierAIn);
+                    $carrierA = $carrierA[0];
+                }
+                else{
+                    $carrierA = $carrierA[0].' (error)';
+                }
+                $currencyC = count($currencyA);
+                if($currencyC <= 1){
+                    $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
+                    //$pruebacurre = $currenc['id'];
+                    $currencyA = $currencyA[0];
+                }
+                else{
+                    $currencyA = $currencyA[0].' (error)';
+                }        
+                $colec = ['id'              =>  $failrate->id,
+                          'contract_id'     =>  $id,
+                          'origin_portLb'   =>  $originA,       //
+                          'destiny_portLb'  =>  $destinationA,  // 
+                          'carrierLb'       =>  $carrierA,      //
+                          'twuenty'         =>  $twuentyA,      //    
+                          'forty'           =>  $fortyA,        //  
+                          'fortyhc'         =>  $fortyhcA,      //
+                          'currency_id'     =>  $currencyA,     //
+                          'operation'       =>  '1'
+                         ];
+
+                $pruebacurre = "";
+                $carrAIn = "";
+                $failrates->push($colec);
+
+            }
+            
+           /* foreach($rates as $rate){
+                $originRate     = '';
+                $detinyRate     = '';
+                $carrierRate    = '';
+                $currencyRate   = '';
+
+                $originRate     = $rate['port_origin']['name'];
+                $detinyRate     = $rate['port_destiny']['name'];
+                $carrierRate    = $rate['carrier']['name'];
+                $currencyRate   = $rate->Currency->alphacode;
+
+                $colec = ['id'              =>  $rate->id,
+                          'contract_id'     =>  $id,            //
+                          'origin_portLb'   =>  $originRate,    //
+                          'destiny_portLb'  =>  $detinyRate,    //
+                          'carrierLb'       =>  $carrierRate,   //
+                          'twuenty'         =>  $rate->twuenty, //    
+                          'forty'           =>  $rate->forty,   //  
+                          'fortyhc'         =>  $rate->fortyhc, //
+                          'currency_id'     =>  $currencyRate,  //
+                          'operation'       =>  '2'
+                         ];
+                $failrates->push($colec);
+            }*/
+            
+            return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
+                return '<a href="#edit-'.$failrate['id'].'-'.$failrate['operation'].'-" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                &nbsp;
+                <a href="#delet-'.$failrate['id'].'-'.$failrate['operation'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
+            })
+            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            
+            
+            
+        } else if($selector == 2){
+
+
+            foreach($rates as $rate){
+                $originRate     = '';
+                $detinyRate     = '';
+                $carrierRate    = '';
+                $currencyRate   = '';
+
+                $originRate     = $rate['port_origin']['name'];
+                $detinyRate     = $rate['port_destiny']['name'];
+                $carrierRate    = $rate['carrier']['name'];
+                $currencyRate   = $rate->Currency->alphacode;
+
+                $colec = ['id'              =>  $rate->id,
+                          'contract_id'     =>  $id,            //
+                          'origin_portLb'   =>  $originRate,    //
+                          'destiny_portLb'  =>  $detinyRate,    //
+                          'carrierLb'       =>  $carrierRate,   //
+                          'twuenty'         =>  $rate->twuenty, //    
+                          'forty'           =>  $rate->forty,   //  
+                          'fortyhc'         =>  $rate->fortyhc, //
+                          'currency_id'     =>  $currencyRate,  //
+                         ];
+                $ratescol->push($colec);
+            }
+        return DataTables::of($ratescol)->addColumn('action', function ($ratescol) {
+                return '
+                <a href="#edit-'.$ratescol['id'].'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                &nbsp;
+                <a href="#delet-'.$ratescol['id'].'" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Delete</a>';
+            })
+            ->editColumn('id', 'ID: {{$id}}')->toJson();
+        }
+    }
 
 }

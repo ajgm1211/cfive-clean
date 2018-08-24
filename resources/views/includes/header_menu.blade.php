@@ -196,6 +196,7 @@ Load Ports
                             </span>
                         </a>
                     </li>
+                    @role('administrator')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-folder-3"></i>
@@ -204,6 +205,7 @@ Load Ports
                             </span>
                         </a>
                     </li>
+                    @endrole
                 </ul>
             </div>
         </li>

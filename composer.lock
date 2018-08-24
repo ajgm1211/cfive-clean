@@ -4,8 +4,13 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "hash": "9ee30a5395f0e46e1dc84f85638eb34d",
     "content-hash": "3c099ff5976c3ad70bfa2661dec55fae",
+=======
+    "hash": "a6226e0ffa87b9ce19da12ba282ab3df",
+    "content-hash": "53a0fee9eeea211437dda83341f730fa",
+>>>>>>> origin/lblanco
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -116,6 +121,7 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
             "version": "3.65.0",
             "source": {
                 "type": "git",
@@ -126,6 +132,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0daae6292e8355156a9be73bc1cc4dd7075cac0d",
                 "reference": "0daae6292e8355156a9be73bc1cc4dd7075cac0d",
+=======
+            "version": "3.65.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "70235697503c6b0501e58e5898f9825d800fe647"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/70235697503c6b0501e58e5898f9825d800fe647",
+                "reference": "70235697503c6b0501e58e5898f9825d800fe647",
+>>>>>>> origin/lblanco
                 "shasum": ""
             },
             "require": {
@@ -192,7 +210,11 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
             "time": "2018-08-20 20:24:35"
+=======
+            "time": "2018-08-21 20:10:44"
+>>>>>>> origin/lblanco
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -965,6 +987,7 @@
                 "url"
             ],
             "time": "2017-03-20 17:10:46"
+<<<<<<< HEAD
         },
         {
             "name": "hashids/hashids",
@@ -1031,6 +1054,8 @@
                 "youtube"
             ],
             "time": "2018-03-12 16:30:09"
+=======
+>>>>>>> origin/lblanco
         },
         {
             "name": "intervention/image",
@@ -1627,16 +1652,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.45",
+            "version": "1.0.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a99f94e63b512d75f851b181afcdf0ee9ebef7e6"
+                "reference": "f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a99f94e63b512d75f851b181afcdf0ee9ebef7e6",
-                "reference": "a99f94e63b512d75f851b181afcdf0ee9ebef7e6",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2",
+                "reference": "f3e0d925c18b92cf3ce84ea5cc58d62a1762a2b2",
                 "shasum": ""
             },
             "require": {
@@ -1648,7 +1673,7 @@
             "require-dev": {
                 "ext-fileinfo": "*",
                 "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "^5.7"
+                "phpunit/phpunit": "^5.7.10"
             },
             "suggest": {
                 "ext-fileinfo": "Required for MimeType",
@@ -1707,7 +1732,11 @@
                 "sftp",
                 "storage"
             ],
+<<<<<<< HEAD
             "time": "2018-05-07 08:44:23"
+=======
+            "time": "2018-08-22 07:45:22"
+>>>>>>> origin/lblanco
         },
         {
             "name": "league/flysystem-cached-adapter",
@@ -5273,16 +5302,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.1",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
                 "shasum": ""
             },
             "require": {
@@ -5353,7 +5382,11 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD
             "time": "2018-08-07 06:44:28"
+=======
+            "time": "2018-08-22 06:39:21"
+>>>>>>> origin/lblanco
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

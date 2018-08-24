@@ -105,6 +105,10 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 Failed Rates
                 <i class="fa flaticon-tool-1"></i>
               </a>
+              <a href="{{route('Failed.Rates.Developer.For.Contracts',$id)}}" class="btn btn-info">
+                Failed Rates Developer
+                <i class="fa flaticon-tool-1"></i>
+              </a>
               <table  class="table tableData" id="rateTable" width="100%">
                 <thead>
                   <tr>
@@ -359,7 +363,7 @@ Load
       </div>
     </div>
   </div>
-  
+
   <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -380,8 +384,8 @@ Load
       </div>
     </div>
   </div>
-  
-  
+
+
 </div>
 
 </div>
