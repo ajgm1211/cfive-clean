@@ -863,8 +863,7 @@ $subtotalDestiny = 0;
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group ">
-
-                                                            @if(isset($terms_origin) && $terms_origin->count()>0)                             
+                                                            @if(isset($terms_origin) && $terms_origin->count()>0)  
                                                             <h5 class="title-quote">Origin harbor</h5>
                                                             @foreach($terms_origin as $v)
                                                             {!! $form->modality==1 ? $v->term->import : $v->term->export!!}
