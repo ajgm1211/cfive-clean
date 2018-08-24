@@ -743,8 +743,8 @@
     </div>
   </div>
 </div>
-@include('contacts.partials.contactsModal');
-@include('companies.partials.companiesModal');
+@include('contacts.partials.contactsModal')
+@include('companies.partials.companiesModal')
 
 @endsection
 
