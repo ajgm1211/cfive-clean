@@ -9,7 +9,6 @@ $subtotalDestiny = 0;
 @endphp
 
 <div class="m-content">
-
     <br>
     @if(Session::has('message.nivel'))
     <div class="col-md-12">
@@ -47,13 +46,14 @@ $subtotalDestiny = 0;
 
             </div>
             <div class="col-md-2 col-xs-4">
-                <a href="#"  class="btn btn-primary btn-block">PDF</a>
+
+                <button id="store-pdf" value="submit-pdf" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save and PDF</button>
+
             </div>
             <div class="col-md-2 col-xs-4" >
-                <button id="duplicate-quote" type="submit" class="btn btn-primary btn-block">Save</button>
+                <button id="store" value="submit" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save</button>
 
             </div>
-
 
         </div>
         <hr><br><br>
@@ -120,6 +120,7 @@ $subtotalDestiny = 0;
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading title-quote size-14px"><b>Origin</b></div>
                                                     <div class="panel-body">
+
                                                         <b>Port: </b><span id="origin_input">  {{ $info->port_origin->name }}</span>
                                                     </div>
                                                 </div>
@@ -174,7 +175,7 @@ $subtotalDestiny = 0;
                                                 @if($form->fortyhc > 0)
                                                 <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
                                                 @endif
-                                                <!--<p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>-->
+                                                <p id="totRat" ><span id="totRat"></span><b>Total Rates {{ $info->totalrates }} </b> </p>
 
                                             </div>
                                         </div>
@@ -917,7 +918,7 @@ $subtotalDestiny = 0;
         <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $info->contract->expire }}">
         <input type="hidden" class="form-control" id="origin_address" name="origin_address" value="{{ $form->origin_address }} ">
         <input type="hidden" class="form-control" id="destination_address" name="destination_address" value="{{ $form->destination_address }} ">
-        <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id }} ">
+        <input type="hidden" class="form-control" id="company_id" name="company_id" value="{{ $form->company_id_quote }} ">
         <input type="hidden" class="form-control" id="origin_harbor_id" name="origin_harbor_id" value="{{ $info->origin_port }} ">
         <input type="hidden" class="form-control" id="destination_harbor_id" name="destination_harbor_id" value="{{ $info->destiny_port }} ">
         <input type="hidden" class="form-control" id="price_id" name="price_id" value="{{ $priceID }} ">
@@ -930,11 +931,23 @@ $subtotalDestiny = 0;
         <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
         <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
         <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+
+        <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
+        <input type="hidden" class="form-control" id="height" name="height[]">
+        <input type="hidden" class="form-control" id="width" name="width[]">
+        <input type="hidden" class="form-control" id="large" name="large[]">
+        <input type="hidden" class="form-control" id="weight" name="weight[]">
+        <input type="hidden" class="form-control" id="volume" name="volume[]">
+
+        <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+
+
         @if($email_templates)
         @include('quotes.partials.submitQuoteEmailModal')
         @endif
         {!! Form::close() !!}  
     </div>
+
 </div>
 @endsection
 

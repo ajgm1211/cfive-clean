@@ -52,10 +52,13 @@
                                     <th width="1%" >
                                         Id
                                     </th>
+                                    <th width="3%" >
+                                        Company
+                                    </th>
                                     <th width="4%" >
                                         Contract Name
                                     </th>
-                                    <th width="4%" >
+                                    <th width="3%" >
                                         Contract Number
                                     </th>
                                     <th width="4%" >
@@ -66,6 +69,9 @@
                                     </th>
                                     <th width="5%" >
                                         User
+                                    </th>
+                                    <th width="5%" >
+                                        Status
                                     </th>
                                     <th width="5%" >
                                         Options
@@ -79,22 +85,36 @@
                                         {{$loop->iteration}}
                                     </td>
                                     <td>
+                                        {{$Ncontract->companyuser->name}}
+                                    </td>
+                                    <td id="{{'thnamec'.$loop->iteration}}">
                                         {{$Ncontract->namecontract}}
                                     </td>
-                                    <td>
+                                    <td id="{{'thnumc'.$loop->iteration}}">
                                         {{$Ncontract->numbercontract}}
                                     </td>
                                     <td>
                                         {{$Ncontract->validation}}
                                     </td>
                                     <td>
-                                        {{$Ncontract->created}}
+                                        {{\Carbon\Carbon::parse($Ncontract->created)->format('d-m-Y')}}
                                     </td>
                                     <td>
                                         {{$Ncontract->user->name.' '.$Ncontract->user->lastname}}
                                     </td>
                                     <td>
-                                        ------
+                                        <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
+                                        &nbsp;
+                                        <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
+                                    </td>
+                                    <td>
+                                        <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
+                                            <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                                        </a>
+                                        &nbsp; &nbsp;  
+                                        <a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
+                                            <samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -107,10 +127,65 @@
     </div>
 </div>
 
+<div class="modal fade" id="Loadstatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Status Of The Request
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label id="NameCon" class="form-control-label">
+                            Name Contract:
+                        </label>
+
+                    </div>
+                    <div class="form-group">
+                        <label id="NumCon" class="form-control-label">
+                            Number Contract:
+                        </label>
+
+                    </div>
+                    <input type="hidden" id="idContract" value="0"/>
+                    <input type="hidden" id="posicionval" value="0"/>
+                    <div class="form-group">
+                        <label class="form-control-label" for="statusSelectMD">Status: </label>
+                        <select class="form-control" id="statusSelectMD">
+                            <option value="Pending" id="Pending">Pending</option>
+                            <option value="Processing" id="Processing">Processing</option>
+                            <option value="Done" id="Done">Done</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
+                    Load
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js')
 @parent
 
+<script type="application/x-javascript" src="/js/RequestContracts/Request.Index.Status.js">
+
+
+</script>
 
 @stop

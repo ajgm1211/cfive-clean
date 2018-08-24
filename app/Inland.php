@@ -23,5 +23,12 @@ class Inland extends Model
   {
     return $this->belongsTo('App\CompanyUser');
   }
+  
+  public function getRouteKey()
+{
+    $hashids = new \Hashids\Hashids('MySecretSalt');
+
+    return $hashids->encode($this->getKey());
+}
 
 }
