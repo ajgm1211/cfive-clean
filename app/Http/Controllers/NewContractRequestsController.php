@@ -5,38 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\NewContractRequest;
 use App\User;
+use App\CompanyUser;
+use App\Harbor;
+use App\Carrier;
 use App\Notifications\N_general;
+use Illuminate\Support\Facades\Storage;
 
 class NewContractRequestsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index()
     {
-        $Ncontracts = NewContractRequest::with('user')->get();
+        $Ncontracts = NewContractRequest::with('user','companyuser')->get();
         //dd($Ncontracts);
         return view('contracts.Requests.index',compact('Ncontracts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //dd($request->all());
@@ -67,9 +58,9 @@ class NewContractRequestsController extends Controller
         if($request->type == 2){
             // Rate And Surcharger 
             $typeVal    = 2;
-            $type['type'] = array('type'=>$typeVal,'values'=>$request->valuesCurrency);
+            $type = array('type'=>$typeVal,'values'=>$request->valuesCurrency);
         } else {
-            $type['type'] = array('type'=>$typeVal);
+            $type = array('type'=>$typeVal);
             $arreglotype = '"type":'.$typeVal;
         }
 
@@ -96,13 +87,13 @@ class NewContractRequestsController extends Controller
             $DatCarBol = true;
         } 
 
-        $data['data'] = array('DatOri'  => $DatOriBol,
-                              'origin'  => $origin,
-                              'DatDes'  => $DatDesBol,
-                              'destiny' => $destiny,
-                              'DatCar'  => $DatCarBol,
-                              'carrier' => $carrier
-                             );
+        $data = array('DatOri'  => $DatOriBol,
+                      'origin'  => $origin,
+                      'DatDes'  => $DatDesBol,
+                      'destiny' => $destiny,
+                      'DatCar'  => $DatCarBol,
+                      'carrier' => $carrier
+                     );
         $type         = json_encode($type);
         $data         = json_encode($data);
 
@@ -130,47 +121,161 @@ class NewContractRequestsController extends Controller
         return redirect()->route('contracts.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //Para descargar el archivo
     public function show($id)
     {
         $Ncontract = NewContractRequest::find($id);
-        dd($Ncontract);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-Y_s');
+        $company    = CompanyUser::find($Ncontract->company_user_id);
+        $name       = $company->name.'_'.$now;
+        return Storage::download($Ncontract->namefile,$name);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function edit($id)
     {
-        //
+        $Ncontracts = NewContractRequest::with('companyuser','user')->find($id);
+        //dd($Ncontracts);
+        $type = json_decode($Ncontracts->type);
+        $data = json_decode($Ncontracts->data);
+
+        //dd($data);
+
+        $surchargeBol       = false;
+        $rateBol            = false; 
+        $ValuesSomeBol      = false; 
+        $ValuesWithCurreBol = false; 
+        $ValCarrierBol      = false; 
+        $ValuesDestinyBol   = false; 
+        $ValuesOriginBol    = false; 
+        $tarjetBol          = false; 
+
+        $contenSurchar          = '';
+        $contenRate             = '';
+        $contenValuesSome       = '';
+        $contenValuesWithCurre  = '';
+        $contenValuesCarrier    = '';
+        $contenValuesDestiny    = '';
+        $contenValuesOrigin     = '';
+
+        //dd($type);
+        if($type->type == 2){
+            $surchargeBol = true;
+            $contenSurchar = 'El archivo contiene Rates + Surchargers';
+
+            if($type->values == 1){
+                $contenValuesSome = 'Las columnas valores solo contiene los valores';
+                $ValuesSomeBol = true;
+
+            } else if($type->values == 2){
+                $contenValuesWithCurre = 'Las columnas de los valores, contienen los currency';
+                $ValuesWithCurreBol = true;
+            }
+        } else if($type->type == 1){
+            $rateBol = true;
+            $contenRate = 'El archivo contiene solo Rates';
+        }
+
+        if($data->DatCar){
+            $ValCarrierBol = true;
+            $carrierObj = Carrier::find($data->carrier);
+            $contenValuesCarrier = 'El archivo no contiene la columna Carrier. Carrier: '.$carrierObj->name;
+        }
+
+        if($data->DatDes){
+            $ValuesDestinyBol = true;
+            $destinos ='';
+            foreach($data->destiny as $destiny){
+                $destinosObj = Harbor::find($destiny);
+                $destinos  = $destinos.$destinosObj->display_name.'.. ';
+            }
+            $contenValuesDestiny = 'El archivo no contiene la columna Destino. Destino: '.$destinos;
+        }
+
+        if($data->DatOri){
+            $ValuesOriginBol = true;
+            $origenes ='';
+            foreach($data->origin as $origen){
+                $origenObj = Harbor::find($origen);
+                $origenes  = $origenes.''.$origenObj->display_name.'...  ';
+            }
+            $contenValuesOrigin = 'El archivo no contiene la columna Origen. Origen: '.$origenes;
+        }
+
+        if($ValuesOriginBol == true || $ValuesDestinyBol == true || $ValCarrierBol == true){
+            $tarjetBol = true;
+        }
+
+        $colectionFinal = collect([]);
+
+        $Contenido = [
+            'namecontract'          => $Ncontracts->namecontract,
+            'numbercontract'        => $Ncontracts->numbercontract,
+            'validation'            => $Ncontracts->validation,
+            'company'               => $Ncontracts->companyuser->name,
+            'status'                => $Ncontracts->status,
+            'User'                  => $Ncontracts->user->name.' '.$Ncontracts->user->lastname,
+            'created'               => $Ncontracts->created,
+
+            'surchargeBol'          => $surchargeBol,
+            'contenSurchar'         => $contenSurchar,
+            'rateBol'               => $rateBol,
+            'contenRate'            => $contenRate,
+
+            'ValuesSomeBol'         => $ValuesSomeBol,
+            'contenValuesSome'      => $contenValuesSome,
+            'ValuesWithCurreBol'    => $ValuesWithCurreBol,
+            'contenValuesWithCurre' => $contenValuesWithCurre,
+
+            'ValCarrierBol'         => $ValCarrierBol,
+            'contenValuesCarrier'   => $contenValuesCarrier,
+            'ValuesDestinyBol'      => $ValuesDestinyBol,
+            'contenValuesDestiny'   => $contenValuesDestiny,
+
+            'ValuesOriginBol'       => $ValuesOriginBol,
+            'contenValuesOrigin'    => $contenValuesOrigin,
+            'tarjetBol'             => $tarjetBol
+
+        ];
+
+        $colectionFinal->push($Contenido);
+        //dd($ColectionFinal);
+
+        return view('contracts.Requests.DetailNewRequest',compact('colectionFinal'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function UpdateStatusRequest(){
+        $id     = $_REQUEST['id'];
+        $status = $_REQUEST['status'];
+        try {
+            $Ncontract = NewContractRequest::find($id);
+            $Ncontract->status = $status;
+            $Ncontract->save();
+
+            if($Ncontract->status == 'Done'){
+
+                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                $message = 'The request was processed N°: ' . $Ncontract->id;
+                foreach ($users as $user) {
+                    $user->notify(new N_general(\Auth::user(),$message));
+                }
+            }
+
+            return response()->json($data=['status'=>1,'data'=>$status]);
+        } catch (\Exception $e){
+            return response()->json($data=['status'=>2]);;
+        }
+
+    }
+
     public function destroy($id)
     {
         //
