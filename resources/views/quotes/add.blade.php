@@ -24,32 +24,35 @@
     </div>
     @endif
 
+
     <div class="row">
         <div class="col-md-10">
             @if(count($company_user->company_user_id)>0)
             <div class="row">
                 <div class="col-md-12">
                     {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
+                    <div class="row">
+                        <ul class="nav" role="tablist">
+                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
+                                <button type="submit" class="btn btn-primary">
+                                    Save
+                                </button>
+                                @if($email_templates)
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
+                                    Save and send
+                                </button>
+                                @endif
+                                <button type="submit" class="btn btn-primary" formaction="/quotes/store/pdf">
+                                    Save and PDF
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="m-portlet__body">
                         <div class="row">
                             <div class="m-portlet m-portlet--tabs">
                                 <div class="m-portlet__head">
-                                    <div class="m-portlet__head-tools">
-                                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left m-tabs-line-danger" role="tablist">
-                                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
-                                                <button type="submit" class="btn btn-primary">
-                                                    Save
-                                                </button>
-                                                @if($email_templates)
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
-                                                    Save and send
-                                                </button>
-                                                @endif
-                                                <button type="submit" class="btn btn-primary" formaction="/quotes/store/pdf">
-                                                    Save and PDF
-                                                </button>
-                                            </li>
-                                        </ul>
+                                    <div class="m-portlet__head-tools">                                        
                                         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist">
                                             <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
                                                 <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
@@ -284,8 +287,8 @@
                                                                             <div class="col-md-1 boxes">
                                                                                 <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                                 <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
-                                                                                <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity[]"/>
-                                                                                <input type="hidden" class="weight_input" id="weight_input" name="total_weight[]"/>
+                                                                                <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                                                                                <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -340,8 +343,8 @@
                                                                                 <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                                 <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
                                                                                 <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
-                                                                                <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity[]"/>
-                                                                                <input type="hidden" class="weight_input" id="weight_input" name="total_weight[]"/>
+                                                                                <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                                                                                <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>
