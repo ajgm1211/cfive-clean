@@ -88,6 +88,15 @@ $(document).ready(function() {
 
 
     });
+    // NOTIFICACIONES LEIDAS 
+        $.get('/users/notifications_read', function (data) {
+      if(data.length > 0 ){
+        addNotifications_old(data);
+      
+      }
+
+
+    });
   }
 
   // check if there's a logged in user
@@ -117,6 +126,24 @@ function addNotifications(data) {
     });
 
     $('.notifications').html(htmlElements);
+  });
+}
+
+
+function addNotifications_old(data) {
+
+  notifications = _.concat(notifications, data);
+
+  notifications.map(function (notification) {
+
+
+    var htmlElements = notifications.map(function (notification) {
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+      return text;
+
+    });
+
+    $('.notifications_old').html(htmlElements);
   });
 }
 
