@@ -137,6 +137,34 @@
                     </div>
                 </div>
             </div>
+            @if($quote->origin_address || $quote->destination_address)
+                <div class="row">
+                    @if($quote->origin_address!='')
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading title-quote size-14px"><b>Origin address</b></div>
+                                <div class="panel-body">
+                                    <span id="origin_input" class="color-blue">
+                                        {{$quote->origin_address}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    @if($quote->destination_address!='')
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
+                                <div class="panel-body">
+                                    <span id="destination_input" class="color-blue">
+                                        {{$quote->destination_address}}                                     
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endif
             <div style="padding-top: 20px; padding-bottom: 20px;">
                 <div class="row">
                     <div class="col-md-12">
@@ -426,7 +454,7 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-    <script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
+<script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
 @endif
 
 
@@ -434,7 +462,7 @@
 
 <script>
 
- window.open('{{ route('quotes.pdf', ['id' => $quote->id]) }}');
+    window.open('{{ route('quotes.pdf', ['id' => $quote->id]) }}');
 
 </script>
 @endif

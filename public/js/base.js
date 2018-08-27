@@ -522,6 +522,12 @@ $(document).on('click', '#add_load_lcl_air', function (e) {
 $(document).on('click', '.remove_lcl_air_load', function (e) {
     var $row = $(this).closest('.template').remove();
     $row.remove();
+    
+    $('.quantity').change();
+    $('.height').change();
+    $('.width').change();
+    $('.large').change();
+    $('.weight').change();
 });
 
 //Duplicate Quote
@@ -639,47 +645,47 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
 
 $(document).on('change', '#delivery_type', function (e) {
     if($(this).val()==1){
-        $("#origin_address_label").hide();
-        $("#destination_address_label").hide();
+        $("#origin_address_label").addClass('hide');
+        $("#destination_address_label").addClass('hide');
         $("#origin_address").val('');
         $("#destination_address").val('');
     }
     if($(this).val()==2){
-        $("#origin_address_label").hide();
-        $("#destination_address_label").show();
+        $("#origin_address_label").addClass('hide');
+        $("#destination_address_label").removeClass('hide');
         $("#origin_address").val('');
     }
     if($(this).val()==3){
-        $("#origin_address_label").show();
-        $("#destination_address_label").hide();
+        $("#origin_address_label").removeClass('hide');
+        $("#destination_address_label").addClass('hide');
         $("#destination_address").val('');
     }
     if($(this).val()==4){
-        $("#origin_address_label").show();
-        $("#destination_address_label").show();
+        $("#origin_address_label").removeClass('hide');
+        $("#destination_address_label").removeClass('hide');
     }
 });
 
 $(document).on('change', '#delivery_type_air', function (e) {
     if($(this).val()==5){
-        $("#origin_address_label").hide();
-        $("#destination_address_label").hide();
+        $("#origin_address_label").addClass('hide');
+        $("#destination_address_label").addClass('hide');
         $("#origin_address").val('');
         $("#destination_address").val('');
     }
     if($(this).val()==6){
-        $("#origin_address_label").hide();
-        $("#destination_address_label").show();
+        $("#origin_address_label").addClass('hide');
+        $("#destination_address_label").removeClass('hide');
         $("#origin_address").val('');
     }
     if($(this).val()==7){
-        $("#origin_address_label").show();
-        $("#destination_address_label").hide();
+        $("#origin_address_label").removeClass('hide');
+        $("#destination_address_label").addClass('hide');
         $("#destination_address").val('');
     }
     if($(this).val()==8){
-        $("#origin_address_label").show();
-        $("#destination_address_label").show();
+        $("#origin_address_label").removeClass('hide');
+        $("#destination_address_label").removeClass('hide');
     }
 });
 
@@ -702,6 +708,7 @@ $(document).on('click', '#create-quote', function (e) {
     var width = new Array();
     var large = new Array();
     var weight = new Array();
+    var total_weight_arr = new Array();
     var volume = new Array();
     var type_cargo = new Array();
     var myTableDiv = document.getElementById("label_package_loads");
@@ -736,7 +743,8 @@ $(document).on('click', '#create-quote', function (e) {
     heading[2] = "Width";
     heading[3] = "Large";
     heading[4] = "Weight";
-    heading[5] = "Volume";
+    heading[5] = "Total Weight";
+    heading[6] = "Volume";
 
     $(".type_cargo").each(function(){
         if($(this).val()==1){
@@ -778,12 +786,12 @@ $(document).on('click', '#create-quote', function (e) {
 
     $(".weight").each(function(){
         if($(this).val()!=''){
-            weight.push($(this).val()+" kg");
+            weight.push($(this).val());
         }
     });
 
     var q2 = new Array();
-
+    
     for (i = 0; i < quantity.length; i++) {
         for (i = 0; i < height.length; i++) {
             for (i = 0; i < width.length; i++) {
@@ -791,7 +799,7 @@ $(document).on('click', '#create-quote', function (e) {
                     for (i = 0; i < weight.length; i++) {
                         for (i = 0; i < volume.length; i++) {
                             if((quantity[i]!=undefined) && (height[i]!=undefined) && (width[i]!=undefined) && (large[i]!=undefined) && (weight[i]!=undefined)){
-                                q2[i] = new Array (quantity[i],height[i],width[i],large[i],weight[i],volume[i]);
+                                q2[i] = new Array (quantity[i]+" "+type_cargo[i],height[i],width[i],large[i],weight[i]+" kg",weight[i]*quantity[i]+" kg",volume[i]);
                             }
                         }
                     }
@@ -1310,9 +1318,11 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
             }
         }
         if($( this).val()!=''){
-            $(this).closest('.template').find('.volume').html("Volume: "+volume+" m<sup>3</sup>");
+            $(this).closest('.template').find('.volume').html(volume+" m<sup>3</sup>");
             $(this).closest('.template').find('.volume_input').val(volume);
         }
+        $(this).closest('.template').find('.quantity').html(" "+quantity+" un");
+        $(this).closest('.template').find('.weight').html(" "+weight*quantity+" kg");
         $(this).closest('.template').find('.quantity_input').val(quantity);
         $(this).closest('.template').find('.weight_input').val(weight*quantity);
         $(this).closest('.template').find('.volume_input').change();

@@ -1695,7 +1695,7 @@ class QuoteController extends Controller
                 $package_load->save();
             }
         }
-        if($input['btnsubmit'] == 'submit-pdf'){
+        if(isset($input['btnsubmit']) && $input['btnsubmit'] == 'submit-pdf'){
             return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
         }
         $request->session()->flash('message.nivel', 'success');
