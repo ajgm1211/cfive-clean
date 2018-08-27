@@ -1932,7 +1932,7 @@ class ContractsController extends Controller
                 ->Load(\Storage::disk('UpLoadFile')
                        ->url($requestobj ->FileName),function($reader) use($requestobj,$errors) {
                            $reader->noHeading = true;
-                           $reader->ignoreEmpty();
+                           //$reader->ignoreEmpty();
                            $currency   = "Currency";
                            $twenty     = "20'";
                            $forty      = "40'";
@@ -1996,6 +1996,7 @@ class ContractsController extends Controller
                                        $origExiBol = true; //segundo boolean para verificar campos errados
                                        $randons = $requestobj->$origin;
                                    } else {
+                                      // dd($read[$requestobj->$originExc]);
                                        $originVal = $read[$requestobj->$originExc];// hacer validacion de puerto en DB
                                        $originResul = str_replace($caracteres,'',strtolower($originVal));
                                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
