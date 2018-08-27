@@ -107,6 +107,7 @@ class ContractsController extends Controller
      */
     public function store(Request $request)
     {
+        
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
@@ -122,7 +123,8 @@ class ContractsController extends Controller
         $contador = 1;
         foreach($details as $key => $value)
         {
-            if(!empty($request->input('twuenty.'.$key))) {
+       
+      
                 $rates = new Rate();
                 $rates->origin_port = $request->input('origin_id.'.$key);
                 $rates->destiny_port = $request->input('destiny_id.'.$key);
@@ -132,9 +134,12 @@ class ContractsController extends Controller
                 $rates->fortyhc = $request->input('fortyhc.'.$key);
                 $rates->currency_id = $request->input('currency_id.'.$key);
                 $rates->contract()->associate($contract);
+           
                 $rates->save();
-            }
+          
         }
+       
+    
         // For Each de los localcharge
 
         foreach($detailscharges as $key2 => $value)
@@ -429,7 +434,7 @@ class ContractsController extends Controller
         // for each rates 
         foreach($details as $key => $value)
         {
-            if(!empty($request->input('twuenty.'.$key))) {
+            if(is_numeric($request->input('twuenty.'.$key))) {
 
                 $rates = new Rate();
                 $rates->origin_port = $request->input('origin_id.'.$key);

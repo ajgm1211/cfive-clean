@@ -121,21 +121,7 @@ $validation_expire = 'Please enter validity date';
 
                   </tr>
 
-                  <tr   id='tclone' hidden="true" >
-                    <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
-                    <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
-                    <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
 
-                    <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','style' => 'width:100%;' ]) !!} </td>
-                    <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','style' => 'width:100%;']) !!} </td>
-                    <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
-                    <td>   <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
-                      <i class="la la-eraser"></i>
-                      </a>
-                    </td>
-
-                  </tr>
 
               </table>
             </div>
@@ -150,7 +136,7 @@ $validation_expire = 'Please enter validity date';
                     </button>
                   </a>
                 </div>
- 
+
               </div>
               <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
                 <thead>
@@ -248,6 +234,23 @@ $validation_expire = 'Please enter validity date';
       </div>
     </div>
     {!! Form::close() !!}
+    <table  hidden="true">
+      <tr   id='tclone' hidden="true" >
+        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
+        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
+        <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
+
+        <td>{!! Form::text('twuenty[]', null, ['placeholder' => 'Please enter the 20','class' => 'form-control m-input','style' => 'width:100%;' ]) !!} </td>
+        <td>{!! Form::text('forty[]', null, ['placeholder' => 'Please enter the 40','class' => 'form-control m-input','style' => 'width:100%;']) !!} </td>
+        <td> {!! Form::text('fortyhc[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+        <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
+        <td>   <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
+          <i class="la la-eraser"></i>
+          </a>
+        </td>
+
+      </tr>
+    </table>
     <!--end: Form Wizard-->
   </div>
   <!--End::Main Portlet-->
