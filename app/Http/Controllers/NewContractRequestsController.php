@@ -128,7 +128,9 @@ class NewContractRequestsController extends Controller
         $time       = new \DateTime();
         $now        = $time->format('d-m-Y_s');
         $company    = CompanyUser::find($Ncontract->company_user_id);
-        $name       = $company->name.'_'.$now;
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $company->name.'_'.$now.'.'.$ext;
         return Storage::download($Ncontract->namefile,$name);
     }
 
