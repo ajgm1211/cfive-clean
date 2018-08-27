@@ -228,6 +228,10 @@ class UsersController extends Controller
   {
     return auth()->user()->unreadNotifications()->limit(4)->get()->toArray();
   }
+  public function notifications_read()
+  {
+    return auth()->user()->notifications()->limit(4)->get()->toArray();
+  }
 
   public function updateNotifications()
   {
