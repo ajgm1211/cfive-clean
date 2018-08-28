@@ -68,6 +68,7 @@ window.Echo = new Echo({
 
 
 var notifications = [];
+var notifications_old = [];
 
 $(document).ready(function() {
 
@@ -89,9 +90,9 @@ $(document).ready(function() {
 
     });
     // NOTIFICACIONES LEIDAS 
-        $.get('/users/notifications_read', function (data) {
-      if(data.length > 0 ){
-        addNotifications_old(data);
+        $.get('/users/notifications_read', function (read) {
+      if(read.length > 0 ){
+        addNotifications_old(read);
       
       }
 
@@ -132,13 +133,13 @@ function addNotifications(data) {
 
 function addNotifications_old(data) {
 
-  notifications = _.concat(notifications, data);
+  notifications_old = _.concat(notifications_old, data);
 
-  notifications.map(function (notification) {
+  notifications_old.map(function (notification_old) {
 
 
-    var htmlElements = notifications.map(function (notification) {
-      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification.data.name_user+" " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+    var htmlElements = notifications_old.map(function (notification_old) {
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>El usuario "+notification_old.data.name_user+" " + notification_old.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
       return text;
 
     });
