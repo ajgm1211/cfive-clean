@@ -102,6 +102,14 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('CorrectedRateForContracts','ContractsController@SaveCorrectedRate')->name('Corrected.Rate.For.Contracts');
     Route::get('UpdateRatesForContracts','ContractsController@UpdateRatesCorrect')->name('Update.Rates.For.Contracts');
     Route::get('DestroyRatesFailCorrectForContracts','ContractsController@DestroyRatesFailCorrect')->name('Destroy.Rates.FailCorrect.For.Contracts');
+        // ---- developer
+    Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
+    Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
+    Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
+    Route::get('UpdateRatesFailForContracts/{id}','ContractsController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
+    
+    Route::get('DestroyRatesFailForContracts/{id}','ContractsController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
+    Route::get('DestroyRatesGForContracts/{id}','ContractsController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
 
     // Surcharge
     Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
@@ -127,7 +135,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     
     //Developer Datatables
     
-     Route::get('FailedRatesForContractsDeveloper/{id}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+     Route::get('FailedRatesForContractsDeveloper/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
     
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
 
