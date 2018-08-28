@@ -8,12 +8,12 @@
     <div class="form-group m-form__group row"> 
       <div class="col-lg-4">
         {!! Form::label('origin_port', 'Origin Port') !!}
-        {{ Form::select('origin_id', $harbor,$rates->port_origin->id,['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;']) }} 
+        {{ Form::select('origin_port', $harbor,$rates->port_origin->id,['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;']) }} 
       </div>
       <div class="col-lg-4">
         {!! Form::label('destination_port', 'Destination Port') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('destiny_id', $harbor,$rates->port_destiny->id,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
+          {{ Form::select('destiny_port', $harbor,$rates->port_destiny->id,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-info-circle"></i>
