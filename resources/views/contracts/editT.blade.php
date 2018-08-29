@@ -162,6 +162,10 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                 Failed Surcharge
                                 <i class="fa flaticon-tool-1"></i>
                             </a>
+                            <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
+                                Failed Surcharge Developer
+                                <i class="fa flaticon-tool-1"></i>
+                            </a>
                             <br><br><br>
                             @endrole
                             <table class="table tableData" id="users-table" width="100%" >

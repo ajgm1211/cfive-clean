@@ -12,7 +12,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Rates
+                        Surchargers
                     </h3><br>
 
                 </div>
@@ -52,28 +52,28 @@
                     <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
                         @if($tab)
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailRates" role="tab">
+                            <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Rates 
+                                Fail Surcharge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodRates" role="tab">
+                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Rates
+                                Good Surcharge
                             </a>
                         </li>
                         @else
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link " data-toggle="tab" href="#FailRates" role="tab">
+                            <a class="nav-link m-tabs__link " data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Rates 
+                                Fail Surcharge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#GoodRates" role="tab">
+                            <a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Rates
+                                Good Surcharge
                             </a>
                         </li>
                         @endif
@@ -83,19 +83,19 @@
 
             <div class="tab-content">
                 @if($tab)
-                <div class="tab-pane active" id="FailRates" role="tabpanel">
+                <div class="tab-pane active" id="FailSurcharge" role="tabpanel">
                     @else
-                    <div class="tab-pane " id="FailRates" role="tabpanel">
+                    <div class="tab-pane " id="FailSurcharge" role="tabpanel">
                         @endif
                         <br>
                         <div class="m-portlet__head">
                             <label >
                                 <i class="fa fa-dot-circle-o" style="color:red;"> </i>
                                 <strong >
-                                    Rates Failed: 
+                                    Failed Surcharges: 
                                 </strong>
-                                <strong id="strfail">{{$countfailrates}}</strong>
-                                <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
+                                <strong id="strfail">{{$countfailsurcharge}}</strong>
+                                <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
                             </label>
                             <br>
 
@@ -107,14 +107,15 @@
                             <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                                 <thead >
                                     <tr>
-                                        <th>origin</th>
-                                        <th>destiny</th>
-                                        <th>carrier</th>
-                                        <th>20</th>
-                                        <th>40</th>
-                                        <th>40'hc</th>
-                                        <th>currency</th>
-                                        <th>option</th>
+                                        <th> Surcharge </th>
+                                        <th> Origin </th>
+                                        <th> Destiny </th>
+                                        <th> Type Destiny </th>
+                                        <th> Type Calculation </th>
+                                        <th> Ammount </th>
+                                        <th> Currency </th>
+                                        <th> Carrier </th>
+                                        <th> Options </th>
                                     </tr>
                                 </thead>
 
@@ -131,21 +132,21 @@
 
                     <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
                     @if($tab)
-                    <div class="tab-pane " id="GoodRates" role="tabpanel">
+                    <div class="tab-pane " id="GoodSurcharge" role="tabpanel">
                         @else
-                        <div class="tab-pane active" id="GoodRates" role="tabpanel">
+                        <div class="tab-pane active" id="GoodSurcharge" role="tabpanel">
                             @endif
                             <br>
                             <div class="m-portlet__head">
                                 <label>
                                     <i class="fa fa-dot-circle-o" style="color:green;"> </i>
                                     <strong id="">
-                                        Good Rates: 
+                                        Good Surcharges: 
                                     </strong>
                                     <strong id="strgood">
-                                        {{$countrates}}
+                                        {{$countgoodsurcharge}}
                                     </strong>
-                                    <input type="hidden" value="{{$countrates}}" id="strgoodinput" />
+                                    <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinput" />
                                 </label>
                             </div>
 
@@ -155,14 +156,15 @@
                                 <table class="table m-table m-table--head-separator-primary"  id="myatest2" >
                                     <thead >
                                         <tr>
-                                            <th>origin</th>
-                                            <th>destiny</th>
-                                            <th>carrier</th>
-                                            <th>20</th>
-                                            <th>40</th>
-                                            <th>40'hc</th>
-                                            <th>currency</th>
-                                            <th>option</th>
+                                            <th> Surcharge </th>
+                                            <th> Origin </th>
+                                            <th> Destiny </th>
+                                            <th> Type Destiny </th>
+                                            <th> Type Calculation </th>
+                                            <th> Ammount </th>
+                                            <th> Currency </th>
+                                            <th> Carrier </th>
+                                            <th> Options </th>
                                         </tr>
                                     </thead>
 
@@ -184,12 +186,12 @@
 
         <!--  begin modal editar rate -->
 
-        <div class="modal fade bd-example-modal-lg" id="modaleditRate"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="modaleditSurcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Edit Rates
+                            Edit Surcharge
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -219,15 +221,16 @@
                 $('#myatest').DataTable({
                     processing: true,
                     //serverSide: true,
-                    ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,1]) !!}',
+                    ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
                     columns: [
+                        { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
                         { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierLb', name: 'carrierLb' },
-                        { data: 'twuenty', name: 'twuenty' },
-                        { data: 'forty', name: "forty" },
-                        { data: 'fortyhc', name: "fortyhc" },
-                        { data: 'currency_id', name: 'currency_id' },
+                        { data: 'carrierlb', name: 'carrierlb' },
+                        { data: 'typedestinylb', name: "typedestinylb" },
+                        { data: 'ammount', name: "ammount" },
+                        { data: 'calculationtypelb', name: 'calculationtypelb' },
+                        { data: 'currencylb', name: 'currencylb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -244,15 +247,16 @@
                 $('#myatest2').DataTable({
                     processing: true,
                     //serverSide: true,
-                    ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,2]) !!}',
+                    ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,2]) !!}',
                     columns: [
+                        { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
                         { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierLb', name: 'carrierLb' },
-                        { data: 'twuenty', name: 'twuenty' },
-                        { data: 'forty', name: "forty" },
-                        { data: 'fortyhc', name: "fortyhc" },
-                        { data: 'currency_id', name: 'currency_id' },
+                        { data: 'carrierlb', name: 'carrierlb' },
+                        { data: 'typedestinylb', name: "typedestinylb" },
+                        { data: 'ammount', name: "ammount" },
+                        { data: 'calculationtypelb', name: 'calculationtypelb' },
+                        { data: 'currencylb', name: 'currencylb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -264,31 +268,31 @@
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true
-                });
+                }); 
             });
-            
-            
-            
 
-            function showModalsavetorate(id,operation){
+
+
+
+            function showModalsavetosurcharge(id,operation){
 
                 if(operation == 1){
                     var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
-                        $('#modaleditRate').modal();
+                        $('#modaleditSurcharge').modal();
                     });
                 }else if(operation == 2){
                     var url = '{{ route("Edit.Rates.Good.For.Contracts", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
-                        $('#modaleditRate').modal();
+                        $('#modaleditSurcharge').modal();
                     });
                 }
             }
 
-            $(document).on('click','#delete-FailRate',function(){
-                var id = $(this).attr('data-id-failrate');
+            $(document).on('click','#delete-Fail-Surcharge',function(){
+                var id = $(this).attr('data-id-failSurcharge');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
@@ -334,8 +338,8 @@
                 });
             });
 
-            $(document).on('click','#delete-Rate',function(){
-                var id = $(this).attr('data-id-rate');
+            $(document).on('click','#delete-Surcharge',function(){
+                var id = $(this).attr('data-id-Surcharge');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
