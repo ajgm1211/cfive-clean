@@ -223,7 +223,7 @@ font-family: sans-serif !important;
                 </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>Hi {{$user['name']}}.</p>
+                        
                         <p>Before using cargofive you need to confirm your email address. Please click on the button below.</p>
                     </td>
                 </tr>
@@ -233,7 +233,7 @@ font-family: sans-serif !important;
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
                             <tr>
                                 <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
-                                    <a href="{{url('verify', $user->verifyUser->token)}}" style="background: #001728; border: 15px solid #001728; font-family: sans-serif; font-size: 13px; line-height: 110%; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                    <a href="" style="background: #001728; border: 15px solid #001728; font-family: sans-serif; font-size: 13px; line-height: 110%; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
                                         &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#fff;">Confirm Email</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     </a>
                                 </td>
@@ -245,7 +245,7 @@ font-family: sans-serif !important;
                 <!-- 1 Column Text + Button : END -->
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>This message was sent to <b>{{$user['email']}}</b>. If you do not want to receive more emails, please tell us.</p>
+                        <p>This message was sent to. If you do not want to receive more emails, please tell us.</p>
                         <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
                         <h4 style="text-align: center;">info@cargofive.com </h4>
                     </td>

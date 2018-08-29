@@ -406,12 +406,20 @@
                                                                             <br>
                                                                             <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                         </div>
-                                                                    </div>                                                            
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <b>Total: </b>
+                                                                            <span id="total_quantity_pkg">{{$quote->packages->sum('quantity')}} un</span>
+                                                                            <span id="total_volume_pkg">{{$quote->packages->sum('volume')}} m<sup>3</sup></span>
+                                                                            <span id="total_weight_pkg">{{$quote->packages->sum('weight')*$quote->packages->sum('quantity')}} kg</span>
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <br>
                                                                             <div id="saveActions" class="form-group">
-                                                                                <input type="hidden" name="save_action" value="save_and_back">
                                                                                 <div class="btn-group">
                                                                                     <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
                                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
