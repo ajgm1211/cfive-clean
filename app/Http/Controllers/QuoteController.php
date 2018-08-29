@@ -43,6 +43,7 @@ use App\EmailTemplate;
 use App\PackageLoad;
 use App\Airline;
 use App\Mail\SendQuotePdf;
+use App\Notifications\N_general;
 class QuoteController extends Controller
 {
 
@@ -409,7 +410,7 @@ class QuoteController extends Controller
 
     // Fin condiciones del cero
 
-  
+
 
     $formulario = $request;
     $array20 = array('2','4','5');
@@ -2352,6 +2353,15 @@ class QuoteController extends Controller
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('display_name','id');
     $countries = Country::all()->pluck('name','id');
+    // Notificaciones
+    $userLogin  = auth()->user();
+    $idCompany = $userLogin->company_user_id;
+    $users = User::where('company_user_id','=',$idCompany)->where('type','company')->orWhere('id','=',$userLogin->id)->get();
+    $message = ' changed the status of the quote number :  '.$quote->id. ' to  '.$quote->status->name;
+    foreach ($users as $user) {
+      $user->notify(new N_general($userLogin,$message));
+    }
+    // fin notificaciones
     if($request->ajax()){
       return response()->json(['message' => 'Ok']);
     }else{

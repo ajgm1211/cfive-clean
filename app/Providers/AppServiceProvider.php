@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Schema;
 
 use App\Observers\ContractObserver;
 use App\Contract;
+use App\Observers\QuoteObserver;
+use App\Quote;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
   {
     Schema::defaultStringLength(191);
     Contract::observe(ContractObserver::class);
+    Quote::observe(QuoteObserver::class);
 
   }
 
