@@ -951,6 +951,9 @@ $( document ).ready(function() {
           $.each(data, function(key, value) {
             $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
+          // CLEARING PRICE SELECT
+          $("select[name='price_id']").val('');
+          $('#select2-price_id-n3-container').text('Please an option');
         }
       });
     }else{
@@ -984,6 +987,9 @@ $( document ).ready(function() {
           $.each(data, function(key, value) {
             $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
+          // CLEARING PRICE SELECT
+          $("select[name='price_id']").val('');
+          $('#select2-price_id-n3-container').text('Please an option');
         }
       });
     }else{
