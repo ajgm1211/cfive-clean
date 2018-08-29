@@ -15,8 +15,7 @@
             <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
         </div>
         <div class="col-md-2 col-xs-4" >
-            <button id="duplicate-quote" class="btn btn-primary btn-block">Duplicate</button>
-
+            <a href="{{route('quotes.duplicate',$quote->id)}}" class="btn btn-primary btn-block">Duplicate</a>
         </div>
         <div class="col-md-2 col-xs-4" >
             <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-primary btn-block">Send</button>

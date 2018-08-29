@@ -345,8 +345,13 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
+                                                                             <input type="hidden" class="quantity_input" id="volume_input" value="" name="total_quantity_pkg[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="" name="volume[]"/>
+                                                                            <input type="hidden" class="weight_input" id="volume_input" value="" name="total_weight_pkg[]"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <br>
                                                                             <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>
                                                                     @endif
@@ -392,9 +397,14 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                             <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
+                                                                            <input type="hidden" class="quantity_input" id="volume_input" value="" name="total_quantity_pkg[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="" name="volume[]"/>
+                                                                            <input type="hidden" class="weight_input" id="volume_input" value="" name="total_weight_pkg[]"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <br>
+                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                         </div>
                                                                     </div>                                                            
                                                                     <div class="row">
@@ -436,7 +446,7 @@
                                                                     <label>Delivery type</label>
                                                                     {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
                                                                 </div>
-                                                                <div class="col-md-5" id="delivery_type_air_label" {{$quote->delivery_type<4 ? 'style=display:none;':''}}>
+                                                                <div class="col-md-5" id="delivery_type_air_label" {{$quote->delivery_type<5 ? 'style=display:none;':''}}>
                                                                     <label>Delivery type</label>
                                                                     {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
                                                                 </div>
@@ -454,14 +464,18 @@
                                                             </div>
                                                             <br>
                                                             <div class="row">
-                                                                <div class="col-md-4" id="origin_harbor_label" {{$quote->origin_harbor_id=='' ? 'style=display:none;':''}}>
+                                                                @if($quote->type!=3)
+                                                                <div class="col-md-4" id="origin_harbor_label">
                                                                     <label>Origin port</label>
                                                                     {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor']) }}
                                                                 </div>
-                                                                <div class="col-md-4" id="origin_airport_label" {{$quote->origin_airport_id=='' ? 'style=display:none;':''}}>
+                                                                @endif
+                                                                @if($quote->type==3)
+                                                                <div class="col-md-4" id="origin_airport_label">
                                                                     <label>Origin airport</label>
                                                                     {{ Form::select('origin_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'origin_airport']) }}
                                                                 </div>
+                                                                @endif
                                                                 <div class="col-md-8 {{$quote->origin_address != '' ? '':'hide'}}" id="origin_address_label">
                                                                     <label>Origin address</label>
                                                                     {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
@@ -469,14 +483,18 @@
                                                             </div>
                                                             <br>
                                                             <div class="row">
-                                                                <div class="col-md-4" id="destination_harbor_label" {{$quote->destination_harbor_id=='' ? 'style=display:none;':''}}>
+                                                                @if($quote->type!=3)
+                                                                <div class="col-md-4" id="destination_harbor_label">
                                                                     <label>Destination port</label>
                                                                     {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor']) }}
                                                                 </div>
-                                                                <div class="col-md-4" id="destination_airport_label" {{$quote->destination_airport_id=='' ? 'style=display:none;':''}}>
+                                                                @endif
+                                                                @if($quote->type==3)
+                                                                <div class="col-md-4" id="destination_airport_label">
                                                                     <label>Destination airport</label>
                                                                     {{ Form::select('destination_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'destination_airport']) }}
                                                                 </div>
+                                                                @endif
                                                                 <div class="col-md-8 {{$quote->destination_address != '' ? '':'hide'}}" id="destination_address_label">
                                                                     <label>Destination address</label>
                                                                     {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
