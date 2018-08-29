@@ -99,12 +99,13 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
 
-        // ---- developer
+    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+    Route::get('FailedRatesForContractsDeveloper/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
     Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
     Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
     Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
     Route::get('UpdateRatesFailForContracts/{id}','ContractsController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
-    
+
     Route::get('DestroyRatesFailForContracts/{id}','ContractsController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
     Route::get('DestroyRatesGForContracts/{id}','ContractsController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
 
@@ -114,6 +115,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
     Route::get('DestroySurchargeFailCorrectForContracts','ContractsController@DestroySurchargeFailCorrect')->name('Destroy.Surcharge.FailCorrect.For.Contracts');
     Route::get('UpdateSurchargeForContracts','ContractsController@UpdateSurchargeCorrect')->name('Update.Surcharge.For.Contractss');
+
+    //----- developer
+    Route::get('FailSurchargeFCD/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
+    Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
 
     //Contract FCL Importation
 
@@ -126,15 +131,13 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     //New Request Importation
     Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
-    
+
     Route::resource('RequestImportation','NewContractRequestsController');
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
-    
+
     //Developer Datatables
-    
-     Route::get('FailedRatesForContractsDeveloper/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
-    
-    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+
+
 
     // DATATABLES
 
