@@ -63,8 +63,6 @@ class UsersController extends Controller
       $user->assignRole('subuser');
     }
 
-
-
     VerifyUser::create([
       'user_id' => $user->id,
       'token' => str_random(40)

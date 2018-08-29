@@ -1440,6 +1440,8 @@ class QuoteController extends Controller
     }
 
     // FIN COTIZACION AUTOMATICA
+
+    //Crear cotización manual
     public function create()
     {
         $company_user='';
@@ -1462,8 +1464,14 @@ class QuoteController extends Controller
         if($company_user_id){
             $company_user=CompanyUser::find($company_user_id);
             $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-            $companies=Company::where('company_user_id',$company_user->id)->pluck('business_name','id');
             $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
+            if(\Auth::user()->hasRole('subuser')){
+                $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+                    $q->where('user_id',\Auth::user()->id);
+                })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+            }else{
+                $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+            }
         }
         if($company_user){
             $currencies = Currency::pluck('alphacode','id');
@@ -1704,7 +1712,7 @@ class QuoteController extends Controller
         //return redirect()->route('quotes.index');
         return redirect()->action('QuoteController@show',$quote->id);
     }
-    
+
     public function storeWithEmail(Request $request)
     {
         $input = Input::all();
@@ -2329,6 +2337,9 @@ class QuoteController extends Controller
         if($request->ajax()){
             return response()->json(['message' => 'Ok']);
         }else{
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Quote duplicated successfully!');
             return redirect()->action('QuoteController@show',$quote_duplicate->id);
         }
     }
