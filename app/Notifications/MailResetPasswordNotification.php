@@ -39,16 +39,13 @@ class MailResetPasswordNotification extends Notification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail( $notifiable ) {
-        $link = url( "/password/reset/?token=" . $this->token );
 
         return ( new MailMessage )
-            ->view('emails.reset_password')
+            ->view('emails.reset_password', ['token' => $this->token,'email'=>$notifiable->email,'name'=>$notifiable->name,'lastname'=>$notifiable->lastname])
             ->from('info@example.com')
-            ->subject( 'Reset your password' )
-            ->line( "Hey, We've successfully changed the text " )
-            ->action( 'Reset Password', $link )
-            ->line( 'Thank you!' );
+            ->subject( 'Reset your password' );
     }
+    
     /**
      * Get the array representation of the notification.
      *

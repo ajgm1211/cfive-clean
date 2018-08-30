@@ -522,7 +522,7 @@ $(document).on('click', '#add_load_lcl_air', function (e) {
 $(document).on('click', '.remove_lcl_air_load', function (e) {
     var $row = $(this).closest('.template').remove();
     $row.remove();
-    
+
     $('.quantity').change();
     $('.height').change();
     $('.width').change();
@@ -791,7 +791,7 @@ $(document).on('click', '#create-quote', function (e) {
     });
 
     var q2 = new Array();
-    
+
     for (i = 0; i < quantity.length; i++) {
         for (i = 0; i < height.length; i++) {
             for (i = 0; i < width.length; i++) {
@@ -1871,9 +1871,18 @@ $(document).on('click', '.removesche', function () {
 });
 
 $(document).on('click', '#filter_data', function () {
-
-    alert('here');
-
+    
+    $.ajax({
+        type: 'POST',
+        url: '/dashboard/filter/',
+        data: {
+            'user': $("#user").val(),
+            'pick_up_date': $("#m_daterangepicker_1").val(),
+        },
+        success: function(data) {
+            alert(data);
+        }
+    });
 });
 
 /** FUNCTIONS **/

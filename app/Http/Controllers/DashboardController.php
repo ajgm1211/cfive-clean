@@ -21,48 +21,56 @@ class DashboardController extends Controller
         $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
-        $allUsers = User::All();
-        $users = $allUsers->where('type', 'subuser')->pluck('name', 'id');
+        
+        $users = User::where('type', 'subuser')->pluck('name', 'id');
         $quotes = Quote::where('company_id', Auth::User()->company_user_id)->get();
+        
         $total = 0;
         $totalSent = 0;
-        $totalWin = 0;
+        $totalNegotiated = 0;
+        $totalWon = 0;
         $totalLost = 0;
+        
         foreach ($quotes as $q){
             if($q->status_quote_id == 2){
                 $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
-            if($q->status_quote_id == 5){
-                $totalWin += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            if($q->status_quote_id == 3){
+                $totalNegotiated += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
             if($q->status_quote_id == 4){
                 $totalLost += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
-
+            if($q->status_quote_id == 5){
+                $totalWon += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            }
             $total += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
-
         }
+        
         $totalQuotes = $quotes->count();
         $sent = $quotes->where('status_quote_id', 2)->count();
-        $acepted = $quotes->where('status_quote_id', 5)->count();
+        $negotiated = $quotes->where('status_quote_id', 3)->count();
         $lost = $quotes->where('status_quote_id', 4)->count();
+        $won = $quotes->where('status_quote_id', 5)->count();
         if($totalQuotes == 0){ $totalQuotes = 1; }
         if($total == 0){ $total = 1; }
 
         return view('dashboard.index',
-            compact(
-                'users',
-                'sent',
-                    'acepted',
-                    'lost',
-                    'totalQuotes',
-                    'totalSent',
-                    'totalWin',
-                    'totalLost',
-                    'total',
-                    'currency'
-            )
-        );
+                    compact(
+                        'users',
+                        'sent',
+                        'negotiated',
+                        'won',
+                        'lost',
+                        'totalQuotes',
+                        'totalSent',
+                        'totalNegotiated',
+                        'totalWon',
+                        'totalLost',
+                        'total',
+                        'currency'
+                    )
+                   );
     }
 
     /**
@@ -87,53 +95,66 @@ class DashboardController extends Controller
         $dates[0] = date("Y-m-d", strtotime($dates[0]));
         $dates[1] = date("Y-m-d", strtotime($dates[1]));
 
+        $pick_up_dates = collect(['start_date'=>$dates[0], 'end_date'=>$dates[1]]);
         $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
 
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
-        
+
+        $user = User::find($request->user);
+
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-        
+
         $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->where('owner', $request->user)->get();
 
         $totalQuotes = $quotes->count();
+
         if($totalQuotes == 0){ $totalQuotes = 1; }
+
         $total = 0;
         $totalSent = 0;
-        $totalWin = 0;
+        $totalNegotiated = 0;
+        $totalWon = 0;
         $totalLost = 0;
+
         foreach ($quotes as $q){
             if($q->status_quote_id == 2){
                 $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
-            if($q->status_quote_id == 5){
-                $totalWin += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            if($q->status_quote_id == 3){
+                $totalNegotiated += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
             if($q->status_quote_id == 4){
                 $totalLost += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
-
+            if($q->status_quote_id == 5){
+                $totalWon += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            }
             $total += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
-
         }
+
         if($total == 0){ $total = 1; }
+
         $sent = $quotes->where('status_quote_id', 2)->count();
-        $acepted = $quotes->where('status_quote_id', 5)->count();
+        $negotiated = $quotes->where('status_quote_id', 3)->count();
         $lost = $quotes->where('status_quote_id', 4)->count();
+        $won = $quotes->where('status_quote_id', 5)->count();
 
         return \View::make('dashboard.index',
-            compact('users',
-                'sent',
-                    'acepted',
-                    'lost',
-                    'totalQuotes',
-                    'totalSent',
-                    'totalWin',
-                    'totalLost',
-                    'total',
-                    'currency'
-            )
-        );
+                           compact('users','user','pick_up_dates',
+                                   'sent',
+                                   'negotiated',
+                                   'won',
+                                   'lost',
+                                   'totalQuotes',
+                                   'totalSent',
+                                   'totalNegotiated',
+                                   'totalWin',
+                                   'totalLost',
+                                   'total',
+                                   'currency'
+                                  )
+                          );
     }
 
     /**

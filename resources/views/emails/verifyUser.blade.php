@@ -244,7 +244,7 @@ font-family: sans-serif !important;
                 </tr>
                 <!-- 1 Column Text + Button : END -->
                 <tr>
-                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: left;">
+                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: center;">
                         <p>This message was sent to <b>{{$user['email']}}</b>. If you do not want to receive more emails, please tell us.</p>
                         <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
                         <h4 style="text-align: center;">info@cargofive.com </h4>
