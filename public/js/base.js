@@ -1870,6 +1870,11 @@ $(document).on('click', '.removesche', function () {
     $("#schedule").val('');
 });
 
+$(document).on('click', '#filter_data', function () {
+
+    alert('here');
+
+});
 
 /** FUNCTIONS **/
 
