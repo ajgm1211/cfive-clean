@@ -2,6 +2,10 @@
 <html lang="en" >
 @include('includes.head')
 <body class="m-page--fluid"  >
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MT7GKLK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 
     @include('includes.header')
