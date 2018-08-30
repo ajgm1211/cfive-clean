@@ -449,7 +449,8 @@ class QuoteController extends Controller
           $totalT += $markup ;
           $arraymarkupT = array("markup" => $markup , "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
-          $markup =$freighAmmount;
+    
+          $markup =trim($freighAmmount);
           $markup = number_format($markup, 2, '.', '');
           $totalT += $markup;
           $arraymarkupT = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
@@ -473,7 +474,7 @@ class QuoteController extends Controller
           $totalF += $markup ;
           $arraymarkupF = array("markup" => $markup ,  "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
-          $markup =$freighAmmount;
+          $markup =trim($freighAmmount);
           $markup = number_format($markup, 2, '.', '');
           $totalF += $markup;
           $arraymarkupF = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
@@ -497,7 +498,7 @@ class QuoteController extends Controller
           $totalFHC += $markup ;
           $arraymarkupFH = array("markup" => $markup  , "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
         }else{
-          $markup =$freighAmmount;
+          $markup =trim($freighAmmount);
           $markup = number_format($markup, 2, '.', '');
           $totalFHC += $markup;
           $arraymarkupFH = array("markup" => $markup , "typemarkup" => $typeCurrency) ;
