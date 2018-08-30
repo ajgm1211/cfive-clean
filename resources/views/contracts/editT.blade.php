@@ -158,12 +158,9 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                                     <i class="fa flaticon-tool-1"></i>
                                 </button>
                             </a>
-                            <a href="{{route('Failed.Subcharge.For.Contracts',$id)}}" class="btn btn-info">
-                                Failed Surcharge
-                                <i class="fa flaticon-tool-1"></i>
-                            </a>
+       
                             <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
-                                Failed Surcharge Developer
+                                Failed Surcharge
                                 <i class="fa flaticon-tool-1"></i>
                             </a>
                             <br><br><br>

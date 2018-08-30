@@ -226,11 +226,11 @@
                         { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
                         { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierlb', name: 'carrierlb' },
                         { data: 'typedestinylb', name: "typedestinylb" },
-                        { data: 'ammount', name: "ammount" },
                         { data: 'calculationtypelb', name: 'calculationtypelb' },
+                        { data: 'ammount', name: "ammount" },
                         { data: 'currencylb', name: 'currencylb' },
+                        { data: 'carrierlb', name: 'carrierlb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -252,11 +252,11 @@
                         { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
                         { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierlb', name: 'carrierlb' },
                         { data: 'typedestinylb', name: "typedestinylb" },
-                        { data: 'ammount', name: "ammount" },
                         { data: 'calculationtypelb', name: 'calculationtypelb' },
+                        { data: 'ammount', name: "ammount" },
                         { data: 'currencylb', name: 'currencylb' },
+                        { data: 'carrierlb', name: 'carrierlb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -277,13 +277,13 @@
             function showModalsavetosurcharge(id,operation){
 
                 if(operation == 1){
-                    var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
+                    var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditSurcharge').modal();
                     });
                 }else if(operation == 2){
-                    var url = '{{ route("Edit.Rates.Good.For.Contracts", ":id") }}';
+                    var url = '{{ route("Edit.Surchargers.Good.For.Contracts", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditSurcharge').modal();
@@ -305,7 +305,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.RatesF.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.SurchargersF.For.Contracts",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -315,7 +315,7 @@
                                 if(data == 1){
                                     swal(
                                         'Deleted!',
-                                        'Your rate has been deleted.',
+                                        'Your Surcharge has been deleted.',
                                         'success'
                                     )
                                     $(elemento).closest('tr').remove();
@@ -324,7 +324,7 @@
                                     $('#strfail').text(a);
                                     $('#strfailinput').attr('value',a);
                                 }else if(data == 2){
-                                    swal("Error!", "an internal error occurred!", "error");
+                                    swal("Error!", "An internal error occurred!", "error");
                                 }
                             }
                         });
@@ -352,7 +352,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.RatesG.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.SurchargersG.For.Contracts",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -362,7 +362,7 @@
                                 if(data == 1){
                                     swal(
                                         'Deleted!',
-                                        'Your rate has been deleted.',
+                                        'Your Surcharge has been deleted.',
                                         'success'
                                     )
                                     $(elemento).closest('tr').remove();
