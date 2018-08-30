@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "daa12dd15e548cb59d04581a25494c26",
-    "content-hash": "3c099ff5976c3ad70bfa2661dec55fae",
+    "hash": "19033155ad7c542133c694ea706280b2",
+    "content-hash": "e250bcae98e1b1528d96201cb3e42408",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -2935,6 +2935,64 @@
                 "stylesheet"
             ],
             "time": "2016-07-19 19:14:21"
+        },
+        {
+            "name": "spatie/laravel-googletagmanager",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-googletagmanager.git",
+                "reference": "a1375b23e7bf0535aed19b446a27c93b2e098bb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-googletagmanager/zipball/a1375b23e7bf0535aed19b446a27c93b2e098bb2",
+                "reference": "a1375b23e7bf0535aed19b446a27c93b2e098bb2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Spatie\\GoogleTagManager\\GoogleTagManagerServiceProvider"
+                    ],
+                    "aliases": {
+                        "GoogleTagManager": "Spatie\\GoogleTagManager\\GoogleTagManagerFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\GoogleTagManager\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Google Tag Manager integration for Laravel",
+            "homepage": "https://github.com/spatie/laravel-googletagmanager",
+            "keywords": [
+                "Google Tag Manager",
+                "laravel",
+                "laravel-googletagmanager",
+                "spatie"
+            ],
+            "time": "2018-07-26 04:38:56"
         },
         {
             "name": "spatie/laravel-permission",
