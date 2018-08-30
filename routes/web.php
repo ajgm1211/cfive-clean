@@ -219,5 +219,11 @@ Route::middleware(['auth'])->prefix('saleterms')->group(function () {
 
 Route::resource('saleterms', 'SaleTermController')->middleware('auth');
 
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::post('filter', 'DashboardController@filter')->name('dashboard.filter');
+});
+
+Route::resource('dashboard', 'DashboardController')->middleware('auth');
+
 Auth::routes();
 

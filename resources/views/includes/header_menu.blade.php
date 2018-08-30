@@ -196,6 +196,14 @@ Load Ports
                             </span>
                         </a>
                     </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-graph"></i>
+                            <span class="m-menu__link-text">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>                    
                     @role('administrator')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
@@ -244,8 +252,6 @@ Load Ports
                     </span>
                 </div>
             </a>
-
-
 
             <div class="m-dropdown__wrapper">
                 <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
