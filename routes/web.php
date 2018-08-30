@@ -111,14 +111,16 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     // Surcharge
     Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
-    Route::get('FailedSubchargeForContracts/{id}','ContractsController@FailSubcharges')->name('Failed.Subcharge.For.Contracts');
-    Route::get('CorrectedSurchargeForContracts','ContractsController@SaveCorrectedSurcharge')->name('Corrected.Surcharge.For.Contracts');
-    Route::get('DestroySurchargeFailCorrectForContracts','ContractsController@DestroySurchargeFailCorrect')->name('Destroy.Surcharge.FailCorrect.For.Contracts');
-    Route::get('UpdateSurchargeForContracts','ContractsController@UpdateSurchargeCorrect')->name('Update.Surcharge.For.Contractss');
 
     //----- developer
     Route::get('FailSurchargeFCD/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
+    Route::get('EditSurchargersGoodForContracts/{id}','ContractsController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
+    Route::get('EditSurchargersFailForContracts/{id}','ContractsController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
+    Route::PUT('CreateSurchargersFailForContracts/{id}','ContractsController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
+    Route::get('UpdateSurchargersForContracts/{id}','ContractsController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
+    Route::get('DestroySurchargersFForContracts/{id}','ContractsController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
+    Route::get('DestroySurchargersGForContracts/{id}','ContractsController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
 
     //Contract FCL Importation
 
