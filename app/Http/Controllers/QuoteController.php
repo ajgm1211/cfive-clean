@@ -2228,6 +2228,12 @@ class QuoteController extends Controller
         if($quote->destination_harbor_id){
             $quote_duplicate->destination_harbor_id=$quote->destination_harbor_id;
         }
+        if($quote->origin_airport_id){
+            $quote_duplicate->origin_airport_id=$quote->origin_airport_id;
+        }
+        if($quote->destination_airport_id){
+            $quote_duplicate->destination_airport_id=$quote->destination_airport_id;
+        }
         if($quote->price_id){
             $quote_duplicate->price_id=$quote->price_id;
         }

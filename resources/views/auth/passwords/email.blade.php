@@ -17,7 +17,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <head>
         <meta charset="utf-8" />
         <title>
-            Gencomex | Login Page - 1
+            Cargofive | Request reset password
         </title>
         <meta name="description" content="Latest updates and statistic charts">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,7 +37,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <link href="/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
         <link href="/assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
         <!--end::Base Styles -->
-        <link rel="shortcut icon" href="/assets/demo/default/media/img/logo/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.png" />
     </head>
     <!-- end::Head -->
     <!-- end::Body -->
@@ -74,10 +74,10 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                 <div class="form-group row mb-0">
                                     <div class="col-md-6 offset-md-4">
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary" style="background-color: #031B4E">
                                             {{ __('Send Password Reset Link') }}
                                         </button>
-                                        <a href="javascript:history.back()" class="btn btn-primary">
+                                        <a href="javascript:history.back()" class="btn btn-danger">
                                             Cancel
                                         </a>
                                     </div>
