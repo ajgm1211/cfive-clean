@@ -21,20 +21,7 @@ class TermsAndConditionsController extends Controller
 
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-        $terms = TermAndCondition::All();
-        $data = $terms->where('company_user_id', Auth::user()->company_user_id);
-        
-        $tabla = Harbor::All();
-        $terms_port = TermsPort::All();
-        $aux = '';
-        for($i = 0; $i < sizeof($data); $i++){
-            $var = $terms_port->where('term_id', $data[$i]->id)->pluck('port_id');
-            for($j = 0; $j < sizeof($var); $j++){
-                $data[$i]->user_id = $aux . trim($tabla->where('id', $var[$j])->pluck('name'), '[".."]');
-                $aux = $data[$i]->user_id . ', ';
-            }
-            $aux = '';
-        }
+        $data = TermAndCondition::where('company_user_id', Auth::user()->company_user_id)->get();
 
         return view('terms.list', compact('data'));
     }

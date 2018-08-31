@@ -5,20 +5,17 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
-
-
+use App\Notifications\MailResetPasswordNotification as MailResetPasswordNotification;
 
 class User extends Authenticatable
 {
 
-  use Notifiable;
-  use HasRoles;
+    use Notifiable;
+    use HasRoles;
 
-
-
-  protected $fillable = [
-    'id','name','lastname', 'password', 'email', 'type','company_user_id','position','verified','access'
-  ];
+    protected $fillable = [
+        'id','name','lastname', 'password', 'email', 'type','company_user_id','position','verified','access'
+    ];
 
     protected $hidden = [
         'password', 'remember_token',
@@ -58,4 +55,14 @@ class User extends Authenticatable
         return $this->hasMany('App\NewContractRequest');
     }
 
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MailResetPasswordNotification($token));
+    }
 }

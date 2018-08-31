@@ -5,19 +5,19 @@
         <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
         <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-        <title>Verification Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+        <title>Reset password</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
         <!-- Web Font / @font-face : BEGIN -->
         <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
 
         <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
         <!--[if mso]>
-<style>
-* {
-font-family: sans-serif !important;
-}
-</style>
-<![endif]-->
+        <style>
+        * {
+        font-family: sans-serif !important;
+        }
+        </style>
+        <![endif]-->
 
         <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
         <!--[if !mso]><!-->
@@ -219,18 +219,33 @@ font-family: sans-serif !important;
                 <!-- 1 Column Text + Button : BEGIN -->
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">PDF</h1>
+                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">Reset password</h1>
                 </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>Hi.</p>
-                        <p>You requested that we send you the pdf of the quote.</p>
+                        <p>Hi {{$name}} {{$lastname}}.</p>
+                        <p>You have requested to reset your password. Please click on the button below to complete this action.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728;">
+                        <!-- Button : BEGIN -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
+                            <tr>
+                                <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                                    <a href="{{url('/password/reset/'.$token)}}" style="background: #001728; border: 15px solid #001728; font-family: sans-serif; font-size: 13px; line-height: 110%; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#fff;">Reset password</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- Button : END -->
                     </td>
                 </tr>
                 <!-- 1 Column Text + Button : END -->
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: center;">
-                        <p>If you do not want to receive more emails, please tell us.</p>
+                        <p>This message was sent to <b>{{$email}}</b>. If you do not requested reset your password, please tell us immediately.</p>
                         <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
                         <h4 style="text-align: center;">info@cargofive.com </h4>
                     </td>
