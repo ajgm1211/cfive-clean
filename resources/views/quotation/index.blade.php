@@ -11,7 +11,7 @@
 
 <div class="row">
 
-{{--
+  {{--
   <div class="col-xl-3">
     <!--begin:: Widgets/Authors Profit-->
     <div class="m-portlet m-portlet--bordered-semi m-portlet--full-height ">
@@ -119,7 +119,7 @@
     </div>
     <!--end:: Widgets/Authors Profit--> 
   </div>
---}}
+  --}}
 
   <div class="col-xl-12">
     @if(!$arreglo->isEmpty())
@@ -555,11 +555,11 @@
 
                                   </a>
                                   <hr>
-                                
-                                      <a href="#" class="btn btn-outline-prima m-btn m-btn--pill m-btn--wide btn-sm">
-                                        Cancel
-                                      </a>
-                                   
+
+                                  <a href="#" class="btn btn-outline-prima m-btn m-btn--pill m-btn--wide btn-sm">
+                                    Cancel
+                                  </a>
+
                                 </div>
                               </div>
                             </div>
@@ -578,9 +578,24 @@
                 <i class="la la-warning"></i>
               </div>
               <div class="m-alert__text">
-                <strong>Bu</strong> You successfully read this message.
+                <strong>Sorry</strong> no rates have found 
+
               </div>	
             </div>
+            <a  class="btn btn-sm btn-primary m-btn m-btn--icon" href="{{route('quotes.create')}}">
+              <span style="color: white;">
+                <i class="la la-plus"></i>
+                <span>Manual Quote </span>
+              </span>
+            </a>
+          <a  class="btn btn-sm btn-primary m-btn m-btn--icon" href="{{route('quotes.automatic')}}">
+              <span style="color: white;">  
+                <span>
+                  Automatic Quote
+                </span>
+                <i class="la la-plus"></i>
+              </span>
+            </a>
           </div>
         </div>
       </div>

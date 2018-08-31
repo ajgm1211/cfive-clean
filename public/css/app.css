@@ -78275,11 +78275,6 @@ h3.m-subheader__title {
   background-color: #FF5F48 !important;
 }
 
-.tableData > tbody > tr > th {
-  color: #031B4E !important;
-  background: #f4f3f8;
-}
-
 .tableData > tbody > tr:nth-child(even) > td {
   background-color: #faf9fc;
 }
