@@ -444,7 +444,7 @@ $subtotalDestiny = 0;
                                                                     <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->detail }}"  readonly='true' />
                                                                 </td>
                                                                 <td>
-                                                                    <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->cantidad }}" data-container="body" data-toggle="m-popover" data-placement="bottom" data-content="Im sorry " data-original-title=""  readonly='true'/>
+                                                                    <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="text" value="{{ $freight->cantidad }}" data-container="body" data-toggle="m-popover" data-placement="bottom" data-content="Im sorry " data-original-title=""  readonly='true'/>
                                                                 </td>
                                                                 <td>
                                                                     <div class="input-group">

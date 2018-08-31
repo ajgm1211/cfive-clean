@@ -23,11 +23,11 @@ class CompanyController extends Controller
   {
     $company_user_id=\Auth::user()->company_user_id;
     $user_id = \Auth::user()->id;
-    $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function ($query) use($user_id) {
-      $query->where('user_id',$user_id);
-    })->orwhere('owner',\Auth::user()->id)->with('groupUserCompanies.user','user')->get();
+        $query->where('user_id',$user_id);
+      })->orwhere('owner',\Auth::user()->id)->with('groupUserCompanies.user','user')->get();
 
     }else{
       $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->with('groupUserCompanies.user','user')->get();
@@ -45,8 +45,22 @@ class CompanyController extends Controller
   }
   public function addWithModal()
   {
+    $company_user_id=\Auth::user()->company_user_id;
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-    return view('companies.addwithmodal', compact('prices'));
+    $user_id = \Auth::user()->id;
+    $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',$user_id)->where('type','!=','company')->pluck('name','id');
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function ($query) use($user_id) {
+        $query->where('user_id',$user_id);
+      })->orwhere('owner',\Auth::user()->id)->with('groupUserCompanies.user','user')->get();
+
+    }else{
+      $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->with('groupUserCompanies.user','user')->get();
+    }
+
+
+    return view('companies.addwithmodal', compact('prices','users'));
+
   }
 
   public function show($id)

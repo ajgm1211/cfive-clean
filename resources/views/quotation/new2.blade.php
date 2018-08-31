@@ -26,7 +26,7 @@
     <div class="">
       <div class="row">
         <div class="col-xl-12">
-          {!! Form::open(['route' => 'quotes.listRate','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
+          {!! Form::open(['route' => 'quotes.listRate','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed','onsubmit' => 'setdateinput()']) !!}
           <div class="m-portlet__body">
             <div class="row">
               <div class="m-portlet m-portlet--tabs">
@@ -66,7 +66,7 @@
                                     </span>
                                   </label>
                                 </div>
-                                
+
                               </div>
                               <br>
                               <div class='row'>
@@ -122,7 +122,9 @@
                                 <div class="col-md-3">
                                   <label>Pick up date</label>
                                   <div class="input-group date">
-                                    {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input' ,'required' => 'true','autocomplete'=>'off']) !!}
+                                    {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+
+                                    {!! Form::hidden('date_hidden', null, ['id' => 'date_hidden']) !!}
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="la la-calendar-check-o"></i>
@@ -169,7 +171,7 @@
                                 <div class="row">
                                   <div class="col-md-4 col-sm-4 col-xs-12">
                                     <label>Company</label>
-                                    {{ Form::select('company_id', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
+                                    {{ Form::select('company_id_quote', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }}<br><br>
                                     <a  class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('add',0)">
                                       <span style="color: white;">
                                         <i class="la la-plus"></i>
@@ -210,527 +212,527 @@
                       </div>
                     </div>
                     <!--<div class="tab-pane" id="m_portlet_tab_1_2">
-                      <div class="row">
-                        <div class="col-lg-12">
-                          <div class="form-group m-form__group row">
-                            <div class="col-md-12">
-                              <div class="row">
-                                <div class="col-md-6">
-                                  <div class="m-portlet m-portlet--responsive-tablet-and-mobile">
-                                    <div class="m-portlet__head">
-                                      <div class="m-portlet__head-caption">
-                                        <div class="m-portlet__head-title">
-                                          <h5 class="m-portlet__head-text">
-                                            Origin
-                                          </h5>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="m-portlet__body">
-                                      <span id="origin_input"></span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="m-portlet m-portlet--responsive-tablet-and-mobile">
-                                    <div class="m-portlet__head">
-                                      <div class="m-portlet__head-caption">
-                                        <div class="m-portlet__head-title">
-                                          <h5 class="m-portlet__head-text">
-                                            Destination
-                                          </h5>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="m-portlet__body">
-                                      <span id="destination_input"></span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
-                                <div class="col-md-12">
-                                  <h5>Cargo details</h5>
-                                  <hr>
-                                  <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                  <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
-                                  <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="form-group m-form__group row">
-                            <div class="col-md-12">
-                              <div class="row">
-                                <div class="col-md-3">
-                                  <h5>Origin Amounts</h5>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">Charge</div>
-                                <div class="col-md-2">Detail</div>
-                                <div class="col-md-1">Units</div>
-                                <div class="col-md-3">Price per unit</div>
-                                <div class="col-md-1">Markup</div>
-                                <div class="col-md-1">Total</div>
-                                <div class="col-md-1">Total EUR</div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row hide' id="origin_ammounts">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row'>
-                                <div class="col-md-9"></div>
-                                <div class="col-md-2">
-                                  <div class="form-group">
-                                    <span>
-                                      <h5>
-                                        Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
-                                      </h5>
-                                    </span>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="form-group">
-                                    <span>
-                                      <a class="btn addButtonOrigin" style="vertical-align: middle">
-                                        <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                      </a>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="form-group m-form__group row">
-                            <div class="col-md-12">
-                              <div class="row">
-                                <div class="col-md-3">
-                                  <h5>Freight Amounts</h5>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">Charge</div>
-                                <div class="col-md-2">Detail</div>
-                                <div class="col-md-1">Units</div>
-                                <div class="col-md-3">Price per unit</div>
-                                <div class="col-md-1">Markup</div>
-                                <div class="col-md-1">Total</div>
-                                <div class="col-md-1">Total EUR</div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="freight_ammount_description" name="freight_ammount_description[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row hide' id="freight_ammounts">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="">
-                                        <a class="btn removeButton">
-                                          <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row'>
-                                <div class="col-md-9"></div>
-                                <div class="col-md-2">
-                                  <div class="form-group">
-                                    <span>
-                                      <h5>
-                                        Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
-                                      </h5>
-                                    </span>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="form-group">
-                                    <span>
-                                      <a class="btn addButton" style="vertical-align: middle">
-                                        <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                      </a>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="form-group m-form__group row">
-                            <div class="col-md-12">
-                              <div class="row">
-                                <div class="col-md-3">
-                                  <h5>Destination Amounts</h5>
-                                </div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">Charge</div>
-                                <div class="col-md-2">Detail</div>
-                                <div class="col-md-1">Units</div>
-                                <div class="col-md-3">Price per unit</div>
-                                <div class="col-md-1">Markup</div>
-                                <div class="col-md-1">Total</div>
-                                <div class="col-md-1">Total EUR</div>
-                              </div>
-                              <hr>
-                              <div class="row">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row hide' id="destination_ammounts">
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-2">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-3">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="input-group">
-                                      <input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
-                                      <div class="input-group-btn">
-                                        <div class="btn-group">
-                                          <select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
-                                            <option value="">Currency</option>
-                                            <option value="1">USD</option>
-                                            <option value="2">CLP</option>
-                                            <option value="3">ARS</option>
-                                            <option value="4">EUR</option>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
-                                  </div>
-                                </div>
-                                <div class="col-md-1" >
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="input-group">
-                                        <input type="text" name="destination_total_ammount_2[]"  class="form-control" aria-label="...">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="m-bootstrap-touchspin-brand">
-                                    <div class="form-group">
-                                      <div class="">
-                                        <a class="btn removeButtonDestination">
-                                          <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='row'>
-                                <div class="col-md-9"></div>
-                                <div class="col-md-2">
-                                  <div class="form-group">
-                                    <span>
-                                      <h5>
-                                        Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
-                                      </h5>
-                                    </span>
-                                  </div>
-                                </div>
-                                <div class="col-md-1">
-                                  <div class="form-group">
-                                    <span>
-                                      <a class="btn addButtonDestination" style="vertical-align: middle">
-                                        <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                      </a>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>-->
+<div class="row">
+<div class="col-lg-12">
+<div class="form-group m-form__group row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-6">
+<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
+<div class="m-portlet__head">
+<div class="m-portlet__head-caption">
+<div class="m-portlet__head-title">
+<h5 class="m-portlet__head-text">
+Origin
+</h5>
+</div>
+</div>
+</div>
+<div class="m-portlet__body">
+<span id="origin_input"></span>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="m-portlet m-portlet--responsive-tablet-and-mobile">
+<div class="m-portlet__head">
+<div class="m-portlet__head-caption">
+<div class="m-portlet__head-title">
+<h5 class="m-portlet__head-text">
+Destination
+</h5>
+</div>
+</div>
+</div>
+<div class="m-portlet__body">
+<span id="destination_input"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+<div class="col-md-12">
+<h5>Cargo details</h5>
+<hr>
+<p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+<p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+<p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
+</div>
+</div>
+</div>
+</div>
+<div class="form-group m-form__group row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-3">
+<h5>Origin Amounts</h5>
+</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">Charge</div>
+<div class="col-md-2">Detail</div>
+<div class="col-md-1">Units</div>
+<div class="col-md-3">Price per unit</div>
+<div class="col-md-1">Markup</div>
+<div class="col-md-1">Total</div>
+<div class="col-md-1">Total EUR</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default origin_ammount_currency" name="origin_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='row hide' id="origin_ammounts">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="origin_total_ammount_2[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='row'>
+<div class="col-md-9"></div>
+<div class="col-md-2">
+<div class="form-group">
+<span>
+<h5>
+Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+</h5>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="form-group">
+<span>
+<a class="btn addButtonOrigin" style="vertical-align: middle">
+<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+</a>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="form-group m-form__group row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-3">
+<h5>Freight Amounts</h5>
+</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">Charge</div>
+<div class="col-md-2">Detail</div>
+<div class="col-md-1">Units</div>
+<div class="col-md-3">Price per unit</div>
+<div class="col-md-1">Markup</div>
+<div class="col-md-1">Total</div>
+<div class="col-md-1">Total EUR</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="freight_ammount_description" name="freight_ammount_description[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
+</div>
+</div>
+</div>
+<div class='row hide' id="freight_ammounts">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="freight_ammount_charge" name="freight_ammount_charge[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_units" name="freight_ammount_units[]" class="form-control" min="0" max="99" type="number"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.01" class="form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default freight_ammount_currency" name="freight_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control" min="0" type="number"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="freight_total_ammount[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control" min="0" type="number"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="">
+<a class="btn removeButton">
+<span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='row'>
+<div class="col-md-9"></div>
+<div class="col-md-2">
+<div class="form-group">
+<span>
+<h5>
+Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+</h5>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="form-group">
+<span>
+<a class="btn addButton" style="vertical-align: middle">
+<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+</a>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="form-group m-form__group row">
+<div class="col-md-12">
+<div class="row">
+<div class="col-md-3">
+<h5>Destination Amounts</h5>
+</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">Charge</div>
+<div class="col-md-2">Detail</div>
+<div class="col-md-1">Units</div>
+<div class="col-md-3">Price per unit</div>
+<div class="col-md-1">Markup</div>
+<div class="col-md-1">Total</div>
+<div class="col-md-1">Total EUR</div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="destination_total_ammount_2[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='row hide' id="destination_ammounts">
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input type="text" class="form-control" id="destination_ammount_charge" name="destination_ammount_charge[]"/>
+</div>
+</div>
+<div class="col-md-2">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_detatil" name="destination_ammount_detail[]" class="form-control" type="text"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_units" name="destination_ammount_units[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-3">
+<div class="m-bootstrap-touchspin-brand">
+<div class="input-group">
+<input type="number" id="destination_ammount" name="destination_price_per_unit[]" min="1" step="0.01" class="origin_exp_amount form-control" aria-label="...">
+<div class="input-group-btn">
+<div class="btn-group">
+<select class="btn btn-default destination_ammount_currency" name="destination_ammount_currency[]">
+<option value="">Currency</option>
+<option value="1">USD</option>
+<option value="2">CLP</option>
+<option value="3">ARS</option>
+<option value="4">EUR</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_ammount_markup" name="destination_ammount_markup[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<input id="destination_total_ammount" name="destination_total_ammount[]" class="form-control" type="number" min="0"/>
+</div>
+</div>
+<div class="col-md-1" >
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="input-group">
+<input type="text" name="destination_total_ammount_2[]"  class="form-control" aria-label="...">
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-1">
+<div class="m-bootstrap-touchspin-brand">
+<div class="form-group">
+<div class="">
+<a class="btn removeButtonDestination">
+<span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class='row'>
+<div class="col-md-9"></div>
+<div class="col-md-2">
+<div class="form-group">
+<span>
+<h5>
+Sub-Total:<span id="sub_total_origin">0.00</span>&nbsp;
+</h5>
+</span>
+</div>
+</div>
+<div class="col-md-1">
+<div class="form-group">
+<span>
+<a class="btn addButtonDestination" style="vertical-align: middle">
+<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+</a>
+</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>-->
                   </div>
                 </div>
               </div>
@@ -743,6 +745,8 @@
     </div>
   </div>
 </div>
+
+
 @include('contacts.partials.contactsModal');
 @include('companies.partials.companiesModal');
 
@@ -779,7 +783,25 @@
     });
   }
 </script>
+
 <script>
+  $valor =   $('#date_hidden').val();
+  if($valor != 0){
+    $('#m_datepicker_2').val($valor);
+  }
+  function setdateinput(){
+    var date = $('#m_datepicker_2').val();
+    $('#date_hidden').val(date);
+  }
+
+
+</script>
+
+
+<script>
+
+
+
   function AbrirModal(action,id){
 
     if(action == "add"){

@@ -32,7 +32,22 @@ class N_general extends Notification
   }
 
 
-  public function toArray($notifiable)
+  public function toDatabase($notifiable)
+  {
+    return [
+      'id' => $this->id,
+      'read_at' => null,
+      'id_company' => $this->user->company_user_id,
+      'name_user' => $this->user->name,
+      'message' => $this->message,
+      'data' => [
+        'id_company' => $this->user->company_user_id,
+        'name_user' => $this->user->name,
+        'message' => $this->message,
+      ],
+    ];
+  }
+    public function toArray($notifiable)
   {
     return [
       'id' => $this->id,
