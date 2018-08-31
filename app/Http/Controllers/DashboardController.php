@@ -21,16 +21,21 @@ class DashboardController extends Controller
         $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
-        
-        $users = User::where('type', 'subuser')->pluck('name', 'id');
+
+        if(Auth::user()->type=='admin'){
+            $users = User::pluck('name','id');
+        }else{
+            $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+        }
+
         $quotes = Quote::where('company_id', Auth::User()->company_user_id)->get();
-        
+
         $total = 0;
         $totalSent = 0;
         $totalNegotiated = 0;
         $totalWon = 0;
         $totalLost = 0;
-        
+
         foreach ($quotes as $q){
             if($q->status_quote_id == 2){
                 $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
@@ -46,7 +51,7 @@ class DashboardController extends Controller
             }
             $total += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
         }
-        
+
         $totalQuotes = $quotes->count();
         $sent = $quotes->where('status_quote_id', 2)->count();
         $negotiated = $quotes->where('status_quote_id', 3)->count();
@@ -103,9 +108,17 @@ class DashboardController extends Controller
 
         $user = User::find($request->user);
 
-        $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+        if(Auth::user()->type=='admin'){
+            $users = User::pluck('name','id');
+        }else{
+            $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+        }
 
-        $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->where('owner', $request->user)->get();
+        if($request->user){
+            $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->where('owner', $request->user)->get();
+        }else{
+            $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->get();
+        }
 
         $totalQuotes = $quotes->count();
 
@@ -149,7 +162,7 @@ class DashboardController extends Controller
                                    'totalQuotes',
                                    'totalSent',
                                    'totalNegotiated',
-                                   'totalWin',
+                                   'totalWon',
                                    'totalLost',
                                    'total',
                                    'currency'

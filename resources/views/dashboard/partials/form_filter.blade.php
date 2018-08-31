@@ -3,7 +3,7 @@
         <div class="form-group m-form__group">
             <div class="col-md-12">
                 <label>User</label>
-                {{ Form::select('user', $users, null,['class'=>'custom-select form-control','placeholder'=>'Select an user','required']) }}
+                {{ Form::select('user', $users, null,['class'=>'custom-select form-control','placeholder'=>'Select an user']) }}
             </div>
         </div>
         <div class="form-group m-form__group">
