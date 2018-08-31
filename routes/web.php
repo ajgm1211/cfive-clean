@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-  return redirect('users/home');
+    return redirect('dashboard');
 });
 
 Route::get('/home', function () {
-  return redirect('users/home');
+    return redirect('dashboard');
 });
 
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
@@ -230,6 +230,12 @@ Route::middleware(['auth'])->prefix('saleterms')->group(function () {
 });
 
 Route::resource('saleterms', 'SaleTermController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::get('filter', 'DashboardController@filter')->name('dashboard.filter');
+});
+
+Route::resource('dashboard', 'DashboardController')->middleware('auth');
 
 Auth::routes();
 

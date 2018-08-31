@@ -277,18 +277,16 @@
                                                                             <div class="col-md-2">
                                                                                 <div class="input-group">
                                                                                     <input type="number" id="weight" name="weight[]" min="0" step="0.01" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
-                                                                                    <!--<div class="input-group-btn">
-<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right">
-</ul>
-</div><!-- /btn-group -->
                                                                                 </div><!-- /input-group -->
                                                                             </div>
-                                                                            <div class="col-md-1 boxes">
-                                                                                <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                            <div class="col-md-1">
                                                                                 <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                                 <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
                                                                                 <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <br>
+                                                                                <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -332,19 +330,17 @@
                                                                             <div class="col-md-2">
                                                                                 <div class="input-group">
                                                                                     <input type="number" name="weight[]" min="0" step="0.01" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
-                                                                                    <!--<div class="input-group-btn">
-<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right">
-</ul>
-</div><!-- /btn-group -->
                                                                                 </div><!-- /input-group -->
                                                                             </div>
-                                                                            <div class="col-md-1">
-                                                                                <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                            <div class="col-md-1">                     
                                                                                 <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
                                                                                 <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                                 <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
                                                                                 <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <br>
+                                                                                <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -425,7 +421,7 @@
                                                                 {{ Form::select('origin_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'origin_airport','placeholder'=>'Select an option']) }}
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                                        <div class="col-md-8 hide" id="origin_address_label">
                                                             <label>Origin address</label>
                                                             {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                                         </div>
@@ -442,7 +438,7 @@
                                                                 {{ Form::select('destination_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'destination_airport','placeholder'=>'Select an option']) }}
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                                        <div class="col-md-8 hide" id="destination_address_label">
                                                             <label>Destination address</label>
                                                             {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                                         </div>
@@ -496,10 +492,10 @@
                                                             <label>Client</label>
                                                             {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                         </div>
-                                                        <div class="col-md-4 col-sm-4 col-xs-12">
+                                                        <!--<div class="col-md-4 col-sm-4 col-xs-12">
                                                             <label>Price level</label>
                                                             {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                        </div>
+                                                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>                                                    
@@ -957,19 +953,6 @@
                                                 </div>
                                             </div>                                            
                                             <hr>
-                                            <!--<div class="row">
-<div class="col-lg-4 col-lg-offset-4">
-<button type="submit" class="btn btn-primary">
-Save
-</button>
-@if($email_templates)
-<button type="button" class="btn btn-info" data-toggle="modal" data-target="#SendQuoteModal">
-Save and send
-</button>
-@endif
-</div>
-</div>
-<hr>-->
                                         </div>
                                     </div>
                                 </div>                                
@@ -1071,7 +1054,6 @@ Save and send
 
     function AbrirModal(action){
         if(action == "add"){
-
             var orig_p = $('#origin_harbor').val();
             var dest_p = $('#destination_harbor').val();
             var date_p = $('.pick_up_date').val();
