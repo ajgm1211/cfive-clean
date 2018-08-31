@@ -46,7 +46,6 @@ class UsersController extends Controller
   public function store(Request $request)
   {
 
-
     if($request->type == "subuser"){
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
