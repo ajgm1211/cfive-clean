@@ -31,7 +31,8 @@
                         <p>{{$user->name}}</p>
                         <p><b>{{$user->companyUser->name}}</b></p>
                         <p>{{$user->companyUser->address}}</p>
-                        <p>{{$user->companyUser->phone}}</p>
+                        <p>{{$user->phone}}</p>
+                        <p>{{$user->email}}</p>
                     </span>
 
                 </div>
@@ -42,8 +43,8 @@
                         <p><b>{{$quote->company->business_name}}</b></p>
                         <p>{{$quote->company->address}}</p>
                         <p>{{$quote->contact->phone}}</p>
+                        <p>{{$quote->contact->email}}</p>
                     </span>
-
                 </div>
             </div>
             <div id="" class="clearfix">
@@ -53,10 +54,10 @@
                         <div class="panel-body">
                             <span id="origin_input" style="color: #1D3A6E;">
                                 @if($quote->origin_harbor_id!='')
-                                Port: {{$quote->origin_harbor->name}}
+                                {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                 @endif
                                 @if($quote->origin_airport_id!='')
-                                Airport: {{$quote->origin_airport->name}}
+                                {{$quote->origin_airport->name}}
                                 @endif
                             </span>
                         </div>
@@ -68,10 +69,10 @@
                         <div class="panel-body">
                             <span id="destination_input" style="color: #1D3A6E;">
                                 @if($quote->destination_harbor_id!='')
-                                Port: {{$quote->destination_harbor->name}}
+                                {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                 @endif
                                 @if($quote->destination_airport_id!='')
-                                Airport: {{$quote->destination_airport->name}}
+                                {{$quote->destination_airport->name}}
                                 @endif
                             </span>
                         </div>

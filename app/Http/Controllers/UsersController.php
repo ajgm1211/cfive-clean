@@ -54,7 +54,7 @@ class UsersController extends Controller
     if(\Auth::user()->type=='company' && $request->type == 'company'){
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);   
     }
-
+    
     $user = new User($request->all());
     $user->password = bcrypt($request->password);
     $user->save();

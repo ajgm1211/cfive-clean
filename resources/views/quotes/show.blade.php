@@ -84,15 +84,16 @@
                                         <p>{{$user->name}}</p>
                                         <p><b>{{$user->companyUser->name}}</b></p>
                                         <p>{{$user->companyUser->address}}</p>
-                                        <p>{{$user->companyUser->phone}}</p>
+                                        <p>{{$user->phone}}</p>
+                                        <p><a href="mailto:{{$user->email}}">{{$user->email}}</a></p>
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>To:</b></p>
                                         <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                                         <p><b>{{$quote->company->business_name}}</b></p>
                                         <p>{{$quote->company->address}}</p>
-                                        <p>{{$quote->company->phone}}</p>
-                                        <p><a href="mailto:{{$quote->company->email}}">{{$quote->company->email}}</a></p>
+                                        <p>{{$quote->contact->phone}}</p>
+                                        <p><a href="mailto:{{$quote->contact->email}}">{{$quote->contact->email}}</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -109,10 +110,10 @@
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
                                         @if($quote->origin_harbor_id!='')
-                                        Port: {{$quote->origin_harbor->name}}
+                                        <b>Port:</b> {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                         @endif
                                         @if($quote->origin_airport_id!='')
-                                        Airport: {{$quote->origin_airport->name}}
+                                        <b>Airport:</b> {{$quote->origin_airport->name}}
                                         @endif
                                     </span>
                                 </div>
@@ -124,10 +125,10 @@
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
                                         @if($quote->destination_harbor_id!='')
-                                        Port: {{$quote->destination_harbor->name}}
+                                        <b>Port:</b> {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                         @endif
                                         @if($quote->destination_airport_id!='')
-                                        Airport: {{$quote->destination_airport->name}}
+                                        <b>Airport:</b> {{$quote->destination_airport->name}}
                                         @endif                                        
                                     </span>
                                 </div>

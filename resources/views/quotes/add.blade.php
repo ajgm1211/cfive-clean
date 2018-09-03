@@ -24,6 +24,8 @@
     </div>
     @endif
 
+    @include('contacts.partials.contactsModal')
+    @include('companies.partials.companiesModal')
 
     <div class="row">
         <div class="col-md-10">
@@ -448,7 +450,7 @@
                                                             <br>
                                                             <label>Validity</label>
                                                             <div class="input-group date">
-                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true','autocomplete'=>'off']) !!}
+                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text">
                                                                         <i class="la la-calendar-check-o"></i>
@@ -486,16 +488,28 @@
                                                     <div class="row">
                                                         <div class="col-md-4 col-sm-4 col-xs-12">
                                                             <label>Company</label>
-                                                            {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>true]) }}
+                                                            {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>true]) }}<br><br>
+                                                            <a  class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('addCompany',0)">
+                                                                <span style="color: white;">
+                                                                    <i class="la la-plus"></i>
+                                                                    <span>Add Company</span>
+                                                                </span>
+                                                            </a>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 ol-xs-12">
                                                             <label>Client</label>
-                                                            {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>true]) }}
+                                                            {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>true]) }}<br><br>
+                                                            <a  class="btn btn-sm btn-primary m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
+                                                                <span style="color: white;">
+                                                                    <i class="la la-plus"></i>
+                                                                    <span>Add Contact</span>
+                                                                </span>
+                                                            </a>
                                                         </div>
                                                         <!--<div class="col-md-4 col-sm-4 col-xs-12">
                                                             <label>Price level</label>
                                                             {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                        </div>-->
+                                                            </div>-->
                                                     </div>
                                                 </div>
                                             </div>                                                    
@@ -728,7 +742,7 @@
                                                                                 <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.01" required/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" required/> 
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
                                                                             </td>                      
                                                                             <td>
                                                                                 <div class="form-group">
@@ -1011,8 +1025,7 @@
     </div>
 </div>
 
-
-@include('quotes.partials.schedulesModal');
+@include('quotes.partials.schedulesModal')
 
 
 @endsection
@@ -1079,6 +1092,18 @@
 
                 $('#scheduleModal').modal({show:true});
                 $('#spinner').hide();
+            });
+        }
+        if(action == "addCompany"){
+            var url = '{{ route("companies.addM") }}';
+            $('#modal-body').load(url,function(){
+                $('#companyModal').modal({show:true});
+            });
+        }
+        if(action == "addContact"){
+            var url = '{{ route("contacts.addCM") }}';
+            $('.modal-body').load(url,function(){
+                $('#contactModal').modal({show:true});
             });
         }
     }

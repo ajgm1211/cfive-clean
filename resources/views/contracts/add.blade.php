@@ -16,7 +16,7 @@ $validation_expire = 'Please enter validation date';
         <div class="m-portlet__foot m-portlet__foot--fit">
             <br>
             <div class="m-form__actions m-form__actions">
-                {!! Form::submit('Save', ['class'=> 'btn btn-primary  btn-sm']) !!}
+                {!! Form::submit('Save', ['class'=> 'btn btn-primary btn-sm']) !!}
                 <a class="btn btn-success btn-sm" href="{{url()->previous()}}">
                     Cancel
                 </a>

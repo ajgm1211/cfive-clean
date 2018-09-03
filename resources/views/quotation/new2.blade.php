@@ -258,9 +258,7 @@
       }
     });
   }
-</script>
-
-<script>
+    
   $valor =   $('#date_hidden').val();
   if($valor != 0){
     $('#m_datepicker_2').val($valor);
@@ -269,14 +267,6 @@
     var date = $('#m_datepicker_2').val();
     $('#date_hidden').val(date);
   }
-
-
-</script>
-
-
-<script>
-
-
 
   function AbrirModal(action,id){
 

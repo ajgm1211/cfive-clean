@@ -14,7 +14,7 @@ class User extends Authenticatable
     use HasRoles;
 
     protected $fillable = [
-        'id','name','lastname', 'password', 'email', 'type','company_user_id','position','verified','access'
+        'id','name','lastname', 'password', 'email','phone','type','company_user_id','position','verified','access'
     ];
 
     protected $hidden = [
@@ -40,21 +40,17 @@ class User extends Authenticatable
         return $this->hasMany('App\EmailTemplate');
 
     }
-
     public function verifyUser()
     {
         return $this->hasOne('App\VerifyUser');
     }
-
     public function companyUser()
     {
         return $this->belongsTo('App\CompanyUser');
     }
-
     public function NewContractRequests(){
         return $this->hasMany('App\NewContractRequest');
     }
-
     /**
      * Send the password reset notification.
      *

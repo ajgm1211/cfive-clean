@@ -26,7 +26,7 @@
 </div>
 <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
-        {!! Form::submit('Update', ['class'=> 'btn btn-success']) !!}
+        {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
     </div>
     <br>
 </div>

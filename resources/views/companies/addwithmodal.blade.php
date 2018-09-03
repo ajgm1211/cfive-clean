@@ -18,11 +18,8 @@
 <div class="m-portlet__foot m-portlet__foot--fit">
   <br>
   <div class="m-form__actions m-form__actions">
-    <button id= 'savecompany' class="btn btn-success" type="button" class="close " aria->
+    <button id= 'savecompany' class="btn btn-primary" type="button" class="close " aria->
       <span aria-hidden="true">Save</span>
-    </button>
-    <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">Cancel</span>
     </button>
   </div>
 </div>
