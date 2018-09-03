@@ -139,7 +139,7 @@
                                   <label>Origin port</label>
                                   {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
                                 </div>
-                                <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                <div class="col-md-8 hide" id="origin_address_label">
                                   <label>Origin address</label>
                                   {!! Form::text('origin_address', '', ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                 </div>
@@ -150,7 +150,7 @@
                                   <label>Destination port</label>
                                   {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
                                 </div>
-                                <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                <div class="col-md-8 hide" id="destination_address_label">
                                   <label>Destination address</label>
                                   {!! Form::text('destination_address', '', ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                 </div>

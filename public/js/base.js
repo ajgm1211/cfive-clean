@@ -644,6 +644,7 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
 });
 
 $(document).on('change', '#delivery_type', function (e) {
+
     if($(this).val()==1){
         $("#origin_address_label").addClass('hide');
         $("#destination_address_label").addClass('hide');
@@ -651,6 +652,7 @@ $(document).on('change', '#delivery_type', function (e) {
         $("#destination_address").val('');
     }
     if($(this).val()==2){
+
         $("#origin_address_label").addClass('hide');
         $("#destination_address_label").removeClass('hide');
         $("#origin_address").val('');
