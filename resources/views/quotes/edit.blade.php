@@ -232,8 +232,14 @@
                                                                 </div>
 
                                                                 <div class="tab-pane fade {{$quote->packages->count() > 0 ? 'active show' : ''}}" id="tab_1_2">
+                                                                    @php
+                                                                    $i=0;
+                                                                    @endphp
                                                                     @if($quote->packages->count() > 0)
                                                                     @foreach($quote->packages as $item)
+                                                                    @php
+                                                                    $i++;
+                                                                    @endphp
                                                                     <div class="row template">
                                                                         <div class="col-md-2">
                                                                             <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
@@ -280,8 +286,16 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class=""><span class="quantity"></span> <span class="volume"> {{$item->volume}} m<sup>3</sup></span> <span class="weight"></span></p>
+                                                                            @if($i>1)
+                                                                            <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
+                                                                            @endif
+                                                                            <input type="hidden" class="quantity_input" id="volume_input" value="{{$item->quantity}}" name="total_quantity_pkg[]"/>
                                                                             <input type="hidden" class="volume_input" id="volume_input" value="{{$item->volume}}" name="volume[]"/>
+                                                                            <input type="hidden" class="weight_input" id="volume_input" value="{{$item->weight*$item->quantity}}" name="total_weight_pkg[]"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <br>
+                                                                            <p class=""><span class="quantity">{{$item->quantity}} un</span> <span class="volume"> {{$item->volume}} m<sup>3</sup></span> <span class="weight">{{$item->weight*$item->quantity}} kg</span></p>
                                                                         </div>
                                                                     </div>
                                                                     @endforeach
@@ -331,8 +345,13 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
+                                                                             <input type="hidden" class="quantity_input" id="volume_input" value="" name="total_quantity_pkg[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="" name="volume[]"/>
+                                                                            <input type="hidden" class="weight_input" id="volume_input" value="" name="total_weight_pkg[]"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <br>
                                                                             <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
                                                                         </div>
                                                                     </div>
                                                                     @endif
@@ -378,16 +397,29 @@
                                                                             </div><!-- /input-group -->
                                                                         </div>
                                                                         <div class="col-md-1">
-                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                                                                             <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
-                                                                            <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
+                                                                            <input type="hidden" class="quantity_input" id="volume_input" value="" name="total_quantity_pkg[]"/>
+                                                                            <input type="hidden" class="volume_input" id="volume_input" value="" name="volume[]"/>
+                                                                            <input type="hidden" class="weight_input" id="volume_input" value="" name="total_weight_pkg[]"/>
                                                                         </div>
-                                                                    </div>                                                            
+                                                                        <div class="col-md-4">
+                                                                            <br>
+                                                                            <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <b>Total: </b>
+                                                                            <span id="total_quantity_pkg">{{$quote->packages->sum('quantity')}} un</span>
+                                                                            <span id="total_volume_pkg">{{$quote->packages->sum('volume')}} m<sup>3</sup></span>
+                                                                            <span id="total_weight_pkg">{{$quote->packages->sum('weight')*$quote->packages->sum('quantity')}} kg</span>
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <br>
                                                                             <div id="saveActions" class="form-group">
-                                                                                <input type="hidden" name="save_action" value="save_and_back">
                                                                                 <div class="btn-group">
                                                                                     <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
                                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
@@ -418,9 +450,13 @@
                                                                     <label>Incoterm</label>
                                                                     {{ Form::select('incoterm',$incoterm,$quote->incoterm,['class'=>'m-select2-general form-control']) }}
                                                                 </div>
-                                                                <div class="col-md-5">
+                                                                <div class="col-md-5" id="delivery_type_label" {{$quote->delivery_type>4 ? 'style=display:none;':''}}>
                                                                     <label>Delivery type</label>
                                                                     {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+                                                                </div>
+                                                                <div class="col-md-5" id="delivery_type_air_label" {{$quote->delivery_type<5 ? 'style=display:none;':''}}>
+                                                                    <label>Delivery type</label>
+                                                                    {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <label>Pick up date</label>
@@ -436,22 +472,38 @@
                                                             </div>
                                                             <br>
                                                             <div class="row">
+                                                                @if($quote->type!=3)
                                                                 <div class="col-md-4" id="origin_harbor_label">
                                                                     <label>Origin port</label>
                                                                     {{ Form::select('origin_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor']) }}
                                                                 </div>
-                                                                <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                                                @endif
+                                                                @if($quote->type==3)
+                                                                <div class="col-md-4" id="origin_airport_label">
+                                                                    <label>Origin airport</label>
+                                                                    {{ Form::select('origin_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'origin_airport']) }}
+                                                                </div>
+                                                                @endif
+                                                                <div class="col-md-8 {{$quote->origin_address != '' ? '':'hide'}}" id="origin_address_label">
                                                                     <label>Origin address</label>
-                                                                    {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+                                                                    {!! Form::text('origin_address', null, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                                                 </div>
                                                             </div>
                                                             <br>
                                                             <div class="row">
+                                                                @if($quote->type!=3)
                                                                 <div class="col-md-4" id="destination_harbor_label">
                                                                     <label>Destination port</label>
                                                                     {{ Form::select('destination_harbor_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'destination_harbor']) }}
                                                                 </div>
-                                                                <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                                                @endif
+                                                                @if($quote->type==3)
+                                                                <div class="col-md-4" id="destination_airport_label">
+                                                                    <label>Destination airport</label>
+                                                                    {{ Form::select('destination_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'destination_airport']) }}
+                                                                </div>
+                                                                @endif
+                                                                <div class="col-md-8 {{$quote->destination_address != '' ? '':'hide'}}" id="destination_address_label">
                                                                     <label>Destination address</label>
                                                                     {!! Form::text('destination_address', null, ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                                                 </div>
@@ -506,10 +558,10 @@
                                                                     <label>Client</label>
                                                                     {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                                 </div>
-                                                                <div class="col-md-4 col-sm-4 col-xs-12">
-                                                                    <label>Price level</label>
-                                                                    {{ Form::select('price_id',$prices,$quote->price_id,['class'=>'m-select2-general form-control']) }}
-                                                                </div>
+                                                                <!--<div class="col-md-4 col-sm-4 col-xs-12">
+<label>Price level</label>
+{{ Form::select('price_id',$prices,$quote->price_id,['class'=>'m-select2-general form-control']) }}
+</div>-->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1110,7 +1162,6 @@
                                                                     </tbody>
                                                                     @else
                                                                     <tbody>
-
                                                                         <tr>
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
@@ -1250,5 +1301,27 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script>
+    /*** GOOGLE MAPS API ***/
 
+    var autocomplete;
+
+    function initAutocomplete() {
+        var geocoder = new google.maps.Geocoder();
+        var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+        var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+        //autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == 'OK') {
+                alert(results[0].geometry.location);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
 @stop

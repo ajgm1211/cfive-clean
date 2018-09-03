@@ -42,7 +42,7 @@
                                             @endif
                                         </div>
                                         <div class="m-login__form-action">
-                                            <button type="submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                            <button type="submit" class="btn btn-primary btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
                                                 {{ __('Login')  }}
                                             </button>
                                         </div>
@@ -51,11 +51,8 @@
                                 <div class="m-login__signup">
                                     <div class="m-login__head">
                                         <h3 class="m-login__title">
-                                            Sign Up
-                                        </h3>
-                                        <div class="m-login__desc">
                                             Sign Up in Cargofive
-                                        </div>
+                                        </h3>
                                     </div>
                                     <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
                                         @csrf
@@ -89,10 +86,10 @@
                                             </div>
                                         </div>
                                         <div class="m-login__form-action">
-                                            <button type="submit" id="" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                            <button type="submit" id="" class="btn btn-primary btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
                                                 Sign Up
                                             </button>
-                                            <button id="m_login_signup_cancel" class="btn btn-outline-focus  m-btn m-btn--pill m-btn--custom">
+                                            <button id="m_login_signup_cancel" class="btn btn-danger m-btn m-btn--pill m-btn--custom">
                                                 Cancel
                                             </button>
                                         </div>
