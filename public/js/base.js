@@ -698,7 +698,6 @@ $(document).on('click', '#create-quote', function (e) {
         msg('Sorry, the validity date is empty. Please go back and complete this field');
         return;
     }else{
-        msg('');
         var origin_harbor=$("#origin_harbor").val();
         var destination_harbor=$("#destination_harbor").val();
         var destination_address=$("#destination_address").val();
