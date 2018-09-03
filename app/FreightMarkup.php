@@ -12,4 +12,5 @@ class FreightMarkup extends Model
     {
         return $this->belongsTo('App\Price');
     }
+
 }
