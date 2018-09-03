@@ -53,8 +53,8 @@ return [
 
 
 
-/*        
-        'mysql' => [
+      
+        /*'mysql' => [
 
             'driver' => 'mysql',
             'host' => RDS_HOSTNAME,
@@ -68,8 +68,7 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],
-        */
+        ],*/
    
 
         'mysql' => [

@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('lastname');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
             $table->string('password');
             $table->enum('type',['admin','company','subuser'])->default('company');
             $table->string('name_company')->nullable();

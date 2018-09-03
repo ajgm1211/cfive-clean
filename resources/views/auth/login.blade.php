@@ -57,24 +57,27 @@
                                     <form method="POST" class="m-login__form m-form" action="{{ route('register') }}">
                                         @csrf
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="First Name" name="name">
+                                            <input class="form-control m-input" type="text" placeholder="First Name" name="name" required>
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" autocomplete="off">
+                                            <input class="form-control m-input" type="text" placeholder="Last Name" name="lastname" autocomplete="off" required>
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="text" placeholder="Email" name="email" autocomplete="off">
+                                            <input class="form-control m-input" type="text" placeholder="Email" name="email" autocomplete="off" required>
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input" type="password" placeholder="Password" name="password">
+                                            <input class="form-control m-input" type="text" placeholder="Phone" name="phone" autocomplete="off">
                                         </div>
                                         <div class="form-group m-form__group">
-                                            <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="password_confirmation">
+                                            <input class="form-control m-input" type="password" placeholder="Password" name="password" required>
+                                        </div>
+                                        <div class="form-group m-form__group">
+                                            <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="password_confirmation" required>
                                         </div>
                                         <div class="row form-group m-form__group m-login__form-sub">
                                             <div class="col m--align-left">
                                                 <label class="m-checkbox m-checkbox--focus">
-                                                    <input type="checkbox" name="agree">
+                                                    <input type="checkbox" name="agree" required>
                                                     I acept the
                                                     <a href="https://cargorive.com/terms-and-conditions" class="m-link m-link--focus" >
                                                         Terms and Conditions

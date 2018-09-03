@@ -22,7 +22,7 @@
 <div class="m-portlet__foot m-portlet__foot--fit">
     <br>
     <div class="m-form__actions m-form__actions">
-        <button id= 'savecontact' class="btn btn-success" type="button" class="close " aria->
+        <button id= 'savecontact' class="btn btn-primary" type="button" class="close " aria->
             <span aria-hidden="true">Save</span>
         </button>
     </div>
