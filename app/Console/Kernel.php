@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:updateCurrenciesEur')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 &')->withoutOverlapping();
     }
 
     /**

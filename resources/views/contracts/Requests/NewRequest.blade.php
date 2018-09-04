@@ -66,6 +66,7 @@ new registration
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
+                    <br>
                     <div class="row">
                         <div class="col-lg-12">
 
@@ -96,8 +97,8 @@ new registration
                             </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
-                            <hr>
-                            <div class="form-group m-form__group row">
+                           <!-- <hr> -->
+                            <div class="form-group m-form__group row" style='display:none;'>
 
                                 <div class="col-lg-2">
                                     <label class="col-form-label"><b>TYPE:</b></label>
@@ -141,7 +142,7 @@ new registration
                                 </div>
 
                             </div>
-                            <div class="form-group m-form__group row" hidden="hidden" id="divvaluescurren">
+                            <div class="form-group m-form__group row" hidden="hidden" id="divvaluescurren" style='display:none;'>
                                 <div class="col-2"></div>
                                 <div class="col-3">
                                     <label class="m-option">
@@ -178,8 +179,8 @@ new registration
                                     </label>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="form-group m-form__group row">
+                        <!--    <hr> -->
+                            <div class="form-group m-form__group row"style='display:none;'>
 
                                 <div class="col-lg-2">
                                     <label class="col-form-label"><b>DATA:</b></label>
@@ -251,6 +252,8 @@ new registration
                             <div class="form-group m-form__group row">
 
                             </div>
+                            <br>
+                            <br>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-4">
                                 </div>
@@ -258,10 +261,10 @@ new registration
                                     <input type="file" name="file" required>
                                 </div>
                             </div>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-4 col-lg-offset-4">
+                            <div class="form-group m-form__group ">
+                                <div class="col-lg-12 col-lg-offset-12">
                                     <button type="submit" class="btn btn-primary">
-                                        Load
+                                        Load Request
                                     </button>
                                 </div>
                             </div>
