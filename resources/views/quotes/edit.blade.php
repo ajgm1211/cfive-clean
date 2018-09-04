@@ -575,7 +575,7 @@
                                                     <div style="min-height: 100px;">
                                                         <div style="margin-top: 20px;">
                                                             <div class="pull-left text-left" style="line-height: .5;">
-                                                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto">
                                                             </div>
                                                             <div class="pull-right text-right" style="line-height: .5">
                                                                 <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
