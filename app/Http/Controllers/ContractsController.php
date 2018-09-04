@@ -107,7 +107,7 @@ class ContractsController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
@@ -123,23 +123,23 @@ class ContractsController extends Controller
         $contador = 1;
         foreach($details as $key => $value)
         {
-       
-      
-                $rates = new Rate();
-                $rates->origin_port = $request->input('origin_id.'.$key);
-                $rates->destiny_port = $request->input('destiny_id.'.$key);
-                $rates->carrier_id = $request->input('carrier_id.'.$key);
-                $rates->twuenty = $request->input('twuenty.'.$key);
-                $rates->forty = $request->input('forty.'.$key);
-                $rates->fortyhc = $request->input('fortyhc.'.$key);
-                $rates->currency_id = $request->input('currency_id.'.$key);
-                $rates->contract()->associate($contract);
-           
-                $rates->save();
-          
+
+
+            $rates = new Rate();
+            $rates->origin_port = $request->input('origin_id.'.$key);
+            $rates->destiny_port = $request->input('destiny_id.'.$key);
+            $rates->carrier_id = $request->input('carrier_id.'.$key);
+            $rates->twuenty = $request->input('twuenty.'.$key);
+            $rates->forty = $request->input('forty.'.$key);
+            $rates->fortyhc = $request->input('fortyhc.'.$key);
+            $rates->currency_id = $request->input('currency_id.'.$key);
+            $rates->contract()->associate($contract);
+
+            $rates->save();
+
         }
-       
-    
+
+
         // For Each de los localcharge
 
         foreach($detailscharges as $key2 => $value)
@@ -1206,7 +1206,7 @@ class ContractsController extends Controller
             return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
     }
-    
+
 
     public function LoadViewImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
@@ -1625,7 +1625,7 @@ class ContractsController extends Controller
             $contract = Contract::find($request->Contract_id);
             $contract->status = 'publish';
             $contract->update();
-            return redirect()->route('Failed.Rates.For.Contracts',$requestobj->Contract_id);
+            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj->Contract_id,1]);
 
         } catch(\Illuminate\Database\QueryException $e){
 
