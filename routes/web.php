@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-    return redirect('dashboard');
+  return redirect('dashboard');
 });
 
 Route::get('/home', function () {
-    return redirect('dashboard');
+  return redirect('dashboard');
 });
 
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
@@ -77,78 +77,80 @@ Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
   Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
-  Route::get('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
+  Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
   Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
+  Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge']);
+  Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge']);
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 
-    //Route::get('add', 'ContractsController@add')->name('contracts.add');
-    Route::get('addT', 'ContractsController@add')->name('contracts.add');
-    Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
-    Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
-    Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
-    Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
-    Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
-    Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
-    Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
-    Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
-    Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+  //Route::get('add', 'ContractsController@add')->name('contracts.add');
+  Route::get('addT', 'ContractsController@add')->name('contracts.add');
+  Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
+  Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+  Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
+  Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
+  Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
+  Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
+  Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+  Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
+  Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
 
-    // Rates
+  // Rates
 
-    Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
+  Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
 
-    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
-    Route::get('RatesListFC/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
-    Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
-    Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
-    Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
-    Route::get('UpdateRatesFailForContracts/{id}','ContractsController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
+  Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+  Route::get('RatesListFC/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+  Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
+  Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
+  Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
+  Route::get('UpdateRatesFailForContracts/{id}','ContractsController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
 
-    Route::get('DestroyRatesFailForContracts/{id}','ContractsController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
-    Route::get('DestroyRatesGForContracts/{id}','ContractsController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
+  Route::get('DestroyRatesFailForContracts/{id}','ContractsController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
+  Route::get('DestroyRatesGForContracts/{id}','ContractsController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
 
-    // Surcharge
-    Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
+  // Surcharge
+  Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
 
-    //----- developer
-    Route::get('FailSurchargeFC/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
-    Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
-    Route::get('EditSurchargersGoodForContracts/{id}','ContractsController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
-    Route::get('EditSurchargersFailForContracts/{id}','ContractsController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
-    Route::PUT('CreateSurchargersFailForContracts/{id}','ContractsController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
-    Route::get('UpdateSurchargersForContracts/{id}','ContractsController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
-    Route::get('DestroySurchargersFForContracts/{id}','ContractsController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
-    Route::get('DestroySurchargersGForContracts/{id}','ContractsController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
+  //----- developer
+  Route::get('FailSurchargeFC/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
+  Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
+  Route::get('EditSurchargersGoodForContracts/{id}','ContractsController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
+  Route::get('EditSurchargersFailForContracts/{id}','ContractsController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
+  Route::PUT('CreateSurchargersFailForContracts/{id}','ContractsController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
+  Route::get('UpdateSurchargersForContracts/{id}','ContractsController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
+  Route::get('DestroySurchargersFForContracts/{id}','ContractsController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
+  Route::get('DestroySurchargersGForContracts/{id}','ContractsController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
 
-    //Contract FCL Importation
+  //Contract FCL Importation
 
-    Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
-    Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
-    Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-    Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
-    Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
-    Route::get('RedirectProcessedInformation/','ContractsController@redirectProcessedInformation')->name('redirect.Processed.Information');
+  Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
+  Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
+  Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
+  Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+  Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
+  Route::get('RedirectProcessedInformation/','ContractsController@redirectProcessedInformation')->name('redirect.Processed.Information');
 
-    //New Request Importation
-    Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
+  //New Request Importation
+  Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
 
-    Route::resource('RequestImportation','NewContractRequestsController');
-    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+  Route::resource('RequestImportation','NewContractRequestsController');
+  Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
 
-    //Developer Datatables
+  //Developer Datatables
 
 
 
-    // DATATABLES
+  // DATATABLES
 
-    Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
-    Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
-    Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
-    Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
+  Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
+  Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
+  Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
+  Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 });
 
 Route::resource('UploadFile','FileHarborsPortsController');
@@ -232,7 +234,7 @@ Route::middleware(['auth'])->prefix('saleterms')->group(function () {
 Route::resource('saleterms', 'SaleTermController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::get('filter', 'DashboardController@filter')->name('dashboard.filter');
+  Route::get('filter', 'DashboardController@filter')->name('dashboard.filter');
 });
 
 Route::resource('dashboard', 'DashboardController')->middleware('auth');
