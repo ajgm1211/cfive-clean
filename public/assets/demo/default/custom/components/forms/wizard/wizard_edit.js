@@ -15,11 +15,7 @@ var WizardDemo = function () {
 
     //== Validation before going to next page
     wizard.on('beforeNext', function(wizard) {
-      if (validator.form() !== true) {
 
-        return false;  // don’t go to the next step
-
-      }
     })
 
     //== Change event envia al tope de la pagina 
@@ -188,11 +184,6 @@ var WizardDemo = function () {
               "text": "The application has been successfully submitted!", 
               "type": "success",
               "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
-            }).then(function(result) {
-              if (result.value) {
-                  window.location.href = '/inlands';
-              }
-
             });
           }
         });

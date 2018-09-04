@@ -594,7 +594,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
   @section('js')
   @parent
   <script src="/js/inlands.js"></script>
-
+<script src="/assets/demo/default/custom/components/forms/wizard/wizard_edit.js" type="text/javascript"></script>
   <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
   <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
   @stop
