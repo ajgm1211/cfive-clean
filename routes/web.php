@@ -102,7 +102,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
 
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
-    Route::get('FailedRatesForContractsDeveloper/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+    Route::get('RatesListFC/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
     Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
     Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
     Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
@@ -115,7 +115,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
 
     //----- developer
-    Route::get('FailSurchargeFCD/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
+    Route::get('FailSurchargeFC/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
     Route::get('EditSurchargersGoodForContracts/{id}','ContractsController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
     Route::get('EditSurchargersFailForContracts/{id}','ContractsController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
