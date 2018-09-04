@@ -66,7 +66,7 @@ $subtotalDestiny = 0;
                                 <div class="m-portlet__head-tools">
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <div class="pull-left text-left" style="line-height: .5;">
-                                            <img src="/uploads/logos/{{$user->companyUser->logo}}" class="img img-responsive" width="300px" ><br>
+                                            <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px" ><br>
                                         </div>
                                         <div class="pull-right text-right" style="line-height: .5">                                
 
