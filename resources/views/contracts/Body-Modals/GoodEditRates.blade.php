@@ -31,19 +31,19 @@
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('twuenty', '20 \' ') !!}
-        {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input','required' ]) !!} 
       </div>
 
 
       <div class="col-lg-4">
         {!! Form::label('forty', '40  \' ') !!}
-        {!! Form::number('forty', $rates->forty, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('forty', $rates->forty, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' ]) !!} 
 
       </div>
       <div class="col-lg-4">
 
         {!! Form::label('fortyhc', '40 HC \' ') !!}
-        {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
+        {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ','required']) !!}
 
       </div>
 
