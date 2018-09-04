@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="col-md-2">
                                   <label>Incoterm</label>
-                                  {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control']) }}
+                                                   {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
                                 </div>
                                 <div class="col-md-5">
                                   <label>Delivery type</label>
@@ -123,8 +123,8 @@
                                   <label>Pick up date</label>
                                   <div class="input-group date">
                                     {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                                    {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
 
-                                    {!! Form::hidden('date_hidden', null, ['id' => 'date_hidden']) !!}
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="la la-calendar-check-o"></i>
@@ -133,6 +133,7 @@
                                   </div>
                                 </div>
                               </div>
+
                               <br>
                               <div class="row">
                                 <div class="col-md-4" id="origin_harbor_label">
@@ -262,6 +263,7 @@
 
 <script>
   $valor =   $('#date_hidden').val();
+
   if($valor != 0){
     $('#m_datepicker_2').val($valor);
   }

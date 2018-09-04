@@ -74,6 +74,7 @@ class QuoteController extends Controller
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
+     $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
         $q->where('user_id',\Auth::user()->id);
@@ -92,7 +93,7 @@ class QuoteController extends Controller
       $currency_name = '';
     }
     $currencies = Currency::all()->pluck('alphacode','id');
-    return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name]);
+    return view('quotation/new2', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name,'incoterm' => $incoterm]);
   }
 
   public function test(Request $request){
