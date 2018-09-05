@@ -144,9 +144,9 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
               </table>
             </div>
             <div class="tab-pane " id="m_tabs_6_2" role="tabpanel">
-              <a  id="newL" class="">
+              <a  id="newChar" class="">
 
-                <button type="button" class="btn btn-brand">
+                <button type="button"  onclick="AbrirModal('addLocalCharge',{{ $contracts->id }})"  class="btn btn-brand">
                   Add New
                   <i class="fa fa-plus"></i>
                 </button>
@@ -369,7 +369,7 @@ Load
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
-            Edit Local Charges
+            Local Charges
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">
@@ -524,6 +524,14 @@ Load
     }
     if(action == "editLocalCharge"){
       var url = '{{ route("edit-local-charge", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#modalLocalcharge').modal({show:true});
+      });
+
+    }
+    if(action == "addLocalCharge"){
+      var url = '{{ route("add-LocalCharge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#modalLocalcharge').modal({show:true});

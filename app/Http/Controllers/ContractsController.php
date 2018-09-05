@@ -536,7 +536,7 @@ class ContractsController extends Controller
   public function storeRates(Request $request,$id){
     $rates = new Rate();
     $request->request->add(['contract_id' => $id]);
-  
+
     $rates->create($request->all());
   }
   public function editRates($id){
@@ -558,7 +558,48 @@ class ContractsController extends Controller
 
   }
 
+  public function addLocalChar($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    $objtypedestiny = new TypeDestiny();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    return view('contracts.addLocalCharge', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','id'));
 
+  }
+  public function storeLocalChar(Request $request,$id){
+    $localcharge = new LocalCharge();
+    $request->request->add(['contract_id' => $id]);
+    $localcharge =  $localcharge->create($request->all());
+    $detailportOrig = $request->input('port_origlocal');
+    $detailportDest = $request->input('port_destlocal');
+    $detailcarrier = $request->input('carrier_id');
+    foreach($detailcarrier as $c => $value)
+    {
+      $detailcarrier = new LocalCharCarrier();
+      $detailcarrier->carrier_id =$value;
+      $detailcarrier->localcharge()->associate($localcharge);
+      $detailcarrier->save();
+    }
+    foreach($detailportOrig as $orig => $valueOrig)
+    {
+      foreach($detailportDest as $dest => $valueDest)
+      {
+        $detailport = new LocalCharPort();
+        $detailport->port_orig =$valueOrig;
+        $detailport->port_dest =$valueDest;
+        $detailport->localcharge()->associate($localcharge);
+        $detailport->save();
+      }
+    }
+  }
   public function editLocalChar($id){
     $objcarrier = new Carrier();
     $objharbor = new Harbor();
@@ -576,7 +617,6 @@ class ContractsController extends Controller
     $localcharges = LocalCharge::find($id);
     return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
   }
-
   public function updateLocalChar(Request $request, $id)
   {
     $localC = LocalCharge::find($id);
