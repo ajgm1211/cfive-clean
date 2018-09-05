@@ -74,7 +74,7 @@
                             </span>
                         </a>
                     </li>
-                    <!--  <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                    <!--   <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
 <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
 <i class="m-menu__link-icon flaticon-business"></i>
 <span class="m-menu__link-text">
@@ -233,7 +233,7 @@ Load Ports
 
             <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                 <div class='row'>
-                    <div class="col-md-2">  
+                    <div class="col-md-2">
                         <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
                     </div>
                     <span class="m-nav__link-icon">
@@ -244,7 +244,7 @@ Load Ports
 
             <a href="#" class="m-nav__link m-dropdown__toggle noNotification">
                 <div class='row'>
-                    <div class="col-md-2">  
+                    <div class="col-md-2">
                         <div>
 
                         </div>
@@ -317,4 +317,3 @@ Load Ports
         </li>
     </ul>
 </div>
-

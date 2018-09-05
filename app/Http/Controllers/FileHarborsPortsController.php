@@ -82,10 +82,10 @@ class FileHarborsPortsController extends Controller
             } else{
                 $request->session()->flash('message.nivel', 'danger');
                 $request->session()->flash('message.content', 'The file is it empty');
-                return redirect()->route('UploadFile.index');   
+                return redirect()->route('UploadFile.index');
             }
 
-            /* $country        = 'country';
+            $country        = 'country';
             $portName       = 'port_name';
             $codeport       = 'uencode';
             $location       = 'location';
@@ -97,21 +97,6 @@ class FileHarborsPortsController extends Controller
             $PNamePorWPT    = 'port_with_pt';
             $PNameNamWPT    = 'name_with_port';
             $PNameNamWCi    = 'name_with_city';
-            */
-
-            $country        = 'country';
-            $portName       = 'port_name';
-            $codeport       = 'uencode';
-            $location       = 'location';
-            $uencode2       = 'portvariationcountrycode';
-            $PNameV1        = 'port_name_variation_1';
-            $PNameMSC       = 'citycodecountry';
-            $PNameMaersk    = 'citycountrycode';
-            $PNameCosco     = 'countrycity';
-            $PNamePorWPT    = 'citypt';
-            $PNameNamWPT    = 'cityport';
-            $PNameNamWCi    = 'namewithcity';
-            $PNameNamtwo    = 'name';
 
             $i =0;
             $f =0;
@@ -126,15 +111,14 @@ class FileHarborsPortsController extends Controller
                                       strtolower($book->$PNameCosco),
                                       strtolower($book->$PNamePorWPT),
                                       strtolower($book->$PNameNamWPT),
-                                      strtolower($book->$PNameNamtwo),
                                       strtolower($book->$PNameNamWCi));
 
                 $json = json_encode($type);
 
-                if(empty($countryExist['id']) != true){   
+                if(empty($countryExist['id']) != true){
                     $f++;
-                    $prueba = Harbor::create([
-                        'name'          => $book->$portName, 
+                    $prueba = Harbor_copy::create([
+                        'name'          => $book->$portName,
                         'code'          => $book->$codeport,
                         'display_name'  => $book->$portName.', '.$book->$codeport,
                         'coordinates'   => $book->$location,
@@ -143,8 +127,8 @@ class FileHarborsPortsController extends Controller
                     ]);
                     //dd($prueba);
                 }else{
-                    $prueba = Harbor::create([
-                        'name'          => $book->$portName, 
+                    $prueba = Harbor_copy::create([
+                        'name'          => $book->$portName,
                         'code'          => $book->$codeport,
                         'display_name'  => $book->$portName.', '.$book->$codeport,
                         'coordinates'   => $book->$location,
