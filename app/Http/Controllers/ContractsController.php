@@ -367,7 +367,7 @@ class ContractsController extends Controller
 
 
 
-  public function edit($id)
+  public function edit(Request $request,$id)
   {
     $contracts = Contract::where('id',$id)->first();
 
@@ -408,6 +408,10 @@ class ContractsController extends Controller
                                })->pluck('Name','id');
     }
     //dd($contracts);
+    if (!$request->session()->exists('activeS')) {
+      $request->session()->flash('activeR', 'active');
+    }
+
     return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
   }
   /**
@@ -531,13 +535,16 @@ class ContractsController extends Controller
     $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
+    
     return view('contracts.addRates', compact('harbor','carrier','currency','id'));
   }
   public function storeRates(Request $request,$id){
     $rates = new Rate();
     $request->request->add(['contract_id' => $id]);
 
+
     $rates->create($request->all());
+      return redirect()->back()->with('ratesSave','true');
   }
   public function editRates($id){
     $objcarrier = new Carrier();
@@ -599,6 +606,7 @@ class ContractsController extends Controller
         $detailport->save();
       }
     }
+    return redirect()->back()->with('localcharSave','true')->with('activeS','active');
   }
   public function editLocalChar($id){
     $objcarrier = new Carrier();
