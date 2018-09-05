@@ -18,25 +18,32 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $company = CompanyUser::where('id', Auth::User()->company_user_id)->pluck('currency_id');
+        $company = CompanyUser::where('id', \Auth::User()->company_user_id)->pluck('currency_id');
         $cur = Currency::where('id', $company[0])->pluck('alphacode');
         $currency = $cur[0];
 
         if(Auth::user()->type=='admin'){
             $users = User::pluck('name','id');
+            $quotes = Quote::all();
+        }else if(Auth::user()->type=='company'){
+            $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+            $quotes = Quote::where('company_id', \Auth::User()->company_user_id)->get();
         }else{
             $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+            $quotes = Quote::where('owner', \Auth::id())->get();
         }
-
-        $quotes = Quote::where('company_id', Auth::User()->company_user_id)->get();
 
         $total = 0;
         $totalSent = 0;
+        $totalDraft = 0;
         $totalNegotiated = 0;
         $totalWon = 0;
         $totalLost = 0;
 
         foreach ($quotes as $q){
+            if($q->status_quote_id == 1){
+                $totalDraft += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            }
             if($q->status_quote_id == 2){
                 $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
@@ -53,6 +60,7 @@ class DashboardController extends Controller
         }
 
         $totalQuotes = $quotes->count();
+        $draft = $quotes->where('status_quote_id', 1)->count();
         $sent = $quotes->where('status_quote_id', 2)->count();
         $negotiated = $quotes->where('status_quote_id', 3)->count();
         $lost = $quotes->where('status_quote_id', 4)->count();
@@ -63,11 +71,13 @@ class DashboardController extends Controller
         return view('dashboard.index',
                     compact(
                         'users',
+                        'draft',
                         'sent',
                         'negotiated',
                         'won',
                         'lost',
                         'totalQuotes',
+                        'totalDraft',
                         'totalSent',
                         'totalNegotiated',
                         'totalWon',
@@ -115,9 +125,11 @@ class DashboardController extends Controller
         }
 
         if($request->user){
-            $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->where('owner', $request->user)->get();
+            $quotes = Quote::whereDate('created_at', '>=', $dates[0])
+                ->whereDate('created_at', '<=', $dates[1])->where('owner', $request->user)->get();
         }else{
-            $quotes = Quote::whereBetween('pick_up_date' ,[$dates[0], $dates[1]])->get();
+            $quotes = Quote::whereDate('created_at', '>=', $dates[0])
+                ->whereDate('created_at', '<=', $dates[1])->get();
         }
 
         $totalQuotes = $quotes->count();
@@ -125,12 +137,16 @@ class DashboardController extends Controller
         if($totalQuotes == 0){ $totalQuotes = 1; }
 
         $total = 0;
+        $totalDraft = 0;
         $totalSent = 0;
         $totalNegotiated = 0;
         $totalWon = 0;
         $totalLost = 0;
 
         foreach ($quotes as $q){
+            if($q->status_quote_id == 1){
+                $totalDraft += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
+            }            
             if($q->status_quote_id == 2){
                 $totalSent += $q->sub_total_origin + $q->sub_total_freight + $q->sub_total_destination;
             }
@@ -148,6 +164,7 @@ class DashboardController extends Controller
 
         if($total == 0){ $total = 1; }
 
+        $draft = $quotes->where('status_quote_id', 1)->count();
         $sent = $quotes->where('status_quote_id', 2)->count();
         $negotiated = $quotes->where('status_quote_id', 3)->count();
         $lost = $quotes->where('status_quote_id', 4)->count();
@@ -155,11 +172,13 @@ class DashboardController extends Controller
 
         return \View::make('dashboard.index',
                            compact('users','user','pick_up_dates',
+                                   'draft',
                                    'sent',
                                    'negotiated',
                                    'won',
                                    'lost',
                                    'totalQuotes',
+                                   'totalDraft',
                                    'totalSent',
                                    'totalNegotiated',
                                    'totalWon',

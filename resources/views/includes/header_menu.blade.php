@@ -196,7 +196,6 @@ Load Ports
                             </span>
                         </a>
                     </li>
-                    @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-graph"></i>
@@ -205,7 +204,6 @@ Load Ports
                             </span>
                         </a>
                     </li>
-                    @endif
                     @role('administrator')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
