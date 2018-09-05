@@ -88,6 +88,9 @@
             <th title="Ammount">
               Ammount
             </th>
+            <th title="Markup">
+              Markup
+            </th>
             <th title="Type">
               Type
             </th>
@@ -101,7 +104,7 @@
           <tr>
             <td><span class="{{$quote->status->name}}"  onclick="AbrirModal('change_status',{{$quote->id}})" style="cursor: pointer;">{{$quote->status->name }}</span></td>
             @if(isset($quote->company))
-            <td>{{$quote->id }}</td>
+            <td>{{$quote->company_quote }}</td>
             <td>{{$quote->company->business_name }}</td>
             @else
             <td>---</td>
@@ -123,6 +126,7 @@
             <td>{{$quote->destination_address }}</td>
             @endif
             <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
+            <td>{{$quote->total_markup_origin+$quote->total_markup_freight+$quote->total_markup_destination}} {{$quote->currencies->alphacode}}</td>
             <td>
               @if($quote->type==1)
               <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
