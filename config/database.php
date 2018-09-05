@@ -1,5 +1,5 @@
 <?php
-/*
+
 if (!defined('RDS_HOSTNAME')) {
 
 
@@ -11,7 +11,7 @@ if (!defined('RDS_HOSTNAME')) {
 }
 
 
-*/
+
 return [
 
     /*
@@ -50,8 +50,8 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
         ],
-/*
-        
+
+
         'mysql' => [
 
 
@@ -69,8 +69,8 @@ return [
             'engine' => null,
 
         ],
-        
-      */
+
+      /*
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -85,7 +85,7 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-
+*/
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
