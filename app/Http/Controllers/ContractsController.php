@@ -663,7 +663,7 @@ class ContractsController extends Controller
       $detailcarrier->localcharge_id = $id;
       $detailcarrier->save();
     }
-    return redirect()->back()->with('localchar','true');
+    return redirect()->back()->with('localchar','true')->with('activeS','active');
   }
 
 
