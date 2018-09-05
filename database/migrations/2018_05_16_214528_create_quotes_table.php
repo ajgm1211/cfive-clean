@@ -23,7 +23,7 @@ class CreateQuotesTable extends Migration
       $table->integer('type_cargo')->nullable();
       $table->string('origin_address')->nullable();
       $table->string('destination_address')->nullable();
-      $table->string('quote_id')->nullable();
+      $table->string('company_quote')->nullable();
       $table->integer('company_id')->unsigned();
       $table->foreign('company_id')->references('id')->on('companies');
       $table->integer('origin_harbor_id')->unsigned()->nullable();

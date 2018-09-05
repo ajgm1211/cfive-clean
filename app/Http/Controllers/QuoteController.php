@@ -1617,8 +1617,9 @@ class QuoteController extends Controller
   public function store(Request $request)
   {
     $input = Input::all();
-    $quote_id = $this->idPersonalizado();    //ID PERSONALIZADO
-    $request->request->add(['quote_id' => $quote_id]); // SE AGREGA AL REQUEST
+    $company_quote = $this->idPersonalizado();    //ID PERSONALIZADO
+
+
     $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
     $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
     $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
@@ -1626,7 +1627,8 @@ class QuoteController extends Controller
     $sum_markup_freight=array_sum($total_markup_freight);
     $sum_markup_destination=array_sum($total_markup_destination);
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote' => $company_quote]);
+    
     $quote=Quote::create($request->all());
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
@@ -2702,12 +2704,14 @@ class QuoteController extends Controller
 
   public function idPersonalizado(){
     $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first(); 
-    $iniciales =  substr($user_company->name,0, 1); 
+    $iniciales =  strtoupper(substr($user_company->name,0, 2)); 
     $quote = Quote::where('company_id',$user_company->id)->first();
-    if(!empty($quote)){
+
+    if($quote == null){
       $iniciales = $iniciales."-1";
     }else{
-      $numeroFinal = explode('-',$quote->quote_id);
+      $numeroFinal = explode('-',$quote->company_quote);
+
       $numeroFinal = $numeroFinal[1] +1;
       $iniciales = $iniciales."-".$numeroFinal;
     }
