@@ -74,7 +74,7 @@ class QuoteController extends Controller
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
-     $incoterm = Incoterm::pluck('name','id');
+    $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
         $q->where('user_id',\Auth::user()->id);
@@ -1616,7 +1616,8 @@ class QuoteController extends Controller
   public function store(Request $request)
   {
     $input = Input::all();
-
+    $quote_id = $this->idPersonalizado();    //ID PERSONALIZADO
+    $request->request->add(['quote_id' => $quote_id]); // SE AGREGA AL REQUEST
     $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
     $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
     $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
@@ -2696,5 +2697,19 @@ class QuoteController extends Controller
     //$pdf->download('quote');
 
     return redirect()->action('QuoteController@showWithPdf',$quote->id);
+  }
+
+  public function idPersonalizado(){
+    $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first(); 
+    $iniciales =  substr($user_company->name,0, 1); 
+    $quote = Quote::where('company_id',$user_company->id)->first();
+    if(!empty($quote)){
+      $iniciales = $iniciales."-1";
+    }else{
+      $numeroFinal = explode('-',$quote->quote_id);
+      $numeroFinal = $numeroFinal[1] +1;
+      $iniciales = $iniciales."-".$numeroFinal;
+    }
+    return $iniciales;
   }
 }
