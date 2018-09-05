@@ -65,13 +65,13 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
           <div class="m-portlet__head-tools">
             <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
               <li class="nav-item m-tabs__item">
-                <a class="nav-link m-tabs__link active " data-toggle="tab" href="#m_tabs_6_1" role="tab">
+                <a class="nav-link m-tabs__link  {{ session('activeR')}}" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                   <i class="la la-cog"></i>
                   Routes
                 </a>
               </li>
               <li class="nav-item m-tabs__item">
-                <a class="nav-link m-tabs__link " data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                <a class="nav-link m-tabs__link {{ session('activeS')}} " data-toggle="tab" href="#m_tabs_6_2" role="tab">
                   <i class="la la-briefcase"></i>
                   Surcharges
                 </a>
@@ -87,7 +87,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
         </div>
         <div class="m-portlet__body">
           <div class="tab-content">
-            <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
+            <div class="tab-pane {{ session('activeR')}} " id="m_tabs_6_1" role="tabpanel">
               <a  id="newRate" class="">
 
                 <button type="button" onclick="AbrirModal('addRate',{{ $contracts->id }})" class="btn btn-brand">
@@ -143,7 +143,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="m_tabs_6_2" role="tabpanel">
+            <div class="tab-pane {{ session('activeS')}} " id="m_tabs_6_2" role="tabpanel">
               <a  id="newChar" class="">
 
                 <button type="button"  onclick="AbrirModal('addLocalCharge',{{ $contracts->id }})"  class="btn btn-brand">
@@ -557,6 +557,26 @@ Load
   swal(
     'Done!',
     'Local Charge updated.',
+    'success'
+  )
+</script>
+@endif
+
+
+@if(session('localcharSave'))
+<script>
+  swal(
+    'Done!',
+    'Local Charge  saved.',
+    'success'
+  )
+</script>
+@endif
+@if(session('ratesSave'))
+<script>
+  swal(
+    'Done!',
+    'rate saved.',
     'success'
   )
 </script>
