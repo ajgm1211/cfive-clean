@@ -17,6 +17,10 @@ body{
   font-size: 12px !important;
 }
 
+.desktop{
+    display: block;
+}
+
 /* Font sizes
 ------------------------------------------------------------------ */
 .size-48px {
@@ -217,19 +221,14 @@ h3.m-subheader__title{
 .panel {
   margin-bottom: 20px;
   background-color: #fff;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  border-radius: none !important;
 }
 .panel-body {
   padding: 15px;
+  border: 1px solid #f1f1f1
 }
 .panel-heading {
   padding: 10px 15px;
-  border-bottom: 1px solid transparent;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
 }
 .panel-heading > .dropdown .dropdown-toggle {
   color: inherit;
@@ -658,6 +657,13 @@ th#options-limit-fcl {
   display: none !important;
 }
 
+@media only screen and (max-width: 767px) {
+
+    .desktop{
+        display: none;
+    }
+
+}
 
 @media (min-width: 993px) {
 .m-portlet.m-portlet--full-height.result-automatic {

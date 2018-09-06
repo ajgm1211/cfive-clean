@@ -128,8 +128,13 @@ class DashboardController extends Controller
             $quotes = Quote::whereDate('created_at', '>=', $dates[0])
                 ->whereDate('created_at', '<=', $dates[1])->where('owner', $request->user)->get();
         }else{
-            $quotes = Quote::whereDate('created_at', '>=', $dates[0])
-                ->whereDate('created_at', '<=', $dates[1])->get();
+            if(Auth::user()->type=='subuser'){
+                $quotes = Quote::whereDate('created_at', '>=', $dates[0])
+                    ->whereDate('created_at', '<=', $dates[1])->where('owner', Auth::id())->get();
+            }else{
+                $quotes = Quote::whereDate('created_at', '>=', $dates[0])
+                    ->whereDate('created_at', '<=', $dates[1])->get();
+            }
         }
 
         $totalQuotes = $quotes->count();

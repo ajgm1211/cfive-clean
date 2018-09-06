@@ -65,21 +65,10 @@ class TermsAndConditionsController extends Controller
             $ports = $request->ports;
 
             foreach($ports as $i){
-                if($i==742){
-                    $harbors = Harbor::All();
-                    foreach($harbors as $item){
-                        $termsport = new TermsPort();
-                        $termsport->port_id = $item->id;
-                        $termsport->term()->associate($term);
-                        $termsport->save();
-                    }
-                    break;
-                }else{
-                    $termsport = new TermsPort();
-                    $termsport->port_id = $i;
-                    $termsport->term()->associate($term);
-                    $termsport->save();
-                }
+                $termsport = new TermsPort();
+                $termsport->port_id = $i;
+                $termsport->term()->associate($term);
+                $termsport->save();
             }
 
             $request->session()->flash('message.nivel', 'success');
