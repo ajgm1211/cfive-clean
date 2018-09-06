@@ -12,7 +12,7 @@
                 <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="auto" height="150">
             </div>
             <div id="company">
-                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->id}}</b></span></div>
+                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!='')
                 @php
