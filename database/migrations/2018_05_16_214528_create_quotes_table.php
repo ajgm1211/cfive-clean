@@ -16,6 +16,8 @@ class CreateQuotesTable extends Migration
         Schema::create('quotes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('owner');
+            $table->integer('company_user_id')->unsigned();
+            $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->string('incoterm');
             $table->date('validity')->nullable();
             $table->integer('modality');

@@ -27,7 +27,7 @@ class DashboardController extends Controller
             $quotes = Quote::all();
         }else if(Auth::user()->type=='company'){
             $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-            $quotes = Quote::where('company_id', \Auth::User()->company_user_id)->get();
+            $quotes = Quote::where('company_user_id', \Auth::User()->company_user_id)->get();
         }else{
             $users = User::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
             $quotes = Quote::where('owner', \Auth::id())->get();
@@ -130,10 +130,10 @@ class DashboardController extends Controller
         }else{
             if(Auth::user()->type=='subuser'){
                 $quotes = Quote::whereDate('created_at', '>=', $dates[0])
-                    ->whereDate('created_at', '<=', $dates[1])->where('owner', Auth::id())->get();
+                    ->whereDate('created_at', '<=', $dates[1])->where('owner', \Auth::id())->get();
             }else{
                 $quotes = Quote::whereDate('created_at', '>=', $dates[0])
-                    ->whereDate('created_at', '<=', $dates[1])->get();
+                    ->whereDate('created_at', '<=', $dates[1])->where('company_user_id', \Auth::user()->company_user_id)->get();
             }
         }
 

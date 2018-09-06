@@ -1643,6 +1643,7 @@ class QuoteController extends Controller
             return redirect('/quotes/create');
 
         }else{
+
             $input = Input::all();
 
             $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
@@ -1652,7 +1653,7 @@ class QuoteController extends Controller
             $sum_markup_freight=array_sum($total_markup_freight);
             $sum_markup_destination=array_sum($total_markup_destination);
             $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-            $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
+            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
             $quote=Quote::create($request->all());
             if($input['origin_ammount_charge']!=[null]) {
                 $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
@@ -1836,9 +1837,18 @@ class QuoteController extends Controller
     public function storeWithEmail(Request $request)
     {
         $input = Input::all();
+
+        $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+        $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+        $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+        $sum_markup_origin=array_sum($total_markup_origin);
+        $sum_markup_freight=array_sum($total_markup_freight);
+        $sum_markup_destination=array_sum($total_markup_destination);
         $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-        $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2]);
+        $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2]);
+
         $quote=Quote::create($request->all());
+        
         if($input['origin_ammount_charge']!=[null]) {
             $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
             $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
@@ -2328,6 +2338,7 @@ class QuoteController extends Controller
 
         $quote_duplicate = new Quote();
         $quote_duplicate->owner=\Auth::id();
+        $quote_duplicate->company_user_id=\Auth::user()->company_user_id;
         $quote_duplicate->incoterm=$quote->incoterm;
         $quote_duplicate->modality=$quote->modality;
         $quote_duplicate->currency_id=$quote->currency_id;
@@ -2537,9 +2548,18 @@ class QuoteController extends Controller
     public function StoreWithPdf(Request $request)
     {
         $input = Input::all();
+        
+        $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+        $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+        $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+        $sum_markup_origin=array_sum($total_markup_origin);
+        $sum_markup_freight=array_sum($total_markup_freight);
+        $sum_markup_destination=array_sum($total_markup_destination);
         $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-        $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2]);
+        $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
+        
         $quote=Quote::create($request->all());
+        
         if($input['origin_ammount_charge']!=[null]) {
             $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
             $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
