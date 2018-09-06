@@ -1,11 +1,13 @@
 <div class="m-portlet__body">
     <div class="row">
+        @if( Auth::user()->type == 'admin' || Auth::user()->type == 'company')
         <div class="form-group m-form__group">
             <div class="col-md-12">
                 <label>User</label>
                 {{ Form::select('user', $users, null,['class'=>'custom-select form-control','placeholder'=>'Select an user']) }}
             </div>
         </div>
+        @endif
         <div class="form-group m-form__group">
             <div class="col-md-12">
                 <label>Pick up date</label>

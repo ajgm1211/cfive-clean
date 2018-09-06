@@ -14,7 +14,6 @@
         <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 col-12" style="padding-top:20px;">
                 <!-- filter -->
-                @if( Auth::user()->type == 'admin' || Auth::user()->type == 'company')
 
                 <div class="m-portlet--mobile">
                     <div class="m-portlet__body ">
@@ -27,7 +26,6 @@
                     <hr class="separator">
                 </div>
                 
-                @endif
                 <!-- end-filter -->
             </div>
         </div>

@@ -11,7 +11,7 @@
 </div>
 
 <div class="form-group m-form__group">
-    {!! Form::label('Port', 'Port') !!}
+    {!! Form::label('Port', 'Ports') !!}
     {!! Form::select('ports[]',$harbors,@$selected_harbors, 
     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
