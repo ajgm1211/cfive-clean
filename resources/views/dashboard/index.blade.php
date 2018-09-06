@@ -29,11 +29,13 @@
                 <!-- end-filter -->
             </div>
         </div>
-        @if(isset($user))
+        @if(isset($pick_up_dates))
         <div class="row">  
             <div class="col-md-3 col-lg-3 col-xl-3">
+                @if(isset($user))
                 <h4>{{$user->name}} {{$user->lastname}}</h4>
                 <br>
+                @endif
                 <h6><b>From:</b> {{$pick_up_dates['start_date']}}</h6>
                 <h6><b>To:</b> {{$pick_up_dates['end_date']}}</h6>
             </div>
