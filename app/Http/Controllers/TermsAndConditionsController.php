@@ -90,7 +90,12 @@ class TermsAndConditionsController extends Controller
      */
     public function show($id)
     {
-        //
+        $term = TermAndCondition::where('id',$id)->with('harbor')->first();
+        $selected_harbors = collect($term->harbor);
+        $selected_harbors = $selected_harbors->pluck('id','name');
+        $harbors = harbor::all()->pluck('name','id');
+
+        return view('terms.show', compact('term', 'harbors', 'selected_harbors'));        
     }
 
     /**
@@ -105,7 +110,6 @@ class TermsAndConditionsController extends Controller
         $selected_harbors = collect($term->harbor);
         $selected_harbors = $selected_harbors->pluck('id','name');
         $harbors = harbor::all()->pluck('name','id');
-
 
         return view('terms.edit', compact('term', 'harbors', 'selected_harbors'));
     }

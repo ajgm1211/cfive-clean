@@ -49,9 +49,9 @@
             </div>
             <div id="" class="clearfix">
                 <div class="client" style="width: 150px;">
-                    <div class="panel panel-default" style="width: 350px;">
-                        <div class="panel-heading title">Origin {{$quote->type==3 ? ' Airport':' Port'}}</div>
-                        <div class="panel-body">
+                    <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Origin {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-body" style="border: 1px solid #dddddd">
                             <span id="origin_input" style="color: #1D3A6E;">
                                 @if($quote->origin_harbor_id!='')
                                 {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
@@ -64,9 +64,9 @@
                     </div>
                 </div>
                 <div class="company" style="float: right; width: 350px;">
-                    <div class="panel panel-default" style="width: 350px; height: 83px;">
-                        <div class="panel-heading title">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
-                        <div class="panel-body">
+                    <div class="panel panel-default" style="width: 350px; height: 83px; border: none; border-radius:none;">
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-body" style="border: 1px solid #dddddd; height: 18px;">
                             <span id="destination_input" style="color: #1D3A6E;">
                                 @if($quote->destination_harbor_id!='')
                                 {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}

@@ -190,11 +190,9 @@ font-family: sans-serif !important;
             }
 
         </style>
-
-
     </head>
 
-    <body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly; background-color: #001728;">
+    <body width="100%" bgcolor="#ffffff" style="margin: 0; mso-line-height-rule: exactly; background-color: #fff;">
         <center style="width: 100%; text-align: left; margin-bottom: 100px !important;">
 
             <!-- Preview Text Spacing Hack : BEGIN -->
