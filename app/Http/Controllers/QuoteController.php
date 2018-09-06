@@ -74,7 +74,7 @@ class QuoteController extends Controller
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
-     $incoterm = Incoterm::pluck('name','id');
+    $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
         $q->where('user_id',\Auth::user()->id);
@@ -1608,6 +1608,7 @@ class QuoteController extends Controller
       }
     }
     $incoterm = Incoterm::pluck('name','id');
+
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user]);
 
@@ -1616,6 +1617,8 @@ class QuoteController extends Controller
   public function store(Request $request)
   {
     $input = Input::all();
+    $company_quote = $this->idPersonalizado();    //ID PERSONALIZADO
+
 
     $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
     $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
@@ -1624,7 +1627,8 @@ class QuoteController extends Controller
     $sum_markup_freight=array_sum($total_markup_freight);
     $sum_markup_destination=array_sum($total_markup_destination);
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote' => $company_quote]);
+    
     $quote=Quote::create($request->all());
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
@@ -1807,8 +1811,9 @@ class QuoteController extends Controller
   public function storeWithEmail(Request $request)
   {
     $input = Input::all();
+    $company_quote = $this->idPersonalizado();    //ID PERSONALIZADO
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2,'company_quote' => $company_quote]);
     $quote=Quote::create($request->all());
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
@@ -2696,5 +2701,21 @@ class QuoteController extends Controller
     //$pdf->download('quote');
 
     return redirect()->action('QuoteController@showWithPdf',$quote->id);
+  }
+
+  public function idPersonalizado(){
+    $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first(); 
+    $iniciales =  strtoupper(substr($user_company->name,0, 2)); 
+    $quote = Quote::where('company_id',$user_company->id)->first();
+
+    if($quote == null){
+      $iniciales = $iniciales."-1";
+    }else{
+      $numeroFinal = explode('-',$quote->company_quote);
+
+      $numeroFinal = $numeroFinal[1] +1;
+      $iniciales = $iniciales."-".$numeroFinal;
+    }
+    return $iniciales;
   }
 }
