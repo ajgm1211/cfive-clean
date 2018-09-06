@@ -167,9 +167,9 @@ $subtotalDestiny = 0;
                           <hr>
                         </div>
                         <div class="col-md-12">
-                         
+
                           <p>{{$info->carrier->name}}</p>
-  
+
                         </div>
                       </div>
                     </div>
@@ -946,6 +946,7 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
 
     <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
     <input type="hidden" class="form-control" id="height" name="height[]">
