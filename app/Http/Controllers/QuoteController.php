@@ -1811,8 +1811,9 @@ class QuoteController extends Controller
   public function storeWithEmail(Request $request)
   {
     $input = Input::all();
+    $company_quote = $this->idPersonalizado();    //ID PERSONALIZADO
     $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2]);
+    $request->request->add(['owner' => \Auth::id(),'currency_id'=>$currency->currency_id,'status_quote_id'=>2,'company_quote' => $company_quote]);
     $quote=Quote::create($request->all());
     if($input['origin_ammount_charge']!=[null]) {
       $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
