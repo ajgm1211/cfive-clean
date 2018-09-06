@@ -35,11 +35,6 @@ use App\CompanyUser;
 
 class ContractsController extends Controller
 {
-  /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
   public function index()
   {
@@ -49,12 +44,6 @@ class ContractsController extends Controller
 
     return view('contracts/index', compact('arreglo','contractG'));
   }
-
-  /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
   public function add()
   {
@@ -99,12 +88,6 @@ class ContractsController extends Controller
     //
   }
 
-  /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
   public function store(Request $request)
   {
 
@@ -209,23 +192,13 @@ class ContractsController extends Controller
 
   }
 
-  /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
   public function show($id)
   {
     //
   }
 
-  /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
 
   // FUNCIONES PARA EL DATATABLE
   public function data($id){
@@ -414,13 +387,7 @@ class ContractsController extends Controller
 
     return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
   }
-  /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */ 
+  
   public function update(Request $request, $id)
   {
     $requestForm = $request->all();
