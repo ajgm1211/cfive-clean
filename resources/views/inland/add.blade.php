@@ -418,7 +418,7 @@ $validation_expire = 'Please enter valididity date';
       <div class="m-portlet__foot m-portlet__foot--fit">
         <br>
         <div class="m-form__actions">
-          <button type="submit" class="btn btn-primary">
+          <button type="button"  data-wizard-action="submit" class="btn btn-primary">
             Submit
           </button>
           <button type="reset" class="btn btn-danger">
@@ -443,7 +443,7 @@ $validation_expire = 'Please enter valididity date';
 
 <script src="/js/inlands.js"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
-<script src="/assets/demo/default/custom/components/forms/wizard/wizard.js" type="text/javascript"></script>
+
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 @stop

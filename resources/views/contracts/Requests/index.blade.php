@@ -111,10 +111,10 @@
                                         <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
                                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                                         </a>
-                                        &nbsp; &nbsp;  
+                                        &nbsp; &nbsp;  <!--
                                         <a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
                                             <samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
-                                        </a>
+                                        </a> -->
                                     </td>
                                 </tr>
                                 @endforeach
