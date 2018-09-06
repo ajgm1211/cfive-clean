@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use App\Company;
 use App\CompanyPrice;
 use App\CompanyUser;
