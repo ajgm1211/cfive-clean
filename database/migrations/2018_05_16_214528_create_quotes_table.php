@@ -6,11 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateQuotesTable extends Migration
 {
-    /**
+  /**
      * Run the migrations.
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('quotes', function (Blueprint $table) {
@@ -18,6 +19,7 @@ class CreateQuotesTable extends Migration
             $table->string('owner');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
+            $table->string('company_quote')->nullable();
             $table->string('incoterm');
             $table->date('validity')->nullable();
             $table->integer('modality');
@@ -66,14 +68,13 @@ class CreateQuotesTable extends Migration
             $table->timestamps();
         });
     }
-
-    /**
+  /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('quotes');
-    }
+  public function down()
+  {
+    Schema::dropIfExists('quotes');
+  }
 }

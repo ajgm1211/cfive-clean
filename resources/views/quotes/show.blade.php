@@ -57,7 +57,7 @@
                                         <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
-                                        <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
+                                        <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                         <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                         @if($quote->validity!='')
                                         @php
