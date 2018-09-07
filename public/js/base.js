@@ -857,7 +857,7 @@ $(document).on('click', '#create-quote', function (e) {
                 type: 'get',
                 url: 'get/harbor/id/' + origin_harbor,
                 success: function(data) {
-                    $("#origin_input").html(data.name);
+                    $("#origin_input").html(data.name+", "+data.code);
                 }
             });
         }
@@ -866,7 +866,7 @@ $(document).on('click', '#create-quote', function (e) {
                 type: 'get',
                 url: 'get/harbor/id/' + destination_harbor,
                 success: function(data) {
-                    $("#destination_input").html(data.name);
+                    $("#destination_input").html(data.name+", "+data.code);
                 }
             });
         }

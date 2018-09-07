@@ -138,32 +138,32 @@
                 </div>
             </div>
             @if($quote->origin_address || $quote->destination_address)
-                <div class="row">
-                    @if($quote->origin_address!='')
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Origin address</b></div>
-                                <div class="panel-body">
-                                    <span id="origin_input" class="color-blue">
-                                        {{$quote->origin_address}}
-                                    </span>
-                                </div>
-                            </div>
+            <div class="row">
+                @if($quote->origin_address!='')
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading title-quote size-14px"><b>Origin address</b></div>
+                        <div class="panel-body">
+                            <span id="origin_input" class="color-blue">
+                                {{$quote->origin_address}}
+                            </span>
                         </div>
-                    @endif
-                    @if($quote->destination_address!='')
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
-                                <div class="panel-body">
-                                    <span id="destination_input" class="color-blue">
-                                        {{$quote->destination_address}}                                     
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 </div>
+                @endif
+                @if($quote->destination_address!='')
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
+                        <div class="panel-body">
+                            <span id="destination_input" class="color-blue">
+                                {{$quote->destination_address}}                                     
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
             @endif
             <div style="padding-top: 20px; padding-bottom: 20px;">
                 <div class="row">
@@ -243,6 +243,14 @@
                             </tbody>
                         </table>
                     </div>                    
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <span class="pull-right">
+                            <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                        </span>
+                    </div>
                 </div>
                 @endif
             </div>
@@ -411,16 +419,16 @@
                         <div class="col-md-12">
                             <div class="form-group terms-and-conditions">
                                 @if($quote->type!=3)
-                                    @if(isset($terms_origin) && $terms_origin->count()>0)
-                                        @foreach($terms_origin as $v)
-                                        {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                        @endforeach
-                                    @endif
-                                    @if(isset($terms_destination) && $terms_destination->count()>0)
-                                        @foreach($terms_destination as $v)
-                                        {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                        @endforeach
-                                    @endif
+                                @if(isset($terms_origin) && $terms_origin->count()>0)
+                                @foreach($terms_origin as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
+                                @if(isset($terms_destination) && $terms_destination->count()>0)
+                                @foreach($terms_destination as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
                                 @endif
                             </div>
                         </div>

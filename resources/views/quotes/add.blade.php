@@ -631,15 +631,15 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" step="0.01" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="number" name="origin_total_ammount_2[]" step="0.01" min="0" value="" class="origin_total_ammount_2 form-control" aria-label="...">
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -666,15 +666,15 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" step="0.01" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="text" name="origin_total_ammount_2[]" step="0.01" min="0" value="" class="origin_total_ammount_2 form-control" aria-label="...">
                                                                                         <a class="btn removeOriginButton">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
@@ -742,12 +742,12 @@
                                                                                 <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.01" required/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>                      
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="..." required>
+                                                                                        <input type="number" name="freight_total_ammount_2[]" step="0.01" min="0" value="" class="freight_total_ammount_2 form-control" aria-label="..." required>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -774,15 +774,15 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" step="0.01" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="number" name="freight_total_ammount_2[]"  value="" class="freight_total_ammount_2 form-control" aria-label="..." step="0.01" min="0"/>
                                                                                         <a class="btn removeButton">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
@@ -846,15 +846,15 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" step="0.01" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="number" name="destination_total_ammount_2[]" step="0.01" min="0" value="" class="destination_total_ammount_2 form-control" aria-label="...">
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -881,15 +881,15 @@
                                                                                 </div>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" step="0.01" min="0"/>
                                                                             </td>
                                                                             <td>
-                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" min="0"/> 
+                                                                                <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.01" min="0"/> 
                                                                             </td>
                                                                             <td>
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
-                                                                                        <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                        <input type="number" name="destination_total_ammount_2[]" step="0.01" min="0" value="" class="destination_total_ammount_2 form-control" aria-label="...">
                                                                                         <a class="btn removeButtonDestination">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
