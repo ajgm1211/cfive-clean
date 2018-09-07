@@ -978,6 +978,8 @@ $subtotalDestiny = 0;
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 
 
 @stop
