@@ -12,7 +12,7 @@
                 <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="auto" height="150">
             </div>
             <div id="company">
-                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->id}}</b></span></div>
+                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!='')
                 @php
@@ -161,6 +161,12 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 pull-right">
+                            <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                        </div>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -322,7 +328,7 @@
         </main>
         <div class="clearfix details">
             <div class="company">
-                <p class="title text-right" style="color: #01194F;"><b>TOTAL: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
+                <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
             </div>
             <hr>
         </div>

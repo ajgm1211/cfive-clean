@@ -2084,10 +2084,11 @@ class QuoteController extends Controller
         $currencies = Currency::pluck('alphacode','id');
         $package_loads = PackageLoad::where('quote_id',$id)->get();
         if(\Auth::user()->company_user_id){
-            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+            $port_all = harbor::where('name','ALL')->first();
+            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->orWhere('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
                 $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
             })->get();
-            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->orWhere('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
                 $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
             })->get();
             $email_templates=EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -2130,10 +2131,11 @@ class QuoteController extends Controller
         $currencies = Currency::pluck('alphacode','id');
         $package_loads = PackageLoad::where('quote_id',$id)->get();
         if(\Auth::user()->company_user_id){
-            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+            $port_all = harbor::where('name','ALL')->first();
+            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->orWhere('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
                 $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
             })->get();
-            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->orWhere('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
                 $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
             })->get();
             $email_templates=EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -2345,6 +2347,7 @@ class QuoteController extends Controller
         $quote_duplicate = new Quote();
         $quote_duplicate->owner=\Auth::id();
         $quote_duplicate->company_user_id=\Auth::user()->company_user_id;
+        $quote_duplicate->company_quote=$this->idPersonalizado();
         $quote_duplicate->incoterm=$quote->incoterm;
         $quote_duplicate->modality=$quote->modality;
         $quote_duplicate->currency_id=$quote->currency_id;
