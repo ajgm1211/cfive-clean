@@ -48,10 +48,10 @@ class PdfController extends Controller
         }
 
         $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
-        
+
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
-        
+
         return $pdf->stream('quote');
     }
 
