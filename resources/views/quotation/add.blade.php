@@ -167,9 +167,9 @@ $subtotalDestiny = 0;
                           <hr>
                         </div>
                         <div class="col-md-12">
-                         
+
                           <p>{{$info->carrier->name}}</p>
-  
+
                         </div>
                       </div>
                     </div>
@@ -946,6 +946,7 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
+    <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
 
     <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
     <input type="hidden" class="form-control" id="height" name="height[]">
@@ -977,6 +978,8 @@ $subtotalDestiny = 0;
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 
 
 @stop
