@@ -282,7 +282,7 @@
                                     <td>{{$origin_ammount->units}}</td>
                                     <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
-                                    <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$origin_ammount->markup!='' ? $origin_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
@@ -328,7 +328,7 @@
                                     <td>{{$freight_ammount->units}}</td>
                                     <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
                                     <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
-                                    <td>{{$freight_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$freight_ammount->markup!='' ? $freight_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$freight_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
@@ -374,7 +374,7 @@
                                     <td>{{$destination_ammount->units}}</td>
                                     <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
                                     <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
-                                    <td>{{$destination_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$destination_ammount->markup!='' ? $destination_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$destination_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach

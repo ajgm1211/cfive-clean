@@ -85,7 +85,7 @@ class QuoteController extends Controller
             $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
         }
 
-        $harbors = Harbor::all()->pluck('display_name','id');
+        $harbors = Harbor::pluck('display_name','id');
         $countries = Country::all()->pluck('name','id');
         $prices = Price::all()->pluck('name','id');
         $company_user = User::where('id',\Auth::id())->first();
@@ -1546,7 +1546,7 @@ class QuoteController extends Controller
         $email_templates = '';
         $company_user_id=\Auth::user()->company_user_id;
         $quotes = Quote::all();
-        $harbors = Harbor::all()->pluck('name','id');
+        $harbors = Harbor::pluck('display_name','id');
         $countries = Country::all()->pluck('name','id');
         $airports = Airport::all()->pluck('name','id');
         $carriers = Carrier::all()->pluck('name','id');
@@ -1568,6 +1568,7 @@ class QuoteController extends Controller
         }
         if($company_user){
             $currencies = Currency::pluck('alphacode','id');
+            $currencies->prepend ('Currency','');
             $currency_cfg = Currency::find($company_user->currency_id);
         }
         if(\Auth::user()->company_user_id && $currency_cfg != ''){
@@ -1585,7 +1586,7 @@ class QuoteController extends Controller
         $email_templates='';
         $quote = Quote::findOrFail($id);
         $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
-        $harbors = Harbor::all()->pluck('name','id');
+        $harbors = Harbor::all()->pluck('display_name','id');
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -1596,6 +1597,7 @@ class QuoteController extends Controller
         $saleterms = SaleTerm::where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
         $currencies = Currency::pluck('alphacode','id');
+        $currencies->prepend ('Currency','');
         $carriers = Carrier::pluck('name','id');
         $airlines = Airline::pluck('name','id');
         $airports = Airport::pluck('name','id');
@@ -1662,6 +1664,7 @@ class QuoteController extends Controller
                 $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
                 $origin_ammount_price_per_unit = array_values( array_filter($input['origin_price_per_unit']) );
                 $origin_ammount_currency = array_values( array_filter($input['origin_ammount_currency']) );
+
                 $origin_total_units = array_values( array_filter($input['origin_ammount_units']) );
                 $origin_total_ammount = array_values( array_filter($input['origin_total_ammount']) );
                 $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
@@ -1700,10 +1703,12 @@ class QuoteController extends Controller
                 $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
                 $freight_ammount_price_per_unit = array_values( array_filter($input['freight_price_per_unit']) );
                 $freight_ammount_currency = array_values( array_filter($input['freight_ammount_currency']) );
+
                 $freight_total_units = array_values( array_filter($input['freight_ammount_units']) );
                 $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
                 $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
                 $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
+                dd($freight_total_units);
                 foreach ($freight_ammount_charge as $key => $item) {
                     $freight_ammount = new FreightAmmount();
                     $freight_ammount->quote_id = $quote->id;
@@ -1841,10 +1846,10 @@ class QuoteController extends Controller
     public function storeWithEmail(Request $request)
     {
         $input = Input::all();
-        
+
         $company_quote = $this->idPersonalizado();
         $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-        
+
         $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
         $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
         $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
@@ -2560,7 +2565,7 @@ class QuoteController extends Controller
         $input = Input::all();
         $company_quote = $this->idPersonalizado();
         $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-        
+
         $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
         $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
         $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );

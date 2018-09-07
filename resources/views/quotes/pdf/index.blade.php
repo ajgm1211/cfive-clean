@@ -182,7 +182,7 @@
                         <th class="unit"><b>Units</b></th>
                         <th class="unit"><b>Price per units</b></th>
                         <th class="unit"><b>Total </b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
+                        <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,25 +191,25 @@
                         <td class="white">{{$origin_ammount->charge}}</td>
                         <td class="white">{{$origin_ammount->detail}}</td>
                         <td class="white">{{$origin_ammount->units}}</td>
-                        @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($currency_cfg->alphacode=='USD'){
+                        if($quote->currencies->alphacode=='USD'){
                         $rate=$currency_cfg->rates_eur;
                         }else{
                         $rate=$currency_cfg->rates;
                         }
                         $markup_currency=$origin_ammount->markup / $rate;
                         @endphp                    
-                        <td class="white">{{number_format((float)($origin_ammount->price_per_unit+$markup_currency)/$origin_ammount->units, 2,'.', '')}}</td>
+                        <td class="white">{{number_format((float)($markup_currency/$origin_ammount->units) + $origin_ammount->price_per_unit, 2,'.', '')}}</td>                        
                         @else
-                        <td>{{$origin_ammount->total_ammount_2 / $origin_ammount->units}}</td>
+                        <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}}</td>
                         @endif
-                        @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         <td>{{number_format((float)$origin_ammount->total_ammount  + $markup_currency, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
                         @endif
-                        <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                        <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -217,7 +217,7 @@
                     <tr class="text-center subtotal">
                         <td colspan="4"></td>
                         <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
+                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
             </table>
@@ -233,7 +233,7 @@
                         <th class="unit"><b>Units</b></th>
                         <th class="unit"><b>Price per units</b></th>
                         <th class="unit"><b>Total</b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
+                        <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -242,25 +242,25 @@
                         <td>{{$freight_ammount->charge}}</td>
                         <td>{{$freight_ammount->detail}}</td>
                         <td>{{$freight_ammount->units}}</td>
-                        @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($currency_cfg->alphacode=='USD'){
+                        if($quote->currencies->alphacode=='USD'){
                         $rate=$currency_cfg->rates_eur;
                         }else{
                         $rate=$freight_ammount->currency->rates;
                         }
                         $markup_currency=$freight_ammount->markup / $rate;
                         @endphp
-                        <td>{{number_format((float)($freight_ammount->price_per_unit + $markup_currency) / $freight_ammount->units, 2,'.', '')}}</td>
+                        <td>{{number_format((float)($markup_currency/$freight_ammount->units) + $freight_ammount->price_per_unit, 2,'.', '')}}</td>
                         @else
-                        <td>{{$freight_ammount->total_ammount_2 / $freight_ammount->units}}</td>
+                        <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}}</td>
                         @endif
-                        @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         <td>{{number_format((float)$freight_ammount->total_ammount + $markup_currency, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
                         @endif
-                        <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif<</td>
+                        <td>{{$freight_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -268,7 +268,7 @@
                     <tr class="text-center" style="font-size: 12px;">
                         <td colspan="4"></td>
                         <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
+                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
             </table>
@@ -284,7 +284,7 @@
                         <th class="unit"><b>Units</b></th>
                         <th class="unit"><b>Price per units</b></th>
                         <th class="unit"><b>Total</b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
+                        <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -293,25 +293,25 @@
                         <td>{{$destination_ammount->charge}}</td>
                         <td>{{$destination_ammount->detail}}</td>
                         <td>{{$destination_ammount->units}}</td>                  
-                        @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($currency_cfg->alphacode=='USD'){
+                        if($quote->currencies->alphacode=='USD'){
                         $rate=$currency_cfg->rates_eur;
                         }else{
                         $rate=$currency_cfg->rates;
                         }
                         $markup_currency=$destination_ammount->markup / $rate;
                         @endphp
-                        <td>{{($destination_ammount->price_per_unit  + $markup_currency) / $destination_ammount->units }}</td>
+                        <td>{{number_format((float)($markup_currency/$destination_ammount->units) + $destination_ammount->price_per_unit, 2,'.', '')}}</td>
                         @else
-                        <td>{{$destination_ammount->total_ammount_2 / $destination_ammount->units}}</td>
+                        <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}}</td>
                         @endif                    
-                        @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
+                        @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         <td>{{$destination_ammount->total_ammount }} {{$destination_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
                         @endif                    
-                        <td>{{$destination_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
+                        <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -320,7 +320,7 @@
                         <td colspan="4"></td>
                         <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
                         <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
-                            &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
+                            &nbsp; {{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
             </table>
@@ -328,7 +328,7 @@
         </main>
         <div class="clearfix details">
             <div class="company">
-                <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
+                <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
             </div>
             <hr>
         </div>
