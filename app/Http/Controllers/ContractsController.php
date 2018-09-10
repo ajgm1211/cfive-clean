@@ -204,12 +204,12 @@ class ContractsController extends Controller
   // FUNCIONES PARA EL DATATABLE
   public function data($id){
 
-    $localchar = ViewLocalCharges::where('contract_id',$id)->get();
+    $localchar = new  ViewLocalCharges();
+    $data = $localchar->select('id','surcharge','port_orig','port_dest','changetype','carrier','calculation_type','ammount','currency')->where('contract_id',$id);
 
-
-    return \DataTables::collection($localchar)
-      ->addColumn('options', function (ViewLocalCharges $localchar) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$localchar->id)'>
+    return \DataTables::of($data)
+      ->addColumn('options', function ($data) {
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$data[id])'>
           <i class='la la-edit'></i>
           </a>
             <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
