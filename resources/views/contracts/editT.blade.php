@@ -402,6 +402,8 @@ Load
   $(function() {
 
     $('#users-table').DataTable({
+      processing: true,
+      serverSide: true,
       ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
         {data: 'surcharge', name: 'surcharge'},
@@ -413,17 +415,9 @@ Load
         {data: 'ammount', name: 'ammount'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
-      ]
-      ,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "deferLoading": 57,
-      "processing": true,
-      "dom": 'Bfrtip',
-      "paging": true,
+      ],
+
+
 
       buttons: [
         {
@@ -451,6 +445,8 @@ Load
 
 
     $('#rateTable').DataTable({
+      processing: true,
+      serverSide: true,
       ajax:  "{{ route('rate.table',['id' => $id]) }}",
       columns: [
 
@@ -463,17 +459,8 @@ Load
         {data: 'fortyhc', name: 'fortyhc'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
-      ]
-      ,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "deferLoading": 57,
-      "processing": true,
-      "dom": 'Bfrtip',
-      "paging": true,
+      ],
+     
 
       buttons: [
         {
