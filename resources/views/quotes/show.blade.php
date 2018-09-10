@@ -419,6 +419,11 @@
                         <div class="col-md-12">
                             <div class="form-group terms-and-conditions">
                                 @if($quote->type!=3)
+                                @if(isset($terms_all) && $terms_all->count()>0)
+                                @foreach($terms_all as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
                                 @if(isset($terms_origin) && $terms_origin->count()>0)
                                 @foreach($terms_origin as $v)
                                 {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}

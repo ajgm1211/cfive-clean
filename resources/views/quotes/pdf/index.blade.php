@@ -307,7 +307,7 @@
                         <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}}</td>
                         @endif                    
                         @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                        <td>{{$destination_ammount->total_ammount }} {{$destination_ammount->currency->alphacode}}</td>
+                        <td>{{number_format((float)$destination_ammount->total_ammount + $markup_currency, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
                         @endif                    
