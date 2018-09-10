@@ -445,8 +445,7 @@ Load
 
 
     $('#rateTable').DataTable({
-      processing: true,
-      serverSide: true,
+
       ajax:  "{{ route('rate.table',['id' => $id]) }}",
       columns: [
 
@@ -460,7 +459,16 @@ Load
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
       ],
-     
+         
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "deferLoading": 57,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
 
       buttons: [
         {
