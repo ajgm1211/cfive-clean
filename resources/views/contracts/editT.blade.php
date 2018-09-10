@@ -404,7 +404,7 @@ Load
     $('#users-table').DataTable({
       ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
-        {data: 'type', name: 'type'},
+        {data: 'surcharge', name: 'surcharge'},
         {data: 'port_orig', name: 'port_orig'},
         {data: 'port_dest', name: 'port_dest'},
         {data: 'changetype', name: 'changetype'},

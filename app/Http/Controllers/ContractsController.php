@@ -32,6 +32,7 @@ use App\Jobs\ImportationRatesSurchargerJob;
 use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
 use App\CompanyUser;
+use App\ViewLocalCharges;
 
 class ContractsController extends Controller
 {
@@ -192,43 +193,22 @@ class ContractsController extends Controller
 
   }
 
- 
+
   public function show($id)
   {
     //
   }
 
-  
+
 
   // FUNCIONES PARA EL DATATABLE
   public function data($id){
 
-    $localchar = LocalCharge::where('contract_id',$id)->get();
+    $localchar = ViewLocalCharges::where('contract_id',$id)->get();
 
 
     return \DataTables::collection($localchar)
-      ->addColumn('type', function (LocalCharge $localchar) {
-        return $localchar->surcharge->name;
-      })
-      ->addColumn('calculation_type', function (LocalCharge $localchar) {
-        return $localchar->calculationtype->name;
-      })
-      ->addColumn('changetype', function (LocalCharge $localchar) {
-        return $localchar->typedestiny->description;
-      })
-      ->addColumn('currency', function (LocalCharge $localchar) {
-        return $localchar->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portOrig')->unique()->pluck('display_name'));
-      })
-      ->addColumn('port_dest', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharports->pluck('portDest')->unique()->pluck('display_name'));
-      })
-      ->addColumn('carrier', function (LocalCharge $localchar) {
-        return str_replace(["[","]","\""], ' ',$localchar->localcharcarriers->pluck('carrier')->unique()->pluck('name'));
-      })->
-      addColumn('options', function (LocalCharge $localchar) {
+      ->addColumn('options', function (ViewLocalCharges $localchar) {
         return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$localchar->id)'>
           <i class='la la-edit'></i>
           </a>
@@ -387,7 +367,7 @@ class ContractsController extends Controller
 
     return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
   }
-  
+
   public function update(Request $request, $id)
   {
     $requestForm = $request->all();
@@ -502,7 +482,7 @@ class ContractsController extends Controller
     $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
-    
+
     return view('contracts.addRates', compact('harbor','carrier','currency','id'));
   }
   public function storeRates(Request $request,$id){
@@ -511,7 +491,7 @@ class ContractsController extends Controller
 
 
     $rates->create($request->all());
-      return redirect()->back()->with('ratesSave','true');
+    return redirect()->back()->with('ratesSave','true');
   }
   public function editRates($id){
     $objcarrier = new Carrier();
