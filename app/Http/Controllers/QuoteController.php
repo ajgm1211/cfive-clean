@@ -1708,7 +1708,7 @@ class QuoteController extends Controller
                 $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
                 $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
                 $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
-                dd($freight_total_units);
+
                 foreach ($freight_ammount_charge as $key => $item) {
                     $freight_ammount = new FreightAmmount();
                     $freight_ammount->quote_id = $quote->id;
