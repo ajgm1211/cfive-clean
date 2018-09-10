@@ -378,7 +378,11 @@ Load
           </button>
         </div>
         <div class="modal-body">
-
+          <center>
+            <div id="spinner" style="display:none">
+              <img src="/images/ship.gif" alt="Loading" />
+            </div>
+          </center>
         </div>
 
       </div>
@@ -459,16 +463,16 @@ Load
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
       ],
-         
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "deferLoading": 57,
-            "processing": true,
-            "dom": 'Bfrtip',
-            "paging": true,
+
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "deferLoading": 57,
+      "processing": true,
+      "dom": 'Bfrtip',
+      "paging": true,
 
       buttons: [
         {
@@ -518,18 +522,24 @@ Load
 
     }
     if(action == "editLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
       var url = '{{ route("edit-local-charge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
       });
 
     }
     if(action == "addLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
       var url = '{{ route("add-LocalCharge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
       });
 
     }
