@@ -106,6 +106,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 <i class="fa flaticon-tool-1"></i>
               </a>
               @endrole
+              <br><br>
               <table  class="table tableData" id="rateTable" width="100%">
                 <thead>
                   <tr>
@@ -406,8 +407,11 @@ Load
   $(function() {
 
     $('#users-table').DataTable({
+      ordering: true,
+      searching: true,
       processing: true,
       serverSide: true,
+      order: [[ 1, "asc" ],[ 2, "asc" ]],
       ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
         {data: 'surcharge', name: 'surcharge'},
@@ -449,6 +453,11 @@ Load
 
 
     $('#rateTable').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 0, "asc" ],[ 1, "asc" ]],
 
       ajax:  "{{ route('rate.table',['id' => $id]) }}",
       columns: [
@@ -464,15 +473,7 @@ Load
         {data: 'options', name: 'options'}
       ],
 
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "deferLoading": 57,
-      "processing": true,
-      "dom": 'Bfrtip',
-      "paging": true,
+
 
       buttons: [
         {

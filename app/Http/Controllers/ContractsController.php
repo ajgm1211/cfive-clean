@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
 use App\CompanyUser;
 use App\ViewLocalCharges;
+use App\ViewRates;
+use App\ViewContractRates;
 
 class ContractsController extends Controller
 {
@@ -212,7 +214,7 @@ class ContractsController extends Controller
         return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$data[id])'>
           <i class='la la-edit'></i>
           </a>
-            <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
+            <a  data-local-id='$data[id]'    class='m_sweetalert_demo_8  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
           <i id='rm_l' class='la la-times-circle'></i>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
@@ -220,76 +222,41 @@ class ContractsController extends Controller
 
   public function dataRates($id){
 
-    $rate = Rate::where('contract_id',$id)->get();
 
-    return \DataTables::collection($rate)
+    $rate = new  ViewRates();
+    $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','currency')->where('contract_id',$id);
 
-      ->addColumn('currency', function (Rate $rate) {
-        return $rate->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (Rate $rate) {
-        return $rate->port_origin->display_name;
-      })
-      ->addColumn('port_dest', function (Rate $rate) {
-        return $rate->port_destiny->display_name;
-      })
-      ->addColumn('carrier', function (Rate $rate) {
-        return $rate->carrier->name;
-      })->
-      addColumn('options', function (Rate $rate) {
-        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$rate->id)'>
+    return \DataTables::of($data)
+      ->addColumn('options', function ($data) {
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
           <i class='la la-edit'></i>
           </a>
-            <a    class='m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
-          <i id='rm_l' class='la la-times-circle'></i>
+             <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                    <i  class='la la-times-circle'></i>
+                    </a>
+
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
   }
 
   public function contractRates(){
-
-    $contractRate = Rate::whereHas('contract', function($q)
-                                   {
-                                     $q->where('company_user_id', '=', Auth::user()->company_user_id);
-                                   })->with('contract')->get();
+    $contractRate = new  ViewContractRates();
+    $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','currency')->where('company_user_id', Auth::user()->company_user_id);
 
 
+    return \DataTables::of($data)
 
-
-    return \DataTables::collection($contractRate)
-
-      ->addColumn('name', function (Rate $contractRate) {
-        return $contractRate->contract->name;
+      ->addColumn('validity', function ($data) {
+        return $data['validy'] ." / ".$data['expire'];
       })
-      ->addColumn('number', function (Rate $contractRate) {
-        return $contractRate->contract->number;
-      })
-      ->addColumn('status', function (Rate $contractRate) {
-        return $contractRate->contract->status;
-      })
-      ->addColumn('currency', function (Rate $contractRate) {
-        return $contractRate->currency->alphacode ;
-      })
-      ->addColumn('port_orig', function (Rate $contractRate) {
-        return $contractRate->port_origin->display_name;
-      })
-      ->addColumn('port_dest', function (Rate $contractRate) {
-        return $contractRate->port_destiny->display_name;
-      })
-      ->addColumn('carrier', function (Rate $contractRate) {
-        return $contractRate->carrier->name;
-      })
-      ->addColumn('validity', function (Rate $contractRate) {
-        return $contractRate->contract->validity ." / ".$contractRate->contract->expire;
-      })
-      ->addColumn('options', function (Rate $contractRate) {
-        return "<a href='contracts/".$contractRate->contract->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+      ->addColumn('options', function ($data) {
+        return "<a href='contracts/".$data['contract_id']."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
 
-                    <a href='#' id='delete-rate' data-rate-id='$contractRate->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
-                      <i class='la la-eraser'></i>
+                    <a href='#' id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                    <i  class='la la-times-circle'></i>
                     </a>
 
         ";
@@ -658,13 +625,14 @@ class ContractsController extends Controller
   public function destroyLocalCharges($id)
   {
     $local = LocalCharge::find($id);
-    $local->delete();
+    $local->forceDelete();
   }
 
   public function destroyRates(Request $request,$id)
   {
+
     $rate = Rate::find($id);
-    $rate->delete();
+    $rate->forceDelete();
     return $rate;
 
   }
