@@ -744,11 +744,9 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="origin_total_ammount_2[]"  value="{{$origin_ammount->total_ammount_2}}" class="origin_total_ammount_2 form-control" aria-label="...">
-                                                                                        @if($i>1)
                                                                                         <a class="btn removeOriginButton">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
-                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -942,11 +940,10 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="freight_total_ammount_2[]"  value="{{$freight_ammount->total_ammount_2}}" class="freight_total_ammount_2 form-control" aria-label="...">
-                                                                                        @if($i>1)
+                                                                                        
                                                                                         <a class="btn removeButton">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
-                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
@@ -1142,11 +1139,9 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="destination_total_ammount_2[]"  value="{{$destination_ammount->total_ammount_2}}" class="destination_total_ammount_2 form-control" aria-label="...">
-                                                                                        @if($i>1)
                                                                                         <a class="btn removeButtonDestination">
                                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                                         </a>
-                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                             </td>

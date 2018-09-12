@@ -193,19 +193,14 @@
                         <td class="white">{{$origin_ammount->units}}</td>
                         @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($quote->currencies->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$currency_cfg->rates;
-                        }
-                        $markup_currency=$origin_ammount->markup / $rate;
-                        @endphp                    
-                        <td class="white">{{number_format((float)($markup_currency/$origin_ammount->units) + $origin_ammount->price_per_unit, 2,'.', '')}}</td>                        
+                        $markup_per_unit=$origin_ammount->markup_converted/$origin_ammount->units
+                        @endphp
+                        <td>{{number_format((float)$markup_per_unit+$origin_ammount->price_per_unit, 2,'.', '')}}</td>
                         @else
                         <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}}</td>
                         @endif
                         @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                        <td>{{number_format((float)$origin_ammount->total_ammount  + $markup_currency, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
+                        <td>{{number_format((float)$origin_ammount->total_ammount + $origin_ammount->markup_converted, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
                         @endif
@@ -244,19 +239,14 @@
                         <td>{{$freight_ammount->units}}</td>
                         @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($quote->currencies->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$freight_ammount->currency->rates;
-                        }
-                        $markup_currency=$freight_ammount->markup / $rate;
+                        $markup_per_unit=$freight_ammount->markup_converted/$freight_ammount->units
                         @endphp
-                        <td>{{number_format((float)($markup_currency/$freight_ammount->units) + $freight_ammount->price_per_unit, 2,'.', '')}}</td>
+                        <td>{{number_format((float)$markup_per_unit+$freight_ammount->price_per_unit, 2,'.', '')}}</td>
                         @else
                         <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}}</td>
                         @endif
                         @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                        <td>{{number_format((float)$freight_ammount->total_ammount + $markup_currency, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
+                        <td>{{number_format((float)$freight_ammount->total_ammount + $freight_ammount->markup_converted, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
                         @endif
@@ -295,19 +285,14 @@
                         <td>{{$destination_ammount->units}}</td>                  
                         @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @php
-                        if($quote->currencies->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$currency_cfg->rates;
-                        }
-                        $markup_currency=$destination_ammount->markup / $rate;
+                        $markup_per_unit=$destination_ammount->markup_converted/$destination_ammount->units
                         @endphp
-                        <td>{{number_format((float)($markup_currency/$destination_ammount->units) + $destination_ammount->price_per_unit, 2,'.', '')}}</td>
+                        <td>{{number_format((float)$markup_per_unit+$destination_ammount->price_per_unit, 2,'.', '')}}</td>
                         @else
                         <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}}</td>
                         @endif                    
                         @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                        <td>{{number_format((float)$destination_ammount->total_ammount + $markup_currency, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
+                        <td>{{number_format((float)$destination_ammount->total_ammount + $destination_ammount->markup_converted, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
                         @else
                         <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
                         @endif                    
