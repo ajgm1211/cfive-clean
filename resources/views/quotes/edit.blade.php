@@ -1329,12 +1329,14 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
     /*** GOOGLE MAPS API ***/
 
     var autocomplete;
 
     function initAutocomplete() {
+        alert('here');
         var geocoder = new google.maps.Geocoder();
         var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
         var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));

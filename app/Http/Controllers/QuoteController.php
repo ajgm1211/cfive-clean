@@ -2211,7 +2211,11 @@ class QuoteController extends Controller
                 }
                 $origin_ammount->save();
             }
+        }else{
+            $quote->sub_total_origin=null;  
+            $quote->update();  
         }
+        
         if($input['freight_ammount_charge']!=[null]) {
             $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
             $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
@@ -2248,7 +2252,11 @@ class QuoteController extends Controller
                 }
                 $freight_ammount->save();
             }
+        }else{
+            $quote->sub_total_freight=null;  
+            $quote->update();  
         }
+        
         if($input['destination_ammount_charge']!=[null]) {
             $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
             $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
@@ -2285,6 +2293,9 @@ class QuoteController extends Controller
                 }
                 $destination_ammount->save();
             }
+        }else{
+            $quote->sub_total_destination=null;  
+            $quote->update();  
         }
 
         $quantity = array_values( array_filter($input['quantity']) );
