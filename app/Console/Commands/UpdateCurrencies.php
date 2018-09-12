@@ -53,7 +53,7 @@ class updateCurrencies extends Command
 
         // Decode JSON response:
         $exchangeRates = json_decode($json, true);
-
+        
         foreach($exchangeRates['quotes'] as $key=>$value){
             $currency=Currency::where('api_code',$key)->first();
             if(isset($currency)){
