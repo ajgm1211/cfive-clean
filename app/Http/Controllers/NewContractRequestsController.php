@@ -10,6 +10,8 @@ use App\Harbor;
 use App\Carrier;
 use App\Notifications\N_general;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\NewRequestToAdminMail;
+use App\Mail\RequestToUserMail;
 
 class NewContractRequestsController extends Controller
 {
@@ -108,11 +110,13 @@ class NewContractRequestsController extends Controller
         $Ncontract->type            = $type;
         $Ncontract->data            = $data;
         $Ncontract->save();
-
         $user = User::find($request->user);
         $admins = User::where('type','admin')->get();
         $message = 'has created an new request: '.$Ncontract->id;
         foreach($admins as $userNotifique){
+            \Mail::to($userNotifique->email)->send(new NewRequestToAdminMail($userNotifique->toArray(),
+                                                                             $user->toArray(),
+                                                                             $Ncontract->toArray()));
             $userNotifique->notify(new N_general($user,$message));
         }
 
@@ -257,6 +261,7 @@ class NewContractRequestsController extends Controller
     public function UpdateStatusRequest(){
         $id     = $_REQUEST['id'];
         $status = $_REQUEST['status'];
+
         try {
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
@@ -267,8 +272,22 @@ class NewContractRequestsController extends Controller
                 $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
                 $message = 'The request was processed N°: ' . $Ncontract->id;
                 foreach ($users as $user) {
+
                     $user->notify(new N_general(\Auth::user(),$message));
                 }
+
+                $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
+                foreach ($usersCompa as $userCmp) {
+
+                    \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
+                                                                             $Ncontract->toArray()));
+                }
+                
+                $usercreador = User::find($Ncontract->user_id);
+                
+                  \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
+                                                                             $Ncontract->toArray()));
+
             }
 
             return response()->json($data=['status'=>1,'data'=>$status]);
