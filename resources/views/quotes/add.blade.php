@@ -353,6 +353,9 @@
                                                                             <span id="total_quantity_pkg"></span>
                                                                             <span id="total_volume_pkg"></span>
                                                                             <span id="total_weight_pkg"></span>
+                                                                            <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
+                                                                            <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
+                                                                            <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
@@ -507,9 +510,9 @@
                                                             </a>
                                                         </div>
                                                         <!--<div class="col-md-4 col-sm-4 col-xs-12">
-                                                            <label>Price level</label>
-                                                            {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
-                                                            </div>-->
+<label>Price level</label>
+{{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
+</div>-->
                                                     </div>
                                                 </div>
                                             </div>                                                    
@@ -575,7 +578,8 @@
                                                                 <div id="cargo_details_cargo_type_p" class="hide"><b>Cargo type:</b> <span id="cargo_details_cargo_type"></span></div>
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <div id="cargo_details_total_quantity_p" class="hide"><b>Total quantity:</b> <span id="cargo_details_total_quantity"></span></div>
+                                                                <div id="cargo_details_total_quantity_p" class="hide">  <b>Total quantity:</b> <span id="cargo_details_total_quantity"></span>
+                                                                </div>
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div id="cargo_details_total_weight_p" class="hide"><b>Total weight: </b> <span id="cargo_details_total_weight"></span> KG</div>
@@ -587,6 +591,15 @@
                                                         <div class="row">
                                                             <div class="col-md-12" id="label_package_loads">
 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pull-right">
+                                                            <div class="col-md-12">
+                                                                <div id="cargo_details_total_pkg_p" class="hide">  <b>Total:</b> 
+                                                                    <span id="cargo_details_total_quantity_pkg"></span> un&nbsp;
+                                                                    <span id="cargo_details_total_volume_pkg"></span> m<sup>3</sup>&nbsp;
+                                                                    <span id="cargo_details_total_weight_pkg"></span> km
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1041,6 +1054,7 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
 
     /*** GOOGLE MAPS API ***/
