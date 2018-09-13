@@ -106,6 +106,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 <i class="fa flaticon-tool-1"></i>
               </a>
               @endrole
+              <br><br>
               <table  class="table tableData" id="rateTable" width="100%">
                 <thead>
                   <tr>
@@ -378,7 +379,11 @@ Load
           </button>
         </div>
         <div class="modal-body">
-
+          <center>
+            <div id="spinner" style="display:none">
+              <img src="/images/ship.gif" alt="Loading" />
+            </div>
+          </center>
         </div>
 
       </div>
@@ -402,9 +407,14 @@ Load
   $(function() {
 
     $('#users-table').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 1, "asc" ],[ 2, "asc" ]],
       ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
-        {data: 'type', name: 'type'},
+        {data: 'surcharge', name: 'surcharge'},
         {data: 'port_orig', name: 'port_orig'},
         {data: 'port_dest', name: 'port_dest'},
         {data: 'changetype', name: 'changetype'},
@@ -413,17 +423,9 @@ Load
         {data: 'ammount', name: 'ammount'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
-      ]
-      ,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "deferLoading": 57,
-      "processing": true,
-      "dom": 'Bfrtip',
-      "paging": true,
+      ],
+
+
 
       buttons: [
         {
@@ -451,6 +453,12 @@ Load
 
 
     $('#rateTable').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 0, "asc" ],[ 1, "asc" ]],
+
       ajax:  "{{ route('rate.table',['id' => $id]) }}",
       columns: [
 
@@ -463,17 +471,9 @@ Load
         {data: 'fortyhc', name: 'fortyhc'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
-      ]
-      ,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "deferLoading": 57,
-      "processing": true,
-      "dom": 'Bfrtip',
-      "paging": true,
+      ],
+
+
 
       buttons: [
         {
@@ -523,18 +523,24 @@ Load
 
     }
     if(action == "editLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
       var url = '{{ route("edit-local-charge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
       });
 
     }
     if(action == "addLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
       var url = '{{ route("add-LocalCharge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
       });
 
     }
