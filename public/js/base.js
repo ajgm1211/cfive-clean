@@ -613,18 +613,31 @@ $(document).on('click', '.addButtonDestination', function (e) {
     .removeAttr('id')
     .insertAfter($template);
 });
+
 $(document).on('click', '.removeOriginButton', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".origin_price_per_unit").change();
+    $(".origin_ammount_units").change();
+    $(".origin_ammount_currency").change();
+    $(".origin_total_ammount_2").change();
 });
+
 $(document).on('click', '.removeButton', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".freight_price_per_unit").change();
+    $(".freight_ammount_units").change();
+    $(".freight_ammount_currency").change();
+    $(".freight_total_ammount_2").change();
 });
+
 $(document).on('click', '.removeButtonDestination', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".destination_price_per_unit").change();
+    $(".destination_ammount_units").change();
+    $(".destination_ammount_currency").change();
+    $(".destination_total_ammount_2").change();
 });
+
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
         $(".inland_fixed_markup_3").hide();

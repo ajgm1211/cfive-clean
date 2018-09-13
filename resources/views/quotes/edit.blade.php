@@ -1336,7 +1336,6 @@
     var autocomplete;
 
     function initAutocomplete() {
-        alert('here');
         var geocoder = new google.maps.Geocoder();
         var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
         var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
