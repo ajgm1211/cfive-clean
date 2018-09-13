@@ -19,7 +19,7 @@ class NewContractRequestsController extends Controller
 
     public function index()
     {
-        $Ncontracts = NewContractRequest::with('user','companyuser')->get();
+        $Ncontracts = NewContractRequest::with('user','companyuser')->orderBy('id', 'desc')->get();
         //dd($Ncontracts);
         return view('contracts.Requests.index',compact('Ncontracts'));
     }
@@ -278,15 +278,16 @@ class NewContractRequestsController extends Controller
 
                 $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
                 foreach ($usersCompa as $userCmp) {
-
-                    \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
-                                                                             $Ncontract->toArray()));
+                    if($userCmp->id != $Ncontract->user_id){
+                        \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
+                                                                               $Ncontract->toArray()));
+                    }
                 }
-                
+
                 $usercreador = User::find($Ncontract->user_id);
-                
-                  \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
-                                                                             $Ncontract->toArray()));
+
+                \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
+                                                                           $Ncontract->toArray()));
 
             }
 
