@@ -14,7 +14,6 @@
 <script src="/assets/demo/default/custom/components/forms/validation/form-controls.js" type="text/javascript"></script>
 
 <script src="/assets/demo/default/custom/components/forms/wizard/wizard.js" type="text/javascript"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 @if(Auth::check())
 <script>
   var userId = {{ Auth::user()->id }}
