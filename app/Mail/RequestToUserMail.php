@@ -29,7 +29,10 @@ class RequestToUserMail extends Mailable
      */
     public function build()
     {
+
         return $this->markdown('emails.Requests.ToUserMailabel')->with(['user'=>$this->user,
-                                                                       'contract' => $this->contract])->subject('The contract '.$this->contract['namecontract'].' importation was completed');
+                                                                       'contract' => $this->contract])
+            ->from('info@cargofive.com')
+            ->subject('The contract '.$this->contract['namecontract'].' importation was completed');
     }
 }
