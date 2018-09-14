@@ -247,6 +247,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $total[0]  }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -287,6 +290,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $total[0]  }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -324,6 +330,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $origin->monto }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -481,6 +490,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -521,6 +533,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
+                                      <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -561,6 +576,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
+                                      <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -673,6 +691,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $total[0] }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -713,6 +734,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $total[0] }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -750,6 +774,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $destiny->monto }}">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
@@ -786,6 +813,9 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                <a class="btn removeButton">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                      </a>
                                     </div>
                                   </div>
                                 </td>
