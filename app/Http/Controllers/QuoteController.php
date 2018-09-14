@@ -2180,7 +2180,18 @@ class QuoteController extends Controller
     {
         $input = Input::all();
         $quote = Quote::find($id);
+        
+        $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+        $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+        $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+        $sum_markup_origin=array_sum($total_markup_origin);
+        $sum_markup_freight=array_sum($total_markup_freight);
+        $sum_markup_destination=array_sum($total_markup_destination);
+        
+        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]); 
+        
         $quote->update($request->all());
+        
         OriginAmmount::where('quote_id',$quote->id)->delete();
         FreightAmmount::where('quote_id',$quote->id)->delete();
         DestinationAmmount::where('quote_id',$quote->id)->delete();
@@ -2223,6 +2234,7 @@ class QuoteController extends Controller
             }
         }else{
             $quote->sub_total_origin=null;  
+            $quote->total_markup_origin=null;  
             $quote->update();  
         }
 
@@ -2263,7 +2275,8 @@ class QuoteController extends Controller
                 $freight_ammount->save();
             }
         }else{
-            $quote->sub_total_freight=null;  
+            $quote->sub_total_freight=null;
+            $quote->total_markup_freight=null;
             $quote->update();  
         }
 
@@ -2304,7 +2317,8 @@ class QuoteController extends Controller
                 $destination_ammount->save();
             }
         }else{
-            $quote->sub_total_destination=null;  
+            $quote->sub_total_destination=null;
+            $quote->total_markup_destination=null;
             $quote->update();  
         }
 
