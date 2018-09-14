@@ -1855,137 +1855,180 @@ class QuoteController extends Controller
 
     public function storeWithEmail(Request $request)
     {
-        $input = Input::all();
+        $rules = array(
+            'pick_up_date' => 'required',
+            'validity' => 'required',
+            'company_id' => 'required',
+            'contact_id' => 'required',
+            'type' => 'required',
+            'freight_ammount_charge' => 'required',
+            'freight_ammount_detail' => 'required',
+            'freight_ammount_units' => 'required',
+            'freight_price_per_unit' => 'required',
+            'freight_total_ammount' => 'required',
+            'freight_total_ammount_2' => 'required',
+        );
 
-        $company_quote = $this->idPersonalizado();
-        $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
+        $validator = Validator::make(Input::all(), $rules);
 
-        $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
-        $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
-        $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
-        $sum_markup_origin=array_sum($total_markup_origin);
-        $sum_markup_freight=array_sum($total_markup_freight);
-        $sum_markup_destination=array_sum($total_markup_destination);
-        $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2,'company_quote'=>$company_quote]);     
+        if ($validator->fails()) {
 
-        $quote=Quote::create($request->all());
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            $request->session()->flash('message.content', 'There is empty fields');
+            //return redirect()->route('quotes.index');
+            return redirect('/quotes/create');
 
-        if($input['origin_ammount_charge']!=[null]) {
-            $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
-            $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
-            $origin_ammount_price_per_unit = array_values( array_filter($input['origin_price_per_unit']) );
-            $origin_ammount_currency = array_values( array_filter($input['origin_ammount_currency']) );
-            $origin_total_units = array_values( array_filter($input['origin_ammount_units']) );
-            $origin_total_ammount = array_values( array_filter($input['origin_total_ammount']) );
-            $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
-            $origin_total_markup = array_values( array_filter($input['origin_ammount_markup']) );
-            foreach ($origin_ammount_charge as $key => $item) {
-                $origin_ammount = new OriginAmmount();
-                $origin_ammount->quote_id = $quote->id;
-                if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
-                    $origin_ammount->charge = $origin_ammount_charge[$key];
+        }else{
+            
+            $input = Input::all();
+
+            $company_quote = $this->idPersonalizado();
+            $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
+
+            $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
+            $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
+            $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
+            $sum_markup_origin=array_sum($total_markup_origin);
+            $sum_markup_freight=array_sum($total_markup_freight);
+            $sum_markup_destination=array_sum($total_markup_destination);
+            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2,'company_quote'=>$company_quote]);     
+
+            $quote=Quote::create($request->all());
+
+            if($input['origin_ammount_charge']!=[null]) {
+                $origin_ammount_charge = array_values( array_filter($input['origin_ammount_charge']) );
+                $origin_ammount_detail = array_values( array_filter($input['origin_ammount_detail']) );
+                $origin_ammount_price_per_unit = array_values( array_filter($input['origin_price_per_unit']) );
+                $origin_ammount_currency = array_values( array_filter($input['origin_ammount_currency']) );
+                $origin_total_units = array_values( array_filter($input['origin_ammount_units']) );
+                $origin_total_ammount = array_values( array_filter($input['origin_total_ammount']) );
+                $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
+                $origin_total_markup = array_values( array_filter($input['origin_ammount_markup']) );
+                foreach ($origin_ammount_charge as $key => $item) {
+                    $origin_ammount = new OriginAmmount();
+                    $origin_ammount->quote_id = $quote->id;
+                    if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
+                        $origin_ammount->charge = $origin_ammount_charge[$key];
+                    }
+                    if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
+                        $origin_ammount->detail = $origin_ammount_detail[$key];
+                    }
+                    if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
+                        $origin_ammount->units = $origin_total_units[$key];
+                    }
+                    if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
+                        $origin_ammount->markup = $origin_total_markup[$key];
+                    }
+                    if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
+                        $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
+                        $origin_ammount->currency_id = $origin_ammount_currency[$key];
+                    }
+                    if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
+                        $origin_ammount->total_ammount = $origin_total_ammount[$key];
+                    }
+                    if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
+                        $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
+                    }
+                    $origin_ammount->save();
                 }
-                if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
-                    $origin_ammount->detail = $origin_ammount_detail[$key];
-                }
-                if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
-                    $origin_ammount->units = $origin_total_units[$key];
-                }
-                if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
-                    $origin_ammount->markup = $origin_total_markup[$key];
-                }
-                if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
-                    $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
-                    $origin_ammount->currency_id = $origin_ammount_currency[$key];
-                }
-                if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
-                    $origin_ammount->total_ammount = $origin_total_ammount[$key];
-                }
-                if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
-                    $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
-                }
-                $origin_ammount->save();
             }
-        }
-        if($input['freight_ammount_charge']!=[null]) {
-            $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
-            $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
-            $freight_ammount_price_per_unit = array_values( array_filter($input['freight_price_per_unit']) );
-            $freight_ammount_currency = array_values( array_filter($input['freight_ammount_currency']) );
-            $freight_total_units = array_values( array_filter($input['freight_ammount_units']) );
-            $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
-            $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
-            $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
-            foreach ($freight_ammount_charge as $key => $item) {
-                $freight_ammount = new FreightAmmount();
-                $freight_ammount->quote_id = $quote->id;
-                if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
-                    $freight_ammount->charge = $freight_ammount_charge[$key];
+            if($input['freight_ammount_charge']!=[null]) {
+                $freight_ammount_charge = array_values( array_filter($input['freight_ammount_charge']) );
+                $freight_ammount_detail = array_values( array_filter($input['freight_ammount_detail']) );
+                $freight_ammount_price_per_unit = array_values( array_filter($input['freight_price_per_unit']) );
+                $freight_ammount_currency = array_values( array_filter($input['freight_ammount_currency']) );
+                $freight_total_units = array_values( array_filter($input['freight_ammount_units']) );
+                $freight_total_ammount = array_values( array_filter($input['freight_total_ammount']) );
+                $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
+                $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
+                foreach ($freight_ammount_charge as $key => $item) {
+                    $freight_ammount = new FreightAmmount();
+                    $freight_ammount->quote_id = $quote->id;
+                    if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
+                        $freight_ammount->charge = $freight_ammount_charge[$key];
+                    }
+                    if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
+                        $freight_ammount->detail = $freight_ammount_detail[$key];
+                    }
+                    if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
+                        $freight_ammount->units = $freight_total_units[$key];
+                    }
+                    if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
+                        $freight_ammount->markup = $freight_total_markup[$key];
+                    }
+                    if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
+                        $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
+                        $freight_ammount->currency_id = $freight_ammount_currency[$key];
+                    }
+                    if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
+                        $freight_ammount->total_ammount = $freight_total_ammount[$key];
+                    }
+                    if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
+                        $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
+                    }
+                    $freight_ammount->save();
                 }
-                if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
-                    $freight_ammount->detail = $freight_ammount_detail[$key];
-                }
-                if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
-                    $freight_ammount->units = $freight_total_units[$key];
-                }
-                if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
-                    $freight_ammount->markup = $freight_total_markup[$key];
-                }
-                if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
-                    $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
-                    $freight_ammount->currency_id = $freight_ammount_currency[$key];
-                }
-                if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
-                    $freight_ammount->total_ammount = $freight_total_ammount[$key];
-                }
-                if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
-                    $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
-                }
-                $freight_ammount->save();
             }
-        }
-        if($input['destination_ammount_charge']!=[null]) {
-            $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
-            $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
-            $destination_ammount_price_per_unit = array_values( array_filter($input['destination_price_per_unit']) );
-            $destination_ammount_currency = array_values( array_filter($input['destination_ammount_currency']) );
-            $destination_ammount_units = array_values( array_filter($input['destination_ammount_units']) );
-            $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
-            $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
-            $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
-            foreach ($destination_ammount_charge as $key => $item) {
-                $destination_ammount = new DestinationAmmount();
-                $destination_ammount->quote_id = $quote->id;
-                if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
-                    $destination_ammount->charge = $destination_ammount_charge[$key];
+            if($input['destination_ammount_charge']!=[null]) {
+                $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
+                $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
+                $destination_ammount_price_per_unit = array_values( array_filter($input['destination_price_per_unit']) );
+                $destination_ammount_currency = array_values( array_filter($input['destination_ammount_currency']) );
+                $destination_ammount_units = array_values( array_filter($input['destination_ammount_units']) );
+                $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
+                $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
+                $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
+                foreach ($destination_ammount_charge as $key => $item) {
+                    $destination_ammount = new DestinationAmmount();
+                    $destination_ammount->quote_id = $quote->id;
+                    if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
+                        $destination_ammount->charge = $destination_ammount_charge[$key];
+                    }
+                    if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
+                        $destination_ammount->detail = $destination_ammount_detail[$key];
+                    }
+                    if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
+                        $destination_ammount->units = $destination_ammount_units[$key];
+                    }
+                    if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
+                        $destination_ammount->markup = $destination_ammount_markup[$key];
+                    }
+                    if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
+                        $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
+                        $destination_ammount->currency_id = $destination_ammount_currency[$key];
+                    }
+                    if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
+                        $destination_ammount->total_ammount = $destination_total_ammount[$key];
+                    }
+                    if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
+                        $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
+                    }
+                    $destination_ammount->save();
                 }
-                if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
-                    $destination_ammount->detail = $destination_ammount_detail[$key];
-                }
-                if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
-                    $destination_ammount->units = $destination_ammount_units[$key];
-                }
-                if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
-                    $destination_ammount->markup = $destination_ammount_markup[$key];
-                }
-                if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
-                    $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
-                    $destination_ammount->currency_id = $destination_ammount_currency[$key];
-                }
-                if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
-                    $destination_ammount->total_ammount = $destination_total_ammount[$key];
-                }
-                if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
-                    $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
-                }
-                $destination_ammount->save();
             }
-        }
-        if(isset($input['schedule'])){
-            if($input['schedule'] != 'null'){
-                $schedules = json_decode($input['schedule']);
-                foreach( $schedules as $schedule){
-                    $sche = json_decode($schedule);
+            if(isset($input['schedule'])){
+                if($input['schedule'] != 'null'){
+                    $schedules = json_decode($input['schedule']);
+                    foreach( $schedules as $schedule){
+                        $sche = json_decode($schedule);
+                        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                        $saveSchedule  = new Schedule();
+                        $saveSchedule->vessel = $sche->VesselName;
+                        $saveSchedule->etd = $sche->Etd;
+                        $saveSchedule->transit_time =  $dias;
+                        $saveSchedule->eta = $sche->Eta;
+                        $saveSchedule->type = 'direct';
+                        $saveSchedule->quotes()->associate($quote);
+                        $saveSchedule->save();
+                    }
+                }
+            }
+            // Schedule manual
+            if(isset($input['schedule_manual'])){
+                if($input['schedule_manual'] != 'null'){
+                    $sche = json_decode($input['schedule_manual']);
+                    // dd($sche);
                     $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
                     $saveSchedule  = new Schedule();
                     $saveSchedule->vessel = $sche->VesselName;
@@ -1997,75 +2040,59 @@ class QuoteController extends Controller
                     $saveSchedule->save();
                 }
             }
-        }
-        // Schedule manual
-        if(isset($input['schedule_manual'])){
-            if($input['schedule_manual'] != 'null'){
-                $sche = json_decode($input['schedule_manual']);
-                // dd($sche);
-                $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
-                $saveSchedule  = new Schedule();
-                $saveSchedule->vessel = $sche->VesselName;
-                $saveSchedule->etd = $sche->Etd;
-                $saveSchedule->transit_time =  $dias;
-                $saveSchedule->eta = $sche->Eta;
-                $saveSchedule->type = 'direct';
-                $saveSchedule->quotes()->associate($quote);
-                $saveSchedule->save();
-            }
-        }
-        $quantity = array_values( array_filter($input['quantity']) );
-        $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-        $height = array_values( array_filter($input['height']) );
-        $width = array_values( array_filter($input['width']) );
-        $large = array_values( array_filter($input['large']) );
-        $weight = array_values( array_filter($input['weight']) );
-        $volume = array_values( array_filter($input['volume']) );
+            $quantity = array_values( array_filter($input['quantity']) );
+            $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+            $height = array_values( array_filter($input['height']) );
+            $width = array_values( array_filter($input['width']) );
+            $large = array_values( array_filter($input['large']) );
+            $weight = array_values( array_filter($input['weight']) );
+            $volume = array_values( array_filter($input['volume']) );
 
-        if(count($quantity)>0){
-            foreach($type_cargo as $key=>$item){
-                $package_load = new PackageLoad();
-                $package_load->quote_id = $quote->id;
-                $package_load->type_cargo = $type_cargo[$key];
-                $package_load->quantity = $quantity[$key];
-                $package_load->height = $height[$key];
-                $package_load->width = $width[$key];
-                $package_load->large = $large[$key];
-                $package_load->weight = $weight[$key];
-                $package_load->total_weight = $weight[$key]*$quantity[$key];
-                $package_load->volume = $volume[$key];
-                $package_load->save();
+            if(count($quantity)>0){
+                foreach($type_cargo as $key=>$item){
+                    $package_load = new PackageLoad();
+                    $package_load->quote_id = $quote->id;
+                    $package_load->type_cargo = $type_cargo[$key];
+                    $package_load->quantity = $quantity[$key];
+                    $package_load->height = $height[$key];
+                    $package_load->width = $width[$key];
+                    $package_load->large = $large[$key];
+                    $package_load->weight = $weight[$key];
+                    $package_load->total_weight = $weight[$key]*$quantity[$key];
+                    $package_load->volume = $volume[$key];
+                    $package_load->save();
+                }
             }
-        }
-        //Sending email
-        if(isset($input['subject']) && isset($input['body'])){
-            $subject = $input['subject'];
-            $body = $input['body'];
-            $contact_email = Contact::find($quote->contact_id);
-            $companies = Company::all()->pluck('business_name','id');
-            $harbors = Harbor::all()->pluck('name','id');
-            $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-            $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-            $prices = Price::all()->pluck('name','id');
-            $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
-            $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
-            $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
-            $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-            $user = User::where('id',\Auth::id())->with('companyUser')->first();
-            if(\Auth::user()->company_user_id){
-                $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-                $currency_cfg = Currency::find($company_user->currency_id);
+            //Sending email
+            if(isset($input['subject']) && isset($input['body'])){
+                $subject = $input['subject'];
+                $body = $input['body'];
+                $contact_email = Contact::find($quote->contact_id);
+                $companies = Company::all()->pluck('business_name','id');
+                $harbors = Harbor::all()->pluck('name','id');
+                $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+                $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+                $prices = Price::all()->pluck('name','id');
+                $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+                $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+                $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+                $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+                $user = User::where('id',\Auth::id())->with('companyUser')->first();
+                if(\Auth::user()->company_user_id){
+                    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+                    $currency_cfg = Currency::find($company_user->currency_id);
+                }
+                $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                                         'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+                \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
             }
-            $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                                     'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
-            $pdf = \App::make('dompdf.wrapper');
-            $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
-            \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Register completed successfully!');
+            return redirect()->action('QuoteController@show',$quote->id);
         }
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register completed successfully!');
-        return redirect()->action('QuoteController@show',$quote->id);
     }
 
 
@@ -2180,18 +2207,18 @@ class QuoteController extends Controller
     {
         $input = Input::all();
         $quote = Quote::find($id);
-        
+
         $total_markup_origin=array_values( array_filter($input['origin_ammount_markup']) );
         $total_markup_freight=array_values( array_filter($input['freight_ammount_markup']) );
         $total_markup_destination=array_values( array_filter($input['destination_ammount_markup']) );
         $sum_markup_origin=array_sum($total_markup_origin);
         $sum_markup_freight=array_sum($total_markup_freight);
         $sum_markup_destination=array_sum($total_markup_destination);
-        
+
         $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]); 
-        
+
         $quote->update($request->all());
-        
+
         OriginAmmount::where('quote_id',$quote->id)->delete();
         FreightAmmount::where('quote_id',$quote->id)->delete();
         DestinationAmmount::where('quote_id',$quote->id)->delete();

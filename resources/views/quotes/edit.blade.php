@@ -35,6 +35,8 @@
         </div>
     </div>
     @endif
+    <!-- input with currency id -->
+    <input type="hidden" id="currency_id" value="{{$currency_cfg->alphacode}}"/>
     <div class="row">
         <div class="col-md-10">
             <div class="row">
