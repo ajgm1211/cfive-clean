@@ -67,7 +67,7 @@ class PdfController extends Controller
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -88,7 +88,7 @@ class PdfController extends Controller
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -111,7 +111,7 @@ class PdfController extends Controller
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -120,7 +120,7 @@ class PdfController extends Controller
             $item->markup_converted = $markup_converted;
         }
 
-        $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
+        $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
@@ -133,7 +133,7 @@ class PdfController extends Controller
         // set API Endpoint and access key (and any options of your choice)
         $endpoint = 'live';
         $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
-        
+
         $quote = Quote::findOrFail($request->id);
         $contact_email = Contact::find($quote->contact_id);
         $companies = Company::all()->pluck('business_name','id');
@@ -162,7 +162,7 @@ class PdfController extends Controller
             })->get();            
         }
 
-foreach($origin_ammounts as $item){
+        foreach($origin_ammounts as $item){
             $currency=Currency::find($item->currency_id);
             // Initialize CURL:
             $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
@@ -174,7 +174,7 @@ foreach($origin_ammounts as $item){
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -195,7 +195,7 @@ foreach($origin_ammounts as $item){
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -218,7 +218,7 @@ foreach($origin_ammounts as $item){
 
             // Decode JSON response:
             $exchangeRates = json_decode($json, true);
-            
+
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
             }else{
@@ -228,7 +228,7 @@ foreach($origin_ammounts as $item){
         }
         $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                                  'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads]);
+                                                 'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
