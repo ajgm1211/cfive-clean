@@ -178,6 +178,7 @@ new registration
                             @endforeach
                         </div>
                         <input type="hidden" name="countTarges" id="countTarges" value="{{$countTarges}}" />
+                        <input type="hidden" name="CompanyUserId" id="CompanyUserId" value="{{$CompanyUserId}}" />
                     </div>
                     <div class="form-group m-form__group row">
 
