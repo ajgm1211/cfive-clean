@@ -1303,7 +1303,7 @@ class ContractsController extends Controller
     $data->push($boxdinamy);
     $countTarges = count($targetsArr);
     //dd($data);
-    return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren'));
+    return view('contracts.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
     /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
@@ -1621,7 +1621,7 @@ class ContractsController extends Controller
   }
 
   public function ProcessContractFclRatSurch(Request $request){
-    $companyUserId =\Auth::user()->company_user_id;
+    $companyUserId = $request->CompanyUserId;
     $UserId =\Auth::user()->id;
     ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId);
     return redirect()->route('redirect.Processed.Information');
