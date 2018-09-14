@@ -370,9 +370,7 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="origin_total_ammount_2[]"  value="" class="origin_total_ammount_2 form-control" aria-label="...">
-                                      <a class="btn removeOriginButton">
-                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                      </a>
+                                     
                                     </div>
                                   </div>                
                                 </td>
@@ -813,9 +811,7 @@ $subtotalDestiny = 0;
                                   <div class="form-group">
                                     <div class="input-group">
                                       <input type="text" name="destination_total_ammount_2[]"  value="" class="destination_total_ammount_2 form-control" aria-label="...">
-                                                <a class="btn removeButton">
-                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                      </a>
+                                                
                                     </div>
                                   </div>
                                 </td>
