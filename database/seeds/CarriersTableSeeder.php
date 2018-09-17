@@ -167,6 +167,12 @@ class CarriersTableSeeder extends Seeder
                 'name' => 'ONE',
                 'image' => 'one.png',
             ),
+            25 => 
+            array (
+                'id' => 26,
+                'name' => 'ALL',
+                'image' => 'all.png',
+            ),
         ));
         
         

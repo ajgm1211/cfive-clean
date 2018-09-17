@@ -592,9 +592,15 @@ class QuoteController extends Controller
                 $collectionRate->push($array);
             }
             $data->setAttribute('rates',$collectionRate);
-            // id de los ALL
+            // id de los port  ALL
             array_push($orig_port,1485);
             array_push($dest_port,1485);
+            // id de los carrier ALL 
+            $carrier_all = 26;
+            array_push($carrier,$carrier_all);
+          
+
+          
             //  calculo de los local charges en freight , origin y destiny
             $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
                 $q->whereIn('carrier_id', $carrier);
@@ -1054,6 +1060,7 @@ class QuoteController extends Controller
             })->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
                 $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
             })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+  
             foreach($globalChar as $global){
                 $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
                 // Condicion para enviar los terminos de venta o compra
@@ -1065,7 +1072,7 @@ class QuoteController extends Controller
                 if(in_array($global->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_i1d  || $carrierGlobal->carrier_id ==  $carrier_all){
                                 if($global->typedestiny_id == '1'){
                                     $subtotal_global = $formulario->twuenty *  $global->ammount;
                                     $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG ;
