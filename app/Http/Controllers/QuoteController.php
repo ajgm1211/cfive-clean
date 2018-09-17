@@ -618,7 +618,7 @@ class QuoteController extends Controller
                 if(in_array($local->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($local->localcharcarriers as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                                 if($local->typedestiny_id == '1'){
                                     $subtotal_local = $formulario->twuenty *  $local->ammount;
                                     $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
@@ -696,7 +696,7 @@ class QuoteController extends Controller
                 if(in_array($local->calculationtype_id, $array40)){
                     if($request->input('forty') != "0") {
                         foreach($local->localcharcarriers as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                                 if($local->typedestiny_id == '1'){
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->forty *  $local->ammount) * 2 ;
@@ -835,7 +835,7 @@ class QuoteController extends Controller
                 if(in_array($local->calculationtype_id, $array40Hc)){
                     if($request->input('fortyhc') != "0") {
                         foreach($local->localcharcarriers as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                                 if($local->typedestiny_id == '1'){
                                     if($local->calculationtype_id == "4"  ){
                                         $subtotal_local = ($formulario->fortyhc *  $local->ammount) * 2 ;
@@ -973,7 +973,7 @@ class QuoteController extends Controller
                 }
                 if($local->calculationtype_id == "6"){
                     foreach($local->localcharcarriers as $carrierGlobal){
-                        if($carrierGlobal->carrier_id == $data->carrier_id ){
+                        if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                             if($local->typedestiny_id == '1'){
                                 $subtotal_local =  $local->ammount;
                                 $totalAmmount =  $local->ammount  / $rateMount;
@@ -1072,7 +1072,7 @@ class QuoteController extends Controller
                 if(in_array($global->calculationtype_id, $array20)){
                     if($request->input('twuenty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_i1d  || $carrierGlobal->carrier_id ==  $carrier_all){
+                            if($carrierGlobal->carrier_id == $data->carrier_id  || $carrierGlobal->carrier_id ==  $carrier_all){
                                 if($global->typedestiny_id == '1'){
                                     $subtotal_global = $formulario->twuenty *  $global->ammount;
                                     $totalAmmount = ($formulario->twuenty *  $global->ammount) / $rateMountG ;
@@ -1153,7 +1153,7 @@ class QuoteController extends Controller
                 if(in_array($global->calculationtype_id, $array40)){
                     if($request->input('forty') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                                 if($global->typedestiny_id == '1'){
                                     if($global->calculationtype_id == "4"  ){
                                         $subtotal_global = ($formulario->forty *  $global->ammount) * 2 ;
@@ -1254,7 +1254,7 @@ class QuoteController extends Controller
                 if(in_array($global->calculationtype_id, $array40Hc)){
                     if($request->input('fortyhc') != "0") {
                         foreach($global->globalcharcarrier as $carrierGlobal){
-                            if($carrierGlobal->carrier_id == $data->carrier_id ){
+                            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                                 if($global->typedestiny_id == '1'){
                                     if($global->calculationtype_id == "4"  ){
                                         $subtotal_global = ($formulario->fortyhc *  $global->ammount) * 2 ;
@@ -1354,7 +1354,7 @@ class QuoteController extends Controller
                 }
                 if($global->calculationtype_id == "6"){
                     foreach($global->globalcharcarrier as $carrierGlobal){
-                        if($carrierGlobal->carrier_id == $data->carrier_id ){
+                        if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
                             if($global->typedestiny_id == '1'){
                                 $subtotal_global = $global->ammount;
                                 $totalAmmount =  $global->ammount / $rateMountG;
