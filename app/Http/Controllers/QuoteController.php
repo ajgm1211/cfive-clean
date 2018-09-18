@@ -463,16 +463,6 @@ class QuoteController extends Controller
             $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
         });
 
-
-
-        /*
-        $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id)
-        {
-        $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
-      });*/
-
-
-
         // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
         if($request->input('twuenty') != "0" ){
             $arreglo->where('twuenty' , '!=' , "0");
