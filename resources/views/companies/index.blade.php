@@ -68,7 +68,7 @@ All
                     </div>
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                        <button type="button" class="addCompany btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                        <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
