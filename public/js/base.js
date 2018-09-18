@@ -1131,7 +1131,6 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
                             var quantity = $(self).closest('tr').find('.freight_ammount_units').val();
                             markup = $(self).closest('tr').find('.freight_ammount_markup').val();
                             var sub_total = amount * quantity;
-
                             if(currency_cfg+json.alphacode == json.api_code){
                                 total = sub_total / json.rates;
                             }else{
