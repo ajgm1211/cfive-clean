@@ -1,6 +1,6 @@
 <div class="m-portlet">
 
-{!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
+  {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
   <div class="m-portlet__body">
     <div class="form-group m-form__group row">
 
@@ -37,22 +37,15 @@
         {!! Form::label('typed', 'Destination type') !!}
         {{ Form::select('changetype',$typedestiny, null,['id' => 'changetype','class'=>'m-select2-general form-control' ,'required' => 'true']) }}
       </div>
-      <div class="col-lg-4">
-        {!! Form::label('carrierL', 'Carrier') !!}
-        <div class="m-input-icon m-input-icon--right">
-           {{ Form::select('localcarrier[]', $carrier,null,['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple' ,'required' => 'true']) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-info-circle"></i>
-            </span>
-          </span>
-        </div>
-
+            <div class="col-lg-4">
+        {!! Form::label('validation_expire', 'Validation') !!}
+        {!! Form::text('validation_expire', null, ['placeholder' => 'Contract Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
       </div>
+     
       <div class="col-lg-4">
         {!! Form::label('calculationt', 'Calculation Type') !!}
         <div class="m-input-icon m-input-icon--right">
-               {{ Form::select('calculationtype', $calculationT,null,['id' => 'calculationtype','class'=>'m-select2-general form-control ' ,'required' => 'true']) }}
+          {{ Form::select('calculationtype', $calculationT,null,['id' => 'calculationtype','class'=>'m-select2-general form-control ' ,'required' => 'true']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-map-marker"></i>
@@ -63,10 +56,23 @@
       </div>
     </div>
     <div class="form-group m-form__group row">
-      <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+
+ <div class="col-lg-4">
+        {!! Form::label('carrierL', 'Carrier') !!}
         <div class="m-input-icon m-input-icon--right">
-         {!! Form::text('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input' ,'required' => 'true']) !!}
+          {{ Form::select('localcarrier[]', $carrier,null,['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple' ,'required' => 'true']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-info-circle"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+      <div class="col-lg-4">
+        {!! Form::label('currencyl', 'Currency') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('localcurrency_id',$currency,null,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -76,9 +82,9 @@
 
       </div>
       <div class="col-lg-4">
-        {!! Form::label('currencyl', 'Currency') !!}
+        {!! Form::label('ammountL', 'Ammount') !!}
         <div class="m-input-icon m-input-icon--right">
-                 {{ Form::select('localcurrency_id',$currency,null,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
+          {!! Form::text('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input' ,'required' => 'true']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -102,7 +108,7 @@
   </div>
   {!! Form::close() !!}
 </div>
-
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script>
 
 
