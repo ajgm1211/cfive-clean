@@ -191,8 +191,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p id="cargo_details_20_p">{{$quote->qty_20 != '' ? $quote->qty_20.' x 20\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 20\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 20\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 40\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 40\' HC container':''}}</p>
                     </div>
                 </div>
                 @if($quote->total_quantity!='' && $quote->total_quantity>0)
