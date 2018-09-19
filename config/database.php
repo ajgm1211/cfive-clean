@@ -1,5 +1,5 @@
 <?php
-/*
+
 if (!defined('RDS_HOSTNAME')) {
 
 
@@ -9,7 +9,7 @@ if (!defined('RDS_HOSTNAME')) {
     define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
 
 }
-*/
+
 
 
 return [
@@ -51,7 +51,7 @@ return [
             'prefix' => '',
         ],
 
-/*
+
         'mysql' => [
 
 
@@ -69,8 +69,8 @@ return [
             'engine' => null,
 
         ],
-*/
-      
+
+      /*
 
         'mysql' => [
             'driver' => 'mysql',
@@ -85,7 +85,7 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-        ],
+        ],*/
 
         'pgsql' => [
             'driver' => 'pgsql',

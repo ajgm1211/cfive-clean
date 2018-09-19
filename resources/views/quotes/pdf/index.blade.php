@@ -41,7 +41,7 @@
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><b>{{$quote->company->business_name}}</b></p>
-                        <p>{{$quote->company->address}}</p>
+                        <p style="line-height: 1.2" >{{$quote->company->address}}</p>
                         <p>{{$quote->contact->phone}}</p>
                         <p>{{$quote->contact->email}}</p>
                     </span>
