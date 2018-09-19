@@ -39,7 +39,7 @@ class NewContractRequestsController extends Controller
         $now2   = $time->format('Y-m-d');
         $file   = $request->file('file');
         $ext    = strtolower($file->getClientOriginalExtension());
-        $validator = \Validator::make(
+       /* $validator = \Validator::make(
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
@@ -48,7 +48,7 @@ class NewContractRequestsController extends Controller
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
             return redirect()->route('Requestimporfcl');
-        }
+        }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
