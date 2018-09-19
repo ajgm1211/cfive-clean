@@ -67,7 +67,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
               <li class="nav-item m-tabs__item">
                 <a class="nav-link m-tabs__link  {{ session('activeR')}}" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                   <i class="la la-cog"></i>
-                  Routes
+                  Ocean Freight
                 </a>
               </li>
               <li class="nav-item m-tabs__item">
@@ -114,7 +114,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                       Origin Port
                     </th>
                     <th title="Field #2">
-                      Destiny Port    
+                      Destination Port    
                     </th>
                     <th title="Field #3">
                       Carrier
@@ -349,7 +349,7 @@ Load
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
-            Rates
+            Ocean Freight
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">

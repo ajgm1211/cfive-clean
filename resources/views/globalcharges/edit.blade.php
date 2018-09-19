@@ -36,35 +36,41 @@
         {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control']) }}
       </div>
       <div class="col-lg-4">
-        {!! Form::label('carrierL', 'Carrier') !!}
-        <div class="m-input-icon m-input-icon--right">
-           {{ Form::select('carrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-info-circle"></i>
-            </span>
-          </span>
-        </div>
-
+        {!! Form::label('validation_expire', 'Validation') !!}
+        {!! Form::text('validation_expire', $globalcharges->validation_expire, ['placeholder' => 'Contract Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
       </div>
-      <div class="col-lg-4">
-        {!! Form::label('calculationt', 'Calculation Type') !!}
-        <div class="m-input-icon m-input-icon--right">
-               {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ']) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-map-marker"></i>
-            </span>
-          </span>
-        </div>
 
+    
+    <div class="col-lg-4">
+      {!! Form::label('calculationt', 'Calculation Type') !!}
+      <div class="m-input-icon m-input-icon--right">
+        {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ']) }}
+        <span class="m-input-icon__icon m-input-icon__icon--right">
+          <span>
+            <i class="la la-map-marker"></i>
+          </span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+  <div class="form-group m-form__group row">
+    <div class="col-lg-4">
+      {!! Form::label('carrierL', 'Carrier') !!}
+      <div class="m-input-icon m-input-icon--right">
+        {{ Form::select('carrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+        <span class="m-input-icon__icon m-input-icon__icon--right">
+          <span>
+            <i class="la la-info-circle"></i>
+          </span>
+        </span>
       </div>
     </div>
-    <div class="form-group m-form__group row">
+
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Ammount') !!}
         <div class="m-input-icon m-input-icon--right">
-         {!! Form::text('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+          {!! Form::text('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -76,7 +82,7 @@
       <div class="col-lg-4">
         {!! Form::label('currencyl', 'Currency') !!}
         <div class="m-input-icon m-input-icon--right">
-                 {{ Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ]) }}
+          {{ Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ]) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -99,7 +105,7 @@
   </div>
   {!! Form::close() !!}
 </div>
-
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script>
 
 

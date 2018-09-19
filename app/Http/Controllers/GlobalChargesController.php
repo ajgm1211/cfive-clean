@@ -66,6 +66,9 @@ class GlobalChargesController extends Controller
     $detailscharges = $request->input('type');
     //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
     $global = new GlobalCharge();
+    $validation = explode('/',$request->validation_expire);
+    $global->validity = $validation[0];
+    $global->expire = $validation[1];
     $global->surcharge_id = $request->input('type');
     $global->typedestiny_id = $request->input('changetype');
     $global->calculationtype_id = $request->input('calculationtype');
@@ -85,7 +88,7 @@ class GlobalChargesController extends Controller
 
     foreach($detailcarrier as $c => $value)
     {
-         
+
       $detailcarrier = new GlobalCharCarrier();
       $detailcarrier->carrier_id =$value;
       $detailcarrier->globalcharge()->associate($global);
@@ -118,10 +121,25 @@ class GlobalChargesController extends Controller
   public function updateGlobalChar(Request $request, $id)
   {
 
+
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    $objtypedestiny = new TypeDestiny();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
     //dd($request);
     /* $type =  TypeDestiny::all();
         $changetype = $type->find($request->input('changetype'))->toArray();*/
     $global = GlobalCharge::find($id);
+    $validation = explode('/',$request->validation_expire);
+    $global->validity = $validation[0];
+    $global->expire = $validation[1];
     $global->surcharge_id = $request->input('surcharge_id');
     $global->typedestiny_id = $request->input('changetype');
     $global->calculationtype_id = $request->input('calculationtype_id');
@@ -158,8 +176,13 @@ class GlobalChargesController extends Controller
     }
 
     $global->update();
-
-
+    /*
+    $global =  GlobalCharge::whereHas('companyUser', function($q) {
+      $q->where('company_user_id', '=', Auth::user()->company_user_id);
+    })->with('globalcharport.portOrig','globalcharport.portDest','GlobalCharCarrier.carrier','typedestiny')->get();
+    
+    return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
+        return redirect()->back()->with('globalchar','true');
   }
   public function destroyGlobalCharges($id)
   {
@@ -183,6 +206,8 @@ class GlobalChargesController extends Controller
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $globalcharges = GlobalCharge::find($id);
+    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+    $globalcharges->setAttribute('validation_expire',$validation_expire);
     return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
   }
 

@@ -8,7 +8,7 @@ class Contract extends Model
 {
   protected $table    = "contracts";            
 
-  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status'];
+  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status','free_days'];
 
   public function rates(){
     return $this->hasMany('App\Rate');
