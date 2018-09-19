@@ -40,6 +40,7 @@
     </div>
 
 </div>
+<hr>
 <div class="form-group row" id="variatiogroup">
     <div class="col-lg-4" >
         <label for="DispNamMD" class="form-control-label">
