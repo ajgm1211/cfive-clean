@@ -50,6 +50,7 @@
             Variation:
         </label>
         <input type="text" name="variation[]" value="{{$nameVaration}}" class="form-control">
+        <a href="#" class="borrarInput"><samp class="la la-remove"></samp></a>
     </div>
     @endif
     @endforeach
@@ -68,5 +69,9 @@
 <script>
     $('.m-select2-general').select2({
 
+    });
+    
+    $(document).on('click','.borrarInput',function(e){
+       $(this).closest('div').remove();
     });
 </script>
