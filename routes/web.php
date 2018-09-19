@@ -160,6 +160,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {
     Route::resource('UploadFile','FileHarborsPortsController');
     Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
+    Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
 });
 
 Route::resource('contracts', 'ContractsController')->middleware('auth');

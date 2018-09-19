@@ -15,15 +15,13 @@ use Yajra\Datatables\Datatables;
 class FileHarborsPortsController extends Controller
 {
 
-    
+
     public function index()
     {
-
-        $country = Country::all()->pluck('name','id');
-        return  view('harbors.index',compact('country'));
+        return  view('harbors.index');
     }
 
-   
+
     public function create()
     {
         $harbors = Harbor::with('country')->get();
@@ -36,39 +34,39 @@ class FileHarborsPortsController extends Controller
                         &nbsp 
                         &nbsp  <a href="#" data-id-remove="'.$harbor->id.'" class="BorrarHarbor"><i class="la  la-remove"></i></a>';
             })
-            
+
             ->make();
     }
 
     public function loadviewAdd(){
-        
+
         $country = Country::all()->pluck('name','id');
         return  view('harbors.Body-Modals.add',compact('country'));
-        
+
     }    
-    
+
     public function store(Request $request)
     {  
-        
+
         foreach($request->variation as $variation){
             $arreglo[] =  strtolower($variation);
         }
         $type['type'] = $arreglo;
         $json = json_encode($type);
-        
+
         $prueba = Harbor::create([
-                        'name'          => $request->name,
-                        'code'          => $request->code,
-                        'display_name'  => $request->display_name,
-                        'coordinates'   => $request->coordinate,
-                        'country_id'    => $request->country,
-                        'varation'      => $json
-                    ]);
-        
+            'name'          => $request->name,
+            'code'          => $request->code,
+            'display_name'  => $request->display_name,
+            'coordinates'   => $request->coordinate,
+            'country_id'    => $request->country,
+            'varation'      => $json
+        ]);
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your Harbor was created');
         return redirect()->route('UploadFile.index');
-        
+
     }
 
 
@@ -76,10 +74,10 @@ class FileHarborsPortsController extends Controller
     {
         $country = Country::all()->pluck('name','id');
         $harbors = Harbor::find($id);
-        $decodejosn = json_decode($harbors->varation);
-        
+        $decodejosn = json_decode($harbors->varation,true);
+        $decodejosn = $decodejosn['type'];
         return  view('harbors.Body-Modals.edit',compact('country','harbors','decodejosn'));
-        
+
     }
 
 
@@ -88,15 +86,40 @@ class FileHarborsPortsController extends Controller
         //
     }
 
-  
+
     public function update(Request $request, $id)
     {
-        //
+
+        foreach($request->variation as $variation){
+            $arreglo[] =  strtolower($variation);
+        }
+
+        $type['type'] = $arreglo;
+        $json = json_encode($type);
+
+        $harbor = Harbor::find($id);
+        $harbor->name          = $request->name;
+        $harbor->code          = $request->code;
+        $harbor->display_name  = $request->display_name;
+        $harbor->coordinates   = $request->coordinate;
+        $harbor->country_id    = $request->country;
+        $harbor->varation      = $json;
+        $harbor->update();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'Your Harbor was updated');
+        return redirect()->route('UploadFile.index');
     }
 
- 
-    public function destroy($id)
+
+    public function destroyharbor($id)
     {
-        //
+        try{
+            $harbor = Harbor::find($id);
+            $harbor->delete();
+            return 1;
+        }catch(\Exception $e){
+            return 2;
+        }
     }
 }
