@@ -19,6 +19,8 @@ class CreateGlobalchargesTable extends Migration
       $table->integer('typedestiny_id')->unsigned();
       $table->integer('calculationtype_id')->unsigned();
       $table->double('ammount');
+      $table->date('validity');
+      $table->date('expire');
       $table->integer('currency_id')->unsigned();
       $table->integer('company_user_id')->unsigned()->nullable();
       $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');

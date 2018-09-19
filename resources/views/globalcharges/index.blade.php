@@ -47,7 +47,7 @@
                   <div class="m-separator m-separator--dashed d-xl-none"></div>
                 </div>
               </div>
-               <div class="row">
+              <div class="row">
                 <div class="col-md-2">
                   <a  id="newmodal" class="">
                     <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
@@ -59,7 +59,7 @@
 
               </div>
             </div>
-           <table class="table tableData" id="global-table" width="100%" >
+            <table class="table tableData" id="global-table" width="100%" >
               <thead>
                 <tr>
                   <th title="Field #1">
@@ -87,6 +87,9 @@
                     Currency
                   </th>
                   <th title="Field #10">
+                    Validity
+                  </th>
+                  <th title="Field #11">
                     Options
                   </th>
                 </tr>
@@ -125,6 +128,9 @@
                     <div id="divcurrency{{$loop->index}}"  class="val"> {!! $globalcharges->currency->alphacode !!} </div>
                   </td>
                   <td>
+                    <div id="divvalidity{{$loop->index}}"  class="val"> {!! $globalcharges->validity !!} / {!! $globalcharges->expire !!}</div>
+                  </td>
+                  <td>
                     <a  id='edit_l{{$loop->index}}' onclick="AbrirModal('editGlobalCharge',{{$globalcharges->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                       <i class="la la-edit"></i>
                     </a>    
@@ -132,14 +138,14 @@
                       <i id='rm_l{{$globalcharges->id}}' class="la la-times-circle"></i>
                     </a>
 
-         
+
                   </td>
                 </tr>
                 @endforeach
               </tbody>
             </table>
           </div>
-     
+
         </div>
       </div>
     </div>
@@ -164,7 +170,7 @@
       </div>
     </div>
   </div>
-    <div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -200,28 +206,37 @@
   } );
 </script>
 <script>
-    function AbrirModal(action,id){
+  function AbrirModal(action,id){
 
 
-        if(action == "editGlobalCharge"){
-            var url = '{{ route("edit-global-charge", ":id") }}';
-            url = url.replace(':id', id);
-            $('.modal-body').load(url,function(){
-                $('#modalGlobalcharge').modal({show:true});
-            });
+    if(action == "editGlobalCharge"){
+      var url = '{{ route("edit-global-charge", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#modalGlobalcharge').modal({show:true});
+      });
 
-        }
-          if(action == "addGlobalCharge"){
-            var url = '{{ route("add-global-charge")}}';
-      
-            $('.modal-body-add').load(url,function(){
-                $('#modalGlobalchargeAdd').modal({show:true});
-            });
-
-        }
     }
+    if(action == "addGlobalCharge"){
+      var url = '{{ route("add-global-charge")}}';
+
+      $('.modal-body-add').load(url,function(){
+        $('#modalGlobalchargeAdd').modal({show:true});
+      });
+
+    }
+  }
 
 </script>
 <script src="/js/globalcharges.js"></script>
+@if(session('globalchar'))
+<script>
+  swal(
+    'Done!',
+    'GlobalCharge updated.',
+    'success'
+  )
+</script>
+@endif
 
 @stop

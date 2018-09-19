@@ -74,6 +74,14 @@
                             </span>
                         </a>
                     </li>
+                    <!--   <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+<a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
+<i class="m-menu__link-icon flaticon-business"></i>
+<span class="m-menu__link-text">
+Load Ports
+</span>
+</a>
+</li> -->
                 </ul>
             </div>
         </li>
@@ -202,14 +210,6 @@
                             <i class="m-menu__link-icon flaticon-folder-3"></i>
                             <span class="m-menu__link-text">
                                 Request Importation
-                            </span>
-                        </a>
-                    </li>
-                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
-                            <i class="m-menu__link-icon flaticon-business"></i>
-                            <span class="m-menu__link-text">
-                                Manage Harbors
                             </span>
                         </a>
                     </li>
