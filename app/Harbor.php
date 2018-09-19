@@ -32,4 +32,8 @@ class Harbor extends Model
     public function termport(){
         return hasMany('App\TermsPort');
     }
+    
+    public function country(){
+        return $this->belongsTo('App\Country');
+    }
 }
