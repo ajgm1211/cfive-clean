@@ -23,8 +23,8 @@ class SurchargeTest extends DuskTestCase
         ->press('Login')
         ->visit("/surcharges/add")
 
-        ->type('name', 'IVA')
-        ->type('description', 'IvA al consumidor')
+        ->type('name', 'OSS')
+        ->type('description', 'OSS al consumidor')
         ->press('Save')
         ->assertPathIs('/surcharges');
     });
@@ -36,7 +36,7 @@ class SurchargeTest extends DuskTestCase
     $this->browse(function (Browser $browser) {
       $this->assertTrue(true);
       $browser->visit("/surcharges/1/edit")
-        ->type('name', 'IVAX')
+        ->type('name', 'LUIS')
         ->type('description', 'IvA al consumidor y vendedor')
         ->press('Update');
 

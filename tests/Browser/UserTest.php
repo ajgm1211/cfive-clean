@@ -23,10 +23,10 @@ class UserTest extends DuskTestCase
         ->type('password', 'secret')
         ->press('Login')
         ->visit("users/add")
-        ->type('name', 'company name')
+        ->type('name', 'Nombre comp')
         ->type('lastname', '45123456789')
         ->type('email', 'mail@mail.com')
-        ->type('password', '123456')
+        ->type('password', '1234')
         ->select('type', 'company')
         ->press('Save');
 
