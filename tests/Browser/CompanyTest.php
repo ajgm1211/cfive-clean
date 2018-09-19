@@ -18,7 +18,7 @@ class CompanyTest extends DuskTestCase
                 ->type('password', 'secret')
                 ->press('Login')
                 ->visit("/companies/add")
-                ->type('business_name', 'company name')
+                ->type('business_name', 'cargofive name')
                 ->type('phone', '45123456789')
                 ->type('email', 'mail@mail.com')
                 ->type('address', 'company address')
@@ -33,7 +33,7 @@ class CompanyTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
           $this->assertTrue(true);
             $browser->visit("/companies/1/edit")
-                ->type('business_name', 'Alex name')
+                ->type('business_name', 'Juan name')
                 ->type('phone', '45123456789')
                 ->type('email', 'mail@mail.com')
                 ->type('address', 'company address')

@@ -1847,9 +1847,9 @@ $(document).on('click', '#savecontact', function () {
                 url: "company/companies",
                 dataType: 'json',
                 success: function(dataC) {
-                    $('select[name="company_id"]').empty();
+                    $('select[name="company_id_quote"]').empty();
                     $.each(dataC, function(key, value) {
-                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
                     $('#contactModal').modal('hide');
 
