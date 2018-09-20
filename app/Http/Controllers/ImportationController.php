@@ -15,6 +15,7 @@ use App\Notifications\N_general;
 
 class ImportationController extends Controller
 {
+    
     public function ReprocesarRates(Request $request, $id){
 
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
@@ -187,4 +188,9 @@ class ImportationController extends Controller
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'0']);
         }
     }
+    
+    public function ReprocesarSurchargers(Request $request, $id){
+        
+    }
+    
 }
