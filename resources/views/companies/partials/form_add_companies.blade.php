@@ -11,8 +11,16 @@
     {!! Form::email('email', null, ['placeholder' => 'Please enter a valid email','class' => 'form-control m-input email_input','required' => 'required']) !!}
 </div>
 <div class="form-group m-form__group">
+    {!! Form::label('tax_number', 'Tax number') !!}
+    {!! Form::text('tax_number', null, ['placeholder' => 'Please enter a tax number','class' => 'form-control m-input tax_number_input','required' => 'required']) !!}
+</div>
+<div class="form-group m-form__group">
     {!! Form::label('address', 'Address') !!}
     {!! Form::textarea('address', null, ['placeholder' => 'Please enter a address','class' => 'form-control m-input address_input','required' => 'required']) !!}
+</div>
+<div class="form-group m-form__group">
+    {!! Form::label('logo', 'Logo') !!}
+    {!! Form::file('logo', null, ['placeholder' => 'Please upload a logo','class' => 'form-control m-input logo_input','required' => 'required']) !!}
 </div>
 
 

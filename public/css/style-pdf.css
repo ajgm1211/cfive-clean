@@ -20,6 +20,10 @@
     clear: both;
 }
 
+.page-break{
+	page-break-after: always;
+}
+
 a {
     color: #0087C3;
     text-decoration: none;

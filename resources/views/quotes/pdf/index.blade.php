@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="auto" height="150">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="290" height="auto" style="margin-bottom:25px">
             </div>
             <div id="company">
                 <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
@@ -106,11 +106,24 @@
                 </div>
                 @endif
             </div>
-            @endif       
+            @endif
+            <hr>
+            <div class="clearfix">
+                <div class="client">
+                    <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
+                    @if($quote->carrier_id!='')
+                    <p>{{$quote->carrier->name}}</p>
+                    @endif
+                    @if($quote->airline_id!='')
+                    <p>{{$quote->airline->name}}</p>
+                    @endif
+                </div>
+            </div>
+            <br>
             <div id="details" class="clearfix details">
                 <hr>
                 <div class="company" style="color: #1D3A6E;">
-                    <p class="title"><b>Cargo details:</b></p>
+                    <p class="title"><b>Cargo details</b></p>
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
@@ -172,7 +185,7 @@
             </div>
             <hr>
             @if(count($origin_ammounts)>0)
-            <p class="title">Origin charges:</p>
+            <p class="title">Origin charges</p>
             <br>
             <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
@@ -218,7 +231,7 @@
             </table>
             @endif
             @if(count($freight_ammounts)>0)
-            <p class="title">Freight charges:</p>
+            <p class="title">Freight charges</p>
             <br>
             <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
@@ -264,7 +277,7 @@
             </table>
             @endif
             @if(count($destination_ammounts)>0)
-            <p class="title">Destination charges:</p>
+            <p class="title">Destination charges</p>
             <br>
             <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
@@ -311,7 +324,7 @@
             </table>
             @endif
         </main>
-        <div class="clearfix details">
+        <div class="clearfix details page-break">
             <div class="company">
                 <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
             </div>
@@ -354,7 +367,7 @@
             @endif
         </div>
         <footer>
-            Cargofive &copy; {{date('Y')}}
+            <!--Cargofive &copy; {{date('Y')}}-->
         </footer>
     </body>
 </html>

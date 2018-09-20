@@ -53,16 +53,17 @@ class QuoteController extends Controller
     if(\Auth::user()->hasRole('subuser')){
       $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
         $q->where('company_user_id','=',$company_user_id);
-      })->get();
+      })->orderBy('created_at', 'desc')->get();
     }else{
       $quotes = Quote::whereHas('user', function($q) use($company_user_id){
         $q->where('company_user_id','=',$company_user_id);
-      })->get();
+      })->orderBy('created_at', 'desc')->get();
     }
 
-    $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('business_name','id');
-    $countries = Country::all()->pluck('name','id');
+    $companies = Company::pluck('business_name','id');
+    $harbors = Harbor::pluck('display_name','id');
+    $countries = Country::pluck('name','id');
+
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
       $currency_cfg = Currency::find($company_user->currency_id);
