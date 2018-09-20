@@ -94,18 +94,21 @@ All
                             Email
                         </th>
                         <th title="Field #4">
+                            Tax number
+                        </th>                        
+                        <th title="Field #5">
                             Address
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #6">
                             Owners
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #7">
                             Contacts
                         </th>
-                        <th title="Field #6">
+                        <th title="Field #8">
                             Price Levels
                         </th>
-                        <th title="Field #12">
+                        <th title="Field #9">
                             Options
                         </th>
                     </tr>
@@ -116,6 +119,7 @@ All
                         <td>{{$company->business_name }}</td>
                         <td>{{$company->phone }}</td>
                         <td>{{$company->email }}</td>
+                        <td>{{$company->tax_number }}</td>
                         <td>{{$company->address  }}</td>
                         <td>
                             @foreach($company->groupUserCompanies as $groupUser)

@@ -9,7 +9,7 @@
 
 
 <!--begin::Form-->
-{!! Form::open(['route' => 'companies.store','class' => 'form-group m-form__group']) !!}
+{!! Form::open(['route' => 'companies.store','class' => 'form-group m-form__group','enctype'=>'multipart/form-data']) !!}
 <div class="m-form__section m-form__section--first">
     <div class="form-group m-form__group">
         @include('companies.partials.form_add_companies')

@@ -20,7 +20,7 @@ class CreateHarborsTable extends Migration
             $table->string('display_name')->nullable();
             $table->string('coordinates')->nullable();
             $table->integer('country_id')->unsigned();
-            $table->json('varation')->nullable();
+            $table->string('varation')->nullable();
             $table->foreign('country_id')->references('id')->on('countries');
             $table->timestamps();
         });
