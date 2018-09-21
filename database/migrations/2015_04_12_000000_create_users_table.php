@@ -27,7 +27,6 @@ class CreateUsersTable extends Migration
       $table->boolean('verified')->default(false);
       $table->boolean('state')->default(false);
       $table->integer('company_user_id')->unsigned()->nullable();
-      $table->dateTime('last_login')->nullable();
       //$table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
       $table->rememberToken();
       $table->timestamps();
