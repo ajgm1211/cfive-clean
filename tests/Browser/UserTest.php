@@ -29,7 +29,6 @@ class UserTest extends DuskTestCase
         ->type('password', '1234')
         ->select('type', 'company')
         ->press('Save');
-
     });
   }
 
