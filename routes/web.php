@@ -157,6 +157,11 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 });
 
+Route::middleware(['auth'])->prefix('Importation')->group(function () {
+    Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates');
+    
+});
+
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {
     Route::resource('UploadFile','FileHarborsPortsController');
     Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
