@@ -15,7 +15,7 @@
         <div class="col-lg-2">
       
                 {!! Form::label('change', 'Charge Type') !!}<br>
-                {{ Form::select('status',['1' => 'Export','2' => 'Import','3' => 'All'],null,['class'=>'m-select2-general form-control']) }}
+                {{ Form::select('status',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
 
        
         </div>

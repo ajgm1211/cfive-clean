@@ -17,7 +17,8 @@
       {!! Form::label('free_days', 'Free Days') !!}<br>
       {{ Form::number('free_days',null,['placeholder'=> '0','class'=>'custom-select form-control','id' => 'free_days','min' =>'0']) }}
 
-  </div>-->
+  </div> -->
+
   <div class="col-lg-2">
     <div class="row">
       {!! Form::label('status', 'Status') !!}<br>
