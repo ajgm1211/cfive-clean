@@ -288,10 +288,12 @@ class QuoteController extends Controller
     }
     //--------------------------------------
     // Calculo de los inlands
+    $modality_inland = $request->modality;
     if($delivery_type == "2" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
-      })->where('company_user_id','=',$company_user_id)->with('inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandports.ports','inlanddetails.currency')->get();
+
       foreach($inlands as $inlandsValue){
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
@@ -371,7 +373,7 @@ class QuoteController extends Controller
     if($delivery_type == "3" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
         $q->whereIn('port', $origin_port);
-      })->where('company_user_id','=',$company_user_id)->with('inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandports.ports','inlanddetails.currency')->get();
       foreach($inlands as $inlandsValue){
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
