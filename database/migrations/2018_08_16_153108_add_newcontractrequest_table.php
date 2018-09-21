@@ -23,8 +23,8 @@ class AddNewcontractrequestTable extends Migration
             $table->enum('status',['Pending','Processing','Done'])->default('Pending');
             $table->integer('user_id')->unsigned();
             $table->date('created');
-            $table->string('type');
-            $table->string('data');
+            $table->json('type');
+            $table->json('data');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();

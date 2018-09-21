@@ -10,7 +10,7 @@
 
 
 <!--begin::Form-->
-{{ Form::model($company, array('route' => array('companies.update', $company->id), 'method' => 'PUT')) }}
+{{ Form::model($company, array('route' => array('companies.update', $company->id), 'method' => 'PUT','enctype'=>'multipart/form-data')) }}
 <div class="m-form__section m-form__section--first">
     <div class="form-group m-form__group">
         @include('companies.partials.form_add_companies')
