@@ -8,7 +8,7 @@ class GlobalCharge extends Model
 {
   protected $table    = "globalcharges";
   protected $fillable = 
-    ['id','surcharge_id','typedestiny_id','company_user_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
+    ['id','surcharge_id','typedestiny_id','company_user_id','calculationtype_id','ammount','validity','expire','currency_id','created_at','updated_at'];
   public function companyUser()
   {
     return $this->belongsTo('App\CompanyUser');
