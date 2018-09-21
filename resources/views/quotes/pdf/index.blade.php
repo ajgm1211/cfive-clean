@@ -26,7 +26,8 @@
         <main>
             <div id="details" class="clearfix details">
                 <div class="client">
-                    <p>From:</p>
+                    <p><b>From:</b></p>
+                    <br>
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$user->name}}</p>
                         <p><b>{{$user->companyUser->name}}</b></p>
@@ -37,8 +38,9 @@
 
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
-                    <p>To:</p>
+                    <p><b>To:</b></p>
                     <span id="destination_input" style="line-height: 0.4">
+                        <img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><b>{{$quote->company->business_name}}</b></p>
                         <p style="line-height: 1.2" >{{$quote->company->address}}</p>
@@ -47,6 +49,7 @@
                     </span>
                 </div>
             </div>
+            <br>
             <div id="" class="clearfix">
                 <div class="client" style="width: 150px;">
                     <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">

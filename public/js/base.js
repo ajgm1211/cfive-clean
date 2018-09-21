@@ -1581,7 +1581,7 @@ $(document).on('click', '#delete-contact', function () {
     if (result.value) {
       $.ajax({
         type: 'get',
-        url: 'contacts/delete/' + id,
+        url: '/contacts/delete/' + id,
         success: function(data) {
           if(data.message=='Ok'){
             swal(

@@ -89,16 +89,19 @@
                         <th title="Field #2">
                             Last Name
                         </th>
-                        <th title="Field #4">
+                        <th title="Field #3">
                             Company
                         </th>
-                        <th title="Field #3">
+                        <th title="Field #4">
                             Email
                         </th>
-                        <th title="Field #4">
+                        <th title="Field #5">
                             Phone
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #6">
+                            Position
+                        </th>                        
+                        <th title="Field #7">
                             Options
                         </th>
                     </tr>
@@ -111,6 +114,7 @@
                             <td>{{$contact->company->business_name}}</td>
                             <td>{{$contact->email }}</td>
                             <td>{{$contact->phone}}</td>
+                            <td>{{$contact->position}}</td>
                             <td>
                                 <button onclick="AbrirModal('edit',{{$contact->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                                     <i class="la la-edit"></i>

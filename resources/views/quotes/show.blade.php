@@ -81,6 +81,7 @@
                                 <div class="col-md-12">
                                     <div class="pull-left text-left" style="line-height: .5">
                                         <p><b>From:</b></p>
+                                        <br>
                                         <p>{{$user->name}}</p>
                                         <p><b>{{$user->companyUser->name}}</b></p>
                                         <p>{{$user->companyUser->address}}</p>
@@ -89,6 +90,7 @@
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>To:</b></p>
+                                        <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
                                         <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                                         <p><b>{{$quote->company->business_name}}</b></p>
                                         <p>{{$quote->company->address}}</p>
@@ -101,6 +103,8 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group m-form__group row">

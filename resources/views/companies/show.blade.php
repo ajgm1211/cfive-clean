@@ -38,8 +38,13 @@
                         <div class="col-md-12">
                             <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                 <div class="m-portlet__body text-center">
-                                    <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> <a onclick="AbrirModal('edit',{{$company->id}})" href="#" class="pull-right"><i class="fa fa-edit"></i></a></h2>
+                                    <div class="" style="line-height: .5;">
+                                        <img src="/{{$company->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
+                                    </div>
                                     <br>
+                                    <br>
+                                    <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> <a onclick="AbrirModal('edit',{{$company->id}})" href="#" class="pull-right"><i class="fa fa-edit"></i></a></h2>
+                                    <hr>
                                     <button class="btn btn-default">
                                         Actions
                                     </button>
@@ -96,11 +101,11 @@
                                         <p>No Owners</p>
                                         @endif
                                         <!--<br>
-                                        <div class="text-center">
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
-                                                Add contact
-                                            </button>
-                                        </div>-->
+<div class="text-center">
+<button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
+Add contact
+</button>
+</div>-->
                                     </div>
                                 </div>
                             </div>
