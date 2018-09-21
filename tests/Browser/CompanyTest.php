@@ -9,10 +9,10 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class CompanyTest extends DuskTestCase
 {
 
-  public function testAddCompanies()
+    public function testAddCompanies()
     {
         $this->browse(function (Browser $browser) {
-   
+
             $browser->visit('/login')
                 ->type('email', 'admin@example.com')
                 ->type('password', 'secret')
@@ -23,23 +23,21 @@ class CompanyTest extends DuskTestCase
                 ->type('email', 'mail@mail.com')
                 ->type('address', 'company address')
                 ->press('Save')
-                ->assertPathIs('/companies');
+                ->assertPathIs("/companies/add");
         });
     }
-  
-  
 
-      public function testEditCompany(){
+    public function testEditCompany(){
         $this->browse(function (Browser $browser) {
-          $this->assertTrue(true);
+            $this->assertTrue(true);
             $browser->visit("/companies/1/edit")
                 ->type('business_name', 'Juan name')
                 ->type('phone', '45123456789')
                 ->type('email', 'mail@mail.com')
                 ->type('address', 'company address')
                 ->press('Update');
-            
+
         });
     }
-    
+
 }
