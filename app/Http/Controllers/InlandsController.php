@@ -9,6 +9,8 @@ use App\InlandPort;
 use App\InlandDetail;
 use App\Currency;
 use Illuminate\Support\Facades\Auth;
+use App\Company;
+use App\InlandCompanyRestriction;
 class InlandsController extends Controller
 {
   /**
@@ -18,17 +20,26 @@ class InlandsController extends Controller
      */
   public function index()
   {
+
     $data = Inland::where('company_user_id','=',Auth::user()->company_user_id)->with('inlandports.ports')->get();
     return view('inland/index', ['arreglo' => $data]);
   }
 
   public function add(){
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
 
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('display_name','id');
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
-    return view('inland/add', compact('harbor','currency'));
+    return view('inland/add', compact('harbor','currency','companies'));
   }
 
   /**
@@ -51,6 +62,7 @@ class InlandsController extends Controller
   {
     //  dd($request);
     $inland = new Inland();
+    $companies = $request->input('companies');
     $inland->provider = $request->input('name');
     $inland->type = $request->input('status');
     $validation = explode('/',$request->validation_expire);
@@ -109,6 +121,15 @@ class InlandsController extends Controller
         $inlandfortyhc->save();
       }
     }
+    if(!empty($companies)){
+      foreach($companies as $key3 => $value)
+      {
+        $inland_company_restriction = new InlandCompanyRestriction();
+        $inland_company_restriction->company_id=$value;
+        $inland_company_restriction->inland_id=$inland->id;
+        $inland_company_restriction->save();
+      }
+    }
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this Inland.');
@@ -140,9 +161,22 @@ class InlandsController extends Controller
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
 
+    $company_user_id=\Auth::user()->company_user_id;
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
+    $company_restriction = InlandCompanyRestriction::where('inland_id',$inland->id)->first();
+    $company = array();
+    if(!empty($company_restriction)){
+      $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
+    }
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('display_name','id');
-    return view('inland/edit', compact('harbor','inland','currency'));
+    return view('inland/edit', compact('harbor','inland','currency','company','companies'));
 
   }
 
@@ -169,6 +203,7 @@ class InlandsController extends Controller
   {
     $id = obtenerRouteKey($id);
     $inland = Inland::find($id);
+    $companies = $request->input('companies');
     $inland->provider = $request->input('provider');
     $inland->type = $request->input('type');
     $validation = explode('/',$request->validation_expire);
@@ -226,6 +261,17 @@ class InlandsController extends Controller
         $inlandfortyhc->currency_id = $request->input('currencyfortyhc.'.$t);
         $inlandfortyhc->inland()->associate($inland);
         $inlandfortyhc->save();
+      }
+    }
+
+    InlandCompanyRestriction::where('inland_id',$inland->id)->delete();
+    if(!empty($companies)){
+      foreach($companies as $key3 => $value)
+      {
+        $inland_company_restriction = new InlandCompanyRestriction();
+        $inland_company_restriction->company_id=$value;
+        $inland_company_restriction->inland_id=$inland->id;
+        $inland_company_restriction->save();
       }
     }
     $request->session()->flash('message.nivel', 'success');
