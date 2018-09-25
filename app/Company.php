@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Company extends Model
+class Company extends Model implements Auditable
 {
+  use \OwenIt\Auditing\Auditable;
   protected $fillable = ['business_name','phone','address','email','associated_contacts','associated_quotes','currency_id','company_user_id','owner','tax_number','logo'];
 
   public function contact()
@@ -26,7 +28,7 @@ class Company extends Model
   {
     return $this->belongsTo('App\Currency');
   }
-    public function user()
+  public function user()
   {
     return $this->belongsTo('App\user','owner');
   }
