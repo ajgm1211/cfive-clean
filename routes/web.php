@@ -215,7 +215,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
     Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
     Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+    Route::get('pdf/{quote_id}/{type}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
     Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');

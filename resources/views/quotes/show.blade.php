@@ -12,7 +12,10 @@
             </a>
         </div>
         <div class="col-md-2 col-xs-4">
-            <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
+            <a href="{{route('quotes.pdf',[$quote->id,1])}}" target="_blank" class="btn btn-primary btn-block">PDF All-in</a>
+        </div>        
+        <div class="col-md-2 col-xs-4">
+            <a href="{{route('quotes.pdf',[$quote->id,2])}}" target="_blank" class="btn btn-primary btn-block">PDF Detailed</a>
         </div>
         <div class="col-md-2 col-xs-4" >
             <a href="{{route('quotes.duplicate',$quote->id)}}" class="btn btn-primary btn-block">Duplicate</a>
@@ -457,7 +460,7 @@
         </div>
     </div>
 </div>
-@include('quotes.partials.sendQuoteModal');
+@include('quotes.partials.sendQuoteModal')
 @endsection
 
 @section('js')
