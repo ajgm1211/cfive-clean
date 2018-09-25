@@ -291,7 +291,8 @@ class QuoteController extends Controller
     // Calculo de los inlands
     $modality_inland = $request->modality;
     $company_inland = $request->input('company_id_quote');
-    if($delivery_type == "2" || $delivery_type == "4" ){ // Destination Address
+    // Destination Address
+    if($delivery_type == "2" || $delivery_type == "4" ){ 
       $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
       })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
