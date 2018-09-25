@@ -23,12 +23,17 @@ class Inland extends Model
   {
     return $this->belongsTo('App\CompanyUser');
   }
-  
-  public function getRouteKey()
-{
+  public function inland_company_restriction(){
+
+    return $this->HasMany('App\InlandCompanyRestriction');
+
+  }
+  /*public function getRouteKey()
+  {
     $hashids = new \Hashids\Hashids('MySecretSalt');
 
     return $hashids->encode($this->getKey());
-}
+  }*/
+
 
 }
