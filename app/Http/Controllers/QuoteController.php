@@ -173,6 +173,7 @@ class QuoteController extends Controller
     $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
     $typeCurrency =  $company->companyUser->currency->alphacode ;
     $idCurrency = $company->companyUser->currency_id;
+
     //dd($company);
     $origin_port = $request->input('originport');
     $destiny_port = $request->input('destinyport');
@@ -289,10 +290,15 @@ class QuoteController extends Controller
     //--------------------------------------
     // Calculo de los inlands
     $modality_inland = $request->modality;
-    if($delivery_type == "2" || $delivery_type == "4" ){
+    $company_inland = $request->input('company_id_quote');
+    if($delivery_type == "2" || $delivery_type == "4" ){ // Destination Address
       $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
+        $a->where('company_id', '=',$company_inland);
+      })->orDoesntHave('inland_company_restriction')->with('inlandports.ports','inlanddetails.currency')->get();
+
+
 
       foreach($inlands as $inlandsValue){
         foreach($inlandsValue->inlandports as $ports){
@@ -370,10 +376,15 @@ class QuoteController extends Controller
         // dd($inlandDestiny); // filtraor por el minimo
       }
     }
+    // Origin Addrees
     if($delivery_type == "3" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
         $q->whereIn('port', $origin_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
+        $a->where('company_id', '=',$company_inland);
+      })->orDoesntHave('inland_company_restriction')->with('inlandports.ports','inlanddetails.currency')->get();
+      
+  
       foreach($inlands as $inlandsValue){
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
