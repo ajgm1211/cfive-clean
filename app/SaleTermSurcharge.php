@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class SaleTermSurcharge extends Model
+class SaleTermSurcharge extends Model implements Auditable
 {
+  use \OwenIt\Auditing\Auditable;
   protected $fillable =['surcharge_id','sale_term_id'];
 
   public function saleterm()
