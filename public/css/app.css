@@ -72634,6 +72634,7 @@ body.m-page--boxed {
 
 .m-body .m-content {
   padding: 30px 30px;
+  background-color: white;
 }
 
 .m-content--skin-light .m-body {
@@ -72670,6 +72671,7 @@ body.m-content--skin-light2 {
   }
   .m-body .m-content {
     padding: 20px 20px;
+    background-color: white;
   }
   .m-aside-right--enabled .m-body .m-content {
     padding-bottom: 0;

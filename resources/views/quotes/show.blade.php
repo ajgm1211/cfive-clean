@@ -6,24 +6,21 @@
 <div class="m-content">
     <div class="row">
         <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
-        <div class="col-md-2 col-xs-4">
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <a href="{{route('quotes.edit',$quote->id)}}" class="btn btn-primary btn-block"  title="Edit ">
                 Edit
             </a>
         </div>
-        <div class="col-md-2 col-xs-4">
-            <a href="{{route('quotes.pdf',[$quote->id,1])}}" target="_blank" class="btn btn-primary btn-block">PDF All-in</a>
-        </div>        
-        <div class="col-md-2 col-xs-4">
-            <a href="{{route('quotes.pdf',[$quote->id,2])}}" target="_blank" class="btn btn-primary btn-block">PDF Detailed</a>
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
+            <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
         </div>
-        <div class="col-md-2 col-xs-4" >
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <a href="{{route('quotes.duplicate',$quote->id)}}" class="btn btn-primary btn-block">Duplicate</a>
         </div>
-        <div class="col-md-2 col-xs-4" >
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-primary btn-block">Send</button>
         </div>
-        <div class="col-md-2 col-xs-12">
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             {{ Form::select('status_quote_id',$status_quotes,$quote->status_quote_id,['class'=>'m-select2-general form-control','required'=>'true','id'=>'status_quote_id','placeholder'=>'Select an option']) }}           
         </div>
     </div>
@@ -457,6 +454,9 @@
             <hr>
             <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF type</label>
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
         </div>
     </div>
 </div>
