@@ -9,13 +9,14 @@ use App\Harbor;
 use App\Carrier;
 use App\Currency;
 use App\Contract;
+use App\FailSurCharge;
 use App\User;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 
 class ImportationController extends Controller
 {
-    
+
     public function ReprocesarRates(Request $request, $id){
 
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
@@ -188,9 +189,43 @@ class ImportationController extends Controller
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'0']);
         }
     }
-    
+
     public function ReprocesarSurchargers(Request $request, $id){
-        
+        $countfailsurchargers = FailSurCharge::where('contract_id','=',$id)->count();
+        if($countfailsurchargers <= 150){
+            $failsurchargers = FailSurCharge::where('contract_id','=',$id)->get();
+            foreach($failsurchargers as $FailSurchager){
+
+                $surcharger         = '';
+                $origen             = '';
+                $destiny            = '';
+                $typedestiny        = '';
+                $calculationtype    = '';
+                $ammount            = '';
+                $currency           = '';
+                $carrier            = '';
+
+                $surcharger         = explode('-',$FailSurchager['surcharge_id']);
+                $origen             = explode('-',$FailSurchager['port_orig']);
+                $destiny            = explode('-',$FailSurchager['port_dest']);
+                $typedestiny        = explode('-',$FailSurchager['typedestiny_id']);
+                $calculationtype    = explode('-',$FailSurchager['calculationtype_id']);
+                $ammount            = explode('-',$FailSurchager['ammount']);
+                $currency           = explode('-',$FailSurchager['currency_id']);
+                $carrier            = explode('-',$FailSurchager['carrier_id']);
+
+                if(count($surcharger) == 1     && count($typedestiny) == 1
+                   && count($typedestiny) == 1 && count($calculationtype) == 1
+                   && count($ammount) == 1     && count($currency) == 1
+                   && count($carrier) >= 1){
+
+                    dd($FailSurchager);
+                }
+
+            }
+        } else {
+
+        }
     }
-    
+
 }
