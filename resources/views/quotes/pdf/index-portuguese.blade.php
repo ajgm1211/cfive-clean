@@ -373,7 +373,6 @@
                 <div class="company">
                     <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
                 </div>
-                <hr>
             </div>
         @endif
         <div class="clearfix">
@@ -412,8 +411,8 @@
             </div>
             @endif
         </div>
-        <footer>
-            <!--Cargofive &copy; {{date('Y')}}-->
-        </footer>
+        <!--<footer>
+            Cargofive &copy; {{date('Y')}}
+        </footer>-->
     </body>
 </html>

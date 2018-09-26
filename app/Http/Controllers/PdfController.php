@@ -25,7 +25,7 @@ use App\TermsPort;
 
 class PdfController extends Controller
 {
-    public function quote($id,$type)
+    public function quote($id)
     {
         // set API Endpoint and access key (and any options of your choice)
         $endpoint = 'live';
@@ -42,6 +42,7 @@ class PdfController extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $type=$company_user->type_pdf;
             $currency_cfg = Currency::find($company_user->currency_id);
             $port_all = harbor::where('name','ALL')->first();
             $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
@@ -121,8 +122,6 @@ class PdfController extends Controller
         }
 
 
-        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-
         if($company_user->pdf_language==1){
             $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type]);
         }else if($company_user->pdf_language==2){
@@ -142,7 +141,6 @@ class PdfController extends Controller
         // set API Endpoint and access key (and any options of your choice)
         $endpoint = 'live';
         $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
-        $type = 2;
 
         $quote = Quote::findOrFail($request->id);
         $contact_email = Contact::find($quote->contact_id);
@@ -159,6 +157,7 @@ class PdfController extends Controller
         $package_loads = PackageLoad::where('quote_id',$request->id)->get();
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $type=$company_user->type_pdf;
             $currency_cfg = Currency::find($company_user->currency_id);
             $port_all = harbor::where('name','ALL')->first();
             $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {

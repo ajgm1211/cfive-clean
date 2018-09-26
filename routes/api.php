@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('currency/{value}', function($value) {
     return \App\Currency::find($value);
 });
+
+Route::get('airports/', function() {
+    return \App\Airport::All();
+});

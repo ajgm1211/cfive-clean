@@ -26,10 +26,10 @@
 
     @include('contacts.partials.contactsModal')
     @include('companies.partials.companiesModal')
-    
+
     <!-- input with currency id -->
     <input type="hidden" id="currency_id" value="{{$currency_cfg->alphacode}}"/>
-    
+
     <div class="row">
         <div class="col-md-10">
             @if(count($company_user->company_user_id)>0)

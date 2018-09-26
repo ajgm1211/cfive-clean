@@ -5,7 +5,7 @@
 <div class="m-content">
     <div class="row">
         <!--<div class="col-md-1">
-<a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
+<a href="" class="btn btn-primary btn-block">PDF</a>
 </div>
 <div class="col-md-2">
 <button class="btn btn-primary btn-block">Schedules</button>
