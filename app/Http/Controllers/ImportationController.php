@@ -9,13 +9,15 @@ use App\Harbor;
 use App\Carrier;
 use App\Currency;
 use App\Contract;
+use App\Surcharge;
+use App\FailSurCharge;
 use App\User;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 
 class ImportationController extends Controller
 {
-    
+
     public function ReprocesarRates(Request $request, $id){
 
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
@@ -188,9 +190,84 @@ class ImportationController extends Controller
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'0']);
         }
     }
-    
+
     public function ReprocesarSurchargers(Request $request, $id){
-        
+        $countfailsurchargers = FailSurCharge::where('contract_id','=',$id)->count();
+        if($countfailsurchargers <= 150){
+            $failsurchargers = FailSurCharge::where('contract_id','=',$id)->get();
+            foreach($failsurchargers as $FailSurchager){
+
+                $surchargerEX       = '';
+                $origenEX           = '';
+                $destinyEX          = '';
+                $typedestinyEX      = '';
+                $calculationtypeEX  = '';
+                $ammountEX          = '';
+                $currencyEX         = '';
+                $carrierEX          = '';
+                $originResul        = '';
+                $originExits        = '';
+                $originV            = '';
+                $destinResul        = '';
+                $destinationExits   = '';
+                $destinationV       = '';
+                $surchargerV        = '';
+
+                $originB        = false;
+                $destinyB       = false;
+                $surcharB       = false;
+
+
+                $surchargerEX       = explode('_',$FailSurchager['surcharge_id']);
+                $originEX           = explode('_',$FailSurchager['port_orig']);
+                $destinyEX          = explode('_',$FailSurchager['port_dest']);
+                $typedestinyEX      = explode('_',$FailSurchager['typedestiny_id']);
+                $calculationtypeEX  = explode('_',$FailSurchager['calculationtype_id']);
+                $ammountEX          = explode('_',$FailSurchager['ammount']);
+                $currencyEX         = explode('_',$FailSurchager['currency_id']);
+                $carrierEX          = explode('_',$FailSurchager['carrier_id']);
+
+                if(count($surchargerEX) == 1     && count($typedestinyEX) == 1
+                   && count($typedestinyEX) == 1 && count($calculationtypeEX) == 1
+                   && count($ammountEX) == 1     && count($currencyEX) == 1
+                   && count($carrierEX) == 1){
+
+                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+                    // Origen Y Destino ------------------------------------------------------------------------
+
+                    $originResul = str_replace($caracteres,'',strtolower($originEX[0]));
+                    $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
+                        ->get();    
+                    if(count($originExits) == 1){
+                        $originB = true;
+                        foreach($originExits as $originRc){
+                            $originV = $originRc['id'];
+                        }
+                    }
+
+                    $destinResul = str_replace($caracteres,'',strtolower($destinyEX[0]));
+                    $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
+                        ->get();
+                    if(count($destinationExits) == 1){
+                        $destinyB = true;
+                        foreach($destinationExits as $destinationRc){
+                            $destinationV = $destinationRc['id'];
+                            // dd($destinationV);
+                        }
+                    }
+                    //          ----------------------------------------------------------------------------------
+
+                    $surchargerV = Surcharge::where('name','=',$surchargerEX[0])->first();
+                    if(count($surchargerV) == 1){
+                        $surcharB = true;
+                        $surchargerV = $surchargerV['id'];
+                    }
+                }
+
+            }
+        } else {
+
+        }
     }
-    
+
 }

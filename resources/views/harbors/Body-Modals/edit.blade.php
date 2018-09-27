@@ -30,7 +30,7 @@
         <label for="countryMD" class="form-control-label">
             Country:
         </label>
-        {!! Form::select('country',$country,$harbors->country,['id' => 'countryMD', 'class' => 'm-select2-general form-control'])!!}
+        {!! Form::select('country',$country,$harbors->country_id,['id' => 'countryMD', 'class' => 'm-select2-general form-control'])!!}
     </div>
     <div class="col-lg-1">
     </div>

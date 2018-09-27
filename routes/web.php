@@ -159,6 +159,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 Route::middleware(['auth'])->prefix('Importation')->group(function () {
     Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates');
+    Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers');
     
 });
 
