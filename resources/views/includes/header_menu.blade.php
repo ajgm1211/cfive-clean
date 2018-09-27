@@ -74,14 +74,6 @@
                             </span>
                         </a>
                     </li>
-                    <!--  <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-business"></i>
-<span class="m-menu__link-text">
-Load Ports
-</span>
-</a>
-</li> -->
                 </ul>
             </div>
         </li>
@@ -196,7 +188,6 @@ Load Ports
                             </span>
                         </a>
                     </li>
-                    @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-graph"></i>
@@ -205,13 +196,20 @@ Load Ports
                             </span>
                         </a>
                     </li>
-                    @endif
                     @role('administrator')
                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-folder-3"></i>
                             <span class="m-menu__link-text">
                                 Request Importation
+                            </span>
+                        </a>
+                    </li>
+                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                Manage Harbors
                             </span>
                         </a>
                     </li>
@@ -233,7 +231,7 @@ Load Ports
 
             <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                 <div class='row'>
-                    <div class="col-md-2">  
+                    <div class="col-md-2">
                         <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
                     </div>
                     <span class="m-nav__link-icon">
@@ -244,7 +242,7 @@ Load Ports
 
             <a href="#" class="m-nav__link m-dropdown__toggle noNotification">
                 <div class='row'>
-                    <div class="col-md-2">  
+                    <div class="col-md-2">
                         <div>
 
                         </div>
@@ -317,4 +315,3 @@ Load Ports
         </li>
     </ul>
 </div>
-

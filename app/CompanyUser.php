@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CompanyUser extends Model
+class CompanyUser extends Model implements Auditable
 {
-    protected $fillable = ['name','address','phone','currency_id', 'logo'];
+    use \OwenIt\Auditing\Auditable;
+
+    protected $fillable = ['name','address','phone','currency_id', 'logo','pdf_language'];
 
     public function user()
     {

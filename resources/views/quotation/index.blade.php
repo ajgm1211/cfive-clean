@@ -391,7 +391,7 @@
                 @if((!empty($inlandDestiny)) || (!empty($inlandOrigin)))
                 <tr id="inlands{{$loop->iteration}}" hidden="true" >
                   <td colspan="6">
-                    <b>Inlands Charges</b>
+                           <span class="darkblue cabezeras">Inland Charges</span>
                     <hr>
                     <table class="table table-hover">
                       <tr class="thead-light">

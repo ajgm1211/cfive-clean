@@ -1,6 +1,6 @@
 <div class="form-group m-form__group">
     {!! Form::label('first_name', 'First Name') !!}
-    {!! Form::text('first_name', null, ['placeholder' => 'Please enter your first name','class' => 'form-control m-input first_namec_input','required' => 'required']) !!}
+    {!! Form::text('first_name', null, ['placeholder' => 'Please enter your first name','class' => 'form-control m-input first_namec_input','required' => 'required', 'id'=>'firts_name_contact']) !!}
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('last_name', 'Last Name') !!}
@@ -13,4 +13,8 @@
 <div class="form-group m-form__group">
     {!! Form::label('phone', 'Phone') !!}
     {!! Form::text('phone', null, ['placeholder' => 'Please enter a phone','class' => 'form-control m-input phonec_input','required' => 'required']) !!}
+</div>
+<div class="form-group m-form__group">
+    {!! Form::label('position', 'Position') !!}
+    {!! Form::text('position', null, ['placeholder' => 'Please enter a position','class' => 'form-control m-input phonec_input','required' => 'required']) !!}
 </div>

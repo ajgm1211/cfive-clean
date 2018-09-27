@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
         <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-        <title>Verification Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+        <title>Quote Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
         <!-- Web Font / @font-face : BEGIN -->
         <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
@@ -190,11 +190,9 @@ font-family: sans-serif !important;
             }
 
         </style>
-
-
     </head>
 
-    <body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly; background-color: #001728;">
+    <body width="100%" bgcolor="#ffffff" style="margin: 0; mso-line-height-rule: exactly; background-color: #fff;">
         <center style="width: 100%; text-align: left; margin-bottom: 100px !important;">
 
             <!-- Preview Text Spacing Hack : BEGIN -->
@@ -203,7 +201,7 @@ font-family: sans-serif !important;
             </div>
             <!-- Preview Text Spacing Hack : END -->
 
-            <!-- Email Header : BEGIN -->
+            <!-- Email Header : BEGIN
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
                 <tr>
                     <td style="padding: 20px 0; text-align: center;">
@@ -215,24 +213,9 @@ font-family: sans-serif !important;
 
             <!-- Email Body : BEGIN -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
-
-                <!-- 1 Column Text + Button : BEGIN -->
-                <tr>
-                    <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">PDF</h1>
-                </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>Hi.</p>
-                        <p>You requested that we send you the pdf of the quote.</p>
-                    </td>
-                </tr>
-                <!-- 1 Column Text + Button : END -->
-                <tr>
-                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: center;">
-                        <p>If you do not want to receive more emails, please tell us.</p>
-                        <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
-                        <h4 style="text-align: center;">info@cargofive.com </h4>
+                        {!!$text!!}
                     </td>
                 </tr>
             </table>

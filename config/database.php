@@ -1,5 +1,5 @@
 <?php
-
+/*
 if (!defined('RDS_HOSTNAME')) {
 
 
@@ -9,7 +9,7 @@ if (!defined('RDS_HOSTNAME')) {
     define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
 
 }
-
+*/
 
 
 return [
@@ -51,24 +51,6 @@ return [
             'prefix' => '',
         ],
 
-
-
-        
-        'mysql' => [
-
-            'driver' => 'mysql',
-            'host' => RDS_HOSTNAME,
-            'port' => env('DB_PORT', '3306'),
-            'database' => RDS_DB_NAME,
-            'username' => RDS_USERNAME,
-            'password' => RDS_PASSWORD,
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
-        ],
 
    
 /*

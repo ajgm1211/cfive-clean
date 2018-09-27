@@ -613,18 +613,31 @@ $(document).on('click', '.addButtonDestination', function (e) {
     .removeAttr('id')
     .insertAfter($template);
 });
+
 $(document).on('click', '.removeOriginButton', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".origin_price_per_unit").change();
+    $(".origin_ammount_units").change();
+    $(".origin_ammount_currency").change();
+    $(".origin_total_ammount_2").change();
 });
+
 $(document).on('click', '.removeButton', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".freight_price_per_unit").change();
+    $(".freight_ammount_units").change();
+    $(".freight_ammount_currency").change();
+    $(".freight_total_ammount_2").change();
 });
+
 $(document).on('click', '.removeButtonDestination', function (e) {
     var $row = $(this).closest('tr').remove();
     $(".destination_price_per_unit").change();
+    $(".destination_ammount_units").change();
+    $(".destination_ammount_currency").change();
+    $(".destination_total_ammount_2").change();
 });
+
 $(document).on('change', '#type_inland_markup_3', function (e) {
     if($(this).val()==1){
         $(".inland_fixed_markup_3").hide();
@@ -644,6 +657,7 @@ $(document).on('change', '#type_inland_markup_3', function (e) {
 });
 
 $(document).on('change', '#delivery_type', function (e) {
+
     if($(this).val()==1){
         $("#origin_address_label").addClass('hide');
         $("#destination_address_label").addClass('hide');
@@ -651,6 +665,7 @@ $(document).on('change', '#delivery_type', function (e) {
         $("#destination_address").val('');
     }
     if($(this).val()==2){
+
         $("#origin_address_label").addClass('hide');
         $("#destination_address_label").removeClass('hide');
         $("#origin_address").val('');
@@ -690,253 +705,284 @@ $(document).on('change', '#delivery_type_air', function (e) {
 });
 
 $(document).on('click', '#create-quote', function (e) {
-    var origin_harbor=$("#origin_harbor").val();
-    var destination_harbor=$("#destination_harbor").val();
-    var destination_address=$("#destination_address").val();
-    var origin_address=$("#origin_address").val();
-    var origin_airport=$("#origin_airport").val();
-    var destination_airport=$("#destination_airport").val();
-    var qty_20='';
-    var qty_40='';
-    var qty_40_hc='';
-    var total_quantity='';
-    var total_weight='';
-    var total_volume='';
-    var type_cargo='';
-    var quantity = new Array();
-    var height = new Array();
-    var width = new Array();
-    var large = new Array();
-    var weight = new Array();
-    var total_weight_arr = new Array();
-    var volume = new Array();
-    var type_cargo = new Array();
-    var myTableDiv = document.getElementById("label_package_loads");
-    var table = document.createElement('table');
-    var tableBody = document.createElement('tbody');
+    if($(".pick_up_date").val() == ''){
+        msg('Sorry, the pick up date is empty. Please go back and complete this field');
+        return;
+    }else if($(".validity").val() == ''){
+        msg('Sorry, the validity date is empty. Please go back and complete this field');
+        return;
+    }else{
+        var origin_harbor=$("#origin_harbor").val();
+        var destination_harbor=$("#destination_harbor").val();
+        var destination_address=$("#destination_address").val();
+        var origin_address=$("#origin_address").val();
+        var origin_airport=$("#origin_airport").val();
+        var destination_airport=$("#destination_airport").val();
+        var qty_20='';
+        var qty_40='';
+        var qty_40_hc='';
+        var total_quantity='';
+        var total_weight='';
+        var total_volume='';
+        var total_quantity_pkg='';
+        var total_weight_pkg='';
+        var total_volume_pkg='';        
+        var type_cargo='';
+        var quantity = new Array();
+        var height = new Array();
+        var width = new Array();
+        var large = new Array();
+        var weight = new Array();
+        var total_weight_arr = new Array();
+        var volume = new Array();
+        var type_cargo = new Array();
+        var myTableDiv = document.getElementById("label_package_loads");
+        var table = document.createElement('table');
+        var tableBody = document.createElement('tbody');
 
-    if($(".qty_20").val()>0){
-        qty_20=$(".qty_20").val();
-    }
-    if($(".qty_40").val()>0){
-        qty_40=$(".qty_40").val();
-    }
-    if($(".qty_40_hc").val()>0){
-        qty_40_hc=$(".qty_40_hc").val();
-    }
-    if($("#total_quantity").val()>0){
-        total_quantity=$("#total_quantity").val();
-    }
-    if($("#total_weight").val()>0){
-        total_weight=$("#total_weight").val();
-    }
-    if($("#total_volume").val()>0){
-        total_volume=$("#total_volume").val();
-    }
-
-    //Creating table to loads by packages
-    table.appendChild(tableBody);
-
-    var heading = new Array();
-    heading[0] = "Quantity";
-    heading[1] = "Height";
-    heading[2] = "Width";
-    heading[3] = "Large";
-    heading[4] = "Weight";
-    heading[5] = "Total Weight";
-    heading[6] = "Volume";
-
-    $(".type_cargo").each(function(){
-        if($(this).val()==1){
-            type_cargo.push('Pallets');
-        }else{
-            type_cargo.push('Packages');
+        if($(".qty_20").val()>0){
+            qty_20=$(".qty_20").val();
         }
-    });
-
-    $(".quantity").each(function(){
-        if($(this).val()!=''){
-            quantity.push($(this).val());
+        if($(".qty_40").val()>0){
+            qty_40=$(".qty_40").val();
         }
-    });
-
-    $(".height").each(function(){
-        if($(this).val()!=''){
-            height.push($(this).val());
+        if($(".qty_40_hc").val()>0){
+            qty_40_hc=$(".qty_40_hc").val();
         }
-    });
-
-    $(".width").each(function(){
-        if($(this).val()!=''){
-            width.push($(this).val());
+        if($("#total_quantity").val()>0){
+            total_quantity=$("#total_quantity").val();
         }
-    });
-
-    $(".large").each(function(){
-        if($(this).val()!=''){
-            large.push($(this).val());
+        if($("#total_weight").val()>0){
+            total_weight=$("#total_weight").val();
         }
-    });
-
-    $(".volume_input").each(function(){
-        if($(this).val()!=''){
-            volume.push($(this).val()+" m3");
+        if($("#total_volume").val()>0){
+            total_volume=$("#total_volume_pkg_input").val();
         }
-    });
-
-    $(".weight").each(function(){
-        if($(this).val()!=''){
-            weight.push($(this).val());
+        if($("#total_quantity_pkg_input").val()>0){
+            total_quantity_pkg=$("#total_quantity_pkg_input").val();
         }
-    });
+        if($("#total_weight_pkg_input").val()>0){
+            total_weight_pkg=$("#total_weight_pkg_input").val();
+        }
+        if($("#total_volume_pkg_input").val()>0){
+            total_volume_pkg=$("#total_volume_pkg_input").val();
+        }
 
-    var q2 = new Array();
+        //Creating table to loads by packages
+        table.appendChild(tableBody);
 
-    for (i = 0; i < quantity.length; i++) {
-        for (i = 0; i < height.length; i++) {
-            for (i = 0; i < width.length; i++) {
-                for (i = 0; i < large.length; i++) {
-                    for (i = 0; i < weight.length; i++) {
-                        for (i = 0; i < volume.length; i++) {
-                            if((quantity[i]!=undefined) && (height[i]!=undefined) && (width[i]!=undefined) && (large[i]!=undefined) && (weight[i]!=undefined)){
-                                q2[i] = new Array (quantity[i]+" "+type_cargo[i],height[i],width[i],large[i],weight[i]+" kg",weight[i]*quantity[i]+" kg",volume[i]);
+        var heading = new Array();
+        heading[0] = "Quantity";
+        heading[1] = "Height";
+        heading[2] = "Width";
+        heading[3] = "Large";
+        heading[4] = "Weight";
+        heading[5] = "Total Weight";
+        heading[6] = "Volume";
+
+        $(".type_cargo").each(function(){
+            if($(this).val()==1){
+                type_cargo.push('Pallets');
+            }else{
+                type_cargo.push('Packages');
+            }
+        });
+
+        $(".quantity").each(function(){
+            if($(this).val()!=''){
+                quantity.push($(this).val());
+            }
+        });
+
+        $(".height").each(function(){
+            if($(this).val()!=''){
+                height.push($(this).val());
+            }
+        });
+
+        $(".width").each(function(){
+            if($(this).val()!=''){
+                width.push($(this).val());
+            }
+        });
+
+        $(".large").each(function(){
+            if($(this).val()!=''){
+                large.push($(this).val());
+            }
+        });
+
+        $(".volume_input").each(function(){
+            if($(this).val()!=''){
+                volume.push($(this).val()+" m3");
+            }
+        });
+
+        $(".weight").each(function(){
+            if($(this).val()!=''){
+                weight.push($(this).val());
+            }
+        });
+
+        var q2 = new Array();
+
+        for (i = 0; i < quantity.length; i++) {
+            for (i = 0; i < height.length; i++) {
+                for (i = 0; i < width.length; i++) {
+                    for (i = 0; i < large.length; i++) {
+                        for (i = 0; i < weight.length; i++) {
+                            for (i = 0; i < volume.length; i++) {
+                                if((quantity[i]!=undefined) && (height[i]!=undefined) && (width[i]!=undefined) && (large[i]!=undefined) && (weight[i]!=undefined)){
+                                    q2[i] = new Array (quantity[i]+" "+type_cargo[i],height[i],width[i],large[i],weight[i]+" kg",weight[i]*quantity[i]+" kg",volume[i]);
+                                }
                             }
                         }
                     }
                 }
-            }
+            }   
         }   
-    }   
 
-    //TABLE COLUMNS
-    var tr = document.createElement('tr');
-    tableBody.appendChild(tr);
-    for (i = 0; i < heading.length; i++) {
-        var th = document.createElement('th')
-        th.width = '75';
-        th.setAttribute('class','header-table title-quote');
-        th.appendChild(document.createTextNode(heading[i]));
-        tr.appendChild(th);
-    }
-
-    //TABLE ROWS
-    for (i = 0; i < q2.length; i++) {
+        //TABLE COLUMNS
         var tr = document.createElement('tr');
-        for (j = 0; j < q2[i].length; j++) {
-            var td = document.createElement('td')
-            td.appendChild(document.createTextNode(q2[i][j]));
-            tr.appendChild(td)
-        }
         tableBody.appendChild(tr);
+        for (i = 0; i < heading.length; i++) {
+            var th = document.createElement('th')
+            th.width = '75';
+            th.setAttribute('class','header-table title-quote');
+            th.appendChild(document.createTextNode(heading[i]));
+            tr.appendChild(th);
+        }
+
+        //TABLE ROWS
+        for (i = 0; i < q2.length; i++) {
+            var tr = document.createElement('tr');
+            for (j = 0; j < q2[i].length; j++) {
+                var td = document.createElement('td')
+                td.appendChild(document.createTextNode(q2[i][j]));
+                tr.appendChild(td)
+            }
+            tableBody.appendChild(tr);
+        }
+
+        //Adding table body to table
+        if(q2.length>0){
+            table.setAttribute('class', 'table table-bordered color-blue text-center')
+            $("#label_package_loads table").empty();
+            myTableDiv.appendChild(table);
+        }
+
+        type_cargo=$("#type_cargo").val();
+        if(type_cargo==1){
+            type_cargo='Pallets';
+        }else{
+            type_cargo='Packages';
+        }
+        if(origin_harbor!=''){
+            $.ajax({
+                type: 'get',
+                url: 'get/harbor/id/' + origin_harbor,
+                success: function(data) {
+                    $("#origin_input").html(data.name+", "+data.code);
+                }
+            });
+        }
+        if(destination_harbor!=''){
+            $.ajax({
+                type: 'get',
+                url: 'get/harbor/id/' + destination_harbor,
+                success: function(data) {
+                    $("#destination_input").html(data.name+", "+data.code);
+                }
+            });
+        }
+        if(origin_airport!=''){
+            $.ajax({
+                type: 'get',
+                url: 'get/airport/id/' + origin_airport,
+                success: function(data) {
+                    $("#origin_input").html(data.name);
+                }
+            });
+        }
+        if(destination_airport!=''){
+            $.ajax({
+                type: 'get',
+                url: 'get/airport/id/' + destination_airport,
+                success: function(data) {
+                    $("#destination_input").html(data.name);
+                }
+            });
+        }
+        if(qty_20!='' || qty_20>0){
+            $("#cargo_details_20").html(qty_20);
+            $("#cargo_details_20_p").removeClass('hide');
+        }else{
+            $("#cargo_details_20_p").addClass('hide');
+        }
+        if(qty_40!='' || qty_40>0){
+            $("#cargo_details_40").html(qty_40);
+            $("#cargo_details_40_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_p").addClass('hide');
+        }
+        if(qty_40_hc!='' || qty_40_hc>0){
+            $("#cargo_details_40_hc").html(qty_40_hc);
+            $("#cargo_details_40_hc_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_hc_p").addClass('hide');
+        }
+        if(total_quantity!='' && type_cargo!=''){
+            $("#cargo_details_cargo_type").html(" "+type_cargo);
+            $("#cargo_details_cargo_type_p").removeClass('hide');
+        }else{
+            $("#cargo_details_cargo_type_p").addClass('hide');
+        }
+        if(total_quantity!='' || total_quantity>0){
+            $("#cargo_details_total_quantity").html(" "+total_quantity);
+            $("#cargo_details_total_quantity_p").removeClass('hide');
+        }else{
+            $("#cargo_details_total_quantity_p").addClass('hide');
+        }
+        if(total_weight!='' || total_weight>0){
+            $("#cargo_details_total_weight").html(" "+total_weight);
+            $("#cargo_details_total_weight_p").removeClass('hide');
+        }else{
+            $("#cargo_details_total_weight_p").addClass('hide');
+        }
+        if(total_volume!='' || total_volume>0){
+            $("#cargo_details_total_volume").html(" "+total_volume);
+            $("#cargo_details_total_volume_p").removeClass('hide');
+        }else{
+            $("#cargo_details_total_volume_p").addClass('hide');
+        }
+
+        if((total_quantity_pkg!='' || total_quantity_pkg>0) && (total_weight_pkg!='' || total_weight_pkg>0) && (total_volume_pkg!='' || total_volume_pkg>0)){
+
+            $("#cargo_details_total_quantity_pkg").html(" "+total_quantity_pkg);
+            $("#cargo_details_total_weight_pkg").html(" "+total_weight_pkg);
+            $("#cargo_details_total_volume_pkg").html(" "+total_volume_pkg);
+            $("#cargo_details_total_pkg_p").removeClass('hide');
+        }else{
+            $("#cargo_details_total_pkg_p").addClass('hide');
+        }
+
+        if(origin_address!=''){
+            $("#origin_address_p").html(origin_address);
+            $("#origin_address_panel").removeClass('hide');
+        }else{
+            $("#origin_address_panel").addClass('hide');
+        }
+        if(destination_address!=''){
+            $("#destination_address_p").html(destination_address);
+            $("#destination_address_panel").removeClass('hide');
+        }else{
+            $("#destination_address_panel").addClass('hide');
+        }
     }
 
-    //Adding table body to table
-    if(q2.length>0){
-        table.setAttribute('class', 'table table-bordered color-blue text-center')
-        $("#label_package_loads table").empty();
-        myTableDiv.appendChild(table);
-    }
-
-    type_cargo=$("#type_cargo").val();
-    if(type_cargo==1){
-        type_cargo='Pallets';
-    }else{
-        type_cargo='Packages';
-    }
-    if(origin_harbor!=''){
-        $.ajax({
-            type: 'get',
-            url: 'get/harbor/id/' + origin_harbor,
-            success: function(data) {
-                $("#origin_input").html(data.name);
-            }
-        });
-    }
-    if(destination_harbor!=''){
-        $.ajax({
-            type: 'get',
-            url: 'get/harbor/id/' + destination_harbor,
-            success: function(data) {
-                $("#destination_input").html(data.name);
-            }
-        });
-    }
-    if(origin_airport!=''){
-        $.ajax({
-            type: 'get',
-            url: 'get/airport/id/' + origin_airport,
-            success: function(data) {
-                $("#origin_input").html(data.name);
-            }
-        });
-    }
-    if(destination_airport!=''){
-        $.ajax({
-            type: 'get',
-            url: 'get/airport/id/' + destination_airport,
-            success: function(data) {
-                $("#destination_input").html(data.name);
-            }
-        });
-    }
-    if(qty_20!='' || qty_20>0){
-        $("#cargo_details_20").html(qty_20);
-        $("#cargo_details_20_p").removeClass('hide');
-    }else{
-        $("#cargo_details_20_p").addClass('hide');
-    }
-    if(qty_40!='' || qty_40>0){
-        $("#cargo_details_40").html(qty_40);
-        $("#cargo_details_40_p").removeClass('hide');
-    }else{
-        $("#cargo_details_40_p").addClass('hide');
-    }
-    if(qty_40_hc!='' || qty_40_hc>0){
-        $("#cargo_details_40_hc").html(qty_40_hc);
-        $("#cargo_details_40_hc_p").removeClass('hide');
-    }else{
-        $("#cargo_details_40_hc_p").addClass('hide');
-    }
-    if(total_quantity!='' && type_cargo!=''){
-        $("#cargo_details_cargo_type").html(" "+type_cargo);
-        $("#cargo_details_cargo_type_p").removeClass('hide');
-    }else{
-        $("#cargo_details_cargo_type_p").addClass('hide');
-    }
-    if(total_quantity!='' || total_quantity>0){
-        $("#cargo_details_total_quantity").html(" "+total_quantity);
-        $("#cargo_details_total_quantity_p").removeClass('hide');
-    }else{
-        $("#cargo_details_total_quantity_p").addClass('hide');
-    }
-    if(total_weight!='' || total_weight>0){
-        $("#cargo_details_total_weight").html(" "+total_weight);
-        $("#cargo_details_total_weight_p").removeClass('hide');
-    }else{
-        $("#cargo_details_total_weight_p").addClass('hide');
-    }
-    if(total_volume!='' || total_volume>0){
-        $("#cargo_details_total_volume").html(" "+total_volume);
-        $("#cargo_details_total_volume_p").removeClass('hide');
-    }else{
-        $("#cargo_details_total_volume_p").addClass('hide');
-    }
-    if(origin_address!=''){
-        $("#origin_address_p").html(origin_address);
-        $("#origin_address_panel").removeClass('hide');
-    }else{
-        $("#origin_address_panel").addClass('hide');
-    }
-    if(destination_address!=''){
-        $("#destination_address_p").html(destination_address);
-        $("#destination_address_panel").removeClass('hide');
-    }else{
-        $("#destination_address_panel").addClass('hide');
-    }
 });
 
 $( document ).ready(function() {
-
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
@@ -992,7 +1038,7 @@ $( document ).ready(function() {
                     $.each(data, function(key, value) {
                         $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
-                    
+
                     // CLEARING PRICE SELECT
                     $("select[name='price_id']").val('');
                     $('#select2-price_id-n3-container').text('Please an option');
@@ -1085,7 +1131,6 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
                             var quantity = $(self).closest('tr').find('.freight_ammount_units').val();
                             markup = $(self).closest('tr').find('.freight_ammount_markup').val();
                             var sub_total = amount * quantity;
-
                             if(currency_cfg+json.alphacode == json.api_code){
                                 total = sub_total / json.rates;
                             }else{
@@ -1349,7 +1394,7 @@ $(document).on("change keydown keyup", ".quantity_input", function(){
         }
     });
     $("#total_quantity_pkg").html(sum + " un");
-    $("#total_quantity_input").val(sum);
+    $("#total_quantity_pkg_input").val(sum);
 });
 
 $(document).on("change keydown keyup", ".volume_input", function(){
@@ -1358,7 +1403,7 @@ $(document).on("change keydown keyup", ".volume_input", function(){
     $(".volume_input").each(function() {
         //add only if the value is number      
         if ($(this).val()>0 && $(this).val()!='') {
-            sum += parseInt($(this).val());
+            sum += parseFloat($(this).val());
             console.log($(this).val());
         }
         else if ($(this).val().length != 0){
@@ -1367,7 +1412,7 @@ $(document).on("change keydown keyup", ".volume_input", function(){
     });
 
     $("#total_volume_pkg").html((sum) + " m3");
-    $("#total_volume_input").val(sum);
+    $("#total_volume_pkg_input").val(sum);
 });
 
 $(document).on("change keydown keyup", ".weight_input", function(){
@@ -1376,12 +1421,12 @@ $(document).on("change keydown keyup", ".weight_input", function(){
     $(".weight_input").each(function() {
         //add only if the value is number      
         if ($(this).val()>0 && $(this).val()!='') {
-            sum += parseInt($(this).val());
+            sum += parseFloat($(this).val());
             console.log($(this).val());
         }
     });
     $("#total_weight_pkg").html(sum + " kg");
-    $("#total_weight_input").val(sum);
+    $("#total_weight_pkg_input").val(sum);
 });
 
 $(document).on('click', '#send-pdf-quote', function () {
@@ -1536,7 +1581,7 @@ $(document).on('click', '#delete-contact', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'contacts/delete/' + id,
+                url: '/contacts/delete/' + id,
                 success: function(data) {
                     if(data.message=='Ok'){
                         swal(
@@ -1734,9 +1779,11 @@ $('#price_level_company').select2({
 $('#users_company').select2({
     placeholder: "Select an option"
 });
+
 // companies 
 
 $(document).on('click', '#savecompany', function () {
+
     var $element = $('#addContactModal');
     $.ajax({
         type: 'POST',
@@ -1753,15 +1800,17 @@ $(document).on('click', '#savecompany', function () {
                 url: "company/companies",
                 dataType: 'json',
                 success: function(dataC) {
-                    $('select[name="company_id"]').empty();
+                    $('select[name="company_id_quote"]').empty();
                     $.each(dataC, function(key, value) {
-                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
                     $('#companyModal').modal('hide');
+                    $("select[name='company_id_quote']").val('');
+                    $('#select2-m_select2_2_modal-container').text('Please an option');
 
                     swal(
                         'Done!',
-                        'Status updated.',
+                        'Register completed',
                         'success'
                     )
                 },
@@ -1779,6 +1828,7 @@ $(document).on('click', '#savecompany', function () {
 
 
 $(document).on('click', '#savecontact', function () {
+
     var $element = $('#contactModal');
 
     $.ajax({
@@ -1797,17 +1847,19 @@ $(document).on('click', '#savecontact', function () {
                 url: "company/companies",
                 dataType: 'json',
                 success: function(dataC) {
-                    $('select[name="company_id"]').empty();
+                    $('select[name="company_id_quote"]').empty();
                     $.each(dataC, function(key, value) {
-                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
                     $('#contactModal').modal('hide');
 
                     swal(
                         'Done!',
-                        'Status updated.',
+                        'Register completed',
                         'success'
                     )
+                    $("select[name='company_id_quote']").val('');
+                    $('#select2-m_select2_2_modal-container').text('Please an option');
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -1837,6 +1889,44 @@ $('#carrier_id').select2({
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
+});
+
+$('#origin_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        },
+    }
+});
+
+$('#destination_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        },
+    }
 });
 
 $('.select2-company_id').select2({
@@ -1875,7 +1965,6 @@ $(document).on('click', '.removesche', function () {
 });
 
 $(document).on('click', '#filter_data', function () {
-    
     $.ajax({
         type: 'POST',
         url: '/dashboard/filter/',
@@ -1889,15 +1978,33 @@ $(document).on('click', '#filter_data', function () {
     });
 });
 
+/** PDF **/
+
+$(document).on('change', '#pdf_type', function () {
+    var type=$("#pdf_type").val();
+    $.ajax({
+        type: 'POST',
+        url: '/settings/update/pdf/type',
+        data: {
+            'pdf_type': $("#pdf_type").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
+
+
 /** FUNCTIONS **/
 
 function msg(message){
+
     toastr.options = {
         "closeButton": true,
         "debug": false,
         "newestOnTop": false,
         "progressBar": false,
-        "positionClass": "toast-bottom-right",
+        "positionClass": "toast-bottom-center",
         "preventDuplicates": true,
         "onclick": null,
         "showDuration": "0",

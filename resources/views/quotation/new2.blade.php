@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="col-md-2">
                                   <label>Incoterm</label>
-                                  {{ Form::select('incoterm',['1' => 'FOB','2' => 'ECX'],null,['class'=>'m-select2-general form-control']) }}
+                                  {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
                                 </div>
                                 <div class="col-md-5">
                                   <label>Delivery type</label>
@@ -123,8 +123,8 @@
                                   <label>Pick up date</label>
                                   <div class="input-group date">
                                     {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                                    {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
 
-                                    {!! Form::hidden('date_hidden', null, ['id' => 'date_hidden']) !!}
                                     <div class="input-group-append">
                                       <span class="input-group-text">
                                         <i class="la la-calendar-check-o"></i>
@@ -133,13 +133,14 @@
                                   </div>
                                 </div>
                               </div>
+
                               <br>
                               <div class="row">
                                 <div class="col-md-4" id="origin_harbor_label">
                                   <label>Origin port</label>
                                   {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
                                 </div>
-                                <div class="col-md-8" id="origin_address_label" style="display: none;">
+                                <div class="col-md-8 hide" id="origin_address_label">
                                   <label>Origin address</label>
                                   {!! Form::text('origin_address', '', ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
                                 </div>
@@ -150,7 +151,7 @@
                                   <label>Destination port</label>
                                   {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
                                 </div>
-                                <div class="col-md-8" id="destination_address_label" style="display: none;">
+                                <div class="col-md-8 hide" id="destination_address_label">
                                   <label>Destination address</label>
                                   {!! Form::text('destination_address', '', ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
                                 </div>
@@ -237,7 +238,11 @@
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+
+
+
   /*** GOOGLE MAPS API ***/
 
   var autocomplete;
@@ -258,10 +263,9 @@
       }
     });
   }
-</script>
 
-<script>
   $valor =   $('#date_hidden').val();
+
   if($valor != 0){
     $('#m_datepicker_2').val($valor);
   }
@@ -269,14 +273,6 @@
     var date = $('#m_datepicker_2').val();
     $('#date_hidden').val(date);
   }
-
-
-</script>
-
-
-<script>
-
-
 
   function AbrirModal(action,id){
 

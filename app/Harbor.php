@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Harbor extends Model
 {
     protected $table    = "harbors";
-    protected $fillable = ['id', 'name', 'code','display_name','country_id','varation'];
+    protected $fillable = ['id', 'name', 'code','display_name','coordinates','country_id','varation'];
 
     public function globalcharge()
     {
@@ -31,5 +31,9 @@ class Harbor extends Model
 
     public function termport(){
         return hasMany('App\TermsPort');
+    }
+    
+    public function country(){
+        return $this->belongsTo('App\Country');
     }
 }

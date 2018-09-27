@@ -5,7 +5,7 @@
 <div class="m-content">
     <div class="row">
         <!--<div class="col-md-1">
-<a href="{{route('quotes.pdf',$quote->id)}}" class="btn btn-primary btn-block">PDF</a>
+<a href="" class="btn btn-primary btn-block">PDF</a>
 </div>
 <div class="col-md-2">
 <button class="btn btn-primary btn-block">Schedules</button>
@@ -35,6 +35,8 @@
         </div>
     </div>
     @endif
+    <!-- input with currency id -->
+    <input type="hidden" id="currency_id" value="{{$currency_cfg->alphacode}}"/>
     <div class="row">
         <div class="col-md-10">
             <div class="row">
@@ -575,10 +577,10 @@
                                                     <div style="min-height: 100px;">
                                                         <div style="margin-top: 20px;">
                                                             <div class="pull-left text-left" style="line-height: .5;">
-                                                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                                                <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto">
                                                             </div>
                                                             <div class="pull-right text-right" style="line-height: .5">
-                                                                <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
+                                                                <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                                                 <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                                                 @if($quote->validity!='')
                                                                 @php
@@ -710,6 +712,9 @@
                                                                     </thead>
                                                                     @if(count($origin_ammounts)>0)
                                                                     <tbody>
+                                                                        @php
+                                                                            $i=1;
+                                                                        @endphp
                                                                         @foreach($origin_ammounts as $origin_ammount)
                                                                         <tr>
                                                                             <td>
@@ -741,12 +746,18 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="origin_total_ammount_2[]"  value="{{$origin_ammount->total_ammount_2}}" class="origin_total_ammount_2 form-control" aria-label="...">
+                                                                                        <a class="btn removeOriginButton">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
+                                                                        @php
+                                                                            $i++;
+                                                                        @endphp
                                                                         @endforeach
-                                                                        <tr class="hide"  id="origin_ammounts">
+                                                                        <tr class="hide" id="origin_ammounts">
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
                                                                             </td>
@@ -897,6 +908,9 @@
                                                                     </thead>
                                                                     @if(count($freight_ammounts)>0)
                                                                     <tbody>
+                                                                        @php
+                                                                            $i=1;
+                                                                        @endphp
                                                                         @foreach($freight_ammounts as $freight_ammount)
                                                                         <tr>
                                                                             <td>
@@ -928,12 +942,19 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="freight_total_ammount_2[]"  value="{{$freight_ammount->total_ammount_2}}" class="freight_total_ammount_2 form-control" aria-label="...">
+                                                                                        
+                                                                                        <a class="btn removeButton">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
+                                                                        @php
+                                                                            $i++;
+                                                                        @endphp
                                                                         @endforeach
-                                                                        <tr class="hide"  id="freight_ammounts">
+                                                                        <tr class="hide" id="freight_ammounts">
                                                                             <td>
                                                                                 <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
                                                                             </td>
@@ -1086,6 +1107,9 @@
                                                                     </thead>
                                                                     @if(count($destination_ammounts)>0)
                                                                     <tbody>
+                                                                        @php
+                                                                            $i=1;
+                                                                        @endphp
                                                                         @foreach($destination_ammounts as $destination_ammount)
                                                                         <tr>
                                                                             <td>
@@ -1117,10 +1141,16 @@
                                                                                 <div class="form-group">
                                                                                     <div class="input-group">
                                                                                         <input type="text" name="destination_total_ammount_2[]"  value="{{$destination_ammount->total_ammount_2}}" class="destination_total_ammount_2 form-control" aria-label="...">
+                                                                                        <a class="btn removeButtonDestination">
+                                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                                        </a>
                                                                                     </div>
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
+                                                                        @php
+                                                                            $i++;
+                                                                        @endphp
                                                                         @endforeach
                                                                         <tr class="hide"  id="destination_ammounts">
                                                                             <td>
@@ -1301,6 +1331,7 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
     /*** GOOGLE MAPS API ***/
 

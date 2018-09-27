@@ -38,7 +38,7 @@ class TermsAndConditionsController extends Controller
 
     public function add()
     {
-        $harbors = Harbor::all()->pluck('name','id');
+        $harbors = Harbor::pluck('name','id');
 
         return view('terms.add', compact('harbors'));
     }
@@ -51,28 +51,34 @@ class TermsAndConditionsController extends Controller
      */
     public function store(Request $request)
     {
-        $companyUser = CompanyUser::All();
-        $company = Auth::user()->company_user_id;
-        $term = new TermAndCondition();
-        $term->name = $request->name;
-        $term->user_id = Auth::user()->id;
-        $term->import = $request->import;
-        $term->export = $request->export;
-        $term->company_user_id = $company;
-        $term->save();
-        
-        $ports = $request->ports;
+        if($request->import!='' || $request->export!=''){
+            $companyUser = CompanyUser::All();
+            $company = Auth::user()->company_user_id;
+            $term = new TermAndCondition();
+            $term->name = $request->name;
+            $term->user_id = Auth::user()->id;
+            $term->import = $request->import;
+            $term->export = $request->export;
+            $term->company_user_id = $company;
+            $term->save();
 
-        foreach($ports as $i){
-            $termsport = new TermsPort();
-            $termsport->port_id = $i;
-            $termsport->term()->associate($term);
-            $termsport->save();
+            $ports = $request->ports;
+
+            foreach($ports as $i){
+                $termsport = new TermsPort();
+                $termsport->port_id = $i;
+                $termsport->term()->associate($term);
+                $termsport->save();
+            }
+
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Register completed successfully');
+        }else{
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            $request->session()->flash('message.content', 'You must add terms to import or export');
         }
-        
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully added new term.');
         return redirect('terms/list');
     }
 
@@ -84,7 +90,12 @@ class TermsAndConditionsController extends Controller
      */
     public function show($id)
     {
-        //
+        $term = TermAndCondition::where('id',$id)->with('harbor')->first();
+        $selected_harbors = collect($term->harbor);
+        $selected_harbors = $selected_harbors->pluck('id','name');
+        $harbors = harbor::all()->pluck('name','id');
+
+        return view('terms.show', compact('term', 'harbors', 'selected_harbors'));        
     }
 
     /**
@@ -100,7 +111,6 @@ class TermsAndConditionsController extends Controller
         $selected_harbors = $selected_harbors->pluck('id','name');
         $harbors = harbor::all()->pluck('name','id');
 
-        
         return view('terms.edit', compact('term', 'harbors', 'selected_harbors'));
     }
 
@@ -113,30 +123,35 @@ class TermsAndConditionsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->import=='' || $request->export==''){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            $request->session()->flash('message.content', 'You must add terms to import or export');
+        }else{
+            $term = TermAndCondition::find($id);
+            $term->name = $request->name;
+            $term->user_id = Auth::user()->id;
+            $term->import = $request->import;
+            $term->export = $request->export;
+            $term->company_user_id = Auth::user()->company_user_id;
+            $term->update();
 
-        $term = TermAndCondition::find($id);
-        $term->name = $request->name;
-        $term->user_id = Auth::user()->id;
-        $term->import = $request->import;
-        $term->export = $request->export;
-        $term->company_user_id = Auth::user()->company_user_id;
-        $term->update();
+            $ports = $request->ports;
+            if($ports != ''){
+                TermsPort::where('term_id',$id)->delete();
 
-        $ports = $request->ports;
-        if($ports != ''){
-            TermsPort::where('term_id',$id)->delete();
+                foreach($ports as $i){
+                    $termsport = new TermsPort();
+                    $termsport->port_id = $i;
+                    $termsport->term()->associate($term);
+                    $termsport->save();
+                }
+            }        
 
-            foreach($ports as $i){
-                $termsport = new TermsPort();
-                $termsport->port_id = $i;
-                $termsport->term()->associate($term);
-                $termsport->save();
-            }
-        }        
-
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You upgrade has been success ');
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'You upgrade has been success ');
+        }
         return redirect()->route('terms.list');
     }
 

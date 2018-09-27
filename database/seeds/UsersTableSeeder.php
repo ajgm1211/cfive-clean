@@ -22,10 +22,12 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Admin',
                 'lastname' => 'Admin',
                 'email' => 'admin@example.com',
+                'phone' => '+56972374655',
                 'password' =>  bcrypt('secret'),
                 'type' => 'admin',
                 'verified' => 1,
                 'state' => 1,
+                'company_user_id' => 1,
                 'created_at' => $date,
                 'updated_at' => $date,
             )

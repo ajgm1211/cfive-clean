@@ -1,14 +1,16 @@
 <div class="m-portlet__body">
     <div class="row">
+        @if( Auth::user()->type == 'admin' || Auth::user()->type == 'company')
         <div class="form-group m-form__group">
             <div class="col-md-12">
                 <label>User</label>
                 {{ Form::select('user', $users, null,['class'=>'custom-select form-control','placeholder'=>'Select an user']) }}
             </div>
         </div>
+        @endif
         <div class="form-group m-form__group">
             <div class="col-md-12">
-                <label>Pick up date</label>
+                <label>Date</label>
                 <div class="input-group date">
                     {!! Form::text('pick_up_date', null, ['placeholder' => 'Select date','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1']) !!}
                     <div class="input-group-append">

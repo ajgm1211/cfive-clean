@@ -7,26 +7,31 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 class EventServiceProvider extends ServiceProvider
 {
-    /**
+  /**
      * The event listener mappings for the application.
      *
      * @var array
      */
-    protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
-        ],
-    ];
+  protected $listen = [
+    'App\Events\Event' => [
+      'App\Listeners\EventListener',
+    ],
+    'Illuminate\Auth\Events\Login' => [
+      'App\Listeners\SuccessfulLogin',
+    ],
+  ];
 
-    /**
+
+
+  /**
      * Register any events for your application.
      *
      * @return void
      */
-    public function boot()
-    {
-        parent::boot();
+  public function boot()
+  {
+    parent::boot();
 
-        //
-    }
+    //
+  }
 }

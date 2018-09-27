@@ -16,8 +16,8 @@ class CreateAirportsTable extends Migration
         Schema::create('airports', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('country_id')->unsigned();
-            $table->foreign('country_id')->references('id')->on('countries');
+            $table->string('code');
+            $table->string('display_name')->nullable();
             $table->timestamps();
         });
     }

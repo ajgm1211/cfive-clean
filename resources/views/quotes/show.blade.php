@@ -6,21 +6,21 @@
 <div class="m-content">
     <div class="row">
         <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
-        <div class="col-md-2 col-xs-4">
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <a href="{{route('quotes.edit',$quote->id)}}" class="btn btn-primary btn-block"  title="Edit ">
                 Edit
             </a>
         </div>
-        <div class="col-md-2 col-xs-4">
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
         </div>
-        <div class="col-md-2 col-xs-4" >
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <a href="{{route('quotes.duplicate',$quote->id)}}" class="btn btn-primary btn-block">Duplicate</a>
         </div>
-        <div class="col-md-2 col-xs-4" >
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-primary btn-block">Send</button>
         </div>
-        <div class="col-md-2 col-xs-12">
+        <div class="col-md-2 col-12" style="padding-bottom:10px;">
             {{ Form::select('status_quote_id',$status_quotes,$quote->status_quote_id,['class'=>'m-select2-general form-control','required'=>'true','id'=>'status_quote_id','placeholder'=>'Select an option']) }}           
         </div>
     </div>
@@ -54,10 +54,10 @@
                             <div class="m-portlet__head-tools">
                                 <div class="col-md-12" style="margin-top: 20px;">
                                     <div class="pull-left text-left" style="line-height: .5;">
-                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="250">
+                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
-                                        <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->id}}</span></b></p>
+                                        <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                         <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                         @if($quote->validity!='')
                                         @php
@@ -81,18 +81,21 @@
                                 <div class="col-md-12">
                                     <div class="pull-left text-left" style="line-height: .5">
                                         <p><b>From:</b></p>
+                                        <br>
                                         <p>{{$user->name}}</p>
                                         <p><b>{{$user->companyUser->name}}</b></p>
                                         <p>{{$user->companyUser->address}}</p>
-                                        <p>{{$user->companyUser->phone}}</p>
+                                        <p>{{$user->phone}}</p>
+                                        <p><a href="mailto:{{$user->email}}">{{$user->email}}</a></p>
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>To:</b></p>
+                                        <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
                                         <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                                         <p><b>{{$quote->company->business_name}}</b></p>
                                         <p>{{$quote->company->address}}</p>
-                                        <p>{{$quote->company->phone}}</p>
-                                        <p><a href="mailto:{{$quote->company->email}}">{{$quote->company->email}}</a></p>
+                                        <p>{{$quote->contact->phone}}</p>
+                                        <p><a href="mailto:{{$quote->contact->email}}">{{$quote->contact->email}}</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -100,19 +103,21 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group m-form__group row">
                         <div class="col-md-6">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" >
                                 <div class="panel-heading title-quote size-14px"><b>Origin {{$quote->type==3 ? ' Airport':' Port'}}</b></div>
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
                                         @if($quote->origin_harbor_id!='')
-                                        Port: {{$quote->origin_harbor->name}}
+                                            {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                         @endif
                                         @if($quote->origin_airport_id!='')
-                                        Airport: {{$quote->origin_airport->name}}
+                                            {{$quote->origin_airport->name}}, {{$quote->origin_airport->code}}
                                         @endif
                                     </span>
                                 </div>
@@ -124,10 +129,10 @@
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
                                         @if($quote->destination_harbor_id!='')
-                                        Port: {{$quote->destination_harbor->name}}
+                                            {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                         @endif
                                         @if($quote->destination_airport_id!='')
-                                        Airport: {{$quote->destination_airport->name}}
+                                            {{$quote->destination_airport->name}}, {{$quote->destination_airport->code}}
                                         @endif                                        
                                     </span>
                                 </div>
@@ -137,32 +142,32 @@
                 </div>
             </div>
             @if($quote->origin_address || $quote->destination_address)
-                <div class="row">
-                    @if($quote->origin_address!='')
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Origin address</b></div>
-                                <div class="panel-body">
-                                    <span id="origin_input" class="color-blue">
-                                        {{$quote->origin_address}}
-                                    </span>
-                                </div>
-                            </div>
+            <div class="row">
+                @if($quote->origin_address!='')
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading title-quote size-14px"><b>Origin address</b></div>
+                        <div class="panel-body">
+                            <span id="origin_input" class="color-blue">
+                                {{$quote->origin_address}}
+                            </span>
                         </div>
-                    @endif
-                    @if($quote->destination_address!='')
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
-                                <div class="panel-body">
-                                    <span id="destination_input" class="color-blue">
-                                        {{$quote->destination_address}}                                     
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 </div>
+                @endif
+                @if($quote->destination_address!='')
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
+                        <div class="panel-body">
+                            <span id="destination_input" class="color-blue">
+                                {{$quote->destination_address}}                                     
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
             @endif
             <div style="padding-top: 20px; padding-bottom: 20px;">
                 <div class="row">
@@ -190,8 +195,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p id="cargo_details_20_p">{{$quote->qty_20 != '' ? $quote->qty_20.' x 20\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 20\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 20\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 40\' Containers':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 40\' HC container':''}}</p>
                     </div>
                 </div>
                 @if($quote->total_quantity!='' && $quote->total_quantity>0)
@@ -243,6 +248,14 @@
                         </table>
                     </div>                    
                 </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <span class="pull-right">
+                            <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                        </span>
+                    </div>
+                </div>
                 @endif
             </div>
             @if(count($origin_ammounts)>0)
@@ -273,7 +286,7 @@
                                     <td>{{$origin_ammount->units}}</td>
                                     <td>{{$origin_ammount->price_per_unit}} {{$origin_ammount->currency->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount}} {{$origin_ammount->currency->alphacode}}</td>
-                                    <td>{{$origin_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$origin_ammount->markup!='' ? $origin_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$origin_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
@@ -319,7 +332,7 @@
                                     <td>{{$freight_ammount->units}}</td>
                                     <td>{{$freight_ammount->price_per_unit}} {{$freight_ammount->currency->alphacode}}</td>
                                     <td>{{$freight_ammount->total_ammount}} {{$freight_ammount->currency->alphacode}}</td>
-                                    <td>{{$freight_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$freight_ammount->markup!='' ? $freight_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$freight_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
@@ -365,7 +378,7 @@
                                     <td>{{$destination_ammount->units}}</td>
                                     <td>{{$destination_ammount->price_per_unit}} {{$destination_ammount->currency->alphacode}}</td>
                                     <td>{{$destination_ammount->total_ammount}} {{$destination_ammount->currency->alphacode}}</td>
-                                    <td>{{$destination_ammount->markup}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{{$destination_ammount->markup!='' ? $destination_ammount->markup:'0'}} {{$quote->currencies->alphacode}}</td>
                                     <td>{{$destination_ammount->total_ammount_2}} {{$quote->currencies->alphacode}}</td>
                                 </tr>
                                 @endforeach
@@ -408,18 +421,23 @@
                     <br/>
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group ">
-                                @if(isset($terms_origin) && $terms_origin->count()>0)                             
-                                <h5 class="title-quote">Origin harbor</h5>
+                            <div class="form-group terms-and-conditions">
+                                @if($quote->type!=3)
+                                @if(isset($terms_all) && $terms_all->count()>0)
+                                @foreach($terms_all as $v)
+                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                                @endforeach
+                                @endif
+                                @if(isset($terms_origin) && $terms_origin->count()>0)
                                 @foreach($terms_origin as $v)
                                 {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                                 @endforeach
                                 @endif
                                 @if(isset($terms_destination) && $terms_destination->count()>0)
-                                <h5 class="title-quote">Destination harbor</h5>
                                 @foreach($terms_destination as $v)
                                 {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                                 @endforeach
+                                @endif
                                 @endif
                             </div>
                         </div>
@@ -427,7 +445,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 desktop">
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
@@ -436,10 +454,13 @@
             <hr>
             <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF type</label>
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
         </div>
     </div>
 </div>
-@include('quotes.partials.sendQuoteModal');
+@include('quotes.partials.sendQuoteModal')
 @endsection
 
 @section('js')
