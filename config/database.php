@@ -1,8 +1,6 @@
 <?php
 /*
 if (!defined('RDS_HOSTNAME')) {
-
-
     define('RDS_HOSTNAME', $_SERVER['RDS_HOSTNAME']);
     define('RDS_USERNAME', $_SERVER['RDS_USERNAME']);
     define('RDS_PASSWORD', $_SERVER['RDS_PASSWORD']);
@@ -50,9 +48,7 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
         ],
-
-
-   
+  
 /*
         'mysql' => [
             'driver' => 'mysql',
