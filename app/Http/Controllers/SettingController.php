@@ -12,61 +12,73 @@ use Illuminate\Support\Facades\Input;
 
 class SettingController extends Controller
 {
-  public function index()
-  {
-    $company = User::where('id',\Auth::id())->with('companyUser')->first();
-    $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
-    return view('settings/index',compact('company','currencies'));
-  }
-
-  public function store(Request $request){
-
-    $file = Input::file('image');
-
-    if($file != ""){
-      //Creamos una instancia de la libreria instalada   
-      $image = Image::make(Input::file('image'));
-      //Ruta donde queremos guardar las imagenes
-      $path = public_path().'/uploads/logos/';
-      // Guardar Original
-      //$image->save($path.$file->getClientOriginalName());
-      // Cambiar de tamaño
-      //$image->resize(300,500);
-      // Guardar
-      $image->save($path.$file->getClientOriginalName());
+    public function index()
+    {
+        $company = User::where('id',\Auth::id())->with('companyUser')->first();
+        $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
+        return view('settings/index',compact('company','currencies'));
     }
 
-    if(!$request->company_id){
+    public function store(Request $request){
 
-      //$company=CompanyUser::create($request->all());
+        $file = Input::file('image');
 
-      $company = new CompanyUser();
-      $company->name = $request->name;
-      $company->address = $request->address;
-      $company->phone = $request->phone;
-      $company->currency_id = $request->currency_id;
-      $company->hash = \Hash::make($request->name);
-      if($file != ""){
-        $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
-      }
-      $company->save();
+        if($file != ""){
+            //Creamos una instancia de la libreria instalada   
+            $image = Image::make(Input::file('image'));
+            //Ruta donde queremos guardar las imagenes
+            $path = public_path().'/uploads/logos/';
+            // Guardar Original
+            //$image->save($path.$file->getClientOriginalName());
+            // Cambiar de tamaño
+            //$image->resize(300,500);
+            // Guardar
+            $image->save($path.$file->getClientOriginalName());
+        }
 
-      User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
+        if(!$request->company_id){
 
-    }else{
-      $company=CompanyUser::findOrFail($request->company_id);
-      $company->name=$request->name;
-      $company->phone=$request->phone;
-      $company->address=$request->address;
-      $company->currency_id=$request->currency_id;
+            //$company=CompanyUser::create($request->all());
 
-      if($file != ""){
-        $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
-      }
-      $company->update();
+            $company = new CompanyUser();
+            $company->name = $request->name;
+            $company->address = $request->address;
+            $company->phone = $request->phone;
+            $company->currency_id = $request->currency_id;
+            $company->hash = \Hash::make($request->name);
+            $company->pdf_language = $request->pdf_language;
+            $company->type_pdf = 2;
+            if($file != ""){
+                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            }
+            $company->save();
+
+            User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
+
+        }else{
+            $company=CompanyUser::findOrFail($request->company_id);
+            $company->name=$request->name;
+            $company->phone=$request->phone;
+            $company->address=$request->address;
+            $company->currency_id=$request->currency_id;
+            $company->pdf_language = $request->pdf_language;
+            if($file != ""){
+                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            }
+            $company->update();
+        }
+
+
+        return response()->json(['message' => 'Ok']);
     }
 
 
-    return response()->json(['message' => 'Ok']);
-  }
+    public function update_pdf_type(Request $request)
+    {
+        $company=CompanyUser::find(\Auth::user()->company_user_id);
+        $company->type_pdf = $request->pdf_type;
+        $company->update();
+        
+        return response()->json(['message' => 'Ok']);
+    }
 }

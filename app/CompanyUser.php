@@ -8,7 +8,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 class CompanyUser extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['name','address','phone','currency_id', 'logo'];
+
+    protected $fillable = ['name','address','phone','currency_id', 'logo','pdf_language'];
 
     public function user()
     {

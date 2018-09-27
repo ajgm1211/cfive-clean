@@ -26,10 +26,10 @@
 
     @include('contacts.partials.contactsModal')
     @include('companies.partials.companiesModal')
-    
+
     <!-- input with currency id -->
     <input type="hidden" id="currency_id" value="{{$currency_cfg->alphacode}}"/>
-    
+
     <div class="row">
         <div class="col-md-10">
             @if(count($company_user->company_user_id)>0)
@@ -426,7 +426,7 @@
                                                             </div>
                                                             <div id="origin_airport_label" style="display:none;">
                                                                 <label>Origin airport</label>
-                                                                {{ Form::select('origin_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'origin_airport','placeholder'=>'Select an option']) }}
+                                                                <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 hide" id="origin_address_label">
@@ -443,7 +443,7 @@
                                                             </div>
                                                             <div id="destination_airport_label" style="display:none;">
                                                                 <label>Destination airport</label>
-                                                                {{ Form::select('destination_airport_id',$airports,null,['class'=>'m-select2-general form-control','id'=>'destination_airport','placeholder'=>'Select an option']) }}
+                                                                <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-8 hide" id="destination_address_label">
