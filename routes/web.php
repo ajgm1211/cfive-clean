@@ -227,6 +227,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
     Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
     Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
+    Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
