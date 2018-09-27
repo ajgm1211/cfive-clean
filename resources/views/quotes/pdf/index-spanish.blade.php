@@ -12,21 +12,21 @@
                 <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="290" height="auto" style="margin-bottom:25px">
             </div>
             <div id="company">
-                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
-                <div><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
+                <div><b>Cotización</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
+                <div><b>Fecha de creación:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!='')
                 @php
                 $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
                 $validity = $date->format('M d, Y');
                 @endphp
-                <div><b>Valid up to: </b>{{$validity}}</div>
+                <div><b>Válido hasta: </b>{{$validity}}</div>
                 @endif
             </div>
         </header>
         <main>
             <div id="details" class="clearfix details">
                 <div class="client">
-                    <p><b>From:</b></p>
+                    <p><b>Desde:</b></p>
                     <br>
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$user->name}}</p>
@@ -38,7 +38,7 @@
 
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
-                    <p><b>To:</b></p>
+                    <p><b>Hasta:</b></p>
                     <span id="destination_input" style="line-height: 0.4">
                         <img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
@@ -53,7 +53,7 @@
             <div id="" class="clearfix">
                 <div class="client" style="width: 150px;">
                     <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Origin {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">{{$quote->type==3 ? ' Aeropuerto':' Puerto'}} de Origen</div>
                         <div class="panel-body" style="border: 1px solid #dddddd">
                             <span id="origin_input" style="color: #1D3A6E;">
                                 @if($quote->origin_harbor_id!='')
@@ -68,7 +68,7 @@
                 </div>
                 <div class="company" style="float: right; width: 350px;">
                     <div class="panel panel-default" style="width: 350px; height: 83px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">{{$quote->type==3 ? 'Aeropuerto':'Puerto'}} de Destino</div>
                         <div class="panel-body" style="border: 1px solid #dddddd; height: 18px;">
                             <span id="destination_input" style="color: #1D3A6E;">
                                 @if($quote->destination_harbor_id!='')
@@ -87,7 +87,7 @@
                 @if($quote->origin_address!='')
                 <div class="client" style="width: 150px;">
                     <div class="panel panel-default" style="width: 350px;">
-                        <div class="panel-heading title">Origin address</div>
+                        <div class="panel-heading title">Dirección de origen</div>
                         <div class="panel-body">
                             <span id="origin_input" style="color: #1D3A6E;">
                                 {{$quote->origin_address}}
@@ -99,7 +99,7 @@
                 @if($quote->destination_address!='')
                 <div class="company" style="float: right; width: 350px;">
                     <div class="panel panel-default" style="width: 350px; height: 83px;">
-                        <div class="panel-heading title">Destination address</div>
+                        <div class="panel-heading title">Dirección de destino</div>
                         <div class="panel-body">
                             <span id="destination_input" style="color: #1D3A6E;">
                                 {{$quote->destination_address}}
@@ -113,7 +113,7 @@
             <hr>
             <div class="clearfix">
                 <div class="client">
-                    <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
+                    <p class="title"><b>{{$quote->type==3 ? 'Aerolínea':'Naviera'}}</b></p>
                     @if($quote->carrier_id!='')
                     <p>{{$quote->carrier->name}}</p>
                     @endif
@@ -126,7 +126,7 @@
             <div id="details" class="clearfix details">
                 <hr>
                 <div class="company" style="color: #1D3A6E;">
-                    <p class="title"><b>Cargo details</b></p>
+                    <p class="title"><b>Detalles de la carga</b></p>
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
@@ -134,16 +134,16 @@
                     @if($quote->total_quantity!='' && $quote->total_quantity>0)
                     <div class="row">
                         <div class="col-md-3">
-                            <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->type_cargo == 1 ? 'Pallets' : 'Packages'}}</div>
+                            <div id="cargo_details_cargo_type_p"><b>Tipo de carga:</b> {{$quote->type_cargo == 1 ? 'Pallets' : 'Packages'}}</div>
                         </div>
                         <div class="col-md-3">
-                            <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
+                            <div id="cargo_details_total_quantity_p"><b>Cantidad total:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
                         </div>
                         <div class="col-md-3">
-                            <div id="cargo_details_total_weight_p"><b>Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.'Kg' : ''}}</div>
+                            <div id="cargo_details_total_weight_p"><b>Peso total: </b> {{$quote->total_weight != '' ? $quote->total_weight.'Kg' : ''}}</div>
                         </div>
                         <div class="col-md-3">
-                            <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.'m<sup>3</sup>' : ''!!}</p>
+                            <p id="cargo_details_total_volume_p"><b>Volumen total: </b> {!!$quote->total_volume != '' ? $quote->total_volume.'m<sup>3</sup>' : ''!!}</p>
                         </div>
                     </div>
                     @endif
@@ -152,14 +152,14 @@
                     <table class="table table-bordered color-blue">
                         <thead class="title-quote text-center header-table">
                             <tr>
-                                <th class="unit"><b>Cargo type</b></th>
-                                <th class="unit"><b>Quantity</b></th>
-                                <th class="unit"><b>Height</b></th>
-                                <th class="unit"><b>Width</b></th>
-                                <th class="unit"><b>Large</b></th>
-                                <th class="unit"><b>Weight</b></th>
-                                <th class="unit"><b>Total weight</b></th>
-                                <th class="unit"><b>Volume</b></th>
+                                <th class="unit"><b>Tipo de carga</b></th>
+                                <th class="unit"><b>Cantidad</b></th>
+                                <th class="unit"><b>Alto</b></th>
+                                <th class="unit"><b>Ancho</b></th>
+                                <th class="unit"><b>Largo</b></th>
+                                <th class="unit"><b>Peso</b></th>
+                                <th class="unit"><b>Peso total</b></th>
+                                <th class="unit"><b>Volumen</b></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -192,13 +192,13 @@
                     <thead class="title-quote text-center header-table">
                         <tr >
                             @if($quote->sub_total_origin!='')
-                                <th class="unit"><b>Origin charges</b></th>
+                                <th class="unit"><b>Cargos en origen</b></th>
                             @endif
                             @if($quote->sub_total_freight!='')
-                                <th class="unit"><b>Freight charges</b></th>
+                                <th class="unit"><b>Cargos de flete</b></th>
                             @endif
                             @if($quote->sub_total_destination!='')
-                                <th class="unit"><b>Destination charges</b></th>
+                                <th class="unit"><b>Cargos de destino</b></th>
                             @endif
                             <th class="unit"><b>Total</b></th>
                         </tr>
@@ -228,17 +228,17 @@
                 </table>
             @else
                 @if(count($origin_ammounts)>0)
-                <p class="title">Origin charges</p>
+                <p class="title">Cargos en origen</p>
                 <br>
                 <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit"><b>Charge</b></th>
-                            <th class="unit"><b>Detail</b></th>
-                            <th class="unit"><b>Units</b></th>
-                            <th class="unit"><b>Price per units</b></th>
+                            <th class="unit"><b>Carga</b></th>
+                            <th class="unit"><b>Detalle</b></th>
+                            <th class="unit"><b>Unidades</b></th>
+                            <th class="unit"><b>Precio por unidad</b></th>
                             <th class="unit"><b>Total </b></th>
-                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                            <th class="unit"><b>Total en &nbsp;{{$quote->currencies->alphacode}}</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -274,17 +274,17 @@
                 </table>
                 @endif
                 @if(count($freight_ammounts)>0)
-                <p class="title">Freight charges</p>
+                <p class="title">Cargos de flete</p>
                 <br>
                 <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit"><b>Charge</b></th>
-                            <th class="unit"><b>Detail</b></th>
-                            <th class="unit"><b>Units</b></th>
-                            <th class="unit"><b>Price per units</b></th>
-                            <th class="unit"><b>Total</b></th>
-                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                            <th class="unit"><b>Carga</b></th>
+                            <th class="unit"><b>Detalle</b></th>
+                            <th class="unit"><b>Unidades</b></th>
+                            <th class="unit"><b>Precio por unidad</b></th>
+                            <th class="unit"><b>Total </b></th>
+                            <th class="unit"><b>Total en &nbsp;{{$quote->currencies->alphacode}}</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -320,17 +320,17 @@
                 </table>
                 @endif
                 @if(count($destination_ammounts)>0)
-                <p class="title">Destination charges</p>
+                <p class="title">Cargos en destino</p>
                 <br>
                 <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote text-center header-table">
                         <tr>
-                            <th class="unit"><b>Charge</b></th>
-                            <th class="unit"><b>Detail</b></th>
-                            <th class="unit"><b>Units</b></th>
-                            <th class="unit"><b>Price per units</b></th>
-                            <th class="unit"><b>Total</b></th>
-                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                            <th class="unit"><b>Carga</b></th>
+                            <th class="unit"><b>Detalle</b></th>
+                            <th class="unit"><b>Unidades</b></th>
+                            <th class="unit"><b>Precio por unidad</b></th>
+                            <th class="unit"><b>Total </b></th>
+                            <th class="unit"><b>Total en &nbsp;{{$quote->currencies->alphacode}}</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -373,12 +373,11 @@
                 <div class="company">
                     <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
                 </div>
-                <hr>
             </div>
         @endif
         <div class="clearfix">
             <br>
-            <p class="title">Terms and conditions</p>
+            <p class="title">Términos y condiciones</p>
             <hr>
             @if(isset($terms_all) && $terms_all->count()>0)
             <div class=" row">
@@ -393,7 +392,7 @@
             @if(isset($terms_origin) && $terms_origin->count()>0)
             <div class=" row">
                 <div class="col-md-12">
-                    <p class="title">Origin</p>
+                    <p class="title">Origen</p>
                     @foreach($terms_origin as $v)
                     {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                     @endforeach
@@ -404,7 +403,7 @@
             @if(isset($terms_destination) && $terms_destination->count()>0)
             <div class="row">
                 <div class="col-md-12">
-                    <p class="title">Destination</p>
+                    <p class="title">Destino</p>
                     @foreach($terms_destination as $v)
                     {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                     @endforeach

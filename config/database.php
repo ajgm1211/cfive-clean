@@ -53,8 +53,6 @@ return [
 
 /*
         'mysql' => [
-
-
             'driver' => 'mysql',
             'host' => RDS_HOSTNAME,
             'port' => env('DB_PORT', '3306'),
@@ -67,7 +65,6 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-
         ],
       */
 
