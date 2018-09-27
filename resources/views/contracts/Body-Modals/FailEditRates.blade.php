@@ -31,19 +31,19 @@
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('twuenty', '20 \' ',['style' => $failrates['classtwuenty']]) !!}
-        {!! Form::number('twuenty', $failrates['twuenty'], ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('twuenty', $failrates['twuenty'], ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input','required']) !!} 
       </div>
 
 
       <div class="col-lg-4">
         {!! Form::label('forty', '40  \' ',['style' => $failrates['classforty']]) !!}
-        {!! Form::number('forty', $failrates['forty'], ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('forty', $failrates['forty'], ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input','required' ]) !!} 
 
       </div>
       <div class="col-lg-4">
 
         {!! Form::label('fortyhc', '40 HC \' ',['style' => $failrates['classfortyhc']]) !!}
-        {!! Form::number('fortyhc',$failrates['fortyhc'], ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
+        {!! Form::number('fortyhc',$failrates['fortyhc'], ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ','required']) !!}
 
       </div>
 

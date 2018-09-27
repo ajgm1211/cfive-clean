@@ -77,12 +77,6 @@
                         <th title="Field #2">
                             Ports
                         </th>
-                        <th title="Field #3">
-                            Export
-                        </th>
-                        <th title="Field #4">
-                            Import
-                        </th>
                         <th title="Field #5">
                             Actions
                         </th>
@@ -92,10 +86,23 @@
                     @foreach ($data as $arr)
                     <tr>
                         <td>{{ $arr->name }}</td>
-                        <td>@foreach($arr->harbor as $harbor)<ul><li>{{ $harbor->name }}</li></ul>@endforeach</td>
-                        <td>{!! strip_tags( $arr->export ) !!}</td>
-                        <td>{!! strip_tags( $arr->import ) !!}</td>
-                        <td> 
+                        <td>
+                            @if($arr->harbor->count()==742)
+                                <ul>
+                                    <li>All</li>
+                                </ul>
+                            @else
+                                @foreach($arr->harbor as $harbor)
+                                    <ul>
+                                        <li>{{ $harbor->name }}</li>
+                                    </ul>
+                                @endforeach
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('terms.show', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                                <i class="la la-eye"></i>
+                            </a>                            
                             <a href="{{ route('terms.edit', ['id' => $arr->id]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                                 <i class="la la-edit"></i>
                             </a>

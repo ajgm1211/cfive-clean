@@ -89,14 +89,20 @@
                         @endif
                         <br>
                         <div class="m-portlet__head">
-                            <label >
-                                <i class="fa fa-dot-circle-o" style="color:red;"> </i>
-                                <strong >
-                                    Rates Failed: 
-                                </strong>
-                                <strong id="strfail">{{$countfailrates}}</strong>
-                                <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
-                            </label>
+                            <div class="form-group row ">
+                                <div class="col-lg-12">
+                                    <label >
+                                        <i class="fa fa-dot-circle-o" style="color:red;"> </i>
+                                        <strong >
+                                            Rates Failed: 
+                                        </strong>
+                                        <strong id="strfail">{{$countfailrates}}</strong>
+                                        <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
+                                    </label>
+                                    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="{{route('Reprocesar.Rates',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                                </div>
+                            </div>
                             <br>
 
                         </div>
@@ -266,9 +272,9 @@
                     "paging": true
                 });
             });
-            
-            
-            
+
+
+
 
             function showModalsavetorate(id,operation){
 

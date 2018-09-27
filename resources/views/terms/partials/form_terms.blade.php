@@ -11,20 +11,20 @@
 </div>
 
 <div class="form-group m-form__group">
-    {!! Form::label('Port', 'Port') !!}
+    {!! Form::label('Port', 'Ports') !!}
     {!! Form::select('ports[]',$harbors,@$selected_harbors, 
     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Import', 'Import') !!}
-    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input']) !!}
+    {!! Form::textarea('import', null, ['placeholder' => 'Please enter your  import text','class' => 'form-control editor m-input','id'=>'Import']) !!}
 
 </div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Export', 'Export') !!}
-    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input']) !!}
+    {!! Form::textarea('export', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
 </div>
 
 <!-- tinyMCE script config -->

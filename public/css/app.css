@@ -72634,6 +72634,7 @@ body.m-page--boxed {
 
 .m-body .m-content {
   padding: 30px 30px;
+  background-color: white;
 }
 
 .m-content--skin-light .m-body {
@@ -72670,6 +72671,7 @@ body.m-content--skin-light2 {
   }
   .m-body .m-content {
     padding: 20px 20px;
+    background-color: white;
   }
   .m-aside-right--enabled .m-body .m-content {
     padding-bottom: 0;
@@ -78118,6 +78120,10 @@ body {
   font-size: 12px !important;
 }
 
+.desktop {
+  display: block;
+}
+
 /* Font sizes
 ------------------------------------------------------------------ */
 .size-48px {
@@ -78331,21 +78337,16 @@ h3.m-subheader__title {
 .panel {
   margin-bottom: 20px;
   background-color: #fff;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-radius: none !important;
 }
 
 .panel-body {
   padding: 15px;
+  border: 1px solid #f1f1f1;
 }
 
 .panel-heading {
   padding: 10px 15px;
-  border-bottom: 1px solid transparent;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
 }
 
 .panel-heading > .dropdown .dropdown-toggle {
@@ -78835,6 +78836,12 @@ th#options-limit-fcl {
   display: none !important;
 }
 
+@media only screen and (max-width: 767px) {
+  .desktop {
+    display: none;
+  }
+}
+
 @media (min-width: 993px) {
   .m-portlet.m-portlet--full-height.result-automatic {
     height: calc(100% - 5rem) !important;
@@ -78843,4 +78850,10 @@ th#options-limit-fcl {
 
 .m-portlet result-automatic {
   margin-bottom: 0rem !important;
+}
+
+.terms-and-conditions {
+  border: 1px solid #f4f5f8;
+  margin-top: -20px;
+  padding: 25px;
 }

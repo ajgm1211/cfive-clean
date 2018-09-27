@@ -9,10 +9,10 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="200">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="290" height="auto" style="margin-bottom:25px">
             </div>
             <div id="company">
-                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->id}}</b></span></div>
+                <div><b>Quotation Id</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!='')
                 @php
@@ -26,52 +26,56 @@
         <main>
             <div id="details" class="clearfix details">
                 <div class="client">
-                    <p>From:</p>
+                    <p><b>From:</b></p>
+                    <br>
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$user->name}}</p>
                         <p><b>{{$user->companyUser->name}}</b></p>
                         <p>{{$user->companyUser->address}}</p>
-                        <p>{{$user->companyUser->phone}}</p>
+                        <p>{{$user->phone}}</p>
+                        <p>{{$user->email}}</p>
                     </span>
 
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
-                    <p>To:</p>
+                    <p><b>To:</b></p>
                     <span id="destination_input" style="line-height: 0.4">
+                        <img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><b>{{$quote->company->business_name}}</b></p>
-                        <p>{{$quote->company->address}}</p>
+                        <p style="line-height: 1.2" >{{$quote->company->address}}</p>
                         <p>{{$quote->contact->phone}}</p>
+                        <p>{{$quote->contact->email}}</p>
                     </span>
-
                 </div>
             </div>
+            <br>
             <div id="" class="clearfix">
                 <div class="client" style="width: 150px;">
-                    <div class="panel panel-default" style="width: 350px;">
-                        <div class="panel-heading title">Origin {{$quote->type==3 ? ' Airport':' Port'}}</div>
-                        <div class="panel-body">
+                    <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Origin {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-body" style="border: 1px solid #dddddd">
                             <span id="origin_input" style="color: #1D3A6E;">
                                 @if($quote->origin_harbor_id!='')
-                                Port: {{$quote->origin_harbor->name}}
+                                {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                 @endif
                                 @if($quote->origin_airport_id!='')
-                                Airport: {{$quote->origin_airport->name}}
+                                {{$quote->origin_airport->name}}
                                 @endif
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="company" style="float: right; width: 350px;">
-                    <div class="panel panel-default" style="width: 350px; height: 83px;">
-                        <div class="panel-heading title">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
-                        <div class="panel-body">
+                    <div class="panel panel-default" style="width: 350px; height: 83px; border: none; border-radius:none;">
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
+                        <div class="panel-body" style="border: 1px solid #dddddd; height: 18px;">
                             <span id="destination_input" style="color: #1D3A6E;">
                                 @if($quote->destination_harbor_id!='')
-                                Port: {{$quote->destination_harbor->name}}
+                                {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                 @endif
                                 @if($quote->destination_airport_id!='')
-                                Airport: {{$quote->destination_airport->name}}
+                                {{$quote->destination_airport->name}}
                                 @endif
                             </span>
                         </div>
@@ -105,11 +109,24 @@
                 </div>
                 @endif
             </div>
-            @endif       
+            @endif
+            <hr>
+            <div class="clearfix">
+                <div class="client">
+                    <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
+                    @if($quote->carrier_id!='')
+                    <p>{{$quote->carrier->name}}</p>
+                    @endif
+                    @if($quote->airline_id!='')
+                    <p>{{$quote->airline->name}}</p>
+                    @endif
+                </div>
+            </div>
+            <br>
             <div id="details" class="clearfix details">
                 <hr>
                 <div class="company" style="color: #1D3A6E;">
-                    <p class="title"><b>Cargo details:</b></p>
+                    <p class="title"><b>Cargo details</b></p>
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
@@ -160,175 +177,219 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 pull-right">
+                            <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                        </div>
+                    </div>
                     @endif
                 </div>
             </div>
             <hr>
-            @if(count($origin_ammounts)>0)
-            <p class="title">Origin charges:</p>
-            <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
-                <thead class="title-quote text-center header-table">
-                    <tr >
-                        <th class="unit"><b>Charge</b></th>
-                        <th class="unit"><b>Detail</b></th>
-                        <th class="unit"><b>Units</b></th>
-                        <th class="unit"><b>Price per units</b></th>
-                        <th class="unit"><b>Total </b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($origin_ammounts as $origin_ammount)
-                    <tr class="text-center">
-                        <td class="white">{{$origin_ammount->charge}}</td>
-                        <td class="white">{{$origin_ammount->detail}}</td>
-                        <td class="white">{{$origin_ammount->units}}</td>
-                        @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        @php
-                        if($currency_cfg->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$currency_cfg->rates;
-                        }
-                        $markup_currency=$origin_ammount->markup / $rate;
-                        @endphp                    
-                        <td class="white">{{number_format((float)($origin_ammount->price_per_unit+$markup_currency)/$origin_ammount->units, 2,'.', '')}}</td>
-                        @else
-                        <td>{{$origin_ammount->total_ammount_2 / $origin_ammount->units}}</td>
-                        @endif
-                        @if($origin_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        <td>{{number_format((float)$origin_ammount->total_ammount  + $markup_currency, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
-                        @else
-                        <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
-                        @endif
-                        <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr class="text-center subtotal">
-                        <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
-                    </tr>
-                </tfoot>
-            </table>
-            @endif
-            @if(count($freight_ammounts)>0)
-            <p class="title">Freight charges:</p>
-            <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
-                <thead class="title-quote text-center header-table">
-                    <tr >
-                        <th class="unit"><b>Charge</b></th>
-                        <th class="unit"><b>Detail</b></th>
-                        <th class="unit"><b>Units</b></th>
-                        <th class="unit"><b>Price per units</b></th>
-                        <th class="unit"><b>Total</b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($freight_ammounts as $freight_ammount)
-                    <tr class="text-center">
-                        <td>{{$freight_ammount->charge}}</td>
-                        <td>{{$freight_ammount->detail}}</td>
-                        <td>{{$freight_ammount->units}}</td>
-                        @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        @php
-                        if($currency_cfg->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$freight_ammount->currency->rates;
-                        }
-                        $markup_currency=$freight_ammount->markup / $rate;
-                        @endphp
-                        <td>{{number_format((float)($freight_ammount->price_per_unit + $markup_currency) / $freight_ammount->units, 2,'.', '')}}</td>
-                        @else
-                        <td>{{$freight_ammount->total_ammount_2 / $freight_ammount->units}}</td>
-                        @endif
-                        @if($freight_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        <td>{{number_format((float)$freight_ammount->total_ammount + $markup_currency, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
-                        @else
-                        <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
-                        @endif
-                        <td>{{$freight_ammount->total_ammount_2}} @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif<</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr class="text-center" style="font-size: 12px;">
-                        <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
-                    </tr>
-                </tfoot>
-            </table>
-            @endif
-            @if(count($destination_ammounts)>0)
-            <p class="title">Destination charges:</p>
-            <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
-                <thead class="title-quote text-center header-table">
-                    <tr>
-                        <th class="unit"><b>Charge</b></th>
-                        <th class="unit"><b>Detail</b></th>
-                        <th class="unit"><b>Units</b></th>
-                        <th class="unit"><b>Price per units</b></th>
-                        <th class="unit"><b>Total</b></th>
-                        <th class="unit"><b>Total &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($destination_ammounts as $destination_ammount)
-                    <tr class="text-center">
-                        <td>{{$destination_ammount->charge}}</td>
-                        <td>{{$destination_ammount->detail}}</td>
-                        <td>{{$destination_ammount->units}}</td>                  
-                        @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        @php
-                        if($currency_cfg->alphacode=='USD'){
-                        $rate=$currency_cfg->rates_eur;
-                        }else{
-                        $rate=$currency_cfg->rates;
-                        }
-                        $markup_currency=$destination_ammount->markup / $rate;
-                        @endphp
-                        <td>{{($destination_ammount->price_per_unit  + $markup_currency) / $destination_ammount->units }}</td>
-                        @else
-                        <td>{{$destination_ammount->total_ammount_2 / $destination_ammount->units}}</td>
-                        @endif                    
-                        @if($destination_ammount->currency->alphacode!=$currency_cfg->alphacode)
-                        <td>{{$destination_ammount->total_ammount }} {{$destination_ammount->currency->alphacode}}</td>
-                        @else
-                        <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
-                        @endif                    
-                        <td>{{$destination_ammount->total_ammount_2}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr class="text-center">
-                        <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
-                            &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></td>
-                    </tr>
-                </tfoot>
-            </table>
+            @if($charges_type==1)
+                <table class="table table-bordered color-blue page-break" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote text-center header-table">
+                        <tr >
+                            @if($quote->sub_total_origin!='')
+                                <th class="unit"><b>Origin charges</b></th>
+                            @endif
+                            @if($quote->sub_total_freight!='')
+                                <th class="unit"><b>Freight charges</b></th>
+                            @endif
+                            @if($quote->sub_total_destination!='')
+                                <th class="unit"><b>Destination charges</b></th>
+                            @endif
+                            <th class="unit"><b>Total</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @if($quote->sub_total_origin!='')
+                                <td>
+                                    {{$quote->sub_total_origin}} &nbsp;{{$quote->currencies->alphacode}}
+                                </td>
+                            @endif
+                            @if($quote->sub_total_freight!='')
+                                <td>
+                                    {{$quote->sub_total_freight}} &nbsp;{{$quote->currencies->alphacode}}
+                                </td>
+                            @endif
+                            @if($quote->sub_total_destination!='')
+                                <td>
+                                    {{$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}
+                                </td>
+                            @endif
+                            <td>
+                                {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}}&nbsp;{{$quote->currencies->alphacode}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            @else
+                @if(count($origin_ammounts)>0)
+                <p class="title">Origin charges</p>
+                <br>
+                <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote text-center header-table">
+                        <tr >
+                            <th class="unit"><b>Charge</b></th>
+                            <th class="unit"><b>Detail</b></th>
+                            <th class="unit"><b>Units</b></th>
+                            <th class="unit"><b>Price per units</b></th>
+                            <th class="unit"><b>Total </b></th>
+                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($origin_ammounts as $origin_ammount)
+                        <tr class="text-center">
+                            <td class="white">{{$origin_ammount->charge}}</td>
+                            <td class="white">{{$origin_ammount->detail}}</td>
+                            <td class="white">{{$origin_ammount->units}}</td>
+                            @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            @php
+                            $markup_per_unit=$origin_ammount->markup_converted/$origin_ammount->units
+                            @endphp
+                            <td>{{number_format((float)$markup_per_unit+$origin_ammount->price_per_unit, 2,'.', '')}}</td>
+                            @else
+                            <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}}</td>
+                            @endif
+                            @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            <td>{{number_format((float)$origin_ammount->total_ammount + $origin_ammount->markup_converted, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
+                            @else
+                            <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
+                            @endif
+                            <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="text-center subtotal">
+                            <td colspan="4"></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                @endif
+                @if(count($freight_ammounts)>0)
+                <p class="title">Freight charges</p>
+                <br>
+                <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote text-center header-table">
+                        <tr >
+                            <th class="unit"><b>Charge</b></th>
+                            <th class="unit"><b>Detail</b></th>
+                            <th class="unit"><b>Units</b></th>
+                            <th class="unit"><b>Price per units</b></th>
+                            <th class="unit"><b>Total</b></th>
+                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($freight_ammounts as $freight_ammount)
+                        <tr class="text-center">
+                            <td>{{$freight_ammount->charge}}</td>
+                            <td>{{$freight_ammount->detail}}</td>
+                            <td>{{$freight_ammount->units}}</td>
+                            @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            @php
+                            $markup_per_unit=$freight_ammount->markup_converted/$freight_ammount->units
+                            @endphp
+                            <td>{{number_format((float)$markup_per_unit+$freight_ammount->price_per_unit, 2,'.', '')}}</td>
+                            @else
+                            <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}}</td>
+                            @endif
+                            @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            <td>{{number_format((float)$freight_ammount->total_ammount + $freight_ammount->markup_converted, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
+                            @else
+                            <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
+                            @endif
+                            <td>{{$freight_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="text-center" style="font-size: 12px;">
+                            <td colspan="4"></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                @endif
+                @if(count($destination_ammounts)>0)
+                <p class="title">Destination charges</p>
+                <br>
+                <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote text-center header-table">
+                        <tr>
+                            <th class="unit"><b>Charge</b></th>
+                            <th class="unit"><b>Detail</b></th>
+                            <th class="unit"><b>Units</b></th>
+                            <th class="unit"><b>Price per units</b></th>
+                            <th class="unit"><b>Total</b></th>
+                            <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($destination_ammounts as $destination_ammount)
+                        <tr class="text-center">
+                            <td>{{$destination_ammount->charge}}</td>
+                            <td>{{$destination_ammount->detail}}</td>
+                            <td>{{$destination_ammount->units}}</td>                  
+                            @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            @php
+                            $markup_per_unit=$destination_ammount->markup_converted/$destination_ammount->units
+                            @endphp
+                            <td>{{number_format((float)$markup_per_unit+$destination_ammount->price_per_unit, 2,'.', '')}}</td>
+                            @else
+                            <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}}</td>
+                            @endif                    
+                            @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
+                            <td>{{number_format((float)$destination_ammount->total_ammount + $destination_ammount->markup_converted, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
+                            @else
+                            <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
+                            @endif                    
+                            <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="text-center">
+                            <td colspan="4"></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
+                                &nbsp; {{$quote->currencies->alphacode}}</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                @endif
             @endif
         </main>
-        <div class="clearfix details">
-            <div class="company">
-                <p class="title text-right" style="color: #01194F;"><b>TOTAL: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;@if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif</b></p>
+        @if($charges_type==2)
+            <div class="clearfix details page-break">
+                <div class="company">
+                    <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
+                </div>
+                <hr>
             </div>
-            <hr>
-        </div>
+        @endif
         <div class="clearfix">
             <br>
             <p class="title">Terms and conditions</p>
-            <hr>            
+            <hr>
+            @if(isset($terms_all) && $terms_all->count()>0)
+            <div class=" row">
+                <div class="col-md-12">
+                    @foreach($terms_all as $v)
+                    {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
+                    @endforeach
+                </div>
+            </div>
+            <br>
+            @endif
             @if(isset($terms_origin) && $terms_origin->count()>0)
             <div class=" row">
                 <div class="col-md-12">
@@ -351,8 +412,8 @@
             </div>
             @endif
         </div>
-        <footer>
+        <!--<footer>
             Cargofive &copy; {{date('Y')}}
-        </footer>
+        </footer>-->
     </body>
 </html>

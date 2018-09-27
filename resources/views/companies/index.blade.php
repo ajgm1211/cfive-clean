@@ -68,7 +68,7 @@ All
                     </div>
                     <div class="col-xl-4 order-1 order-xl-2 m--align-right">
 
-                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                        <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
                                 <i class="la la-user"></i>
                                 <span>
@@ -94,18 +94,21 @@ All
                             Email
                         </th>
                         <th title="Field #4">
+                            Tax number
+                        </th>                        
+                        <th title="Field #5">
                             Address
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #6">
                             Owners
                         </th>
-                        <th title="Field #5">
+                        <th title="Field #7">
                             Contacts
                         </th>
-                        <th title="Field #6">
+                        <th title="Field #8">
                             Price Levels
                         </th>
-                        <th title="Field #12">
+                        <th title="Field #9">
                             Options
                         </th>
                     </tr>
@@ -116,6 +119,7 @@ All
                         <td>{{$company->business_name }}</td>
                         <td>{{$company->phone }}</td>
                         <td>{{$company->email }}</td>
+                        <td>{{$company->tax_number }}</td>
                         <td>{{$company->address  }}</td>
                         <td>
                             @foreach($company->groupUserCompanies as $groupUser)

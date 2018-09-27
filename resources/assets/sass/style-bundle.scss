@@ -30447,7 +30447,9 @@ body.m-page--boxed {
     margin-right: auto; } }
 
 .m-body .m-content {
-  padding: 30px 30px; }
+  padding: 30px 30px; 
+  background-color: white;
+}
 
 .m-content--skin-light .m-body {
   background-color: #ffffff; }
@@ -30477,7 +30479,9 @@ body.m-content--skin-light2 {
     transition: padding-top;
     padding-top: 60px; }
   .m-body .m-content {
-    padding: 20px 20px; }
+    padding: 20px 20px; 
+    background-color: white;
+    }
   .m-aside-right--enabled .m-body .m-content {
     padding-bottom: 0; } }
 

@@ -62,7 +62,7 @@
             <div class="col-lg-4">
                 {!! Form::label('ammountL', 'Ammount',['style' => $failsurchargeArre['classammount']]) !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {!! Form::text('ammount', $failsurchargeArre['ammount'], ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+                    {!! Form::text('ammount', $failsurchargeArre['ammount'], ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','required']) !!}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-bookmark-o"></i>
