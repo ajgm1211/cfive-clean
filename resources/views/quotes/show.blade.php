@@ -114,10 +114,10 @@
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
                                         @if($quote->origin_harbor_id!='')
-                                        <b>Port:</b> {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
+                                            {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                         @endif
                                         @if($quote->origin_airport_id!='')
-                                        <b>Airport:</b> {{$quote->origin_airport->name}}
+                                            {{$quote->origin_airport->name}}, {{$quote->origin_airport->code}}
                                         @endif
                                     </span>
                                 </div>
@@ -129,10 +129,10 @@
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
                                         @if($quote->destination_harbor_id!='')
-                                        <b>Port:</b> {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
+                                            {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                         @endif
                                         @if($quote->destination_airport_id!='')
-                                        <b>Airport:</b> {{$quote->destination_airport->name}}
+                                            {{$quote->destination_airport->name}}, {{$quote->destination_airport->code}}
                                         @endif                                        
                                     </span>
                                 </div>

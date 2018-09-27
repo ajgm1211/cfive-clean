@@ -1891,6 +1891,44 @@ $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
 
+$('#origin_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        },
+    }
+});
+
+$('#destination_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+            return {
+                q: $.trim(params.term)
+            };
+        },
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        },
+    }
+});
+
 $('.select2-company_id').select2({
     placeholder: "Select an option"
 });
