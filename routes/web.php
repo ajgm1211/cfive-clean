@@ -235,7 +235,8 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
-    Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);    
+    Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
+    Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);        
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
 

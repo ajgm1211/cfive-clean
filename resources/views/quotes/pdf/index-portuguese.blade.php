@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="290" height="auto" style="margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 225px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><b>Citar</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
@@ -130,7 +130,7 @@
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
-
+                    <p>{!! $quote->qty_45_hc != '' &&  $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':'' !!}</p>
                     @if($quote->total_quantity!='' && $quote->total_quantity>0)
                     <div class="row">
                         <div class="col-md-3">
@@ -373,7 +373,7 @@
                 <div class="company">
                     <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
                 </div>
-            </div>
+            </div>    
         @endif
         <div class="clearfix">
             <br>

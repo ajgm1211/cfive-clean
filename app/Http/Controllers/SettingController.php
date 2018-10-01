@@ -78,7 +78,16 @@ class SettingController extends Controller
         $company=CompanyUser::find(\Auth::user()->company_user_id);
         $company->type_pdf = $request->pdf_type;
         $company->update();
-        
+
+        return response()->json(['message' => 'Ok']);
+    }
+
+    public function update_pdf_ammount(Request $request)
+    {
+        $company=CompanyUser::find(\Auth::user()->company_user_id);
+        $company->pdf_ammounts = $request->pdf_ammounts;
+        $company->update();
+
         return response()->json(['message' => 'Ok']);
     }
 }

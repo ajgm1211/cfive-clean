@@ -53,9 +53,11 @@
                         <div class="m-portlet__head" style="min-height: 100px;">
                             <div class="m-portlet__head-tools">
                                 <div class="col-md-12" style="margin-top: 20px;">
-                                    <div class="pull-left text-left" style="line-height: .5;">
-                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
-                                    </div>
+                                    @if($user->companyUser->logo!='')
+                                        <div class="pull-left text-left" style="line-height: .5;">
+                                            <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225" height="auto" margin-bottom="25px">
+                                        </div>
+                                    @endif
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                         <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
@@ -90,7 +92,9 @@
                                     </div>
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>To:</b></p>
+                                        @if($quote->company->logo!='')
                                         <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
+                                        @endif
                                         <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                                         <p><b>{{$quote->company->business_name}}</b></p>
                                         <p>{{$quote->company->address}}</p>
@@ -194,9 +198,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p id="cargo_details_20_p">{{$quote->qty_20 != '' ? $quote->qty_20.' x 20\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40 != '' ? $quote->qty_40.' x 40\' Containers':''}}</p>
-                        <p id="cargo_details_20_p">{{$quote->qty_40_hc != '' ? $quote->qty_40_hc.' x 40\' HC container':''}}</p>
+                        <p id="cargo_details_20_p">{{$quote->qty_20 != '' &&  $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' Containers':''}}</p>
+                        <p id="cargo_details_40_p">{{$quote->qty_40 != '' &&  $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' Containers':''}}</p>
+                        <p id="cargo_details_40_hc_p">{{$quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':''}}</p>
+                        <p id="cargo_details_45_hc_p">{{$quote->qty_45_hc != '' &&  $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':''}}</p>
                     </div>
                 </div>
                 @if($quote->total_quantity!='' && $quote->total_quantity>0)
@@ -457,6 +462,9 @@
             <hr>
             <label class="title-quote title-quote size-14px">PDF type</label>
             {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
         </div>
     </div>
 </div>

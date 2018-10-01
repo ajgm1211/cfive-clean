@@ -146,7 +146,7 @@
                                                         </div>
                                                         <div class="col-lg-8">
                                                             <div class='row'>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-3">
                                                                     <label>
                                                                         20' :
                                                                     </label>
@@ -154,7 +154,7 @@
                                                                         {!! Form::text('qty_20', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20']) !!}
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-3">
                                                                     <label>
                                                                         40' :
                                                                     </label>
@@ -162,7 +162,7 @@
                                                                         {!! Form::text('qty_40', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40']) !!}
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4">
+                                                                <div class="col-md-3">
                                                                     <label>
                                                                         40' HC :
                                                                     </label>
@@ -170,6 +170,14 @@
                                                                         {!! Form::text('qty_40_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc']) !!}
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        45' HC :
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_45_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_45_hc']) !!}
+                                                                    </div>
+                                                                </div>                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -572,8 +580,9 @@
                                                                 <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
                                                                 <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
                                                                 <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
-                                                                <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                                <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
+                                                                <p id="cargo_details_45_hc_p" class="hide"><span id="cargo_details_45_hc"></span> x 45' HC Containers</p>               
+                                                                <!--<p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
+                                                                <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>-->
                                                             </div>
                                                         </div>
                                                         <div class="row">
