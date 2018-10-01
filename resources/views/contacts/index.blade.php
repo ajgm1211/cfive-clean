@@ -130,8 +130,8 @@
             </div>
         </div>
     </div>
-    @include('contacts.partials.contactsModal');
-    @include('contacts.partials.deleteContactsModal');
+    @include('contacts.partials.contactsModal')
+    @include('contacts.partials.deleteContactsModal')
 @endsection
 
 @section('js')

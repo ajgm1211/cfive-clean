@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Quote extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-    protected $fillable = ['owner','company_user_id','company_quote','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id','destination_harbor_id','origin_airport_id','destination_airport_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','total_quantity','total_weight','total_volume','type_cargo','status_quote_id','pick_up_date','delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','total_markup_origin','total_markup_freight','total_markup_destination','sale_term_id','carrier_id','airline_id'];
+    protected $fillable = ['owner','company_user_id','company_quote','incoterm','modality','validity','origin_address','destination_address','company_id','origin_harbor_id','destination_harbor_id','origin_airport_id','destination_airport_id','price_id','contact_id','qty_20','qty_40','qty_40_hc','qty_45_hc','total_quantity','total_weight','total_volume','type_cargo','status_quote_id','pick_up_date','delivery_type','currency_id','type','sub_total_origin','sub_total_freight','sub_total_destination','total_markup_origin','total_markup_freight','total_markup_destination','sale_term_id','carrier_id','airline_id'];
 
     public function company()
     {

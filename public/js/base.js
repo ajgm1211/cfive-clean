@@ -485,6 +485,7 @@ $(document).on('click', '#lcl_type', function (e) {
     $("input[name=qty_20]").val('');
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
+    $("input[name=qty_45_hc]").val('');
 });
 
 $(document).on('click', '#air_type', function (e) {
@@ -505,6 +506,7 @@ $(document).on('click', '#air_type', function (e) {
     $("input[name=qty_20]").val('');
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
+    $("input[name=qty_45_hc]").val('');
 
 });
 
@@ -721,6 +723,7 @@ $(document).on('click', '#create-quote', function (e) {
         var qty_20='';
         var qty_40='';
         var qty_40_hc='';
+        var qty_45_hc='';
         var total_quantity='';
         var total_weight='';
         var total_volume='';
@@ -749,6 +752,9 @@ $(document).on('click', '#create-quote', function (e) {
         if($(".qty_40_hc").val()>0){
             qty_40_hc=$(".qty_40_hc").val();
         }
+        if($(".qty_45_hc").val()>0){
+            qty_45_hc=$(".qty_45_hc").val();
+        }        
         if($("#total_quantity").val()>0){
             total_quantity=$("#total_quantity").val();
         }
@@ -931,6 +937,12 @@ $(document).on('click', '#create-quote', function (e) {
         }else{
             $("#cargo_details_40_hc_p").addClass('hide');
         }
+        if(qty_45_hc!='' || qty_45_hc>0){
+            $("#cargo_details_45_hc").html(qty_45_hc);
+            $("#cargo_details_45_hc_p").removeClass('hide');
+        }else{
+            $("#cargo_details_45_hc_p").addClass('hide');
+        }        
         if(total_quantity!='' && type_cargo!=''){
             $("#cargo_details_cargo_type").html(" "+type_cargo);
             $("#cargo_details_cargo_type_p").removeClass('hide');
@@ -1804,8 +1816,13 @@ $(document).on('click', '#savecompany', function () {
                     $.each(dataC, function(key, value) {
                         $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
+                    $('select[name="company_id"]').empty();
+                    $.each(dataC, function(key, value) {
+                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
                     $('#companyModal').modal('hide');
                     $("select[name='company_id_quote']").val('');
+                    $("select[name='company_id']").val('');
                     $('#select2-m_select2_2_modal-container').text('Please an option');
 
                     swal(
@@ -1851,6 +1868,10 @@ $(document).on('click', '#savecontact', function () {
                     $.each(dataC, function(key, value) {
                         $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
+                    $('select[name="company_id"]').empty();
+                    $.each(dataC, function(key, value) {
+                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });                    
                     $('#contactModal').modal('hide');
 
                     swal(
@@ -1859,6 +1880,7 @@ $(document).on('click', '#savecontact', function () {
                         'success'
                     )
                     $("select[name='company_id_quote']").val('');
+                    $("select[name='company_id']").val('');
                     $('#select2-m_select2_2_modal-container').text('Please an option');
                 },
                 error: function (request, status, error) {
@@ -1987,6 +2009,20 @@ $(document).on('change', '#pdf_type', function () {
         url: '/settings/update/pdf/type',
         data: {
             'pdf_type': $("#pdf_type").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
+
+$(document).on('change', '#pdf_ammounts', function () {
+    var type=$("#pdf_ammounts").val();
+    $.ajax({
+        type: 'POST',
+        url: '/settings/update/pdf/ammounts',
+        data: {
+            'pdf_ammounts': $("#pdf_ammounts").val()
         },
         success: function(data) {
             //
