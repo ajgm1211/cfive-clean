@@ -453,18 +453,21 @@ class QuoteAutomaticController extends Controller
     }
     if($request->input('forty') != "0"){
       $arreglo->where('forty' , '!=' , "0");
+
     }
 
-    if($request->input('fortyhc') != "0"){
-      $arreglo->where('fortyhc' , '!=' , "0");
+    if($request->input('fortyhc') != "0"){  
+      $arreglo->where(function ($query) {
+        $query->where('fortyhc' , '!=' , "0")->orWhere('fortynor' , '!=' , "0"); 
+      });
+    }  
+    if($request->input('fortyfive') != "0"){
+      $arreglo->where('fortyfive' , '!=' , "0"); 
     }
 
     $arreglo = $arreglo->get();
 
     // Fin condiciones del cero
-
-
-
     $formulario = $request;
     $array20 = array('2','4','5');
     $array40 =  array('1','4','5');
@@ -540,7 +543,7 @@ class QuoteAutomaticController extends Controller
         $collectionRate->push($array);
         $data->setAttribute('montF',$array);
       }
-      if($request->input('fortyhc') != "0") {
+      if($request->input('fortyhc') != "0" && $data->fortyhc != "0") {
         $subtotalFHC = $formulario->fortyhc *  $data->fortyhc;
         $totalFHC = ($formulario->fortyhc *  $data->fortyhc)  / $rateC ;
         // MARKUPS
@@ -564,6 +567,57 @@ class QuoteAutomaticController extends Controller
         $data->setAttribute('montFHC',$array);
         $collectionRate->push($array);
       }
+      //####################################################################################
+      //NUEVOS CONTENEDORES
+      if($data->fortyhc == "0") {
+        $subtotalNOR = $formulario->fortyhc *  $data->fortynor;
+        $totalNOR = ($formulario->fortyhc *  $data->fortynor)  / $rateC ;
+        // MARKUPS
+        if($freighPercentage != 0){
+          $freighPercentage = intval($freighPercentage);
+          $markup = ( $totalNOR *  $freighPercentage ) / 100 ;
+          $markup = number_format($markup, 2, '.', '');
+          $totalNOR += $markup ;
+          $arraymarkupNOR = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
+        }else{
+          $markup =trim($freighAmmount);
+          $markup = number_format($markup, 2, '.', '');
+          $totalNOR += $freighMarkup;
+          $arraymarkupNOR = array("markup" => $markup , "markupConvert" => $freighMarkup, "typemarkup" => $markupFreightCurre) ;
+        }
+        $totalNOR =  number_format($totalNOR, 2, '.', '');
+        $totalFreight += $totalNOR;
+        $totalRates += $totalNOR;
+        $array = array('type'=>'Ocean Freight 40NOR ', 'cantidad' => $formulario->fortyhc,'detail'=>'Container 40NOR', 'price' => $data->fortynor, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalNOR , 'total' =>$totalNOR." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array_merge($array,$arraymarkupNOR);
+        $data->setAttribute('montNOR',$array);
+        $collectionRate->push($array);
+      }
+      if($request->input('fortyfive') != "0") {
+        $subtotalFIVE = $formulario->fortyfive *  $data->fortyfive;
+        $totalFIVE = ($formulario->fortyfive *  $data->fortyfive)  / $rateC ;
+        // MARKUPS
+        if($freighPercentage != 0){
+          $freighPercentage = intval($freighPercentage);
+          $markup = ( $totalFIVE *  $freighPercentage ) / 100 ;
+          $markup = number_format($markup, 2, '.', '');
+          $totalFIVE += $markup ;
+          $arraymarkupFIVE = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($freighPercentage%)") ;
+        }else{
+          $markup =trim($freighAmmount);
+          $markup = number_format($markup, 2, '.', '');
+          $totalFIVE += $freighMarkup;
+          $arraymarkupFIVE = array("markup" => $markup , "markupConvert" => $freighMarkup, "typemarkup" => $markupFreightCurre) ;
+        }
+        $totalFIVE =  number_format($totalFIVE, 2, '.', '');
+        $totalFreight += $totalFIVE;
+        $totalRates += $totalFIVE;
+        $array = array('type'=>'Ocean Freight 45 ', 'cantidad' => $formulario->fortyfive,'detail'=>'Container 45', 'price' => $data->fortyfive, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFIVE , 'total' =>$totalFIVE." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array_merge($array,$arraymarkupFIVE);
+        $data->setAttribute('montFIVE',$array);
+        $collectionRate->push($array);
+      }
+      //####################################################################################
       $data->setAttribute('rates',$collectionRate);
       // id de los port  ALL
       array_push($orig_port,1485);
@@ -571,8 +625,6 @@ class QuoteAutomaticController extends Controller
       // id de los carrier ALL 
       $carrier_all = 26;
       array_push($carrier,$carrier_all);
-
-
 
       //  calculo de los local charges en freight , origin y destiny
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
