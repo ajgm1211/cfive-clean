@@ -469,9 +469,9 @@ class QuoteAutomaticController extends Controller
 
     // Fin condiciones del cero
     $formulario = $request;
-    $array20 = array('2','4','5');
-    $array40 =  array('1','4','5');
-    $array40Hc= array('3','4','5');
+    $array20 = array('2','4','5'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
+    $array40 =  array('1','4','5'); // id  calculation type 2 = per 40 
+    $array40Hc= array('3','4','5'); // id  calculation type 3 = per 40HC 
     $collectionLocal = new Collection();
     foreach($arreglo as $data){
       $totalFreight = 0;
@@ -567,8 +567,7 @@ class QuoteAutomaticController extends Controller
         $data->setAttribute('montFHC',$array);
         $collectionRate->push($array);
       }
-      //####################################################################################
-      //NUEVOS CONTENEDORES
+      //NUEVOS CONTENEDORES RATES
       if($data->fortyhc == "0") {
         $subtotalNOR = $formulario->fortyhc *  $data->fortynor;
         $totalNOR = ($formulario->fortyhc *  $data->fortynor)  / $rateC ;
