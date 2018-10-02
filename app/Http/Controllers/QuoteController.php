@@ -2839,6 +2839,7 @@ class QuoteController extends Controller
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
             $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
         }
         foreach($origin_ammounts as $item){
             $currency=Currency::find($item->currency_id);
@@ -2855,10 +2856,15 @@ class QuoteController extends Controller
 
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;
             }else{
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates_eur;
             }
             $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
         }
 
         foreach($freight_ammounts as $item){
@@ -2876,10 +2882,15 @@ class QuoteController extends Controller
 
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
             }else{
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
             }
             $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
         }
 
         //dd(json_encode($item->markup/1.16));
@@ -2899,18 +2910,23 @@ class QuoteController extends Controller
 
             if($quote->currencies->alphacode=='USD'){    
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                  
             }else{
                 $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
             }
             $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
         }
         if($company_user->pdf_language==1){
-            $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type]);
+            $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
         }else if($company_user->pdf_language==2){
-            $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type]);
+            $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
 
         }else{
-            $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type]);
+            $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
         }
 
         $pdf = \App::make('dompdf.wrapper');
