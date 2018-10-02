@@ -128,6 +128,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     <th title="Field #6">
                       40'HC
                     </th>
+                    <th title="Field #6">
+                      40'NOR
+                    </th>
+                    <th title="Field #6">
+                      45'
+                    </th>
                     <th title="Field #7">
                       Currency
                     </th>
@@ -469,6 +475,8 @@ Load
         {data: 'twuenty', name: 'twuenty'},
         {data: 'forty', name: 'forty'},
         {data: 'fortyhc', name: 'fortyhc'},
+        {data: 'fortynor', name: 'fortynor'},
+        {data: 'fortyfive', name: 'fortyfive'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
       ],

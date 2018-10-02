@@ -118,6 +118,8 @@ class ContractsController extends Controller
       $rates->twuenty = $request->input('twuenty.'.$key);
       $rates->forty = $request->input('forty.'.$key);
       $rates->fortyhc = $request->input('fortyhc.'.$key);
+      $rates->fortynor = $request->input('fortynor.'.$key);
+      $rates->fortyfive = $request->input('fortyfive.'.$key);
       $rates->currency_id = $request->input('currency_id.'.$key);
       $rates->contract()->associate($contract);
 
@@ -224,7 +226,7 @@ class ContractsController extends Controller
 
 
     $rate = new  ViewRates();
-    $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','currency')->where('contract_id',$id);
+    $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('contract_id',$id);
 
     return \DataTables::of($data)
       ->addColumn('options', function ($data) {
@@ -242,7 +244,7 @@ class ContractsController extends Controller
 
   public function contractRates(){
     $contractRate = new  ViewContractRates();
-    $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','currency')->where('company_user_id', Auth::user()->company_user_id);
+    $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);
 
 
     return \DataTables::of($data)
