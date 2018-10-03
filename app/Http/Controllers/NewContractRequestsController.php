@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\NewContractRequest;
 use App\User;
-use App\CompanyUser;
 use App\Harbor;
 use App\Carrier;
-use App\Notifications\N_general;
-use Illuminate\Support\Facades\Storage;
-use App\Mail\NewRequestToAdminMail;
+use App\CompanyUser;
+use App\NewContractRequest;
+use Illuminate\Http\Request;
 use App\Mail\RequestToUserMail;
+use App\Notifications\N_general;
+use App\Mail\NewRequestToAdminMail;
+use Illuminate\Support\Facades\Storage;
 
 class NewContractRequestsController extends Controller
 {
@@ -21,7 +21,7 @@ class NewContractRequestsController extends Controller
     {
         $Ncontracts = NewContractRequest::with('user','companyuser')->orderBy('id', 'desc')->get();
         //dd($Ncontracts);
-        return view('contracts.Requests.index',compact('Ncontracts'));
+        return view('Requests.index',compact('Ncontracts'));
     }
 
 
@@ -39,7 +39,7 @@ class NewContractRequestsController extends Controller
         $now2   = $time->format('Y-m-d');
         $file   = $request->file('file');
         $ext    = strtolower($file->getClientOriginalExtension());
-       /* $validator = \Validator::make(
+        /* $validator = \Validator::make(
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
@@ -249,7 +249,7 @@ class NewContractRequestsController extends Controller
         $colectionFinal->push($Contenido);
         //dd($ColectionFinal);
 
-        return view('contracts.Requests.DetailNewRequest',compact('colectionFinal'));
+        return view('Requests.DetailNewRequest',compact('colectionFinal'));
     }
 
 
@@ -261,6 +261,8 @@ class NewContractRequestsController extends Controller
     public function UpdateStatusRequest(){
         $id     = $_REQUEST['id'];
         $status = $_REQUEST['status'];
+       // $id     = 1;
+       // $status = 'Done';
 
         try {
             $Ncontract = NewContractRequest::find($id);
@@ -302,4 +304,13 @@ class NewContractRequestsController extends Controller
     {
         //
     }
+
+    // New Request Importation ----------------------------------------------------------
+    public function LoadViewRequestImporContractFcl(){
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $user   = \Auth::user();
+        return view('Requests.NewRequest',compact('harbor','carrier','user'));
+    }
+
 }
