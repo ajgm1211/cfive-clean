@@ -477,8 +477,6 @@ class ContractsController extends Controller
     $rate = Rate::find($id);
     $rate->update($requestForm);
     return redirect()->back()->with('editRate','true');
-
-
   }
 
   public function addLocalChar($id){
