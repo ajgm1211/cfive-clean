@@ -148,7 +148,7 @@
                                                             <div class='row'>
                                                                 <div class="col-md-3">
                                                                     <label>
-                                                                        20' :
+                                                                        <b>20' :</b>
                                                                     </label>
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         {!! Form::text('qty_20', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20']) !!}
@@ -156,7 +156,7 @@
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <label>
-                                                                        40' :
+                                                                        <b>40' :</b>
                                                                     </label>
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         {!! Form::text('qty_40', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40']) !!}
@@ -164,7 +164,7 @@
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <label>
-                                                                        40' HC :
+                                                                        <b>40' HC :</b>
                                                                     </label>
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         {!! Form::text('qty_40_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc']) !!}
@@ -172,12 +172,68 @@
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <label>
-                                                                        45' HC :
+                                                                        <b>45' HC :</b>
                                                                     </label>
                                                                     <div class="m-bootstrap-touchspin-brand">
                                                                         {!! Form::text('qty_45_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_45_hc']) !!}
                                                                     </div>
-                                                                </div>                                                                
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>20' Reefer :</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_20_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_reefer']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>40' Reefer :</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_reefer']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>40' HC Reefer:</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40_hc_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_reefer']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>20' Open top :</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_20_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_open_top']) !!}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>40' Open top :</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_open_top']) !!}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>
+                                                                        <b>40' HC Open top :</b>
+                                                                    </label>
+                                                                    <div class="m-bootstrap-touchspin-brand">
+                                                                        {!! Form::text('qty_40_hc_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_open_top']) !!}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -576,9 +632,12 @@
                                                                 <p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
                                                                 <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>
                                                                 <p id="cargo_details_40_hc_p" class="hide"><span id="cargo_details_40_hc"></span> x 40' HC Containers</p>
-                                                                <p id="cargo_details_45_hc_p" class="hide"><span id="cargo_details_45_hc"></span> x 45' HC Containers</p>               
-                                                                <!--<p id="cargo_details_20_p" class="hide"><span id="cargo_details_20"></span> x 20' Containers</p>
-                                                                <p id="cargo_details_40_p" class="hide"><span id="cargo_details_40"></span> x 40' Containers</p>-->
+                                                                <p id="cargo_details_45_hc_p" class="hide"><span id="cargo_details_45_hc"></span> x 45' HC Containers</p> 
+                                                                <p id="cargo_details_20_reefer_p" class="hide"><span id="cargo_details_20_reefer"></span> x 20' Reefer Containers</p>
+                                                                <p id="cargo_details_40_reefer_p" class="hide"><span id="cargo_details_40_reefer"></span> x 40' Reefer Containers</p>
+                                                                <p id="cargo_details_40_hc_reefer_p" class="hide"><span id="cargo_details_40_hc_reefer"></span> x 40' HC Reefer Containers</p>
+                                                                <p id="cargo_details_20_open_top_p" class="hide"><span id="cargo_details_20_open_top"></span> x 20' Open Top Containers</p> 
+                                                                <p id="cargo_details_40_open_top_p" class="hide"><span id="cargo_details_40_open_top"></span> x 40' Open Top Containers</p> <p id="cargo_details_40_hc_open_top_p" class="hide"><span id="cargo_details_40_hc_open_top"></span> x 40' HC Open Top Containers</p>           
                                                             </div>
                                                         </div>
                                                         <div class="row">

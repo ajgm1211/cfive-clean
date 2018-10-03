@@ -730,6 +730,12 @@ $(document).on('click', '#create-quote', function (e) {
         var qty_40='';
         var qty_40_hc='';
         var qty_45_hc='';
+        var qty_20_reefer='';
+        var qty_40_reefer='';
+        var qty_40_hc_reefer='';
+        var qty_20_open_top='';
+        var qty_40_open_top='';
+        var qty_45_hc_open_top='';
         var total_quantity='';
         var total_weight='';
         var total_volume='';
@@ -760,6 +766,24 @@ $(document).on('click', '#create-quote', function (e) {
         }
         if($(".qty_45_hc").val()>0){
             qty_45_hc=$(".qty_45_hc").val();
+        }
+        if($(".qty_20_reefer").val()>0){
+            qty_20_reefer=$(".qty_20_reefer").val();
+        }
+        if($(".qty_40_reefer").val()>0){
+            qty_40_reefer=$(".qty_40_reefer").val();
+        }
+        if($(".qty_40_hc_reefer").val()>0){
+            qty_40_hc_reefer=$(".qty_40_hc_reefer").val();
+        }
+        if($(".qty_20_open_top").val()>0){
+            qty_20_open_top=$(".qty_20_open_top").val();
+        }
+        if($(".qty_40_open_top").val()>0){
+            qty_40_open_top=$(".qty_40_open_top").val();
+        }
+        if($(".qty_40_hc_open_top").val()>0){
+            qty_40_hc_open_top=$(".qty_40_hc_open_top").val();
         }        
         if($("#total_quantity").val()>0){
             total_quantity=$("#total_quantity").val();
@@ -948,6 +972,42 @@ $(document).on('click', '#create-quote', function (e) {
             $("#cargo_details_45_hc_p").removeClass('hide');
         }else{
             $("#cargo_details_45_hc_p").addClass('hide');
+        }
+        if(qty_20_reefer!='' || qty_20_reefer>0){
+            $("#cargo_details_20_reefer").html(qty_20_reefer);
+            $("#cargo_details_20_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_20_reefer_p").addClass('hide');
+        }
+        if(qty_40_reefer!='' || qty_40_reefer>0){
+            $("#cargo_details_40_reefer").html(qty_40_reefer);
+            $("#cargo_details_40_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_reefer_p").addClass('hide');
+        }
+        if(qty_40_hc_reefer!='' || qty_40_hc_reefer>0){
+            $("#cargo_details_40_hc_reefer").html(qty_40_hc_reefer);
+            $("#cargo_details_40_hc_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_reefer_p").addClass('hide');
+        }
+        if(qty_20_open_top!='' || qty_20_open_top>0){
+            $("#cargo_details_20_open_top").html(qty_20_open_top);
+            $("#cargo_details_20_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_20_open_top_p").addClass('hide');
+        }
+        if(qty_40_open_top!='' || qty_40_open_top>0){
+            $("#cargo_details_40_open_top").html(qty_40_open_top);
+            $("#cargo_details_40_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_open_top_p").addClass('hide');
+        }
+        if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
+            $("#cargo_details_40_hc_open_top").html(qty_40_hc_open_top);
+            $("#cargo_details_40_hc_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_hc_open_top_p").addClass('hide');
         }        
         if(total_quantity!='' && type_cargo!=''){
             $("#cargo_details_cargo_type").html(" "+type_cargo);
