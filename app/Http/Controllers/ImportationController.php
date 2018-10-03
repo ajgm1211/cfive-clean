@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\FailRate;
+use App\User;
 use App\Rate;
 use App\Harbor;
 use App\Carrier;
+use App\FailRate;
 use App\Currency;
 use App\Contract;
 use App\Surcharge;
+use App\LocalCharge;
+use App\TypeDestiny;
+use App\LocalCharPort;
 use App\FailSurCharge;
-use App\User;
+use App\CalculationType;
+use App\LocalCharCarrier;
+use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
+use App\Jobs\ReprocessSurchargersJob;
 
 class ImportationController extends Controller
 {
@@ -212,10 +218,19 @@ class ImportationController extends Controller
                 $destinationExits   = '';
                 $destinationV       = '';
                 $surchargerV        = '';
+                $typedestunyV       = '';
+                $calculationtypeV   = '';
+                $amountV            = '';
+                $currencyV          = '';
+                $carrierV           = '';
 
-                $originB        = false;
-                $destinyB       = false;
-                $surcharB       = false;
+                $carrierB           = false;
+                $calculationtypeB   = false;
+                $typedestinyB       = false;
+                $originB            = false;
+                $destinyB           = false;
+                $surcharB           = false;
+                $currencyB          = false;
 
 
                 $surchargerEX       = explode('_',$FailSurchager['surcharge_id']);
@@ -255,18 +270,119 @@ class ImportationController extends Controller
                             // dd($destinationV);
                         }
                     }
-                    //          ----------------------------------------------------------------------------------
+                    //  Surcharge ------------------------------------------------------------------------------
 
                     $surchargerV = Surcharge::where('name','=',$surchargerEX[0])->first();
                     if(count($surchargerV) == 1){
                         $surcharB = true;
                         $surchargerV = $surchargerV['id'];
                     }
+
+                    //  Type Destiny ---------------------------------------------------------------------------
+
+                    $typedestunyV = TypeDestiny::where('description','=',$typedestinyEX[0])->first();
+                    if(count($typedestunyV) == 1){
+                        $typedestinyB = true;
+                        $typedestunyV = $typedestunyV['id'];
+                    }
+
+                    //  Calculation Type -----------------------------------------------------------------------
+
+                    $calculationtypeV = CalculationType::where('code','=',$calculationtypeEX[0])->orWhere('name','=',$calculationtypeEX[0])->first();
+
+                    if(count($calculationtypeV) == 1){
+                        $calculationtypeB = true;
+                        $calculationtypeV = $calculationtypeV['id'];
+                    }
+
+                    //  Amount ---------------------------------------------------------------------------------
+
+                    $amountV = (int)$ammountEX[0];
+
+                    //  Currency -------------------------------------------------------------------------------
+
+                    $currencyV = Currency::where('alphacode','=',$currencyEX[0])->first();
+                    if(count($currencyV) == 1){
+                        $currencyB = true;
+                        $currencyV = $currencyV['id'];
+                    }
+
+                    //  Carrier -------------------------------------------------------------------------------
+
+                    $carrierV = Carrier::where('name','=',$carrierEX[0])->first();
+                    if(count($carrierV) == 1){
+                        $carrierB = true;
+                        $carrierV = $carrierV['id'];
+                    }
+
+                    /*$colleccion = collect([]);
+                    $colleccion = [
+                        'origen'            =>  $originV,
+                        'destiny'           =>  $destinationV,
+                        'surcharge'         =>  $surchargerV,
+                        'typedestuny'       =>  $typedestunyV,
+                        'calculationtypeV'  =>  $calculationtypeV,
+                        'amountV'           =>  $amountV,
+                        'currencyV'         =>  $currencyV,
+                        'carrierV'          =>  $carrierV
+                    ];
+                    
+                    dd($colleccion);*/
+
+                    if($originB == true     && $destinyB == true 
+                       && $surcharB == true && $typedestinyB == true
+                       && $calculationtypeB == true && $currencyB == true
+                       && $carrierB == true){
+
+                        $Localchargeobj = LocalCharge::create([
+                            'surcharge_id'          => $surchargerV,
+                            'typedestiny_id'        => $typedestunyV,
+                            'contract_id'           => $id,
+                            'calculationtype_id'    => $calculationtypeV,
+                            'ammount'               => $amountV,
+                            'currency_id'           => $currencyV
+                        ]);
+
+                        $LocalchargeId = $Localchargeobj->id;
+
+                        LocalCharCarrier::create([
+                            'carrier_id'     => $carrierV,
+                            'localcharge_id' => $LocalchargeId
+                        ]);
+
+                        LocalCharPort::create([
+                            'port_orig'         => $originV,
+                            'port_dest'         => $destinationV,
+                            'localcharge_id'    => $LocalchargeId                
+                        ]);
+                        $FailSurchager->forceDelete();
+                    }
                 }
 
             }
-        } else {
 
+            $contractData = Contract::find($id);
+            $usersNotifiques = User::where('type','=','admin')->get();
+            foreach($usersNotifiques as $userNotifique){
+                $message = 'The Surchargers was Reprocessed. Contract: ' . $contractData->number ;
+                $userNotifique->notify(new N_general($userNotifique,$message));
+            }
+
+        } else {
+            ReprocessSurchargersJob::dispatch($id);
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.content', 'The Surchargers are reprocessing in the background');
+            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The Surchargers are being reprocessed');
+        $countfailSurChargersNew = FailSurCharge::where('contract_id','=',$id)->count();
+
+        if($countfailSurChargersNew > 0){
+            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
+        }else{
+            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'0']);
         }
     }
 

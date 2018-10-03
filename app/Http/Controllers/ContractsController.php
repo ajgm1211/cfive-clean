@@ -2404,7 +2404,7 @@ class ContractsController extends Controller
           $currencyA      = $currencyA[0].' (error)';
           $classcurrency  = 'color:red';
         }
-        $typedestinyLB    = TypeDestiny::find($failsurcharge['typedestiny_id']);
+        $typedestinyLB    = TypeDestiny::where('description',$failsurcharge['typedestiny_id'])->first();
 
         ////////////////////////////////////////////////////////////////////////////////////
         $arreglo = [
