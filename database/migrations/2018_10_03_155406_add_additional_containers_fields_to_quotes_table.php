@@ -14,11 +14,12 @@ class AddAdditionalContainersFieldsToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->string('qty_20_refeer')->nullable()->after('qty_40_nor');
-            $table->string('qty_40_refeer')->nullable()->after('qty_20_refeer');
-            $table->string('qty_40_hc_refeer')->nullable()->after('qty_40_refeer');
-            $table->string('qty_20_open_top')->nullable()->after('qty_40_hc_refeer');
-            $table->string('qty_40_hc_open_top')->nullable()->after('qty_20_open_top');
+            $table->string('qty_20_reefer')->nullable()->after('qty_40_nor');
+            $table->string('qty_40_reefer')->nullable()->after('qty_20_reefer');
+            $table->string('qty_40_hc_reefer')->nullable()->after('qty_40_reefer');
+            $table->string('qty_20_open_top')->nullable()->after('qty_40_hc_reefer');
+            $table->string('qty_40_open_top')->nullable()->after('qty_20_open_top');
+            $table->string('qty_40_hc_open_top')->nullable()->after('qty_40_open_top');
         });
     }
 
@@ -30,10 +31,11 @@ class AddAdditionalContainersFieldsToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn('qty_20_refeer');
-            $table->dropColumn('qty_40_refeer');
-            $table->dropColumn('qty_40_hc_refeer');
+            $table->dropColumn('qty_20_reefer');
+            $table->dropColumn('qty_40_reefer');
+            $table->dropColumn('qty_40_hc_reefer');
             $table->dropColumn('qty_20_open_top');
+            $table->dropColumn('qty_40_open_top');
             $table->dropColumn('qty_40_hc_open_top');
         });
     }
