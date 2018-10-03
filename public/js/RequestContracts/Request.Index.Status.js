@@ -22,7 +22,7 @@
         var status = $('#statusSelectMD').val();
         
         $.ajax({
-            url:'/contracts/RequestStatus',
+            url:'/Requests/RequestStatus',
             method:'get',
             data:{id:id,status:status},
             success: function(data){
