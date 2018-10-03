@@ -706,11 +706,17 @@ $(document).on('change', '#delivery_type_air', function (e) {
 
 $(document).on('click', '#create-quote', function (e) {
     if($(".pick_up_date").val() == ''){
-        msg('Sorry, the pick up date is empty. Please go back and complete this field');
+        msg('Sorry, pick up date is empty. Please go back and complete this field');
         return;
     }else if($(".validity").val() == ''){
-        msg('Sorry, the validity date is empty. Please go back and complete this field');
+        msg('Sorry, validity date is empty. Please go back and complete this field');
         return;
+    }else if($(".company_id").val() == ''){
+        msg('Sorry, company is empty. Please go back and complete this field');
+        return;
+    }else if($(".contact_id").val() == ''){
+        msg('Sorry, contact is empty. Please go back and complete this field');
+        return;        
     }else{
         var origin_harbor=$("#origin_harbor").val();
         var destination_harbor=$("#destination_harbor").val();
