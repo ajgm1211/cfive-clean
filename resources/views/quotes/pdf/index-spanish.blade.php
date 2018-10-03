@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" width="290" height="auto" style="margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 225px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><b>Cotización</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
@@ -130,7 +130,13 @@
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
-
+                    <p>{!! $quote->qty_45_hc != '' &&  $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':'' !!}</p>
+                    <p>{!! $quote->qty_20_reefer != '' &&  $quote->qty_20_reefer > 0 ? $quote->qty_20_reefer.' x 20\' Reefer container':'' !!}</p>
+                    <p>{!! $quote->qty_40_reefer != '' &&  $quote->qty_40_reefer > 0 ? $quote->qty_40_reefer.' x 40\' Reefer container':'' !!}</p>
+                    <p>{!! $quote->qty_40_hc_reefer != '' &&  $quote->qty_40_hc_reefer > 0 ? $quote->qty_40_hc_reefer.' x 40\' HC Reefer container':'' !!}</p>
+                    <p>{!! $quote->qty_20_open_top != '' &&  $quote->qty_20_open_top > 0 ? $quote->qty_20_open_top.' x 20\' Open Top container':'' !!}</p>
+                    <p>{!! $quote->qty_40_open_top != '' &&  $quote->qty_40_open_top > 0 ? $quote->qty_40_open_top.' x 40\' Open Top container':'' !!}</p>
+                    <p>{!! $quote->qty_40_hc_open_top != '' &&  $quote->qty_40_hc_open_top > 0 ? $quote->qty_40_hc_open_top.' x 40\' HC Open Top container':'' !!}</p>                    
                     @if($quote->total_quantity!='' && $quote->total_quantity>0)
                     <div class="row">
                         <div class="col-md-3">
@@ -248,17 +254,25 @@
                             <td class="white">{{$origin_ammount->detail}}</td>
                             <td class="white">{{$origin_ammount->units}}</td>
                             @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            @php
-                            $markup_per_unit=$origin_ammount->markup_converted/$origin_ammount->units
-                            @endphp
-                            <td>{{number_format((float)$markup_per_unit+$origin_ammount->price_per_unit, 2,'.', '')}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}} {{$quote->currencies->alphacode}}</td>
+                                @else
+                                    @php
+                                    $markup_per_unit=$origin_ammount->markup_converted/$origin_ammount->units
+                                    @endphp
+                                    <td>{{number_format((float)$markup_per_unit+$origin_ammount->price_per_unit, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}}</td>
+                                <td>{{number_format((float)$origin_ammount->total_ammount_2 / $origin_ammount->units, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
                             @endif
                             @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            <td>{{number_format((float)$origin_ammount->total_ammount + $origin_ammount->markup_converted, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{$origin_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                                @else   
+                                    <td>{{number_format((float)$origin_ammount->total_ammount + $origin_ammount->markup_converted, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
+                                <td>{{$origin_ammount->total_ammount + $origin_ammount->markup}} {{$origin_ammount->currency->alphacode}}</td>
                             @endif
                             <td class="white">{{$origin_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                         </tr>
@@ -294,17 +308,25 @@
                             <td>{{$freight_ammount->detail}}</td>
                             <td>{{$freight_ammount->units}}</td>
                             @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            @php
-                            $markup_per_unit=$freight_ammount->markup_converted/$freight_ammount->units
-                            @endphp
-                            <td>{{number_format((float)$markup_per_unit+$freight_ammount->price_per_unit, 2,'.', '')}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}} {{$quote->currencies->alphacode}}</td>
+                                @else
+                                    @php
+                                    $markup_per_unit=$freight_ammount->markup_converted/$freight_ammount->units
+                                    @endphp
+                                    <td>{{number_format((float)$markup_per_unit+$freight_ammount->price_per_unit, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}}</td>
+                                <td>{{number_format((float)$freight_ammount->total_ammount_2 / $freight_ammount->units, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
                             @endif
                             @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            <td>{{number_format((float)$freight_ammount->total_ammount + $freight_ammount->markup_converted, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{$freight_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                                @else   
+                                    <td>{{number_format((float)$freight_ammount->total_ammount + $freight_ammount->markup_converted, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
+                                <td>{{$freight_ammount->total_ammount + $freight_ammount->markup}} {{$freight_ammount->currency->alphacode}}</td>
                             @endif
                             <td>{{$freight_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                         </tr>
@@ -340,17 +362,25 @@
                             <td>{{$destination_ammount->detail}}</td>
                             <td>{{$destination_ammount->units}}</td>                  
                             @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            @php
-                            $markup_per_unit=$destination_ammount->markup_converted/$destination_ammount->units
-                            @endphp
-                            <td>{{number_format((float)$markup_per_unit+$destination_ammount->price_per_unit, 2,'.', '')}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}} {{$quote->currencies->alphacode}}</td>
+                                @else
+                                    @php
+                                    $markup_per_unit=$destination_ammount->markup_converted/$destination_ammount->units
+                                    @endphp
+                                    <td>{{number_format((float)$markup_per_unit+$destination_ammount->price_per_unit, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}}</td>
+                                <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
                             @endif                    
                             @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
-                            <td>{{number_format((float)$destination_ammount->total_ammount + $destination_ammount->markup_converted, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
+                                @if($ammounts_type==1)
+                                    <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
+                                @else   
+                                    <td>{{number_format((float)$destination_ammount->total_ammount + $destination_ammount->markup_converted, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
+                                @endif
                             @else
-                            <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
+                                <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
                             @endif                    
                             <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                         </tr>
@@ -373,7 +403,7 @@
                 <div class="company">
                     <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
                 </div>
-            </div>
+            </div>    
         @endif
         <div class="clearfix">
             <br>
