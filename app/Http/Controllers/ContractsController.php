@@ -253,7 +253,7 @@ class ContractsController extends Controller
                 return $data['validy'] ." / ".$data['expire'];
             })
             ->addColumn('options', function ($data) {
-                return "<a href='contracts/".$data['contract_id']."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                return "<a href='contracts/".setearRouteKey($data['contract_id'])."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
 
@@ -275,7 +275,7 @@ class ContractsController extends Controller
         return \DataTables::collection($contractG)
 
             ->addColumn('options', function (Contract $contractG) {
-                return "      <a href='contracts/".$contractG->id."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                return "      <a href='contracts/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
                     <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
@@ -291,6 +291,7 @@ class ContractsController extends Controller
 
     public function edit(Request $request,$id)
     {
+        $id = obtenerRouteKey($id);
         $contracts = Contract::where('id',$id)->first();
 
         $objtypedestiny = new TypeDestiny();
