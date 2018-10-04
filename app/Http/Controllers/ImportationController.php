@@ -473,7 +473,7 @@ class ImportationController extends Controller
         //dd($targetsArr);
         //  dd($data);
         $coordenates = collect([]);
-        ini_set('max_execution_time', 300);
+        //ini_set('max_execution_time', 300);
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
                    ->url($nombre),function($reader) use($request,$coordenates) {
