@@ -1034,23 +1034,23 @@
                                                 </div>
                                             </div>                                            
                                             <hr>
-                                                                <div class="row pull-right">
-                        <ul class="nav" role="tablist">
-                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
-                                <button type="submit" class="btn btn-primary">
-                                    Save
-                                </button>
-                                @if($email_templates)
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
-                                    Save and send
-                                </button>
-                                @endif
-                                <button type="submit" class="btn btn-primary" formaction="/quotes/store/pdf">
-                                    Save and PDF
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                                            <div class="row pull-right">
+                                                <ul class="nav" role="tablist">
+                                                    <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Save
+                                                        </button>
+                                                        @if($email_templates)
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
+                                                            Save and send
+                                                        </button>
+                                                        @endif
+                                                        <button type="submit" class="btn btn-primary" formaction="/quotes/store/pdf">
+                                                            Save and PDF
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>                                
@@ -1072,9 +1072,6 @@
                             </li>
                         </ul>
                     </div>
-                    <br>
-                    <br>
-
                     {!! Form::close() !!}
                 </div>
             </div>
