@@ -11,7 +11,7 @@ class Rate extends Model
     protected $dates    = ['deleted_at'];
     
     protected $table    = "rates";
-    protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contract_id','twuenty','forty','fortyhc', 'currency_id'];
+    protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contract_id','twuenty','forty','fortyhc','fortynor','fortyfive', 'currency_id'];
     public function contract()
     {
         return $this->belongsTo('App\Contract');

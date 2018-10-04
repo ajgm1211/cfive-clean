@@ -48,6 +48,7 @@ class SettingController extends Controller
             $company->hash = \Hash::make($request->name);
             $company->pdf_language = $request->pdf_language;
             $company->type_pdf = 2;
+            $company->pdf_ammounts = 2;
             if($file != ""){
                 $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
             }
@@ -78,7 +79,16 @@ class SettingController extends Controller
         $company=CompanyUser::find(\Auth::user()->company_user_id);
         $company->type_pdf = $request->pdf_type;
         $company->update();
-        
+
+        return response()->json(['message' => 'Ok']);
+    }
+
+    public function update_pdf_ammount(Request $request)
+    {
+        $company=CompanyUser::find(\Auth::user()->company_user_id);
+        $company->pdf_ammounts = $request->pdf_ammounts;
+        $company->update();
+
         return response()->json(['message' => 'Ok']);
     }
 }

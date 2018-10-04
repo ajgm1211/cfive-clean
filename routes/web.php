@@ -103,51 +103,14 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
     Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
 
-    // Rates
 
-    Route::put('UploadFileRates','ContractsController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
-
-    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ContractsController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
-    Route::get('RatesListFC/{id}/{bo}','ContractsController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
-    Route::get('EditRatesGoodForContracts/{id}','ContractsController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
-    Route::get('EditRatesFailForContracts/{id}','ContractsController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
-    Route::PUT('CreateRatesFailForContracts/{id}','ContractsController@CreateRates')->name('create.Rates.For.Contracts');
-    Route::get('UpdateRatesFailForContracts/{id}','ContractsController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
-
-    Route::get('DestroyRatesFailForContracts/{id}','ContractsController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
-    Route::get('DestroyRatesGForContracts/{id}','ContractsController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
-
-    // Surcharge
-    Route::put('UploadFileSubchargeForContracts','ContractsController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
 
     //----- developer
-    Route::get('FailSurchargeFC/{id}/{bo}','ContractsController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
-    Route::get('FailedSurchargeFCDView/{id}/{ids}','ContractsController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
-    Route::get('EditSurchargersGoodForContracts/{id}','ContractsController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
-    Route::get('EditSurchargersFailForContracts/{id}','ContractsController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
-    Route::PUT('CreateSurchargersFailForContracts/{id}','ContractsController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
-    Route::get('UpdateSurchargersForContracts/{id}','ContractsController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
-    Route::get('DestroySurchargersFForContracts/{id}','ContractsController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
-    Route::get('DestroySurchargersGForContracts/{id}','ContractsController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
 
-    //Contract FCL Importation
 
-    Route::get('imporfcl','ContractsController@LoadViewImporContractFcl')->name('importaion.fcl');
-    Route::get('ProcessContractFcl','ContractsController@ProcessContractFcl')->name('process.contract.fcl');
-    Route::get('ProcessContractFclRatSurch','ContractsController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-    Route::PUT('UploadFileNewContracts','ContractsController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+
+
     Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
-    Route::get('RedirectProcessedInformation/','ContractsController@redirectProcessedInformation')->name('redirect.Processed.Information');
-
-    //New Request Importation
-    Route::get('Requestimporfcl','ContractsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
-
-    Route::resource('RequestImportation','NewContractRequestsController');
-    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
-
-    //Developer Datatables
-
-
 
     // DATATABLES
 
@@ -157,10 +120,53 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 });
 
+Route::middleware(['auth'])->prefix('Requests')->group(function () {
+    //New Request Importation
+    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
+    Route::resource('RequestImportation','NewContractRequestsController');
+    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+});
+
+
 Route::middleware(['auth'])->prefix('Importation')->group(function () {
+
+    // Importar Contracto
+    Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+    Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
+    Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
+    Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
+    Route::get('RatesListFC/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+    Route::get('imporfcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
+
+    // Rates
+    Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
+    Route::get('EditRatesGoodForContracts/{id}','ImportationController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
+    Route::get('EditRatesFailForContracts/{id}','ImportationController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
+    Route::PUT('CreateRatesFailForContracts/{id}','ImportationController@CreateRates')->name('create.Rates.For.Contracts');
+    Route::get('UpdateRatesFailForContracts/{id}','ImportationController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
+    Route::get('DestroyRatesFailForContracts/{id}','ImportationController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
+    Route::get('DestroyRatesGForContracts/{id}','ImportationController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
+
+    // Surcharge
+    Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
+    Route::get('FailSurchargeFC/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
+    Route::get('EditSurchargersGoodForContracts/{id}','ImportationController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
+    Route::get('EditSurchargersFailForContracts/{id}','ImportationController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
+    Route::PUT('CreateSurchargersFailForContracts/{id}','ImportationController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
+    Route::get('UpdateSurchargersForContracts/{id}','ImportationController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
+    Route::get('DestroySurchargersFForContracts/{id}','ImportationController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
+    Route::get('DestroySurchargersGForContracts/{id}','ImportationController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
+
+    // Reprocesar
     Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates');
     Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers');
-    
+
+    // Datatable Rates Y Surchargers
+    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+    Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
+
+    // Test
+    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 });
 
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {
@@ -215,12 +221,12 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
     Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
-    Route::post('listRate', 'QuoteController@listRate')->name('quotes.listRate');
+    Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
-    Route::get('automatic', 'QuoteController@automatic')->name('quotes.automatic');
+    Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
     Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
     Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
-    Route::post('test', 'QuoteController@test')->name('quotes.test');
+    Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
     Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
     Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
     Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
@@ -235,7 +241,8 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
-    Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);    
+    Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
+    Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);        
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
 

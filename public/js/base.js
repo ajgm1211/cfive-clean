@@ -485,6 +485,7 @@ $(document).on('click', '#lcl_type', function (e) {
     $("input[name=qty_20]").val('');
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
+    $("input[name=qty_45_hc]").val('');
 });
 
 $(document).on('click', '#air_type', function (e) {
@@ -505,6 +506,7 @@ $(document).on('click', '#air_type', function (e) {
     $("input[name=qty_20]").val('');
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
+    $("input[name=qty_45_hc]").val('');
 
 });
 
@@ -706,11 +708,17 @@ $(document).on('change', '#delivery_type_air', function (e) {
 
 $(document).on('click', '#create-quote', function (e) {
     if($(".pick_up_date").val() == ''){
-        msg('Sorry, the pick up date is empty. Please go back and complete this field');
+        msg('Sorry, pick up date is empty. Please go back and complete this field');
         return;
     }else if($(".validity").val() == ''){
-        msg('Sorry, the validity date is empty. Please go back and complete this field');
+        msg('Sorry, validity date is empty. Please go back and complete this field');
         return;
+    }else if($(".company_id").val() == ''){
+        msg('Sorry, company is empty. Please go back and complete this field');
+        return;
+    }else if($(".contact_id").val() == ''){
+        msg('Sorry, contact is empty. Please go back and complete this field');
+        return;        
     }else{
         var origin_harbor=$("#origin_harbor").val();
         var destination_harbor=$("#destination_harbor").val();
@@ -721,6 +729,13 @@ $(document).on('click', '#create-quote', function (e) {
         var qty_20='';
         var qty_40='';
         var qty_40_hc='';
+        var qty_45_hc='';
+        var qty_20_reefer='';
+        var qty_40_reefer='';
+        var qty_40_hc_reefer='';
+        var qty_20_open_top='';
+        var qty_40_open_top='';
+        var qty_45_hc_open_top='';
         var total_quantity='';
         var total_weight='';
         var total_volume='';
@@ -749,6 +764,27 @@ $(document).on('click', '#create-quote', function (e) {
         if($(".qty_40_hc").val()>0){
             qty_40_hc=$(".qty_40_hc").val();
         }
+        if($(".qty_45_hc").val()>0){
+            qty_45_hc=$(".qty_45_hc").val();
+        }
+        if($(".qty_20_reefer").val()>0){
+            qty_20_reefer=$(".qty_20_reefer").val();
+        }
+        if($(".qty_40_reefer").val()>0){
+            qty_40_reefer=$(".qty_40_reefer").val();
+        }
+        if($(".qty_40_hc_reefer").val()>0){
+            qty_40_hc_reefer=$(".qty_40_hc_reefer").val();
+        }
+        if($(".qty_20_open_top").val()>0){
+            qty_20_open_top=$(".qty_20_open_top").val();
+        }
+        if($(".qty_40_open_top").val()>0){
+            qty_40_open_top=$(".qty_40_open_top").val();
+        }
+        if($(".qty_40_hc_open_top").val()>0){
+            qty_40_hc_open_top=$(".qty_40_hc_open_top").val();
+        }        
         if($("#total_quantity").val()>0){
             total_quantity=$("#total_quantity").val();
         }
@@ -931,6 +967,48 @@ $(document).on('click', '#create-quote', function (e) {
         }else{
             $("#cargo_details_40_hc_p").addClass('hide');
         }
+        if(qty_45_hc!='' || qty_45_hc>0){
+            $("#cargo_details_45_hc").html(qty_45_hc);
+            $("#cargo_details_45_hc_p").removeClass('hide');
+        }else{
+            $("#cargo_details_45_hc_p").addClass('hide');
+        }
+        if(qty_20_reefer!='' || qty_20_reefer>0){
+            $("#cargo_details_20_reefer").html(qty_20_reefer);
+            $("#cargo_details_20_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_20_reefer_p").addClass('hide');
+        }
+        if(qty_40_reefer!='' || qty_40_reefer>0){
+            $("#cargo_details_40_reefer").html(qty_40_reefer);
+            $("#cargo_details_40_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_reefer_p").addClass('hide');
+        }
+        if(qty_40_hc_reefer!='' || qty_40_hc_reefer>0){
+            $("#cargo_details_40_hc_reefer").html(qty_40_hc_reefer);
+            $("#cargo_details_40_hc_reefer_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_reefer_p").addClass('hide');
+        }
+        if(qty_20_open_top!='' || qty_20_open_top>0){
+            $("#cargo_details_20_open_top").html(qty_20_open_top);
+            $("#cargo_details_20_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_20_open_top_p").addClass('hide');
+        }
+        if(qty_40_open_top!='' || qty_40_open_top>0){
+            $("#cargo_details_40_open_top").html(qty_40_open_top);
+            $("#cargo_details_40_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_open_top_p").addClass('hide');
+        }
+        if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
+            $("#cargo_details_40_hc_open_top").html(qty_40_hc_open_top);
+            $("#cargo_details_40_hc_open_top_p").removeClass('hide');
+        }else{
+            $("#cargo_details_40_hc_open_top_p").addClass('hide');
+        }        
         if(total_quantity!='' && type_cargo!=''){
             $("#cargo_details_cargo_type").html(" "+type_cargo);
             $("#cargo_details_cargo_type_p").removeClass('hide');
@@ -1804,8 +1882,13 @@ $(document).on('click', '#savecompany', function () {
                     $.each(dataC, function(key, value) {
                         $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
+                    $('select[name="company_id"]').empty();
+                    $.each(dataC, function(key, value) {
+                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
                     $('#companyModal').modal('hide');
                     $("select[name='company_id_quote']").val('');
+                    $("select[name='company_id']").val('');
                     $('#select2-m_select2_2_modal-container').text('Please an option');
 
                     swal(
@@ -1851,6 +1934,10 @@ $(document).on('click', '#savecontact', function () {
                     $.each(dataC, function(key, value) {
                         $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
+                    $('select[name="company_id"]').empty();
+                    $.each(dataC, function(key, value) {
+                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });                    
                     $('#contactModal').modal('hide');
 
                     swal(
@@ -1859,6 +1946,7 @@ $(document).on('click', '#savecontact', function () {
                         'success'
                     )
                     $("select[name='company_id_quote']").val('');
+                    $("select[name='company_id']").val('');
                     $('#select2-m_select2_2_modal-container').text('Please an option');
                 },
                 error: function (request, status, error) {
@@ -1987,6 +2075,20 @@ $(document).on('change', '#pdf_type', function () {
         url: '/settings/update/pdf/type',
         data: {
             'pdf_type': $("#pdf_type").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
+
+$(document).on('change', '#pdf_ammounts', function () {
+    var type=$("#pdf_ammounts").val();
+    $.ajax({
+        type: 'POST',
+        url: '/settings/update/pdf/ammounts',
+        data: {
+            'pdf_ammounts': $("#pdf_ammounts").val()
         },
         success: function(data) {
             //
