@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Quote #{{$quote->id}}</title>
+    <title>Quote #{{$quote->company_quote}}</title>
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" media="all" />
         <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
     </head>
