@@ -121,6 +121,7 @@ class PriceController extends Controller
 
   public function edit($id)
   {
+    $id = obtenerRouteKey($id);
     $price = Price::find($id);
     $selected_companies = array();
     if (isset($price->company_price)) {
