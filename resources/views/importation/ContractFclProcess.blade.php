@@ -134,6 +134,14 @@ new registration
                                 </div>
                                 @endif
                                 
+                                @if($value['existfortynor'] == true)
+                                <input type="hidden" value="0" name="fortynor" />
+                                @endif
+                                
+                                @if($value['existfortyfive'] == true)
+                                <input type="hidden" value="0" name="fortyfive" />
+                                @endif
+                                
                                 @if($type == 2)
                                 <div class="col-2 col-form-label">
                                     <label for="Charge" class=" ">Charge</label>
