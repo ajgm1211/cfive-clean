@@ -117,6 +117,7 @@ class EmailsTemplateController extends Controller
      */
     public function edit($id)
     {
+        $id  = obtenerRouteKey($id);
         $template = EmailTemplate::find($id);
         $mergeTag = MergeTag::All();
         $array = $mergeTag->where('user_name', Auth::user()->name);
