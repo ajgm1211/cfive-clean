@@ -240,6 +240,7 @@ class QuoteController extends Controller
                 $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
                 // Objeto con las propiedades del currency por monto fijo
                 $markupLocalCurre = Currency::find($markupLocalCurre);
+                $markupLocalCurre = $markupLocalCurre->alphacode;
                 // en caso de ser porcentake
                 $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
                 // monto original
@@ -722,7 +723,7 @@ class QuoteController extends Controller
                                         $totalOrigin += $totalAmmount ;
                                     }else{
                                         $subtotal_local = $formulario->forty *  $local->ammount;
-                                        $totalAmmount = ($formulario->forty *  $local->ammount) *  $rateMount ;
+                                        $totalAmmount = ($formulario->forty *  $local->ammount) /  $rateMount ;
                                         $cantidadT = $formulario->forty;
                                         // MARKUP
                                         if($localPercentage != 0){
