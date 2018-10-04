@@ -45,6 +45,7 @@ use App\EmailTemplate;
 use App\PackageLoad;
 use App\Airline;
 use App\Mail\SendQuotePdf;
+use App\Notifications\N_general;
 class QuoteController extends Controller
 {
 
@@ -374,13 +375,13 @@ class QuoteController extends Controller
         }
       }
       if(isset($input['btnsubmit']) && $input['btnsubmit'] == 'submit-pdf'){
-        return redirect()->route('quotes.show', ['quote_id' => $quote->id])->with('pdf','true');
+        return redirect()->route('quotes.show', ['quote_id' => setearRouteKey($quote->id)])->with('pdf','true');
       }
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
       $request->session()->flash('message.content', 'Register completed successfully!');
       //return redirect()->route('quotes.index');
-      return redirect()->action('QuoteController@show',$quote->id);
+      return redirect()->action('QuoteController@show',setearRouteKey($quote->id));
     }
   }
 
@@ -623,7 +624,7 @@ class QuoteController extends Controller
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
       $request->session()->flash('message.content', 'Register completed successfully!');
-      return redirect()->action('QuoteController@show',$quote->id);
+      return redirect()->action('QuoteController@show',setearRouteKey($quote->id));
     }
   }
 
@@ -1464,7 +1465,7 @@ class QuoteController extends Controller
     $pdf->loadHTML($view);
     //$pdf->download('quote');
 
-    return redirect()->action('QuoteController@showWithPdf',$quote->id);
+    return redirect()->action('QuoteController@showWithPdf',setearRouteKey($quote->id));
   }
 
   public function idPersonalizado(){
