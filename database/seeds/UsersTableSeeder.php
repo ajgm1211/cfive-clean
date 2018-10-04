@@ -27,7 +27,6 @@ class UsersTableSeeder extends Seeder
                 'type' => 'admin',
                 'verified' => 1,
                 'state' => 1,
-                'company_user_id' => 1,
                 'created_at' => $date,
                 'updated_at' => $date,
             )

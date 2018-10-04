@@ -154,8 +154,8 @@ All
         </div>
     </div>
 </div>
-@include('companies.partials.companiesModal');
-@include('companies.partials.deleteCompaniesModal');
+@include('companies.partials.companiesModal')
+@include('companies.partials.deleteCompaniesModal')
 @endsection
 
 @section('js')

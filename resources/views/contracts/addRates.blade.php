@@ -1,7 +1,7 @@
 
 <div class="m-portlet">
 
-{{ Form::open(array('route' => array('contracts.storeRate', $id)),['class' => 'form-group m-form__group']) }}
+  {{ Form::open(array('route' => array('contracts.storeRate', $id)),['class' => 'form-group m-form__group']) }}
   <div class="m-portlet__body">
     <div class="form-group m-form__group row"> 
       <div class="col-lg-4">
@@ -47,6 +47,17 @@
 
     </div>
     <div class="form-group m-form__group row">
+      <div class="col-lg-4">
+        {!! Form::label('fortynor', '40 NOR \' ') !!}
+        {!! Form::number('fortynor', null, ['id' => 'fortynor','placeholder' => 'Please enter the 40 NOR','class' => 'form-control m-input' ]) !!} 
+
+      </div>
+      <div class="col-lg-4">
+
+        {!! Form::label('fortyfive', '45 \' ') !!}
+        {!! Form::number('fortyfive',null, ['id' => 'fortyfive','placeholder' => 'Please enter the 45 ','class' => 'form-control ']) !!}
+
+      </div>
       <div class="col-lg-4">
         {!! Form::label('currency', 'Currency') !!}
 

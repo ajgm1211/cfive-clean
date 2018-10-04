@@ -150,6 +150,12 @@
                   <th title="Field #8" >
                     40'HC
                   </th>
+                  <th title="Field #9" >
+                    40'NOR
+                  </th>
+                  <th title="Field #10" >
+                    45'HC
+                  </th>
                   <th title="Field #10">
                     Currency
                   </th>
@@ -346,13 +352,14 @@
         {data: 'twuenty', name: 'twuenty'},
         {data: 'forty', name: 'forty'},
         {data: 'fortyhc', name: 'fortyhc'},
+        {data: 'fortynor', name: 'fortynor'},
+        {data: 'fortyfive', name: 'fortyfive'},
         {data: 'currency', name: 'currency'},
-
         {data: 'validity', name: 'validity'},
         {data: 'status', name: 'status'},
         {data: 'options', name: 'options'}
       ] ,
-      
+
       buttons: [
         {
           extend: 'copyHtml5',
