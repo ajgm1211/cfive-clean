@@ -989,10 +989,12 @@ $(document).on('click', '#create-quote', function (e) {
 });
 
 $( document ).ready(function() {
+    $('select[name="contact_id"]').prop("disabled",true);
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
             $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').prop("disabled",false);
             $.ajax({
                 url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
@@ -1014,7 +1016,7 @@ $( document ).ready(function() {
                 }
             });
         }else{
-            $('select[name="client"]').empty();
+            $('select[name="contact_id"]').empty();
             $('select[name="price_id"]').empty();
         }
     });
