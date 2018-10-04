@@ -1106,6 +1106,16 @@ class QuoteController extends Controller
     $companies = Company::all()->pluck('business_name','id');
     $harbors = Harbor::all()->pluck('name','id');
     $countries = Country::all()->pluck('name','id');
+    // Notificaciones
+    $userLogin  = auth()->user();
+    $idCompany = $userLogin->company_user_id;
+    $users = User::where('company_user_id','=',$idCompany)->where('type','company')->orWhere('id','=',$userLogin->id)->get();
+    $message = ' changed the status of the quote number :  '.$quote->id. ' to  '.$quote->status->name;
+    foreach ($users as $user) {
+      $user->notify(new N_general($userLogin,$message));
+    }
+    // fin notificaciones
+
     if($request->ajax()){
       return response()->json(['message' => 'Ok']);
     }else{
