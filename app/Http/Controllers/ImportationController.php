@@ -393,19 +393,29 @@ class ImportationController extends Controller
         }
     }
 
+    // precarga la vista para importar rates o rates mas surchargers
+    public function LoadViewImporContractFcl(){
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        return view('importation.ImporContractFcl',compact('harbor','carrier','companysUser'));
+    }
+
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
     public function UploadFileNewContract(Request $request){
-        //dd($request);
+        //dd($request->all());
         $now = new \DateTime();
         $now = $now->format('dmY_His');
-        $type = $request->type;
+        $type       = $request->type;
         $carrierVal     = $request->carrier;
         $destinyArr     = $request->destiny;
         $originArr      = $request->origin;
         $CompanyUserId  = $request->CompanyUserId;
-        $carrierBol = false;
-        $destinyBol = false;
-        $originBol  = false;
+        $carrierBol     = false;
+        $destinyBol     = false;
+        $originBol      = false;
+        $fortynorBol    = false;
+        $fortyfiveBol   = false;
         $data= collect([]);
         $harbor  = harbor::all()->pluck('display_name','id');
         $carrier = carrier::all()->pluck('name','id');
@@ -434,16 +444,17 @@ class ImportationController extends Controller
         $contract->expire           = $validity[1];
         $contract->status           = 'incomplete';
         $contract->company_user_id  = $CompanyUserId;
-        $contract->save(); //*/
+        $contract->save(); 
         $Contract_id = $contract->id;
         $fileTmp = new FileTmp();
         $fileTmp->contract_id = $Contract_id;
         $fileTmp->name_file   = $nombre;
-        $fileTmp->save();
+        $fileTmp->save(); //*/
 
         $statustypecurren = $request->valuesCurrency;
         if($type == 1){
             $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
+
         }else if($type == 2){
             if($statustypecurren == 1){
                 $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC", 4 => "Calculation Type", 5 => "Charge"];
@@ -451,6 +462,19 @@ class ImportationController extends Controller
                 $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC", 3 => "Calculation Type", 4 => "Charge"];
             }
         }
+
+        if($request->Datftynor == true){
+            array_push($targetsArr,"40'NOR");
+        } else{
+            $fortynorBol = true;
+        }
+        
+        if($request->Datftyfive == true){
+            array_push($targetsArr,"45'");
+        } else {
+            $fortyfiveBol = true;
+        }
+
         if($request->DatOri == false){
             array_push($targetsArr,'Origin');
         }
@@ -491,17 +515,21 @@ class ImportationController extends Controller
 
                    });
         $boxdinamy = [
-            'existorigin'   => $originBol,
-            'origin'        => $originArr,
-            'existdestiny'  => $destinyBol,
-            'destiny'       => $destinyArr,
-            'existcarrier'  => $carrierBol,
-            'carrier'       => $carrierVal,
-            'Contract_id'   => $Contract_id,
-            'number'        => $request->number,
-            'name'          => $request->name,
-            'fileName'      => $nombre,
-            'validatiion'   => $request->validation_expire,
+            'existorigin'     => $originBol,
+            'origin'          => $originArr,
+            'existdestiny'    => $destinyBol,
+            'destiny'         => $destinyArr,
+            'existcarrier'    => $carrierBol,
+            'carrier'         => $carrierVal,
+            'Contract_id'     => $Contract_id,
+            'number'          => $request->number,
+            'name'            => $request->name,
+            'existfortynor'   => $fortynorBol,
+            'fortynor'        => 0,
+            'existfortyfive'  => $fortyfiveBol,
+            'fortyfive'       => 0,
+            'fileName'        => $nombre,
+            'validatiion'     => $request->validation_expire,
         ];
         $data->push($boxdinamy);
         $countTarges = count($targetsArr);
@@ -846,12 +874,6 @@ class ImportationController extends Controller
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
         return view('importation.TestFailRates2',compact('countfailrates','countrates','id','tab'));
     }
-    public function LoadViewImporContractFcl(){
-        $harbor         = harbor::all()->pluck('display_name','id');
-        $carrier        = carrier::all()->pluck('name','id');
-        $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('importation.ImporContractFcl',compact('harbor','carrier','companysUser'));
-    }
 
     // * proccesa solo cuando es Surchargers, Se envia a cola de trabajos 2do. plano
     public function ProcessContractFclRatSurch(Request $request){
@@ -1143,7 +1165,7 @@ class ImportationController extends Controller
             return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
     }
-    
+
     public function EditRatesGood($id){
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
@@ -1335,9 +1357,9 @@ class ImportationController extends Controller
             return 2;
         }
     }
-    
+
     // Surcharge ------------------------------------------------------------------------
-    
+
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request);
         $requestobj = $request;
@@ -1609,7 +1631,7 @@ class ImportationController extends Controller
         return view('importation.SurchargersFailOF',compact('countfailsurcharge','countgoodsurcharge','id','tab'));
 
     }
-    
+
     public function EditSurchargersGood($id){
         $objharbor          = new Harbor();
         $objcurrency        = new Currency();
@@ -1628,12 +1650,12 @@ class ImportationController extends Controller
         $goodsurcharges  = LocalCharge::with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->find($id);
         //dd($goodsurcharges);
         return view('importation.Body-Modals.GoodEditSurcharge', compact('goodsurcharges',
-                                                                       'harbor',
-                                                                       'carrierSelect',
-                                                                       'currency',
-                                                                       'surchargeSelect',
-                                                                       'typedestiny',
-                                                                       'calculationtypeselect'));
+                                                                         'harbor',
+                                                                         'carrierSelect',
+                                                                         'currency',
+                                                                         'surchargeSelect',
+                                                                         'typedestiny',
+                                                                         'calculationtypeselect'));
     }
     public function EditSurchargersFail($id){
         $objharbor          = new Harbor();
@@ -1765,12 +1787,12 @@ class ImportationController extends Controller
 
         //dd($failsurchargeArre);
         return view('importation.Body-Modals.FailEditSurcharge', compact('failsurchargeArre',
-                                                                       'harbor',
-                                                                       'carrierSelect',
-                                                                       'currency',
-                                                                       'surchargeSelect',
-                                                                       'typedestiny',
-                                                                       'calculationtypeselect'));
+                                                                         'harbor',
+                                                                         'carrierSelect',
+                                                                         'currency',
+                                                                         'surchargeSelect',
+                                                                         'typedestiny',
+                                                                         'calculationtypeselect'));
     }
     public function CreateSurchargers(Request $request, $id){
         //dd($request->all());
@@ -1817,7 +1839,7 @@ class ImportationController extends Controller
         return redirect()->route('Failed.Surcharge.F.C.D',[$request->contract_id,1]);
 
     }
-    
+
     public function UpdateSurchargersD(Request $request, $id){
         //dd($request->all());
 
@@ -1881,7 +1903,7 @@ class ImportationController extends Controller
             return 2;
         }
     }
-    
+
     //Datatable Rates Y Surchargers -----------------------------------------------------
     public function FailedRatesDeveloperLoad($id,$selector){
         //$id se refiere al id del contracto
@@ -2238,7 +2260,7 @@ class ImportationController extends Controller
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
         }
     }
-    
+
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
         ini_set('max_execution_time', 300); 

@@ -248,8 +248,49 @@ new registration
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
+                                <div class="col-lg-2"></div>
+                                
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                <input name="Datftynor" id="fortynorchk" type="checkbox">
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Includes 40'NOR Column
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                <input name="Datftyfive" id="fortyfivechk" type="checkbox">
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Includes 45 Column
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            
+                            </div>
+                            <div class="form-group m-form__group row">
 
                             </div>
+                            <br>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-4">
                                 </div>
@@ -257,11 +298,15 @@ new registration
                                     <input type="file" name="file" required>
                                 </div>
                             </div>
+                            <br>
+                            <br>
                             <div class="form-group m-form__group row">
-                                <div class="col-lg-4 col-lg-offset-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Load
-                                    </button>
+                                <div class="col-lg-12 col-lg-offset-12">
+                                    <center>
+                                        <button type="submit" class="btn btn-primary col-2 form-control">
+                                            Load
+                                        </button>
+                                    </center>
                                 </div>
                             </div>
 
