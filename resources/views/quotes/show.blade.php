@@ -496,7 +496,7 @@
 
 <script>
 
-    window.open('{{ route('quotes.pdf', ['id' => $quote->id]) }}');
+    window.open('{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}');
 
 </script>
 @endif
