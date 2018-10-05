@@ -140,7 +140,7 @@ new registration
                                 </div>
 
                             </div>
-                            <div class="form-group m-form__group row" hidden="hidden" id="divvaluescurren">
+                            <div class="form-group m-form__group row"  id="divvaluescurren">
                                 <div class="col-2"></div>
                                 <div class="col-3">
                                     <label class="m-option">
