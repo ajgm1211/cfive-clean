@@ -54,9 +54,9 @@ new registration
             </div>
         </div>
         @if($type == 1)
-            {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
+            {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!} <!-- Rates -->
         @elseif($type == 2)
-            {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!}
+            {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!} <!-- Rates + Surchargers -->
             <input type="hidden" name="statustypecurren" value="{{$statustypecurren}}">
         @endif
         <div class="m-portlet__body">

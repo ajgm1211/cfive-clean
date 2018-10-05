@@ -452,27 +452,34 @@ class ImportationController extends Controller
         $fileTmp->save(); //*/
 
         $statustypecurren = $request->valuesCurrency;
-        if($type == 1){
-            $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"];
+        $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
 
-        }else if($type == 2){
-            if($statustypecurren == 1){
-                $targetsArr =[ 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC", 4 => "Calculation Type", 5 => "Charge"];
-            } else if($statustypecurren == 2){
-                $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC", 3 => "Calculation Type", 4 => "Charge"];
-            }
+        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
+
+        if($type == 2){
+            array_push($targetsArr,"Calculation Type","Charge");
         }
+
+        // Datftynor Datftyfive - DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
 
         if($request->Datftynor == true){
             array_push($targetsArr,"40'NOR");
         } else{
             $fortynorBol = true;
         }
-        
+
         if($request->Datftyfive == true){
             array_push($targetsArr,"45'");
         } else {
             $fortyfiveBol = true;
+        }
+
+        /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
+        con los valores, si es uno el currency viene en una colmna aparte        
+        */
+
+        if($statustypecurren == 1){
+            array_push($targetsArr,"Currency");
         }
 
         if($request->DatOri == false){
@@ -544,8 +551,8 @@ class ImportationController extends Controller
 
     // * proccesa solo cuando son rates --------------------------------------------------
     public function ProcessContractFcl(Request $request){
-        //dd($request);
-        $requestobj = $request;
+        dd($request->all());
+        $requestobj = $request->all();
         try{
             $errors = 0;
             Excel::selectSheetsByIndex(0)
@@ -557,6 +564,8 @@ class ImportationController extends Controller
                            $twenty     = "20'";
                            $forty      = "40'";
                            $fortyhc    = "40'HC";
+                           $fortynor   = "40'NOR";
+                           $fortyfive  = "45'";
                            $origin     = "origin";
                            $originExc  = "Origin";
                            $destiny    = "destiny";
@@ -567,19 +576,21 @@ class ImportationController extends Controller
 
                            $i = 1;
                            foreach($reader->get() as $read){
-                               $carrierVal  = '';
-                               $originVal   = '';
-                               $destinyVal  = '';
-                               $origenFL    = '';
-                               $destinyFL   = '';
-                               $currencyVal = '';
-                               $twentyVal   = '';
-                               $fortyVal    = '';
-                               $fortyhcVal  = '';
-                               $originResul  = '';
-                               $destinResul  = '';
-                               $currencResul = '';
-                               $carrierResul = '';
+                               $carrierVal      = '';
+                               $originVal       = '';
+                               $destinyVal      = '';
+                               $origenFL        = '';
+                               $destinyFL       = '';
+                               $currencyVal     = '';
+                               $twentyVal       = '';
+                               $fortyVal        = '';
+                               $fortyhcVal      = '';
+                               $fortynorVal     = '';
+                               $fortyfiveVal    = '';
+                               $originResul     = '';
+                               $destinResul     = '';
+                               $currencResul    = '';
+                               $carrierResul    = '';
 
                                $originBol       = false;
                                $origExiBol      = false;
@@ -590,17 +601,19 @@ class ImportationController extends Controller
                                $twentyExiBol    = false;
                                $fortyExiBol     = false;
                                $fortyhcExiBol   = false;
+                               $fortynorExiBol  = false;
+                               $fortyfiveExiBol = false;
                                $carriBol        = false;
                                $values          = true;
                                if($i != 1){
                                    // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
                                    //--------------- CARRIER -----------------------------------------------------------------
-                                   if($requestobj->existcarrier == 1){
+                                   if($requestobj['existcarrier'] == 1){
                                        $carriExitBol = true;
                                        $carriBol     = true;
-                                       $carrierVal = $requestobj->carrier; // cuando se indica que no posee carrier 
+                                       $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
                                    } else {
-                                       $carrierVal = $read[$requestobj->Carrier]; // cuando el carrier existe en el excel
+                                       $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
                                        $carrierResul = str_replace($caracteres,'',$carrierVal);
                                        $carrier = Carrier::where('name','=',$carrierResul)->first();
                                        if(empty($carrier->id) != true){
@@ -611,13 +624,13 @@ class ImportationController extends Controller
                                        }
                                    }
                                    //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
-                                   if($requestobj->existorigin == 1){
+                                   if($requestobj['existorigin'] == 1){
                                        $originBol = true;
                                        $origExiBol = true; //segundo boolean para verificar campos errados
-                                       $randons = $requestobj->$origin;
+                                       $randons = $requestobj[$origin];
                                    } else {
                                        // dd($read[$requestobj->$originExc]);
-                                       $originVal = $read[$requestobj->$originExc];// hacer validacion de puerto en DB
+                                       $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
                                        $originResul = str_replace($caracteres,'',strtolower($originVal));
                                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                                            ->get();
@@ -631,12 +644,12 @@ class ImportationController extends Controller
                                        }
                                    }
                                    //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
-                                   if($requestobj->existdestiny == 1){
+                                   if($requestobj['existdestiny'] == 1){
                                        $destinyBol = true;
                                        $destiExitBol = true; //segundo boolean para verificar campos errados
-                                       $randons = $requestobj->$destiny;
+                                       $randons = $requestobj[$destiny];
                                    } else {
-                                       $destinyVal = $read[$requestobj->$destinyExc];// hacer validacion de puerto en DB
+                                       $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
                                        $destinResul = str_replace($caracteres,'',strtolower($destinyVal));
                                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                                            ->get();
@@ -649,17 +662,70 @@ class ImportationController extends Controller
                                            $destinyVal = $destinyVal.'_E_E';
                                        }
                                    }
+
+                                   $twentyArr    = explode(' ',$read[$requestobj[$twenty]]);
+                                   $fortyArr     = explode(' ',$read[$requestobj[$forty]]);
+                                   $fortyhcArr   = explode(' ',$read[$requestobj[$fortyhc]]);
+                                   $fortynorArr  = explode(' ',$read[$requestobj[$fortynor]]);
+                                   $fortyfiveArr = explode(' ',$read[$requestobj[$fortyfive]]);
+
+
                                    //---------------- CURRENCY ---------------------------------------------------------------
-                                   $currencResul = str_replace($caracteres,'',$read[$requestobj->$currency]);
-                                   $currenc = Currency::where('alphacode','=',$currencResul)->first();
-                                   if(empty($currenc->id) != true){
-                                       $curreExiBol = true;
-                                       $currencyVal =  $currenc->id;
-                                   }
-                                   else{
-                                       $currencyVal = $read[$requestobj->$currency].'_E_E';
+                                   $arraycarga = [];
+                                   if($requestobj[$statustypecurren] == 2){
+                                       if(count($twentyArr) > 1 ){
+                                           array_push($arraycarga,$twentyArr[1]);
+                                       } 
+                                       
+                                       if(count($fortyArr) > 1 ){
+                                           array_push($arraycarga,$fortyArr[1]);
+                                       }
+                                       
+                                       if(count($fortyhcArr) > 1 ){
+                                           array_push($arraycarga,$fortyhcArr[1]);
+                                       }
+                                       
+                                       if(count($fortynorArr) > 1 ){
+                                           array_push($arraycarga,$fortynorArr[1]);
+                                       }
+                                       
+                                       if(count($fortyfiveArr) > 1 ){
+                                           array_push($arraycarga,$fortyfiveArr[1]);
+                                       }
+                                       
+                                       if(count($arraycarga) > 0){
+                                           foreach($arraycarga as $true){
+                                                $currencyVal = str_replace($caracteres,'',$true);
+                                                $currenctwen = Currency::where('alphacode','=',$currencyVal)->first();
+                                               if(empty($currenctwen->id) != true){
+                                                   $curreExiBol = true;
+                                                   $currencyVal = $currenctwen->id;
+                                                   break;
+                                               }
+                                           }
+                                       }  else{
+                                           if(count($twentyArr) > 1){
+                                               $currencyValtwen = $twentyArr[1].'_E_E';
+                                           } else{
+                                               $currencyValtwen = '_E_E';
+                                           }
+                                       }
+                                       
+                                   } else { 
+                                       $currencResul = str_replace($caracteres,'',$read[$requestobj[$currency]]);
+                                       $currenc = Currency::where('alphacode','=',$currencResul)->first();
+                                       if(empty($currenc->id) != true){
+                                           $curreExiBol = true;
+                                           $currencyVal =  $currenc->id;
+                                       }
+                                       else{
+                                           $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                       }
                                    }
                                    //dd($currencyVal);
+
+
+
                                    //---------------- 20' ---------------------------------------------------------------
                                    if(empty($read[$requestobj->$twenty]) != true || (int)$read[$requestobj->$twenty] == 0){
                                        $twentyExiBol = true;
