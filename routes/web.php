@@ -238,6 +238,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
+    Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
 
