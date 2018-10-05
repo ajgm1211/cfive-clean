@@ -91,4 +91,11 @@ class SettingController extends Controller
 
         return response()->json(['message' => 'Ok']);
     }
+
+    public function list_companies()
+    {
+        $companies=CompanyUser::all();
+
+        return view('settings/list_companies',compact('companies'));
+    }
 }

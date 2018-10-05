@@ -213,6 +213,14 @@
                             </span>
                         </a>
                     </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{route('settings.companies')}}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                User companies
+                            </span>
+                        </a>
+                    </li>
                     @endrole
                 </ul>
             </div>
@@ -252,10 +260,6 @@
                     </span>
                 </div>
             </a>
-
-
-
-
             <div class="m-dropdown__wrapper">
                 <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
                 <div class="m-dropdown__inner">
