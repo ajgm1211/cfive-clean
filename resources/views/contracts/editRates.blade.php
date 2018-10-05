@@ -50,6 +50,17 @@
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
+        {!! Form::label('fortynor', '40 NOR \' ') !!}
+        {!! Form::number('fortynor', $rates->fortynor, ['id' => 'fortynor','placeholder' => 'Please enter the 40 NOR','class' => 'form-control m-input' ]) !!} 
+
+      </div>
+      <div class="col-lg-4">
+
+        {!! Form::label('fortyfive', '45 \' ') !!}
+        {!! Form::number('fortyfive', $rates->fortyfive, ['id' => 'fortyfive','placeholder' => '45','class' => 'form-control ']) !!}
+
+      </div>
+      <div class="col-lg-4">
         {!! Form::label('currency', 'Currency') !!}
 
         <div class="m-input-icon m-input-icon--right">
