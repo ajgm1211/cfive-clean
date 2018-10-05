@@ -1777,12 +1777,12 @@ $(document).on('click', '#delete-company-user', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'settings/delete/company' + id,
+                url: 'delete/company/' + id,
                 success: function(data) {
                     if(data.message=='Ok'){
                         swal(
                             'Deleted!',
-                            'The company has been deleted.',
+                            'The company and all associated data has been deleted.',
                             'success'
                         )
                         $(theElement).closest('tr').remove();
