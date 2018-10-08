@@ -9,7 +9,7 @@ class FailRate extends Model
 {
     use SoftDeletes;
     protected $dates    = ['deleted_at'];
-    
+
     protected $table    = "failes_rates";
     protected $fillable = [
         'origin_port',
@@ -20,5 +20,7 @@ class FailRate extends Model
         'forty',
         'fortyhc',
         'currency_id',
+        'fortynor',
+        'fortyfive'
     ];
 }
