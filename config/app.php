@@ -169,6 +169,7 @@ return [
     Spatie\Permission\PermissionServiceProvider::class,
     Spatie\GoogleTagManager\GoogleTagManagerServiceProvider::class,
     OwenIt\Auditing\AuditingServiceProvider::class,
+    Lab404\Impersonate\ImpersonateServiceProvider::class,
   ],
 
   /*
