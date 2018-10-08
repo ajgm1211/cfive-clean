@@ -154,6 +154,7 @@ new registration
                                 @endif
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                                <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
 
                             </div>
                         </div>
