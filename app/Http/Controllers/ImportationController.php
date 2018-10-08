@@ -676,41 +676,43 @@ class ImportationController extends Controller
                                        if(count($twentyArr) > 1 ){
                                            array_push($arraycarga,$twentyArr[1]);
                                        } 
-                                       
+
                                        if(count($fortyArr) > 1 ){
                                            array_push($arraycarga,$fortyArr[1]);
                                        }
-                                       
+
                                        if(count($fortyhcArr) > 1 ){
                                            array_push($arraycarga,$fortyhcArr[1]);
                                        }
-                                       
+
                                        if(count($fortynorArr) > 1 ){
                                            array_push($arraycarga,$fortynorArr[1]);
                                        }
-                                       
+
                                        if(count($fortyfiveArr) > 1 ){
                                            array_push($arraycarga,$fortyfiveArr[1]);
                                        }
-                                       
+
                                        if(count($arraycarga) > 0){
                                            foreach($arraycarga as $true){
-                                                $currencyVal = str_replace($caracteres,'',$true);
-                                                $currenctwen = Currency::where('alphacode','=',$currencyVal)->first();
+                                               $currencyVal = str_replace($caracteres,'',$true);
+                                               $currenctwen = Currency::where('alphacode','=',$currencyVal)->first();
                                                if(empty($currenctwen->id) != true){
                                                    $curreExiBol = true;
                                                    $currencyVal = $currenctwen->id;
                                                    break;
+                                               }else {
+                                                   $currencyVal = $currencyVal.'_E_E';
                                                }
                                            }
                                        }  else{
                                            if(count($twentyArr) > 1){
-                                               $currencyValtwen = $twentyArr[1].'_E_E';
+                                               $currencyVal = $twentyArr[1].'_E_E';
                                            } else{
-                                               $currencyValtwen = '_E_E';
+                                               $currencyVal = '_E_E';
                                            }
                                        }
-                                       
+
                                    } else { 
                                        $currencResul = str_replace($caracteres,'',$read[$requestobj[$currency]]);
                                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
@@ -727,33 +729,49 @@ class ImportationController extends Controller
 
 
                                    //---------------- 20' ---------------------------------------------------------------
-                                   if(empty($read[$requestobj->$twenty]) != true || (int)$read[$requestobj->$twenty] == 0){
+                                   if(empty($read[$requestobj[$twenty]]) != true || (int)$read[$requestobj[$twenty]] == 0){
                                        $twentyExiBol = true;
-                                       $twentyVal = (int)$read[$requestobj->$twenty];
+                                       $twentyVal = (int)$read[$requestobj[$twenty]];
                                    }
                                    else{
-                                       $twentyVal = $read[$requestobj->$twenty].'_E_E';
+                                       $twentyVal = $read[$requestobj[$twenty]].'_E_E';
                                    }
                                    //---------------- 40' ---------------------------------------------------------------
-                                   if(empty($read[$requestobj->$forty]) != true || (int)$read[$requestobj->$forty] == 0){
+                                   if(empty($read[$requestobj[$forty]]) != true || (int)$read[$requestobj[$forty]] == 0){
                                        $fortyExiBol = true;
-                                       $fortyVal = (int)$read[$requestobj->$forty];
+                                       $fortyVal = (int)$read[$requestobj[$forty]];
                                    }
                                    else{
-                                       $fortyVal = $read[$requestobj->$forty].'_E_E';
+                                       $fortyVal = $read[$requestobj[$forty]].'_E_E';
                                    }
                                    //---------------- 40'HC -------------------------------------------------------------
-                                   if(empty($read[$requestobj->$fortyhc]) != true || (int)$read[$requestobj->$fortyhc] == 0){
+                                   if(empty($read[$requestobj[$fortyhc]]) != true || (int)$read[$requestobj[$fortyhc]] == 0){
                                        $fortyhcExiBol = true;
                                        $fortyhcVal = (int)$read[$requestobj->$fortyhc];
                                    }
                                    else{
                                        $fortyhcVal = $read[$requestobj->$fortyhc].'_E_E';
                                    }
+                                   //---------------- 40'NOR -------------------------------------------------------------
+                                   if(empty($read[$requestobj[$fortynor]]) != true || (int)$read[$requestobj[$fortynor]] == 0){
+                                       $fortynorExiBol = true;
+                                       $fortynorVal = (int)$read[$requestobj[$fortynor]];
+                                   }
+                                   else{
+                                       $fortynorVal = $read[$requestobj[$fortyhc]].'_E_E';
+                                   }
+                                   //---------------- 45' ----------------------------------------------------------------
+                                   if(empty($read[$requestobj[$fortyfive]]) != true || (int)$read[$requestobj[$fortyfive]] == 0){
+                                       $fortyfiveExiBol = true;
+                                       $fortyfiveVal = (int)$read[$requestobj[$fortyfive]];
+                                   }
+                                   else{
+                                       $fortyfiveVal = $read[$requestobj[$fortyfive]].'_E_E';
+                                   }
 
-                                   if((int)$read[$requestobj->$twenty] == 0
-                                      && (int)$read[$requestobj->$forty] == 0
-                                      && (int)$read[$requestobj->$fortyhc] == 0){
+                                   if((int)$read[$requestobj[$twenty]] == 0
+                                      && (int)$read[$requestobj[$forty]] == 0
+                                      && (int)$read[$requestobj[$fortyhc]] == 0){
                                        $values = false;
                                    }
 
@@ -778,7 +796,7 @@ class ImportationController extends Controller
                                                    'origin_port'   => $originVal,
                                                    'destiny_port'  => $destinyVal,
                                                    'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $requestobj->Contract_id,
+                                                   'contract_id'   => $requestobj['Contract_id'],
                                                    'twuenty'       => $twentyVal,
                                                    'forty'         => $fortyVal,
                                                    'fortyhc'       => $fortyhcVal,
@@ -791,7 +809,7 @@ class ImportationController extends Controller
                                                'origin_port'   => $originVal,
                                                'destiny_port'  => $destinyVal,
                                                'carrier_id'    => $carrierVal,
-                                               'contract_id'   => $requestobj->Contract_id,
+                                               'contract_id'   => $requestobj['Contract_id'],
                                                'twuenty'       => $twentyVal,
                                                'forty'         => $fortyVal,
                                                'fortyhc'       => $fortyhcVal,
