@@ -264,5 +264,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
 Route::resource('dashboard', 'DashboardController')->middleware('auth');
 
+Route::impersonate();
+
 Auth::routes();
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\MailResetPasswordNotification as MailResetPasswordNotification;
 use OwenIt\Auditing\Contracts\Auditable;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable implements Auditable
 {
