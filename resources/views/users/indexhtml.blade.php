@@ -140,7 +140,7 @@
                         @hasrole('administrator')
                         <td>
                             {{ $arr->last_login }}
-
+                        </td>
                         @endhasrole
                         <td>@if($arr->state==1) Active @else Inactive @endif</td>
                         @if(Auth::user()->type != 'subuser')
@@ -159,6 +159,11 @@
                             <a href="{{route('users.activate',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Enable/Disable User" >
                                 <i class="la la-user"></i>
                             </a>
+                            @role('administrator')
+                            <a href="{{route('impersonate.impersonate',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Impersonate User" >
+                                <i class="la la-eye"></i>
+                            </a>
+                            @endrole
                         </td>
                         @else
                         <td>-</td>
