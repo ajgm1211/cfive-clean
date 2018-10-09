@@ -14,10 +14,10 @@ class GlobalCharCountry extends Model
 		return $this->belongsTo('App\GlobalCharge','globalcharge_id');
 	}
 	public function countryOrig(){
-		return $this->belongsTo('App\Countries','country_orig');
+		return $this->belongsTo('App\Country','country_orig');
 	}
 	public function countryDest(){
-		return $this->belongsTo('App\Countries','country_dest');
+		return $this->belongsTo('App\Country','country_dest');
 
 	}
 }
