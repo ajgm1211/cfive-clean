@@ -113,14 +113,16 @@
                             <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                                 <thead >
                                     <tr>
-                                        <th>origin</th>
-                                        <th>destiny</th>
-                                        <th>carrier</th>
+                                        <th>Origin</th>
+                                        <th>Destiny</th>
+                                        <th>Carrier</th>
                                         <th>20</th>
                                         <th>40</th>
-                                        <th>40'hc</th>
-                                        <th>currency</th>
-                                        <th>option</th>
+                                        <th>40'HC</th>
+                                        <th>40'NOR</th>
+                                        <th>45'</th>
+                                        <th>Currency</th>
+                                        <th>Option</th>
                                     </tr>
                                 </thead>
 
@@ -161,14 +163,16 @@
                                 <table class="table m-table m-table--head-separator-primary"  id="myatest2" >
                                     <thead >
                                         <tr>
-                                            <th>origin</th>
-                                            <th>destiny</th>
-                                            <th>carrier</th>
+                                            <th>Origin</th>
+                                            <th>Destiny</th>
+                                            <th>Carrier</th>
                                             <th>20</th>
                                             <th>40</th>
-                                            <th>40'hc</th>
-                                            <th>currency</th>
-                                            <th>option</th>
+                                            <th>40'HC</th>
+                                            <th>40'NOR</th>
+                                            <th>45'</th>
+                                            <th>Currency</th>
+                                            <th>Option</th>
                                         </tr>
                                     </thead>
 
@@ -233,6 +237,8 @@
                         { data: 'twuenty', name: 'twuenty' },
                         { data: 'forty', name: "forty" },
                         { data: 'fortyhc', name: "fortyhc" },
+                        { data: 'fortynor', name: "fortynor" },
+                        { data: 'fortyfive', name: "fortyfive" },
                         { data: 'currency_id', name: 'currency_id' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
@@ -258,6 +264,8 @@
                         { data: 'twuenty', name: 'twuenty' },
                         { data: 'forty', name: "forty" },
                         { data: 'fortyhc', name: "fortyhc" },
+                        { data: 'fortynor', name: "fortynor" },
+                        { data: 'fortyfive', name: "fortyfive" },
                         { data: 'currency_id', name: 'currency_id' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
