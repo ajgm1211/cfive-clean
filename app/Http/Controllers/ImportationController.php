@@ -62,6 +62,8 @@ class ImportationController extends Controller
                 $currencyArr        = '';
                 $currencyVal        = '';
                 $currenct           = '';
+                $fortynorVal        = '';
+                $fortyfiveVal       = '';
 
                 $curreExitBol       = false;
                 $originB            = false;
@@ -71,14 +73,18 @@ class ImportationController extends Controller
                 $fortyhcExiBol      = false;
                 $values             = true;
                 $carriExitBol       = false;
+                $fortynorExiBol     = false;
+                $fortyfiveExiBol    = false;
 
-                $originEX    = explode('_',$failrate->origin_port);
-                $destinyEX   = explode('_',$failrate->destiny_port);
-                $carrierArr  = explode('_',$failrate->carrier_id);
-                $twentyArr   = explode('_',$failrate->twuenty);
-                $fortyArr    = explode('_',$failrate->forty);
-                $fortyhcArr  = explode('_',$failrate->fortyhc);
-                $currencyArr = explode('_',$failrate->currency_id);
+                $originEX       = explode('_',$failrate->origin_port);
+                $destinyEX      = explode('_',$failrate->destiny_port);
+                $carrierArr     = explode('_',$failrate->carrier_id);
+                $twentyArr      = explode('_',$failrate->twuenty);
+                $fortyArr       = explode('_',$failrate->forty);
+                $fortyhcArr     = explode('_',$failrate->fortyhc);
+                $fortynorArr    = explode('_',$failrate->fortynor);
+                $fortyfiveArr   = explode('_',$failrate->fortyfive);
+                $currencyArr    = explode('_',$failrate->currency_id);
 
 
                 $carrierEX     = count($carrierArr);
@@ -144,14 +150,30 @@ class ImportationController extends Controller
                         $fortyhcVal   = (int)$fortyhcArr[0];
                     }
 
+                    //----------------- 40'NOR -------------------------------------------------------------
+
+                    if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
+                        $fortynorExiBol = true;
+                        $fortynorVal   = (int)$fortynorArr[0];
+                    }
+
+                    //----------------- 45' ----------------------------------------------------------------
+
+                    if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
+                        $fortyfiveExiBol = true;
+                        $fortyfiveVal   = (int)$fortyfiveArr[0];
+                    }
+
                     if($twentyVal == 0
                        && $fortyVal == 0
-                       && $fortyhcVal == 0){
+                       && $fortyhcVal == 0
+                       && $fortynorVal == 0
+                       && $fortyfiveVal == 0){
                         $values = false;
                     }
                     //----------------- Currency -----------------------------------------------------------
 
-                    $currenct = Currency::where('alphacode','=',$currencyArr[0])->first();
+                    $currenct = Currency::where('alphacode','=',$currencyArr[0])->orWhere('id','=',$currencyArr[0])->first();
 
                     if(empty($currenct->id) != true){
                         $curreExitBol = true;
@@ -160,9 +182,10 @@ class ImportationController extends Controller
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
                     if($originB == true && $destinyB == true &&
-                       $twentyExiBol   == true && $fortyExiBol  == true &&
-                       $fortyhcExiBol  == true && $values       == true &&
-                       $carriExitBol   == true && $curreExitBol == true){
+                       $twentyExiBol   == true && $fortyExiBol    == true &&
+                       $fortyhcExiBol  == true && $fortynorExiBol == true &&
+                       $fortyfiveExiBol == true && $values        == true &&
+                       $carriExitBol   == true && $curreExitBol   == true){
                         $collecciont = '';
 
                         $collecciont = Rate::create([
@@ -173,6 +196,8 @@ class ImportationController extends Controller
                             'twuenty'       => $twentyVal,
                             'forty'         => $fortyVal,
                             'fortyhc'       => $fortyhcVal,
+                            'fortynor'      => $fortynorVal,
+                            'fortyfive'     => $fortyfiveVal,
                             'currency_id'   => $currencyVal
                         ]);
                         $failrate->forceDelete();
@@ -784,21 +809,7 @@ class ImportationController extends Controller
                                       && $fortyfiveVal == 0){
                                        $values = false;
                                    }
-                                   $prueba = collect([]);
 
-                                   $prueba = [
-                                       '$twentyVal' => $twentyVal,
-                                       '$fortyVal' => $fortyVal,
-                                       '$fortyhcVal' => $fortyhcVal,
-                                       '$fortyhcVal' => $fortyhcVal,
-                                       '$fortyfiveVal' => $fortyfiveVal,
-                                       '$currencyVal' => $currencyVal,
-                                       '$carrierVal' => $carrierVal,
-                                       '$fortynorExiBol' => $fortynorExiBol,
-                                       '$fortyfiveExiBol' => $fortyfiveExiBol,
-                                       '$values' => $values,
-                                   ];
-                                   //dd($prueba);
                                    if( $origExiBol == true 
                                       && $destiExitBol  == true
                                       && $carriExitBol  == true 
@@ -893,28 +904,37 @@ class ImportationController extends Controller
                                        }
                                        //---------------------------------------------------
                                        if( $fortyfiveExiBol == true){
-                                           if(empty($fortynorVal) == true){
+                                           if(empty($fortyfiveVal) == true){
                                                $fortyfiveVal = 0;
                                            } 
                                        }
-                                       $prue = collect([]);
+                                       /*        $prue = collect([]);
                                        $prue = [
-                                      '$origExiBol'  =>  $origExiBol, 
-                                      '$destiExitBol'=>  $destiExitBol,
-                                      '$carriExitBol'=>  $carriExitBol, 
-                                      '$twentyExiBol'=>  $twentyExiBol, 
-                                      '$fortyExiBol'=> $fortyExiBol , 
-                                      '$twentyExiBol'=>  $twentyExiBol, 
-                                      '$fortynorExiBo'=>  $fortynorExiBol,
-                                      '$fortyfiveExiBo'=>  $fortyfiveExiBol,
-                                      '$values'=>  $values,
+                                           '$origExiBol'  =>  $origExiBol, 
+                                           '$destiExitBol'=>  $destiExitBol,
+                                           '$carriExitBol'=>  $carriExitBol, 
+                                           '$twentyExiBol'=>  $twentyExiBol, 
+                                           '$fortyExiBol'=> $fortyExiBol , 
+                                           '$twentyExiBol'=>  $twentyExiBol, 
+                                           '$fortynorExiBo'=>  $fortynorExiBol,
+                                           '$fortyfiveExiBo'=>  $fortyfiveExiBol,
+                                           '$originVal'=>  $originVal,
+                                           '$destinyVal'=>  $destinyVal,
+                                           '$values'=>  $values,
+                                           '$twentyVal' => $twentyVal,
+                                           '$fortyVal' => $fortyVal,
+                                           '$fortyhcVal' => $fortyhcVal,
+                                           '$fortyhcVal' => $fortyhcVal,
+                                           '$fortyfiveVal' => $fortyfiveVal,
+                                           '$fortynor' => $fortynorVal,
+                                           '$currencyVal' => $currencyVal,
+                                           '$carrierVal' => $carrierVal,
+                                           '$fortynorExiBol' => $fortynorExiBol,
+                                           '$fortyfiveExiBol' => $fortyfiveExiBol,
                                        ];
-dd($prue);
-                                       if($twentyVal != 0
-                                          && $fortyVal != 0
-                                          && $fortyhcVal != 0 
-                                          && $fortynorVal  != 0
-                                          && $fortyfiveVal != 0){
+                                       dd($prue); */
+                                       if($values == true){
+                                           // dd('$prue');
 
                                            if($originBol == true || $destinyBol == true){
                                                foreach($randons as  $rando){
@@ -970,6 +990,7 @@ dd($prue);
                                            }
                                        }
                                        //*/
+                                       //dd('para');
                                    }
                                }
                                $i++;
@@ -1339,24 +1360,30 @@ dd($prue);
         $twuentyA;
         $fortyA;
         $fortyhcA;
+        $fortynorA;
+        $fortyfiveA;
 
         $carrAIn;
-        $pruebacurre = "";
-        $classdorigin='color:green';
-        $classddestination='color:green';
-        $classcarrier='color:green';
-        $classcurrency='color:green';
-        $classtwuenty ='color:green';
-        $classforty ='color:green';
-        $classfortyhc ='color:green';
+        $pruebacurre    = "";
+        $classdorigin   ='color:green';
+        $classddestination  ='color:green';
+        $classcarrier   ='color:green';
+        $classcurrency  ='color:green';
+        $classtwuenty   ='color:green';
+        $classforty     ='color:green';
+        $classfortyhc   ='color:green';
+        $classfortynor  ='color:green';
+        $classfortyfive ='color:green';
         $originA =  explode("_",$failrate['origin_port']);
         //dd($originA);
-        $destinationA = explode("_",$failrate['destiny_port']);
-        $carrierA = explode("_",$failrate['carrier_id']);
-        $currencyA = explode("_",$failrate['currency_id']);
-        $twuentyA = explode("_",$failrate['twuenty']);
-        $fortyA = explode("_",$failrate['forty']);
-        $fortyhcA = explode("_",$failrate['fortyhc']);
+        $destinationA   = explode("_",$failrate['destiny_port']);
+        $carrierA       = explode("_",$failrate['carrier_id']);
+        $currencyA      = explode("_",$failrate['currency_id']);
+        $twuentyA       = explode("_",$failrate['twuenty']);
+        $fortyA         = explode("_",$failrate['forty']);
+        $fortyhcA       = explode("_",$failrate['fortyhc']);
+        $fortynorA      = explode("_",$failrate['fortynor']);
+        $fortyfiveA     = explode("_",$failrate['fortyfive']);
         $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
             ->first();
         $originAIn = $originOb['id'];
@@ -1398,6 +1425,23 @@ dd($prue);
             $fortyhcA = $fortyhcA[0].' (error)';
             $classfortyhc='color:red';
         }
+
+        $fortynorC   = count($fortynorA);
+        if($fortynorC <= 1){
+            $fortynorA = $fortynorA[0];
+        } else{
+            $fortynorA = $fortynorA[0].' (error)';
+            $classfortynor ='color:red';
+        }
+
+        $fortyfiveC   = count($fortyfiveA);
+        if($fortyfiveC <= 1){
+            $fortyfiveA = $fortyfiveA[0];
+        } else{
+            $fortyfiveA = $fortyfiveA[0].' (error)';
+            $classfortyfive = 'color:red';
+        }
+
         $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
         $carrAIn = $carrierOb['id'];
         $carrierC = count($carrierA);
@@ -1411,7 +1455,7 @@ dd($prue);
         }
         $currencyC = count($currencyA);
         if($currencyC <= 1){
-            $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
+            $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
             $pruebacurre = $currenc['id'];
             $currencyA = $currencyA[0];
         }
@@ -1427,6 +1471,8 @@ dd($prue);
                       'twuenty'         =>  $twuentyA,      
                       'forty'           =>  $fortyA,      
                       'fortyhc'         =>  $fortyhcA,  
+                      'fortynor'        =>  $fortynorA,  
+                      'fortyfive'       =>  $fortyfiveA,  
                       'currencyAIn'     =>  $pruebacurre,
                       'classorigin'     =>  $classdorigin,
                       'classdestiny'    =>  $classddestination,
@@ -1434,6 +1480,8 @@ dd($prue);
                       'classtwuenty'    =>  $classtwuenty,
                       'classforty'      =>  $classforty,
                       'classfortyhc'    =>  $classfortyhc,
+                      'classfortynor'   =>  $classfortyhc,
+                      'classfortyfive'  =>  $classfortyhc,
                       'classcurrency'   =>  $classcurrency
                      ];
         $pruebacurre = "";
@@ -1453,6 +1501,8 @@ dd($prue);
             "twuenty"      => $request->twuenty,
             "forty"        => $request->forty,
             "fortyhc"      => $request->fortyhc,
+            "fortynor"     => $request->fortynor,
+            "fortyfive"    => $request->fortyfive,
             "currency_id"  => $request->currency_id
         ]);
         $failrate = FailRate::find($id);
@@ -1473,6 +1523,8 @@ dd($prue);
         $rate->twuenty      =  $request->twuenty;
         $rate->forty        =  $request->forty;
         $rate->fortyhc      =  $request->fortyhc;
+        $rate->fortynor     =  $request->fortynor;
+        $rate->fortyfive    =  $request->fortyfive;
         $rate->currency_id  =  $request->currency_id;
         $rate->update();
 
@@ -2070,6 +2122,8 @@ dd($prue);
         $twuentyA;
         $fortyA;
         $fortyhcA;
+        $fortynorA;
+        $fortyfiveA;
         $failrates = collect([]);
         $ratescol = collect([]);
         if($selector == 1){
@@ -2084,6 +2138,8 @@ dd($prue);
                 $twuentyA       = explode("_",$failrate['twuenty']);
                 $fortyA         = explode("_",$failrate['forty']);
                 $fortyhcA       = explode("_",$failrate['fortyhc']);
+                $fortynorA      = explode("_",$failrate['fortynor']);
+                $fortyfiveA     = explode("_",$failrate['fortyfive']);
 
                 $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
@@ -2127,6 +2183,20 @@ dd($prue);
                     $fortyhcA = $fortyhcA[0].' (error)';
                 }
 
+                $fortynorC   = count($fortynorA);
+                if($fortynorC <= 1){
+                    $fortynorA = $fortynorA[0];
+                } else{
+                    $fortynorA = $fortynorA[0].' (error)';
+                }
+
+                $fortyfiveC   = count($fortyfiveA);
+                if($fortyfiveC <= 1){
+                    $fortyfiveA = $fortyfiveA[0];
+                } else{
+                    $fortyfiveA = $fortyfiveA[0].' (error)';
+                }
+
                 $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
                 //$carrAIn = $carrierOb['id'];
                 $carrierC = count($carrierA);
@@ -2139,9 +2209,9 @@ dd($prue);
                 }
                 $currencyC = count($currencyA);
                 if($currencyC <= 1){
-                    $currenc = Currency::where('alphacode','=',$currencyA[0])->first();
+                    $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
                     //$pruebacurre = $currenc['id'];
-                    $currencyA = $currencyA[0];
+                    $currencyA = $currenc['alphacode'];
                 }
                 else{
                     $currencyA = $currencyA[0].' (error)';
@@ -2154,6 +2224,8 @@ dd($prue);
                           'twuenty'         =>  $twuentyA,      //    
                           'forty'           =>  $fortyA,        //  
                           'fortyhc'         =>  $fortyhcA,      //
+                          'fortynor'        =>  $fortynorA,     //
+                          'fortyfive'       =>  $fortyfiveA,    //
                           'currency_id'     =>  $currencyA,     //
                           'operation'       =>  '1'
                          ];
@@ -2194,6 +2266,8 @@ dd($prue);
                           'twuenty'         =>  $rate->twuenty, //    
                           'forty'           =>  $rate->forty,   //  
                           'fortyhc'         =>  $rate->fortyhc, //
+                          'fortynor'        =>  $rate->fortynor, //
+                          'fortyfive'       =>  $rate->fortyfive, //
                           'currency_id'     =>  $currencyRate,  //
                           'operation'       =>  '2'
                          ];
