@@ -31,17 +31,13 @@
             <div class="m-radio-inline">
               <label class="m-radio">
                 {{ Form::radio('typeroute', 'port', $portRadio ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }} Port
-
                 <span></span>
               </label>
               <label class="m-radio">
                 {{ Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
-
                 <span></span>
               </label>
-
             </div>
-
           </div>
         </div>
       </div>
