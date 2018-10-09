@@ -264,7 +264,12 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
 Route::resource('dashboard', 'DashboardController')->middleware('auth');
 
-Route::impersonate();
+Route::prefix('impersonation')->group(function ($router) {
+    # Revert route...
+    $router->get('revert', 'ImpersonateController@revert')->name('impersonate.revert');
+    # Impersonate route...
+    $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
+});
 
 Auth::routes();
 
