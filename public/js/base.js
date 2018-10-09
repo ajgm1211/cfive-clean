@@ -1100,6 +1100,7 @@ $( document ).ready(function() {
         var company_id = $(this).val();
         if(company_id) {
             $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').prop("disabled",false);
             $.ajax({
                 url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
