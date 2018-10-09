@@ -135,11 +135,17 @@ new registration
                                 @endif
                                 
                                 @if($value['existfortynor'] == true)
-                                <input type="hidden" value="0" name="fortynor" />
+                                <!--<input type="hidden" value="0" name="fortynor" />-->
+                                <input type="hidden" value="0" name="existfortynor" />
+                                @else
+                                <input type="hidden" value="1" name="existfortynor" />
                                 @endif
                                 
                                 @if($value['existfortyfive'] == true)
-                                <input type="hidden" value="0" name="fortyfive" />
+                                <!--<input type="hidden" value="0" name="fortyfive" />-->
+                                <input type="hidden" value="0" name="existfortyfive" />
+                                @else
+                                <input type="hidden" value="1" name="existfortyfive" />
                                 @endif
                                 
                                 @if($type == 2)
