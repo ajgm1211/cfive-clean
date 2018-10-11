@@ -242,7 +242,9 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
-    Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);        
+    Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
+    Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
+    Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
 
@@ -261,6 +263,13 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 });
 
 Route::resource('dashboard', 'DashboardController')->middleware('auth');
+
+Route::prefix('impersonation')->group(function ($router) {
+    # Revert route...
+    $router->get('revert', 'ImpersonateController@revert')->name('impersonate.revert');
+    # Impersonate route...
+    $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
+});
 
 Auth::routes();
 

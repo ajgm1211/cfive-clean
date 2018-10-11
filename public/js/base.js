@@ -1061,10 +1061,12 @@ $(document).on('click', '#create-quote', function (e) {
 });
 
 $( document ).ready(function() {
+    $('select[name="contact_id"]').prop("disabled",true);
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
             $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').prop("disabled",false);
             $.ajax({
                 url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
@@ -1086,7 +1088,7 @@ $( document ).ready(function() {
                 }
             });
         }else{
-            $('select[name="client"]').empty();
+            $('select[name="contact_id"]').empty();
             $('select[name="price_id"]').empty();
         }
     });
@@ -1098,6 +1100,7 @@ $( document ).ready(function() {
         var company_id = $(this).val();
         if(company_id) {
             $('select[name="contact_id"]').empty();
+            $('select[name="contact_id"]').prop("disabled",false);
             $.ajax({
                 url: "/quotes/company/contact/id/"+company_id,
                 dataType: 'json',
@@ -1704,7 +1707,7 @@ $(document).on('click', '#delete-company', function () {
                     if(data.message>0){
                         swal({
                             title: 'Warning!',
-                            text: "There are "+data.message+" clients assoociated with this company. If you delete it, those contacts will be deleted.",
+                            text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Yes, delete it!'
@@ -1761,6 +1764,35 @@ $(document).on('click', '#delete-company', function () {
 
         }
 
+    });
+});
+
+$(document).on('click', '#delete-company-user', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "This action will delete all data associated to this company. You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Continue!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: 'delete/company/' + id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Deleted!',
+                            'The company and all associated data has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                    }
+                }
+            });
+        }
     });
 });
 

@@ -46,7 +46,7 @@
     @endif
     <hr>
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-lg-10 col-md-10 col-sm-10">
             <div class="row">
                 <div class="col-md-12">
                     <div class="m-portlet__body">
@@ -456,7 +456,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-2 desktop">
+        <div class="col-lg-2 col-md-2 col-sm-2">
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
