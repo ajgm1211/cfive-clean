@@ -568,6 +568,7 @@ class ContractsController extends Controller
     $objtypedestiny = new TypeDestiny();
     $objcalculation = new CalculationType();
     $objsurcharge = new Surcharge();
+    $countries = Country::pluck('name','id');
 
     $calculationT = $objcalculation->all()->pluck('name','id');
     $typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -576,7 +577,7 @@ class ContractsController extends Controller
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $localcharges = LocalCharge::find($id);
-    return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge'));
+    return view('contracts.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
   }
   public function updateLocalChar(Request $request, $id)
   {
@@ -589,26 +590,37 @@ class ContractsController extends Controller
     $localC->currency_id = $request->input('currency_id');
     $localC->update();
 
-    $detailportOrig = $request->input('port_origlocal');
-    $detailportDest = $request->input('port_destlocal');
+
     $carrier = $request->input('carrier_id');
     $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
     $deleteCarrier->delete();
     $deletePort = LocalCharPort::where("localcharge_id",$id);
     $deletePort->delete();
-
-    foreach($detailportOrig as $orig => $valueOrig)
-    {
-      foreach($detailportDest as $dest => $valueDest)
+    $deleteCountry = LocalCharCountry::where("localcharge_id",$id);
+    $deleteCountry->delete();
+    $typerate =  $request->input('typeroute');
+    if($typerate == 'port'){
+      $detailportOrig = $request->input('port_origlocal');
+      $detailportDest = $request->input('port_destlocal');
+      foreach($detailportOrig as $orig => $valueOrig)
       {
-        $detailport = new LocalCharPort();
-        $detailport->port_orig = $valueOrig;
-        $detailport->port_dest = $valueDest;
-        $detailport->localcharge_id = $id;
-        $detailport->save();
+        foreach($detailportDest as $dest => $valueDest)
+        {
+          $detailport = new LocalCharPort();
+          $detailport->port_orig = $valueOrig;
+          $detailport->port_dest = $valueDest;
+          $detailport->localcharge_id = $id;
+          $detailport->save();
+        }
       }
-
+    }elseif($typerate == 'country'){
+      $detailcountry = new LocalCharCountry();
+      $detailcountry->country_orig = $request->input('country_orig');
+      $detailcountry->country_dest =  $request->input('country_dest');
+      $detailcountry->localcharge_id = $id;
+      $detailcountry->save();
     }
+    
     foreach($carrier as $key)
     {
       $detailcarrier = new LocalCharCarrier();
