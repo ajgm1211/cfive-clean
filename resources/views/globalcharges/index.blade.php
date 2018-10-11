@@ -102,14 +102,29 @@
                     <div id="divtype{{$loop->index}}"  class="val">{!! $globalcharges->surcharge->name !!}</div>
                   </td>
                   <td>
+                    @if(!$globalcharges->globalcharport->isEmpty())
                     <div id="divport{{$loop->index}}"  class="val">
                       {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portOrig')->unique()->pluck('display_name') ) !!} 
                     </div>
+                    @endif
+                    @if(!$globalcharges->globalcharcountry->isEmpty())
+                    <div id="divcountry{{$loop->index}}"  class="val">
+                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('name') ) !!} 
+                    </div>
+                    @endif
                   </td>
                   <td>
+
+                    @if(!$globalcharges->globalcharport->isEmpty())
                     <div id="divportDest{{$loop->index}}"  class="val">
                       {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharport->pluck('portDest')->unique()->pluck('display_name') ) !!} 
                     </div>
+                    @endif
+                    @if(!$globalcharges->globalcharcountry->isEmpty())
+                    <div id="divcountryDest{{$loop->index}}"  class="val">
+                      {!! str_replace(["[","]","\""], ' ', $globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('name') ) !!} 
+                    </div>
+                    @endif
                   </td>
                   <td>
                     <div id="divchangetype{{$loop->index}}"  class="val">{!! $globalcharges->typedestiny->description !!}</div>

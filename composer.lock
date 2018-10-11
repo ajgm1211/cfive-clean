@@ -4,6 +4,10 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
+=======
+    "hash": "1804a238fabafee67a3c1e2804bc3344",
+>>>>>>> remotes/origin/agonzalez
     "content-hash": "1f891834130292573ca4b07911273f89",
     "packages": [
         {
@@ -115,6 +119,7 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
             "version": "3.69.0",
             "source": {
                 "type": "git",
@@ -125,6 +130,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d6ba5f9250fc8a9cbc1cc11bc80c452b144ab215",
                 "reference": "d6ba5f9250fc8a9cbc1cc11bc80c452b144ab215",
+=======
+            "version": "3.68.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "2986beb07a14bcde94608e940ee7e5cba1ed4e38"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2986beb07a14bcde94608e940ee7e5cba1ed4e38",
+                "reference": "2986beb07a14bcde94608e940ee7e5cba1ed4e38",
+>>>>>>> remotes/origin/agonzalez
                 "shasum": ""
             },
             "require": {
@@ -194,7 +211,11 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
             "time": "2018-10-04T21:43:42+00:00"
+=======
+            "time": "2018-10-02 21:11:29"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -1144,7 +1165,11 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+<<<<<<< HEAD
             "time": "2018-09-29T17:23:10+00:00"
+=======
+            "time": "2018-09-29 17:23:10"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "jakub-onderka/php-console-highlighter",
@@ -1360,7 +1385,7 @@
                 "plugin",
                 "user"
             ],
-            "time": "2018-09-03T13:05:19+00:00"
+            "time": "2018-09-03 13:05:19"
         },
         {
             "name": "laracasts/flash",
@@ -1553,7 +1578,11 @@
                 "framework",
                 "laravel"
             ],
+<<<<<<< HEAD
             "time": "2018-10-04T14:50:41+00:00"
+=======
+            "time": "2018-10-04 14:50:41"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "laravel/tinker",
@@ -2236,7 +2265,11 @@
                 "laravel",
                 "seed"
             ],
+<<<<<<< HEAD
             "time": "2018-10-01T07:59:18+00:00"
+=======
+            "time": "2018-10-01 07:59:18"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "owen-it/laravel-auditing",
@@ -2319,7 +2352,11 @@
                 "revision",
                 "tracking"
             ],
+<<<<<<< HEAD
             "time": "2018-10-02T10:11:08+00:00"
+=======
+            "time": "2018-10-02 10:11:08"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "paragonie/random_compat",
@@ -3365,7 +3402,11 @@
                 "security",
                 "spatie"
             ],
+<<<<<<< HEAD
             "time": "2018-09-29T04:20:17+00:00"
+=======
+            "time": "2018-09-29 04:20:17"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "spatie/temporary-directory",
@@ -3596,7 +3637,11 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-03T08:15:46+00:00"
+=======
+            "time": "2018-10-03 08:15:46"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/css-selector",
@@ -3649,7 +3694,11 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-02T16:36:10+00:00"
+=======
+            "time": "2018-10-02 16:36:10"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/debug",
@@ -3705,7 +3754,11 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-02T16:36:10+00:00"
+=======
+            "time": "2018-10-02 16:36:10"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3817,7 +3870,11 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-03T08:47:56+00:00"
+=======
+            "time": "2018-10-03 08:47:56"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/http-foundation",
@@ -3871,7 +3928,11 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-03T08:48:45+00:00"
+=======
+            "time": "2018-10-03 08:48:45"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/http-kernel",
@@ -3958,7 +4019,11 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-03T12:53:38+00:00"
+=======
+            "time": "2018-10-03 12:53:38"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4287,7 +4352,11 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-02T12:40:59+00:00"
+=======
+            "time": "2018-10-02 12:40:59"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/routing",
@@ -4364,7 +4433,11 @@
                 "uri",
                 "url"
             ],
+<<<<<<< HEAD
             "time": "2018-10-02T12:40:59+00:00"
+=======
+            "time": "2018-10-02 12:40:59"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/translation",
@@ -4433,7 +4506,11 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-02T16:36:10+00:00"
+=======
+            "time": "2018-10-02 16:36:10"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "symfony/var-dumper",
@@ -4508,7 +4585,11 @@
                 "debug",
                 "dump"
             ],
+<<<<<<< HEAD
             "time": "2018-10-02T16:36:10+00:00"
+=======
+            "time": "2018-10-02 16:36:10"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -5061,7 +5142,11 @@
                 "testing",
                 "webdriver"
             ],
+<<<<<<< HEAD
             "time": "2018-10-03T15:37:05+00:00"
+=======
+            "time": "2018-10-03 15:37:05"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "mockery/mockery",
@@ -5126,7 +5211,11 @@
                 "test double",
                 "testing"
             ],
+<<<<<<< HEAD
             "time": "2018-10-02T21:52:37+00:00"
+=======
+            "time": "2018-10-02 21:52:37"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "myclabs/deep-copy",
@@ -5237,7 +5326,11 @@
                 "php",
                 "symfony"
             ],
+<<<<<<< HEAD
             "time": "2018-10-03T20:01:54+00:00"
+=======
+            "time": "2018-10-03 20:01:54"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "phar-io/manifest",
@@ -5617,7 +5710,11 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD
             "time": "2018-10-04T03:41:23+00:00"
+=======
+            "time": "2018-10-04 03:41:23"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -6510,7 +6607,11 @@
             ],
             "description": "Symfony DomCrawler Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-10-02T12:40:59+00:00"
+=======
+            "time": "2018-10-02 12:40:59"
+>>>>>>> remotes/origin/agonzalez
         },
         {
             "name": "theseer/tokenizer",
