@@ -205,7 +205,7 @@
                             </span>
                         </a>
                     </li>
-                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
                             <i class="m-menu__link-icon flaticon-business"></i>
                             <span class="m-menu__link-text">
@@ -213,14 +213,32 @@
                             </span>
                         </a>
                     </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="{{route('settings.companies')}}" class="m-menu__link ">
+                            <i class="m-menu__link-icon flaticon-business"></i>
+                            <span class="m-menu__link-text">
+                                User companies
+                            </span>
+                        </a>
+                    </li>
                     @endrole
+                    @if(Session::has('impersonate'))
+                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                            <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
+                                <i class="m-menu__link-icon flaticon-logout"></i>
+                                <span class="m-menu__link-text">
+                                    Exit impersonate mode
+                                </span>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </li>
         <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
             <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <span class="m-menu__link-text">
-                    Logout
+                    <b>Logout ( {{\Auth::user()->name}} {{\Auth::user()->lastname}} ) </b>
                 </span>
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -228,7 +246,6 @@
             </form>
         </li>
         <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
-
             <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                 <div class='row'>
                     <div class="col-md-2">
@@ -252,10 +269,6 @@
                     </span>
                 </div>
             </a>
-
-
-
-
             <div class="m-dropdown__wrapper">
                 <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
                 <div class="m-dropdown__inner">

@@ -6,6 +6,15 @@ use App\Company;
 use App\CompanyUser;
 use App\Currency;
 use App\User;
+use App\Quote;
+use App\Surcharge;
+use App\SaleTerm;
+use App\Price;
+use App\Contract;
+use App\GlobalCharge;
+use App\Inland;
+use App\NewContractRequest;
+use App\TermAndCondition;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
@@ -90,5 +99,34 @@ class SettingController extends Controller
         $company->update();
 
         return response()->json(['message' => 'Ok']);
+    }
+
+    public function list_companies()
+    {
+        $companies=CompanyUser::all();
+
+        return view('settings/list_companies',compact('companies'));
+    }    
+
+    public function delete_company_user(Request $request,$id)
+    {
+        Quote::where('company_user_id',$id)->delete();
+        Company::where('company_user_id',$id)->delete();
+        User::where('company_user_id',$id)->delete();
+        Surcharge::where('company_user_id',$id)->delete();
+        SaleTerm::where('company_user_id',$id)->delete();
+        Price::where('company_user_id',$id)->delete();
+        Contract::where('company_user_id',$id)->delete();
+        GlobalCharge::where('company_user_id',$id)->delete();
+        Inland::where('company_user_id',$id)->delete();
+        NewContractRequest::where('company_user_id',$id)->delete();
+        TermAndCondition::where('company_user_id',$id)->delete();
+        CompanyUser::where('id',$id)->delete();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Register completed successfully!');
+
+        return view('settings/list_companies',compact('companies'));
     }
 }

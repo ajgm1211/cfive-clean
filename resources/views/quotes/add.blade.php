@@ -31,10 +31,10 @@
     <input type="hidden" id="currency_id" value="{{$currency_cfg->alphacode}}"/>
 
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-lg-10 col-md-10 col-sm-10 col-12">
             @if(count($company_user->company_user_id)>0)
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 col-12">
                     {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
                     <div class="row">
                         <ul class="nav" role="tablist">
@@ -56,24 +56,12 @@
                     <div class="m-portlet__body">
                         <div class="row">
                             <div class="m-portlet m-portlet--tabs">
-                                <div class="m-portlet__head">
-                                    <div class="m-portlet__head-tools">                                        
-                                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist">
-                                            <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
-                                                <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
-                                                    Next
-                                                </a>
-                                                <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
-                                                    Back
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+
                                 <div class="m-portlet__body">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="m_portlet_tab_1_1">
-                                            <div class="row">
+                                            <br>
+                                            <div class="row">                                        
                                                 <div class="col-lg-12">
                                                     <div class="form-group m-form__group row">
                                                         <div class="col-lg-2">
@@ -145,93 +133,110 @@
                                                             </label>
                                                         </div>
                                                         <div class="col-lg-8">
-                                                            <div class='row'>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>20' :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_20', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20']) !!}
+                                                            <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_2_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;"> Regular Containers </a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a href="#tab_2_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Reefer Containers </a>
+                                                                </li>                                                         <li class="nav-item">
+                                                                    <a href="#tab_2_3" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Open Top Containers </a>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="tab-content">
+                                                                <div class="tab-pane fade active show" id="tab_2_1">
+                                                                    <br>
+                                                                    <div class='row'>
+                                                                        <div class="col-md-3">
+                                                                            <label>
+                                                                                <b>20' :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_20', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label>
+                                                                                <b>40' :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label>
+                                                                                <b>40' HC :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <label>
+                                                                                <b>45' HC :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_45_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_45_hc']) !!}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40']) !!}
+                                                                <div class="tab-pane fade" id="tab_2_2">
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>20' Reefer :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_20_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_reefer']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>40' Reefer :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_reefer']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>40' HC Reefer:</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40_hc_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_reefer']) !!}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' HC :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc']) !!}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>45' HC :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_45_hc', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_45_hc']) !!}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <br>
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>20' Reefer :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_20_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_reefer']) !!}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' Reefer :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_reefer']) !!}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' HC Reefer:</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40_hc_reefer', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_reefer']) !!}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>20' Open top :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_20_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_open_top']) !!}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <br>
-                                                            <br>
-                                                            <div class="row">
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' Open top :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_open_top']) !!}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>
-                                                                        <b>40' HC Open top :</b>
-                                                                    </label>
-                                                                    <div class="m-bootstrap-touchspin-brand">
-                                                                        {!! Form::text('qty_40_hc_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_open_top']) !!}
+                                                                <div class="tab-pane fade" id="tab_2_3">
+                                                                    <br>
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>20' Open top :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_20_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_20_open_top']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>40' Open top :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_open_top']) !!}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>
+                                                                                <b>40' HC Open top :</b>
+                                                                            </label>
+                                                                            <div class="m-bootstrap-touchspin-brand">
+                                                                                {!! Form::text('qty_40_hc_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_open_top']) !!}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -243,7 +248,7 @@
                                                                 <b>LOAD</b>
                                                             </label>
                                                         </div>
-                                                        <div class="col-lg-10">                                                            
+                                                        <div class="col-lg-10">
                                                             <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
                                                                 <li class="nav-item">
                                                                     <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
@@ -444,7 +449,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
+                                            <br>
                                             <div class="form-group m-form__group row">
                                                 <div class="col-lg-2">
                                                     <label>
@@ -547,7 +552,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
+                                            <br>
                                             <div class="form-group m-form__group row">
                                                 <div class="col-lg-2">
                                                     <label>
@@ -1047,6 +1052,23 @@
                                                 </div>
                                             </div>                                            
                                             <hr>
+                                            <div class="row pull-right">
+                                                <ul class="nav" role="tablist">
+                                                    <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Save
+                                                        </button>
+                                                        @if($email_templates)
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
+                                                            Save and send
+                                                        </button>
+                                                        @endif
+                                                        <button type="submit" class="btn btn-primary" formaction="/quotes/store/pdf">
+                                                            Save and PDF
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>                                
@@ -1054,8 +1076,20 @@
                         </div>
                     </div>
                     @if($email_templates)
-                    @include('quotes.partials.submitQuoteEmailModal');
+                    @include('quotes.partials.submitQuoteEmailModal')
                     @endif
+                    <div class="row pull-right">
+                        <ul class="nav" role="tablist">
+                            <li class="nav-item m-tabs__item">
+                                <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
+                                    Next
+                                </a>
+                                <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                    Back
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     {!! Form::close() !!}
                 </div>
             </div>
@@ -1088,7 +1122,7 @@
             </div>
             @endif
         </div>
-        <div class="col-md-2">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-12 desktop">
             <h3 class="title-quote size-16px">Settings</h3>
             <hr>
             <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
