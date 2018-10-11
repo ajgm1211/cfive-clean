@@ -67,28 +67,30 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $NameFile = $requestobj['FileName'];
         $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
         //dd($path);
-        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
-        //dd($path);
         Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
                 $reader->noHeading = true;
                 //$reader->ignoreEmpty();
 
-                $currency            = "Currency";
-                $twenty              = "20'";
-                $forty               = "40'";
-                $fortyhc             = "40'HC";
-                $origin              = "origin";
-                $originExc           = "Origin";
-                $destiny             = "destiny";
-                $destinyExc          = "Destiny";
-                $carrier             = "Carrier";
-                $CalculationType     = "Calculation_Type";
-                $Charge              = "Charge";
-                $statustypecurren    = "statustypecurren";
-                $contractId          = "Contract_id";
-                $chargeVal           = $requestobj['chargeVal'];
-                $contract_id         = $requestobj['Contract_id'];
+                $currency               = "Currency";
+                $twenty                 = "20'";
+                $forty                  = "40'";
+                $fortyhc                = "40'HC";
+                $fortynor               = "40'NOR";
+                $fortyfive              = "45'";
+                $origin                 = "origin";
+                $originExc              = "Origin";
+                $destiny                = "destiny";
+                $destinyExc             = "Destiny";
+                $carrier                = "Carrier";
+                $CalculationType        = "Calculation_Type";
+                $Charge                 = "Charge";
+                $statustypecurren       = "statustypecurren";
+                $contractId             = "Contract_id";
+                $chargeVal              = $requestobj['chargeVal'];
+                $contract_id            = $requestobj['Contract_id'];
+                $statusexistfortynor    = $requestobj['existfortynor'];
+                $statusexistfortyfive   = $requestobj['existfortyfive'];
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
@@ -110,6 +112,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $currencyValtwen     = '';
                     $currencyValfor      = '';
                     $currencyValforHC    = '';
+                    $currencyValfornor   = '';
+                    $currencyValforfive  = '';
                     $calculationtypeVal  = '';
                     $surchargelist       = '';
                     $surchargeVal        = '';
@@ -119,14 +123,20 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $currencResultwen        = '';
                     $currencResulfor         = '';
                     $currencResulforhc       = '';
+                    $currencResulfornor      = '';
+                    $currencResulforfive     = '';
                     $currencResul            = '';
 
                     $twentyArr;
                     $fortyArr;
                     $fortyhcArr;
+                    $fortynorArr;
+                    $fortyfiveArr;
                     $twentyVal           = '';
                     $fortyVal            = '';
                     $fortyhcVal          = '';
+                    $fortynorVal         = '';
+                    $fortyfiveVal        = '';
 
                     $originBol               = false;
                     $origExiBol              = false;
@@ -138,9 +148,13 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $curreExitwenBol         = false;
                     $curreExiforBol          = false;
                     $curreExiforHCBol        = false;
+                    $curreExifornorBol       = false;
+                    $curreExiforfiveBol      = false;
                     $twentyExiBol            = false;
                     $fortyExiBol             = false;
                     $fortyhcExiBol           = false;
+                    $fortynorExiBol          = false;
+                    $fortyfiveExiBol         = false;
                     $carriBol                = false;
                     $calculationtypeExiBol   = false;
                     $variantecurrency        = false;
@@ -209,9 +223,17 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                         //---------------- CURRENCY VALUES ------------------------------------------------------
 
-                        $twentyArr  = explode(' ',$read[$requestobj[$twenty]]);
-                        $fortyArr   = explode(' ',$read[$requestobj[$forty]]);
-                        $fortyhcArr = explode(' ',$read[$requestobj[$fortyhc]]);
+                        $twentyArr      = explode(' ',$read[$requestobj[$twenty]]);
+                        $fortyArr       = explode(' ',$read[$requestobj[$forty]]);
+                        $fortyhcArr     = explode(' ',$read[$requestobj[$fortyhc]]);
+
+
+                        if($statusexistfortynor == 1){
+                            $fortynorArr    = explode(' ',$read[$requestobj[$fortynor]]);
+                        }
+                        if($statusexistfortyfive == 1){
+                            $fortyfiveArr   = explode(' ',$read[$requestobj[$fortyfive]]);
+                        }
 
                         //---------------- 20' ------------------------------------------------------------------
 
@@ -243,9 +265,38 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $fortyhcVal = $fortyhcArr[0].'_E_E';
                         }
 
+                        //----------------- 40'NOR -------------------------------------------------------------
+                        if($statusexistfortynor == 1){
+
+                            if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
+                                $fortynorExiBol = true;
+                                $fortynorVal    = (int)$fortynorArr[0];
+                            }
+                            else{
+                                $fortynorVal = $fortynorArr[0].'_E_E';
+                            }
+                        } else {
+                            $fortynorVal = 0;
+                        }
+
+                        //----------------- 45' ----------------------------------------------------------------
+                        if($statusexistfortyfive == 1){
+                            if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
+                                $fortyfiveExiBol = true;
+                                $fortyfiveVal    = (int)$fortyfiveArr[0];
+                            }
+                            else{
+                                $fortyfiveVal = $fortyfiveArr[0].'_E_E';
+                            }
+                        } else {
+                            $fortyfiveVal = 0;
+                        }
+
                         if($twentyVal == 0
                            && $fortyVal == 0
-                           && $fortyhcVal == 0){
+                           && $fortyhcVal == 0
+                           && $fortynorVal == 0
+                           && $fortyfiveVal == 0){
                             $values = false;
                         }
 
@@ -322,7 +373,81 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 }
                             }
 
-                            if($curreExitwenBol == true && $curreExiforBol == true && $curreExiforHCBol == true){
+                            //---------------- CURRENCY 40'NOR -------------------------------------------------
+                            if($statusexistfortynor == 1){
+                                if(count($fortynorArr) > 1){
+                                    $currencResulfornor = str_replace($caracteres,'',$fortynorArr[1]);
+                                } else {
+                                    $currencResulfornor = '';
+                                }
+
+                                $currencfornor = Currency::where('alphacode','=',$currencResulfornor)->first();
+
+                                if(empty($currencfornor->id) != true){
+                                    $curreExifornorBol = true;
+                                    $currencyValfornor =  $currencfornor->id;
+                                } else{
+                                    if(count($fortynorArr) > 1){
+                                        $currencyValfornor = $fortynorArr[1].'_E_E';
+                                    } else{
+                                        $currencyValfornor = '';
+                                    }
+                                } 
+                            } else {
+                                if($curreExitwenBol == true){                                    
+                                    $currencyValfornor = $currencyValtwen;
+                                    $curreExifornorBol = true;
+                                } else if($curreExiforBol == true){
+                                    $currencyValfornor = $currencyValfor;
+                                    $curreExifornorBol = true;
+                                } else if($curreExiforHCBol == true){
+                                    $currencyValfornor = $currencyValforHC;
+                                    $curreExifornorBol = true;
+                                } else {
+                                    $currencyValfornor = '_E_E';
+                                }
+                            }
+
+                            //---------------- CURRENCY 45  ----------------------------------------------------
+                            if($statusexistfortyfive == 1){
+                                if(count($fortyfiveArr) > 1){
+                                    $currencResulforfive = str_replace($caracteres,'',$fortyfiveArr[1]);
+                                } else {
+                                    $currencResulforfive = '';
+                                }
+
+                                $currencforfive = Currency::where('alphacode','=',$currencResulforfive)->first();
+
+                                if(empty($currencforfive->id) != true){
+                                    $curreExiforfiveBol = true;
+                                    $currencyValforfive =  $currencforfive->id;
+                                }
+                                else{
+                                    if(count($fortyfiveArr) > 1){
+                                        $currencyValforfive = $fortyfiveArr[1].'_E_E';
+                                    } else{
+                                        $currencyValforfive = '';
+                                    }
+                                }
+                            } else {
+                                if($curreExitwenBol == true){                                    
+                                    $currencyValforfive = $currencyValtwen;
+                                    $curreExiforfiveBol = true;
+                                } else if($curreExiforBol == true){
+                                    $currencyValforfive = $currencyValfor;
+                                    $curreExiforfiveBol = true;
+                                } else if($curreExiforHCBol == true){
+                                    $currencyValforfive = $currencyValforHC;
+                                    $curreExiforfiveBol = true;
+                                } else {
+                                    $currencyValforfive = '_E_E';
+                                }
+
+                            }
+
+                            if($curreExitwenBol == true && $curreExiforBol == true 
+                               && $curreExiforHCBol == true && $curreExifornorBol == true 
+                               && $curreExiforfiveBol == true){
                                 $variantecurrency = true;
                             }
 
@@ -388,12 +513,14 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         }
                         //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        if($carriExitBol     == true
-                           && $origExiBol    == true
-                           && $destiExitBol  == true
-                           && $twentyExiBol  == true
-                           && $fortyExiBol   == true
-                           && $fortyhcExiBol == true
+                        if($carriExitBol        == true
+                           && $origExiBol       == true
+                           && $destiExitBol     == true
+                           && $twentyExiBol     == true
+                           && $fortyExiBol      == true
+                           && $fortyhcExiBol    == true
+                           && $fortynorExiBol   == true
+                           && $fortyfiveExiBol  == true
                            && $calculationtypeExiBol == true
                            && $variantecurrency == true
                            && $typeExiBol       == true
@@ -423,6 +550,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             'twuenty'        => $twentyVal,
                                             'forty'          => $fortyVal,
                                             'fortyhc'        => $fortyhcVal,
+                                            'fortynor'       => $fortynorVal,
+                                            'fortyfive'      => $fortyfiveVal,
                                             'currency_id'    => $currencyVal
                                         ]);
                                         //dd($ratesArre);
@@ -441,6 +570,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         'twuenty'        => $twentyVal,
                                         'forty'          => $fortyVal,
                                         'fortyhc'        => $fortyhcVal,
+                                        'fortynor'       => $fortynorVal,
+                                        'fortyfive'      => $fortyfiveVal,
                                         'currency_id'    => $currencyVal
                                     ]);
 
@@ -454,7 +585,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     //dd($read[$request->$twenty]);
                                     // se verifica si los valores son iguales 
                                     if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                       $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]]){
+                                       $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
+                                       $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
+                                       $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
 
                                         // evaluamos si viene el valor con el currency juntos
 
@@ -646,9 +779,103 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 //echo $i;
                                                 //dd($SurchargArreG);
                                             }
+
+                                            // --------------------- CARGA 40'NOR -------------------------------------------------
+
+                                            if($fortynorVal != 0){
+                                                $SurchargFORNORArreG = LocalCharge::create([ // tabla localcharges
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'typedestiny_id'     => 3,
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => 7,
+                                                    'ammount'            => $fortynorVal,
+                                                    'currency_id'        => $currencyValfornor
+                                                ]);
+
+                                                $SurchargCarrFORNORArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                    'carrier_id'      => $carrierVal,
+                                                    'localcharge_id' => $SurchargFORNORArreG->id
+                                                ]);
+
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            $originVal = $rando;
+                                                        } else {
+                                                            $destinyVal = $rando;
+                                                        }
+
+                                                        $SurchargPortFORNORArreG = LocalCharPort::create([ // tabla localcharports
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORNORArreG->id
+                                                        ]);
+                                                    } 
+
+                                                } else {
+                                                    // fila por puerto, sin expecificar origen ni destino manualmente
+                                                    $SurchargPortFORNORArreG = LocalCharPort::create([ // tabla localcharports
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargFORNORArreG->id
+                                                    ]);
+                                                }
+
+                                                //echo $i;
+                                                //dd($SurchargArreG);
+                                            }
+
+                                            // --------------------- CARGA 45' ----------------------------------------------------
+
+                                            if($fortyfiveVal != 0){
+                                                $SurchargFORfiveArreG = LocalCharge::create([ // tabla localcharges
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'typedestiny_id'     => 3,
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => 8,
+                                                    'ammount'            => $fortyfiveVal,
+                                                    'currency_id'        => $currencyValforfive
+                                                ]);
+
+                                                $SurchargCarrFORfiveArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                    'carrier_id'     => $carrierVal,
+                                                    'localcharge_id' => $SurchargFORfiveArreG->id
+                                                ]);
+
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            $originVal = $rando;
+                                                        } else {
+                                                            $destinyVal = $rando;
+                                                        }
+
+                                                        $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    } 
+
+                                                } else {
+                                                    // fila por puerto, sin expecificar origen ni destino manualmente
+                                                    $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargFORfiveArreG->id
+                                                    ]);
+                                                }
+
+                                                //echo $i;
+                                                //dd($SurchargArreG);
+                                            }
+
+                                            //---------------------
                                         } else{
 
-                                            // cargar el currency ya descompuesto, un solo registro de los tres
+                                            // cargar el currency ya descompuesto, ahora es un solo registro (currency ) de los tres campos que existen
 
                                             // ----------------------- CARGA 20' -------------------------------------------
 
@@ -780,6 +1007,97 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 //echo $i;
                                                 //dd($SurchargFORHCArreG);
                                             }
+
+                                            // --------------------- CARGA 40'NOR --------------------------------------------
+
+                                            if($fortynorVal != 0){
+                                                $SurchargFORnorArreG = LocalCharge::create([ // tabla localcharges
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'typedestiny_id'     => 3,
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => 7,
+                                                    'ammount'            => $fortynorVal,
+                                                    'currency_id'        => $currencyVal
+                                                ]);
+
+                                                $SurchargCarrFORnorArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                    'carrier_id'     => $carrierVal,
+                                                    'localcharge_id' => $SurchargFORnorArreG->id
+                                                ]);
+
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            $originVal = $rando;
+                                                        } else {
+                                                            $destinyVal = $rando;
+                                                        }
+
+                                                        $SurchargPortFORnorArreG = LocalCharPort::create([ // tabla localcharports
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORnorArreG->id
+                                                        ]);
+                                                    } 
+
+                                                } else {
+                                                    // fila por puerto, sin expecificar origen ni destino manualmente
+                                                    $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargFORnorArreG->id
+                                                    ]);
+                                                }
+                                                //echo $i;
+                                                //dd($SurchargFORHCArreG);
+                                            }
+
+                                            // --------------------- CARGA 45' -----------------------------------------------
+
+                                            if($fortyfiveVal != 0){
+                                                $SurchargFORfiveArreG = LocalCharge::create([ // tabla localcharges
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'typedestiny_id'     => 3,
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => 8,
+                                                    'ammount'            => $fortyfiveVal,
+                                                    'currency_id'        => $currencyVal
+                                                ]);
+
+                                                $SurchargCarrFORfiveArreG = LocalCharCarrier::create([ // tabla localcharcarriers
+                                                    'carrier_id'     => $carrierVal,
+                                                    'localcharge_id' => $SurchargFORfiveArreG->id
+                                                ]);
+
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            $originVal = $rando;
+                                                        } else {
+                                                            $destinyVal = $rando;
+                                                        }
+
+                                                        $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    } 
+
+                                                } else {
+                                                    // fila por puerto, sin expecificar origen ni destino manualmente
+                                                    $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargFORfiveArreG->id
+                                                    ]);
+                                                }
+                                                //echo $i;
+                                                //dd($SurchargFORHCArreG);
+                                            }
+                                            //_____-----
                                         }
 
                                     }
@@ -798,12 +1116,28 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         } 
                                         $ammount = $fortyVal;
 
-                                    }else {
+                                    }else if ($fortyhcVal != 0){
 
                                         if($requestobj[$statustypecurren] == 2){
                                             $currencyVal = $currencyValforHC;
                                         } 
                                         $ammount = $fortyhcVal;
+
+                                    }else if ($fortynorVal != 0){
+                                        if($statusexistfortynor == 1){
+                                            if($requestobj[$statustypecurren] == 2){
+                                                $currencyVal = $currencyValfornor;
+                                            } 
+                                        }
+                                        $ammount = $fortynorVal;
+
+                                    }else if ($fortyfiveVal != 0){
+                                        if($statusexistfortyfive == 1){
+                                            if($requestobj[$statustypecurren] == 2){
+                                                $currencyVal = $currencyValforfive;
+                                            } 
+                                        }
+                                        $ammount = $fortyfiveVal;
                                     }
                                     /*
                                            if($requestobj->$statustypecurren == 2){
@@ -884,6 +1218,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             if( $fortyhcExiBol == true){
                                 $fortyhcVal = $read[$requestobj[$fortyhc]];
                             }
+
+                            if( $fortynorExiBol == true){
+                                if($statusexistfortynor == 1){
+                                    $fortynorVal = $read[$requestobj[$fortynor]];
+                                }
+                            }
+
+                            if( $fortyfiveExiBol == true){
+                                if($statusexistfortyfive == 1){
+                                    $fortyfiveVal = $read[$requestobj[$fortyfive]];
+                                }
+                            }
+
                             if( $variantecurrency == true){
                                 if($requestobj[$statustypecurren] == 2){
                                     //------------ PARA RATES ------------------------
@@ -907,6 +1254,16 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         $currencyValforHC  = $currencyFORHCobj['alphacode'];
                                     }
 
+                                    if($curreExifornorBol == true){
+                                        $currencyFORnorobj  = Currency::find($currencyValfornor);
+                                        $currencyValfornor  = $currencyFORnorobj['alphacode'];
+                                    }
+
+                                    if($curreExiforfiveBol == true){
+                                        $currencyFORfiveobj  = Currency::find($currencyValforfive);
+                                        $currencyValforfive  = $currencyFORfiveobj['alphacode'];
+                                    }
+
                                 } else {
                                     $currencyobj = Currency::find($currencyVal);
                                     $currencyVal = $currencyobj['alphacode'];
@@ -916,7 +1273,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             //---------------------------- CALCULATION TYPE -------------------------------------------------
 
                             if($calculationtypeExiBol == true){
-                                $calculationType =CalculationType::find($calculationtypeVal);
+                                $calculationType = CalculationType::find($calculationtypeVal);
                                 $calculationtypeVal = $calculationType['name'];
                             }
 
@@ -930,9 +1287,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             //////////////////////////////////////////////////////////////////////////////////////////////
                             if($read[$requestobj[$Charge]] == $chargeVal){
                                 // Rates Fallidos
-                                if($twentyVal == 0 && $fortyVal == 0 && $fortyhcVal == 0){
-
-                                } else {
+                                if($values == true){
+                                    // si todos los valores son iguales a cero
 
                                     if($originBol == true || $destinyBol == true){
                                         foreach($randons as  $rando){
@@ -958,6 +1314,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 'twuenty'       => $twentyVal,
                                                 'forty'         => $fortyVal,
                                                 'fortyhc'       => $fortyhcVal,
+                                                'fortynor'      => $fortynorVal,
+                                                'fortyfive'     => $fortyfiveVal,
                                                 'currency_id'   => $currencyVal,
                                             ]);
 
@@ -979,6 +1337,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             'twuenty'       => $twentyVal,
                                             'forty'         => $fortyVal,
                                             'fortyhc'       => $fortyhcVal,
+                                            'fortynor'      => $fortynorVal,
+                                            'fortyfive'     => $fortyfiveVal,
                                             'currency_id'   => $currencyVal,
                                         ]);
 
@@ -1011,7 +1371,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
                                                 if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                                   $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]]){
+                                                   $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
+                                                   $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
+                                                   $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
 
                                                     // -------- PER_CONTAINER -------------------------
                                                     // se almacena uno solo porque todos los valores son iguales
@@ -1086,7 +1448,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                                     // -------- 40'HC -------------------------------
 
-                                                    $calculationtypeValfail = '40HC';
+                                                    $calculationtypeValfail = 'Per 40 HC';
 
                                                     if($requestobj[$statustypecurren] == 2){
                                                         $currencyVal = $currencyValforHC;
@@ -1101,6 +1463,52 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'contract_id'        => $contractIdVal,
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $fortyhcVal, //////
+                                                            'currency_id'        => $currencyVal, //////
+                                                            'carrier_id'         => $carrierVal
+                                                        ]);
+                                                    }
+                                                    //$ratescollection->push($ree);
+
+                                                    // -------- 40'NOR -------------------------------
+
+                                                    $calculationtypeValfail = 'Per 40 NOR';
+
+                                                    if($requestobj[$statustypecurren] == 2){
+                                                        $currencyVal = $currencyValfornor;
+                                                    }
+
+                                                    if($fortyhcArr[0] != 0){
+                                                        FailSurCharge::create([
+                                                            'surcharge_id'       => $surchargeVal,
+                                                            'port_orig'          => $originVal,
+                                                            'port_dest'          => $destinyVal,
+                                                            'typedestiny_id'     => 'freight',
+                                                            'contract_id'        => $contractIdVal,
+                                                            'calculationtype_id' => $calculationtypeValfail,  //////
+                                                            'ammount'            => $fortynorVal, //////
+                                                            'currency_id'        => $currencyVal, //////
+                                                            'carrier_id'         => $carrierVal
+                                                        ]);
+                                                    }
+                                                    //$ratescollection->push($ree);
+
+                                                    // -------- 45' ---------------------------------
+
+                                                    $calculationtypeValfail = 'Per 45';
+
+                                                    if($requestobj[$statustypecurren] == 2){
+                                                        $currencyVal = $currencyValforfive;
+                                                    }
+
+                                                    if($fortyhcArr[0] != 0){
+                                                        FailSurCharge::create([
+                                                            'surcharge_id'       => $surchargeVal,
+                                                            'port_orig'          => $originVal,
+                                                            'port_dest'          => $destinyVal,
+                                                            'typedestiny_id'     => 'freight',
+                                                            'contract_id'        => $contractIdVal,
+                                                            'calculationtype_id' => $calculationtypeValfail,  //////
+                                                            'ammount'            => $fortyfiveVal, //////
                                                             'currency_id'        => $currencyVal, //////
                                                             'carrier_id'         => $carrierVal
                                                         ]);
@@ -1122,7 +1530,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
                                             if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]]){
+                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
+                                               $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
+                                               $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
 
                                                 // -------- PER_CONTAINER -------------------------
                                                 // se almacena uno solo porque todos los valores son iguales
@@ -1196,7 +1606,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                                 // -------- 40'HC -------------------------------
 
-                                                $calculationtypeValfail = '40HC';
+                                                $calculationtypeValfail = 'Per 40 HC';
 
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValforHC;
@@ -1211,6 +1621,51 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'contract_id'        => $contractIdVal,
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyhcVal, //////
+                                                        'currency_id'        => $currencyVal, //////
+                                                        'carrier_id'         => $carrierVal
+                                                    ]);
+                                                    //  $ratescollection->push($ree);
+                                                }
+                                                // -------- 40'NOR ------------------------------
+
+                                                $calculationtypeValfail = 'Per 40 NOR';
+
+                                                if($requestobj[$statustypecurren] == 2){
+                                                    $currencyVal = $currencyValfornor;
+                                                }
+
+                                                if($fortyhcArr[0] != 0){
+                                                    FailSurCharge::create([
+                                                        'surcharge_id'       => $surchargeVal,
+                                                        'port_orig'          => $originVal,
+                                                        'port_dest'          => $destinyVal,
+                                                        'typedestiny_id'     => 'freight',
+                                                        'contract_id'        => $contractIdVal,
+                                                        'calculationtype_id' => $calculationtypeValfail,  //////
+                                                        'ammount'            => $fortynorVal, //////
+                                                        'currency_id'        => $currencyVal, //////
+                                                        'carrier_id'         => $carrierVal
+                                                    ]);
+                                                    //  $ratescollection->push($ree);
+                                                }
+
+                                                // -------- 45' ---------------------------------
+
+                                                $calculationtypeValfail = 'Per 45';
+
+                                                if($requestobj[$statustypecurren] == 2){
+                                                    $currencyVal = $currencyValforfive;
+                                                }
+
+                                                if($fortyhcArr[0] != 0){
+                                                    FailSurCharge::create([
+                                                        'surcharge_id'       => $surchargeVal,
+                                                        'port_orig'          => $originVal,
+                                                        'port_dest'          => $destinyVal,
+                                                        'typedestiny_id'     => 'freight',
+                                                        'contract_id'        => $contractIdVal,
+                                                        'calculationtype_id' => $calculationtypeValfail,  //////
+                                                        'ammount'            => $fortyfiveVal, //////
                                                         'currency_id'        => $currencyVal, //////
                                                         'carrier_id'         => $carrierVal
                                                     ]);
@@ -1259,15 +1714,32 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     } 
                                                     $ammount = $fortyVal;
 
-                                                }else {
+                                                }else if($fortyhcVal != 0){
 
                                                     if($requestobj[$statustypecurren] == 2){
                                                         $currencyVal = $currencyValforHC;
                                                     } 
                                                     $ammount = $fortyhcVal;
+
+                                                }else if($fortynorVal != 0){
+                                                    
+                                                    if($statusexistfortynor == 1){
+                                                        if($requestobj[$statustypecurren] == 2){
+                                                            $currencyVal = $currencyValfornor;
+                                                        } 
+                                                    }
+                                                    $ammount = $fortynorVal;
+
+                                                }else {
+                                                    if($statusexistfortyfive == 1){
+                                                        if($requestobj[$statustypecurren] == 2){
+                                                            $currencyVal = $currencyValforfive;
+                                                        } 
+                                                    }
+                                                    $ammount = $fortyfiveVal;
                                                 }
 
-                                                if($twentyArr[0] != 0){
+                                                if($ammount != 0){
                                                     FailSurCharge::create([
                                                         'surcharge_id'       => $surchargeVal,
                                                         'port_orig'          => $originVal,
@@ -1338,7 +1810,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
                                             if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]]){
+                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
+                                               $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
+                                               $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
 
                                                 // -------- PER_CONTAINER -------------------------
                                                 // se almacena uno solo porque todos los valores son iguales
@@ -1432,6 +1906,52 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
+                                                
+                                                // -------- 40'NOR ------------------------------
+
+                                                $calculationtypeValfail = '40\'NOR Error fila '.$i.'_E_E';
+
+                                                if($requestobj[$statustypecurren] == 2){
+                                                    $currencyVal = $currencyValfornor;
+                                                }
+
+                                                if($fortyhcArr[0] != 0){
+                                                    FailSurCharge::create([
+                                                        'surcharge_id'       => $surchargeVal,
+                                                        'port_orig'          => $originVal,
+                                                        'port_dest'          => $destinyVal,
+                                                        'typedestiny_id'     => 'freight',
+                                                        'contract_id'        => $contractIdVal,
+                                                        'calculationtype_id' => $calculationtypeValfail,  //////
+                                                        'ammount'            => $fortynorVal, //////
+                                                        'currency_id'        => $currencyVal, //////
+                                                        'carrier_id'         => $carrierVal
+                                                    ]);
+                                                    //$ratescollection->push($ree);
+                                                }
+                                                
+                                                // -------- 45'  -------------------------------
+
+                                                $calculationtypeValfail = '45\' Error fila '.$i.'_E_E';
+
+                                                if($requestobj[$statustypecurren] == 2){
+                                                    $currencyVal = $currencyValforfive;
+                                                }
+
+                                                if($fortyhcArr[0] != 0){
+                                                    FailSurCharge::create([
+                                                        'surcharge_id'       => $surchargeVal,
+                                                        'port_orig'          => $originVal,
+                                                        'port_dest'          => $destinyVal,
+                                                        'typedestiny_id'     => 'freight',
+                                                        'contract_id'        => $contractIdVal,
+                                                        'calculationtype_id' => $calculationtypeValfail,  //////
+                                                        'ammount'            => $fortyfiveVal, //////
+                                                        'currency_id'        => $currencyVal, //////
+                                                        'carrier_id'         => $carrierVal
+                                                    ]);
+                                                    //$ratescollection->push($ree);
+                                                }
                                             }
                                         }
                                     } else {
@@ -1447,7 +1967,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
                                         if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                           $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]]){
+                                           $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
+                                           $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
+                                           $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
 
                                             // -------- PER_CONTAINER -------------------------
                                             // se almacena uno solo porque todos los valores son iguales
@@ -1544,6 +2066,52 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
+                                            
+                                            // -------- 40'NOR -------------------------------
+
+                                            $calculationtypeValfail = '40\'NOR Error fila '.$i.'_E_E';
+
+                                            if($requestobj[$statustypecurren] == 2){
+                                                $currencyVal = $currencyValfornor;
+                                            }
+
+                                            if($fortyhcArr[0] != 0){
+                                                FailSurCharge::create([
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'port_orig'          => $originVal,
+                                                    'port_dest'          => $destinyVal,
+                                                    'typedestiny_id'     => 'freight',
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => $calculationtypeValfail,  //////
+                                                    'ammount'            => $fortynorVal, //////
+                                                    'currency_id'        => $currencyVal, //////
+                                                    'carrier_id'         => $carrierVal
+                                                ]);
+                                                //$ratescollection->push($ree);
+                                            }
+                                            
+                                            // -------- 45' ---------------------------------
+
+                                            $calculationtypeValfail = '45\' Error fila '.$i.'_E_E';
+
+                                            if($requestobj[$statustypecurren] == 2){
+                                                $currencyVal = $currencyValforfive;
+                                            }
+
+                                            if($fortyhcArr[0] != 0){
+                                                FailSurCharge::create([
+                                                    'surcharge_id'       => $surchargeVal,
+                                                    'port_orig'          => $originVal,
+                                                    'port_dest'          => $destinyVal,
+                                                    'typedestiny_id'     => 'freight',
+                                                    'contract_id'        => $contractIdVal,
+                                                    'calculationtype_id' => $calculationtypeValfail,  //////
+                                                    'ammount'            => $fortyfiveVal, //////
+                                                    'currency_id'        => $currencyVal, //////
+                                                    'carrier_id'         => $carrierVal
+                                                ]);
+                                                //$ratescollection->push($ree);
+                                            }
                                         }
                                     }
                                 }
@@ -1562,18 +2130,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
         // dd($collection);
-        $contractData = new Contract();
+        //no borrar
+         $contractData = new Contract();
         $contractData = Contract::find($requestobj['Contract_id']);
         $contractData->status = 'publish';
         $contractData->update();
-        
+
         Storage::Delete($NameFile);
         $FileTmp = new FileTmp();
         $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
-        
+
         $userNotifique = User::find($this->UserId);
         $message = 'The file imported was processed :' . $contractData->number ;
-        $userNotifique->notify(new N_general($userNotifique,$message));
+        $userNotifique->notify(new N_general($userNotifique,$message)); 
+
+
 
 
     }
