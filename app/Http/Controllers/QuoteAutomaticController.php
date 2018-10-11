@@ -644,9 +644,14 @@ class QuoteAutomaticController extends Controller
       //  calculo de los local charges en freight , origin y destiny
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
         $q->whereIn('carrier_id', $carrier);
-      })->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
-        $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
+      })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
+        $query->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
+          $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
+        })->orwhereHas('localcharcountries', function($q) use($origin_country,$destiny_country) {
+          $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+        });
       })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.saleterm')->get();
+
       foreach($localChar as $local){
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
         // Condicion para enviar los terminos de venta o compra
@@ -1391,7 +1396,7 @@ class QuoteAutomaticController extends Controller
         });
       })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
 
- 
+
       foreach($globalChar as $global){
         $rateMountG = $this->ratesCurrency($global->currency->id,$typeCurrency);
         // Condicion para enviar los terminos de venta o compra
