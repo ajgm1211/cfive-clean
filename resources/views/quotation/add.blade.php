@@ -34,28 +34,7 @@ $subtotalDestiny = 0;
   <div class="tab-pane" id="m_portlet_tab_1_2">
     {!! Form::open(['route' => 'quotes.store','class' => 'm-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed']) !!}
     <br>
-    <div class="row">
 
-
-      <div class="col-md-2 col-xs-4" >
-        @if($email_templates)
-        <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#SendQuoteModal">
-          Save and send
-        </button>
-        @endif
-
-      </div>
-      <div class="col-md-2 col-xs-4">
-
-        <button id="store-pdf" value="submit-pdf" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save and PDF</button>
-
-      </div>
-      <div class="col-md-2 col-xs-4" >
-        <button id="store" value="submit" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save</button>
-
-      </div>
-
-    </div>
     <hr><br><br>
     <div class="row">
       <div class="col-lg-10">
@@ -924,6 +903,28 @@ $subtotalDestiny = 0;
                           </div>
                         </div> 
                       </div>
+                    </div>
+                    <div class="row">
+
+
+                      <div class="col-md-2 col-xs-4" >
+                        @if($email_templates)
+                        <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#SendQuoteModal">
+                          Save and send
+                        </button>
+                        @endif
+
+                      </div>
+                      <div class="col-md-2 col-xs-4">
+
+                        <button id="store-pdf" value="submit-pdf" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save and PDF</button>
+
+                      </div>
+                      <div class="col-md-2 col-xs-4" >
+                        <button id="store" value="submit" name="btnsubmit" type="submit" class="btn btn-primary btn-block">Save</button>
+
+                      </div>
+
                     </div>
                   </div>
                 </div>
