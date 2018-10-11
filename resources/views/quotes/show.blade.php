@@ -1,21 +1,21 @@
 
 @extends('layouts.app')
-@section('title', 'Details Quote #'.$quote->id)
+@section('title', 'Details Quote #'. $quote->company_quote)
 @section('content')
 
 <div class="m-content">
     <div class="row">
         <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
         <div class="col-md-2 col-12" style="padding-bottom:10px;">
-            <a href="{{route('quotes.edit',$quote->id)}}" class="btn btn-primary btn-block"  title="Edit ">
+            <a href="{{route('quotes.edit',setearRouteKey($quote->id))}}" class="btn btn-primary btn-block"  title="Edit ">
                 Edit
             </a>
         </div>
         <div class="col-md-2 col-12" style="padding-bottom:10px;">
-            <a href="{{route('quotes.pdf',$quote->id)}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
+            <a href="{{route('quotes.pdf',setearRouteKey($quote->id))}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
         </div>
         <div class="col-md-2 col-12" style="padding-bottom:10px;">
-            <a href="{{route('quotes.duplicate',$quote->id)}}" class="btn btn-primary btn-block">Duplicate</a>
+            <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="btn btn-primary btn-block">Duplicate</a>
         </div>
         <div class="col-md-2 col-12" style="padding-bottom:10px;">
             <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-primary btn-block">Send</button>
@@ -496,7 +496,7 @@
 
 <script>
 
-    window.open('{{ route('quotes.pdf', ['id' => $quote->id]) }}');
+    window.open('{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}');
 
 </script>
 @endif

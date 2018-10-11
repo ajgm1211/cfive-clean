@@ -66,6 +66,7 @@ class CompanyController extends Controller
 
     public function show($id)
     {
+        $id = obtenerRouteKey($id);
         $company = Company::find($id);
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $quotes = Quote::where('company_id',$id)->get();

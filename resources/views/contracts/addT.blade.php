@@ -149,14 +149,17 @@ $validation_expire = 'Please enter validity date';
               <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
                 <thead>
                   <tr>
+                    <th title="Field #0">
+                      Type Route
+                    </th>
                     <th title="Field #1">
                       Type
                     </th>
                     <th title="Field #2">
-                      Origin Port
+                      Origin 
                     </th>
                     <th title="Field #2">
-                      Destination Port
+                      Destination 
                     </th>
                     <th title="Field #3">
                       Charge Type
@@ -180,9 +183,38 @@ $validation_expire = 'Please enter validity date';
                 </thead>
                 <tbody>
                   <tr>
+                    <td width='10%'>				
+                      <div class="m-radio-inline">
+                        <label class="m-radio">
+                          <input type="radio" onclick="activarCountry('divport','1')" checked='true' name="typeroute1"  value="port"> Port
+                          <span></span>
+                        </label>
+                        <label class="m-radio">
+                          <input type="radio"  onclick="activarCountry('divcountry','1')"  name="typeroute1" value="country"> Country
+                          <span></span>
+                        </label>
+
+                      </div>
+                    </td>
                     <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
-                    <td width='15%'>{{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
-                    <td width='12%'>{{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                    <td width='15%'>
+                      <div class="divport1" >
+                        {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}
+                      </div>
+                      <div class="divcountry1" hidden="true">	
+                        {{ Form::select('country_orig1[]', $country,
+                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                      </div>
+                    </td>
+                    <td width='12%'>
+                      <div class="divport1" >
+                        {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}
+                      </div>
+                      <div class="divcountry1" hidden="true">	
+                        {{ Form::select('country_dest1[]', $country,
+                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                      </div>
+                    </td>
                     <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
                     <td width='10%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
                     <td width='11%'>{{ Form::select('calculationtype[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
@@ -192,9 +224,39 @@ $validation_expire = 'Please enter validity date';
 
                   </tr>
                   <tr   id='tclone2' hidden="true" >
+                    <td>
+                      <div class="m-radio-inline">
+                        <label class="m-radio">
+                          <input type="radio" checked='true'  class="rdrouteP"  value="port"> Port
+                          <span></span>
+                        </label>
+                        <label class="m-radio">
+                          <input type="radio" class="rdrouteC"  value="country"> Country
+                          <span></span>
+                        </label>
+
+                      </div>
+                    </td>
                     <td>{{ Form::select('type[]', $surcharge,null,['class'=>'form-control' ,'style' => 'width:100%;']) }}</td>
-                    <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple','style' => 'width:100%;']) }}</td>
-                    <td>{{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                    <td>
+                      <div class="divport" >
+                        {{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
+                      </div>
+                      <div class="divcountry" hidden="true">
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryOrig' ,'style' => 'width:100%;']) }}
+                      </div>
+
+
+                    </td>
+                    <td>
+                      <div class="divport" >
+                        {{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
+                      </div>
+                      <div class="divcountry" hidden="true">
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryDest' ,'style' => 'width:100%;']) }}
+                      </div>
+
+                    </td>
                     <td>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
                     <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
 
