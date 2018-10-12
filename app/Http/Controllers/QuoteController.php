@@ -122,6 +122,7 @@ class QuoteController extends Controller
     }
 
     public function edit($id){
+        $id = obtenerRouteKey($id);
         $email_templates='';
         $quote = Quote::findOrFail($id);
         $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
@@ -633,6 +634,7 @@ class QuoteController extends Controller
     }
 
     public function showWithPdf($id){
+        $id = obtenerRouteKey($id);
         $currency_cfg='';
         $company_user='';
         $email_templates='';
@@ -683,6 +685,7 @@ class QuoteController extends Controller
 
     public function show($id)
     {
+        $id = obtenerRouteKey($id);
 
         $currency_cfg='';
         $company_user='';
@@ -931,7 +934,7 @@ class QuoteController extends Controller
     }
     public function duplicate(Request $request,$id)
     {
-
+        $id = obtenerRouteKey($id);
         $quotes = Quote::all();
         $quote = Quote::findOrFail($id);
         $companies = Company::all()->pluck('business_name','id');
