@@ -44,7 +44,7 @@
                         <a href="{{route('quotes.automatic')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                             <span>
                                 <span>
-                                    Automatic Quote
+                                    Search Rates
                                 </span>
                                 <i class="la la-plus"></i>
                             </span>
