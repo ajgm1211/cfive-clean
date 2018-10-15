@@ -189,7 +189,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $randons = $requestobj[$origin];
                         } else {
                             $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                            $originResul = str_replace($caracteres,'',strtolower($originVal));
+                            $sin_via_org = explode(' via ',$originVal);
+                            $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
                             $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                                 ->get();
                             if(count($originExits) == 1){
@@ -208,7 +209,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $randons = $requestobj[$destiny];
                         } else {
                             $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                            $destinResul = str_replace($caracteres,'',strtolower($destinyVal));
+                            $sin_via_des = explode(' via ',$destinyVal);
+                            $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
                             $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                                 ->get();
                             if(count($destinationExits) == 1){

@@ -99,7 +99,8 @@ class ImportationController extends Controller
                     $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                     // Origen Y Destino ------------------------------------------------------------------------
 
-                    $originResul = str_replace($caracteres,'',strtolower($originEX[0]));
+                    $sin_via_org = explode(' via ',$originEX[0]);
+                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
                     $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                         ->get();
                     if(count($originExits) == 1){
@@ -109,7 +110,8 @@ class ImportationController extends Controller
                         }
                     }
 
-                    $destinResul = str_replace($caracteres,'',strtolower($destinyEX[0]));
+                    $sin_via_des = explode(' via ',$destinyEX[0]);
+                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
                     $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                         ->get();
                     if(count($destinationExits) == 1){
@@ -282,7 +284,8 @@ class ImportationController extends Controller
                     $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                     // Origen Y Destino ------------------------------------------------------------------------
 
-                    $originResul = str_replace($caracteres,'',strtolower($originEX[0]));
+                    $sin_via_org = explode(' via ',$originEX[0]);
+                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
                     $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                         ->get();    
                     if(count($originExits) == 1){
@@ -292,7 +295,8 @@ class ImportationController extends Controller
                         }
                     }
 
-                    $destinResul = str_replace($caracteres,'',strtolower($destinyEX[0]));
+                    $sin_via_des = explode(' via ',$destinyEX[0]);
+                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
                     $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                         ->get();
                     if(count($destinationExits) == 1){
@@ -660,7 +664,8 @@ class ImportationController extends Controller
                                    } else {
                                        // dd($read[$requestobj->$originExc]);
                                        $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                                       $originResul = str_replace($caracteres,'',strtolower($originVal));
+                                       $sin_via_org = explode(' via ',$originVal);
+                                       $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
                                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                                            ->get();
                                        if(count($originExits) == 1){
@@ -679,7 +684,8 @@ class ImportationController extends Controller
                                        $randons = $requestobj[$destiny];
                                    } else {
                                        $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                                       $destinResul = str_replace($caracteres,'',strtolower($destinyVal));
+                                       $sin_via_des = explode(' via ',$destinyVal);
+                                       $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
                                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                                            ->get();
                                        if(count($destinationExits) == 1){
@@ -2495,15 +2501,13 @@ class ImportationController extends Controller
 
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        ini_set('max_execution_time', 300); 
-        Excel::load(\Storage::disk('UpLoadFile')
-                    ->url('02102018_153843_MAERSK2.xlsx'), function($sheet) {
-                        $sheet->noHeading = true;
-                        $sheet->ignoreEmpty();
-                        $sheet->takeRows(4);
-                        dd($sheet->first());
-                    });
-
+        $puerto = 'Rongqi, Shunde, Guangdong, China via Nansha';
+        $sin_via = explode(' via ',$puerto);
+        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+        $originResul = str_replace($caracteres,'',strtolower($sin_via[0]));
+        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
+            ->get();
+        dd($originExits->toArray());
     }
 
 }
