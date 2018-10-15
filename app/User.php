@@ -64,4 +64,8 @@ class User extends Authenticatable implements Auditable
   {
     $this->notify(new MailResetPasswordNotification($token));
   }
+  public function routeNotificationForSlack()
+  {
+    return 'https://hooks.slack.com/services/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';
+  }
 }
