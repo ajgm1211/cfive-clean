@@ -983,7 +983,8 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="qty_20" name="qty_20" value="{{ $form->twuenty }} ">
     <input type="hidden" class="form-control" id="qty_40" name="qty_40" value="{{ $form->forty }} ">
     <input type="hidden" class="form-control" id="qty_40_hc" name="qty_40_hc" value="{{ $form->fortyhc }} ">
-    <input type="hidden" class="form-control" id="qty_40_hc" name="qty_45_hc" value="{{ $form->fortyfive }} ">
+    <input type="hidden" class="form-control" id="qty_40_nor" name="qty_40_nor" value="{{ $form->fortynor }} ">
+    <input type="hidden" class="form-control" id="qty_45_hc" name="qty_45_hc" value="{{ $form->fortyfive }} ">
     <input type="hidden" class="form-control" id="pick_up_date" name="pick_up_date" value="{{ $form->date }} ">
     <input type="hidden" class="form-control" id="status_id" name="status_id" value="1">
     <input type="hidden" class="form-control" id="delivery_type" name="delivery_type" value="{{ $form->delivery_type }} ">
