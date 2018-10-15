@@ -924,7 +924,7 @@ $subtotalDestiny = 0;
                       <div class="col-md-2 col-xs-4" >
                         @if($email_templates)
                         <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#SendQuoteModal">
-                          Save and send
+                          Save and send 
                         </button>
                         @endif
                       </div>
