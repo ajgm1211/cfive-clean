@@ -170,6 +170,9 @@ return [
     Spatie\GoogleTagManager\GoogleTagManagerServiceProvider::class,
     OwenIt\Auditing\AuditingServiceProvider::class,
     Lab404\Impersonate\ImpersonateServiceProvider::class,
+
+
+
   ],
 
   /*
@@ -225,6 +228,7 @@ return [
     'GoogleMaps' => GoogleMaps\Facade\GoogleMapsFacade::class,
     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     'GoogleTagManager' => Spatie\GoogleTagManager\GoogleTagManagerFacade::class,
+
   ],
 
 ];
