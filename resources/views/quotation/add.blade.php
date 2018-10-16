@@ -143,12 +143,8 @@ $subtotalDestiny = 0;
                     <div style="padding-top: 20px; padding-bottom: 20px;">
                       <div class="row">
                         <div class="col-md-12">
-                          <h5 class="title-quote size-14px">Carrier</h5>
-                          <hr>
-                        </div>
-                        <div class="col-md-12">
 
-                          <img src="{{ url('imgcarrier/'.$info->carrier->image) }}"  class="img img-responsive" width="125px" height="auto" margin-bottom="25px" />
+                          <img src="{{ url('imgcarrier/'.$info->carrier->image) }}"  class="img img-responsive" width="100px" height="auto" margin-bottom="25px" />
 
                         </div>
                       </div>
