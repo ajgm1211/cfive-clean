@@ -1109,7 +1109,7 @@ class QuoteController extends Controller
     $countries = Country::all()->pluck('name','id');
     // Notificaciones
     $userLogin  = auth()->user();
-    $userLogin->notify(new SlackNotification());
+  //  $userLogin->notify(new SlackNotification('Ejemplo'));
     $idCompany = $userLogin->company_user_id;
     $users = User::where('company_user_id','=',$idCompany)->where('type','company')->orWhere('id','=',$userLogin->id)->get();
     $message = ' changed the status of the quote number :  '.$quote->id. ' to  '.$quote->status->name;
