@@ -525,21 +525,21 @@ class ContractsController extends Controller
     $objcalculation = new CalculationType();
     $objsurcharge = new Surcharge();
     $objtypedestiny = new TypeDestiny();
+    $countries = Country::pluck('name','id');
     $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $calculationT = $objcalculation->all()->pluck('name','id');
     $typedestiny = $objtypedestiny->all()->pluck('description','id');
     $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    return view('contracts.addLocalCharge', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','id'));
+    return view('contracts.addLocalCharge', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','id','countries'));
 
   }
   public function storeLocalChar(Request $request,$id){
     $localcharge = new LocalCharge();
     $request->request->add(['contract_id' => $id]);
     $localcharge =  $localcharge->create($request->all());
-    $detailportOrig = $request->input('port_origlocal');
-    $detailportDest = $request->input('port_destlocal');
+
     $detailcarrier = $request->input('carrier_id');
     foreach($detailcarrier as $c => $value)
     {
@@ -548,16 +548,29 @@ class ContractsController extends Controller
       $detailcarrier->localcharge()->associate($localcharge);
       $detailcarrier->save();
     }
-    foreach($detailportOrig as $orig => $valueOrig)
-    {
-      foreach($detailportDest as $dest => $valueDest)
-      {
-        $detailport = new LocalCharPort();
-        $detailport->port_orig =$valueOrig;
-        $detailport->port_dest =$valueDest;
-        $detailport->localcharge()->associate($localcharge);
-        $detailport->save();
+    $typeroute =  $request->input('typeroute');
+    if($typeroute == 'port'){
+      $detailportOrig = $request->input('port_origlocal');
+      $detailportDest = $request->input('port_destlocal');
+      foreach($detailportOrig as $orig => $valueOrig){
+        foreach($detailportDest as $dest => $valueDest){
+          $detailport = new LocalCharPort();
+          $detailport->port_orig =$valueOrig;
+          $detailport->port_dest =$valueDest;
+          $detailport->localcharge()->associate($localcharge);
+          $detailport->save();
+        }
       }
+    }elseif($typeroute == 'country'){
+
+      $detailcountryOrig = $request->input('country_orig');
+      $detailcountryDest = $request->input('country_dest');
+
+      $detailcountry = new LocalCharCountry();
+      $detailcountry->country_orig =$detailcountryOrig;
+      $detailcountry->country_dest = $detailcountryDest;
+      $detailcountry->localcharge()->associate($localcharge);
+      $detailcountry->save();
     }
     return redirect()->back()->with('localcharSave','true')->with('activeS','active');
   }
@@ -620,7 +633,7 @@ class ContractsController extends Controller
       $detailcountry->localcharge_id = $id;
       $detailcountry->save();
     }
-    
+
     foreach($carrier as $key)
     {
       $detailcarrier = new LocalCharCarrier();
