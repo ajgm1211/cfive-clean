@@ -31,7 +31,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
      return (new SlackMessage)
                 ->from('Laravel', ':extraterrestre:')
                 ->to('#general')
-                ->content('Es ale probando desde laravel');
+                ->content('Es ale y sigue  probando desde laravel');
   }
   /**
      * Get the array representation of the notification.
