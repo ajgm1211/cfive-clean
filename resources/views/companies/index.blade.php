@@ -35,7 +35,7 @@ Companies List
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
-                    <div class="col-xl-8 order-2 order-xl-1">
+                    <div class="col-xl-6 order-2 order-xl-1">
                         <div class="form-group m-form__group row align-items-center">
                             <!--<div class="col-md-4">
 <div class="m-form__group m-form__group--inline">
@@ -66,7 +66,7 @@ All
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 order-1 order-xl-2 m--align-right">
+                    <div class="col-xl-6 order-1 order-xl-2 m--align-right">
 
                         <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                             <span>
@@ -78,6 +78,14 @@ All
                             </span>
                         </button>
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
+
+
+                        <a href="#" data-toggle="modal" data-target="#modalupload" class=" btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                            <span>
+                                Upload Companies
+                                <i class="la la-plus"></i>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -151,6 +159,50 @@ All
                     @endforeach
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="modalupload"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Upload Companies
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div id="edit-modal-body" class="modal-body">
+                    {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
+
+                    <div class="form-group row pull-right">
+                        <div class="col-md-3 ">
+                            <a href="{{route('DownLoad.Files',1)}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                <span>
+                                    Download File
+                                    &nbsp;
+                                    <i class="la la-download"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group row ">
+                        <div class="col-md-1 "></div>
+                        <div class="col-md-6 ">
+                            <input type="file" name="file" value="Load File" required />
+                        </div>
+                    </div>
+                </div>
+                <div id="edit-modal-body" class="modal-footer">
+                    {!! Form::submit('Load', ['class'=> 'btn btn-primary']) !!}
+                    <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Cancel</span>
+                    </button>
+                </div>
+                {!! Form::close() !!}
+            </div>
         </div>
     </div>
 </div>
