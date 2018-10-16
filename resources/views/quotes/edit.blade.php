@@ -141,7 +141,7 @@
                                                                 <li class="nav-item">
                                                                     <a href="#tab_2_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Reefer Containers </a>
                                                                 </li>                                                                <li class="nav-item">
-                                                                <a href="#tab_2_3" class="nav-link" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Open Top Containers </a>
+                                                                <a href="#tab_2_3" class="nav-link" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Special Equipment </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
@@ -228,14 +228,6 @@
                                                                             </label>
                                                                             <div class="m-bootstrap-touchspin-brand">
                                                                                 {!! Form::text('qty_40_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_open_top']) !!}
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-4">
-                                                                            <label>
-                                                                                <b>40' HC Open top :</b>
-                                                                            </label>
-                                                                            <div class="m-bootstrap-touchspin-brand">
-                                                                                {!! Form::text('qty_40_hc_open_top', null, ['id' => 'm_touchspin_2_1' ,'placeholder' => ' ','class' => 'col-lg-12 form-control qty_40_hc_open_top']) !!}
                                                                             </div>
                                                                         </div>
                                                                     </div>
