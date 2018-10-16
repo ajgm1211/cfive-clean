@@ -278,6 +278,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $fortynorVal = $fortynorArr[0].'_E_E';
                             }
                         } else {
+                            $fortynorExiBol = true;
                             $fortynorVal = 0;
                         }
 
@@ -291,6 +292,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $fortyfiveVal = $fortyfiveArr[0].'_E_E';
                             }
                         } else {
+                            $fortyfiveExiBol = true;
                             $fortyfiveVal = 0;
                         }
 
@@ -514,7 +516,24 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $surchargeVal = $read[$requestobj[$Charge]].'_E_E';
                         }
                         //////////////////////////////////////////////////////////////////////////////////////////////////////
+                        /* $prueba = collect([]);
 
+                        $prueba = [
+                            '$carriExitBol'           => $carriExitBol,
+                            '$origExiBol'             => $origExiBol,
+                            '$destiExitBol'           => $destiExitBol,
+                            '$twentyExiBol'           => $twentyExiBol,
+                            '$fortyExiBol'            => $fortyExiBol,
+                            '$fortyhcExiBol'          => $fortyhcExiBol,
+                            '$fortynorExiBol'         => $fortynorExiBol,
+                            '$fortyfiveExiBol'        => $fortyfiveExiBol,
+                            '$calculationtypeExiBol'  => $calculationtypeExiBol,
+                            '$variantecurrency'       => $variantecurrency,
+                            '$typeExiBol'             => $typeExiBol,
+                            '$values'                 => $values
+                        ];
+
+                        dd($prueba);*/
                         if($carriExitBol        == true
                            && $origExiBol       == true
                            && $destiExitBol     == true
@@ -586,10 +605,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 if($read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
                                     //dd($read[$request->$twenty]);
                                     // se verifica si los valores son iguales 
+                                    if($statusexistfortynor == 1){
+                                        $fortynorif =  $read[$requestobj[$fortynor]];
+                                    } else {
+                                        $fortynorif = $read[$requestobj[$twenty]];
+                                    }
+
+                                    if($statusexistfortyfive == 1){ 
+                                        $fortyfiveif = $read[$requestobj[$fortyfive]];
+                                    }else {
+                                        $fortyfiveif = $read[$requestobj[$twenty]];
+                                    }
                                     if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                       $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
-                                       $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
-                                       $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
+                                       $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
+                                       $read[$requestobj[$fortyhc]] == $fortynorif &&
+                                       $fortynorif == $fortyfiveif){
 
                                         // evaluamos si viene el valor con el currency juntos
 
@@ -1372,10 +1402,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 }
                                                 // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
+                                                if($statusexistfortynor == 1){
+                                                    $fortynorif =  $read[$requestobj[$fortynor]];
+                                                } else {
+                                                    $fortynorif = $read[$requestobj[$twenty]];
+                                                }
+
+                                                if($statusexistfortyfive == 1){ 
+                                                    $fortyfiveif = $read[$requestobj[$fortyfive]];
+                                                }else {
+                                                    $fortyfiveif = $read[$requestobj[$twenty]];
+                                                }
                                                 if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
                                                    $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
-                                                   $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
-                                                   $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
+                                                   $read[$requestobj[$fortyhc]] == $fortynorif &&
+                                                   $fortynorif == $fortyfiveif){
 
                                                     // -------- PER_CONTAINER -------------------------
                                                     // se almacena uno solo porque todos los valores son iguales
@@ -1531,10 +1572,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                             // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
+                                            if($statusexistfortynor == 1){
+                                                $fortynorif =  $read[$requestobj[$fortynor]];
+                                            } else {
+                                                $fortynorif = $read[$requestobj[$twenty]];
+                                            }
+
+                                            if($statusexistfortyfive == 1){ 
+                                                $fortyfiveif = $read[$requestobj[$fortyfive]];
+                                            }else {
+                                                $fortyfiveif = $read[$requestobj[$twenty]];
+                                            }
                                             if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
-                                               $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
-                                               $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
+                                               $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
+                                               $read[$requestobj[$fortyhc]] == $fortynorif &&
+                                               $fortynorif == $fortyfiveif){
 
                                                 // -------- PER_CONTAINER -------------------------
                                                 // se almacena uno solo porque todos los valores son iguales
@@ -1724,7 +1776,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $ammount = $fortyhcVal;
 
                                                 }else if($fortynorVal != 0){
-                                                    
+
                                                     if($statusexistfortynor == 1){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValfornor;
@@ -1811,10 +1863,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                             // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
+                                            if($statusexistfortynor == 1){
+                                                $fortynorif =  $read[$requestobj[$fortynor]];
+                                            } else {
+                                                $fortynorif = $read[$requestobj[$twenty]];
+                                            }
+
+                                            if($statusexistfortyfive == 1){ 
+                                                $fortyfiveif = $read[$requestobj[$fortyfive]];
+                                            }else {
+                                                $fortyfiveif = $read[$requestobj[$twenty]];
+                                            }
                                             if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                               $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
-                                               $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
-                                               $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
+                                               $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
+                                               $read[$requestobj[$fortyhc]] == $fortynorif &&
+                                               $fortynorif == $fortyfiveif){
 
                                                 // -------- PER_CONTAINER -------------------------
                                                 // se almacena uno solo porque todos los valores son iguales
@@ -1908,7 +1971,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
-                                                
+
                                                 // -------- 40'NOR ------------------------------
 
                                                 $calculationtypeValfail = '40\'NOR Error fila '.$i.'_E_E';
@@ -1931,7 +1994,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
-                                                
+
                                                 // -------- 45'  -------------------------------
 
                                                 $calculationtypeValfail = '45\' Error fila '.$i.'_E_E';
@@ -1968,10 +2031,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                         // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
+                                        if($statusexistfortynor == 1){
+                                            $fortynorif =  $read[$requestobj[$fortynor]];
+                                        } else {
+                                            $fortynorif = $read[$requestobj[$twenty]];
+                                        }
+
+                                        if($statusexistfortyfive == 1){ 
+                                            $fortyfiveif = $read[$requestobj[$fortyfive]];
+                                        }else {
+                                            $fortyfiveif = $read[$requestobj[$twenty]];
+                                        }
                                         if($read[$requestobj[$twenty]] == $read[$requestobj[$forty]] &&
-                                           $read[$requestobj[$forty]] == $read[$requestobj[$fortyhc]] &&
-                                           $read[$requestobj[$fortyhc]] == $read[$requestobj[$fortynor]] &&
-                                           $read[$requestobj[$fortynor]] == $read[$requestobj[$fortyfive]]){
+                                           $read[$requestobj[$forty]]  == $read[$requestobj[$fortyhc]] &&
+                                           $read[$requestobj[$fortyhc]] == $fortynorif &&
+                                           $fortynorif == $fortyfiveif){
 
                                             // -------- PER_CONTAINER -------------------------
                                             // se almacena uno solo porque todos los valores son iguales
@@ -2068,7 +2142,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
-                                            
+
                                             // -------- 40'NOR -------------------------------
 
                                             $calculationtypeValfail = '40\'NOR Error fila '.$i.'_E_E';
@@ -2091,7 +2165,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
-                                            
+
                                             // -------- 45' ---------------------------------
 
                                             $calculationtypeValfail = '45\' Error fila '.$i.'_E_E';
