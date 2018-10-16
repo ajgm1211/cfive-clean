@@ -199,6 +199,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
     Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
+    Route::get('addCM', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
     Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
@@ -221,6 +222,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
     Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
+    Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
     Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
     Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
     Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
