@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 225px; height: auto; margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 200px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><b>Citar</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>

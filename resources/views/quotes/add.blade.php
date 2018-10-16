@@ -1208,7 +1208,7 @@
             });
         }
         if(action == "addContact"){
-            var url = '{{ route("contacts.addCM") }}';
+            var url = '{{ route("contacts.addCMMQ") }}';
             $('.modal-body').load(url,function(){
                 $('#contactModal').modal({show:true});
             });
