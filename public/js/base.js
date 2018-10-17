@@ -1960,17 +1960,14 @@ $(document).on('click', '#savecontact', function () {
 
         },
         success: function(data) {
+            var company_id = $("select[name='company_id_quote']").val();
             $.ajax({
-                url: "company/companies",
+                url: "contacts/contact/"+company_id,
                 dataType: 'json',
                 success: function(dataC) {
-                    $('select[name="company_id_quote"]').empty();
+                    $('select[name="contact_id"]').empty();
                     $.each(dataC, function(key, value) {
-                        $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
-                    });
-                    $('select[name="company_id"]').empty();
-                    $.each(dataC, function(key, value) {
-                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });                    
                     $('#contactModal').modal('hide');
 
@@ -1979,9 +1976,6 @@ $(document).on('click', '#savecontact', function () {
                         'Register completed',
                         'success'
                     )
-                    $("select[name='company_id_quote']").val('');
-                    $("select[name='company_id']").val('');
-                    $('#select2-m_select2_2_modal-container').text('Please an option');
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
