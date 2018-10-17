@@ -61,6 +61,13 @@ return [
             'url' => 'storage',
             'visibility' => 'public',
         ],
+        
+        'DownLoadFile' => [
+            'driver' => 'local',
+            'root' => storage_path('app/files'),
+            'url' => 'storage',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

@@ -15,9 +15,9 @@ use Illuminate\Notifications\Messages\SlackMessage;
      *
      * @return void
      */
-  public function __construct()
+  public function __construct($message)
   {
-
+    $this->message = $message;
   }
 
 
@@ -29,9 +29,9 @@ use Illuminate\Notifications\Messages\SlackMessage;
   {
 
      return (new SlackMessage)
-                ->from('Laravel', ':extraterrestre:')
+                ->from('CargoFive', ':extraterrestre:')
                 ->to('#general')
-                ->content('Es ale y sigue  probando desde laravel');
+                ->content($this->message);
   }
   /**
      * Get the array representation of the notification.

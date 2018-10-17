@@ -164,7 +164,14 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     // Datatable Rates Y Surchargers
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
-
+    
+    // DownLoad Files
+    Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files');
+    
+    // Companies
+    Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
+    
+    
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 });
@@ -199,7 +206,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
     Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
-    Route::get('addCM', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
+    Route::get('addCMMQ', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
     Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
