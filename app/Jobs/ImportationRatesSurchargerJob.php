@@ -36,7 +36,6 @@ use App\FileTmp;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
-
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
