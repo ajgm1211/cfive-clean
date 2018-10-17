@@ -39,6 +39,10 @@
                             {!! Form::label('phone', 'Phone') !!}
                             {!! Form::text('phone', null, ['placeholder' => 'Please enter a phone','class' => 'form-control m-input','required' => 'required']) !!}
                         </div>
+                        <div class="form-group m-form__group">
+                            {!! Form::label('position', 'Position') !!}
+                            {!! Form::text('position', null, ['placeholder' => 'Please enter a position','class' => 'form-control m-input phonec_input','required' => 'required']) !!}
+                        </div>
                     </div>
                 </div>
                 <div class="m-portlet__foot m-portlet__foot--fit">
