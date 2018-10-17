@@ -164,7 +164,14 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     // Datatable Rates Y Surchargers
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
-
+    
+    // DownLoad Files
+    Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files');
+    
+    // Companies
+    Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
+    
+    
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 });
