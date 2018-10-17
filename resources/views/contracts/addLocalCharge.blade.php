@@ -1,8 +1,31 @@
 <div class="m-portlet">
 
 
-{{ Form::open(array('route' => array('contracts.storeLocalCharge', $id)),['class' => 'form-group m-form__group']) }}
+  {{ Form::open(array('route' => array('contracts.storeLocalCharge', $id)),['class' => 'form-group m-form__group']) }}
   <div class="m-portlet__body">
+    <div class="form-group m-form__group row">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-4">
+            <label>
+              {!! Form::label('Type Route', 'Type Route') !!}
+            </label>
+            <div class="m-radio-inline">
+              <label class="m-radio">
+                <input type="radio" id="rdrouteP" onclick="activarCountry('divport')" checked='true' name="typeroute" value="port"> Port
+                <span></span>
+              </label>
+              <label class="m-radio">
+                <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry')"  name="typeroute" value="country"> Country
+                <span></span>
+              </label>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         <label>
@@ -11,19 +34,33 @@
         {{ Form::select('surcharge_id', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ','style' => 'width:100%;']) }}
       </div>
       <div class="col-lg-4">
-        {!! Form::label('orig', 'Origin Port') !!}
-        {{ Form::select('port_origlocal[]', $harbor,null,['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
+        <div class="divport" >
+          {!! Form::label('orig', 'Origin Port') !!}
+          {{ Form::select('port_origlocal[]', $harbor,null,['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
+        </div>
+        <div class="divcountry" hidden="true">
+          {!! Form::label('origC', 'Origin Country') !!}
+          {{ Form::select('country_orig', $countries,
+          null,['placeholder'=> 'Select an option','id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12']) }}
+
+        </div>
       </div>
       <div class="col-lg-4">
-        {!! Form::label('dest', 'Destination Port') !!}
+        <div class="divport" >
+          {!! Form::label('dest', 'Destination Port') !!}
 
-        <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('port_destlocal[]', $harbor,null,['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-info-circle"></i>
+          <div class="m-input-icon m-input-icon--right">
+            {{ Form::select('port_destlocal[]', $harbor,null,['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
+            <span class="m-input-icon__icon m-input-icon__icon--right">
+              <span>
+                <i class="la la-info-circle"></i>
+              </span>
             </span>
-          </span>
+          </div>
+        </div>
+        <div class="divcountry" hidden="true">
+          {!! Form::label('destC', 'Destination Country') !!}
+          {{ Form::select('country_dest',$countries,null,['placeholder'=> 'Select an option', 'id' => 'country_dest','class'=>'m-select2-general form-control'  ]) }}
         </div>
 
 
@@ -98,13 +135,13 @@
   </div>
   {!! Form::close() !!}
 </div>
-
+<script src="/js/editcontracts.js"></script>
 <script>
 
 
-    $('.m-select2-general').select2({
-      placeholder: "Select an option"
-    });
+  $('.m-select2-general').select2({
+    placeholder: "Select an option"
+  });
 
 
 

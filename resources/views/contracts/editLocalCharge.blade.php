@@ -73,15 +73,8 @@ $portRadio = false;
           </div>
         </div>
         <div class="divcountry" hidden="true">
-          <div class="m-input-icon m-input-icon--right">
-            {!! Form::label('destC', 'Destination Country') !!}
-            {{ Form::select('country_dest',$countries,$localcharges->localcharcountries->pluck('countryDest')->unique()->pluck('id'),['placeholder'=> 'Select an option', 'id' => 'country_dest','class'=>'m-select2-general form-control'  ]) }}
-            <span class="m-input-icon__icon m-input-icon__icon--right">
-              <span>
-                <i class="la la-info-circle"></i>
-              </span>
-            </span>
-          </div>
+          {!! Form::label('destC', 'Destination Country') !!}
+          {{ Form::select('country_dest',$countries,$localcharges->localcharcountries->pluck('countryDest')->unique()->pluck('id'),['placeholder'=> 'Select an option', 'id' => 'country_dest','class'=>'m-select2-general form-control'  ]) }}
         </div>
       </div>
     </div>
