@@ -166,6 +166,9 @@ $subtotalDestiny = 0;
                         @if($form->fortyhc > 0)
                         <p id="cargo_details_40_hc_p" ><span id="cargo_details_40_hc"></span> {{ $form->fortyhc }} x 40' HC Containers</p>
                         @endif
+                        @if($form->fortynor > 0)
+                        <p id="cargo_details_40_nor_p" ><span id="cargo_details_40_nor"></span> {{ $form->fortynor }} x 40' NOR Containers</p>
+                        @endif
                         @if($form->fortyfive > 0)
                         <p id="cargo_details_45_hc_p" ><span id="cargo_details_45_hc"></span> {{ $form->fortyfive }} x 45' HC Containers</p> 
                         @endif
