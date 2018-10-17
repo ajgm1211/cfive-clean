@@ -241,7 +241,7 @@
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    Import Contrat&nbsp;
+                                                    Import Contract&nbsp;
                                                 </span>
                                                 <i class="la la-cloud-upload"></i>
                                             </span>
