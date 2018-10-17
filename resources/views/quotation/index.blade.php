@@ -323,7 +323,7 @@
                         <td>{{  $freightGlo['freight']['totalAmmount']  }} </td>
                       </tr>
                       @endforeach
-                      @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0" )  || ($formulario->fortyfive !="0") )
+                      @if( ($formulario->twuenty !="0") || ($formulario->forty !="0") || ($formulario->fortyhc!="0" ) ||  ($formulario->fortynor !="0") || ($formulario->fortyfive !="0") )
                       <tr>
                         <td colspan="5"></td>
                         <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>

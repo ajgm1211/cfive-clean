@@ -94,7 +94,8 @@ class ReprocessSurchargersJob implements ShouldQueue
                     $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                     // Origen Y Destino ------------------------------------------------------------------------
 
-                    $originResul = str_replace($caracteres,'',strtolower($originEX[0]));
+                    $sin_via_org = explode(' via ',$originEX[0]);
+                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
                     $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
                         ->get();    
                     if(count($originExits) == 1){
@@ -104,7 +105,8 @@ class ReprocessSurchargersJob implements ShouldQueue
                         }
                     }
 
-                    $destinResul = str_replace($caracteres,'',strtolower($destinyEX[0]));
+                    $sin_via_des = explode(' via ',$destinyEX[0]);
+                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
                     $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
                         ->get();
                     if(count($destinationExits) == 1){

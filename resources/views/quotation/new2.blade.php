@@ -97,7 +97,16 @@
                                 </div>
                                 <div class="col-md-3">
                                   <label>
-                                    45':
+                                    40' NOR :
+                                  </label>
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    {!! Form::text('fortynor', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label>
+                                  <br>  45':
                                   </label>
                                   <div class="m-bootstrap-touchspin-brand">
                                     {!! Form::text('fortyfive', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
