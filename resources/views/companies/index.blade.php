@@ -94,16 +94,23 @@ All
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalupload">
                 <span>
+                  <i class="la la-upload"></i>
+                  &nbsp;
                   Upload Companies
-                   &nbsp;
-                  <i class="la la-plus"></i>
                 </span>
               </a>      
               <a href="{{route('DownLoad.Files',1)}}" class="dropdown-item" >
                 <span>
-                  Download File
-                  &nbsp;
                   <i class="la la-download"></i>
+                  &nbsp;
+                  Download File
+                </span>
+              </a>
+              <a href="{{route('DownLoad.Files',1)}}" class="dropdown-item" >
+                <span>
+                  <i class="la la-search"></i>
+                  &nbsp;
+                  Failed Companies
                 </span>
               </a>
             </div>
@@ -201,7 +208,7 @@ All
 
           <div class="form-group row pull-right">
             <div class="col-md-3 ">
-              
+
             </div>
           </div>
           <div class="form-group row ">
