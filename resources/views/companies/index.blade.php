@@ -159,7 +159,8 @@ All
               @endforeach
             </td>
             <td>{{$company->contact->count()}}</td>
-            <td>
+            <td>ent">
+      <div class="modal-content">
               @foreach($company->price_name as $price)
               <ul>
                 <li>{{$price->name}}</li>
@@ -196,7 +197,7 @@ All
             </span>
           </button>
         </div>
-        <div id="edit-modal-body" class="modal-body">
+        <div id="edit-modal-body-E" class="modal-body-E">
           {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
 
           <div class="form-group row pull-right">
