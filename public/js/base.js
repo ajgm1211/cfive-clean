@@ -1892,6 +1892,7 @@ $('#users_company').select2({
     placeholder: "Select an option"
 });
 
+
 // companies 
 
 $(document).on('click', '#savecompany', function () {
