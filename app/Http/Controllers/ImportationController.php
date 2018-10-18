@@ -2546,6 +2546,7 @@ class ImportationController extends Controller
                  $businessnameBol = false;
                  $phoneBol        = false;
                  $emailBol        = false;
+                 $taxnumberBol    = false;
 
 
                  $businessnameVal = $read[$businessnameread];
@@ -2573,9 +2574,17 @@ class ImportationController extends Controller
                    $emailVal = $emailVal.'_E_E';
                  }
 
+                 if(empty($taxnumbeVal) != true){
+                   $$taxnumberBol = true;
+                 } else {
+                   $taxnumbeVal = $taxnumbeVal.'_E_E';
+                 }
+
                  if($businessnameBol == true &&
-                    $phoneBol == true &&
-                    $emailBol == true){
+                    $phoneBol        == true &&
+                    $$taxnumberBol   == true &&
+                    $emailBol        == true){
+
                    $existe = Company::where('business_name','=',$businessnameVal)
                      ->where('phone','=',$phoneVal)
                      ->where('address','=',$addressVal)
@@ -2631,6 +2640,156 @@ class ImportationController extends Controller
     return redirect()->route('companies.index');
   }
 
+
+  public function FailedCompnaiesView(){
+    $companyuser =\Auth::user()->company_user_id;
+    $countfailcompanies = Failcompany::where('company_user_id',$companyuser)->count();
+    return view('importation.failcompanies',compact('companyuser','countfailcompanies'));
+    dd($countfailcompanies);
+  }
+
+
+  public function FailedCompnaieslist($id){
+    $failcompanies = Failcompany::where('company_user_id',$id)->get();
+    //dd($failcompanies);
+    $collections = collect([]);
+    foreach($failcompanies as $failcompany){
+
+      $businessnameVal  = '';
+      $phoneVal         = '';
+      $emailVal         = '';
+      $taxnumberVal     = '';
+
+      $businessnameArr  = explode('_',$failcompany->business_name);
+      $phoneArr         = explode('_',$failcompany->phone);
+      $emailArr         = explode('_',$failcompany->email);
+      $taxnumberArr     = explode('_',$failcompany->tax_number);
+
+      if(count($businessnameArr) == 1){
+        $businessnameVal = $businessnameArr[0];
+      } else {
+        $businessnameVal = $businessnameArr[0].'(Error)';
+      }
+
+      if(count($phoneArr) == 1){
+        $phoneVal = $phoneArr[0];
+      } else {
+        $phoneVal = $phoneArr[0].'(Error)';
+      }
+
+      if(count($emailArr) == 1){
+        $emailVal = $emailArr[0];
+      } else {
+        $emailVal = $emailArr[0].'(Error)';        
+      }
+
+      if(count($taxnumberArr) == 1){
+        $taxnumberVal = $taxnumberArr[0];
+      } else {
+        $taxnumberVal = $taxnumberArr[0].'(Error)';         
+      }
+
+      $compnyuser = CompanyUser::find($id);
+      $user = User::find($failcompany->owner);
+      $idFC = $failcompany->id;
+      $detalle = [
+        'id'           => $idFC,
+        'businessname' => $businessnameVal,
+        'phone'        => $phoneVal,
+        'address'      => $failcompany->address,
+        'email'        => $emailVal,
+        'taxnumber'    => $taxnumberVal,
+        'compnyuser'   => $compnyuser->name,
+        'owner'        => $user->name.' '.$user->lastname,
+      ];
+      //dd($detalle);
+      $collections->push($detalle);
+    }
+    return DataTables::of($collections)->addColumn('action', function ($collection) {
+      return '
+                <a href="#" onclick="showModalcompany('.$collection['id'].')" class=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-failcompany" data-id-failcompany="'.$collection['id'].'" class=""><i class="la la-remove"></i></a>';
+    })
+      ->editColumn('id', 'ID: {{$id}}')->toJson();
+  }
+
+  public function ShowFailCompany($id){
+    $failcompany = Failcompany::find($id);
+    $businessnameVal  = '';
+    $phoneVal         = '';
+    $emailVal         = '';
+    $taxnumberVal     = '';
+
+    $classbusiness    =  'color:green';
+    $classphone       =  'color:green';
+    $classemail       =  'color:green';
+    $classtaxnumber   =  'color:green';
+
+    $businessnameArr  = explode('_',$failcompany->business_name);
+    $phoneArr         = explode('_',$failcompany->phone);
+    $emailArr         = explode('_',$failcompany->email);
+    $taxnumberArr     = explode('_',$failcompany->tax_number);
+
+    if(count($businessnameArr) == 1){
+      $businessnameVal = $businessnameArr[0];
+    } else {
+      $businessnameVal = $businessnameArr[0].'(Error)';
+      $classbusiness   = 'color:red';
+    }
+
+    if(count($phoneArr) == 1){
+      $phoneVal = $phoneArr[0];
+    } else {
+      $phoneVal   = $phoneArr[0].'(Error)';
+      $classphone = 'color:red';
+    }
+
+    if(count($emailArr) == 1){
+      $emailVal = $emailArr[0];
+    } else {
+      $emailVal   = $emailArr[0].'(Error)';  
+      $classemail = 'color:red';
+    }
+
+    if(count($taxnumberArr) == 1){
+      $taxnumberVal = $taxnumberArr[0];
+    } else {
+      $taxnumberVal   = $taxnumberArr[0].'(Error)';
+      $classtaxnumber =  'color:red';
+    }
+
+    $compnyuser = CompanyUser::find($failcompany->company_user_id);
+    $user = User::find($failcompany->owner);
+    $idFC = $failcompany->id;
+    $detalle = [
+      'id'              => $idFC,
+      'businessname'    => $businessnameVal,
+      'phone'           => $phoneVal,
+      'address'         => $failcompany->address,
+      'email'           => $emailVal,
+      'taxnumber'       => $taxnumberVal,
+      'compnyuser'      => $compnyuser->name,
+      'owner'           => $user->name.' '.$user->lastname,
+      'classbusiness'   => $classbusiness,
+      'classphone'      => $classphone,
+      'classemail'      => $classemail,
+      'classtaxnumber'  => $classtaxnumber,
+    ];
+    dd($detalle);
+    return view('importation.Body-Modals.failedCompany',compact('detalle'));
+
+  }
+
+  public function DeleteFailedCompany($id){
+    try{
+      $fcompany = Failcompany::find($id);
+      $fcompany->delete();
+      return 1;
+    } catch(Exception $e){
+      return 2;
+    }
+  }
   // Solo Para Testear ----------------------------------------------------------------
   public function testExcelImportation(){
     $puerto = 'Rongqi, Shunde, Guangdong, China via Nansha';

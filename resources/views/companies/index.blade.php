@@ -106,7 +106,7 @@ All
                   Download File
                 </span>
               </a>
-              <a href="{{route('DownLoad.Files',1)}}" class="dropdown-item" >
+              <a href="{{route('view.fail.company')}}" class="dropdown-item" >
                 <span>
                   <i class="la la-search"></i>
                   &nbsp;

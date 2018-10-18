@@ -73,8 +73,8 @@
                                         <strong >
                                             Failed Companies: 
                                         </strong>
-                                        <strong id="strfail">{{$countfailrates}}</strong>
-                                        <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
+                                        <strong id="strfail">{{$countfailcompanies}}</strong>
+                                        <input type="hidden" value="{{$countfailcompanies}}" id="strfailinput" />
                                     </label>
                                 </div>
                             </div>
@@ -88,15 +88,13 @@
                             <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                                 <thead >
                                     <tr>
-                                        <th>Origin</th>
-                                        <th>Destiny</th>
-                                        <th>Carrier</th>
-                                        <th>20</th>
-                                        <th>40</th>
-                                        <th>40'HC</th>
-                                        <th>40'NOR</th>
-                                        <th>45'</th>
-                                        <th>Currency</th>
+                                        <th>Business Name</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Email</th>
+                                        <th>Tax Number</th>
+                                        <th>Company User</th>
+                                        <th>Owner</th>
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -145,23 +143,20 @@
 
 
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
         <script>
             $(function() {
                 $('#myatest').DataTable({
                     processing: true,
                     //serverSide: true,
-                    ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,1]) !!}',
+                    ajax: '{!! route("list.fail.company",$companyuser) !!}',
                     columns: [
-                        { data: 'origin_portLb', name: 'origin_portLb' },
-                        { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierLb', name: 'carrierLb' },
-                        { data: 'twuenty', name: 'twuenty' },
-                        { data: 'forty', name: "forty" },
-                        { data: 'fortyhc', name: "fortyhc" },
-                        { data: 'fortynor', name: "fortynor" },
-                        { data: 'fortyfive', name: "fortyfive" },
-                        { data: 'currency_id', name: 'currency_id' },
+                        { data: 'businessname', name: 'businessname' },
+                        { data: 'phone', name: 'phone' },
+                        { data: 'address', name: 'address' },
+                        { data: 'email', name: 'email' },
+                        { data: 'taxnumber', name: "taxnumber" },
+                        { data: 'compnyuser', name: "compnyuser" },
+                        { data: 'owner', name: "owner" },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -176,16 +171,16 @@
                 });
             });
 
-            function showModalsavetorate(id){
-                    var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
+            function showModalcompany(id){
+                    var url = '{{ route("show.fail.company", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditcompanies').modal();
                     });
             }
 
-            $(document).on('click','#delete-FailRate',function(){
-                var id = $(this).attr('data-id-failrate');
+            $(document).on('click','#delete-failcompany',function(){
+                var id = $(this).attr('data-id-failcompany');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
@@ -198,7 +193,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.RatesF.For.Contracts",":id") !!}';
+                        url='{!! route("delete.fail.company",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -216,53 +211,6 @@
                                     a--;
                                     $('#strfail').text(a);
                                     $('#strfailinput').attr('value',a);
-                                }else if(data == 2){
-                                    swal("Error!", "an internal error occurred!", "error");
-                                }
-                            }
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        swal(
-                            'Cancelled',
-                            'Your rate is safe :)',
-                            'error'
-                        )
-                    }
-                });
-            });
-
-            $(document).on('click','#delete-Rate',function(){
-                var id = $(this).attr('data-id-rate');
-                var elemento = $(this);
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then(function(result){
-                    if (result.value) {
-
-                        url='{!! route("Destroy.RatesG.For.Contracts",":id") !!}';
-                        url = url.replace(':id', id);
-                        // $(this).closest('tr').remove();
-                        $.ajax({
-                            url:url,
-                            method:'get',
-                            success: function(data){
-                                if(data == 1){
-                                    swal(
-                                        'Deleted!',
-                                        'Your rate has been deleted.',
-                                        'success'
-                                    )
-                                    $(elemento).closest('tr').remove();
-                                    var b = $('#strgoodinput').val();
-                                    b--;
-                                    $('#strgood').text(b);
-                                    $('#strgoodinput').attr('value',b);
                                 }else if(data == 2){
                                     swal("Error!", "an internal error occurred!", "error");
                                 }
