@@ -2,10 +2,10 @@
 @section('title', 'Companies | List')
 @section('css')
 @parent
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/button-dropdown/css/bootstrap.css">
+<script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
 @endsection
 @section('content')
 
@@ -160,6 +160,7 @@ All
             </td>
             <td>{{$company->contact->count()}}</td>
             <td>
+
               @foreach($company->price_name as $price)
               <ul>
                 <li>{{$price->name}}</li>
@@ -183,11 +184,47 @@ All
       </table>
     </div>
   </div>
+  <div class="modal fade bd-example-modal-lg" id="modalupload"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">
+            Upload Companies
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div id="edit-modal-body-E" class="modal-body-E">
+          {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
 
+          <div class="form-group row pull-right">
+            <div class="col-md-3 ">
+              
+            </div>
+          </div>
+          <div class="form-group row ">
+            <div class="col-md-1 "></div>
+            <div class="col-md-6 ">
+              <input type="file" name="file" value="Load File" required />
+            </div>
+          </div>
+        </div>
+        <div id="edit-modal-body" class="modal-footer">
+          {!! Form::submit('Load', ['class'=> 'btn btn-primary']) !!}
+          <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">Cancel</span>
+          </button>
+        </div>
+        {!! Form::close() !!}
+      </div>
+    </div>
+  </div>
 </div>
 @include('companies.partials.companiesModal')
 @include('companies.partials.deleteCompaniesModal')
-@include('companies.partials.uploadCompanies')
 @endsection
 
 @section('js')
