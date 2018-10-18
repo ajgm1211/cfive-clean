@@ -170,6 +170,10 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     
     // Companies
     Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
+    Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company');
+    Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
+    Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
+    Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
     
     
     // Test
