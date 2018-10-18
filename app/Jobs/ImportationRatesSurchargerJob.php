@@ -159,6 +159,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
           $calculationtypeExiBol   = false;
           $variantecurrency        = false;
           $typeExiBol              = false;
+          $twentyArrBol            = false;
+          $fortyArrBol             = false;
+          $fortyhcArrBol           = false;
+          $fortynorArrBol          = false;
+          $fortyfiveArrBol         = false;
           $values                  = true;
 
           //--------------------------------------------------------
@@ -225,17 +230,148 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
             //---------------- CURRENCY VALUES ------------------------------------------------------
 
-            $twentyArr      = explode(' ',$read[$requestobj[$twenty]]);
-            $fortyArr       = explode(' ',$read[$requestobj[$forty]]);
-            $fortyhcArr     = explode(' ',$read[$requestobj[$fortyhc]]);
-
-
-            if($statusexistfortynor == 1){
-              $fortynorArr    = explode(' ',$read[$requestobj[$fortynor]]);
+            if(empty($read[$requestobj[$twenty]]) != true){ //Primero valido si el campo viene lleno, en caso contrario lo lleno manuelamene
+              $twentyArrBol = true;
+              $twentyArr      = explode(' ',$read[$requestobj[$twenty]]);
+            } else {
+              $twentyArr = ['0']; 
             }
+
+            if(empty($read[$requestobj[$forty]]) != true){
+              $fortyArrBol = true;
+              $fortyArr       = explode(' ',$read[$requestobj[$forty]]);
+            } else {
+              $fortyArr = ['0'];
+            }
+
+            if(empty($read[$requestobj[$fortyhc]]) != true){
+              $fortyhcArrBol  = true;
+              $fortyhcArr     = explode(' ',$read[$requestobj[$fortyhc]]);
+            } else {
+              $fortyhcArr = ['0'];
+            }
+
+
+            if($statusexistfortynor == 1){ // si el selecionado en la vista que posee el campo 40'NOr o 45' hacemos lo mismo
+
+              if(empty($read[$requestobj[$fortynor]]) != true){
+                $fortynorArrBol  = true;
+                $fortynorArr     = explode(' ',$read[$requestobj[$fortynor]]);
+              } else {
+                $fortynorArr = ['0'];
+              }
+
+            }
+
             if($statusexistfortyfive == 1){
-              $fortyfiveArr   = explode(' ',$read[$requestobj[$fortyfive]]);
+
+              if(empty($read[$requestobj[$fortyfive]]) != true){
+                $fortyfiveArrBol  = true;
+                $fortyfiveArr     = explode(' ',$read[$requestobj[$fortyfive]]);
+              } else {
+                $fortyfiveArr = ['0'];
+              }
+
             }
+
+            // ----------------------- Validacion de comapos acios--------------------------------------
+
+            // ------- 20'
+            if($twentyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+              if($fortyArrBol == true){
+                array_push($twentyArr,$fortyArr[1]);
+
+              } elseif($fortyhcArrBol == true){
+                array_push($twentyArr,$fortyhcArr[1]);
+
+              } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                array_push($twentyArr,$fortynorArr[1]);
+
+              } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                array_push($twentyArr,$fortyfiveArr[1]);
+
+              } else {
+                array_push($twentyArr,'');
+              }
+            }
+
+            // ------- 40'
+            if($fortyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+              if($twentyArrBol == true){
+                array_push($fortyArr,$twentyArr[1]);
+
+              } elseif($fortyhcArrBol == true){
+                array_push($fortyArr,$fortyhcArr[1]);
+
+              } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                array_push($fortyArr,$fortynorArr[1]);
+
+              } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                array_push($fortyArr,$fortyfiveArr[1]);
+              } else {
+                array_push($fortyArr,'');
+              }
+            }
+
+            // ------- 40'HC
+            if($fortyhcArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+              if($twentyArrBol == true){
+                array_push($fortyhcArr,$twentyArr[1]);
+
+              } elseif($fortyArrBol == true){
+                array_push($fortyhcArr,$fortyArr[1]);
+
+              } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                array_push($fortyhcArr,$fortynorArr[1]);
+
+              } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                array_push($fortyhcArr,$fortyfiveArr[1]);
+              } else {
+                array_push($fortyhcArr,'');
+              }
+            }
+
+            // ------- 40'NOR
+            if($fortynorArrBol == false && $statusexistfortynor == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+              if($twentyArrBol == true){
+                array_push($fortynorArr,$twentyArr[1]);
+
+              } elseif($fortyArrBol == true){
+                array_push($fortynorArr,$fortyArr[1]);
+
+              } elseif($fortyhcArrBol == true){
+                array_push($fortynorArr,$fortyhcArr[1]);
+
+              } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                array_push($fortynorArr,$fortyfiveArr[1]);
+              } else {
+                array_push($fortynorArr,'');
+              }
+            }
+
+            // ------- 45'
+            if($fortyfiveArrBol == false && $statusexistfortyfive == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+              if($twentyArrBol == true){
+                array_push($fortyfiveArr,$twentyArr[1]);
+
+              } elseif($fortyArrBol == true){
+                array_push($fortyfiveArr,$fortyArr[1]);
+
+              } elseif($fortyhcArrBol == true){
+                array_push($fortyfiveArr,$fortyhcArr[1]);
+
+              } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                array_push($fortyfiveArr,$fortynorArr[1]);
+              } else {
+                array_push($fortyfiveArr,'');
+              }
+            }
+
 
             //---------------- 20' ------------------------------------------------------------------
 
@@ -307,7 +443,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             //---------------- CURRENCY ------------------------------------------------------------
 
 
-            if($requestobj[$statustypecurren] == 2){
+            if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
 
               // cargar  columna con el  valor y currency  juntos, se descompone
 
@@ -516,24 +652,54 @@ class ImportationRatesSurchargerJob implements ShouldQueue
               $surchargeVal = $read[$requestobj[$Charge]].'_E_E';
             }
             //////////////////////////////////////////////////////////////////////////////////////////////////////
-            /* $prueba = collect([]);
+         /*   $prueba = collect([]);
 
-                        $prueba = [
-                            '$carriExitBol'           => $carriExitBol,
-                            '$origExiBol'             => $origExiBol,
-                            '$destiExitBol'           => $destiExitBol,
-                            '$twentyExiBol'           => $twentyExiBol,
-                            '$fortyExiBol'            => $fortyExiBol,
-                            '$fortyhcExiBol'          => $fortyhcExiBol,
-                            '$fortynorExiBol'         => $fortynorExiBol,
-                            '$fortyfiveExiBol'        => $fortyfiveExiBol,
-                            '$calculationtypeExiBol'  => $calculationtypeExiBol,
-                            '$variantecurrency'       => $variantecurrency,
-                            '$typeExiBol'             => $typeExiBol,
-                            '$values'                 => $values
-                        ];
+            $prueba = [
+              '$carriExitBol'           => $carriExitBol,
+              '$origExiBol'             => $origExiBol,
+              '$destiExitBol'           => $destiExitBol,
+              '$twentyExiBol'           => $twentyExiBol,
+              '$fortyExiBol'            => $fortyExiBol,
+              '$fortyhcExiBol'          => $fortyhcExiBol,
+              '$fortynorExiBol'         => $fortynorExiBol,
+              '$fortyfiveExiBol'        => $fortyfiveExiBol,
+              '$calculationtypeExiBol'  => $calculationtypeExiBol,
+              '$variantecurrency'       => $variantecurrency,
+              '$typeExiBol'             => $typeExiBol,
+              '$values'                 => $values,
+              '$carrierVal'             => $carrierVal,
+              '$originVal'              => $originVal,
+              '$destinyVal'             => $destinyVal,
+              '$currencyVal'            => $currencyVal,
+              '$currencyValtwen'        => $currencyValfor,
+              '$currencyValfor'         => $currencyValfor,
+              '$currencyValforHC'       => $currencyValforHC,
+              '$currencyValfornor'      => $currencyValfornor,
+              '$currencyValforfive'     => $currencyValforfive,
+              '$calculationtypeVal'     => $calculationtypeVal,
+              '$surchargeVal'           => $surchargeVal,
+              '$twentyArr'              => $twentyArr,
+              '$fortyArr'               => $fortyArr,
+              '$fortyhcArr'             => $fortyhcArr,                 
+              '$twentyVal'              => $twentyVal,
+              '$fortyVal'               => $fortyVal,
+              '$fortyhcVal'             => $fortyhcVal,
+              '$fortynorVal'            => $fortynorVal,
+              '$fortyfiveVal'           => $fortyfiveVal
+            ];
 
-                        dd($prueba);*/
+            if($statusexistfortynor == 1){
+              $cargaNor = ['$fortynorArr' => $fortynorArr];
+              $prueba->push($cargaNor);
+            }
+
+            if($statusexistfortyfive == 1){
+              $cargaFive = ['$fortyfiveArr' => $fortyfiveArr];
+              $prueba->push($cargaFive);
+            }
+
+            dd($prueba);*/
+            
             if($carriExitBol        == true
                && $origExiBol       == true
                && $destiExitBol     == true
@@ -2205,6 +2371,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
         //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
       });
+
     // dd($collection);
     //no borrar
     $contractData = new Contract();

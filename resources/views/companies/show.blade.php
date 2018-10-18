@@ -140,7 +140,7 @@ Add contact
                                         @endif
                                         <br>
                                         <div class="text-center">
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
+                                            <button class="btn btn-default" onclick="AbrirModal('addContact',0)">
                                                 Add contact
                                             </button>
                                         </div>
@@ -241,6 +241,12 @@ Add contact
             url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#deleteCompanyModal').modal({show:true});
+            });
+        }
+        if(action == "addContact"){
+            var url = '{{ route("contacts.add") }}';
+            $('.modal-body').load(url,function(){
+                $('#addContactModal').modal({show:true});
             });
         }
     }

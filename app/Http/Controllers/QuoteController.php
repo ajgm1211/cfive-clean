@@ -909,8 +909,8 @@ class QuoteController extends Controller
     }
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'Register updated successfully!');
-    return redirect()->route('quotes.index');
+    $request->session()->flash('message.content', 'Quote updated successfully!');
+    return redirect()->action('QuoteController@show', setearRouteKey($id));
   }
 
   public function destroy($id)

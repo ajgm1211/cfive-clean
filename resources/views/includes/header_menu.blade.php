@@ -235,17 +235,7 @@
                 </ul>
             </div>
         </li>
-        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-            <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <span class="m-menu__link-text">
-                    <b>Logout ( {{\Auth::user()->name}} {{\Auth::user()->lastname}} ) </b>
-                </span>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-            </form>
-        </li>
-        <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
+           <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
             <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                 <div class='row'>
                     <div class="col-md-2">
@@ -326,5 +316,16 @@
                 </div>
             </div>
         </li>
+        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+            <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <span class="m-menu__link-text">
+                    &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout ( {{\Auth::user()->name}} {{\Auth::user()->lastname}} ) </b>
+                </span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
+        </li>
+   
     </ul>
 </div>
