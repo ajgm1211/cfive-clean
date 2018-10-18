@@ -466,10 +466,13 @@
             <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
             <hr>
+            <label class="title-quote title-quote size-14px">PDF language</label>
+            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],$quote->pdf_language, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_language']) !!}
+            <hr>
             <label class="title-quote title-quote size-14px">PDF type</label>
             {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
             <hr>
-            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
+            <label class="title-quote title-quote size-14px">PDF ammounts</label>
             {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
         </div>
     </div>

@@ -93,7 +93,7 @@ class QuoteController extends Controller
     $carriers = Carrier::all()->pluck('name','id');
     $airlines = Airline::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
-    $user = User::where('id',\Auth::id())->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
     $incoterm = Incoterm::pluck('name','id');
     if($company_user_id){
       $company_user=CompanyUser::find($company_user_id);
@@ -119,7 +119,7 @@ class QuoteController extends Controller
         $exchange = Currency::where('api_code','USDEUR')->first();
       }
     }
-    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airlines'=>$airlines]);
+    return view('quotes/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airlines'=>$airlines,'user'=>$user]);
 
   }
 
