@@ -95,7 +95,7 @@ All
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalupload">
                 <span>
                   Upload Companies
-                  &nbsp;
+                   &nbsp;
                   <i class="la la-plus"></i>
                 </span>
               </a>      
@@ -184,7 +184,6 @@ All
       </table>
     </div>
   </div>
-
   <div class="modal fade bd-example-modal-lg" id="modalupload"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -201,40 +200,60 @@ All
         <div id="edit-modal-body-E" class="modal-body-E">
           {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
 
-
+          <div class="form-group row pull-right">
+            <div class="col-md-3 ">
+              
+            </div>
+          </div>
+          <div class="form-group row ">
+            <div class="col-md-1 "></div>
+            <div class="col-md-6 ">
+              <input type="file" name="file" value="Load File" required />
+            </div>
+          </div>
         </div>
-        @include('companies.partials.companiesModal')
-        @include('companies.partials.deleteCompaniesModal')
-        @include('companies.partials.uploadCompanies')
-        @endsection
+        <div id="edit-modal-body" class="modal-footer">
+          {!! Form::submit('Load', ['class'=> 'btn btn-primary']) !!}
+          <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">Cancel</span>
+          </button>
+        </div>
+        {!! Form::close() !!}
+      </div>
+    </div>
+  </div>
+</div>
+@include('companies.partials.companiesModal')
+@include('companies.partials.deleteCompaniesModal')
+@endsection
 
-        @section('js')
-        @parent
+@section('js')
+@parent
 
 
-        <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
-        <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
-        <script>
-          function AbrirModal(action,id){
-            if(action == "edit"){
-              var url = '{{ route("companies.edit", ":id") }}';
-              url = url.replace(':id', id);
-              $('.modal-body').load(url,function(){
-                $('#companyModal').modal({show:true});
-              });
-            }if(action == "add"){
-              var url = '{{ route("companies.add") }}';
-              $('.modal-body').load(url,function(){
-                $('#companyModal').modal({show:true});
-              });
-            }
-            if(action == "delete"){
-              var url = '{{ route("companies.delete", ":id") }}';
-              url = url.replace(':id', id);
-              $('.modal-body').load(url,function(){
-                $('#deleteCompanyModal').modal({show:true});
-              });
-            }
-          }
-        </script>
-        @stop
+<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
+<script>
+  function AbrirModal(action,id){
+    if(action == "edit"){
+      var url = '{{ route("companies.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#companyModal').modal({show:true});
+      });
+    }if(action == "add"){
+      var url = '{{ route("companies.add") }}';
+      $('.modal-body').load(url,function(){
+        $('#companyModal').modal({show:true});
+      });
+    }
+    if(action == "delete"){
+      var url = '{{ route("companies.delete", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body').load(url,function(){
+        $('#deleteCompanyModal').modal({show:true});
+      });
+    }
+  }
+</script>
+@stop
