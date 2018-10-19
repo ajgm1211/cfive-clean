@@ -862,7 +862,7 @@ class ImportationController extends Controller
                              'forty'         => $fortyVal,
                              'fortyhc'       => $fortyhcVal,
                              'fortynor'      => $fortynorVal,
-                             'fortyfive'     => $fortyfiveVa,
+                             'fortyfive'     => $fortyfiveVal,
                              'currency_id'   => $currencyVal
                            ]);
                          }
@@ -2761,15 +2761,41 @@ class ImportationController extends Controller
       'email'           => $emailVal,
       'taxnumber'       => $taxnumberVal,
       'compnyuser'      => $compnyuser->name,
+      'compnyuserid'    => $compnyuser->id,
       'owner'           => $user->name.' '.$user->lastname,
+      'ownerid'         => $user->id,
       'classbusiness'   => $classbusiness,
       'classphone'      => $classphone,
       'classemail'      => $classemail,
       'classtaxnumber'  => $classtaxnumber,
     ];
-    dd($detalle);
     return view('importation.Body-Modals.failedCompany',compact('detalle'));
+    dd($detalle);
 
+  }
+
+  public function UpdateFailedCompany(Request $request,$id){
+    //dd($request->all());
+    $company = new Company();
+    $company->business_name     = $request->businessname;
+    $company->phone             = $request->phone;
+    $company->address           = $request->address;
+    $company->email             = $request->email;
+    $company->tax_number        = $request->taxnumber;
+    $company->company_user_id   = $request->compnyuserid;
+    $company->owner             = $request->ownerid;
+    $company->save();
+    
+    if(empty($company->id) != true){
+      $failcompany = Failcompany::find($id);
+      $failcompany->delete();
+    }
+     $failcompany = Failcompany::where('company_user_id',$request->compnyuserid)->count();
+    if($failcompany >= 1){
+      return redirect()->route('view.fail.company');
+    } else {
+      return redirect()->route('companies.index');      
+    }
   }
 
   public function DeleteFailedCompany($id){

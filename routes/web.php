@@ -174,6 +174,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
     Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
     Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
+    Route::get('/UpdateFCompany/{id}','ImportationController@UpdateFailedCompany')->name('update.fail.company');
     
     
     // Test
