@@ -2546,8 +2546,6 @@ class ImportationController extends Controller
                  $businessnameBol = false;
                  $phoneBol        = false;
                  $emailBol        = false;
-                 $taxnumberBol    = false;
-
 
                  $businessnameVal = $read[$businessnameread];
                  $phoneVal        = $read[$phoneRead];
@@ -2574,15 +2572,8 @@ class ImportationController extends Controller
                    $emailVal = $emailVal.'_E_E';
                  }
 
-                 if(empty($taxnumbeVal) != true){
-                   $$taxnumberBol = true;
-                 } else {
-                   $taxnumbeVal = $taxnumbeVal.'_E_E';
-                 }
-
                  if($businessnameBol == true &&
                     $phoneBol        == true &&
-                    $$taxnumberBol   == true &&
                     $emailBol        == true){
 
                    $existe = Company::where('business_name','=',$businessnameVal)
