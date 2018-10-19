@@ -1891,6 +1891,9 @@ $('#price_level_company').select2({
 $('#users_company').select2({
     placeholder: "Select an option"
 });
+$('#users_company_2').select2({
+    placeholder: "Select an option"
+});
 
 
 // companies 
@@ -2140,6 +2143,22 @@ $(document).on('click', '#filter_data', function () {
 });
 
 /** PDF **/
+
+$(document).on('change', '#pdf_language', function () {
+    var type=$("#pdf_language").val();
+    var quote_id=$("#quote-id").val();
+    $.ajax({
+        type: 'POST',
+        url: '/settings/update/pdf/language',
+        data: {
+            'pdf_language': $("#pdf_language").val(),
+            'quote_id': $("#quote-id").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
 
 $(document).on('change', '#pdf_type', function () {
     var type=$("#pdf_type").val();
