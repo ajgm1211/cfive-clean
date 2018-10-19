@@ -198,6 +198,7 @@ All
           </button>
         </div>
         <div id="edit-modal-body-E" class="modal-body-E">
+        <br>
           {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
 
           <div class="form-group row pull-right">

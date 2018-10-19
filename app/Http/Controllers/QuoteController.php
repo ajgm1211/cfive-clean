@@ -618,7 +618,7 @@ class QuoteController extends Controller
                                                  'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
-        \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
+        \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
       }
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
@@ -1010,14 +1010,14 @@ class QuoteController extends Controller
     if($quote->sub_total_destination){
       $quote_duplicate->sub_total_destination=$quote->sub_total_destination;
     }
-    if($quote->total_markut_origin){
-      $quote_duplicate->total_markut_origin=$quote->total_markut_origin;
+    if($quote->total_markup_origin){
+      $quote_duplicate->total_markup_origin=$quote->total_markup_origin;
     }
-    if($quote->total_markut_freight){
-      $quote_duplicate->total_markut_freight=$quote->total_markut_freight;
+    if($quote->total_markup_freight){
+      $quote_duplicate->total_markup_freight=$quote->total_markup_freight;
     }
-    if($quote->total_markut_destination){
-      $quote_duplicate->total_markut_destination=$quote->total_markut_destination;
+    if($quote->total_markup_destination){
+      $quote_duplicate->total_markup_destination=$quote->total_markup_destination;
     }
     if($quote->carrier_id){
       $quote_duplicate->carrier_id=$quote->carrier_id;

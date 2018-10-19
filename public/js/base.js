@@ -1891,6 +1891,9 @@ $('#price_level_company').select2({
 $('#users_company').select2({
     placeholder: "Select an option"
 });
+$('#users_company_2').select2({
+    placeholder: "Select an option"
+});
 
 
 // companies 
