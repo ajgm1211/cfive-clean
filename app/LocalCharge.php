@@ -7,41 +7,46 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LocalCharge extends Model
 {
-    use SoftDeletes;
-    protected $dates    = ['deleted_at'];
-    protected $table    = "localcharges";
-    protected $fillable = ['id','surcharge_id','typedestiny_id','contract_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
-    public function contract()
-    {
-        return $this->belongsTo('App\Contract');
-    }
+  use SoftDeletes;
+  protected $dates    = ['deleted_at'];
+  protected $table    = "localcharges";
+  protected $fillable = ['id','surcharge_id','typedestiny_id','contract_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
+  public function contract()
+  {
+    return $this->belongsTo('App\Contract');
+  }
 
-    public function currency(){
+  public function currency(){
 
-        return $this->belongsTo('App\Currency');
+    return $this->belongsTo('App\Currency');
 
-    }
-    public function calculationtype(){
+  }
+  public function calculationtype(){
 
-        return $this->belongsTo('App\CalculationType');
+    return $this->belongsTo('App\CalculationType');
 
-    }
-    public function surcharge(){
+  }
+  public function surcharge(){
 
-        return $this->belongsTo('App\Surcharge');
+    return $this->belongsTo('App\Surcharge');
 
-    }
-    public function localcharports(){
+  }
+  public function localcharports(){
 
-        return $this->hasMany('App\LocalCharPort','localcharge_id');
+    return $this->hasMany('App\LocalCharPort','localcharge_id');
 
-    }
-    public function localcharcarriers(){
-        return $this->hasMany('App\LocalCharCarrier','localcharge_id');
+  }
+  public function localcharcountries(){
 
-    }
-    public function typedestiny(){
-        return $this->belongsTo('App\TypeDestiny');
+    return $this->hasMany('App\LocalCharCountry','localcharge_id');
 
-    }
+  }
+  public function localcharcarriers(){
+    return $this->hasMany('App\LocalCharCarrier','localcharge_id');
+
+  }
+  public function typedestiny(){
+    return $this->belongsTo('App\TypeDestiny');
+
+  }
 }

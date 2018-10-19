@@ -175,7 +175,17 @@ $(document).on('click', '.cancel', function () {
   $('#buttons').attr('hidden','true');
 });
 
-
+function activarCountry(act){
+  var divCountry = $( ".divcountry");
+  var divport = $( ".divport");
+  if(act == 'divcountry'){
+    divport.attr('hidden','true');
+    divCountry.removeAttr('hidden');
+  }else if(act == 'divport'){
+    divCountry.attr('hidden','true');
+    divport.removeAttr('hidden');
+  }
+}
 
 
 $('.m-select2-general').select2({
@@ -183,24 +193,24 @@ $('.m-select2-general').select2({
 });
 
 $(document).on('click', '.addS', function () {
-  
+
   toastr.options = {
-  "closeButton": true,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-bottom-right",
-  "preventDuplicates": true,
-  "onclick": null,
-  "showDuration": "0",
-  "hideDuration": "0",
-  "timeOut": "0",
-  "extendedTimeOut": "0",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-};
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "0",
+    "hideDuration": "0",
+    "timeOut": "0",
+    "extendedTimeOut": "0",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  };
   var surcharge = $('.type');
   if(surcharge.val() == null){
     toastr.error('You have to first add surcharges terms in order to add surcharges to this global. <a href="surcharges" > <b> Add Surcharge</b> </a>!','IMPORTANT MESSAGE!');

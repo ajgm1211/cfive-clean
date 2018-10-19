@@ -47,7 +47,7 @@
                                 <b>MODE:</b>
                               </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-7">
                               <div class='row'>
                                 <div class="col-md-4">
                                   <label class="m-option">
@@ -70,7 +70,7 @@
                               </div>
                               <br>
                               <div class='row'>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <label>
                                     20' :
                                   </label>
@@ -78,7 +78,7 @@
                                     {!! Form::text('twuenty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
                                   </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <label>
                                     40' :
                                   </label>
@@ -86,12 +86,30 @@
                                     {!! Form::text('forty', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
                                   </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                   <label>
                                     40' HC :
                                   </label>
                                   <div class="m-bootstrap-touchspin-brand">
                                     {!! Form::text('fortyhc', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label>
+                                    40' NOR :
+                                  </label>
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    {!! Form::text('fortynor', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
+
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label>
+                                  <br>  45':
+                                  </label>
+                                  <div class="m-bootstrap-touchspin-brand">
+                                    {!! Form::text('fortyfive', 0, ['id' => 'm_touchspin_2_1' ,'class' => 'col-lg-12 form-control']) !!}
 
                                   </div>
                                 </div>

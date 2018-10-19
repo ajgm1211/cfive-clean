@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\MailResetPasswordNotification as MailResetPasswordNotification;
 use OwenIt\Auditing\Contracts\Auditable;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable implements Auditable
 {
@@ -62,5 +63,9 @@ class User extends Authenticatable implements Auditable
   public function sendPasswordResetNotification($token)
   {
     $this->notify(new MailResetPasswordNotification($token));
+  }
+  public function routeNotificationForSlack()
+  {
+    return 'https://hooks.slack.com/services/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';
   }
 }

@@ -54,9 +54,9 @@ new registration
             </div>
         </div>
         @if($type == 1)
-            {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!}
+            {!! Form::open(['route'=>'process.contract.fcl','method'=>'get'])!!} <!-- Rates -->
         @elseif($type == 2)
-            {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!}
+            {!! Form::open(['route'=>'process.contract.fcl.Rat.Surch','method'=>'get'])!!} <!-- Rates + Surchargers -->
             <input type="hidden" name="statustypecurren" value="{{$statustypecurren}}">
         @endif
         <div class="m-portlet__body">
@@ -134,6 +134,20 @@ new registration
                                 </div>
                                 @endif
                                 
+                                @if($value['existfortynor'] == true)
+                                <!--<input type="hidden" value="0" name="fortynor" />-->
+                                <input type="hidden" value="0" name="existfortynor" />
+                                @else
+                                <input type="hidden" value="1" name="existfortynor" />
+                                @endif
+                                
+                                @if($value['existfortyfive'] == true)
+                                <!--<input type="hidden" value="0" name="fortyfive" />-->
+                                <input type="hidden" value="0" name="existfortyfive" />
+                                @else
+                                <input type="hidden" value="1" name="existfortyfive" />
+                                @endif
+                                
                                 @if($type == 2)
                                 <div class="col-2 col-form-label">
                                     <label for="Charge" class=" ">Charge</label>
@@ -146,6 +160,7 @@ new registration
                                 @endif
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                                <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
 
                             </div>
                         </div>
