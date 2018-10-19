@@ -32,7 +32,6 @@
 {!! Form::close() !!}
 <!--end::Form-->
 <script>
-
   $('#price_level_company').select2({
     placeholder: "Select an option"
   });

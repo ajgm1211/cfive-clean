@@ -14,7 +14,7 @@ class AddPdfLanguageToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            //
+            $table->string('pdf_language')->default(1)->after('qty_40_hc_open_top');
         });
     }
 
@@ -26,7 +26,7 @@ class AddPdfLanguageToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            //
+            $table->dropColumn('pdf_language');
         });
     }
 }

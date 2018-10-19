@@ -101,6 +101,15 @@ class SettingController extends Controller
         return response()->json(['message' => 'Ok']);
     }
 
+    public function update_pdf_language(Request $request)
+    {
+        $quote=Quote::find($request->quote_id);
+        $quote->pdf_language = $request->pdf_language;
+        $quote->update();
+
+        return response()->json(['message' => 'Ok']);
+    }
+
     public function list_companies()
     {
         $companies=CompanyUser::all();

@@ -192,6 +192,8 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
+    Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
+    Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
@@ -254,6 +256,7 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+    Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
