@@ -862,7 +862,7 @@ class ImportationController extends Controller
                              'forty'         => $fortyVal,
                              'fortyhc'       => $fortyhcVal,
                              'fortynor'      => $fortynorVal,
-                             'fortyfive'     => $fortyfiveVa,
+                             'fortyfive'     => $fortyfiveVal,
                              'currency_id'   => $currencyVal
                            ]);
                          }
