@@ -111,12 +111,12 @@
                                         @else
                                         <p>No Owners</p>
                                         @endif
-                                        <!--<br>
-<div class="text-center">
-<button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
-Add contact
-</button>
-</div>-->
+                                        <br>
+                                        <div class="text-center">
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#addOwnerModal">
+                                                Add owner
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -216,6 +216,8 @@ Add contact
 @include('companies.partials.companiesModal')
 @include('companies.partials.deleteCompaniesModal')
 @include('companies.partials.addContactModal')
+@include('companies.partials.addOwnerModal')
+
 @endsection
 
 @section('js')
@@ -249,7 +251,9 @@ Add contact
                 $('#addContactModal').modal({show:true});
             });
         }
+
     }
+
 </script>
 @stop
 

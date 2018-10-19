@@ -284,7 +284,7 @@ class PdfController extends Controller
             $subject = $request->subject;
             $body = $request->body;
 
-            \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
+            \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
 
             $quote->status_quote_id=2;
             $quote->update();

@@ -188,6 +188,8 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
+    Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
+    Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
