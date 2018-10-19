@@ -44,6 +44,13 @@ class CompanyController extends Controller
         $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
         return view('companies.add', compact('prices','users'));
     }
+
+    public function addOwner(){
+        $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
+
+        return view('companies.addOwner', compact('users'));   
+    }
+
     public function addWithModal()
     {
         $company_user_id=\Auth::user()->company_user_id;
@@ -66,10 +73,13 @@ class CompanyController extends Controller
 
     public function show($id)
     {
+        $id = obtenerRouteKey($id);
         $company = Company::find($id);
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $quotes = Quote::where('company_id',$id)->get();
-        return view('companies.show', compact('company','companies','contacts','quotes'));
+        $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
+
+        return view('companies.show', compact('company','companies','contacts','quotes','users'));
     }
 
     public function store(Request $request)
@@ -122,6 +132,28 @@ class CompanyController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
         return redirect()->route('companies.index');
+    }
+
+    public function storeOwner(Request $request){
+        
+        $input = Input::all();
+        
+        $company = Company::find($input['company_id']);
+        
+        if ((isset($input['users'])) && (count($input['users']) > 0)) {
+            foreach ($input['users'] as $key => $item) {            
+                $userCompany_group = new GroupUserCompany();
+                $userCompany_group->user_id= $input['users'][$key];
+                $userCompany_group->company()->associate($company);
+                $userCompany_group->save();
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Owner added successfully!');
+        return redirect()->back();
+
     }
 
     public function edit($id)

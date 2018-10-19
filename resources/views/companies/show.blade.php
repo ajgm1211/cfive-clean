@@ -38,16 +38,27 @@
                         <div class="col-md-12">
                             <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                 <div class="m-portlet__body text-center">
+                                    @if($company->logo!='')
                                     <div class="" style="line-height: .5;">
-                                        <img src="/{{$company->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
+                                        <img src="/{{$company->logo}}" class="img img-fluid" style="width: 200px; height: auto; margin-bottom:25px">
                                     </div>
                                     <br>
-                                    <br>
-                                    <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> <a onclick="AbrirModal('edit',{{$company->id}})" href="#" class="pull-right"><i class="fa fa-edit"></i></a></h2>
+                                    @endif
+                                    <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> </h2>
                                     <hr>
-                                    <button class="btn btn-default">
+                                    <button class="btn btn-primary" data-toggle="collapse" data-target="#actions">
                                         Actions
                                     </button>
+                                    <br>
+                                    <div id="actions" class="collapse">
+                                        <hr>
+                                        <button class="btn btn-success btn-sm" onclick="AbrirModal('edit',{{$company->id}})">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#actions">
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -100,12 +111,12 @@
                                         @else
                                         <p>No Owners</p>
                                         @endif
-                                        <!--<br>
-<div class="text-center">
-<button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
-Add contact
-</button>
-</div>-->
+                                        <br>
+                                        <div class="text-center">
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#addOwnerModal">
+                                                Add owner
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +140,7 @@ Add contact
                                         @endif
                                         <br>
                                         <div class="text-center">
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#addContactModal">
+                                            <button class="btn btn-default" onclick="AbrirModal('addContact',0)">
                                                 Add contact
                                             </button>
                                         </div>
@@ -158,13 +169,16 @@ Add contact
                                 <th title="Ammount">
                                     Ammount
                                 </th>
+                                <th title="Options">
+                                    Options
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($quotes as $quote)
                             <tr>
                                 <td ><span class="{{$quote->status->name}}">{{$quote->status->name }}</span></td>
-                                <td>{{$quote->created_at }}</td>
+                                <td>{{ date_format($quote->created_at, 'M d, Y H:i')}}</td>
                                 @if($quote->origin_harbor)
                                 <td>{{$quote->origin_harbor->name }}</td>
                                 @else
@@ -175,7 +189,21 @@ Add contact
                                 @else
                                 <td>{{$quote->destination_address }}</td>
                                 @endif
-                                <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} @if(isset($currency_cfg)) {{$currency_cfg->alphacode}} @endif</td>                                    
+                                <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
+                                <td>
+                                    <a href="{{route('quotes.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
+                                        <i class="la la-eye"></i>
+                                    </a>
+                                    <a href="{{route('quotes.edit',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                                        <i class="la la-edit"></i>
+                                    </a>
+                                    <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
+                                        <i class="la la-plus"></i>
+                                    </a>
+                                    <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
+                                        <i class="la la-eraser"></i>
+                                    </button>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -188,6 +216,8 @@ Add contact
 @include('companies.partials.companiesModal')
 @include('companies.partials.deleteCompaniesModal')
 @include('companies.partials.addContactModal')
+@include('companies.partials.addOwnerModal')
+
 @endsection
 
 @section('js')
@@ -215,7 +245,15 @@ Add contact
                 $('#deleteCompanyModal').modal({show:true});
             });
         }
+        if(action == "addContact"){
+            var url = '{{ route("contacts.add") }}';
+            $('.modal-body').load(url,function(){
+                $('#addContactModal').modal({show:true});
+            });
+        }
+
     }
+
 </script>
 @stop
 

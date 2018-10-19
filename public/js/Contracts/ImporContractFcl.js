@@ -37,16 +37,6 @@
         }
     });
 
-    $('#rdRateSurcharge').on('click',function(){
-        
-            $('#divvaluescurren').removeAttr('hidden');
-    });
-    
-    $('#rdRate').on('click',function(){
-
-            $('#divvaluescurren').attr('hidden','hidden');
-    });
-
 
     jQuery(document).ready(function($){
         Dropzone.options.mss = {

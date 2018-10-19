@@ -128,6 +128,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                     <th title="Field #6">
                       40'HC
                     </th>
+                    <th title="Field #6">
+                      40'NOR
+                    </th>
+                    <th title="Field #6">
+                      45'
+                    </th>
                     <th title="Field #7">
                       Currency
                     </th>
@@ -415,8 +421,8 @@ Load
       ajax:  "{{ route('localchar.table',['id' => $id]) }}",
       columns: [
         {data: 'surcharge', name: 'surcharge'},
-        {data: 'port_orig', name: 'port_orig'},
-        {data: 'port_dest', name: 'port_dest'},
+        {data: 'origin', name: 'origin'},
+        {data: 'destiny', name: 'destiny'},
         {data: 'changetype', name: 'changetype'},
         {data: 'carrier', name: 'carrier'},
         {data: 'calculation_type', name: 'calculation_type'},
@@ -469,6 +475,8 @@ Load
         {data: 'twuenty', name: 'twuenty'},
         {data: 'forty', name: 'forty'},
         {data: 'fortyhc', name: 'fortyhc'},
+        {data: 'fortynor', name: 'fortynor'},
+        {data: 'fortyfive', name: 'fortyfive'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
       ],

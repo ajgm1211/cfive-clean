@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Subuser;
+use App\Quote;
+use App\Company;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,7 @@ use App\Mail\VerifyMail;
 use App\VerifyUser;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Notifications\SlackNotification;
 
 class UsersController extends Controller
 {
@@ -54,13 +57,15 @@ class UsersController extends Controller
     if(\Auth::user()->type=='company' && $request->type == 'company'){
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);   
     }
-    
+
     $user = new User($request->all());
     $user->password = bcrypt($request->password);
     $user->save();
     if($request->type == "subuser"){
       $user->assignRole('subuser');
     }
+    $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
+    $user->notify(new SlackNotification($message));
 
     VerifyUser::create([
       'user_id' => $user->id,
@@ -151,19 +156,30 @@ class UsersController extends Controller
   }
   public function destroyUser(Request $request,$id)
   {
+    if($request->user_id){
+      Quote::where('owner',$id)->update(['owner'=>$request->user_id]);
+      Company::where('owner',$id)->update(['owner'=>$request->user_id]);
+    }
 
     $user = self::destroy($id);
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully delete : '.$user->name.' '.$user->lastname);
+
     return redirect()->route('users.home');
 
   }
 
   public function destroymsg($id)
   {
-    return view('users/message' ,['userid' => $id]);
+    if(Auth::user()->type == 'admin'  ){
+      $users = User::pluck('name','id');
+    }else{
+      $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id','<>', $id)->pluck('name','id');
+    }
+
+    return view('users/message' ,['userid' => $id,'users' => $users]);
 
   }
   public function resetmsg($id)
@@ -173,12 +189,8 @@ class UsersController extends Controller
 
   public function datahtml(){
     // temporal
-
-
     if(Auth::user()->type == 'admin'  ){
-
-      $user = new User();
-      $data = $user->all();
+      $data = User::all();
     }
 
     if(Auth::user()->type == 'company' || Auth::user()->type == 'subuser' ){
