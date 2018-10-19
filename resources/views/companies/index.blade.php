@@ -106,13 +106,13 @@ All
                   Download File
                 </span>
               </a>
-              <!--<a href="{{route('view.fail.company')}}" class="dropdown-item" >
+              <a href="{{route('view.fail.company')}}" class="dropdown-item" >
                 <span>
                   <i class="la la-search"></i>
                   &nbsp;
                   Failed Companies
                 </span>
-              </a>-->
+              </a>
             </div>
 
           </div>
