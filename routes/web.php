@@ -176,6 +176,11 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
     Route::get('/UpdateFCompany/{id}','ImportationController@UpdateFailedCompany')->name('update.fail.company');
     
+    // Contacts
+    Route::Post('/UploadContacts','ImportationController@UploadContacts')->name('Upload.Contacts');
+    Route::get('/ViewFContact','ImportationController@FailedContactView')->name('view.fail.contact');
+    Route::get('/ListFContact/{id}','ImportationController@FailedContactlist')->name('list.fail.contact');
+    Route::get('/DeleteFContact/{id}','ImportationController@DeleteFailedContact')->name('delete.fail.contact');
     
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
