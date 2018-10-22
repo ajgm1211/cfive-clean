@@ -13967,7 +13967,7 @@ if (token) {
 window.Pusher = __webpack_require__(37);
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
   broadcaster: 'pusher',
-  key: "1052abebf4043210e7f1",
+  key: "b74324bf3d783ed40021",
   cluster: "us2",
   encrypted: true
 });
