@@ -193,6 +193,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
+    Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 

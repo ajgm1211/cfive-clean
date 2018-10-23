@@ -154,6 +154,17 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Owner added successfully!');
         return redirect()->back();
 
+    }    
+    
+    public function deleteOwner(Request $request,$user_id){
+        
+        $user=GroupUserCompany::where('user_id',$user_id)->delete();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Owner deleted successfully!');
+        return redirect()->back();
+
     }
 
     public function edit($id)
