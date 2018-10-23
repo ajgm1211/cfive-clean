@@ -27,7 +27,7 @@
             <div id="details" class="clearfix details">
                 <div class="client">
                     <p ><b>Desde:</b></p>
-                    <span id="destination_input" style="line-height: 0.4">
+                    <span id="destination_input" style="line-height: 0.5">
                         <p>{{$user->name}}</p>
                         <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
                         <p>{{$user->companyUser->address}}</p>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
                     <p><b>Hasta:</b></p>
-                    <span id="destination_input" style="line-height: 0.4">
+                    <span id="destination_input" style="line-height: 0.5">
                         <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">-->
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
@@ -77,7 +77,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table-border" style="width: 350px; right:0; top:264px; position:absolute;">
+                    <table class="table-border" style="width: 350px; right:0; top:271px; position:absolute;">
                         <thead class="title-quote text-center ">
                             <tr>
                                 <th class="unit"><b>Destino</b></th>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="clearfix">
-                <div class="client">
+                <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? 'Aerolínea':'Naviera'}}</b></p>
                     <hr style="margin-bottom:5px;margin-top:1px;border:0.1px solid #f1f1f1">
                     @if($quote->carrier_id!='')

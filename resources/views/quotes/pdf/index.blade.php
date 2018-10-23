@@ -27,7 +27,7 @@
             <div id="details" class="clearfix details">
                 <div class="client">
                     <p><b>From:</b></p>
-                    <span id="destination_input" style="line-height: 0.4">
+                    <span id="destination_input" style="line-height: 0.5">
                         <p>{{$user->name}}</p>
                         <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
                         <p>{{$user->companyUser->address}}</p>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
                     <p><b>To:</b></p>
-                    <span id="destination_input" style="line-height: 0.4">
+                    <span id="destination_input" style="line-height: 0.5">
                         <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">-->
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
@@ -77,7 +77,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table-border" style="width: 350px; right:0; top:264px; position:absolute;">
+                    <table class="table-border" style="width: 350px; right:0; top:271px; position:absolute;">
                         <thead class="title-quote text-center ">
                             <tr>
                                 <th class="unit"><b>Destination</b></th>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="clearfix">
-                <div class="client">
+                <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
                     <hr style="margin-bottom:5px;margin-top:1px;">
                     @if($quote->carrier_id!='')
@@ -120,7 +120,7 @@
             <div id="details" class="clearfix details">
                 <div class="company" style="color: #1D3A6E;">
                     <p class="title"><b>Cargo details</b></p>
-                    <hr style="margin-bottom:5px;margin-top:1px;">
+                    <hr style="margin-bottom:5px;margin-top:1px;border:1px solid #f1f1f1">
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
@@ -147,7 +147,6 @@
                         </div>
                     </div>
                     @endif
-
                     @if(!empty($package_loads) && count($package_loads)>0)
                     <table class="table table-bordered color-blue">
                         <thead class="title-quote text-center header-table">
