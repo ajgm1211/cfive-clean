@@ -169,8 +169,8 @@
                 });
             });
 
-            function showModalcompany(id){
-                    var url = '{{ route("show.fail.company", ":id") }}';
+            function showModalcontact(id){
+                    var url = '{{ route("show.fail.contact", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditcompanies').modal();
