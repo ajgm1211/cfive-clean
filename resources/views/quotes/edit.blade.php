@@ -1351,6 +1351,21 @@
                                 </h5>
                               </div>
                             </div>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div class="form-group ">
+                                  @if(count($quote->term_orig) > 0)  
+                                  <h5 class="title-quote">Origin harbor</h5>
+                                  {!! Form::textarea('term_orig', $quote->term_orig, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'term_orig']) !!}
+                                  @endif
+                               @if(count($quote->term_dest) > 0)  
+                                  <h5 class="title-quote">Destination harbor</h5>
+                                  {!! Form::textarea('term_dest', $quote->term_dest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'term_dest']) !!}
+                                
+                                  @endif
+                                </div>
+                              </div>
+                            </div> 
                           </div>
                         </div>
                       </div>
@@ -1425,4 +1440,46 @@
       });
     }
   </script>
+  
+<script>
+
+ var editor_config = {
+    path_absolute : "/",
+    selector: "textarea.editor",
+    plugins: ["template"],
+    toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+    external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
+    nanospell_server:"php",
+    browser_spellcheck: true,
+    relative_urls: false,
+    remove_script_host: false,
+    file_browser_callback : function(field_name, url, type, win) {
+      var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+      var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+
+      var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+      if (type == 'image') {
+        cmsURL = cmsURL + "&type=Images";
+      } else {
+        cmsURL = cmsURL + "&type=Files";
+      }
+
+      tinymce.activeEditor.windowManager.open({
+        file: '<?= route('elfinder.tinymce4') ?>',// use an absolute path!
+        title: 'File manager',
+        width: 900,
+        height: 450,
+        resizable: 'yes'
+      }, {
+        setUrl: function (url) {
+          win.document.getElementById(field_name).value = url;
+        }
+      });
+    }
+  };
+
+  tinymce.init(editor_config);
+
+
+</script>
   @stop
