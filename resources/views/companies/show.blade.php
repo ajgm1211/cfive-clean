@@ -8,6 +8,13 @@
 ?>
 @extends('layouts.app')
 @section('title', 'Companies | Details')
+@section('css')
+@parent
+<link rel="stylesheet" type="text/css" href="/assets/plugins/button-dropdown/css/bootstrap.css">
+<script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
+@endsection
 @section('content')
 <div class="m-content">
     <div class="m-portlet--mobile">
@@ -46,18 +53,24 @@
                                     @endif
                                     <h2 class="size-18px color-blue" style="text-transform: uppercase;"><b>{{$company->business_name}}</b> </h2>
                                     <hr>
-                                    <button class="btn btn-primary" data-toggle="collapse" data-target="#actions">
+                                    <button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Actions
                                     </button>
-                                    <br>
-                                    <div id="actions" class="collapse">
-                                        <hr>
-                                        <button class="btn btn-success btn-sm" onclick="AbrirModal('edit',{{$company->id}})">
-                                            Edit
-                                        </button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="collapse" data-target="#actions">
-                                            Delete
-                                        </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        <a class="dropdown-item" href="#" onclick="AbrirModal('edit',{{$company->id}})">
+                                            <span>
+                                                Edit
+                                                &nbsp;
+                                                <i class="la la-edit"></i>
+                                            </span>
+                                        </a>      
+                                        <a href="#" class="dropdown-item" >
+                                            <span>
+                                                Delete
+                                                &nbsp;
+                                                <i class="la la-trash"></i>
+                                            </span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -99,33 +112,6 @@
                         <div class="col-md-12">
                             <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                 <div class="m-portlet__body">
-                                    <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#company_contacts" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Owners</b></h4>
-                                    <hr>
-                                    <div class="collapse show" id="company_contacts"> 
-                                        @if(!$company->groupUserCompanies->isEmpty())
-                                        @foreach($company->groupUserCompanies as $groupUser)
-                                        <ul>
-                                            <li>{{$groupUser->user->name}} {{$groupUser->user->lastname}} <a href="#" data-contact-id="{{$groupUser->id}}" id="delete-owner"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
-                                        </ul>
-                                        @endforeach
-                                        @else
-                                        <p>No Owners</p>
-                                        @endif
-                                        <br>
-                                        <div class="text-center">
-                                            <button class="btn btn-default" data-toggle="modal" data-target="#addOwnerModal">
-                                                Add owner
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
-                                <div class="m-portlet__body">
                                     <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#company_contacts" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Contacts</b></h4>
                                     <hr>
                                     <div class="collapse show" id="company_contacts"> 
@@ -142,6 +128,33 @@
                                         <div class="text-center">
                                             <button class="btn btn-default" onclick="AbrirModal('addContact',0)">
                                                 Add contact
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
+                                <div class="m-portlet__body">
+                                    <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#company_owners" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Owners</b></h4>
+                                    <hr>
+                                    <div class="collapse show" id="company_owners"> 
+                                        @if(!$company->groupUserCompanies->isEmpty())
+                                        @foreach($company->groupUserCompanies as $groupUser)
+                                        <ul>
+                                            <li>{{$groupUser->user->name}} {{$groupUser->user->lastname}} <a href="#" data-owner-id="{{$groupUser->user_id}}" id="delete-owner"><span class="pull-right"><i class="fa fa-close"></i></span></a></li>
+                                        </ul>
+                                        @endforeach
+                                        @else
+                                        <p>No Owners</p>
+                                        @endif
+                                        <br>
+                                        <div class="text-center">
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#addOwnerModal">
+                                                Add owner
                                             </button>
                                         </div>
                                     </div>

@@ -27,7 +27,6 @@
             <div id="details" class="clearfix details">
                 <div class="client">
                     <p><b>From:</b></p>
-                    <br>
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$user->name}}</p>
                         <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
@@ -40,60 +39,75 @@
                 <div class="company text-right" style="float: right; width: 350px;">
                     <p><b>To:</b></p>
                     <span id="destination_input" style="line-height: 0.4">
-                        <img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">
+                        <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">-->
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
-                        <p style="line-height: 1.2" >{{$quote->company->address}}</p>
+                        <p>{{$quote->company->address}}</p>
                         <p>{{$quote->contact->phone}}</p>
                         <p>{{$quote->contact->email}}</p>
                     </span>
                 </div>
             </div>
             <br>
-            <div id="" class="clearfix">
-                <div class="client" style="width: 150px;">
-                    <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Origin</div>
-                        <div class="panel-body" style="border: 1px solid #dddddd">
-                            <span id="origin_input" style="color: #787878;">
-                                @if($quote->origin_harbor_id!='')
-                                Port: {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
-                                @endif
-                                @if($quote->origin_airport_id!='')
-                                Airport: {{$quote->origin_airport->name}}
-                                @endif
-                                <br>
-                                @if($quote->origin_address!='')
-                                Address: {{$quote->origin_address}}
-                                @endif
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="company" style="float: right; width: 350px;">
-                    <div class="panel panel-default" style="width: 350px; height: 83px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Destination {{$quote->type==3 ? ' Airport':' Port'}}</div>
-                        <div class="panel-body" style="border: 1px solid #dddddd; height: 18px;">
-                            <span id="destination_input" style="color: #787878;">
-                                @if($quote->destination_harbor_id!='')
-                                Port: {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
-                                @endif
-                                @if($quote->destination_airport_id!='')
-                                Airport: {{$quote->destination_airport->name}}
-                                @endif
-                                <br>
-                                @if($quote->destination_address!='')
-                                Address: {{$quote->destination_address}}
-                                @endif
-                            </span>
-                        </div>
-                    </div>
+            <br>
+            <div class="clearfix">
+                <div class="">
+                    <table class="table-border" style="width: 350px; border-radius:2px !Important;">
+                        <thead class="title-quote text-center header-table">
+                            <tr >
+                                <th class="unit"><b>Origin</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span id="origin_input" style="color: #787878;">
+                                        @if($quote->origin_harbor_id!='')
+                                        Port: {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
+                                        @endif
+                                        @if($quote->origin_airport_id!='')
+                                        Airport: {{$quote->origin_airport->name}}
+                                        @endif
+                                        <br>
+                                        @if($quote->origin_address!='')
+                                        Address: {{$quote->origin_address}}
+                                        @endif
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table-border" style="width: 350px; right:0; top:264px; position:absolute;">
+                        <thead class="title-quote text-center ">
+                            <tr>
+                                <th class="unit"><b>Destination</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span id="destination_input" style="color: #787878;">
+                                        @if($quote->destination_harbor_id!='')
+                                        Port: {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
+                                        @endif
+                                        @if($quote->destination_airport_id!='')
+                                        Airport: {{$quote->destination_airport->name}}
+                                        @endif
+                                        <br>
+                                        @if($quote->destination_address!='')
+                                        Address: {{$quote->destination_address}}
+                                        @endif
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <hr>
             <div class="clearfix">
                 <div class="client">
                     <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
+                    <hr style="margin-bottom:5px;margin-top:1px;">
                     @if($quote->carrier_id!='')
                     <p>{{$quote->carrier->name}}</p>
                     @endif
@@ -104,9 +118,9 @@
             </div>
             <br>
             <div id="details" class="clearfix details">
-                <hr>
                 <div class="company" style="color: #1D3A6E;">
                     <p class="title"><b>Cargo details</b></p>
+                    <hr style="margin-bottom:5px;margin-top:1px;">
                     <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
                     <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
                     <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
@@ -172,7 +186,7 @@
                     @endif
                 </div>
             </div>
-            <hr>
+            <br>
             @if($charges_type==1)
             <table class="table table-bordered color-blue page-break" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
@@ -216,7 +230,7 @@
             @if(count($origin_ammounts)>0)
             <p class="title">Origin charges</p>
             <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+            <table border="0" cellspacing="1" cellpadding="1">
                 <thead class="title-quote text-center header-table">
                     <tr >
                         <th class="unit"><b>Charge</b></th>
@@ -261,7 +275,7 @@
                 <tfoot>
                     <tr class="text-center subtotal">
                         <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                        <td style="font-size: 12px; color: #01194F"><b>Total ammount</b></td>
                         <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
@@ -270,7 +284,7 @@
             @if(count($freight_ammounts)>0)
             <p class="title">Freight charges</p>
             <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+            <table border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
                     <tr >
                         <th class="unit"><b>Charge</b></th>
@@ -315,7 +329,7 @@
                 <tfoot>
                     <tr class="text-center" style="font-size: 12px;">
                         <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                        <td style="font-size: 12px; color: #01194F"><b>Total Ammount</b></td>
                         <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
@@ -324,7 +338,7 @@
             @if(count($destination_ammounts)>0)
             <p class="title">Destination charges</p>
             <br>
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+            <table border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
                     <tr>
                         <th class="unit"><b>Charge</b></th>
@@ -369,7 +383,7 @@
                 <tfoot>
                     <tr class="text-center">
                         <td colspan="4"></td>
-                        <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                        <td style="font-size: 12px; color: #01194F"><b>Total Ammount</b></td>
                         <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
                             &nbsp; {{$quote->currencies->alphacode}}</b></td>
                     </tr>
@@ -381,16 +395,15 @@
         @if($charges_type==2)
         <div class="clearfix details page-break">
             <div class="company">
-                <p class="title text-right" style="color: #01194F;"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
+                <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
             </div>
-            <hr>
         </div>
         @endif
         <div class="clearfix">
-            <table class="table table-bordered color-blue" border="0" cellspacing="0" cellpadding="0">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote header-table">
                     <tr>
-                        <th class="unit text-left"><b>Terms and Conditions</b></th>
+                        <th class="text-left"><b>&nbsp;&nbsp;&nbsp;Terms and Conditions</b></th>
                     </tr>
                 </thead>
                 <tbody>

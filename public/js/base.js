@@ -264,7 +264,38 @@ $(document).on('click', '#delete-contact', function () {
                 success: function(data) {
                     swal(
                         'Deleted!',
-                        'Your file has been deleted.',
+                        'The contact has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('ul').remove();
+                }
+            });
+
+        }
+
+    });
+});
+
+//Owners
+
+$(document).on('click', '#delete-owner', function () {
+    var id = $(this).attr('data-owner-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/companies/owner/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'The owner has been deleted.',
                         'success'
                     )
                     $(theElement).closest('li').remove();
