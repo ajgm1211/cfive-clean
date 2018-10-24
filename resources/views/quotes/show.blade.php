@@ -483,7 +483,7 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-<script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
+<script>window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");</script>
 @endif
 
 

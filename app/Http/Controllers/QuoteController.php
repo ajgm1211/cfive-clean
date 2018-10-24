@@ -605,7 +605,8 @@ class QuoteController extends Controller
                     $package_load->save();
                 }
             }
-            //Sending email
+
+            //Sending email with pdf attached
             if(isset($input['subject']) && isset($input['body'])){
                 $subject = $input['subject'];
                 $body = $input['body'];
@@ -620,12 +621,30 @@ class QuoteController extends Controller
                 $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
                 $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
                 $user = User::where('id',\Auth::id())->with('companyUser')->first();
+                $package_loads = PackageLoad::where('quote_id',$quote->id)->get();
                 if(\Auth::user()->company_user_id){
                     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
                     $currency_cfg = Currency::find($company_user->currency_id);
+                    $type=$company_user->type_pdf;
+                    $ammounts_type=$company_user->pdf_ammounts;
+                    $port_all = harbor::where('name','ALL')->first();
+                    $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+                        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+                    })->get();            
+                    $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+                        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+                    })->get();
+                    $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+                        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+                    })->get(); 
                 }
-                $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                                         'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg]);
+                if($company_user->pdf_language==1){
+                    $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+                }else if($company_user->pdf_language==2){
+                    $view = \View::make('quotes.pdf.index-spanish', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+                }else{
+                    $view = \View::make('quotes.pdf.index-portuguese', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);            
+                }
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
                 \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
@@ -944,7 +963,7 @@ class QuoteController extends Controller
         $terms = TermsPort::where('port_id',$id)->with('term')->whereHas('term', function($q)  {
             $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
         })->get();
-        
+
         return $terms;
     }
     public function duplicate(Request $request,$id)
@@ -1011,6 +1030,27 @@ class QuoteController extends Controller
         if($quote->qty_40_hc){
             $quote_duplicate->qty_40_hc=$quote->qty_40_hc;
         }
+        if($quote->qty_45_hc){
+            $quote_duplicate->qty_45_hc=$quote->qty_45_hc;
+        }
+        if($quote->qty_40_nor){
+            $quote_duplicate->qty_40_nor=$quote->qty_40_nor;
+        }
+        if($quote->qty_20_reefer){
+            $quote_duplicate->qty_20_reefer=$quote->qty_20_reefer;
+        }
+        if($quote->qty_40_reefer){
+            $quote_duplicate->qty_40_reefer=$quote->qty_40_reefer;
+        }
+        if($quote->qty_40_hc_reefer){
+            $quote_duplicate->qty_40_hc_reefer=$quote->qty_40_hc_reefer;
+        }
+        if($quote->qty_20_open_top){
+            $quote_duplicate->qty_20_open_top=$quote->qty_20_open_top;
+        }
+        if($quote->qty_40_open_top){
+            $quote_duplicate->qty_40_open_top=$quote->qty_40_open_top;
+        }     
         if($quote->delivery_type){
             $quote_duplicate->delivery_type=$quote->delivery_type;
         }

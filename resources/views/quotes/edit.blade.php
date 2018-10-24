@@ -516,7 +516,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-2">
                                                                     <label>Modality</label>
-                                                                    {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
+                                                                    {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','id'=>'modality']) }}
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label>Incoterm</label>
@@ -629,23 +629,6 @@
                                                                         <label>Client</label>
                                                                         {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true]) }}
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <div class="col-lg-2">
-                                                                <label>
-                                                                    <b>TERMS & CONDITIONS</b>
-                                                                </label>
-                                                            </div>
-                                                            <div class="col-lg-10">
-                                                                <div class="row " style="margin-bottom:40px;">
-                                                                    <h5 class="title-quote">Origin</h5>
-                                                                    {!! Form::textarea('term_orig', $quote->term_orig, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
-                                                                </div>
-                                                                <div class="row">
-                                                                    <h5 class="title-quote">Destination</h5>
-                                                                    {!! Form::textarea('term_dest', $quote->term_dest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1365,6 +1348,25 @@
                                                                         <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                                                                     </a>
                                                                 </h5>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <label class="size-14px">
+                                                                    <b>Terms & Conditions</b>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <br>
+                                                                <div style="margin-bottom:40px;">
+                                                                    <h5 class="title-quote size-14px">Origin</h5>
+                                                                    {!! Form::textarea('term_orig', $quote->term_orig, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                </div>
+                                                                <div>
+                                                                    <h5 class="title-quote size-14px">Destination</h5>
+                                                                    {!! Form::textarea('term_dest', $quote->term_dest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

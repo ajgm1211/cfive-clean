@@ -416,26 +416,27 @@
                         </td>
                     </tr>
                     @endif
-
-                    @if(isset($terms_origin) && $terms_origin->count()>0)
+                    
+                    @if($quote->term_orig!='')
                     <tr>
                         <td style="padding:20px;">
-                            @foreach($terms_origin as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
-                    @endif                    
-
-                    @if(isset($terms_destination) && $terms_destination->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_destination as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
+                            <span class="text-justify">                                
+                                {!! $quote->term_orig !!}
+                            </span>
                         </td>
                     </tr>
                     @endif
+                    
+                    @if($quote->term_dest!='')
+                    <tr>
+                        <td style="padding:20px;">
+                            <span class="text-justify">
+                                {!! $quote->term_dest !!}    
+                            </span>
+                        </td>
+                    </tr>
+                    @endif
+                    
                 </tbody>
             </table>
         </div>
