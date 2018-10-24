@@ -439,16 +439,8 @@
                                 {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                                 @endforeach
                                 @endif
-                                @if(isset($terms_origin) && $terms_origin->count()>0)
-                                @foreach($terms_origin as $v)
-                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                @endforeach
-                                @endif
-                                @if(isset($terms_destination) && $terms_destination->count()>0)
-                                @foreach($terms_destination as $v)
-                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                @endforeach
-                                @endif
+                                {!! $quote->term_orig!!}
+                                {!! $quote->term_dest!!}
                                 @endif
                             </div>
                         </div>
