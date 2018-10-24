@@ -264,7 +264,38 @@ $(document).on('click', '#delete-contact', function () {
                 success: function(data) {
                     swal(
                         'Deleted!',
-                        'Your file has been deleted.',
+                        'The contact has been deleted.',
+                        'success'
+                    )
+                    $(theElement).closest('ul').remove();
+                }
+            });
+
+        }
+
+    });
+});
+
+//Owners
+
+$(document).on('click', '#delete-owner', function () {
+    var id = $(this).attr('data-owner-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/companies/owner/delete/' + id,
+                success: function(data) {
+                    swal(
+                        'Deleted!',
+                        'The owner has been deleted.',
                         'success'
                     )
                     $(theElement).closest('li').remove();
@@ -548,19 +579,205 @@ $(document).on('click', '#duplicate-quote', function (e) {
     });
 });
 
+$(document).on('change', '#modality', function (e) {
+    var origin_harbor_id = $('#origin_harbor').val();
+    var destination_harbor_id = $('#destination_harbor').val();
+    var modality = $('#modality').val();
+    if(origin_harbor_id!=''){
+        $.ajax({
+            url: "/quotes/terms/"+origin_harbor_id,
+            dataType: 'json',
+            success: function(data) {        
+                $('#terms_box').show();
+                tinymce.init({
+                    selector: "#origin_terms",
+                    plugins: [
+                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons paste textcolor colorpicker textpattern codesample",
+                        "fullpage toc imagetools help"
+                    ],
+                    toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                    menubar: false,
+                    toolbar_items_size: 'small',
+                    paste_as_text: true,
+                    browser_spellcheck: true,
+                    statusbar: false,
+                    height: 200,
+
+                    style_formats: [{
+                        title: 'Bold text',
+                        inline: 'b'
+                    }, ],
+
+                });
+                $.each(data, function(key, value) {
+                    if(modality==1){
+                        $('.editor').html(value.term.export).tinymce({
+                            theme: "modern",
+                        });
+
+                        $('#origin_terms').val(value.term.export);
+                    }else{
+                        $('.editor').html(value.term.import).tinymce({
+                            theme: "modern",
+                        });
+
+                        $('#origin_terms').val(value.term.import);                    
+                    }
+                });
+            }
+        });
+    }
+    if(destination_harbor_id!=''){
+        $.ajax({
+            url: "/quotes/terms/"+destination_harbor_id,
+            dataType: 'json',
+            success: function(data) {        
+                $('#terms_box').show();
+                tinymce.init({
+                    selector: "#origin_terms",
+                    plugins: [
+                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons paste textcolor colorpicker textpattern codesample",
+                        "fullpage toc imagetools help"
+                    ],
+                    toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                    menubar: false,
+                    toolbar_items_size: 'small',
+                    paste_as_text: true,
+                    browser_spellcheck: true,
+                    statusbar: false,
+                    height: 200,
+
+                    style_formats: [{
+                        title: 'Bold text',
+                        inline: 'b'
+                    }, ],
+
+                });
+                $.each(data, function(key, value) {
+                    if(modality==1){
+                        $('.editor').html(value.term.export).tinymce({
+                            theme: "modern",
+                        });
+
+                        $('#origin_terms').val(value.term.export);
+                    }else{
+                        $('.editor').html(value.term.import).tinymce({
+                            theme: "modern",
+                        });
+
+                        $('#origin_terms').val(value.term.import);                    
+                    }
+                });
+            }
+        });        
+    }
+});
 
 $(document).on('change', '#origin_harbor', function (e) {
     var harbor_id = $('#origin_harbor').val();
+    var modality = $('#modality').val();
     $.ajax({
-        url: "terms/"+harbor_id,
+        url: "/quotes/terms/"+harbor_id,
         dataType: 'json',
         success: function(data) {        
             $('#terms_box').show();
-            $('#terms_box_import').html(data.import);
-            $('#terms_box_export').html(data.export);
+            tinymce.init({
+                selector: "#origin_terms",
+                plugins: [
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });
+            $.each(data, function(key, value) {
+                if(modality==1){
+                    $('.editor').html(value.term.export).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#origin_terms').val(value.term.export);
+                }else{
+                    $('.editor').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#origin_terms').val(value.term.import);                    
+                }
+            });
         }
     });
 });
+
+$(document).on('change', '#destination_harbor', function (e) {
+    var harbor_id = $('#destination_harbor').val();
+    $.ajax({
+        url: "/quotes/terms/"+harbor_id,
+        dataType: 'json',
+        success: function(data) {        
+            $('#terms_box').show();
+            tinymce.init({
+                selector: "#destination_terms",
+                plugins: [
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });            
+            $.each(data, function(key, value) {
+                if(modality==1){
+                    $('.editor').html(value.term.export).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#destination_terms').val(value.term.export);
+                }else{
+                    $('.editor').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#destination_terms').val(value.term.import);                    
+                }                
+            });
+        }
+    });
+});
+
 
 $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
@@ -707,7 +924,7 @@ $(document).on('change', '#delivery_type_air', function (e) {
 });
 
 $(document).on('click', '#create-quote', function (e) {
-    
+
     if($(".pick_up_date").val() == ''){
         msg('Sorry, pick up date is empty. Please go back and complete this field');
         //return;
@@ -721,7 +938,7 @@ $(document).on('click', '#create-quote', function (e) {
         msg('Sorry, contact is empty. Please go back and complete this field');
         //return;        
     }
-    
+
     var origin_harbor=$("#origin_harbor").val();
     var destination_harbor=$("#destination_harbor").val();
     var destination_address=$("#destination_address").val();
@@ -1704,7 +1921,7 @@ $(document).on('click', '#delete-company', function () {
         if (result.value) {
             $.ajax({
                 type: 'get',
-                url: 'companies/delete/' + id,
+                url: '/companies/delete/' + id,
                 success: function(data) {
                     if(data.message>0){
                         swal({
@@ -1717,7 +1934,7 @@ $(document).on('click', '#delete-company', function () {
                             if (result.value) {
                                 $.ajax({
                                     type: 'get',
-                                    url: 'companies/destroy/' + id,
+                                    url: '/companies/destroy/' + id,
                                     success: function(data) {
                                         if(data.message=='Ok'){
                                             swal(
@@ -1741,7 +1958,7 @@ $(document).on('click', '#delete-company', function () {
                     }else{
                         $.ajax({
                             type: 'get',
-                            url: 'companies/destroy/' + id,
+                            url: '/companies/destroy/' + id,
                             success: function(data) {
                                 if(data.message=='Ok'){
                                     swal(
@@ -1763,9 +1980,83 @@ $(document).on('click', '#delete-company', function () {
                     }
                 }
             });
-
         }
+    });
+});
 
+$(document).on('click', '#delete-company-show', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Continue!'
+    }).then(function(result) {
+        if (result.value) {
+            $.ajax({
+                type: 'get',
+                url: '/companies/delete/' + id,
+                success: function(data) {
+                    if(data.message>0){
+                        swal({
+                            title: 'Warning!',
+                            text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then(function(result) {
+                            if (result.value) {
+                                $.ajax({
+                                    type: 'get',
+                                    url: '/companies/destroy/' + id,
+                                    success: function(data) {
+                                        if(data.message=='Ok'){
+                                            swal(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            )
+                                            $(theElement).closest('tr').remove();
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                                'error'
+                                            )
+                                            console.log(data.message);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                            type: 'get',
+                            url: '/companies/destroy/' + id,
+                            success: function(data) {
+                                if(data.message=='Ok'){
+                                    swal(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                    )
+                                    window.location.href = '/companies';
+                                }else{
+                                    swal(
+                                        'Error!',
+                                        'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                                        'warning'
+                                    )
+                                    console.log(data.message);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     });
 });
 

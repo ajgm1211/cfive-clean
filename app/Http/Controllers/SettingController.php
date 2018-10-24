@@ -8,11 +8,19 @@ use App\Currency;
 use App\User;
 use App\Quote;
 use App\Surcharge;
+use App\Contact;
 use App\SaleTerm;
+use App\Harbor;
+use App\Airport;
+use App\Country;
 use App\Price;
 use App\Contract;
 use App\GlobalCharge;
 use App\Inland;
+use App\OriginAmmount;
+use App\FreightAmmount;
+use App\DestinationAmmount;
+use App\PackageLoad;
 use App\NewContractRequest;
 use App\TermAndCondition;
 use Illuminate\Http\Request;
@@ -26,6 +34,23 @@ class SettingController extends Controller
         $company = User::where('id',\Auth::id())->with('companyUser')->first();
         $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
         return view('settings/index',compact('company','currencies'));
+    }
+
+    public function idPersonalizado(){
+        $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
+        $iniciales =  strtoupper(substr($user_company->name,0, 2));
+        $quote = Quote::where('company_user_id',$user_company->id)->orderBy('created_at', 'desc')->first();
+
+        if($quote == null){
+            $iniciales = $iniciales."-1";
+        }else{
+            $numeroFinal = explode('-',$quote->company_quote);
+
+            $numeroFinal = $numeroFinal[1] +1;
+
+            $iniciales = $iniciales."-".$numeroFinal;
+        }
+        return $iniciales;
     }
 
     public function store(Request $request){
@@ -137,5 +162,231 @@ class SettingController extends Controller
         $request->session()->flash('message.content', 'Register completed successfully!');
 
         return view('settings/list_companies',compact('companies'));
+    }
+
+    public function duplicate(Request $request,$id)
+    {
+        $id = obtenerRouteKey($id);
+        $company_user = CompanyUser::findOrFail($id);
+
+        $company_user_duplicate = new CompanyUser();
+        $company_user_duplicate->name=$company_user->name.'_duplicate';
+        $company_user_duplicate->address=$company_user->address;
+        $company_user_duplicate->phone=$company_user->phone;
+        $company_user_duplicate->logo=$company_user->logo;
+        $company_user_duplicate->hash=\Hash::make($company_user->name.'_duplicate');        
+        $company_user_duplicate->currency_id=$company_user->currency_id;
+        $company_user_duplicate->pdf_language=$company_user->pdf_language;
+        $company_user_duplicate->type_pdf=$company_user->type_pdf;
+        $company_user_duplicate->pdf_ammounts=$company_user->pdf_ammounts;
+        $company_user_duplicate->save();
+
+        $quotes = Quote::where('company_user_id',$company_user->id)->get();
+        $companies = Company::where('company_user_id',$company_user->id)->get();
+        $harbors = Harbor::all()->pluck('name','id');
+        $countries = Country::all()->pluck('name','id');
+
+        foreach($companies as $company){
+            $company_duplicate = new Company();
+            $company_duplicate->business_name = $company->business_name;
+            $company_duplicate->phone = $company->phone;
+            $company_duplicate->address = $company->address;
+            $company_duplicate->email = $company->email;
+            $company_duplicate->tax_number = $company->tax_number;
+            $company_duplicate->logo = $company->logo;
+            $company_duplicate->associated_quotes = $company->associated_quotes;
+            $company_duplicate->company_user_id = $company_user_duplicate->id;
+            $company_duplicate->owner = $company->owner;
+            $company_duplicate->save();
+
+            $contacts = Contact::where('company_id',$company->id)->get();
+
+            foreach($contacts as $contact){
+                $contact_duplicate = new Contact();
+                $contact_duplicate->first_name = $contact->first_name;
+                $contact_duplicate->last_name = $contact->last_name;
+                $contact_duplicate->email = $contact->email;
+                $contact_duplicate->phone = $contact->phone;
+                $contact_duplicate->position = $contact->position;
+                $contact_duplicate->company_id = $company_duplicate->id;
+                $contact_duplicate->save();
+            }
+        }
+
+        foreach($quotes as $quote){
+            $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+            $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+            $prices = Price::all()->pluck('name','id');
+            $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+            $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+            $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+            $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+            $packaging_loads = PackageLoad::where('quote_id',$quote->id)->get();
+
+            $quote_duplicate = new Quote();
+            $quote_duplicate->owner=\Auth::id();
+            $quote_duplicate->company_user_id=$company_user_duplicate->id;
+            $quote_duplicate->company_quote=$this->idPersonalizado();
+            $quote_duplicate->incoterm=$quote->incoterm;
+            $quote_duplicate->modality=$quote->modality;
+            $quote_duplicate->currency_id=$quote->currency_id;
+            $quote_duplicate->pick_up_date=$quote->pick_up_date;
+            if($quote->validity){
+                $quote_duplicate->validity=$quote->validity;
+            }
+            if($quote->origin_address){
+                $quote_duplicate->origin_address=$quote->origin_address;
+            }
+            if($quote->destination_address){
+                $quote_duplicate->destination_address=$quote->destination_address;
+            }
+            if($quote->company_id){
+                $quote_duplicate->company_id=$quote->company_id;
+            }
+            if($quote->origin_harbor_id){
+                $quote_duplicate->origin_harbor_id=$quote->origin_harbor_id;
+            }
+            if($quote->destination_harbor_id){
+                $quote_duplicate->destination_harbor_id=$quote->destination_harbor_id;
+            }
+            if($quote->origin_airport_id){
+                $quote_duplicate->origin_airport_id=$quote->origin_airport_id;
+            }
+            if($quote->destination_airport_id){
+                $quote_duplicate->destination_airport_id=$quote->destination_airport_id;
+            }
+            if($quote->price_id){
+                $quote_duplicate->price_id=$quote->price_id;
+            }
+            if($quote->contact_id){
+                $quote_duplicate->contact_id=$quote->contact_id;
+            }
+            if($quote->qty_20){
+                $quote_duplicate->qty_20=$quote->qty_20;
+            }
+            if($quote->qty_40){
+                $quote_duplicate->qty_40=$quote->qty_40;
+            }
+            if($quote->qty_40_hc){
+                $quote_duplicate->qty_40_hc=$quote->qty_40_hc;
+            }
+            if($quote->qty_45_hc){
+                $quote_duplicate->qty_45_hc=$quote->qty_45_hc;
+            }
+            if($quote->qty_40_nor){
+                $quote_duplicate->qty_40_nor=$quote->qty_40_nor;
+            }
+            if($quote->qty_20_reefer){
+                $quote_duplicate->qty_20_reefer=$quote->qty_20_reefer;
+            }
+            if($quote->qty_40_reefer){
+                $quote_duplicate->qty_40_reefer=$quote->qty_40_reefer;
+            }
+            if($quote->qty_40_hc_reefer){
+                $quote_duplicate->qty_40_hc_reefer=$quote->qty_40_hc_reefer;
+            }
+            if($quote->qty_20_open_top){
+                $quote_duplicate->qty_20_open_top=$quote->qty_20_open_top;
+            }
+            if($quote->qty_40_open_top){
+                $quote_duplicate->qty_40_open_top=$quote->qty_40_open_top;
+            }            
+            if($quote->delivery_type){
+                $quote_duplicate->delivery_type=$quote->delivery_type;
+            }
+            if($quote->sub_total_origin){
+                $quote_duplicate->sub_total_origin=$quote->sub_total_origin;
+            }
+            if($quote->sub_total_freight){
+                $quote_duplicate->sub_total_freight=$quote->sub_total_freight;
+            }
+            if($quote->sub_total_destination){
+                $quote_duplicate->sub_total_destination=$quote->sub_total_destination;
+            }
+            if($quote->total_markup_origin){
+                $quote_duplicate->total_markup_origin=$quote->total_markup_origin;
+            }
+            if($quote->total_markup_freight){
+                $quote_duplicate->total_markup_freight=$quote->total_markup_freight;
+            }
+            if($quote->total_markup_destination){
+                $quote_duplicate->total_markup_destination=$quote->total_markup_destination;
+            }
+            if($quote->carrier_id){
+                $quote_duplicate->carrier_id=$quote->carrier_id;
+            }
+            if($quote->airline_id){
+                $quote_duplicate->airline_id=$quote->airline_id;
+            }
+            $quote_duplicate->status_quote_id=$quote->status_quote_id;
+            $quote_duplicate->type_cargo=$quote->type_cargo;
+            $quote_duplicate->type=$quote->type;
+            $quote_duplicate->save();
+            foreach ($origin_ammounts as $origin){
+                $origin_ammount_duplicate = new OriginAmmount();
+                $origin_ammount_duplicate->charge=$origin->charge;
+                $origin_ammount_duplicate->detail=$origin->detail;
+                $origin_ammount_duplicate->units=$origin->units;
+                $origin_ammount_duplicate->price_per_unit=$origin->price_per_unit;
+                $origin_ammount_duplicate->markup=$origin->markup;
+                $origin_ammount_duplicate->currency_id=$origin->currency_id;
+                $origin_ammount_duplicate->total_ammount=$origin->total_ammount;
+                if($origin->total_ammount_2){
+                    $origin_ammount_duplicate->total_ammount_2=$origin->total_ammount_2;
+                }
+                $origin_ammount_duplicate->quote_id=$quote_duplicate->id;
+                $origin_ammount_duplicate->save();
+            }
+            foreach ($freight_ammounts as $freight){
+                $freight_ammount_duplicate = new FreightAmmount();
+                $freight_ammount_duplicate->charge=$freight->charge;
+                $freight_ammount_duplicate->detail=$freight->detail;
+                $freight_ammount_duplicate->units=$freight->units;
+                $freight_ammount_duplicate->price_per_unit=$freight->price_per_unit;
+                $freight_ammount_duplicate->markup=$freight->markup;
+                $freight_ammount_duplicate->currency_id=$freight->currency_id;
+                $freight_ammount_duplicate->total_ammount=$freight->total_ammount;
+                if($freight->total_ammount_2){
+                    $freight_ammount_duplicate->total_ammount_2=$freight->total_ammount_2;
+                }
+                $freight_ammount_duplicate->quote_id=$quote_duplicate->id;
+                $freight_ammount_duplicate->save();
+            }
+            foreach ($destination_ammounts as $destination){
+                $destination_ammount_duplicate = new DestinationAmmount();
+                $destination_ammount_duplicate->charge=$destination->charge;
+                $destination_ammount_duplicate->detail=$destination->detail;
+                $destination_ammount_duplicate->units=$destination->units;
+                $destination_ammount_duplicate->price_per_unit=$destination->price_per_unit;
+                $destination_ammount_duplicate->markup=$destination->markup;
+                $destination_ammount_duplicate->currency_id=$destination->currency_id;
+                $destination_ammount_duplicate->total_ammount=$destination->total_ammount;
+                if($destination->total_ammount_2){
+                    $destination_ammount_duplicate->total_ammount_2=$destination->total_ammount_2;
+                }
+                $destination_ammount_duplicate->quote_id=$quote_duplicate->id;
+                $destination_ammount_duplicate->save();
+            }
+
+            foreach ($packaging_loads as $packaging_load){
+                $packaging_load_duplicate = new PackageLoad();
+                $packaging_load_duplicate->type_cargo=$packaging_load->type_cargo;
+                $packaging_load_duplicate->quantity=$packaging_load->quantity;
+                $packaging_load_duplicate->height=$packaging_load->height;
+                $packaging_load_duplicate->width=$packaging_load->width;
+                $packaging_load_duplicate->large=$packaging_load->large;
+                $packaging_load_duplicate->weight=$packaging_load->weight;
+                $packaging_load_duplicate->total_weight=$packaging_load->total_weight;
+                $packaging_load_duplicate->volume=$packaging_load->volume;
+                $packaging_load_duplicate->quote_id=$quote_duplicate->id;
+                $packaging_load_duplicate->save();
+            }
+
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Company duplicated successfully!');
+        return redirect()->back();
     }
 }

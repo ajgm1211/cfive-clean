@@ -439,16 +439,8 @@
                                 {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
                                 @endforeach
                                 @endif
-                                @if(isset($terms_origin) && $terms_origin->count()>0)
-                                @foreach($terms_origin as $v)
-                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                @endforeach
-                                @endif
-                                @if(isset($terms_destination) && $terms_destination->count()>0)
-                                @foreach($terms_destination as $v)
-                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                @endforeach
-                                @endif
+                                {!! $quote->term_orig!!}
+                                {!! $quote->term_dest!!}
                                 @endif
                             </div>
                         </div>
@@ -491,7 +483,7 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-<script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
+<script>window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");</script>
 @endif
 
 
