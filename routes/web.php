@@ -164,17 +164,16 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     // Datatable Rates Y Surchargers
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
-    
+
     // DownLoad Files
     Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files');
-    
+
     // Companies
     Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
     Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company');
     Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
     Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
     Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
-    
     
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
@@ -197,6 +196,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
+    Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
@@ -261,6 +261,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
     Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
+    Route::get('duplicate/{company_id}', 'SettingController@duplicate')->name('settings.duplicate');
 });
 Route::resource('settings', 'SettingController')->middleware('auth');
 
