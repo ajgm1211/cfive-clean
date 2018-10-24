@@ -13,6 +13,7 @@ use App\Contact;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use PrvHarbor;
 use App\Surcharge;
 use App\Failcompany;
 use App\LocalCharge;
@@ -96,34 +97,25 @@ class ImportationController extends Controller
                 $fortyhcEX     = count($fortyhcArr);
                 $currencyEX    = count($currencyArr);
 
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
                 if($carrierEX   <= 1 &&  $twuentyEX   <= 1 &&
                    $fortyEX     <= 1 &&  $fortyhcEX   <= 1 &&
                    $currencyEX  <= 1 ){
-                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
-                    // Origen Y Destino ------------------------------------------------------------------------
 
-                    $sin_via_org = explode(' via ',$originEX[0]);
-                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
-                    $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
-                        ->get();
-                    if(count($originExits) == 1){
-                        $originB = true;
-                        foreach($originExits as $originRc){
-                            $originV = $originRc['id'];
-                        }
+                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($resultadoPortOri['boolean']){
+                        $originB = true;    
                     }
+                    $originV  = $resultadoPortOri['puerto'];
 
-                    $sin_via_des = explode(' via ',$destinyEX[0]);
-                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
-                    $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                        ->get();
-                    if(count($destinationExits) == 1){
-                        $destinyB = true;
-                        foreach($destinationExits as $destinationRc){
-                            $destinationV = $destinationRc['id'];
-                            // dd($destinationV);
-                        }
+
+                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($resultadoPortDes['boolean']){
+                        $destinyB = true;    
                     }
+                    $destinationV  = $resultadoPortDes['puerto'];
+
 
                     //---------------- Carrier ------------------------------------------------------------------
 
@@ -284,31 +276,22 @@ class ImportationController extends Controller
                    && count($ammountEX) == 1     && count($currencyEX) == 1
                    && count($carrierEX) == 1){
 
-                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
                     // Origen Y Destino ------------------------------------------------------------------------
 
-                    $sin_via_org = explode(' via ',$originEX[0]);
-                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
-                    $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
-                        ->get();    
-                    if(count($originExits) == 1){
-                        $originB = true;
-                        foreach($originExits as $originRc){
-                            $originV = $originRc['id'];
-                        }
-                    }
 
-                    $sin_via_des = explode(' via ',$destinyEX[0]);
-                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
-                    $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                        ->get();
-                    if(count($destinationExits) == 1){
-                        $destinyB = true;
-                        foreach($destinationExits as $destinationRc){
-                            $destinationV = $destinationRc['id'];
-                            // dd($destinationV);
-                        }
+                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($resultadoPortOri['boolean']){
+                        $originB = true;    
                     }
+                    $originV  = $resultadoPortOri['puerto'];
+
+                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($resultadoPortDes['boolean']){
+                        $destinyB = true;    
+                    }
+                    $destinationV  = $resultadoPortDes['puerto'];
+
                     //  Surcharge ------------------------------------------------------------------------------
 
                     $surchargerV = Surcharge::where('name','=',$surchargerEX[0])->first();
@@ -667,18 +650,13 @@ class ImportationController extends Controller
                                    } else {
                                        // dd($read[$requestobj->$originExc]);
                                        $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                                       $sin_via_org = explode(' via ',$originVal);
-                                       $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
-                                       $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
-                                           ->get();
-                                       if(count($originExits) == 1){
-                                           $origExiBol = true;
-                                           foreach($originExits as $originRc){
-                                               $originVal = $originRc['id'];
-                                           }
-                                       } else{
-                                           $originVal = $originVal.'_E_E';
+                                       $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                                       if($resultadoPortOri['boolean']){
+                                           $origExiBol = true;    
                                        }
+                                       $originVal  = $resultadoPortOri['puerto'];
+
+
                                    }
                                    //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
                                    if($requestobj['existdestiny'] == true){
@@ -687,18 +665,11 @@ class ImportationController extends Controller
                                        $randons = $requestobj[$destiny];
                                    } else {
                                        $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                                       $sin_via_des = explode(' via ',$destinyVal);
-                                       $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
-                                       $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                                           ->get();
-                                       if(count($destinationExits) == 1){
-                                           $destiExitBol = true;
-                                           foreach($destinationExits as $destinationRc){
-                                               $destinyVal = $destinationRc['id'];
-                                           }
-                                       }else{
-                                           $destinyVal = $destinyVal.'_E_E';
+                                       $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                                       if($resultadoPortDes['boolean']){
+                                           $destiExitBol = true;    
                                        }
+                                       $destinyVal  = $resultadoPortDes['puerto'];
                                    }
 
                                    $twentyArr    = explode(' ',$read[$requestobj[$twenty]]);
@@ -1131,28 +1102,18 @@ class ImportationController extends Controller
 
                     $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
-                    $originResul = str_replace($caracteres,'',strtolower($book->$origin));
-
-                    $originExitsDul = Harbor::where('varation->type','like','%'.$originResul.'%')
-                        ->get();
-                    if(count($originExitsDul) == 1){
-                        $origB=true;
-                        foreach($originExitsDul as $originRc){
-                            $originVdul = $originRc['id'];
-                        }
+                    $resultadoPortOri = PrvHarbor::get_harbor($book->$origin);
+                    if($resultadoPortOri['boolean']){
+                        $origB = true;    
                     }
+                    $originVdul  = $resultadoPortOri['puerto'];
 
-                    $destinResul = str_replace($caracteres,'',strtolower($book->$destination));
-
-                    $destinationExitsDul = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                        ->get();
-                    if(count($destinationExitsDul) == 1){
-                        $destiB=true;
-                        foreach($destinationExitsDul as $destinationRc){
-                            $destinationVdul = $destinationRc['id'];
-                        }
+                    
+                    $resultadoPortDes = PrvHarbor::get_harbor($book->$destination);
+                    if($resultadoPortDes['boolean']){
+                        $destiB = true;    
                     }
-
+                    $destinationVdul  = $resultadoPortDes['puerto'];
 
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
                     $duplicate =  Rate::where('origin_port','=',$originVdul)
@@ -3173,24 +3134,26 @@ class ImportationController extends Controller
     }
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        $puerto = 'SRI LANKA: COLOMBO';
+        $puerto = 'alexandria ,eg1';
+        $resultado = PrvHarbor::get_harbor($puerto);
+        dd($resultado);
 
+        /*  $portExiBol = false;
         $sin_via = explode(' via ',$puerto);
 
         $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
 
-        $originResul = str_replace($caracteres,'',strtolower($sin_via[0]));
+        $portResul = str_replace($caracteres,'',strtolower($sin_via[0]));
 
-        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
+        $portExits = Harbor::where('varation->type','like','%'.$portResul.'%')
             ->get();
-        
-        dd($originExits);
 
-        if(count($originExits) > 1){
+
+        if(count($portExits) > 1){
             $puerto = strtolower(trim($puerto));
 
-            foreach($originExits as $multiples){
+            foreach($portExits as $multiples){
 
                 $jsonorigen = json_decode($multiples['varation']);
 
@@ -3198,18 +3161,30 @@ class ImportationController extends Controller
 
                     if (strlen($puerto) == strlen($parameter)){
                         if(strcmp($puerto,$parameter) == 0){
-                            $resultado = $multiples->id;
-                            dd($resultado);
+                            $portVal = $multiples->id;
+                            $portExiBol = true;
                             break;
                         }
                     }
                 }
             }
 
+            if($portExiBol == false){
+                $portVal = $puerto.'_E_E';
+            }
         } else{
-            $resultado =$originExits->toArray();
-            dd($resultado);
+
+            if(count($portExits) == 1){
+                $portExiBol = true;
+                foreach($portExits as $portRc){
+                    $portVal = $portRc['id'];
+                }
+            } else{
+                $portVal = $portVal.'_E_E';
+            }
         }
+        $data = ['puerto' => $portVal, 'boolean' => $portExiBol];
+        dd($data);*/
 
     }
 
