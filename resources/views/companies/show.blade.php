@@ -63,8 +63,8 @@
                                                 &nbsp;
                                                 <i class="la la-edit"></i>
                                             </span>
-                                        </a>      
-                                        <a href="#" class="dropdown-item" >
+                                        </a>
+                                        <a id="delete-company-show" href="#" class="dropdown-item" data-company-id="{{$company->id}}" title="Delete">
                                             <span>
                                                 Delete
                                                 &nbsp;
