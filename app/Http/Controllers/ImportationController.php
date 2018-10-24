@@ -1108,7 +1108,7 @@ class ImportationController extends Controller
                     }
                     $originVdul  = $resultadoPortOri['puerto'];
 
-                    
+
                     $resultadoPortDes = PrvHarbor::get_harbor($book->$destination);
                     if($resultadoPortDes['boolean']){
                         $destiB = true;    
@@ -3138,7 +3138,9 @@ class ImportationController extends Controller
         $resultado = PrvHarbor::get_harbor($puerto);
         dd($resultado);
 
-        /*  $portExiBol = false;
+        /*  
+
+        $portExiBol = false;
         $sin_via = explode(' via ',$puerto);
 
         $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
@@ -3172,6 +3174,7 @@ class ImportationController extends Controller
             if($portExiBol == false){
                 $portVal = $puerto.'_E_E';
             }
+
         } else{
 
             if(count($portExits) == 1){
@@ -3180,11 +3183,13 @@ class ImportationController extends Controller
                     $portVal = $portRc['id'];
                 }
             } else{
-                $portVal = $portVal.'_E_E';
+                $portVal = $puerto.'_E_E';
             }
         }
         $data = ['puerto' => $portVal, 'boolean' => $portExiBol];
-        dd($data);*/
+
+
+        */
 
     }
 
