@@ -582,16 +582,103 @@ $(document).on('click', '#duplicate-quote', function (e) {
 
 $(document).on('change', '#origin_harbor', function (e) {
     var harbor_id = $('#origin_harbor').val();
+    var modality = $('#modality').val();
     $.ajax({
         url: "terms/"+harbor_id,
         dataType: 'json',
         success: function(data) {        
             $('#terms_box').show();
-            $('#terms_box_import').html(data.import);
-            $('#terms_box_export').html(data.export);
+            tinymce.init({
+                selector: "#origin_terms",
+                plugins: [
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });
+            $.each(data, function(key, value) {
+                if(modality==1){
+                    $('.editor').html(value.term.export).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#origin_terms').val(value.term.export);
+                }else{
+                    $('.editor').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#origin_terms').val(value.term.import);                    
+                }
+            });
         }
     });
 });
+
+$(document).on('change', '#destination_harbor', function (e) {
+    var harbor_id = $('#destination_harbor').val();
+    $.ajax({
+        url: "terms/"+harbor_id,
+        dataType: 'json',
+        success: function(data) {        
+            $('#terms_box').show();
+            tinymce.init({
+                selector: "#destination_terms",
+                plugins: [
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });            
+            $.each(data, function(key, value) {
+                if(modality==1){
+                    $('.editor').html(value.term.export).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#destination_terms').val(value.term.export);
+                }else{
+                    $('.editor').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });
+
+                    $('#destination_terms').val(value.term.import);                    
+                }                
+            });
+        }
+    });
+});
+
 
 $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
@@ -738,7 +825,7 @@ $(document).on('change', '#delivery_type_air', function (e) {
 });
 
 $(document).on('click', '#create-quote', function (e) {
-    
+
     if($(".pick_up_date").val() == ''){
         msg('Sorry, pick up date is empty. Please go back and complete this field');
         //return;
@@ -752,7 +839,7 @@ $(document).on('click', '#create-quote', function (e) {
         msg('Sorry, contact is empty. Please go back and complete this field');
         //return;        
     }
-    
+
     var origin_harbor=$("#origin_harbor").val();
     var destination_harbor=$("#destination_harbor").val();
     var destination_address=$("#destination_address").val();
