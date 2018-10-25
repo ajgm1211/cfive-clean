@@ -566,11 +566,18 @@ class ContractsController extends Controller
       $detailcountryOrig = $request->input('country_orig');
       $detailcountryDest = $request->input('country_dest');
 
-      $detailcountry = new LocalCharCountry();
-      $detailcountry->country_orig =$detailcountryOrig;
-      $detailcountry->country_dest = $detailcountryDest;
-      $detailcountry->localcharge()->associate($localcharge);
-      $detailcountry->save();
+      foreach($detailcountryOrig as $orig => $valueOrigC){
+        foreach($detailcountryDest as $dest => $valueDestC){
+          $detailcountry = new LocalCharCountry();
+          $detailcountry->country_orig =$valueOrigC;
+          $detailcountry->country_dest = $valueDestC;
+          $detailcountry->localcharge()->associate($localcharge);
+          $detailcountry->save();
+
+        }
+      }
+
+
     }
     return redirect()->back()->with('localcharSave','true')->with('activeS','active');
   }
@@ -627,11 +634,21 @@ class ContractsController extends Controller
         }
       }
     }elseif($typerate == 'country'){
-      $detailcountry = new LocalCharCountry();
-      $detailcountry->country_orig = $request->input('country_orig');
-      $detailcountry->country_dest =  $request->input('country_dest');
-      $detailcountry->localcharge_id = $id;
-      $detailcountry->save();
+      $detailCountrytOrig =$request->input('country_orig');
+      $detailCountryDest = $request->input('country_dest');
+      foreach($detailCountrytOrig as $orig => $valueOrigC)
+      {
+        foreach($detailCountryDest as $dest => $valueDestC)
+        {
+          $detailcountry = new LocalCharCountry();
+          $detailcountry->country_orig = $valueOrigC;
+          $detailcountry->country_dest =  $valueDestC;
+          $detailcountry->localcharge_id = $id;
+          $detailcountry->save();
+        }
+      }
+
+
     }
 
     foreach($carrier as $key)

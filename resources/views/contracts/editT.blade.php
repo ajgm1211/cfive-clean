@@ -264,7 +264,6 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
       <!--end: Form Wizard-->
    </div>
    <!--End::Main Portlet-->
-   <!--Begin Modal upload Surchargers-->
 
    <div class="modal fade" id="uploadfileSubcharge" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
@@ -281,36 +280,31 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                   </span>
                </button>
             </div>
-
             <div class="modal-body">
 
-               <div class="form-group m-form__group row">
-
-                  <div class="col-lg-3">
-                     <label for="fileid" class="form-control-label">
-                        Single File Upload:
-                     </label>
-                  </div>
-                  <div class="col-lg-5">
-                     {!!Form::file('file',['id'=>'fileid','required'])!!}
-                  </div>
+               <div class="form-group">
+                  <label for="recipient-name" class="form-control-label">
+                     Single File Upload:
+                  </label>
+                  {!!Form::file('file',['id'=>'','required'])!!}
                </div>
                {!!Form::hidden('contract_id',$id,['id'=>''])!!}
-               
+
 
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close
                </button>
+               <!--  <button type="submit" class="btn btn-success">
+Load
+</button>-->
                <input type="submit" class="btn btn-success">
                {!! Form::close()!!}
             </div>
          </div>
       </div>
    </div>
-
-   <!--End Modal upload Surchargers-->
 
 
 
@@ -355,6 +349,52 @@ Load
       </div>
    </div>
 
+   <div class="modal fade bd-example-modal-lg" id="modalLocalchargeAdd"   role="dialog" aria-labelledby="exampleModalCenterTitleAdd" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLongTitleAdd">
+                  Add Local Charges
+               </h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">
+                     &times;
+                  </span>
+               </button>
+            </div>
+            <div class="modal-body-add">
+
+            </div>
+
+         </div>
+      </div>
+   </div>
+
+
+   <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLongTitle2">
+                  Update Local Charges
+               </h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">
+                     &times;
+                  </span>
+               </button>
+            </div>
+            <div class="modal-body-edit">
+               <center>
+                  <div id="spinner" style="display:none">
+                     <img src="/images/ship.gif" alt="Loading" />
+                  </div>
+               </center>
+            </div>
+
+         </div>
+      </div>
+   </div>
 
    <div class="modal fade bd-example-modal-lg"  id="modalRates"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
@@ -369,7 +409,7 @@ Load
                   </span>
                </button>
             </div>
-            <div id = 'rate-body' class="modal-body">
+            <div id = 'rate-body'>
 
             </div>
 
@@ -377,30 +417,6 @@ Load
       </div>
    </div>
 
-   <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="exampleModalLongTitle">
-                  Local Charges
-               </h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">
-                     &times;
-                  </span>
-               </button>
-            </div>
-            <div class="modal-body">
-               <center>
-                  <div id="spinner" style="display:none">
-                     <img src="/images/ship.gif" alt="Loading" />
-                  </div>
-               </center>
-            </div>
-
-         </div>
-      </div>
-   </div>
 
 
 </div>
@@ -541,20 +557,20 @@ Load
          $('#modalLocalcharge').modal({show:true});
          var url = '{{ route("edit-local-charge", ":id") }}';
          url = url.replace(':id', id);
-         $('.modal-body').load(url,function(){
+         $('.modal-body-edit').load(url,function(){
             $('#modalLocalcharge').modal({show:true});
             $('#spinner').hide();
          });
 
       }
+
+
       if(action == "addLocalCharge"){
-         $('#spinner').show();
-         $('#modalLocalcharge').modal({show:true});
          var url = '{{ route("add-LocalCharge", ":id") }}';
          url = url.replace(':id', id);
-         $('.modal-body').load(url,function(){
-            $('#modalLocalcharge').modal({show:true});
-            $('#spinner').hide();
+         $('.modal-body-add').load(url,function(){
+            $('#modalLocalchargeAdd').modal({show:true});
+
          });
 
       }

@@ -6,8 +6,8 @@ if (!defined('RDS_HOSTNAME')) {
     define('RDS_USERNAME', $_SERVER['RDS_USERNAME']);
     define('RDS_PASSWORD', $_SERVER['RDS_PASSWORD']);
     define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
-}
-*/
+}*/
+
 
 
 
@@ -64,8 +64,8 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],
-*/
+        ],*/
+
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
