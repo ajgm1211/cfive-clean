@@ -434,13 +434,17 @@
                         <div class="col-md-12">
                             <div class="form-group terms-and-conditions">
                                 @if($quote->type!=3)
-                                @if(isset($terms_all) && $terms_all->count()>0)
-                                @foreach($terms_all as $v)
-                                {!! $quote->modality==1 ? $v->term->import : $v->term->export!!}
-                                @endforeach
-                                @endif
-                                {!! $quote->term_orig!!}
-                                {!! $quote->term_dest!!}
+                                    @if(isset($terms_all) && $terms_all->count()>0)
+                                        @foreach($terms_all as $v)
+                                        {!! $quote->modality==1 ? $v->term->export : $v->term->import!!}
+                                        @endforeach
+                                    @endif
+                                    @if(count($quote->term_orig) > 0)                     
+                                      {!! $quote->term_orig !!}         
+                                    @endif
+                                   @if(count($quote->term_dest) > 0)           
+                                      {!! $quote->term_dest !!}  
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -483,7 +487,7 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-<script>window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");</script>
+<script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
 @endif
 
 

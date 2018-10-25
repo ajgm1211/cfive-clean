@@ -55,8 +55,8 @@ $portRadio = false;
         </div>
         <div class="divcountry" hidden="true">
           {!! Form::label('origC', 'Origin Country') !!}
-          {{ Form::select('country_orig', $countries,
-          $localcharges->localcharcountries->pluck('countryOrig')->unique()->pluck('id'),['placeholder'=> 'Select an option','id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12']) }}
+          {{ Form::select('country_orig[]', $countries,
+          $localcharges->localcharcountries->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
         </div>
       </div>
@@ -74,7 +74,7 @@ $portRadio = false;
         </div>
         <div class="divcountry" hidden="true">
           {!! Form::label('destC', 'Destination Country') !!}
-          {{ Form::select('country_dest',$countries,$localcharges->localcharcountries->pluck('countryDest')->unique()->pluck('id'),['placeholder'=> 'Select an option', 'id' => 'country_dest','class'=>'m-select2-general form-control'  ]) }}
+          {{ Form::select('country_dest[]',$countries,$localcharges->localcharcountries->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@ $portRadio = false;
   <hr>
   <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
-      {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+     &nbsp;&nbsp; {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
       <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
