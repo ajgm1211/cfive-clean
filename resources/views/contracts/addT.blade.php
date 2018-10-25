@@ -119,11 +119,11 @@ $validation_expire = 'Please enter validity date';
                     <td  width = '15%'>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                     <td  width = '10%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
 
-                    <td  width = '10%'>{!! Form::number('twuenty[]', null, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-                    <td  width = '10%'>{!! Form::number('forty[]', null, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-                    <td  width = '10%'> {!! Form::number('fortyhc[]', null, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-                    <td  width = '10%'> {!! Form::number('fortynor[]', null, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-                    <td  width = '10%'> {!! Form::number('fortyfive[]', null, ['placeholder' => 'Enter 45','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+                    <td  width = '10%'>{!! Form::number('twuenty[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0']) !!} </td>
+                    <td  width = '10%'>{!! Form::number('forty[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
+                    <td  width = '10%'> {!! Form::number('fortyhc[]', 0, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+                    <td  width = '10%'> {!! Form::number('fortynor[]', 0, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+                    <td  width = '10%'> {!! Form::number('fortyfive[]', 0, ['placeholder' => 'Enter 45','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
                     <td width = '10%'>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                     <td>-</td>
 
@@ -203,7 +203,7 @@ $validation_expire = 'Please enter validity date';
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_orig1[]', $country,
-                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-12' ,'multiple' => 'multiple']) }}			
                       </div>
                     </td>
                     <td width='12%'>
@@ -212,7 +212,7 @@ $validation_expire = 'Please enter validity date';
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_dest1[]', $country,
-                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}			
                       </div>
                     </td>
                     <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
@@ -243,7 +243,7 @@ $validation_expire = 'Please enter validity date';
                         {{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
                       </div>
                       <div class="divcountry" hidden="true">
-                        {{ Form::select(null, $country,null,['class'=>'form-control countryOrig' ,'style' => 'width:100%;']) }}
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryOrig' ,'style' => 'width:100%;','multiple' => 'multiple']) }}
                       </div>
 
 
@@ -253,7 +253,7 @@ $validation_expire = 'Please enter validity date';
                         {{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
                       </div>
                       <div class="divcountry" hidden="true">
-                        {{ Form::select(null, $country,null,['class'=>'form-control countryDest' ,'style' => 'width:100%;']) }}
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryDest' ,'style' => 'width:100%;','multiple' => 'multiple']) }}
                       </div>
 
                     </td>
@@ -310,11 +310,11 @@ $validation_expire = 'Please enter validity date';
         <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
         <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
 
-        <td>{!! Form::number('twuenty[]', null, ['placeholder' => 'Enter 20','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-        <td>{!! Form::number('forty[]', null, ['placeholder' => 'Enter 40','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-        <td> {!! Form::number('fortyhc[]', null, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-        <td> {!! Form::number('fortynor[]', null, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-        <td> {!! Form::number('fortyfive[]', null, ['placeholder' => 'Enter 45','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+        <td>{!! Form::number('twuenty[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
+        <td>{!! Form::number('forty[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
+        <td> {!! Form::number('fortyhc[]', 0, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+        <td> {!! Form::number('fortynor[]', 0, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
+        <td> {!! Form::number('fortyfive[]', 0, ['placeholder' => 'Enter 45','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
         <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
         <td>   <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
           <i class="la la-eraser"></i>

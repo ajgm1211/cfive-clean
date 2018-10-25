@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFailCompaniesTable extends Migration
+class AddFailedContactsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class AddFailCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('fail_companies', function (Blueprint $table) {
+        Schema::create('failed_contacts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('business_name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('phone');
-            $table->string('address',200)->nullable();
             $table->string('email');
-            $table->string('tax_number')->nullable();
-            $table->integer('associated_quotes')->nullable();
-            $table->integer('company_user_id')->unsigned();
-            $table->integer('owner')->unsigned();
+            $table->string('position');
+            $table->string('company_id');
+            $table->integer('company_user_id');
+            //$table->foreign('company_user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class AddFailCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fail_companies');
+        Schema::dropIfExists('failed_contacts');
     }
 }
