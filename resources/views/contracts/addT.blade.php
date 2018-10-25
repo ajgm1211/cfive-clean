@@ -203,7 +203,7 @@ $validation_expire = 'Please enter validity date';
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_orig1[]', $country,
-                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-12' ,'multiple' => 'multiple']) }}			
                       </div>
                     </td>
                     <td width='12%'>
@@ -212,7 +212,7 @@ $validation_expire = 'Please enter validity date';
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_dest1[]', $country,
-                        null,['placeholder'=> 'Select an option','class'=>'m-select2-general form-control col-lg-12']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}			
                       </div>
                     </td>
                     <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
@@ -243,7 +243,7 @@ $validation_expire = 'Please enter validity date';
                         {{ Form::select(null, $harbor,null,['class'=>'form-control portOrig' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
                       </div>
                       <div class="divcountry" hidden="true">
-                        {{ Form::select(null, $country,null,['class'=>'form-control countryOrig' ,'style' => 'width:100%;']) }}
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryOrig' ,'style' => 'width:100%;','multiple' => 'multiple']) }}
                       </div>
 
 
@@ -253,7 +253,7 @@ $validation_expire = 'Please enter validity date';
                         {{ Form::select(null, $harbor,null,['class'=>'form-control portDest' ,'multiple' => 'multiple','style' => 'width:100%;']) }}
                       </div>
                       <div class="divcountry" hidden="true">
-                        {{ Form::select(null, $country,null,['class'=>'form-control countryDest' ,'style' => 'width:100%;']) }}
+                        {{ Form::select(null, $country,null,['class'=>'form-control countryDest' ,'style' => 'width:100%;','multiple' => 'multiple']) }}
                       </div>
 
                     </td>
