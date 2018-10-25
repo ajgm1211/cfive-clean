@@ -33,11 +33,13 @@
 {!! Form::close() !!}
 <!--end::Form-->
 <script>
-
     $('#price_level_company').select2({
         placeholder: "Select an option"
     });
     $('#users_company').select2({
+        placeholder: "Select an option"
+    });
+    $('#pdf_language').select2({
         placeholder: "Select an option"
     });
 </script>

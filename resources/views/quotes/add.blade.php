@@ -1151,13 +1151,13 @@
             @endif
             <hr>
             <label class="title-quote title-quote size-14px">PDF language</label>
-            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_language']) !!}
+            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
             <hr>
             <label class="title-quote title-quote size-14px">PDF type</label>
-            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
             <hr>
             <label class="title-quote title-quote size-14px">PDF Ammounts</label>
-            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
         </div>        
     </div>
 </div>

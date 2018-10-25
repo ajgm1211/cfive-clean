@@ -29,7 +29,6 @@ class AddExtraFieldsQuotesTermTable extends Migration
         Schema::table('quotes', function (Blueprint $table) {
             $table->dropColumn('term_orig');
             $table->dropColumn('term_dest');
-
         });
     }
 }
