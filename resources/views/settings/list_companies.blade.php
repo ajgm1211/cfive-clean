@@ -41,17 +41,17 @@
                         </div>
                     </div>
                     <!--<div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                        <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
-                            <span>
-                                <i class="la la-user"></i>
-                                <span>
-                                    Add Company
-                                </span>
-                                <i class="la la-plus"></i>
-                            </span>
-                        </button>
-                        <div class="m-separator m-separator--dashed d-xl-none"></div>
-                    </div>-->
+<button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+<span>
+<i class="la la-user"></i>
+<span>
+Add Company
+</span>
+<i class="la la-plus"></i>
+</span>
+</button>
+<div class="m-separator m-separator--dashed d-xl-none"></div>
+</div>-->
                 </div>
             </div>
             <table class="m-datatable text-center" id="html_table" >
@@ -81,6 +81,9 @@
                             <button id="delete-company-user" data-company-id="{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                                 <i class="la la-eraser"></i>
                             </button>
+                            <a href="{{route('settings.duplicate',setearRouteKey($company->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                                <i class="la la-plus"></i>
+                            </a> 
                         </td>
                     </tr>
                     @endforeach
