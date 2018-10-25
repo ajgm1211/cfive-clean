@@ -40,8 +40,8 @@
         </div>
         <div class="divcountry" hidden="true">
           {!! Form::label('origC', 'Origin Country') !!}
-          {{ Form::select('country_orig', $countries,
-          null,['placeholder'=> 'Select an option','id' => 'country_origAdd','class'=>'m-select2-general form-control col-lg-12']) }}
+          {{ Form::select('country_orig[]', $countries,
+          null,['id' => 'country_origAdd','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
         </div>
       </div>
@@ -60,7 +60,7 @@
         </div>
         <div class="divcountry" hidden="true">
           {!! Form::label('destC', 'Destination Country') !!}
-          {{ Form::select('country_dest',$countries,null,['placeholder'=> 'Select an option', 'id' => 'country_destAdd','class'=>'m-select2-general form-control'  ]) }}
+          {{ Form::select('country_dest[]',$countries,null,['id' => 'country_destAdd','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
 
 
