@@ -2,10 +2,10 @@
 @section('title', 'Companies | List')
 @section('css')
 @parent
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/plugins/button-dropdown/css/bootstrap.css">
+<script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
 @endsection
 @section('content')
 
@@ -94,18 +94,25 @@ All
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
               <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modalupload">
                 <span>
+                  <i class="la la-upload"></i>
+                  &nbsp;
                   Upload Companies
-                   &nbsp;
-                  <i class="la la-plus"></i>
                 </span>
               </a>      
               <a href="{{route('DownLoad.Files',1)}}" class="dropdown-item" >
                 <span>
-                  Download File
-                  &nbsp;
                   <i class="la la-download"></i>
+                  &nbsp;
+                  Download File
                 </span>
               </a>
+              <!--<a href="{{route('view.fail.company')}}" class="dropdown-item" >
+                <span>
+                  <i class="la la-search"></i>
+                  &nbsp;
+                  Failed Companies
+                </span>
+              </a>-->
             </div>
 
           </div>
@@ -160,6 +167,7 @@ All
             </td>
             <td>{{$company->contact->count()}}</td>
             <td>
+
               @foreach($company->price_name as $price)
               <ul>
                 <li>{{$price->name}}</li>
@@ -196,12 +204,13 @@ All
             </span>
           </button>
         </div>
-        <div id="edit-modal-body" class="modal-body">
+        <div id="edit-modal-body-E" class="modal-body-E">
+        <br>
           {!! Form::open(['route' => 'Upload.Company', 'method' => 'POST', 'files' => 'true'])!!}
 
           <div class="form-group row pull-right">
             <div class="col-md-3 ">
-              
+
             </div>
           </div>
           <div class="form-group row ">

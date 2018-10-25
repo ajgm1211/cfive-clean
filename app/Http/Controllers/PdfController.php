@@ -25,262 +25,272 @@ use App\TermsPort;
 
 class PdfController extends Controller
 {
-  public function quote($id)
-  {
-    // set API Endpoint and access key (and any options of your choice)
-    $id = obtenerRouteKey($id);
-    $endpoint = 'live';
-    $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
+    public function quote($id)
+    {
+        // set API Endpoint and access key (and any options of your choice)
+        $id = obtenerRouteKey($id);
+        $endpoint = 'live';
+        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
 
-    $quote = Quote::where('id',$id)->with('contact')->first();
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
-    $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
-    $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $package_loads = PackageLoad::where('quote_id',$id)->get();
+        $quote = Quote::where('id',$id)->with('contact')->first();
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+        $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+        $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $package_loads = PackageLoad::where('quote_id',$id)->get();
 
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $type=$company_user->type_pdf;
-      $ammounts_type=$company_user->pdf_ammounts;
-      $currency_cfg = Currency::find($company_user->currency_id);
-      $port_all = harbor::where('name','ALL')->first();
-      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();            
-      $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();
-      $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
+            $currency_cfg = Currency::find($company_user->currency_id);
+            $port_all = harbor::where('name','ALL')->first();
+            $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();            
+            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();
+            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();
+        }
+
+        foreach($origin_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates_eur;
+            }
+            $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
+        }
+
+        foreach($freight_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
+            }
+            $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
+        }
+
+        //dd(json_encode($item->markup/1.16));
+
+        foreach($destination_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+                $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                  
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+                $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
+                $rate=$currency_rate->rates;                
+            }
+            $item->markup_converted = $markup_converted;
+            $item->rate = $rate;
+        }
+
+        if($quote->pdf_language!=''){
+            if($quote->pdf_language==1){
+                $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+            }else if($quote->pdf_language==2){
+                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);  
+            }else{
+                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);              
+            }
+        }else{
+            if($company_user->pdf_language==1){
+                $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+            }else if($company_user->pdf_language==2){
+                $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);  
+            }else{
+                $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);              
+            }
+        }
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view);
+
+        return $pdf->stream('quote');
     }
 
-    foreach($origin_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    public function send_pdf_quote(Request $request)
+    {
+        // set API Endpoint and access key (and any options of your choice)
+        $endpoint = 'live';
+        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
 
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
+        $quote = Quote::findOrFail($request->id);
+        $contact_email = Contact::find($quote->contact_id);
+        $companies = Company::all()->pluck('business_name','id');
+        $harbors = Harbor::all()->pluck('name','id');
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $prices = Price::all()->pluck('name','id');
+        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+        $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
+        $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
+        $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $package_loads = PackageLoad::where('quote_id',$request->id)->get();
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
+            $currency_cfg = Currency::find($company_user->currency_id);
+            $port_all = harbor::where('name','ALL')->first();
+            $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();            
+            $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();
+            $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
+                $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+            })->get();            
+        }
 
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
+        foreach($origin_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-        $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates;
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-        $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates_eur;
-      }
-      $item->markup_converted = $markup_converted;
-      $item->rate = $rate;
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+            }
+            $item->markup_converted = $markup_converted;
+        }
+
+        foreach($freight_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+            }
+            $item->markup_converted = $markup_converted;
+        }
+
+        //dd(json_encode($item->markup/1.16));
+
+        foreach($destination_ammounts as $item){
+            $currency=Currency::find($item->currency_id);
+            // Initialize CURL:
+            $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Store the data:
+            $json = curl_exec($ch);
+            curl_close($ch);
+
+            // Decode JSON response:
+            $exchangeRates = json_decode($json, true);
+
+            if($quote->currencies->alphacode=='USD'){    
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
+            }else{
+                $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
+            }
+            $item->markup_converted = $markup_converted;
+        }
+        if($company_user->pdf_language==1){
+            $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
+                                                     'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                                     'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+        }else if($company_user->pdf_language==2){
+            $view = \View::make('quotes.pdf.index-spanish', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
+                                                             'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                                             'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+        }else{
+            $view = \View::make('quotes.pdf.index-portuguese', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
+                                                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+                                                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);            
+        }
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+        if(count($contact_email)>0) {
+
+            $subject = $request->subject;
+            $body = $request->body;
+
+            \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+
+            $quote->status_quote_id=2;
+            $quote->update();
+            return response()->json(['message' => 'Ok']);
+        }else{
+            return response()->json(['message' => 'Error']);
+        }
     }
-
-    foreach($freight_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
-
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
-
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-        $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates;                
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-        $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates;                
-      }
-      $item->markup_converted = $markup_converted;
-      $item->rate = $rate;
-    }
-
-    //dd(json_encode($item->markup/1.16));
-
-    foreach($destination_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
-
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
-
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-        $currency_rate=Currency::where('api_code','USD'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates;                  
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-        $currency_rate=Currency::where('api_code_eur','EUR'.$currency->alphacode)->first();
-        $rate=$currency_rate->rates;                
-      }
-      $item->markup_converted = $markup_converted;
-      $item->rate = $rate;
-    }
-
-    if($company_user->pdf_language==1){
-      $view = \View::make('quotes.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
-    }else if($company_user->pdf_language==2){
-      $view = \View::make('quotes.pdf.index-spanish', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);  
-    }else{
-      $view = \View::make('quotes.pdf.index-portuguese', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);              
-    }
-
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->loadHTML($view);
-
-    return $pdf->stream('quote');
-  }
-
-  public function send_pdf_quote(Request $request)
-  {
-    // set API Endpoint and access key (and any options of your choice)
-    $endpoint = 'live';
-    $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
-
-    $quote = Quote::findOrFail($request->id);
-    $contact_email = Contact::find($quote->contact_id);
-    $companies = Company::all()->pluck('business_name','id');
-    $harbors = Harbor::all()->pluck('name','id');
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $prices = Price::all()->pluck('name','id');
-    $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
-    $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
-    $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
-    $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $package_loads = PackageLoad::where('quote_id',$request->id)->get();
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $type=$company_user->type_pdf;
-      $ammounts_type=$company_user->pdf_ammounts;
-      $currency_cfg = Currency::find($company_user->currency_id);
-      $port_all = harbor::where('name','ALL')->first();
-      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();            
-      $terms_origin = TermsPort::where('port_id',$quote->origin_harbor_id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();
-      $terms_destination = TermsPort::where('port_id',$quote->destination_harbor_id)->with('term')->whereHas('term', function($q)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
-      })->get();            
-    }
-
-    foreach($origin_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
-
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
-
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-      }
-      $item->markup_converted = $markup_converted;
-    }
-
-    foreach($freight_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
-
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
-
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-      }
-      $item->markup_converted = $markup_converted;
-    }
-
-    //dd(json_encode($item->markup/1.16));
-
-    foreach($destination_ammounts as $item){
-      $currency=Currency::find($item->currency_id);
-      // Initialize CURL:
-      $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source='.$currency->alphacode);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-      // Store the data:
-      $json = curl_exec($ch);
-      curl_close($ch);
-
-      // Decode JSON response:
-      $exchangeRates = json_decode($json, true);
-
-      if($quote->currencies->alphacode=='USD'){    
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'USD'];
-      }else{
-        $markup_converted=$item->markup/$exchangeRates['quotes'][$currency->alphacode.'EUR'];
-      }
-      $item->markup_converted = $markup_converted;
-    }
-    if($company_user->pdf_language==1){
-      $view = \View::make('quotes.pdf.index', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                               'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                               'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
-    }else if($company_user->pdf_language==2){
-      $view = \View::make('quotes.pdf.index-spanish', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                                       'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                                       'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
-    }else{
-      $view = \View::make('quotes.pdf.index-portuguese', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                                          'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                                          'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);            
-    }
-
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
-
-    if(count($contact_email)>0) {
-
-      $subject = $request->subject;
-      $body = $request->body;
-
-      \Mail::to($contact_email->email)->send(new SendQuotePdf($subject,$body,$quote));
-
-      $quote->status_quote_id=2;
-      $quote->update();
-      return response()->json(['message' => 'Ok']);
-    }else{
-      return response()->json(['message' => 'Error']);
-    }
-  }
 }

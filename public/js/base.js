@@ -1891,6 +1891,10 @@ $('#price_level_company').select2({
 $('#users_company').select2({
     placeholder: "Select an option"
 });
+$('#users_company_2').select2({
+    placeholder: "Select an option"
+});
+
 
 // companies 
 
@@ -1960,17 +1964,14 @@ $(document).on('click', '#savecontact', function () {
 
         },
         success: function(data) {
+            var company_id = $("select[name='company_id_quote']").val();
             $.ajax({
-                url: "company/companies",
+                url: "contacts/contact/"+company_id,
                 dataType: 'json',
                 success: function(dataC) {
-                    $('select[name="company_id_quote"]').empty();
+                    $('select[name="contact_id"]').empty();
                     $.each(dataC, function(key, value) {
-                        $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
-                    });
-                    $('select[name="company_id"]').empty();
-                    $.each(dataC, function(key, value) {
-                        $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                        $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });                    
                     $('#contactModal').modal('hide');
 
@@ -1979,9 +1980,6 @@ $(document).on('click', '#savecontact', function () {
                         'Register completed',
                         'success'
                     )
-                    $("select[name='company_id_quote']").val('');
-                    $("select[name='company_id']").val('');
-                    $('#select2-m_select2_2_modal-container').text('Please an option');
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2145,6 +2143,22 @@ $(document).on('click', '#filter_data', function () {
 });
 
 /** PDF **/
+
+$(document).on('change', '#pdf_language', function () {
+    var type=$("#pdf_language").val();
+    var quote_id=$("#quote-id").val();
+    $.ajax({
+        type: 'POST',
+        url: '/settings/update/pdf/language',
+        data: {
+            'pdf_language': $("#pdf_language").val(),
+            'quote_id': $("#quote-id").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
 
 $(document).on('change', '#pdf_type', function () {
     var type=$("#pdf_type").val();

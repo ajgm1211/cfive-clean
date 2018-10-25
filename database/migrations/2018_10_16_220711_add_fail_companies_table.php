@@ -19,7 +19,7 @@ class AddFailCompaniesTable extends Migration
             $table->string('phone');
             $table->string('address',200)->nullable();
             $table->string('email');
-            $table->string('tax_number');
+            $table->string('tax_number')->nullable();
             $table->integer('associated_quotes')->nullable();
             $table->integer('company_user_id')->unsigned();
             $table->integer('owner')->unsigned();

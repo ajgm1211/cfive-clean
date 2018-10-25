@@ -170,6 +170,10 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     
     // Companies
     Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
+    Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company');
+    Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
+    Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
+    Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
     
     
     // Test
@@ -188,6 +192,8 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
+    Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
+    Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
     Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
@@ -206,7 +212,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     Route::get('add', 'ContactController@add')->name('contacts.add');
     Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
-    Route::get('addCM', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
+    Route::get('addCMMQ', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
     Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
 Route::resource('contacts', 'ContactController')->middleware('auth');
@@ -250,6 +256,7 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+    Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
     Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
