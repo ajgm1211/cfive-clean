@@ -140,7 +140,7 @@
                                                                 <li class="nav-item">
                                                                     <a href="#tab_2_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Reefer Containers </a>
                                                                 </li>                                                         <li class="nav-item">
-                                                                    <a href="#tab_2_3" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Special Equipment </a>
+                                                                <a href="#tab_2_3" class="nav-link" data-toggle="tab" style=" font-weight: bold;"> Special Equipment </a>
                                                                 </li>
                                                             </ul>
                                                             <div class="tab-content">
@@ -1127,6 +1127,12 @@
             @if(isset($currency_cfg->alphacode))
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
             @endif
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF type</label>
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
         </div>        
     </div>
 </div>

@@ -12,25 +12,24 @@
                 <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 200px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
-                <div><b>Cotización</b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
-                <div><b>Fecha de creación:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
+                <div style="color: #031B4E"><b>Cotización: </b> <span style="color: #D0AD67"><b>#{{$quote->company_quote}}</b></span></div>
+                <div><span style="color: #031B4E"><b>Fecha de creación:</b> </span>{{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!='')
                 @php
                 $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
                 $validity = $date->format('M d, Y');
                 @endphp
-                <div><b>Válido hasta: </b>{{$validity}}</div>
+                <div><span style="color: #031B4E"><b>Válido hasta: </b></span>{{$validity}}</div>
                 @endif
             </div>
         </header>
         <main>
             <div id="details" class="clearfix details">
                 <div class="client">
-                    <p><b>Desde:</b></p>
-                    <br>
+                    <p ><b>Desde:</b></p>
                     <span id="destination_input" style="line-height: 0.4">
                         <p>{{$user->name}}</p>
-                        <p><b>{{$user->companyUser->name}}</b></p>
+                        <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
                         <p>{{$user->companyUser->address}}</p>
                         <p>{{$user->phone}}</p>
                         <p>{{$user->email}}</p>
@@ -42,7 +41,7 @@
                     <span id="destination_input" style="line-height: 0.4">
                         <img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
-                        <p><b>{{$quote->company->business_name}}</b></p>
+                        <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
                         <p style="line-height: 1.2" >{{$quote->company->address}}</p>
                         <p>{{$quote->contact->phone}}</p>
                         <p>{{$quote->contact->email}}</p>
@@ -53,14 +52,18 @@
             <div id="" class="clearfix">
                 <div class="client" style="width: 150px;">
                     <div class="panel panel-default" style="width: 350px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">{{$quote->type==3 ? ' Aeropuerto':' Puerto'}} de Origen</div>
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd; color: #031B4E">Origen</div>
                         <div class="panel-body" style="border: 1px solid #dddddd">
-                            <span id="origin_input" style="color: #1D3A6E;">
+                            <span id="origin_input" style="color: #787878;">
                                 @if($quote->origin_harbor_id!='')
-                                {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
+                                Port: {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                 @endif
                                 @if($quote->origin_airport_id!='')
-                                {{$quote->origin_airport->name}}
+                                Airport: {{$quote->origin_airport->name}}
+                                @endif
+                                <br>
+                                @if($quote->origin_address!='')
+                                {{$quote->origin_address}}
                                 @endif
                             </span>
                         </div>
@@ -68,48 +71,24 @@
                 </div>
                 <div class="company" style="float: right; width: 350px;">
                     <div class="panel panel-default" style="width: 350px; height: 83px; border: none; border-radius:none;">
-                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">{{$quote->type==3 ? 'Aeropuerto':'Puerto'}} de Destino</div>
+                        <div class="panel-heading title" style="border-radius:none; border: 1px solid #dddddd">Destino</div>
                         <div class="panel-body" style="border: 1px solid #dddddd; height: 18px;">
-                            <span id="destination_input" style="color: #1D3A6E;">
+                            <span id="destination_input" style="color: #787878;">
                                 @if($quote->destination_harbor_id!='')
-                                {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
+                                Port: {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                 @endif
                                 @if($quote->destination_airport_id!='')
-                                {{$quote->destination_airport->name}}
+                                Airport: {{$quote->destination_airport->name}}
+                                @endif
+                                <br>
+                                @if($quote->destination_address!='')
+                                {{$quote->destination_address}}
                                 @endif
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-            @if($quote->origin_address || $quote->destination_address)
-            <div id="" class="clearfix">
-                @if($quote->origin_address!='')
-                <div class="client" style="width: 150px;">
-                    <div class="panel panel-default" style="width: 350px;">
-                        <div class="panel-heading title">Dirección de origen</div>
-                        <div class="panel-body">
-                            <span id="origin_input" style="color: #1D3A6E;">
-                                {{$quote->origin_address}}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                @endif
-                @if($quote->destination_address!='')
-                <div class="company" style="float: right; width: 350px;">
-                    <div class="panel panel-default" style="width: 350px; height: 83px;">
-                        <div class="panel-heading title">Dirección de destino</div>
-                        <div class="panel-body">
-                            <span id="destination_input" style="color: #1D3A6E;">
-                                {{$quote->destination_address}}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-            @endif
             <hr>
             <div class="clearfix">
                 <div class="client">
@@ -249,7 +228,7 @@
                     </thead>
                     <tbody>
                         @foreach($origin_ammounts as $origin_ammount)
-                        <tr class="text-center">
+                        <tr class="text-center color-table">
                             <td class="white">{{$origin_ammount->charge}}</td>
                             <td class="white">{{$origin_ammount->detail}}</td>
                             <td class="white">{{$origin_ammount->units}}</td>
@@ -281,7 +260,7 @@
                     <tfoot>
                         <tr class="text-center subtotal">
                             <td colspan="4"></td>
-                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Monto total</b></td>
                             <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_origin}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                         </tr>
                     </tfoot>
@@ -303,7 +282,7 @@
                     </thead>
                     <tbody>
                         @foreach($freight_ammounts as $freight_ammount)
-                        <tr class="text-center">
+                        <tr class="text-center color-table">
                             <td>{{$freight_ammount->charge}}</td>
                             <td>{{$freight_ammount->detail}}</td>
                             <td>{{$freight_ammount->units}}</td>
@@ -335,7 +314,7 @@
                     <tfoot>
                         <tr class="text-center" style="font-size: 12px;">
                             <td colspan="4"></td>
-                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Monto total</b></td>
                             <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_freight}} &nbsp;{{$quote->currencies->alphacode}}</b></td>
                         </tr>
                     </tfoot>
@@ -357,7 +336,7 @@
                     </thead>
                     <tbody>
                         @foreach($destination_ammounts as $destination_ammount)
-                        <tr class="text-center">
+                        <tr class="text-center color-table">
                             <td>{{$destination_ammount->charge}}</td>
                             <td>{{$destination_ammount->detail}}</td>
                             <td>{{$destination_ammount->units}}</td>                  
@@ -389,7 +368,7 @@
                     <tfoot>
                         <tr class="text-center">
                             <td colspan="4"></td>
-                            <td style="font-size: 12px; color: #01194F"><b>Subtotal</b></td>
+                            <td style="font-size: 12px; color: #01194F"><b>Monto total</b></td>
                             <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
                                 &nbsp; {{$quote->currencies->alphacode}}</b></td>
                         </tr>
