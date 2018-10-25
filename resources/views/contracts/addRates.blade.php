@@ -29,19 +29,19 @@
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('twuenty', '20 \' ') !!}
-        {!! Form::number('twuenty',null, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('twuenty',0, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
       </div>
 
 
       <div class="col-lg-4">
         {!! Form::label('forty', '40  \' ') !!}
-        {!! Form::number('forty', null, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('forty', 0, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
 
       </div>
       <div class="col-lg-4">
 
         {!! Form::label('fortyhc', '40 HC \' ') !!}
-        {!! Form::number('fortyhc', null, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
+        {!! Form::number('fortyhc', 0, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
 
       </div>
 
@@ -49,13 +49,13 @@
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('fortynor', '40 NOR \' ') !!}
-        {!! Form::number('fortynor', null, ['id' => 'fortynor','placeholder' => 'Please enter the 40 NOR','class' => 'form-control m-input' ]) !!} 
+        {!! Form::number('fortynor', 0, ['id' => 'fortynor','placeholder' => 'Please enter the 40 NOR','class' => 'form-control m-input' ]) !!} 
 
       </div>
       <div class="col-lg-4">
 
         {!! Form::label('fortyfive', '45 \' ') !!}
-        {!! Form::number('fortyfive',null, ['id' => 'fortyfive','placeholder' => 'Please enter the 45 ','class' => 'form-control ']) !!}
+        {!! Form::number('fortyfive',0, ['id' => 'fortyfive','placeholder' => 'Please enter the 45 ','class' => 'form-control ']) !!}
 
       </div>
       <div class="col-lg-4">
@@ -82,7 +82,7 @@
   <hr>
   <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
-      {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+      &nbsp;&nbsp;&nbsp;{!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
       <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>

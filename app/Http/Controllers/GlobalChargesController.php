@@ -85,8 +85,7 @@ class GlobalChargesController extends Controller
     // Detalles de puertos y carriers
     //$totalCarrier = count($request->input('localcarrier'.$contador));
     //$totalport =  count($request->input('port_id'.$contador));
-    $detailport = $request->input('port_orig');
-    $detailportDest = $request->input('port_dest');
+
     $detailcarrier = $request->input('localcarrier');
 
 
@@ -101,6 +100,8 @@ class GlobalChargesController extends Controller
     }
     $typerate =  $request->input('typeroute');
     if($typerate == 'port'){
+      $detailport = $request->input('port_orig');
+      $detailportDest = $request->input('port_dest');
       foreach($detailport as $p => $value)
       {
         foreach($detailportDest as $dest => $valuedest)
@@ -112,15 +113,22 @@ class GlobalChargesController extends Controller
           $ports->globalcharge()->associate($global);
           $ports->save();
         }
-
       }
     }elseif($typerate == 'country'){
+      $detailCountrytOrig =$request->input('country_orig');
+      $detailCountryDest = $request->input('country_dest');
+      foreach($detailCountrytOrig as $p => $valueC)
+      {
+        foreach($detailCountryDest as $dest => $valuedestC)
+        {
+          $detailcountry = new GlobalCharCountry();
+          $detailcountry->country_orig = $valueC;
+          $detailcountry->country_dest =  $valuedestC;
+          $detailcountry->globalcharge()->associate($global);
+          $detailcountry->save();
+        }
+      }
 
-      $detailcountry = new GlobalCharCountry();
-      $detailcountry->country_orig = $request->input('country_orig');
-      $detailcountry->country_dest =  $request->input('country_dest');
-      $detailcountry->globalcharge()->associate($global);
-      $detailcountry->save();
     }
 
     $request->session()->flash('message.nivel', 'success');
@@ -186,11 +194,20 @@ class GlobalChargesController extends Controller
         }
       }
     }elseif($typerate == 'country'){
-      $detailcountry = new GlobalCharCountry();
-      $detailcountry->country_orig = $request->input('country_orig');
-      $detailcountry->country_dest =  $request->input('country_dest');
-      $detailcountry->globalcharge_id = $id;
-      $detailcountry->save();
+
+      $detailCountrytOrig =$request->input('country_orig');
+      $detailCountryDest = $request->input('country_dest');
+      foreach($detailCountrytOrig as $p => $valueC)
+      {
+        foreach($detailCountryDest as $dest => $valuedestC)
+        {
+          $detailcountry = new GlobalCharCountry();
+          $detailcountry->country_orig = $valueC;
+          $detailcountry->country_dest =  $valuedestC;
+          $detailcountry->globalcharge()->associate($global);
+          $detailcountry->save();
+        }
+      }
     }
 
 
