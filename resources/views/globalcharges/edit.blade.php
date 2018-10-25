@@ -58,8 +58,8 @@
         <div class="divcountry" hidden="true">
 
           {!! Form::label('origC', 'Origin Country') !!}
-          {{ Form::select('country_orig', $countries,
-          $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['placeholder'=> 'Select an option','id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12']) }}
+          {{ Form::select('country_orig[]', $countries,
+          $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
         </div>
       </div>
@@ -78,7 +78,7 @@
         </div>
         <div class="divcountry" hidden="true" >
           {!! Form::label('destC', 'Destination Country') !!}
-          {{ Form::select('country_dest',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),['placeholder'=> 'Select an option', 'id' => 'country_dest','class'=>'m-select2-general form-control'  ]) }}
+          {{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
       </div>
     </div>
