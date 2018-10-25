@@ -32,12 +32,15 @@
 {!! Form::close() !!}
 <!--end::Form-->
 <script>
-  $('#price_level_company').select2({
-    placeholder: "Select an option"
-  });
-  $('#users_company').select2({
-    placeholder: "Select an option"
-  });
+    $('#price_level_company').select2({
+        placeholder: "Select an option"
+    });
+    $('#users_company').select2({
+        placeholder: "Select an option"
+    });
+    $('#pdf_language').select2({
+        placeholder: "Select an option"
+    });
 </script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
