@@ -72,6 +72,19 @@ class ContactController extends Controller
         return view('contacts.addWithModalManualQuote', ['companies'=>$companies]);
     }
 
+    public function addWithModalCompanies($company_id)
+    {
+        $company_user_id=\Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+                $q->where('user_id',\Auth::user()->id);
+            })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+        }else{
+            $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+        }
+        return view('contacts.add', ['companies'=>$companies,'company_id'=>$company_id]);
+    }
+
     public function store(Request $request)
     {
         Contact::create($request->all());

@@ -126,7 +126,7 @@
                                         @endif
                                         <br>
                                         <div class="text-center">
-                                            <button class="btn btn-default" onclick="AbrirModal('addContact',0)">
+                                            <button class="btn btn-default" onclick="AbrirModal('addContact',{{$company->id}})">
                                                 Add contact
                                             </button>
                                         </div>
@@ -259,7 +259,8 @@
             });
         }
         if(action == "addContact"){
-            var url = '{{ route("contacts.add") }}';
+            var url = '{{ route("contacts.addCMC",":id") }}';
+            url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#addContactModal').modal({show:true});
             });
