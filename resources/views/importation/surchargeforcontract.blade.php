@@ -46,7 +46,7 @@
                   <!-- <a href="#" data-toggle="m-tooltip" class="m-portlet__nav-link m-portlet__nav-link--icon" data-direction="left" data-width="auto" title="Get help with filling up this form">
 <i class="flaticon-info m--icon-font-size-lg3"></i> 
 </a>-->
-               <!--   <a href="#" class="btn btn-danger form-control">Cancel</a>-->
+                  <!--   <a href="#" class="btn btn-danger form-control">Cancel</a>-->
                </li>
             </ul>
          </div>
@@ -65,8 +65,8 @@
                            <label class="col-form-labe"><b>CONTRACT:</b></label>
                         </div>
                         {!! Form::hidden('contractId',$contract['id'])!!}
-                        {!! Form::hidden('fileName',$fileName)!!}
-                        
+                        {!! Form::hidden('fileName',$value['fileName'])!!}
+
                         <div class="col-lg-2">
                            <label for="nameid" class="">Contract Name</label>
                            {!!  Form::text('name',$contract['name'],['id'=>'nameid',
@@ -86,11 +86,11 @@
                         </div>
                         <div class="col-lg-3">
                            <label for="validation_expire" class=" ">Validation</label>
-                           <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="{{$validatiion}}" disabled>
+                           <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="{{$contract['validity'].'/'.$contract['expire']}}" disabled>
                         </div>
                         <div class="col-lg-3">
                            <label for="validation_expire" class=" ">Name of File</label>
-                           {!!  Form::text('fileName',$fileName,['id'=>'fileName',
+                           {!!  Form::text('fileNametx',$value['fileName'],['id'=>'fileName',
                            'placeholder'=>'File Name Contract',
                            'required',
                            'disabled',
@@ -108,6 +108,21 @@
                      <br>
                      <br>
                   </div>
+
+                  @if($value['existfortynor'] == true)
+                  <!--<input type="hidden" value="0" name="fortynor" />-->
+                  <input type="hidden" value="0" name="existfortynor" />
+                  @else
+                  <input type="hidden" value="1" name="existfortynor" />
+                  @endif
+
+                  @if($value['existfortyfive'] == true)
+                  <!--<input type="hidden" value="0" name="fortyfive" />-->
+                  <input type="hidden" value="0" name="existfortyfive" />
+                  @else
+                  <input type="hidden" value="1" name="existfortyfive" />
+                  @endif
+
                   <div class="form-group m-form__group row">
                      @foreach($targetsArr as $targets)
                      <div class="col-md-3">
@@ -134,7 +149,7 @@
                      </div>
                      @endforeach
                   </div>
-                  <input type="hidden" name="countTarges" id="countTarges" value="{{$countTarges}}" />
+                  <input type="hidden" name="countTarges" id="countTarges" value="{{$value['countTarges']}}" />
                </div>
                <div class="form-group m-form__group row">
 

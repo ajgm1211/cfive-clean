@@ -282,12 +282,61 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
             </div>
             <div class="modal-body">
 
-               <div class="form-group">
-                  <label for="recipient-name" class="form-control-label">
-                     Single File Upload:
-                  </label>
-                  {!!Form::file('file',['id'=>'','required'])!!}
+               <br>
+               <div class="form-group m-form__group row">
+                  <div class="col-3">
+                     <label for="recipient-name" class="form-control-label">
+                       <b> Single File Upload: </b>
+                     </label>
+                  </div>
+                  <div class="col-4">
+                     {!!Form::file('file',['id'=>'','required'])!!}
+                  </div>
                </div>
+               <br>
+               <hr>
+               <br>
+               <div class="form-group m-form__group row">
+                  <div class="col-lg-2"><b>Data:</b></div>
+
+                  <div class="col-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="Datftynor" id="fortynorchk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Includes 40'NOR Column
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+
+                  <div class="col-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="Datftyfive" id="fortyfivechk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Includes 45 Column
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+
+               </div>
+
                {!!Form::hidden('contract_id',$id,['id'=>''])!!}
 
 
