@@ -1543,7 +1543,8 @@ class ImportationController extends Controller
    public function UploadFileSubchargeForContract(Request $request){
       //dd($request->all());
       $contractId    = $request->contract_id;
-      
+      $fortynorBol   = false;
+      $fortyfiveBol  = false;
       $file = $request->file('file');
       $ext = strtolower($file->getClientOriginalExtension());
       $validator = \Validator::make(
@@ -1564,46 +1565,104 @@ class ImportationController extends Controller
       $fileputtmp = \Storage::disk('UpLoadFile')->put($fileName,\File::get($file));
 
       $targetsArr =[ 
-         0 => "Surcharge", 
-         1 => "Origin", 
-         2 => "Destination",
-         3 => "Carrier", 
-         4 => "Calculation Type",
-         5 => "Amount",
-         6 => "Currency"
+         0 => "Origin",
+         1 => "Destiny",
+         2 => "20'",
+         3 => "40'",
+         4 => "40'HC"
       ];
 
+      // Datftynor Datftyfive - DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
+
+      if($request->Datftynor == true){
+         array_push($targetsArr,"40'NOR");
+      } else{
+         $fortynorBol = true;
+      }
+
+      if($request->Datftyfive == true){
+         array_push($targetsArr,"45'");
+      } else {
+         $fortyfiveBol = true;
+      }
+
+      array_push($targetsArr,"Calculation Type");
+      array_push($targetsArr,"Surcharge");
+      
       $coordenates = collect([]);
       //ini_set('max_execution_time', 300);
-      
+
       $path = public_path(\Storage::disk('UpLoadFile')->url($fileName));
       Excel::selectSheetsByIndex(0)
          ->Load($path,function($reader) use($request,$coordenates) {
-                   $reader->noHeading = true;
-                   $reader->ignoreEmpty();
-                   $reader->takeRows(2);
-                   $read = $reader->first();
-                   $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
-                   for($i=0;$i<count($reader->first());$i++){
-                      $coordenates->push($columna[$i].' '.$read[$i]);
-                   }
+            $reader->noHeading = true;
+            $reader->ignoreEmpty();
+            $reader->takeRows(2);
+            $read = $reader->first();
+            $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
+            for($i=0;$i<count($reader->first());$i++){
+               $coordenates->push($columna[$i].' '.$read[$i]);
+            }
 
-                });
+         });
 
       $contract      = Contract::find($contractId);
-      $validatiion   = $contract->validity.'/'.$contract->expire;
       $countTarges = count($targetsArr);
 
+      $value = [
+         'existfortynor'   => $fortynorBol,
+         'existfortyfive'  => $fortyfiveBol,
+         'fileName'        => $fileName,
+         'countTarges'     => $countTarges
+      ];
+
       return view('importation.surchargeforcontract',compact('contract',
+                                                             'value',
                                                              'coordenates',
-                                                             'targetsArr',
-                                                             'fileName',
-                                                             'validatiion',
-                                                             'countTarges'));
+                                                             'targetsArr'));
    }   
 
    public function ProcessSurchargeForContract(Request $request){
+
       dd($request->all());
+      $requestArr = $request->all();
+      $fileName   = $requestArr['fileName'];
+
+
+
+      $path = public_path(\Storage::disk('UpLoadFile')->url($fileName));
+      Excel::selectSheetsByIndex(0)
+         ->Load($path,function($reader) use($requestArr) { 
+            $reader->noHeading = true;
+
+            $contract            = $requestArr['contractId'];
+
+            $surcharge           = $requestArr['Surcharge'];
+            $origin              = $requestArr['Origin'];
+            $destination         = $requestArr['Destination'];
+            $carrier             = $requestArr['Carrier'];
+            $calculation_type    = $requestArr['Calculation_Type'];
+            $amount              = $requestArr['Amount'];
+            $currency            = $requestArr['Currency'];
+
+            //validamos que el excel este lleno
+            if($reader->get()->isEmpty() != true){
+
+               // dd('if($reader->get()->isEmpty() != true){');
+               /*LocalCharge::where('contract_id','=',$contract)
+                  ->delete();
+               FailSurCharge::where('contract_id','=',$contract)
+                  ->delete();*/
+            } else{
+               $requestobj->session()->flash('message.nivel', 'danger');
+               $requestobj->session()->flash('message.content', 'The file is it empty');
+               return redirect()->route('contracts.edit',$contract);   
+            }
+
+            foreach ($reader->get() as $read) {
+               dd($read[$currency]);
+            }
+         });
    }
 
    public function FailedSurchargeDeveloper($id,$tab){
@@ -2936,7 +2995,7 @@ class ImportationController extends Controller
    }
    // Solo Para Testear ----------------------------------------------------------------
    public function testExcelImportation(){
-      $puerto = 'alexandria ,eg1';
+      $puerto = 'bangkok';
       $resultado = PrvHarbor::get_harbor($puerto);
       dd($resultado);
 
