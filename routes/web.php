@@ -227,6 +227,7 @@ Route::resource('prices', 'PriceController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
    Route::get('add', 'ContactController@add')->name('contacts.add');
    Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
+   Route::get('addCMC/{company_id}', 'ContactController@addWithModalCompanies')->name('contacts.addCMC'); // with modal
    Route::get('addCMMQ', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
    Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
 });
