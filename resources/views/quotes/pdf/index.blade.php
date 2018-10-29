@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-fluid" style="width: 200px; height: auto; margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><span class="color-title"><b>Quotation Id:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
@@ -49,10 +49,9 @@
                 </div>
             </div>
             <br>
-            <br>
             <div class="clearfix">
                 <div class="">
-                    <table class="table-border" style="width: 350px; border-radius:2px !Important;">
+                    <table class="" style="width: 45%; float: left;">
                         <thead class="title-quote text-center header-table">
                             <tr >
                                 <th class="unit"><b>Origin</b></th>
@@ -77,7 +76,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table-border" style="width: 350px; right:0; top:271px; position:absolute;">
+                    <table class="" style="width: 45%; float: right;">
                         <thead class="title-quote text-center ">
                             <tr>
                                 <th class="unit"><b>Destination</b></th>
@@ -104,6 +103,7 @@
                     </table>
                 </div>
             </div>
+            <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
@@ -187,7 +187,7 @@
             </div>
             <br>
             @if($charges_type==1)
-            <table class="table table-bordered color-blue page-break" border="0" cellspacing="0" cellpadding="0">
+            <table class="page-break" border="0" cellspacing="1" cellpadding="1">
                 <thead class="title-quote text-center header-table">
                     <tr >
                         @if($quote->sub_total_origin!='')
@@ -415,20 +415,27 @@
                         </td>
                     </tr>
                     @endif
+                    
+                    @if($quote->term_orig!='')
                     <tr>
                         <td style="padding:20px;">
                             <span class="text-justify">                                
-                                {!! $quote->term_orig!!}
+                                {!! $quote->term_orig !!}
                             </span>
                         </td>
                     </tr>
+                    @endif
+                    
+                    @if($quote->term_dest!='')
                     <tr>
                         <td style="padding:20px;">
                             <span class="text-justify">
-                                {!! $quote->term_dest!!}    
+                                {!! $quote->term_dest !!}    
                             </span>
                         </td>
                     </tr>
+                    @endif
+                    
                 </tbody>
             </table>
         </div>
