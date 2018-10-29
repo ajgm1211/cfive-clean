@@ -101,55 +101,87 @@
                      <hr>
 
                   </div>
-                  <div class="form-group m-form__group row">
-                     <div class="col-lg-2">
-                        <label class="col-form-label"><b>DATA:</b></label>
+                  <div class="col-lg-12">
+                     <div class="form-group m-form__group row">
+                        <div class="col-lg-2">
+                           <label class="col-form-label"><b>DATA:</b></label>
+                        </div>
+                        <br>
+                        <br>
+
+                        @if($value['existcarrier'] == true)
+                        <div class="col-lg-2 ">
+                           <label for="carrier" class="col-form-label">Carrier</label>
+                           {!! Form::select('carrier',$carrier,$value['carrier'],['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                        </div>
+                        @endif
+
+                        @if($value['existorigin'] == true)
+                        <div class="col-2 col-form-label">
+                           <label for="origin" class=" ">Origin</label>
+                           {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
+                        </div>
+                        @endif
+
+                        <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
+
+                        @if($value['existdestiny'] == true)
+                        <div class="col-2 col-form-label">
+                           <label for="destiny" class=" ">Destiny</label>
+                           {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                        </div>
+                        @endif
+
+                        <input type="hidden" name="existdestiny" id="existdestiny" value="{{$value['existdestiny']}}" />
+
+                        @if($value['existfortynor'] == true)
+                        <!--<input type="hidden" value="0" name="fortynor" />-->
+                        <input type="hidden" value="0" name="existfortynor" />
+                        @else
+                        <input type="hidden" value="1" name="existfortynor" />
+                        @endif
+
+                        @if($value['existfortyfive'] == true)
+                        <!--<input type="hidden" value="0" name="fortyfive" />-->
+                        <input type="hidden" value="0" name="existfortyfive" />
+                        @else
+                        <input type="hidden" value="1" name="existfortyfive" />
+                        @endif
+
+
+                        <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                        <input type="hidden" name="statustypecurren" id="existcarrierst" value="{{$statustypecurren}}" />
                      </div>
-                     <br>
-                     <br>
                   </div>
-
-                  @if($value['existfortynor'] == true)
-                  <!--<input type="hidden" value="0" name="fortynor" />-->
-                  <input type="hidden" value="0" name="existfortynor" />
-                  @else
-                  <input type="hidden" value="1" name="existfortynor" />
-                  @endif
-
-                  @if($value['existfortyfive'] == true)
-                  <!--<input type="hidden" value="0" name="fortyfive" />-->
-                  <input type="hidden" value="0" name="existfortyfive" />
-                  @else
-                  <input type="hidden" value="1" name="existfortyfive" />
-                  @endif
-
-                  <div class="form-group m-form__group row">
-                     @foreach($targetsArr as $targets)
-                     <div class="col-md-3">
-                        <div class="m-portlet m-portlet--metal m-portlet--head-solid-bg m-portlet--bordered">
-                           <div class="m-portlet__head">
-                              <div class="m-portlet__head-caption">
-                                 <div class="m-portlet__head-title">
-                                    <h3 class="m-portlet__head-text">
-                                       {{$targets}}
-                                       <!--<small>portlet sub title</small>-->
-                                    </h3>
+                  <div class="col-lg-12">
+                     <div class="form-group m-form__group row">
+                        @foreach($targetsArr as $targets)
+                        <div class="col-md-3">
+                           <div class="m-portlet m-portlet--metal m-portlet--head-solid-bg m-portlet--bordered">
+                              <div class="m-portlet__head">
+                                 <div class="m-portlet__head-caption">
+                                    <div class="m-portlet__head-title">
+                                       <h3 class="m-portlet__head-text">
+                                          {{$targets}}
+                                          <!--<small>portlet sub title</small>-->
+                                       </h3>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="m-portlet__body">
+                                 <div class="col-md-12">
+                                    <label for="" class="">Column  in the file excel</label>
+                                 </div>
+                                 <div class="col-md-12">
+                                    {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control', 'id' => 'select'.$loop->iteration, 'onchange'=>'equals('.$loop->iteration.')'])!!}
                                  </div>
                               </div>
                            </div>
-                           <div class="m-portlet__body">
-                              <div class="col-md-12">
-                                 <label for="" class="">Column  in the file excel</label>
-                              </div>
-                              <div class="col-md-12">
-                                 {!! Form::select($targets,$coordenates,null,['class' => 'm-select2-general form-control', 'id' => 'select'.$loop->iteration, 'onchange'=>'equals('.$loop->iteration.')'])!!}
-                              </div>
-                           </div>
                         </div>
+                        @endforeach
                      </div>
-                     @endforeach
+                     <input type="hidden" name="countTarges" id="countTarges" value="{{$value['countTarges']}}" />
                   </div>
-                  <input type="hidden" name="countTarges" id="countTarges" value="{{$value['countTarges']}}" />
                </div>
                <div class="form-group m-form__group row">
 

@@ -1542,9 +1542,19 @@ class ImportationController extends Controller
 
    public function UploadFileSubchargeForContract(Request $request){
       //dd($request->all());
-      $contractId    = $request->contract_id;
-      $fortynorBol   = false;
-      $fortyfiveBol  = false;
+      $contractId       = $request->contract_id;
+      $carrierVal       = $request->carrier;
+      $statustypecurren = $request->valuesCurrency;
+      $carrier          = carrier::all()->pluck('name','id');
+      $harbor           = harbor::all()->pluck('display_name','id');
+      $destinyArr       = $request->destiny;
+      $originArr        = $request->origin;
+      $destinyBol       = false;
+      $originBol        = false;
+      $carrierBol       = false;
+      $fortynorBol      = false;
+      $fortyfiveBol     = false;
+
       $file = $request->file('file');
       $ext = strtolower($file->getClientOriginalExtension());
       $validator = \Validator::make(
@@ -1558,6 +1568,7 @@ class ImportationController extends Controller
          return redirect()->route('contracts.edit',$request->contract_id);
       }
 
+
       $now = new \DateTime();
       $now = $now->format('dmY_His');  
       $nombre = $file->getClientOriginalName();
@@ -1565,11 +1576,9 @@ class ImportationController extends Controller
       $fileputtmp = \Storage::disk('UpLoadFile')->put($fileName,\File::get($file));
 
       $targetsArr =[ 
-         0 => "Origin",
-         1 => "Destiny",
-         2 => "20'",
-         3 => "40'",
-         4 => "40'HC"
+         0 => "20'",
+         1 => "40'",
+         2 => "40'HC"
       ];
 
       // Datftynor Datftyfive - DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
@@ -1586,9 +1595,35 @@ class ImportationController extends Controller
          $fortyfiveBol = true;
       }
 
+      if($request->DatCar == false){
+         array_push($targetsArr,'Carrier');
+      } else {
+         $carrierVal;
+         $carrierBol = true;
+      }
+
+      if($request->DatOri == false){
+         array_push($targetsArr,'Origin');
+      }
+      else{
+         $originBol = true;
+         $originArr;
+      }
+      if($request->DatDes == false){
+         array_push($targetsArr,'Destiny');
+      } else {
+         $destinyArr;
+         $destinyBol = true;
+      }   
+
+
+      if($statustypecurren == 1){
+         array_push($targetsArr,"Currency");
+      }
+
       array_push($targetsArr,"Calculation Type");
       array_push($targetsArr,"Surcharge");
-      
+
       $coordenates = collect([]);
       //ini_set('max_execution_time', 300);
 
@@ -1610,40 +1645,40 @@ class ImportationController extends Controller
       $countTarges = count($targetsArr);
 
       $value = [
+         'existorigin'     => $originBol,
+         'origin'          => $originArr,
+         'existdestiny'    => $destinyBol,
+         'destiny'         => $destinyArr,
          'existfortynor'   => $fortynorBol,
          'existfortyfive'  => $fortyfiveBol,
          'fileName'        => $fileName,
-         'countTarges'     => $countTarges
+         'existcarrier'    => $carrierBol,
+         'countTarges'     => $countTarges,
+         'carrier'         => $carrierVal,
       ];
 
       return view('importation.surchargeforcontract',compact('contract',
                                                              'value',
+                                                             'harbor',
+                                                             'carrier',
                                                              'coordenates',
+                                                             'statustypecurren',
                                                              'targetsArr'));
    }   
 
    public function ProcessSurchargeForContract(Request $request){
 
-      dd($request->all());
-      $requestArr = $request->all();
-      $fileName   = $requestArr['fileName'];
+      // dd($request->all());
+      $requestobj = $request->all();
+      $fileName   = $requestobj['fileName'];
 
 
 
       $path = public_path(\Storage::disk('UpLoadFile')->url($fileName));
       Excel::selectSheetsByIndex(0)
-         ->Load($path,function($reader) use($requestArr) { 
+         ->Load($path,function($reader) use($requestobj) { 
             $reader->noHeading = true;
 
-            $contract            = $requestArr['contractId'];
-
-            $surcharge           = $requestArr['Surcharge'];
-            $origin              = $requestArr['Origin'];
-            $destination         = $requestArr['Destination'];
-            $carrier             = $requestArr['Carrier'];
-            $calculation_type    = $requestArr['Calculation_Type'];
-            $amount              = $requestArr['Amount'];
-            $currency            = $requestArr['Currency'];
 
             //validamos que el excel este lleno
             if($reader->get()->isEmpty() != true){
@@ -1659,8 +1694,154 @@ class ImportationController extends Controller
                return redirect()->route('contracts.edit',$contract);   
             }
 
-            foreach ($reader->get() as $read) {
-               dd($read[$currency]);
+
+            $contract_id            = $requestobj['contractId'];
+            $statusexistfortynor    = $requestobj['existfortynor'];
+            $statusexistfortyfive   = $requestobj['existfortyfive'];
+            // $chargeVal              = $requestobj['chargeVal'];
+
+            $currency               = "Currency";
+            $twenty                 = "20'";
+            $forty                  = "40'";
+            $fortyhc                = "40'HC";
+            $fortynor               = "40'NOR";
+            $fortyfive              = "45'";
+            $origin                 = "origin";
+            $originExc              = "Origin";
+            $destiny                = "destiny";
+            $destinyExc             = "Destiny";
+            $carrier                = "Carrier";
+            $CalculationType        = "Calculation_Type";
+            $Charge                 = "Surcharge";
+            $statustypecurren       = "statustypecurren";
+            $contractId             = "Contract_id";
+
+
+            $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+            $surcharcollection       = collect([]);
+            $surcharFailcollection   = collect([]);
+
+            $i = 1;
+            $falli =0;
+            foreach($reader->get() as $read){
+               $carrierVal                = '';
+               $originVal                 = '';
+               $destinyVal                = '';
+               $origenFL                  = '';
+               $destinyFL                 = '';
+               $currencyVal               = '';
+               $currencyValtwen           = '';
+               $currencyValfor            = '';
+               $currencyValforHC          = '';
+               $currencyValfornor         = '';
+               $currencyValforfive        = '';
+               $calculationtypeVal        = '';
+               $surchargelist             = '';
+               $surchargeVal              = '';
+               $contractIdVal             = $contract_id;
+
+               $calculationtypeValfail    = '';
+               $currencResultwen          = '';
+               $currencResulfor           = '';
+               $currencResulforhc         = '';
+               $currencResulfornor        = '';
+               $currencResulforfive       = '';
+               $currencResul              = '';
+
+               $twentyArr;
+               $fortyArr;
+               $fortyhcArr;
+               $fortynorArr;
+               $fortyfiveArr;
+               $twentyVal                 = '';
+               $fortyVal                  = '';
+               $fortyhcVal                = '';
+               $fortynorVal               = '';
+               $fortyfiveVal              = '';
+
+               $originBol               = false;
+               $origExiBol              = false;
+               $destinyBol              = false;
+               $destiExitBol            = false;
+               $carriExitBol            = false;
+               $curreExiBol             = false;
+               $curreExitBol            = false;
+               $curreExitwenBol         = false;
+               $curreExiforBol          = false;
+               $curreExiforHCBol        = false;
+               $curreExifornorBol       = false;
+               $curreExiforfiveBol      = false;
+               $twentyExiBol            = false;
+               $fortyExiBol             = false;
+               $fortyhcExiBol           = false;
+               $fortynorExiBol          = false;
+               $fortyfiveExiBol         = false;
+               $carriBol                = false;
+               $calculationtypeExiBol   = false;
+               $variantecurrency        = false;
+               $typeExiBol              = false;
+               $twentyArrBol            = false;
+               $fortyArrBol             = false;
+               $fortyhcArrBol           = false;
+               $fortynorArrBol          = false;
+               $fortyfiveArrBol         = false;
+               $values                  = true;
+
+
+               //--------------- Incio de Insercion -----------------------------------------------------------------
+               if($i != 1){
+
+
+                  //--------------- CARRIER -----------------------------------------------------------------
+                  if($requestobj['existcarrier'] == 1){
+                     $carriExitBol = true;
+                     $carriBol     = true;
+                     $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
+                  } else {
+                     $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
+                     $carrierResul = str_replace($caracteres,'',$carrierVal);
+                     $carrier = Carrier::where('name','=',$carrierResul)->first();
+                     if(empty($carrier->id) != true){
+                        $carriExitBol = true;
+                        $carrierVal = $carrier->id;
+                     }else{
+                        $carrierVal = $carrierVal.'_E_E';
+                     }
+                  }
+
+                  //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+
+                  if($requestobj['existorigin'] == 1){
+                     $originBol = true;
+                     $origExiBol = true; //segundo boolean para verificar campos errados
+                     $randons = $requestobj[$origin];
+                  } else {
+                     $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
+                     $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                     if($resultadoPortOri['boolean']){
+                        $origExiBol = true;    
+                     }
+                     $originVal  = $resultadoPortOri['puerto'];
+
+                  }
+                  //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                  if($requestobj['existdestiny'] == 1){
+                     $destinyBol = true;
+                     $destiExitBol = true; //segundo boolean para verificar campos errados
+                     $randons = $requestobj[$destiny];
+                  } else {
+                     $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
+                     $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                     if($resultadoPortDes['boolean']){
+                        $destiExitBol = true;    
+                     }
+                     $destinyVal  = $resultadoPortDes['puerto'];
+                  }
+
+                  dd($originVal);
+               }
+               $i++;
             }
          });
    }
