@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-group m-form__group">
                             {!! Form::label('position', 'Position') !!}
-                            {!! Form::text('position', null, ['placeholder' => 'Please enter a position','class' => 'form-control m-input phonec_input','required' => 'required']) !!}
+                            {!! Form::text('position', null, ['placeholder' => 'Please enter a position','class' => 'form-control m-input phonec_input']) !!}
                         </div>
                     </div>
                 </div>

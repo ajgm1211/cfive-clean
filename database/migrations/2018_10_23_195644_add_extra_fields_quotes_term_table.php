@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPdfLanguageToQuotesTable extends Migration
+class AddExtraFieldsQuotesTermTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddPdfLanguageToQuotesTable extends Migration
     public function up()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->string('pdf_language')->default(1)->after('qty_40_hc_open_top');
+            $table->text('term_orig')->nullable()->after('status_quote_id');
+            $table->text('term_dest')->nullable()->after('term_orig');
         });
     }
 
@@ -26,7 +27,8 @@ class AddPdfLanguageToQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn('pdf_language');
+            $table->dropColumn('term_orig');
+            $table->dropColumn('term_dest');
         });
     }
 }
