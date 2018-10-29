@@ -102,28 +102,18 @@ class ReprocessRatesJob implements ShouldQueue
                    $currencyEX  <= 1 ){
                     $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                     // Origen Y Destino ------------------------------------------------------------------------
-                    $sin_via_org = explode(' via ',$originEX[0]);
-                    $originResul = str_replace($caracteres,'',strtolower($sin_via_org[0]));
-                    $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
-                        ->get();
-                    if(count($originExits) == 1){
-                        $originB = true;
-                        foreach($originExits as $originRc){
-                            $originV = $originRc['id'];
-                        }
+                   $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($resultadoPortOri['boolean']){
+                        $originB = true;    
                     }
+                    $originV  = $resultadoPortOri['puerto'];
 
-                    $sin_via_des = explode(' via ',$destinyEX[0]);
-                    $destinResul = str_replace($caracteres,'',strtolower($sin_via_des[0]));
-                    $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                        ->get();
-                    if(count($destinationExits) == 1){
-                        $destinyB = true;
-                        foreach($destinationExits as $destinationRc){
-                            $destinationV = $destinationRc['id'];
-                            // dd($destinationV);
-                        }
+
+                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($resultadoPortDes['boolean']){
+                        $destinyB = true;    
                     }
+                    $destinationV  = $resultadoPortDes['puerto'];
 
                     //---------------- Carrier ------------------------------------------------------------------
 

@@ -12,7 +12,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Companies
+                        Contacts
                     </h3><br>
 
                 </div>
@@ -54,7 +54,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailRates" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Companies 
+                                Fail Contacts 
                             </a>
                         </li>
                     </ul>
@@ -71,10 +71,10 @@
                                     <label >
                                         <i class="fa fa-dot-circle-o" style="color:red;"> </i>
                                         <strong >
-                                            Failed Companies: 
+                                            Failed Contacts: 
                                         </strong>
-                                        <strong id="strfail">{{$countfailcompanies}}</strong>
-                                        <input type="hidden" value="{{$countfailcompanies}}" id="strfailinput" />
+                                        <strong id="strfail">{{$countfailcontacts}}</strong>
+                                        <input type="hidden" value="{{$countfailcontacts}}" id="strfailinput" />
                                     </label>
                                 </div>
                             </div>
@@ -88,13 +88,12 @@
                             <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                                 <thead >
                                     <tr>
-                                        <th>Business Name</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
                                         <th>Phone</th>
-                                        <th>Address</th>
                                         <th>Email</th>
-                                        <th>Tax Number</th>
-                                        <th>Company User</th>
-                                        <th>Owner</th>
+                                        <th>Position</th>
+                                        <th>Company</th>
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -119,7 +118,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Edit Failed Companies
+                            Edit Failed Contacts
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -148,15 +147,14 @@
                 $('#myatest').DataTable({
                     processing: true,
                     //serverSide: true,
-                    ajax: '{!! route("list.fail.company",$companyuser) !!}',
+                    ajax: '{!! route("list.fail.contact",$companyuser) !!}',
                     columns: [
-                        { data: 'businessname', name: 'businessname' },
+                        { data: 'firstname', name: 'firstname' },
+                        { data: 'lastname', name: 'lastname' },
                         { data: 'phone', name: 'phone' },
-                        { data: 'address', name: 'address' },
                         { data: 'email', name: 'email' },
-                        { data: 'taxnumber', name: "taxnumber" },
-                        { data: 'compnyuser', name: "compnyuser" },
-                        { data: 'owner', name: "owner" },
+                        { data: 'position', name: "position" },
+                        { data: 'companylb', name: "companylb" },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -171,16 +169,16 @@
                 });
             });
 
-            function showModalcompany(id){
-                    var url = '{{ route("show.fail.company", ":id") }}';
+            function showModalcontact(id){
+                    var url = '{{ route("show.fail.contact", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditcompanies').modal();
                     });
             }
 
-            $(document).on('click','#delete-failcompany',function(){
-                var id = $(this).attr('data-id-failcompany');
+            $(document).on('click','#delete-failcontact',function(){
+                var id = $(this).attr('data-id-failcontact');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
@@ -193,7 +191,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("delete.fail.company",":id") !!}';
+                        url='{!! route("delete.fail.contact",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({

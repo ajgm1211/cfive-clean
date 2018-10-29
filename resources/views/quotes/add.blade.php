@@ -452,7 +452,7 @@
                                                     <div class="row">
                                                         <div class="col-md-2">
                                                             <label>Modality</label>
-                                                            {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                                                            {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control','required'=>'true','id'=>'modality']) }}
                                                         </div>
                                                         <div class="col-md-2">
                                                             <label>Incoterm</label>
@@ -575,7 +575,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>                                                    
+                                            </div>
                                         </div>
                                         <div class="tab-pane" id="m_portlet_tab_1_2">
                                             <br>
@@ -997,6 +997,28 @@
                                                             </h5>
                                                         </div>
                                                     </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <label class="size-14px">
+                                                                <b>Terms & Conditions</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <br>
+                                                            <div class="" style="margin-bottom:40px;">
+                                                                <h5 class="title-quote size-14px">Origin</h5>
+                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                            </div>
+                                                            <div class="">
+                                                                <h5 class="title-quote size-14px">Destination</h5>
+                                                                {!! Form::textarea('term_dest', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <hr>
+                                                    <br>
                                                     <!-- Schedules -->
                                                     <div id="infoschedule" class="row" hidden="true">
                                                         <div class="col-md-3">
@@ -1042,7 +1064,7 @@
                                                         </span>
                                                     </a>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <hr>
                                             <div class="row pull-right">
                                                 <ul class="nav" role="tablist">
@@ -1082,7 +1104,7 @@
                             </li>
                         </ul>
                     </div>
-                    {!! Form::close() !!}
+                    
                 </div>
             </div>
             @else
@@ -1128,14 +1150,18 @@
             <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
             @endif
             <hr>
+            <label class="title-quote title-quote size-14px">PDF language</label>
+            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
+            <hr>
             <label class="title-quote title-quote size-14px">PDF type</label>
-            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
             <hr>
             <label class="title-quote title-quote size-14px">PDF Ammounts</label>
-            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
         </div>        
     </div>
 </div>
+{!! Form::close() !!}
 
 @include('quotes.partials.schedulesModal')
 
@@ -1155,6 +1181,42 @@
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+    var editor_config = {
+        path_absolute : "/",
+        selector: "textarea.editor",
+        plugins: ["template"],
+        toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+        external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
+        nanospell_server:"php",
+        browser_spellcheck: true,
+        relative_urls: false,
+        remove_script_host: false,
+        file_browser_callback : function(field_name, url, type, win) {
+            var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+            var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+
+            var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+            if (type == 'image') {
+                cmsURL = cmsURL + "&type=Images";
+            } else {
+                cmsURL = cmsURL + "&type=Files";
+            }
+
+            tinymce.activeEditor.windowManager.open({
+                file: '<?= route('elfinder.tinymce4') ?>',// use an absolute path!
+                title: 'File manager',
+                width: 900,
+                height: 450,
+                resizable: 'yes'
+            }, {
+                setUrl: function (url) {
+                    win.document.getElementById(field_name).value = url;
+                }
+            });
+        }
+    };
+
+    tinymce.init(editor_config);
 
     /*** GOOGLE MAPS API ***/
 
