@@ -946,7 +946,7 @@ $subtotalDestiny = 0;
           </div>
         </div>
       </div>
-      <div class="col-md-2">
+     <!-- <div class="col-md-2">
         <h3 class="title-quote size-16px">Settings</h3>
         <hr>
         <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
@@ -959,7 +959,30 @@ $subtotalDestiny = 0;
         @if(isset($currency_cfg->alphacode))
         <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
         @endif
-      </div>        
+      </div>        -->
+      <div class="col-lg-2 col-md-2 col-sm-2 col-12 desktop">
+            <h3 class="title-quote size-16px">Settings</h3>
+            <hr>
+            <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
+            @if(isset($currency_cfg->alphacode))
+            <input type="hidden" value="{{$currency_cfg->alphacode}}" id="currency_id">
+            @endif
+            <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
+            <hr>
+            <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
+            @if(isset($currency_cfg->alphacode))
+            <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+            @endif
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF language</label>
+            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],$user->companyUser->pdf_language, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF type</label>
+            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
+            <hr>
+            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
+        </div>        
 
     </div>
 
