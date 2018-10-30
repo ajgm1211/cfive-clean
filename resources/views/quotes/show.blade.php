@@ -439,12 +439,10 @@
                                         {!! $quote->modality==1 ? $v->term->export : $v->term->import!!}
                                         @endforeach
                                     @endif
-                                    @if(count($quote->term_orig) > 0)                     
-                                      {!! $quote->term_orig !!}         
+                                    @if(count($quote->term) > 0)                     
+                                      {!! $quote->term !!}         
                                     @endif
-                                   @if(count($quote->term_dest) > 0)           
-                                      {!! $quote->term_dest !!}  
-                                    @endif
+                        
                                 @endif
                             </div>
                         </div>
