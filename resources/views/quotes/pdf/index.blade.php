@@ -391,7 +391,7 @@
             @endif
             @endif
         </main>
-        @if($charges_type==2)
+        @if($charges_type!=1)
         <div class="clearfix details page-break">
             <div class="company">
                 <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
