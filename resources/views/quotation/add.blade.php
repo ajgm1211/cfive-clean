@@ -65,7 +65,7 @@ $subtotalDestiny = 0;
                     <div class="pull-right text-right" style="line-height: .5">                                
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
-                      <p><b>Validity: </b>  {{ $info->contract->expire }}</p>
+                      <p><b>Validity: </b> {{   \Carbon\Carbon::parse( $info->contract->validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $info->contract->expire)->format('d M Y') }} </p>
                     </div>
                   </div>
                 </div>
@@ -1002,6 +1002,7 @@ $subtotalDestiny = 0;
     @endif
     <input type="hidden" class="form-control" id="incoterm" name="incoterm" value="{{ $form->incoterm }} ">
     <input type="hidden" class="form-control" id="modality" name="modality" value="{{ $form->modality }} ">
+    <input type="hidden" class="form-control" id="since_validity" name="since_validity" value="{{ $info->contract->validity }}">
     <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $info->contract->expire }}">
     <input type="hidden" class="form-control" id="origin_address" name="origin_address" value="{{ $form->origin_address }} ">
     <input type="hidden" class="form-control" id="destination_address" name="destination_address" value="{{ $form->destination_address }} ">
