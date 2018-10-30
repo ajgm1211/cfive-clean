@@ -1016,6 +1016,20 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <label class="size-14px">
+                                                                <b>Payment conditions</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <br>
+                                                            <div class="" style="margin-bottom:40px;">
+                                                                {!! Form::textarea('payment_conditions', $user->companyUser->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <br>
                                                     <hr>
                                                     <br>
@@ -1104,7 +1118,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
             @else
