@@ -9,7 +9,7 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 200px; height: auto; margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><span class="color-title"><b>Citar:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
@@ -49,10 +49,9 @@
                 </div>
             </div>
             <br>
-            <br>
             <div class="clearfix">
                 <div class="">
-                    <table class="table-border" style="width: 350px; border-radius:2px !Important;">
+                    <table class="" style="width: 45%; float:left; border-radius:2px !Important; ">
                         <thead class="title-quote text-center header-table">
                             <tr >
                                 <th class="unit"><b>Origem</b></th>
@@ -77,7 +76,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table-border" style="width: 350px; right:0; top:271px; position:absolute;">
+                    <table class="" style="width: 45%; float: right;">
                         <thead class="title-quote text-center ">
                             <tr>
                                 <th class="unit"><b>Destino</b></th>
@@ -104,6 +103,7 @@
                     </table>
                 </div>
             </div>
+            <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? 'Companhia aérea':'Transportadora'}}</b></p>
@@ -188,7 +188,7 @@
             </div>
             <br>
             @if($charges_type==1)
-            <table class="page-break" border="0" cellspacing="0" cellpadding="0">
+            <table class="page-break" border="0" cellspacing="1" cellpadding="1">
                 <thead class="title-quote text-center header-table">
                     <tr >
                         @if($quote->sub_total_origin!='')
