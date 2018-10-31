@@ -964,7 +964,18 @@ class QuoteController extends Controller
             $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
         })->get();
 
-        return $terms;
+        $terms_arr = new Collection();
+        foreach($terms as $item){
+            $terms_arr->push($item->term->import);
+        }
+
+        return json_encode($terms);
+    }    
+    public function getCompanyPayments($id)
+    {
+        $payments = Company::find($id);
+
+        return $payments;
     }
     public function duplicate(Request $request,$id)
     {

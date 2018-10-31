@@ -1007,12 +1007,7 @@
                                                         <div class="col-lg-12">
                                                             <br>
                                                             <div class="" style="margin-bottom:40px;">
-                                                                <h5 class="title-quote size-14px">Origin</h5>
-                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
-                                                            </div>
-                                                            <div class="">
-                                                                <h5 class="title-quote size-14px">Destination</h5>
-                                                                {!! Form::textarea('term_dest', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control m-input','id'=>'terms_and_conditions']) !!}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1026,7 +1021,7 @@
                                                         <div class="col-lg-12">
                                                             <br>
                                                             <div class="" style="margin-bottom:40px;">
-                                                                {!! Form::textarea('payment_conditions', $user->companyUser->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                                                                {!! Form::textarea('payment_conditions', null, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control m-input','id'=>'payment_conditions']) !!}
                                                             </div>
                                                         </div>
                                                     </div>

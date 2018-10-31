@@ -83,7 +83,6 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
-            $company->payment_conditions = $request->payment_conditions;
             if($file != ""){
                 $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
             }
@@ -98,7 +97,6 @@ class SettingController extends Controller
             $company->address=$request->address;
             $company->currency_id=$request->currency_id;
             $company->pdf_language = $request->pdf_language;
-            $company->payment_conditions = $request->payment_conditions;
             if($file != ""){
                 $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
             }
