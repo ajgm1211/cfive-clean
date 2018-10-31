@@ -1,6 +1,6 @@
 <div class="m-portlet">
 
-d
+
   {{ Form::open(array('route' => array('contracts.storeLocalCharge', $id)),['class' => 'form-group m-form__group']) }}
   <div class="m-portlet__body">
     <div class="form-group m-form__group row">
