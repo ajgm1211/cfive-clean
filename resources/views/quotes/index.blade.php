@@ -99,7 +99,7 @@
                         </th>
                     </tr>
                 </thead>
-                <style>
+             <!-- <style>
                     ul.demo {
                         list-style-type: none;
                         margin: 0;
@@ -121,7 +121,7 @@
                     .meni input:checked ~ ul{display:block;}
 
 
-                </style>
+                </style>-->
                 <tbody>
                     @foreach ($quotes as $quote)
                     <tr>
