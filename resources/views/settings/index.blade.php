@@ -103,7 +103,7 @@
                                         <label for="pdf_language">PDF language</label>
                                         {{ Form::select('pdf_language',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language']) }}
                                     </div>
-                                </div>                                        
+                                </div>                               
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="currency_id">Logo</label>
