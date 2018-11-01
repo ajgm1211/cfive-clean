@@ -26,6 +26,10 @@
     {!! Form::label('pdf_language', 'PDF Language') !!}
     {{ Form::select('pdf_language',[1=>'English',2=>'Spanish',3=>'Portuguese'],null,['class'=>'custom-select form-control','id' => 'pdf_language']) }}
 </div>
+<div class="form-group m-form__group">
+    {!! Form::label('payment_conditions', 'Payment Conditions') !!}
+    {!! Form::textarea('payment_conditions', null, ['placeholder' => 'Please enter payment conditions','class' => 'form-control m-input address_input']) !!}
+</div>
 
 
 

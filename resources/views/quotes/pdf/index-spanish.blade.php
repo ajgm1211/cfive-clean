@@ -416,7 +416,7 @@
                         </td>
                     </tr>
                     @endif
-                    
+
                     @if($quote->term_orig!='')
                     <tr>
                         <td style="padding:20px;">
@@ -426,7 +426,7 @@
                         </td>
                     </tr>
                     @endif
-                    
+
                     @if($quote->term_dest!='')
                     <tr>
                         <td style="padding:20px;">
@@ -436,10 +436,28 @@
                         </td>
                     </tr>
                     @endif
-                    
+
                 </tbody>
             </table>
         </div>
+        @if($quote->payment_conditions!='')
+        <div class="clearfix">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <thead class="title-quote header-table">
+                    <tr>
+                        <th class="unit text-left"><b>&nbsp;&nbsp;&nbsp;Términos de pago</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:20px;">
+                            <span class="text-justify">{!! $quote->payment_conditions!!}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @endif
         <!--<footer>
 Cargofive &copy; {{date('Y')}}
 </footer>-->

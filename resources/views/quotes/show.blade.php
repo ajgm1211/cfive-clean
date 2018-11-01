@@ -55,7 +55,7 @@
                                 <div class="col-md-12" style="margin-top: 20px;">
                                     @if($user->companyUser->logo!='')
                                         <div class="pull-left text-left" style="line-height: .5;">
-                                            <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 200px; height: auto; margin-bottom:35px">
+                                            <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
                                         </div>
                                     @endif
                                     <div class="pull-right text-right" style="line-height: .5">
@@ -414,7 +414,7 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="form-group text-left">
+                    <div class="form-group text-right">
                         <p>Exchange rate: @if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
                     </div>
                 </div>
@@ -449,6 +449,28 @@
                     </div> 
                 </div>
             </div>
+            <br>
+            @if($quote->payment_conditions != '')
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">      
+                            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                                <b>Payment conditions</b>                
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group terms-and-conditions">                  
+                                {!! $quote->payment_conditions !!}
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            @endif
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2">
             <h3 class="title-quote size-16px">Settings</h3>
@@ -485,7 +507,7 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-<script>window.open("{{ route('quotes.pdf', $quote->id) }}");</script>
+<script>window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");</script>
 @endif
 
 
