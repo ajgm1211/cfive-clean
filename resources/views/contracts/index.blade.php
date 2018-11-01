@@ -66,7 +66,7 @@
         </div>
       </div>
       <div class="tab-content">
-            <div class="tab-pane active " id="m_tabs_6_1" role="tabpanel">
+        <div class="tab-pane active " id="m_tabs_6_1" role="tabpanel">
           <div class="m-portlet__body">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
@@ -111,7 +111,7 @@
                     <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                       <span>
                         <span>
-                          Import Contract &nbsp;
+                          Request Importation &nbsp;
                         </span>
                         <i class="la la-clipboard"></i>
                       </span>
@@ -222,7 +222,7 @@
                     <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                       <span>
                         <span>
-                          Import Contract &nbsp;
+                          Request Importation &nbsp;
                         </span>
                         <i class="la la-clipboard"></i>
                       </span>
@@ -317,7 +317,7 @@
           </div>
 
         </div>
-    
+
       </div>
     </div>
   </div>
@@ -359,7 +359,7 @@
         {data: 'status', name: 'status'},
         {data: 'options', name: 'options'}
       ] ,
-
+      "scrollX": true,
       buttons: [
         {
           extend: 'copyHtml5',
@@ -404,6 +404,7 @@
       "processing": true,
       "dom": 'Bfrtip',
       "paging": true,
+      "scrollX": true,
 
       buttons: [
         {
@@ -434,3 +435,7 @@
 </script>
 
 @stop
+
+
+
+
