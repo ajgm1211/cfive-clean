@@ -1361,7 +1361,7 @@
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
                                                                    
-                                                                    {!! Form::textarea('term_orig', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
