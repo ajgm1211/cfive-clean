@@ -1,6 +1,6 @@
 <?php
 
-
+/*
 if (!defined('RDS_HOSTNAME')) {
     define('RDS_HOSTNAME', $_SERVER['RDS_HOSTNAME']);
     define('RDS_USERNAME', $_SERVER['RDS_USERNAME']);
@@ -8,7 +8,7 @@ if (!defined('RDS_HOSTNAME')) {
     define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
 
 }
-
+*/
 
 
 
@@ -52,7 +52,7 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
         ],
-
+/*
         'mysql' => [
             'driver' => 'mysql',
             'host' => RDS_HOSTNAME,
@@ -67,9 +67,9 @@ return [
             'strict' => false,
             'engine' => null,
         ],
+*/
 
-
-        /*'mysql' => [
+        'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
@@ -82,7 +82,7 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-        ],*/
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

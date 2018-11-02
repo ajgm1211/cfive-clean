@@ -1360,12 +1360,8 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
-                                                                    <h5 class="title-quote size-14px">Origin</h5>
-                                                                    {!! Form::textarea('term_orig', $quote->term_orig, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
-                                                                </div>
-                                                                <div>
-                                                                    <h5 class="title-quote size-14px">Destination</h5>
-                                                                    {!! Form::textarea('term_dest', $quote->term_dest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                                   
+                                                                    {!! Form::textarea('term_orig', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>

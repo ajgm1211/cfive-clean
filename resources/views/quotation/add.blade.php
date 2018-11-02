@@ -904,27 +904,43 @@ $subtotalDestiny = 0;
                           <div class="col-md-12">
                             <div class="form-group ">
                               @if(isset($terms_origin) && $terms_origin->count()>0)  
-                                @foreach($terms_origin as $v)
-                                  @php
-                                    $termOrig .= $form->modality==1 ? $v->term->export : $v->term->import;
-                                  @endphp
-                                @endforeach
+                              @foreach($terms_origin as $v)
+                              @php
+                              $termOrig .= $form->modality==1 ? $v->term->export : $v->term->import;
+                              @endphp
+                              @endforeach
                               @endif
                               @if(isset($terms_destination) && $terms_destination->count()>0)                        @foreach($terms_destination as $v)
-                                    @php
-                                      $termDest .= $form->modality==1 ? $v->term->export : $v->term->import;
-                                    @endphp
-                                  @endforeach
+                              @php
+                              $termDest .= $form->modality==1 ? $v->term->export : $v->term->import;
+                              @endphp
+                              @endforeach
                               @endif
-                              
-                              @if($termOrig != "" || $termDest!="" )    
-                                
-                                {!! Form::textarea('term', "Origin Term : ".$termOrig."<br> Destination Term: ".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
+
+                              @if($termOrig == "" || $termDest=="" )    
+
+                              {!! Form::textarea('term',$termOrig."<br>".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
                               @endif
 
                             </div>
                           </div>
                         </div> 
+                        <div class="row">
+                          <div class="col-md-12">      
+                            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                             <b>Payment conditions</b>        
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <br>
+                            <div class="" style="margin-bottom:40px;">
+                              {!! Form::textarea('payment_conditions', $companyInfo->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                     <div class="row">
