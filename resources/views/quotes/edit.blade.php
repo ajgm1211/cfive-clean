@@ -581,11 +581,23 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-4">
+                                                                    <div class="col-md-12">
                                                                         <br>
                                                                         <label>Validity</label>
+                                                                    </div>
+                                                                    <div class="col-md-4">
                                                                         <div class="input-group date">
-                                                                            {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                            {!! Form::text('since_validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'From','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="la la-calendar-check-o"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="input-group date">
+                                                                            {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Until','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text">
                                                                                     <i class="la la-calendar-check-o"></i>
@@ -647,12 +659,8 @@
                                                                 <div class="pull-right text-right" style="line-height: .5">
                                                                     <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                                                     <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
-                                                                    @if($quote->validity!='')
-                                                                    @php
-                                                                    $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                                                                    $validity = $date->format('M d, Y');
-                                                                    @endphp
-                                                                    <p><b>Validity:</b>  Valid up to {{$validity}}</p>
+                                                                    @if($quote->validity!=''&&$quote->since_validity!='')
+                                                                    <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -1360,7 +1368,7 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
-                                                                   
+
                                                                     {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
                                                                 </div>
                                                             </div>

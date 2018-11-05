@@ -917,7 +917,7 @@ $subtotalDestiny = 0;
                               @endforeach
                               @endif
 
-                              @if($termOrig == "" || $termDest=="" )    
+                              @if($termOrig == "" || $termDest=="" )
 
                               {!! Form::textarea('term',$termOrig."<br>".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
                               @endif

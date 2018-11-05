@@ -921,49 +921,28 @@ $(document).on('click', '#create-quote', function (e) {
     var myTableDiv = document.getElementById("label_package_loads");
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
+    var terms = new Array();
 
     $.ajax({
-        url: "/quotes/terms/"+origin_harbor,
+        url: "/quotes/terms/"+origin_harbor+"/"+destination_harbor,
         dataType: 'json',
         success: function(data) {        
             $('#terms_box').show();
-            tinymce.init({
-                selector: "#terms_and_conditions",
-                plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
-                ],
-                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                menubar: false,
-                toolbar_items_size: 'small',
-                paste_as_text: true,
-                browser_spellcheck: true,
-                statusbar: false,
-                height: 200,
-
-                style_formats: [{
-                    title: 'Bold text',
-                    inline: 'b'
-                }, ],
-
-            });
 
             $.each(data, function(key, value) {
                 if(modality==1){
-                    $('#terms_and_conditions').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
+                    terms.push(value.term.import)
                 }else{
-                    $('#terms_and_conditions').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });                  
+                    terms.push(value.term.export);
                 }
+            });
+            //alert(terms);
+            $('#terms_and_conditions').val(terms).tinymce({
+                theme: "modern",
             });
         }
     });
+
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
