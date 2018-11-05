@@ -651,6 +651,12 @@ class QuoteAutomaticController extends Controller
       // id de los carrier ALL 
       $carrier_all = 26;
       array_push($carrier,$carrier_all);
+      // Id de los paises 
+      array_push($origin_country,250);
+      array_push($destiny_country,250);
+
+
+
 
       //  calculo de los local charges en freight , origin y destiny
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
@@ -1030,7 +1036,7 @@ class QuoteAutomaticController extends Controller
 
         //#######################################################################
         //NUEVOS CONTENEDORES 40nor , 45 LOCALCHARGE
-        
+
         if(in_array($local->calculationtype_id, $array40Nor)){
           if($request->input('fortynor') != "0") {
             foreach($local->localcharcarriers as $carrierGlobal){

@@ -103,34 +103,42 @@ class ContractsController extends Controller
     $contract->expire = $validation[1];
     $contract->save();
 
-    $details = $request->input('origin_id');
+    $details = $request->input('currency_id');
     $detailscharges = $request->input('localcurrency_id');
     $companies = $request->input('companies');
     $users = $request->input('users');
     // For Each de los rates
     $contador = 1;
+    $contadorRate = 1;
+
+
     foreach($details as $key => $value)
     {
 
-      $rates = new Rate();
-      $rates->origin_port = $request->input('origin_id.'.$key);
-      $rates->destiny_port = $request->input('destiny_id.'.$key);
-      $rates->carrier_id = $request->input('carrier_id.'.$key);
-      $rates->twuenty = $request->input('twuenty.'.$key);
-      $rates->forty = $request->input('forty.'.$key);
-      $rates->fortyhc = $request->input('fortyhc.'.$key);
-      $rates->fortynor = $request->input('fortynor.'.$key);
-      $rates->fortyfive = $request->input('fortyfive.'.$key);
-      $rates->currency_id = $request->input('currency_id.'.$key);
-      $rates->contract()->associate($contract);
+      $rateOrig = $request->input('origin_id'.$contadorRate);
+      $rateDest = $request->input('destiny_id'.$contadorRate);
 
-      $rates->save();
-
+      foreach($rateOrig as $Rorig => $Origvalue)
+      {
+        foreach($rateDest as $Rdest => $Destvalue)
+        {
+          $rates = new Rate();
+          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig); 
+          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest); 
+          $rates->carrier_id = $request->input('carrier_id.'.$key);
+          $rates->twuenty = $request->input('twuenty.'.$key);
+          $rates->forty = $request->input('forty.'.$key);
+          $rates->fortyhc = $request->input('fortyhc.'.$key);
+          $rates->fortynor = $request->input('fortynor.'.$key);
+          $rates->fortyfive = $request->input('fortyfive.'.$key);
+          $rates->currency_id = $request->input('currency_id.'.$key);
+          $rates->contract()->associate($contract);
+          $rates->save();
+        }
+      }
+      $contadorRate++;
     }
-
-
     // For Each de los localcharge
-
     foreach($detailscharges as $key2 => $value)
     {
 
@@ -494,11 +502,32 @@ class ContractsController extends Controller
     return view('contracts.addRates', compact('harbor','carrier','currency','id'));
   }
   public function storeRates(Request $request,$id){
-    $rates = new Rate();
-    $request->request->add(['contract_id' => $id]);
 
 
-    $rates->create($request->all());
+
+
+    $rateOrig = $request->input('origin_port');
+    $rateDest = $request->input('destiny_port');
+
+    foreach($rateOrig as $Rorig => $Origvalue)
+    {
+      foreach($rateDest as $Rdest => $Destvalue)
+      {
+        
+        $rates = new Rate();
+        $rates->origin_port =$Origvalue;
+        $rates->destiny_port =$Destvalue;
+        $rates->carrier_id = $request->input('carrier_id');
+        $rates->twuenty = $request->input('twuenty');
+        $rates->forty = $request->input('forty');
+        $rates->fortyhc = $request->input('fortyhc');
+        $rates->fortynor = $request->input('fortynor');
+        $rates->fortyfive = $request->input('fortyfive');
+        $rates->currency_id = $request->input('currency_id');
+        $rates->contract_id = $id;
+        $rates->save();
+      }
+    }
     return redirect()->back()->with('ratesSave','true');
   }
   public function editRates($id){
