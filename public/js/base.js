@@ -614,17 +614,13 @@ $(document).on('change', '#modality', function (e) {
                 });
                 $.each(data, function(key, value) {
                     if(modality==1){
-                        $('.editor').html(value.term.export).tinymce({
+                        $('#origin_terms').html(value.term.export).tinymce({
                             theme: "modern",
                         });
-
-                        $('#origin_terms').val(value.term.export);
                     }else{
-                        $('.editor').html(value.term.import).tinymce({
+                        $('#origin_terms').html(value.term.import).tinymce({
                             theme: "modern",
-                        });
-
-                        $('#origin_terms').val(value.term.import);                    
+                        });                
                     }
                 });
             }
@@ -661,17 +657,14 @@ $(document).on('change', '#modality', function (e) {
                 });
                 $.each(data, function(key, value) {
                     if(modality==1){
-                        $('.editor').html(value.term.export).tinymce({
+                        $('#destination_terms').html(value.term.export).tinymce({
                             theme: "modern",
                         });
-
-                        $('#origin_terms').val(value.term.export);
                     }else{
-                        $('.editor').html(value.term.import).tinymce({
+                        $('#destination_terms').html(value.term.import).tinymce({
                             theme: "modern",
                         });
 
-                        $('#origin_terms').val(value.term.import);                    
                     }
                 });
             }
@@ -680,53 +673,7 @@ $(document).on('change', '#modality', function (e) {
 });
 
 $(document).on('change', '#origin_harbor', function (e) {
-    var harbor_id = $('#origin_harbor').val();
-    var modality = $('#modality').val();
-    $.ajax({
-        url: "/quotes/terms/"+harbor_id,
-        dataType: 'json',
-        success: function(data) {        
-            $('#terms_box').show();
-            tinymce.init({
-                selector: "#origin_terms",
-                plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
-                ],
-                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                menubar: false,
-                toolbar_items_size: 'small',
-                paste_as_text: true,
-                browser_spellcheck: true,
-                statusbar: false,
-                height: 200,
 
-                style_formats: [{
-                    title: 'Bold text',
-                    inline: 'b'
-                }, ],
-
-            });
-            $.each(data, function(key, value) {
-                if(modality==1){
-                    $('.editor').html(value.term.export).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#origin_terms').val(value.term.export);
-                }else{
-                    $('.editor').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#origin_terms').val(value.term.import);                    
-                }
-            });
-        }
-    });
 });
 
 $(document).on('change', '#destination_harbor', function (e) {
@@ -761,13 +708,13 @@ $(document).on('change', '#destination_harbor', function (e) {
             });            
             $.each(data, function(key, value) {
                 if(modality==1){
-                    $('.editor').html(value.term.export).tinymce({
+                    $('#destination_terms').html(value.term.export).tinymce({
                         theme: "modern",
                     });
 
                     $('#destination_terms').val(value.term.export);
                 }else{
-                    $('.editor').html(value.term.import).tinymce({
+                    $('#destination_terms').html(value.term.import).tinymce({
                         theme: "modern",
                     });
 
@@ -945,6 +892,7 @@ $(document).on('click', '#create-quote', function (e) {
     var origin_address=$("#origin_address").val();
     var origin_airport=$("#origin_airport").val();
     var destination_airport=$("#destination_airport").val();
+    var modality = $('#modality').val();
     var qty_20='';
     var qty_40='';
     var qty_40_hc='';
@@ -973,6 +921,49 @@ $(document).on('click', '#create-quote', function (e) {
     var myTableDiv = document.getElementById("label_package_loads");
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
+    
+    $.ajax({
+        url: "/quotes/terms/"+origin_harbor,
+        dataType: 'json',
+        success: function(data) {        
+            $('#terms_box').show();
+            tinymce.init({
+                selector: "#terms_and_conditions",
+                plugins: [
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });
+            
+            $.each(data, function(key, value) {
+                if(modality==1){
+                    $('#terms_and_conditions').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });
+                }else{
+                    $('#terms_and_conditions').html(value.term.import).tinymce({
+                        theme: "modern",
+                    });                  
+                }
+            });
+        }
+    });
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
@@ -1001,9 +992,9 @@ $(document).on('click', '#create-quote', function (e) {
     if($(".qty_40_open_top").val()>0){
         qty_40_open_top=$(".qty_40_open_top").val();
     }
-    if($(".qty_40_hc_open_top").val()>0){
+    /*if($(".qty_40_hc_open_top").val()>0){
         qty_40_hc_open_top=$(".qty_40_hc_open_top").val();
-    }        
+    }  */      
     if($("#total_quantity").val()>0){
         total_quantity=$("#total_quantity").val();
     }
@@ -1222,12 +1213,12 @@ $(document).on('click', '#create-quote', function (e) {
     }else{
         $("#cargo_details_40_open_top_p").addClass('hide');
     }
-    if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
+    /*if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
         $("#cargo_details_40_hc_open_top").html(qty_40_hc_open_top);
         $("#cargo_details_40_hc_open_top_p").removeClass('hide');
     }else{
         $("#cargo_details_40_hc_open_top_p").addClass('hide');
-    }        
+    } */       
     if(total_quantity!='' && type_cargo!=''){
         $("#cargo_details_cargo_type").html(" "+type_cargo);
         $("#cargo_details_cargo_type_p").removeClass('hide');
@@ -1303,6 +1294,39 @@ $( document ).ready(function() {
                     $('select[name="price_id"]').empty();
                     $.each(data, function(key, value) {
                         $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                }
+            });
+            $.ajax({
+                url: "/quotes/payments/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    tinymce.init({
+                        selector: "#payment_conditions",
+                        plugins: [
+                            "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                            "searchreplace wordcount visualblocks visualchars code fullscreen",
+                            "insertdatetime nonbreaking save table contextmenu directionality",
+                            "emoticons paste textcolor colorpicker textpattern codesample",
+                            "fullpage toc imagetools help"
+                        ],
+                        toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                        menubar: false,
+                        toolbar_items_size: 'small',
+                        paste_as_text: true,
+                        browser_spellcheck: true,
+                        statusbar: false,
+                        height: 200,
+
+                        style_formats: [{
+                            title: 'Bold text',
+                            inline: 'b'
+                        }, ],
+
+                    });
+                    //alert(data.payment_conditions);
+                    $('#payment_conditions').html(data.payment_conditions).tinymce({
+                        theme: "modern",
                     });
                 }
             });

@@ -141,7 +141,7 @@
                     <span  class="gray cabezeras"  style=" float: right;">Destination</span>
                   </th>
                   <th  width = '20%' title="Field #5">
-                    <span class="gray cabezeras"> Expire</span> 
+                    <span class="gray cabezeras"> Validity</span> 
                   </th>
                   <th  width = '20%' title="Field #6" >
                     <span class="gray cabezeras"  style=" float: right;">Price</span>  
@@ -206,7 +206,7 @@
 
                   <td width = '20%'>
 
-                    <span class="darkblue validate"> {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
+                    <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
                   </td>
                   <td width = '20%'>     
                     <div class="m-widget5" style="float:right;">

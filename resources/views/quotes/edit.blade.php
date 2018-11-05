@@ -642,7 +642,7 @@
                                                         <div style="min-height: 100px;">
                                                             <div style="margin-top: 20px;">
                                                                 <div class="pull-left text-left" style="line-height: .5;">
-                                                                    <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto">
+                                                                    <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">          
                                                                 </div>
                                                                 <div class="pull-right text-right" style="line-height: .5">
                                                                     <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
@@ -1360,12 +1360,22 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
-                                                                    <h5 class="title-quote size-14px">Origin</h5>
-                                                                    {!! Form::textarea('term_orig', $quote->term_orig, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                   
+                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
                                                                 </div>
-                                                                <div>
-                                                                    <h5 class="title-quote size-14px">Destination</h5>
-                                                                    {!! Form::textarea('term_dest', $quote->term_dest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <label class="size-14px">
+                                                                    <b>Payment conditions</b>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <br>
+                                                                <div class="" style="margin-bottom:40px;">
+                                                                    {!! Form::textarea('payment_conditions', $user->companyUser->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>

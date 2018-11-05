@@ -564,7 +564,7 @@
                                                             </a>
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 ol-xs-12">
-                                                            <label>Client</label>
+                                                            <label>Contact</label>
                                                             {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control contact_id','required'=>true]) }}<br><br>
                                                             <a  class="btn btn-sm btn-primary m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
                                                                 <span style="color: white;">
@@ -1007,12 +1007,21 @@
                                                         <div class="col-lg-12">
                                                             <br>
                                                             <div class="" style="margin-bottom:40px;">
-                                                                <h5 class="title-quote size-14px">Origin</h5>
-                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control m-input','id'=>'terms_and_conditions']) !!}
                                                             </div>
-                                                            <div class="">
-                                                                <h5 class="title-quote size-14px">Destination</h5>
-                                                                {!! Form::textarea('term_dest', null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'destination_terms']) !!}
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <label class="size-14px">
+                                                                <b>Payment conditions</b>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <br>
+                                                            <div class="" style="margin-bottom:40px;">
+                                                                {!! Form::textarea('payment_conditions', null, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control m-input','id'=>'payment_conditions']) !!}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1104,7 +1113,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
             @else

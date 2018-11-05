@@ -282,12 +282,161 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
             </div>
             <div class="modal-body">
 
-               <div class="form-group">
-                  <label for="recipient-name" class="form-control-label">
-                     Single File Upload:
-                  </label>
-                  {!!Form::file('file',['id'=>'','required'])!!}
+               <br>
+               <div class="form-group m-form__group row">
+                  <div class="col-3">
+                     <label for="recipient-name" class="form-control-label">
+                        <b> Single File Upload: </b>
+                     </label>
+                  </div>
+                  <div class="col-4">
+                     {!!Form::file('file',['id'=>'','required'])!!}
+                  </div>
                </div>
+               <br>
+               <hr>
+               <br>
+               <div class="form-group m-form__group row">
+                  <div class="col-lg-2"><b>Data:</b></div>
+
+                  <div class="col-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="Datftynor" id="fortynorchk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Includes 40'NOR Column
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+
+                  <div class="col-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="Datftyfive" id="fortyfivechk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Includes 45 Column
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+                  <div class="col-lg-2"></div>
+                  <div class="col-lg-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="DatCar" id="carrierchk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Carrier Not Included
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                     <div class="col-form-label" hidden="hidden" id="carrierinp">
+                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group m-form__group row"  id="divvaluescurren">
+                  <div class="col-2"></div>
+                  <div class="col-lg-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-radio m-radio--brand m-radio--check-bold">
+                              <input name="valuesCurrency" value="1"  type="radio" >
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Values Only
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+                  <div class="col-lg-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-radio m-radio--brand m-radio--check-bold">
+                              <input name="valuesCurrency" value="2"  type="radio" checked>
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Values With Currency
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                  </div>
+                  <div class="col-2"></div>
+                  <div class="col-lg-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="DatOri" id="originchk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Origin Port Not Included
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                     <div class="col-form-label" id="origininp" hidden="hidden" >
+                        {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
+                     </div>
+                  </div>
+                  
+                  <div class="col-lg-5">
+                     <label class="m-option">
+                        <span class="m-option__control">
+                           <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                              <input name="DatDes" id="destinychk" type="checkbox">
+                              <span></span>
+                           </span>
+                        </span>
+                        <span class="m-option__label">
+                           <span class="m-option__head">
+                              <span class="m-option__title">
+                                 Destiny Port Not Included
+                              </span>
+                           </span>
+                        </span>
+                     </label>
+                     <div class="col-form-label" id="destinyinp" hidden="hidden" >
+                        {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                     </div>
+                  </div>
+               </div>
+
+
                {!!Form::hidden('contract_id',$id,['id'=>''])!!}
 
 
@@ -431,6 +580,7 @@ Load
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/editcontracts.js"></script>
+<script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 <script>                 
    $(function() {
 
@@ -452,30 +602,6 @@ Load
             {data: 'currency', name: 'currency'},
             {data: 'options', name: 'options'}
          ],
-
-
-
-         buttons: [
-            {
-               extend: 'copyHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'excelHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'pdfHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            }
-         ]
-
 
       });
 

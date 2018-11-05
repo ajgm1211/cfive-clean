@@ -266,6 +266,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
    Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
    Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
+   Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
