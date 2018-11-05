@@ -96,6 +96,7 @@ class CompanyController extends Controller
         $company->company_user_id = \Auth::user()->company_user_id;
         $company->owner = \Auth::user()->id;
         $company->pdf_language = $request->pdf_language;
+        $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
             $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
         }
@@ -190,6 +191,7 @@ class CompanyController extends Controller
         $company->email = $request->email;
         $company->tax_number = $request->tax_number;
         $company->pdf_language = $request->pdf_language;
+        $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
             $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
         }
