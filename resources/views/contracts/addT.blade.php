@@ -115,8 +115,8 @@ $validation_expire = 'Please enter validity date';
                 <tbody>
 
                   <tr   id='tr_clone'  >
-                    <td width = '15%'>{{ Form::select('origin_id[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control','style' => 'width:100%;']) }}</td>
-                    <td  width = '15%'>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                    <td width = '15%'>{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
+                    <td  width = '15%'>{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
                     <td  width = '10%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
 
                     <td  width = '10%'>{!! Form::number('twuenty[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0']) !!} </td>
@@ -128,8 +128,6 @@ $validation_expire = 'Please enter validity date';
                     <td>-</td>
 
                   </tr>
-
-
 
               </table>
             </div>
@@ -305,9 +303,10 @@ $validation_expire = 'Please enter validity date';
     </div>
     {!! Form::close() !!}
     <table  hidden="true">
-      <tr   id='tclone' hidden="true" >
-        <td>{{ Form::select('origin_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
-        <td>{{ Form::select('destiny_id[]', $harbor,null,['class'=>'col-sm-10 form-control','style' => 'width:100%;']) }}</td>
+      <tr   id='tclone' class="trRate" hidden="true" >
+
+        <td>{{ Form::select(null, $harbor,null,['class'=>'col-sm-10 form-control rateOrig','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
+        <td>{{ Form::select(null, $harbor,null,['class'=>'col-sm-10 form-control rateDest','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
         <td>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
 
         <td>{!! Form::number('twuenty[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
