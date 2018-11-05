@@ -14,12 +14,8 @@
             <div id="company">
                 <div><span class="color-title"><b>Citar:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><span class="color-title"><b>Data de emissão:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
-                @if($quote->validity!='')
-                @php
-                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                $validity = $date->format('M d, Y');
-                @endphp
-                <div><span class="color-title"><b>Válido até: </b></span>{{$validity}}</div>
+                @if($quote->validity!=''&&$quote->since_validity!='')
+                <div><span class="color-title"><b>Validade: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
                 @endif
             </div>
         </header>

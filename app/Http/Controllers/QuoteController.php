@@ -958,18 +958,19 @@ class QuoteController extends Controller
         $airport = Airport::findOrFail($id);
         return $airport;
     }
-    public function getQuoteTerms($id)
+    public function getQuoteTerms($origin_harbor,$destination_harbor)
     {
-        $terms = TermsPort::where('port_id',$id)->with('term')->whereHas('term', function($q)  {
+        $terms = TermsPort::where('port_id',$origin_harbor)->with('term')->whereHas('term', function($q)  {
             $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
         })->get();
 
-        $terms_arr = new Collection();
-        foreach($terms as $item){
-            $terms_arr->push($item->term->import);
-        }
+        $terms_d = TermsPort::where('port_id',$destination_harbor)->with('term')->whereHas('term', function($q)  {
+            $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+        })->get();
+        
+        $merged = $terms->merge($terms_d);
 
-        return json_encode($terms);
+        return json_encode($merged);
     }    
     public function getCompanyPayments($id)
     {
