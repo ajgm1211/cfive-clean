@@ -211,6 +211,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
     Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
+    Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
 
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');

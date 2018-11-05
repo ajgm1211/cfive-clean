@@ -921,7 +921,7 @@ $(document).on('click', '#create-quote', function (e) {
     var myTableDiv = document.getElementById("label_package_loads");
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
-    
+
     $.ajax({
         url: "/quotes/terms/"+origin_harbor,
         dataType: 'json',
@@ -950,7 +950,7 @@ $(document).on('click', '#create-quote', function (e) {
                 }, ],
 
             });
-            
+
             $.each(data, function(key, value) {
                 if(modality==1){
                     $('#terms_and_conditions').html(value.term.import).tinymce({
