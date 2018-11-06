@@ -581,11 +581,16 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-4">
+                                                                    <div class="col-md-12">
                                                                         <br>
                                                                         <label>Validity</label>
+                                                                    </div>
+                                                                    <div class="col-md-4">
                                                                         <div class="input-group date">
-                                                                            {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input','required'=>'true']) !!}
+                                                                            @php
+                                                                            $validity = $quote->since_validity ." / ". $quote->validity;
+                                                                            @endphp
+                                                                            {!! Form::text('validity_date', $validity, ['placeholder' => 'Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text">
                                                                                     <i class="la la-calendar-check-o"></i>
@@ -647,12 +652,8 @@
                                                                 <div class="pull-right text-right" style="line-height: .5">
                                                                     <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                                                     <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
-                                                                    @if($quote->validity!='')
-                                                                    @php
-                                                                    $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                                                                    $validity = $date->format('M d, Y');
-                                                                    @endphp
-                                                                    <p><b>Validity:</b>  Valid up to {{$validity}}</p>
+                                                                    @if($quote->validity!=''&&$quote->since_validity!='')
+                                                                    <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -1360,8 +1361,7 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
-                                                                   
-                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input editor','id'=>'terms_and_conditions_edit']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1375,7 +1375,7 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div class="" style="margin-bottom:40px;">
-                                                                    {!! Form::textarea('payment_conditions', $user->companyUser->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                                                                    {!! Form::textarea('payment_conditions', $quote->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1387,10 +1387,15 @@
                                     <hr>
                                     <div class="form-group m-form__group row">
                                         <div class="row">
-                                            <div class="col-lg-4 col-lg-offset-4">
+                                            <div class="col-lg-6">
                                                 <button type="submit" class="btn btn-primary">
                                                     Update Quote
                                                 </button>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <a href="javascript:history.back()" class="btn btn-danger">
+                                                    Cancel
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

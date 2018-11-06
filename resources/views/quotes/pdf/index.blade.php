@@ -14,12 +14,8 @@
             <div id="company">
                 <div><span class="color-title"><b>Quotation Id:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><span class="color-title"><b>Date of issue:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
-                @if($quote->validity!='')
-                @php
-                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                $validity = $date->format('M d, Y');
-                @endphp
-                <div><span class="color-title"><b>Valid up to: </b></span>{{$validity}}</div>
+                @if($quote->validity!=''&&$quote->since_validity!='')
+                <div><span class="color-title"><b>Validity: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
                 @endif
             </div>
         </header>
@@ -407,33 +403,23 @@
                 </thead>
                 <tbody>
                     @if(isset($terms_all) && $terms_all->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_all as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                        <tr>
+                            <td style="padding:20px;">
+                                @foreach($terms_all as $v)
+                                <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
+                                @endforeach
+                            </td>
+                        </tr>
                     @endif
 
-                    @if($quote->term_orig!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">                                
-                                {!! $quote->term_orig !!}
-                            </span>
-                        </td>
-                    </tr>
-                    @endif
-
-                    @if($quote->term_dest!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">
-                                {!! $quote->term_dest !!}    
-                            </span>
-                        </td>
-                    </tr>
+                    @if($quote->term!='')
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">                                
+                                    {!! $quote->term !!}
+                                </span>
+                            </td>
+                        </tr>
                     @endif
 
                 </tbody>

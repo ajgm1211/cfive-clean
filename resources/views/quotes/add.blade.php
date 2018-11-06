@@ -513,11 +513,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-12">
                                                             <br>
                                                             <label>Validity</label>
+                                                        </div>
+                                                        <div class="col-md-4">
                                                             <div class="input-group date">
-                                                                {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
+                                                                {!! Form::text('validity_date', null, ['placeholder' => 'Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text">
                                                                         <i class="la la-calendar-check-o"></i>
@@ -1007,7 +1009,7 @@
                                                         <div class="col-lg-12">
                                                             <br>
                                                             <div class="" style="margin-bottom:40px;">
-                                                                {!! Form::textarea('term_orig', null, ['placeholder' => 'Please enter your export text','class' => 'form-control m-input','id'=>'terms_and_conditions']) !!}
+                                                                {!! Form::textarea('term', null, ['placeholder' => 'Please enter your export text','class' => 'form-control m-input','id'=>'terms_and_conditions']) !!}
                                                             </div>
                                                         </div>
                                                     </div>

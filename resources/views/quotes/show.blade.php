@@ -54,19 +54,15 @@
                             <div class="m-portlet__head-tools">
                                 <div class="col-md-12" style="margin-top: 20px;">
                                     @if($user->companyUser->logo!='')
-                                        <div class="pull-left text-left" style="line-height: .5;">
-                                            <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
-                                        </div>
+                                    <div class="pull-left text-left" style="line-height: .5;">
+                                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                                    </div>
                                     @endif
                                     <div class="pull-right text-right" style="line-height: .5">
                                         <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
                                         <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
-                                        @if($quote->validity!='')
-                                        @php
-                                        $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                                        $validity = $date->format('M d, Y');
-                                        @endphp
-                                        <p><b>Validity:</b>  Valid up to {{$validity}}</p>
+                                        @if($quote->validity!=''&&$quote->since_validity!='')
+                                        <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -118,10 +114,10 @@
                                 <div class="panel-body">
                                     <span id="origin_input" class="color-blue">
                                         @if($quote->origin_harbor_id!='')
-                                            {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
+                                        {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
                                         @endif
                                         @if($quote->origin_airport_id!='')
-                                            {{$quote->origin_airport->name}}, {{$quote->origin_airport->code}}
+                                        {{$quote->origin_airport->name}}, {{$quote->origin_airport->code}}
                                         @endif
                                     </span>
                                 </div>
@@ -133,10 +129,10 @@
                                 <div class="panel-body">
                                     <span id="destination_input" class="color-blue">
                                         @if($quote->destination_harbor_id!='')
-                                            {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
+                                        {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
                                         @endif
                                         @if($quote->destination_airport_id!='')
-                                            {{$quote->destination_airport->name}}, {{$quote->destination_airport->code}}
+                                        {{$quote->destination_airport->name}}, {{$quote->destination_airport->code}}
                                         @endif                                        
                                     </span>
                                 </div>
@@ -434,15 +430,15 @@
                         <div class="col-md-12">
                             <div class="form-group terms-and-conditions">
                                 @if($quote->type!=3)
-                                    @if(isset($terms_all) && $terms_all->count()>0)
-                                        @foreach($terms_all as $v)
-                                        {!! $quote->modality==1 ? $v->term->export : $v->term->import!!}
-                                        @endforeach
-                                    @endif
-                                    @if(count($quote->term) > 0)                     
-                                      {!! $quote->term !!}         
-                                    @endif
-                        
+                                @if(isset($terms_all) && $terms_all->count()>0)
+                                @foreach($terms_all as $v)
+                                {!! $quote->modality==1 ? $v->term->export : $v->term->import!!}
+                                @endforeach
+                                @endif
+                                @if(count($quote->term) > 0)                     
+                                {!! $quote->term !!}         
+                                @endif
+
                                 @endif
                             </div>
                         </div>
@@ -507,17 +503,15 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 @if(isset($pdf))
-<script>window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");</script>
+    <script>
+        window.open("{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}");
+    </script>
 @endif
 
-
 @if(session('pdf'))
-
-<script>
-
-    window.open('{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}');
-
-</script>
+    <script>
+        window.open('{{ route('quotes.pdf', ['id' => setearRouteKey($quote->id)]) }}');
+    </script>
 @endif
 
 @stop

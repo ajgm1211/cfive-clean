@@ -311,7 +311,7 @@ class QuoteController extends Controller
     {
         $rules = array(
             'pick_up_date' => 'required',
-            'validity' => 'required',
+            'validity_date' => 'required',
             'company_id' => 'required',
             'contact_id' => 'required',
             'type' => 'required',
@@ -343,7 +343,10 @@ class QuoteController extends Controller
             $sum_markup_freight=array_sum($total_markup_freight);
             $sum_markup_destination=array_sum($total_markup_destination);
             $currency = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote' => $company_quote]);
+            $validation = explode('/',$request->validity_date);
+            $since = $validation[0];
+            $until = $validation[1];
+            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote' => $company_quote,'since_validity'=>$since,'validity'=>$until]);
 
             $quote=Quote::create($request->all());
 
@@ -535,7 +538,7 @@ class QuoteController extends Controller
     {
         $rules = array(
             'pick_up_date' => 'required',
-            'validity' => 'required',
+            'validity_date' => 'required',
             'company_id' => 'required',
             'contact_id' => 'required',
             'type' => 'required',
@@ -570,7 +573,10 @@ class QuoteController extends Controller
             $sum_markup_origin=array_sum($total_markup_origin);
             $sum_markup_freight=array_sum($total_markup_freight);
             $sum_markup_destination=array_sum($total_markup_destination);
-            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2,'company_quote'=>$company_quote]);     
+            $validation = explode('/',$request->validity_date);
+            $since = $validation[0];
+            $until = $validation[1];
+            $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2,'company_quote'=>$company_quote,'since_validity'=>$since,'validity'=>$until]);     
 
             $quote=Quote::create($request->all());
 
@@ -913,8 +919,10 @@ class QuoteController extends Controller
         $sum_markup_origin=array_sum($total_markup_origin);
         $sum_markup_freight=array_sum($total_markup_freight);
         $sum_markup_destination=array_sum($total_markup_destination);
-
-        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination]); 
+        $validation = explode('/',$request->validity_date);
+        $since = $validation[0];
+        $until = $validation[1];
+        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until]); 
 
         $quote->update($request->all());
 
@@ -1100,12 +1108,22 @@ class QuoteController extends Controller
             $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
         })->get();
 
-        $terms_arr = new Collection();
-        foreach($terms as $item){
-            $terms_arr->push($item->term->import);
-        }
-
         return json_encode($terms);
+    }     
+
+    public function getQuoteTermsDual($origin_harbor,$destination_harbor)
+    {
+        $terms = TermsPort::where('port_id',$origin_harbor)->with('term')->whereHas('term', function($q)  {
+            $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+        })->get();
+
+        $terms_d = TermsPort::where('port_id',$destination_harbor)->with('term')->whereHas('term', function($q)  {
+            $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+        })->get();
+
+        $merged = $terms->merge($terms_d);
+
+        return json_encode($merged);
     }    
     public function getCompanyPayments($id)
     {
@@ -1387,7 +1405,10 @@ class QuoteController extends Controller
         $sum_markup_origin=array_sum($total_markup_origin);
         $sum_markup_freight=array_sum($total_markup_freight);
         $sum_markup_destination=array_sum($total_markup_destination);
-        $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote'=>$company_quote]);
+        $validation = explode('/',$request->validity_date);
+        $since = $validation[0];
+        $until = $validation[1];        
+        $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote'=>$company_quote,'since_validity'=>$since,'validity'=>$until]);
 
         $quote=Quote::create($request->all());
 
