@@ -162,7 +162,7 @@ class QuoteController extends Controller
             ->editColumn('statusC', function ($colletion) {
                 return '<span class="'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
             })
-            ->editColumn('type', function ($colletion) {
+            ->addColumn('type', function ($colletion) {
 
                 if($colletion['typeid'] == 1){
                     return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">'; 
@@ -171,13 +171,13 @@ class QuoteController extends Controller
                 } else{
                     return  '<img src="/images/plane-blue.svg" class="img img-responsive" width="21">';
                 }
-            })->editColumn('action',function($colletion){
+            })->addColumn('action',function($colletion){
             return 
                 '<button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Importation
+                     Options
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
-                     <a class="dropdown-item m-portlet__nav-link m-btn--hover-accent m-btn--pill" href="/quotes/'.$colletion['idSet'].'">
+                     <a class="dropdown-item" href="/quotes/'.$colletion['idSet'].'">
                         <span>
                            <i class="la la-eye"></i>
                            &nbsp;
@@ -191,7 +191,7 @@ class QuoteController extends Controller
                            Edit
                         </span>
                      </a>
-                     <a href=" quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+                     <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
                         <span>
                            <i class="la la-plus"></i>
                            &nbsp;
