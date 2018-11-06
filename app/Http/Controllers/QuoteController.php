@@ -47,6 +47,9 @@ use App\Airline;
 use App\Mail\SendQuotePdf;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use Yajra\Datatables\Datatables;
+
+
 class QuoteController extends Controller
 {
 
@@ -74,6 +77,139 @@ class QuoteController extends Controller
             $currency_cfg = '';
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
+    }
+
+    public function LoadDatatableIndex(){
+
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }else{
+            $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }
+
+        $companies = Company::pluck('business_name','id');
+        $harbors = Harbor::pluck('display_name','id');
+        $countries = Country::pluck('name','id');
+
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $currency_cfg = Currency::find($company_user->currency_id);
+        }else{
+            $company_user='';
+            $currency_cfg = '';
+        }
+
+        $colletions = collect([]);
+
+        foreach($quotes as $quote){
+            $comquotes      = '---';
+            $businnesnames  = '---';
+            $origin         = '';
+            $destination    = '';
+            $ammount        = '';
+            $markup         = '';
+
+            if(isset($quote->company)){
+                $comquotes      = $quote->company_quote;
+                $businnesnames  = $quote->company->business_name;
+            }
+
+            if($quote->origin_harbor){
+                $origin = $quote->origin_harbor->display_name;
+            } elseif($quote->origin_airport){
+                $origin = $quote->origin_airport->name; 
+            } else {
+                $origin = $quote->origin_address;
+            }
+
+            if($quote->destination_harbor){
+                $destination = $quote->destination_harbor->display_name;
+            } elseif($quote->destination_airport){
+                $destination = $quote->destination_airport->name;
+            } else {
+                $destination = $quote->destination_address;
+            }
+
+            $ammount = $quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination .' '.$quote->currencies->alphacode;
+
+            $markup = $quote->total_markup_origin+$quote->total_markup_freight+$quote->total_markup_destination .' '.$quote->currencies->alphacode;
+
+            $data = [
+                'id'            => $quote->id,
+                'idSet'         => setearRouteKey($quote->id),
+                'status'        => $quote->status->name,
+                'comquotes'     => $comquotes,
+                'client'        => $businnesnames,
+                'created'       => date_format($quote->created_at, 'M d, Y H:i'),
+                'owner'         => $quote->user->name.' '.$quote->user->lastname,
+                'origin'        => $origin,
+                'destination'   => $destination,
+                'ammount'       => $ammount,
+                'markup'        => $markup,
+                'typeid'          => $quote->type,
+                'image'         => $quote->type,
+            ];
+            $colletions->push($data);
+
+        }
+
+        return DataTables::of($colletions)
+            ->editColumn('statusC', function ($colletion) {
+                return '<span class="'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
+            })
+            ->editColumn('type', function ($colletion) {
+
+                if($colletion['typeid'] == 1){
+                    return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">'; 
+                } elseif($colletion['typeid'] == 2){
+                    return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+                } else{
+                    return  '<img src="/images/plane-blue.svg" class="img img-responsive" width="21">';
+                }
+            })->editColumn('action',function($colletion){
+            return 
+                '<button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     Importation
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
+                     <a class="dropdown-item m-portlet__nav-link m-btn--hover-accent m-btn--pill" href="/quotes/'.$colletion['idSet'].'">
+                        <span>
+                           <i class="la la-eye"></i>
+                           &nbsp;
+                           Show
+                        </span>
+                     </a>      
+                     <a href="/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
+                        <span>
+                           <i class="la la-edit"></i>
+                           &nbsp;
+                           Edit
+                        </span>
+                     </a>
+                     <a href=" quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+                        <span>
+                           <i class="la la-plus"></i>
+                           &nbsp;
+                           Duplicate
+                        </span>
+                     </a>
+                     <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+                        <span>
+                           <i class="la la-eraser"></i>
+                           &nbsp;
+                           Delete
+                        </span>
+                     </a>
+                  </div>';
+
+        })
+            ->editColumn('id', 'ID: {{$id}}')->make(true);
+
     }
 
     //Crear cotización manual

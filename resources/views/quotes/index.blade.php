@@ -1,5 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Quotes')
+@section('css')
+@parent
+<link rel="stylesheet" type="text/css" href="/assets/plugins/button-dropdown/css/bootstrap.css">
+<script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+@endsection
 @section('content')
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
@@ -61,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <table class="m-datatable text-center title-quote"  id="html_table" >
+            <table class="table tableData" id="tablequote"  width="100%">
                 <thead>
                     <tr class="title-quote">
                         <th title="Status">
@@ -99,101 +107,8 @@
                         </th>
                     </tr>
                 </thead>
-             <!-- <style>
-                    ul.demo {
-                        list-style-type: none;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .meni * { list-style:none;}
-                    .meni li{ line-height:180%;}
-                    .meni li a{color:#222; text-decoration:none;}
-                    .meni li a:before{ content:"\025b8"; color:#ddd; margin-right:4px;}
-                    .meni input[name="list"] {
-                        position: absolute;
-                        left: -1000em;
-                    }
-                    .meni label:before{ content:"\025b8"; margin-right:4px;}
-                    .meni input:checked ~ label:before{ content:"\025be";}
-                    .meni .interior{
-                        display: none;
-                    }
-                    .meni input:checked ~ ul{display:block;}
-
-
-                </style>-->
                 <tbody>
-                    @foreach ($quotes as $quote)
-                    <tr>
-                        <td><span class="{{$quote->status->name}}"  onclick="AbrirModal('change_status',{{$quote->id}})" style="cursor: pointer;">{{$quote->status->name }}</span></td>
-                        @if(isset($quote->company))
-                        <td>{{$quote->company_quote }}</td>
-                        <td>{{$quote->company->business_name }}</td>
-                        @else
-                        <td>---</td>
-                        @endif
-                        <td>{{ date_format($quote->created_at, 'M d, Y H:i')}}</td>
-                        <td>{!!$quote->user->name.' '.$quote->user->lastname!!}</td>
-                        @if($quote->origin_harbor)
-                        <td>{{$quote->origin_harbor->display_name }}</td>
-                        @elseif($quote->origin_airport)
-                        <td>{{$quote->origin_airport->name }}</td>
-                        @else
-                        <td>{{$quote->origin_address }}</td>
-                        @endif
-                        @if($quote->destination_harbor)
-                        <td>{{$quote->destination_harbor->display_name }}</td>
-                        @elseif($quote->destination_airport)
-                        <td>{{$quote->destination_airport->name }}</td>
-                        @else
-                        <td>{{$quote->destination_address }}</td>
-                        @endif
-                        <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
-                        <td>{{$quote->total_markup_origin+$quote->total_markup_freight+$quote->total_markup_destination}} {{$quote->currencies->alphacode}}</td>
-                        <td>
-                            @if($quote->type==1)
-                            <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
-                            @elseif($quote->type==2)
-                            <img src="{{asset('images/logo-ship-blue.svg')}}" class="img img-responsive" width="25"> 
-                            @else
-                            <img src="{{asset('images/plane-blue.svg')}}" class="img img-responsive" width="21"> 
-                            @endif
-                        </td>
-                        <td>
 
-                            <!--      <ul class="meni">
-<li >
-<input type="checkbox"  name="list" id="{{'nivel1-'.$loop->iteration}}">
-<label class="btn btn-primary" for="{{'nivel1-'.$loop->iteration}}">Acciones</label>
-<ul class="interior">
-<li>
-<a href="#">Primero</a>
-</li>
-<li>
-<a href="#">Segundo</a>
-</li>
-<li>
-<a href="#">Tercero</a>
-</li>
-</ul>
-</li>
-</ul> -->
-
-                            <a href="{{route('quotes.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
-                                <i class="la la-eye"></i>
-                            </a>
-                            <a href="{{route('quotes.edit',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                                <i class="la la-edit"></i>
-                            </a>
-                            <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
-                                <i class="la la-plus"></i>
-                            </a>
-                            <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
-                                <i class="la la-eraser"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    @endforeach
                 </tbody>
             </table>
             <div class="modal fade" id="change_status_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -228,6 +143,8 @@
 
 @section('js')
 @parent
+
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
@@ -260,5 +177,55 @@
         $('#select-origin--2').select2();
         $('#select-destination--2').select2();
     });
+
+    $(function() {
+
+        $('#tablequote').DataTable({
+            ordering: true,
+            searching: true,
+            processing: true,
+            serverSide: true,
+            order: [[ 3, "asc" ],[ 4, "asc" ]],
+            ajax:  "{{ route('quotes.index.datatable') }}",
+            columns: [
+
+                {data: 'statusC', name: 'statusC'},
+                {data: 'comquotes', name: 'comquotes'},
+                {data: 'client', name: 'client'},
+                {data: 'created', name: 'created'},
+                {data: 'owner', name: 'owner'},
+                {data: 'origin', name: 'origin'},
+                {data: 'destination', name: 'destination'},
+                {data: 'ammount', name: 'ammount'},
+                {data: 'markup', name: 'markup'},
+                {data: 'type', name: 'type'},
+                {data: 'action', name: 'action', orderable: false, searchable: false },
+            ] ,
+            "scrollX": true,
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3]
+                    }
+                }
+            ]
+
+
+        });
+    });
+
 </script>
 @stop
