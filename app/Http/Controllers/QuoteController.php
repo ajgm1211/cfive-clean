@@ -208,7 +208,7 @@ class QuoteController extends Controller
                   </div>';
 
         })
-            ->editColumn('id', 'ID: {{$id}}')->make(true);
+            ->editColumn('id', 'ID: {{$id}}')->rawColumns(['action','statusC','type'])->make(true);
 
     }
 
