@@ -388,7 +388,7 @@
             @endif
             @endif
         </main>
-        @if($charges_type==2)
+        @if($charges_type!=1)
         <div class="clearfix details page-break">
             <div class="company">
                 <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
@@ -404,35 +404,24 @@
                 </thead>
                 <tbody>
                     @if(isset($terms_all) && $terms_all->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_all as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                        <tr>
+                            <td style="padding:20px;">
+                                @foreach($terms_all as $v)
+                                <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
+                                @endforeach
+                            </td>
+                        </tr>
                     @endif
 
-                    @if($quote->term_orig!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">                                
-                                {!! $quote->term_orig !!}
-                            </span>
-                        </td>
-                    </tr>
+                    @if($quote->term!='')
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">                                
+                                    {!! $quote->term !!}
+                                </span>
+                            </td>
+                        </tr>
                     @endif
-
-                    @if($quote->term_dest!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">
-                                {!! $quote->term_dest !!}    
-                            </span>
-                        </td>
-                    </tr>
-                    @endif
-
                 </tbody>
             </table>
         </div>
