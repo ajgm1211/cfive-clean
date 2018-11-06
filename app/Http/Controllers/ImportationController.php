@@ -1844,21 +1844,21 @@ class ImportationController extends Controller
 
                         if(empty($read[$requestobj[$twenty]]) != true){ //Primero valido si el campo viene lleno, en caso contrario lo lleno manuelamene
                             $twentyArrBol = true;
-                            $twentyArr      = explode(' ',$read[$requestobj[$twenty]]);
+                            $twentyArr      = explode(' ',trim($read[$requestobj[$twenty]]));
                         } else {
                             $twentyArr = ['0']; 
                         }
 
                         if(empty($read[$requestobj[$forty]]) != true){
                             $fortyArrBol = true;
-                            $fortyArr       = explode(' ',$read[$requestobj[$forty]]);
+                            $fortyArr       = explode(' ',trim($read[$requestobj[$forty]]));
                         } else {
                             $fortyArr = ['0'];
                         }
 
                         if(empty($read[$requestobj[$fortyhc]]) != true){
                             $fortyhcArrBol  = true;
-                            $fortyhcArr     = explode(' ',$read[$requestobj[$fortyhc]]);
+                            $fortyhcArr     = explode(' ',trim($read[$requestobj[$fortyhc]]));
                         } else {
                             $fortyhcArr = ['0'];
                         }
@@ -1868,7 +1868,7 @@ class ImportationController extends Controller
 
                             if(empty($read[$requestobj[$fortynor]]) != true){
                                 $fortynorArrBol  = true;
-                                $fortynorArr     = explode(' ',$read[$requestobj[$fortynor]]);
+                                $fortynorArr     = explode(' ',trim($read[$requestobj[$fortynor]]));
                             } else {
                                 $fortynorArr = ['0'];
                             }
@@ -1879,7 +1879,7 @@ class ImportationController extends Controller
 
                             if(empty($read[$requestobj[$fortyfive]]) != true){
                                 $fortyfiveArrBol  = true;
-                                $fortyfiveArr     = explode(' ',$read[$requestobj[$fortyfive]]);
+                                $fortyfiveArr     = explode(' ',trim($read[$requestobj[$fortyfive]]));
                             } else {
                                 $fortyfiveArr = ['0'];
                             }
