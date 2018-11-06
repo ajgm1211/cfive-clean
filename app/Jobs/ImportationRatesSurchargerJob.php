@@ -598,7 +598,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                   //------------------ CALCULATION TYPE ---------------------------------------------------
                   $calculationvalvaration = '';
-                  if( $read[$requestobj[$CalculationType]] == 'PER_DOC' || $read[$requestobj[$CalculationType]] == 'PER_SHIPMENT'){
+                  if( $read[$requestobj[$CalculationType]] == 'PER_DOC'){
                      $calculationvalvaration = 'Per Shipment';
                   } else if( $read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
                      $calculationvalvaration = 'Per Container';
