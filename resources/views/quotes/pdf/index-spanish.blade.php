@@ -14,12 +14,8 @@
             <div id="company">
                 <div><span class="color-title"><b>Cotización: </b> </span><span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><span class="color-title"><b>Fecha de creación:</b> </span>{{date_format($quote->created_at, 'M d, Y H:i')}}</div>
-                @if($quote->validity!='')
-                @php
-                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                $validity = $date->format('M d, Y');
-                @endphp
-                <div><span class="color-title"><b>Válido hasta: </b></span>{{$validity}}</div>
+                @if($quote->validity!=''&&$quote->since_validity!='')
+                <div><span class="color-title"><b>Validez: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
                 @endif
             </div>
         </header>
@@ -392,7 +388,7 @@
             @endif
             @endif
         </main>
-        @if($charges_type==2)
+        @if($charges_type!=1)
         <div class="clearfix details page-break">
             <div class="company">
                 <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
@@ -408,35 +404,24 @@
                 </thead>
                 <tbody>
                     @if(isset($terms_all) && $terms_all->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_all as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                        <tr>
+                            <td style="padding:20px;">
+                                @foreach($terms_all as $v)
+                                <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
+                                @endforeach
+                            </td>
+                        </tr>
                     @endif
 
-                    @if($quote->term_orig!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">                                
-                                {!! $quote->term_orig !!}
-                            </span>
-                        </td>
-                    </tr>
+                    @if($quote->term!='')
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">                                
+                                    {!! $quote->term !!}
+                                </span>
+                            </td>
+                        </tr>
                     @endif
-
-                    @if($quote->term_dest!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">
-                                {!! $quote->term_dest !!}    
-                            </span>
-                        </td>
-                    </tr>
-                    @endif
-
                 </tbody>
             </table>
         </div>

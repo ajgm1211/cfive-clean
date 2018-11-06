@@ -583,14 +583,14 @@ $(document).on('change', '#modality', function (e) {
     var origin_harbor_id = $('#origin_harbor').val();
     var destination_harbor_id = $('#destination_harbor').val();
     var modality = $('#modality').val();
-    if(origin_harbor_id!=''){
+    if(origin_harbor_id!='' && destination_harbor_id!=''){
         $.ajax({
-            url: "/quotes/terms/"+origin_harbor_id,
+            url: "/quotes/terms/"+origin_harbor_id+"/"+destination_harbor_id,
             dataType: 'json',
             success: function(data) {        
                 $('#terms_box').show();
                 tinymce.init({
-                    selector: "#origin_terms",
+                    selector: "#terms_and_conditions",
                     plugins: [
                         "advlist autolink lists link charmap print preview hr anchor pagebreak",
                         "searchreplace wordcount visualblocks visualchars code fullscreen",
@@ -614,117 +614,17 @@ $(document).on('change', '#modality', function (e) {
                 });
                 $.each(data, function(key, value) {
                     if(modality==1){
-                        $('#origin_terms').html(value.term.export).tinymce({
-                            theme: "modern",
-                        });
+                        terms += value.term.export;
                     }else{
-                        $('#origin_terms').html(value.term.import).tinymce({
-                            theme: "modern",
-                        });                
+                        terms += value.term.import;
                     }
                 });
+                $('#terms_and_conditions').val(terms);
             }
         });
     }
-    if(destination_harbor_id!=''){
-        $.ajax({
-            url: "/quotes/terms/"+destination_harbor_id,
-            dataType: 'json',
-            success: function(data) {        
-                $('#terms_box').show();
-                tinymce.init({
-                    selector: "#origin_terms",
-                    plugins: [
-                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons paste textcolor colorpicker textpattern codesample",
-                        "fullpage toc imagetools help"
-                    ],
-                    toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                    menubar: false,
-                    toolbar_items_size: 'small',
-                    paste_as_text: true,
-                    browser_spellcheck: true,
-                    statusbar: false,
-                    height: 200,
-
-                    style_formats: [{
-                        title: 'Bold text',
-                        inline: 'b'
-                    }, ],
-
-                });
-                $.each(data, function(key, value) {
-                    if(modality==1){
-                        $('#destination_terms').html(value.term.export).tinymce({
-                            theme: "modern",
-                        });
-                    }else{
-                        $('#destination_terms').html(value.term.import).tinymce({
-                            theme: "modern",
-                        });
-
-                    }
-                });
-            }
-        });        
-    }
+    
 });
-
-$(document).on('change', '#origin_harbor', function (e) {
-
-});
-
-$(document).on('change', '#destination_harbor', function (e) {
-    var harbor_id = $('#destination_harbor').val();
-    $.ajax({
-        url: "/quotes/terms/"+harbor_id,
-        dataType: 'json',
-        success: function(data) {        
-            $('#terms_box').show();
-            tinymce.init({
-                selector: "#destination_terms",
-                plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
-                ],
-                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                menubar: false,
-                toolbar_items_size: 'small',
-                paste_as_text: true,
-                browser_spellcheck: true,
-                statusbar: false,
-                height: 200,
-
-                style_formats: [{
-                    title: 'Bold text',
-                    inline: 'b'
-                }, ],
-
-            });            
-            $.each(data, function(key, value) {
-                if(modality==1){
-                    $('#destination_terms').html(value.term.export).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#destination_terms').val(value.term.export);
-                }else{
-                    $('#destination_terms').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#destination_terms').val(value.term.import);                    
-                }                
-            });
-        }
-    });
-});
-
 
 $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
@@ -921,9 +821,10 @@ $(document).on('click', '#create-quote', function (e) {
     var myTableDiv = document.getElementById("label_package_loads");
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
-    
+    var terms = '';
+
     $.ajax({
-        url: "/quotes/terms/"+origin_harbor,
+        url: "/quotes/terms/"+origin_harbor+"/"+destination_harbor,
         dataType: 'json',
         success: function(data) {        
             $('#terms_box').show();
@@ -950,18 +851,15 @@ $(document).on('click', '#create-quote', function (e) {
                 }, ],
 
             });
-            
             $.each(data, function(key, value) {
+
                 if(modality==1){
-                    $('#terms_and_conditions').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
+                    terms += value.term.export;
                 }else{
-                    $('#terms_and_conditions').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });                  
+                    terms += value.term.import;
                 }
             });
+            $('#terms_and_conditions').val(terms);
         }
     });
 
@@ -1325,7 +1223,7 @@ $( document ).ready(function() {
 
                     });
                     //alert(data.payment_conditions);
-                    $('#payment_conditions').html(data.payment_conditions).tinymce({
+                    $('#payment_conditions').val(data.payment_conditions).tinymce({
                         theme: "modern",
                     });
                 }
