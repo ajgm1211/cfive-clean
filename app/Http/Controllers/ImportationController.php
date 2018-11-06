@@ -2970,25 +2970,49 @@ class ImportationController extends Controller
                             if($curreExiBol == true){
                                 $currencyVal = $read[$requestobj[$currency]];
                             }
+
                             if( $twentyExiBol == true){
-                                $twentyVal = $read[$requestobj[$twenty]];
+                                if(empty($read[$requestobj[$twenty]]) == true){
+                                    $twentyVal = '0';
+                                } else{
+                                    $twentyVal = $read[$requestobj[$twenty]];
+
+                                }
                             }
+
                             if( $fortyExiBol == true){
-                                $fortyVal = $read[$requestobj[$forty]];
+                                if(empty($read[$requestobj[$forty]]) == true){
+                                    $fortyVal = '0';
+                                } else{
+                                    $fortyVal = $read[$requestobj[$forty]];
+                                }
                             }
+
                             if( $fortyhcExiBol == true){
-                                $fortyhcVal = $read[$requestobj[$fortyhc]];
+                                if(empty($read[$requestobj[$fortyhc]]) == true){
+                                    $fortyhcVal = '0';
+                                } else{                                  
+                                    $fortyhcVal = $read[$requestobj[$fortyhc]];
+                                }
                             }
 
                             if( $fortynorExiBol == true){
                                 if($statusexistfortynor == 1){
-                                    $fortynorVal = $read[$requestobj[$fortynor]];
+                                    if(empty($read[$requestobj[$fortynor]]) == true){
+                                        $fortynorVal = '0';
+                                    } else {
+                                        $fortynorVal = $read[$requestobj[$fortynor]];
+                                    }
                                 }
                             }
 
                             if( $fortyfiveExiBol == true){
                                 if($statusexistfortyfive == 1){
-                                    $fortyfiveVal = $read[$requestobj[$fortyfive]];
+                                    if(empty($read[$requestobj[$fortyfive]]) == true){
+                                        $fortyfiveVal = '0';
+                                    } else {
+                                        $fortyfiveVal = $read[$requestobj[$fortyfive]];
+                                    }
                                 }
                             }
 
@@ -3869,20 +3893,20 @@ class ImportationController extends Controller
                         }
                     }
                     $i++;
-                                    if($errors > 0){
-                    $requestobj->session()->flash('message.content', 'You successfully added the surcharge ');
-                    $requestobj->session()->flash('message.nivel', 'danger');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                    if($errors == 1){
-                        $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
-                    }else{
-                        $requestobj->session()->flash('message.content', $errors.' Surcharge did not load correctly');
+                    if($errors > 0){
+                        $requestobj->session()->flash('message.content', 'You successfully added the surcharge ');
+                        $requestobj->session()->flash('message.nivel', 'danger');
+                        $requestobj->session()->flash('message.title', 'Well done!');
+                        if($errors == 1){
+                            $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
+                        }else{
+                            $requestobj->session()->flash('message.content', $errors.' Surcharge did not load correctly');
+                        }
                     }
-                }
-                else{
-                    $requestobj->session()->flash('message.nivel', 'success');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                }
+                    else{
+                        $requestobj->session()->flash('message.nivel', 'success');
+                        $requestobj->session()->flash('message.title', 'Well done!');
+                    }
                 }
                 LocalCharge::onlyTrashed()->where('contract_id','=',$contract_id)
                     ->forceDelete();
