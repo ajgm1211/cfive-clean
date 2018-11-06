@@ -1844,21 +1844,21 @@ class ImportationController extends Controller
 
                         if(empty($read[$requestobj[$twenty]]) != true){ //Primero valido si el campo viene lleno, en caso contrario lo lleno manuelamene
                             $twentyArrBol = true;
-                            $twentyArr      = explode(' ',$read[$requestobj[$twenty]]);
+                            $twentyArr      = explode(' ',trim($read[$requestobj[$twenty]]));
                         } else {
                             $twentyArr = ['0']; 
                         }
 
                         if(empty($read[$requestobj[$forty]]) != true){
                             $fortyArrBol = true;
-                            $fortyArr       = explode(' ',$read[$requestobj[$forty]]);
+                            $fortyArr       = explode(' ',trim($read[$requestobj[$forty]]));
                         } else {
                             $fortyArr = ['0'];
                         }
 
                         if(empty($read[$requestobj[$fortyhc]]) != true){
                             $fortyhcArrBol  = true;
-                            $fortyhcArr     = explode(' ',$read[$requestobj[$fortyhc]]);
+                            $fortyhcArr     = explode(' ',trim($read[$requestobj[$fortyhc]]));
                         } else {
                             $fortyhcArr = ['0'];
                         }
@@ -1868,7 +1868,7 @@ class ImportationController extends Controller
 
                             if(empty($read[$requestobj[$fortynor]]) != true){
                                 $fortynorArrBol  = true;
-                                $fortynorArr     = explode(' ',$read[$requestobj[$fortynor]]);
+                                $fortynorArr     = explode(' ',trim($read[$requestobj[$fortynor]]));
                             } else {
                                 $fortynorArr = ['0'];
                             }
@@ -1879,7 +1879,7 @@ class ImportationController extends Controller
 
                             if(empty($read[$requestobj[$fortyfive]]) != true){
                                 $fortyfiveArrBol  = true;
-                                $fortyfiveArr     = explode(' ',$read[$requestobj[$fortyfive]]);
+                                $fortyfiveArr     = explode(' ',trim($read[$requestobj[$fortyfive]]));
                             } else {
                                 $fortyfiveArr = ['0'];
                             }
@@ -2970,25 +2970,49 @@ class ImportationController extends Controller
                             if($curreExiBol == true){
                                 $currencyVal = $read[$requestobj[$currency]];
                             }
+
                             if( $twentyExiBol == true){
-                                $twentyVal = $read[$requestobj[$twenty]];
+                                if(empty($read[$requestobj[$twenty]]) == true){
+                                    $twentyVal = '0';
+                                } else{
+                                    $twentyVal = $read[$requestobj[$twenty]];
+
+                                }
                             }
+
                             if( $fortyExiBol == true){
-                                $fortyVal = $read[$requestobj[$forty]];
+                                if(empty($read[$requestobj[$forty]]) == true){
+                                    $fortyVal = '0';
+                                } else{
+                                    $fortyVal = $read[$requestobj[$forty]];
+                                }
                             }
+
                             if( $fortyhcExiBol == true){
-                                $fortyhcVal = $read[$requestobj[$fortyhc]];
+                                if(empty($read[$requestobj[$fortyhc]]) == true){
+                                    $fortyhcVal = '0';
+                                } else{                                  
+                                    $fortyhcVal = $read[$requestobj[$fortyhc]];
+                                }
                             }
 
                             if( $fortynorExiBol == true){
                                 if($statusexistfortynor == 1){
-                                    $fortynorVal = $read[$requestobj[$fortynor]];
+                                    if(empty($read[$requestobj[$fortynor]]) == true){
+                                        $fortynorVal = '0';
+                                    } else {
+                                        $fortynorVal = $read[$requestobj[$fortynor]];
+                                    }
                                 }
                             }
 
                             if( $fortyfiveExiBol == true){
                                 if($statusexistfortyfive == 1){
-                                    $fortyfiveVal = $read[$requestobj[$fortyfive]];
+                                    if(empty($read[$requestobj[$fortyfive]]) == true){
+                                        $fortyfiveVal = '0';
+                                    } else {
+                                        $fortyfiveVal = $read[$requestobj[$fortyfive]];
+                                    }
                                 }
                             }
 
@@ -3869,20 +3893,20 @@ class ImportationController extends Controller
                         }
                     }
                     $i++;
-                                    if($errors > 0){
-                    $requestobj->session()->flash('message.content', 'You successfully added the surcharge ');
-                    $requestobj->session()->flash('message.nivel', 'danger');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                    if($errors == 1){
-                        $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
-                    }else{
-                        $requestobj->session()->flash('message.content', $errors.' Surcharge did not load correctly');
+                    if($errors > 0){
+                        $requestobj->session()->flash('message.content', 'You successfully added the surcharge ');
+                        $requestobj->session()->flash('message.nivel', 'danger');
+                        $requestobj->session()->flash('message.title', 'Well done!');
+                        if($errors == 1){
+                            $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
+                        }else{
+                            $requestobj->session()->flash('message.content', $errors.' Surcharge did not load correctly');
+                        }
                     }
-                }
-                else{
-                    $requestobj->session()->flash('message.nivel', 'success');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                }
+                    else{
+                        $requestobj->session()->flash('message.nivel', 'success');
+                        $requestobj->session()->flash('message.title', 'Well done!');
+                    }
                 }
                 LocalCharge::onlyTrashed()->where('contract_id','=',$contract_id)
                     ->forceDelete();
