@@ -160,7 +160,7 @@ class QuoteController extends Controller
 
     return DataTables::of($colletions)
       ->editColumn('statusC', function ($colletion) {
-        return '<span class="'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
+        return '<span class="Status_'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
       })
       ->addColumn('type', function ($colletion) {
 
