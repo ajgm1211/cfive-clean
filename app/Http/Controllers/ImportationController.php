@@ -2222,7 +2222,7 @@ class ImportationController extends Controller
 
                         //------------------ CALCULATION TYPE ---------------------------------------------------
                         $calculationvalvaration = '';
-                        if( $read[$requestobj[$CalculationType]] == 'PER_DOC'){
+                        if( $read[$requestobj[$CalculationType]] == 'PER_DOC' || $read[$requestobj[$CalculationType]] == 'PER_SHIPMENT'){
                             $calculationvalvaration = 'Per Shipment';
                         } else if( $read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
                             $calculationvalvaration = 'Per Container';
