@@ -587,17 +587,10 @@
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="input-group date">
-                                                                            {!! Form::text('since_validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'From','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
-                                                                            <div class="input-group-append">
-                                                                                <span class="input-group-text">
-                                                                                    <i class="la la-calendar-check-o"></i>
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="input-group date">
-                                                                            {!! Form::text('validity', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Until','class' => 'form-control m-input validity','required'=>'true','autocomplete'=>'off']) !!}
+                                                                            @php
+                                                                            $validity = $quote->since_validity ." / ". $quote->validity;
+                                                                            @endphp
+                                                                            {!! Form::text('validity_date', $validity, ['placeholder' => 'Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text">
                                                                                     <i class="la la-calendar-check-o"></i>
@@ -1368,8 +1361,7 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div style="margin-bottom:40px;">
-
-                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'origin_terms']) !!}
+                                                                    {!! Form::textarea('term', $quote->term, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input editor','id'=>'terms_and_conditions_edit']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1383,7 +1375,7 @@
                                                             <div class="col-lg-12">
                                                                 <br>
                                                                 <div class="" style="margin-bottom:40px;">
-                                                                    {!! Form::textarea('payment_conditions', $user->companyUser->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                                                                    {!! Form::textarea('payment_conditions', $quote->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1395,10 +1387,15 @@
                                     <hr>
                                     <div class="form-group m-form__group row">
                                         <div class="row">
-                                            <div class="col-lg-4 col-lg-offset-4">
+                                            <div class="col-lg-6">
                                                 <button type="submit" class="btn btn-primary">
                                                     Update Quote
                                                 </button>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <a href="javascript:history.back()" class="btn btn-danger">
+                                                    Cancel
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

@@ -403,33 +403,23 @@
                 </thead>
                 <tbody>
                     @if(isset($terms_all) && $terms_all->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_all as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                        <tr>
+                            <td style="padding:20px;">
+                                @foreach($terms_all as $v)
+                                <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
+                                @endforeach
+                            </td>
+                        </tr>
                     @endif
 
-                    @if($quote->term_orig!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">                                
-                                {!! $quote->term_orig !!}
-                            </span>
-                        </td>
-                    </tr>
-                    @endif
-
-                    @if($quote->term_dest!='')
-                    <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">
-                                {!! $quote->term_dest !!}    
-                            </span>
-                        </td>
-                    </tr>
+                    @if($quote->term!='')
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">                                
+                                    {!! $quote->term !!}
+                                </span>
+                            </td>
+                        </tr>
                     @endif
 
                 </tbody>
