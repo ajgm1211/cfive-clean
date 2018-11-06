@@ -24,7 +24,7 @@ class ProcessLogo implements ShouldQueue
   public function __construct($id,$name)
   {
     $this->id  = $id;
-    $this->name  = $name;
+    $this->name = $name;
   }
 
   /**
@@ -39,10 +39,10 @@ class ProcessLogo implements ShouldQueue
     $user = User::find($this->id);
     $file  =$user->companyUser->logo;
     $s3 = \Storage::disk('s3_upload');
-    $filePath = '/logos/';
+    $filePath = $this->name;
+    
     $file = \Storage::disk('image')->get($file); 
-    $imagen =  response($file, 200)->header('Content-Type', 'image/jpeg');
-    $s3->put($filePath, $imagen, 'public');
+    $s3->put($filePath, $file, 'public');
 
   }
 }

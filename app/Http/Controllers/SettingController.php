@@ -26,6 +26,7 @@ use App\TermAndCondition;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
+use App\Jobs\ProcessLogo;
 
 class SettingController extends Controller
 {
@@ -67,12 +68,19 @@ class SettingController extends Controller
       // Cambiar de tamaño
       //$image->resize(300,500);
       // Guardar
-
+      /*
       $name = $file->getClientOriginalName();
       $s3 = \Storage::disk('s3_upload');
       $filePath = '/logos/' . $name;
       $s3->put($filePath, file_get_contents($file), 'public');
+
+      */
       $image->save($path.$file->getClientOriginalName());
+
+      ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
+
+
+
     }
 
     if(!$request->company_id){
