@@ -99,29 +99,6 @@
                         </th>
                     </tr>
                 </thead>
-             <!-- <style>
-                    ul.demo {
-                        list-style-type: none;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .meni * { list-style:none;}
-                    .meni li{ line-height:180%;}
-                    .meni li a{color:#222; text-decoration:none;}
-                    .meni li a:before{ content:"\025b8"; color:#ddd; margin-right:4px;}
-                    .meni input[name="list"] {
-                        position: absolute;
-                        left: -1000em;
-                    }
-                    .meni label:before{ content:"\025b8"; margin-right:4px;}
-                    .meni input:checked ~ label:before{ content:"\025be";}
-                    .meni .interior{
-                        display: none;
-                    }
-                    .meni input:checked ~ ul{display:block;}
-
-
-                </style>-->
                 <tbody>
                     @foreach ($quotes as $quote)
                     <tr>
@@ -160,26 +137,7 @@
                             @endif
                         </td>
                         <td>
-
-                            <!--      <ul class="meni">
-<li >
-<input type="checkbox"  name="list" id="{{'nivel1-'.$loop->iteration}}">
-<label class="btn btn-primary" for="{{'nivel1-'.$loop->iteration}}">Acciones</label>
-<ul class="interior">
-<li>
-<a href="#">Primero</a>
-</li>
-<li>
-<a href="#">Segundo</a>
-</li>
-<li>
-<a href="#">Tercero</a>
-</li>
-</ul>
-</li>
-</ul> -->
-
-                            <a href="{{route('quotes.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
+                            <a href="{{route('quotes.show',setearRouteKey($quote->id))}}" class=" m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
                                 <i class="la la-eye"></i>
                             </a>
                             <a href="{{route('quotes.edit',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
