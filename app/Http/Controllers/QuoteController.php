@@ -159,56 +159,56 @@ class QuoteController extends Controller
     }
 
     return DataTables::of($colletions)
-      ->editColumn('statusC', function ($colletion) {
-        return '<span class="'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
-      })
-      ->addColumn('type', function ($colletion) {
+    ->editColumn('statusC', function ($colletion) {
+      return '<span class="'.$colletion['status'].'"  onclick="AbrirModal(\'change_status\','.$colletion['id'].')" style="cursor: pointer;">'.$colletion['status'].'</span>';
+    })
+    ->addColumn('type', function ($colletion) {
 
-        if($colletion['typeid'] == 1){
-          return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">'; 
-        } elseif($colletion['typeid'] == 2){
-          return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-        } else{
-          return  '<img src="/images/plane-blue.svg" class="img img-responsive" width="21">';
-        }
-      })->addColumn('action',function($colletion){
+      if($colletion['typeid'] == 1){
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">'; 
+      } elseif($colletion['typeid'] == 2){
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      } else{
+        return  '<img src="/images/plane-blue.svg" class="img img-responsive" width="21">';
+      }
+    })->addColumn('action',function($colletion){
       return 
-        '<button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Options
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
-                     <a class="dropdown-item" href="/quotes/'.$colletion['idSet'].'">
-                        <span>
-                           <i class="la la-eye"></i>
-                           &nbsp;
-                           Show
-                        </span>
-                     </a>      
-                     <a href="/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
-                        <span>
-                           <i class="la la-edit"></i>
-                           &nbsp;
-                           Edit
-                        </span>
-                     </a>
-                     <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
-                        <span>
-                           <i class="la la-plus"></i>
-                           &nbsp;
-                           Duplicate
-                        </span>
-                     </a>
-                     <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
-                        <span>
-                           <i class="la la-eraser"></i>
-                           &nbsp;
-                           Delete
-                        </span>
-                     </a>
-                  </div>';
+      '<button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
+      <a class="dropdown-item" href="/quotes/'.$colletion['idSet'].'">
+      <span>
+      <i class="la la-eye"></i>
+      &nbsp;
+      Show
+      </span>
+      </a>      
+      <a href="/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
+      <span>
+      <i class="la la-edit"></i>
+      &nbsp;
+      Edit
+      </span>
+      </a>
+      <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+      <span>
+      <i class="la la-plus"></i>
+      &nbsp;
+      Duplicate
+      </span>
+      </a>
+      <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+      <span>
+      <i class="la la-eraser"></i>
+      &nbsp;
+      Delete
+      </span>
+      </a>
+      </div>';
 
     })
-      ->editColumn('id', 'ID: {{$id}}')->rawColumns(['action','statusC','type'])->make(true);
+    ->editColumn('id', 'ID: {{$id}}')->rawColumns(['action','statusC','type'])->make(true);
 
   }
 
@@ -302,7 +302,7 @@ class QuoteController extends Controller
     $incoterm = Incoterm::pluck('name','id');
 
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
 
   }
 
@@ -578,9 +578,14 @@ class QuoteController extends Controller
       $sum_markup_origin=array_sum($total_markup_origin);
       $sum_markup_freight=array_sum($total_markup_freight);
       $sum_markup_destination=array_sum($total_markup_destination);
-      $validation = explode('/',$request->validity_date);
-      $since = $validation[0];
-      $until = $validation[1];
+      if(isset($request->validity_date)){
+        $validation = explode('/',$request->validity_date);
+        $since = $validation[0];
+        $until = $validation[1];
+      }else{
+        $since = $request->validity;
+        $until = $request->since_validity;
+      }
       $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'status_quote_id'=>2,'company_quote'=>$company_quote,'since_validity'=>$since,'validity'=>$until]);     
 
       $quote=Quote::create($request->all());
@@ -857,8 +862,8 @@ class QuoteController extends Controller
       }
     }
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'pdf'=>$pdf,'terms_all'=>$terms_all]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'pdf'=>$pdf,'terms_all'=>$terms_all]);
   }
 
   public function show($id)
@@ -909,8 +914,8 @@ class QuoteController extends Controller
     }
 
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all]);
+      'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
+      'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all]);
   }
 
   public function update(Request $request, $id)
@@ -1126,9 +1131,15 @@ class QuoteController extends Controller
       $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
     })->get();
 
-    $merged = $terms->merge($terms_d);
+    $port_all = harbor::where('name','ALL')->first();
+    $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+    })->get(); 
 
-    return json_encode($merged);
+    $merged = $terms->merge($terms_d);
+    $merge_all = $merged->merge($terms_all);
+
+    return json_encode($merge_all);
   }    
   public function getCompanyPayments($id)
   {
@@ -1410,9 +1421,14 @@ class QuoteController extends Controller
     $sum_markup_origin=array_sum($total_markup_origin);
     $sum_markup_freight=array_sum($total_markup_freight);
     $sum_markup_destination=array_sum($total_markup_destination);
-    $validation = explode('/',$request->validity_date);
-    $since = $validation[0];
-    $until = $validation[1];        
+    if(isset($request->validity_date)){
+      $validation = explode('/',$request->validity_date);
+      $since = $validation[0];
+      $until = $validation[1];
+    }else{
+      $since = $request->validity;
+      $until = $request->since_validity;
+    }       
     $request->request->add(['owner' => \Auth::id(),'company_user_id'=>\Auth::user()->company_user_id,'currency_id'=>$currency->currency_id,'total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'company_quote'=>$company_quote,'since_validity'=>$since,'validity'=>$until]);
 
     $quote=Quote::create($request->all());
