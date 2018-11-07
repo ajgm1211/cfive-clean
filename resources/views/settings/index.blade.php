@@ -42,7 +42,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="address">Address</label>
-                                        <textarea class="form-control" name="address"  placeholder="Company's address" cols="4" required></textarea>
+                                        <textarea class="form-control" name="address" id="address" placeholder="Company's address" cols="4" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -89,7 +89,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="address">Address</label>
-                                        <textarea class="form-control" name="address" cols="4" required>{{$company->companyUser->address}}</textarea>
+                                        <textarea class="form-control" name="address" id="address" cols="4" required>{{$company->companyUser->address}}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
