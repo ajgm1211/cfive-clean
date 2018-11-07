@@ -75,7 +75,6 @@ All
                   </div>
                </div>
                <div class="col-xl-6 order-1 order-xl-2 m--align-right">
-
                   <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
                      <span>
                         <i class="la la-user"></i>
@@ -86,8 +85,6 @@ All
                      </span>
                   </button>
                   <div class="m-separator m-separator--dashed d-xl-none"></div>
-
-
                   <button class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                      Importation
                   </button>
@@ -114,7 +111,6 @@ All
                         </span>
                      </a>
                   </div>
-
                </div>
             </div>
          </div>

@@ -2006,11 +2006,6 @@ pre code {
   opacity: 1;
 }
 
-.form-control:-ms-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
 .form-control::-ms-input-placeholder {
   color: #6c757d;
   opacity: 1;
@@ -9462,13 +9457,13 @@ Plugin URI: http://manos.malihu.gr/jquery-custom-content-scroller
 */
 /*
 CONTENTS:
-	1. BASIC STYLE - Plugin's basic/essential CSS properties (normally, should not be edited).
-	2. VERTICAL SCROLLBAR - Positioning and dimensions of vertical scrollbar.
-	3. HORIZONTAL SCROLLBAR - Positioning and dimensions of horizontal scrollbar.
-	4. VERTICAL AND HORIZONTAL SCROLLBARS - Positioning and dimensions of 2-axis scrollbars.
-	5. TRANSITIONS - CSS3 transitions for hover events, auto-expanded and auto-hidden scrollbars.
-	6. SCROLLBAR COLORS, OPACITY AND BACKGROUNDS
-		6.1 THEMES - Scrollbar colors, opacity, dimensions, backgrounds etc. via ready-to-use themes.
+1. BASIC STYLE - Plugin's basic/essential CSS properties (normally, should not be edited).
+2. VERTICAL SCROLLBAR - Positioning and dimensions of vertical scrollbar.
+3. HORIZONTAL SCROLLBAR - Positioning and dimensions of horizontal scrollbar.
+4. VERTICAL AND HORIZONTAL SCROLLBARS - Positioning and dimensions of 2-axis scrollbars.
+5. TRANSITIONS - CSS3 transitions for hover events, auto-expanded and auto-hidden scrollbars.
+6. SCROLLBAR COLORS, OPACITY AND BACKGROUNDS
+6.1 THEMES - Scrollbar colors, opacity, dimensions, backgrounds etc. via ready-to-use themes.
 */
 /*
 ------------------------------------------------------------------------------------------------------------------------
@@ -9637,6 +9632,42 @@ CONTENTS:
   background-color: #ed6b75 !important;
   color: #fff !important;
   padding: 7px !important;
+}
+
+.Status_Negotiated {
+  background-color: #659be0 !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.Status_Sent {
+  background-color: #031B4E !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.Status_Draft {
+  background-color: #bac3d0 !important;
+  color: #1d3a6e !important;
+  padding: 7px !important;
+  font-size: 12px;
+}
+
+.Status_Win {
+  background-color: #26A69A !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+.Status_Lost {
+  background-color: #ed6b75 !important;
+  color: #fff !important;
+  padding: 7px !important;
+}
+
+#tablequote > span {
+  font-size: 12px !important;
+  color: #1d3a6e !important;
 }
 
 /*
@@ -9960,10 +9991,10 @@ yx-axis
 ------------------------------------------------------------------------------------------------------------------------
 */
 /*
-	----------------------------------------
-	6.1 THEMES
-	----------------------------------------
-	*/
+----------------------------------------
+6.1 THEMES
+----------------------------------------
+*/
 /* default theme ("light") */
 .mCSB_scrollTools {
   opacity: 0.75;
@@ -10033,37 +10064,37 @@ yx-axis
 .mCSB_scrollTools .mCSB_buttonUp {
   background-position: 0 0;
   /*
-		sprites locations
-		light: 0 0, -16px 0, -32px 0, -48px 0, 0 -72px, -16px -72px, -32px -72px
-		dark: -80px 0, -96px 0, -112px 0, -128px 0, -80px -72px, -96px -72px, -112px -72px
-		*/
+  sprites locations
+  light: 0 0, -16px 0, -32px 0, -48px 0, 0 -72px, -16px -72px, -32px -72px
+  dark: -80px 0, -96px 0, -112px 0, -128px 0, -80px -72px, -96px -72px, -112px -72px
+  */
 }
 
 .mCSB_scrollTools .mCSB_buttonDown {
   background-position: 0 -20px;
   /*
-		sprites locations
-		light: 0 -20px, -16px -20px, -32px -20px, -48px -20px, 0 -92px, -16px -92px, -32px -92px
-		dark: -80px -20px, -96px -20px, -112px -20px, -128px -20px, -80px -92px, -96px -92px, -112 -92px
-		*/
+  sprites locations
+  light: 0 -20px, -16px -20px, -32px -20px, -48px -20px, 0 -92px, -16px -92px, -32px -92px
+  dark: -80px -20px, -96px -20px, -112px -20px, -128px -20px, -80px -92px, -96px -92px, -112 -92px
+  */
 }
 
 .mCSB_scrollTools .mCSB_buttonLeft {
   background-position: 0 -40px;
   /*
-		sprites locations
-		light: 0 -40px, -20px -40px, -40px -40px, -60px -40px, 0 -112px, -20px -112px, -40px -112px
-		dark: -80px -40px, -100px -40px, -120px -40px, -140px -40px, -80px -112px, -100px -112px, -120px -112px
-		*/
+  sprites locations
+  light: 0 -40px, -20px -40px, -40px -40px, -60px -40px, 0 -112px, -20px -112px, -40px -112px
+  dark: -80px -40px, -100px -40px, -120px -40px, -140px -40px, -80px -112px, -100px -112px, -120px -112px
+  */
 }
 
 .mCSB_scrollTools .mCSB_buttonRight {
   background-position: 0 -56px;
   /*
-		sprites locations
-		light: 0 -56px, -20px -56px, -40px -56px, -60px -56px, 0 -128px, -20px -128px, -40px -128px
-		dark: -80px -56px, -100px -56px, -120px -56px, -140px -56px, -80px -128px, -100px -128px, -120px -128px
-		*/
+  sprites locations
+  light: 0 -56px, -20px -56px, -40px -56px, -60px -56px, 0 -128px, -20px -128px, -40px -128px
+  dark: -80px -56px, -100px -56px, -120px -56px, -140px -56px, -80px -128px, -100px -128px, -120px -128px
+  */
 }
 
 .mCSB_scrollTools .mCSB_buttonUp:hover,
@@ -11218,10 +11249,10 @@ yx-axis
 
 /* ---------------------------------------- */
 /*!
- * Datepicker for Bootstrap v1.7.1 (https://github.com/uxsolutions/bootstrap-datepicker)
- *
- * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- */
+* Datepicker for Bootstrap v1.7.1 (https://github.com/uxsolutions/bootstrap-datepicker)
+*
+* Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+*/
 .datepicker {
   border-radius: 4px;
   direction: ltr;
@@ -11748,14 +11779,14 @@ yx-axis
 }
 
 /*!
- * Datetimepicker for Bootstrap
- *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- */
+* Datetimepicker for Bootstrap
+*
+* Copyright 2012 Stefan Petre
+* Improvements by Andrew Rowls
+* Licensed under the Apache License v2.0
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+*/
 .datetimepicker {
   padding: 4px;
   margin-top: 1px;
@@ -12051,15 +12082,15 @@ yx-axis
 }
 
 /*!
- * Timepicker Component for Twitter Bootstrap
- *
- * Copyright 2013 Joris de Wit
- *
- * Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+* Timepicker Component for Twitter Bootstrap
+*
+* Copyright 2013 Joris de Wit
+*
+* Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 .bootstrap-timepicker {
   position: relative;
 }
@@ -12619,13 +12650,13 @@ yx-axis
 }
 
 /*
- *  Bootstrap TouchSpin - v3.1.1
- *  A mobile and touch friendly input spinner component for Bootstrap 3.
- *  http://www.virtuosoft.eu/code/bootstrap-touchspin/
- *
- *  Made by István Ujj-Mészáros
- *  Under Apache License v2.0 License
- */
+*  Bootstrap TouchSpin - v3.1.1
+*  A mobile and touch friendly input spinner component for Bootstrap 3.
+*  http://www.virtuosoft.eu/code/bootstrap-touchspin/
+*
+*  Made by István Ujj-Mészáros
+*  Under Apache License v2.0 License
+*/
 .bootstrap-touchspin .input-group-btn-vertical {
   position: relative;
   white-space: nowrap;
@@ -12664,13 +12695,13 @@ yx-axis
 }
 
 /**
-  * bootstrap-switch - Turn checkboxes and radio buttons into toggle switches.
-  *
-  * @version v3.3.4
-  * @homepage https://bttstrp.github.io/bootstrap-switch
-  * @author Mattia Larentis <mattia@larentis.eu> (http://larentis.eu)
-  * @license Apache-2.0
-  */
+* bootstrap-switch - Turn checkboxes and radio buttons into toggle switches.
+*
+* @version v3.3.4
+* @homepage https://bttstrp.github.io/bootstrap-switch
+* @author Mattia Larentis <mattia@larentis.eu> (http://larentis.eu)
+* @license Apache-2.0
+*/
 .bootstrap-switch {
   display: inline-block;
   direction: ltr;
@@ -12876,11 +12907,11 @@ yx-axis
 }
 
 /*!
- * Bootstrap-select v1.12.4 (http://silviomoreto.github.io/bootstrap-select)
- *
- * Copyright 2013-2017 bootstrap-select
- * Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
- */
+* Bootstrap-select v1.12.4 (http://silviomoreto.github.io/bootstrap-select)
+*
+* Copyright 2013-2017 bootstrap-select
+* Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
+*/
 select.bs-select-hidden,
 select.selectpicker {
   display: none !important;
@@ -13874,9 +13905,9 @@ select.selectpicker {
 
 /*! nouislider - 10.1.0 - 2017-07-28 17:11:18 */
 /* Functional styling;
- * These styles are required for noUiSlider to function.
- * You don't need to change these rules to apply your design.
- */
+* These styles are required for noUiSlider to function.
+* You don't need to change these rules to apply your design.
+*/
 .noUi-target,
 .noUi-target * {
   -webkit-touch-callout: none;
@@ -13934,8 +13965,8 @@ select.selectpicker {
 }
 
 /* Painting and performance;
- * Browsers can paint handles in their own layer.
- */
+* Browsers can paint handles in their own layer.
+*/
 .noUi-base,
 .noUi-handle {
   -webkit-transform: translate3d(0, 0, 0);
@@ -13943,7 +13974,7 @@ select.selectpicker {
 }
 
 /* Slider size and handle placement;
- */
+*/
 .noUi-horizontal {
   height: 18px;
 }
@@ -13967,7 +13998,7 @@ select.selectpicker {
 }
 
 /* Styling;
- */
+*/
 .noUi-target {
   background: #FAFAFA;
   border-radius: 4px;
@@ -13986,7 +14017,7 @@ select.selectpicker {
 }
 
 /* Handles and cursors;
- */
+*/
 .noUi-draggable {
   cursor: ew-resize;
 }
@@ -14010,7 +14041,7 @@ select.selectpicker {
 }
 
 /* Handle stripes;
- */
+*/
 .noUi-handle:before,
 .noUi-handle:after {
   content: "";
@@ -14040,7 +14071,7 @@ select.selectpicker {
 }
 
 /* Disabled state;
- */
+*/
 [disabled] .noUi-connect {
   background: #B8B8B8;
 }
@@ -14052,8 +14083,8 @@ select.selectpicker {
 }
 
 /* Base;
- *
- */
+*
+*/
 .noUi-pips,
 .noUi-pips * {
   -webkit-box-sizing: border-box;
@@ -14066,8 +14097,8 @@ select.selectpicker {
 }
 
 /* Values;
- *
- */
+*
+*/
 .noUi-value {
   position: absolute;
   white-space: nowrap;
@@ -14080,8 +14111,8 @@ select.selectpicker {
 }
 
 /* Markings;
- *
- */
+*
+*/
 .noUi-marker {
   position: absolute;
   background: #CCC;
@@ -14096,8 +14127,8 @@ select.selectpicker {
 }
 
 /* Horizontal layout;
- *
- */
+*
+*/
 .noUi-pips-horizontal {
   padding: 10px 0;
   height: 80px;
@@ -14126,8 +14157,8 @@ select.selectpicker {
 }
 
 /* Vertical layout;
- *
- */
+*
+*/
 .noUi-pips-vertical {
   padding: 0 10px;
   height: 100%;
@@ -14481,9 +14512,9 @@ select.selectpicker {
 }
 
 /*
- * The MIT License
- * Copyright (c) 2012 Matias Meno <m@tias.me>
- */
+* The MIT License
+* Copyright (c) 2012 Matias Meno <m@tias.me>
+*/
 @-webkit-keyframes passing-through {
   0% {
     opacity: 0;
@@ -15730,12 +15761,12 @@ select.selectpicker {
 }
 
 /*!
- * animate.css -http://daneden.me/animate
- * Version - 3.5.1
- * Licensed under the MIT license - http://opensource.org/licenses/MIT
- *
- * Copyright (c) 2016 Daniel Eden
- */
+* animate.css -http://daneden.me/animate
+* Version - 3.5.1
+* Licensed under the MIT license - http://opensource.org/licenses/MIT
+*
+* Copyright (c) 2016 Daniel Eden
+*/
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
@@ -18878,8 +18909,8 @@ select.selectpicker {
 }
 
 /*Additional properties for button version
- iOS requires the button element instead of an anchor tag.
- If you want the anchor version, it requires `href="#"`.*/
+iOS requires the button element instead of an anchor tag.
+If you want the anchor version, it requires `href="#"`.*/
 button.toast-close-button {
   padding: 0;
   cursor: pointer;
@@ -20286,9 +20317,9 @@ button.toast-close-button {
 @media (max-width: 768px) {
   .jstree-default-responsive {
     /*
-	.jstree-open > .jstree-ocl,
-	.jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }
-	*/
+    .jstree-open > .jstree-ocl,
+    .jstree-closed > .jstree-ocl { border-radius:20px; background-color:white; }
+    */
   }
   .jstree-default-responsive .jstree-icon {
     background-image: url("/images/jstree/40px.png");
@@ -21926,11 +21957,11 @@ button.toast-close-button {
 }
 
 /*!
- *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
- *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
- */
+*  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
+*  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+*/
 /* FONT PATH
- * -------------------------- */
+* -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
   src: url("/fonts/font-awesome/fontawesome-webfont.eot?v=4.7.0");
@@ -22138,7 +22169,7 @@ button.toast-close-button {
 }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
-   readers do not read off random characters that represent icons */
+readers do not read off random characters that represent icons */
 .fa-glass:before {
   content: "\F000";
 }
@@ -24971,20 +25002,20 @@ button.toast-close-button {
 }
 
 /*!
- *  Line Awesome 1.1.0 by @icons_8 - https://icons8.com/line-awesome
- *  License - https://icons8.com/good-boy-license/ (Font: SIL OFL 1.1, CSS: MIT License)
- *
- * Made with love by Icons8 [ https://icons8.com/ ] using FontCustom [ https://github.com/FontCustom/fontcustom ]
- *
- * Contacts:
- *    [ https://icons8.com/contact ]
- *
- * Follow Icon8 on
- *    Twitter [ https://twitter.com/icons_8 ]
- *    Facebook [ https://www.facebook.com/Icons8 ]
- *    Google+ [ https://plus.google.com/+Icons8 ]
- *    GitHub [ https://github.com/icons8 ]
- */
+*  Line Awesome 1.1.0 by @icons_8 - https://icons8.com/line-awesome
+*  License - https://icons8.com/good-boy-license/ (Font: SIL OFL 1.1, CSS: MIT License)
+*
+* Made with love by Icons8 [ https://icons8.com/ ] using FontCustom [ https://github.com/FontCustom/fontcustom ]
+*
+* Contacts:
+*    [ https://icons8.com/contact ]
+*
+* Follow Icon8 on
+*    Twitter [ https://twitter.com/icons_8 ]
+*    Facebook [ https://www.facebook.com/Icons8 ]
+*    Google+ [ https://plus.google.com/+Icons8 ]
+*    GitHub [ https://github.com/icons8 ]
+*/
 @font-face {
   font-family: "LineAwesome";
   src: url("/fonts/line-awesome/line-awesome.eot?v=1.1.");
@@ -27798,9 +27829,9 @@ button.toast-close-button {
 }
 
 /*
-  	Flaticon icon font: Flaticon
-  	Creation date: 20/03/2017 20:02
-  	*/
+Flaticon icon font: Flaticon
+Creation date: 20/03/2017 20:02
+*/
 @font-face {
   font-family: "Flaticon";
   src: url("/fonts/flaticon/Flaticon.eot");
@@ -28536,18 +28567,18 @@ button.toast-close-button {
 }
 
 /*
- * Icon Font Metronic
- * Made with love by Icons8 [ https://icons8.com/ ] using FontCustom [ https://github.com/FontCustom/fontcustom ]
- *
- * Contacts:
- *    [ https://icons8.com/contact ]
- *
- * Follow Icon8 on
- *    Twitter [ https://twitter.com/icons_8 ]
- *    Facebook [ https://www.facebook.com/Icons8 ]
- *    Google+ [ https://plus.google.com/+Icons8 ]
- *    GitHub [ https://github.com/icons8 ]
- */
+* Icon Font Metronic
+* Made with love by Icons8 [ https://icons8.com/ ] using FontCustom [ https://github.com/FontCustom/fontcustom ]
+*
+* Contacts:
+*    [ https://icons8.com/contact ]
+*
+* Follow Icon8 on
+*    Twitter [ https://twitter.com/icons_8 ]
+*    Facebook [ https://www.facebook.com/Icons8 ]
+*    Google+ [ https://plus.google.com/+Icons8 ]
+*    GitHub [ https://github.com/icons8 ]
+*/
 @font-face {
   font-family: "Metronic";
   src: url("/fonts/metronic/Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot");
@@ -32221,11 +32252,6 @@ pre code {
 }
 
 .form-control::-webkit-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
-.form-control:-ms-input-placeholder {
   color: #6c757d;
   opacity: 1;
 }
