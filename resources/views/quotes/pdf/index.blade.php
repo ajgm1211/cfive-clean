@@ -402,15 +402,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(isset($terms_all) && $terms_all->count()>0)
-                        <tr>
-                            <td style="padding:20px;">
-                                @foreach($terms_all as $v)
-                                <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                                @endforeach
-                            </td>
-                        </tr>
-                    @endif
 
                     @if($quote->term!='')
                         <tr>
