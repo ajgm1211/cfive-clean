@@ -163,44 +163,53 @@ $(document).on('click', '#default-currency-submit', function () {
     var id = $('#company_id').val();
     var form = $('#default-currency');
     //event.preventDefault();
-    swal({
-        title: 'Are you sure?',
-        text: "Please confirm!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
-        if (result.value) {
+    if($('#company_id').val()!=''&&$('#name').val()!=''&&$('#phone').val()&&$('#address').val()) {
+        swal({
+            title: 'Are you sure?',
+            text: "Please confirm!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, I am sure!'
+        }).then(function (result) {
+            if (result.value) {
 
-            // Create an FormData object 
-            //var data = new FormData(form);
-            var data = new FormData($("#default-currency")[0]);
+                // Create an FormData object
+                //var data = new FormData(form);
+                var data = new FormData($("#default-currency")[0]);
 
-            // disabled the submit button
-            $("#default-currency-submit").prop("disabled", true);
+                // disabled the submit button
+                $("#default-currency-submit").prop("disabled", true);
 
-            $.ajax({
-                type: 'POST',
-                enctype: 'multipart/form-data',
-                url: '/settings/store/profile/company',
-                data: data,
-                processData: false,
-                contentType: false,      
-                success: function(data) {
-                    if(data.message=='Ok'){
-                        swal(
-                            'Done!',
-                            'Your choice has been saved.',
-                            'success'
+                $.ajax({
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    url: '/settings/store/profile/company',
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.message == 'Ok') {
+                            swal(
+                                'Done!',
+                                'Your choice has been saved.',
+                                'success'
                             )
+                        }
+                        $("#default-currency-submit").prop("disabled", false);
                     }
-                    $("#default-currency-submit").prop("disabled", false);
-                }
-            });
+                });
 
-        }
+            }
 
-    });
+        });
+    }else{
+        swal({
+            title: 'There are empty fields',
+            text: "",
+            type: 'error',
+            showCancelButton: false,
+        })
+    }
 });
 
 //Surcharges
