@@ -4,6 +4,7 @@
 @php 
 $termOrig ="";
 $termDest ="";
+$termAll = "";
 $subtotalOrigin = 0;
 
 $subtotalDestiny = 0;
@@ -903,23 +904,35 @@ $subtotalDestiny = 0;
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group ">
+                              
+                            @if(isset($terms_all) && $terms_all->count()>0)  
+                                @foreach($terms_all as $v)
+                                  @php
+                                    $termAll .= $form->modality==1 ? $v->term->export : $v->term->import;
+                                  @endphp
+                                @endforeach
+                              @endif
+                            
+                                                            
                               @if(isset($terms_origin) && $terms_origin->count()>0)  
-                              @foreach($terms_origin as $v)
-                              @php
-                              $termOrig .= $form->modality==1 ? $v->term->export : $v->term->import;
-                              @endphp
-                              @endforeach
+                                @foreach($terms_origin as $v)
+                                  @php
+                                    $termOrig .= $form->modality==1 ? $v->term->export : $v->term->import;
+                                  @endphp
+                                @endforeach
                               @endif
-                              @if(isset($terms_destination) && $terms_destination->count()>0)                        @foreach($terms_destination as $v)
-                              @php
-                              $termDest .= $form->modality==1 ? $v->term->export : $v->term->import;
-                              @endphp
-                              @endforeach
+                              @if(isset($terms_destination) && $terms_destination->count()>0)           @foreach($terms_destination as $v)
+                                  @php
+                                    $termDest .= $form->modality==1 ? $v->term->export : $v->term->import;
+                                  @endphp
+                                @endforeach
                               @endif
 
-                              @if($termOrig == "" || $termDest=="" )
+                              @if($termOrig != "" || $termDest!="" || $termAll != "" )
 
-                              {!! Form::textarea('term',$termOrig."<br>".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
+                              {!! Form::textarea('term',$termAll." ".$termOrig." ".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
+                              @else
+                                {!! Form::textarea('term',null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'term']) !!}
                               @endif
 
                             </div>
@@ -928,7 +941,7 @@ $subtotalDestiny = 0;
                         <div class="row">
                           <div class="col-md-12">      
                             <div class="header-table title-quote size-14px" style="padding-left: 10px;">
-                             <b>Payment conditions</b>        
+                              <b>Payment conditions</b>        
                             </div>
                           </div>
                         </div>
