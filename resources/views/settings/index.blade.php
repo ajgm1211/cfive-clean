@@ -30,31 +30,31 @@
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="name">Name</label>
-                                        <input type="text" placeholder="Company's name" id="name" name="name" class="form-control"/>
+                                        <input type="text" placeholder="Company's name" id="name" name="name" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="phone">Phone</label>
-                                        <input type="text" placeholder="Company's phone" id="phone" name="phone" class="form-control"/>
+                                        <input type="text" placeholder="Company's phone" id="phone" name="phone" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="address">Address</label>
-                                        <textarea class="form-control" name="address"  placeholder="Company's address" cols="4"></textarea>
+                                        <textarea class="form-control" name="address" id="address" placeholder="Company's address" cols="4" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="currency_id">Currency</label>
-                                        {{ Form::select('currency_id',$currencies,null,['placeholder' => 'Please choose a currency','class'=>'custom-select form-control','id' => 'currency_id']) }}
+                                        {{ Form::select('currency_id',$currencies,null,['placeholder' => 'Please choose a currency','class'=>'custom-select form-control','id' => 'currency_id','required'=>'true']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="pdf_language">PDF language</label>
-                                        {{ Form::select('pdf_language',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language']) }}
+                                        {{ Form::select('pdf_language',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                     </div>
                                 </div>                                
                                 <div class="col-md-12">
@@ -77,31 +77,31 @@
                                     <div class="form-group m-form__group ">
                                         <label for="name">Name</label>
                                         <input type="hidden" value="{{$company->companyUser->id}}" id="company_id" name="company_id" class="form-control"/>
-                                        <input type="text" value="{{$company->companyUser->name}}" id="name" name="name" class="form-control"/>
+                                        <input type="text" value="{{$company->companyUser->name}}" id="name" name="name" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group text-left">
                                         <label for="phone">Phone</label>
-                                        <input type="text" value="{{$company->companyUser->phone}}" id="phone" name="phone" class="form-control"/>
+                                        <input type="text" value="{{$company->companyUser->phone}}" id="phone" name="phone" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="address">Address</label>
-                                        <textarea class="form-control" name="address" cols="4">{{$company->companyUser->address}}</textarea>
+                                        <textarea class="form-control" name="address" id="address" cols="4" required>{{$company->companyUser->address}}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="currency_id">Currency</label>
-                                        {{ Form::select('currency_id',$currencies,$company->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'currency_id']) }}
+                                        {{ Form::select('currency_id',$currencies,$company->companyUser->currency_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'currency_id','required'=>'true']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
                                         <label for="pdf_language">PDF language</label>
-                                        {{ Form::select('pdf_language',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language']) }}
+                                        {{ Form::select('pdf_language',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                     </div>
                                 </div>                               
                                 <div class="col-md-12">
