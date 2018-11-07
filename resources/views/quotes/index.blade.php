@@ -69,6 +69,23 @@
                </div>
             </div>
          </div>
+         <style>
+
+            button.quote-options {
+               background: #fafafa !important;
+               color: #041A4E !important;
+               padding: 7px 15px;
+               font-size: 12px;
+               box-shadow: none !important;
+               border:1px solid #041A4E !important;
+            }
+
+            .quote-options:hover {
+               color: #041A4E;
+               
+            }
+         </style>
+
          <table class="table tableData" id="tablequote" width="100%">
             <thead >
                <tr class="title-quote">
@@ -181,8 +198,8 @@
 
    $(function() {
 
-      
-      
+
+
       $('#tablequote').DataTable({
          ordering: true,
          searching: true,
@@ -205,7 +222,7 @@
             {data: 'action', name: 'action', orderable: false, searchable: false },
          ] ,
          "autoWidth": true,
-        
+
          "ordering": true,
          "paging":         true,
          buttons: [
