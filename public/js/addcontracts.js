@@ -1,7 +1,16 @@
 $("#new").on("click", function() {
 
+
+
+  $ids = $( ".rateOrig" ).length;
+  $ids = $ids + 1;
+
   var $template = $('#tclone');
+
+
   $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
+  $myClone.find(".rateOrig").attr('name', 'origin_id'+$ids+'[]');
+  $myClone.find(".rateDest").attr('name', 'destiny_id'+$ids+'[]');
   $myClone.find("select").select2();
   $("#sample_editable_1").append($myClone);
   // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
@@ -66,6 +75,14 @@ $('#m-select2-client').select2({
 
 $(document).on('click', '.remove', function () {
   $(this).closest('tr').remove();
+  $i = 2;
+  $('.trRate').each(function () {
+    var res = $(".rateOrig",this).removeAttr('name').attr('name', 'origin_id'+$i+'[]');
+    var res = $(".rateDest",this).removeAttr('name').attr('name', 'destiny_id'+$i+'[]');
+
+
+    $i++;
+  });
 });
 
 $(document).on('click', '.removeL', function () {

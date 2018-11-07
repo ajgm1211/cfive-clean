@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f891834130292573ca4b07911273f89",
+    "content-hash": "63ae4659aec4f970cf961a395ca79501",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.69.14",
+            "version": "3.69.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "904e9e21389efe93935701be0b857990752d6245"
+                "reference": "eda89d207e40f3abb0b5e2fb1fabcebe668116fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/904e9e21389efe93935701be0b857990752d6245",
-                "reference": "904e9e21389efe93935701be0b857990752d6245",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/eda89d207e40f3abb0b5e2fb1fabcebe668116fb",
+                "reference": "eda89d207e40f3abb0b5e2fb1fabcebe668116fb",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-10-24T19:17:46+00:00"
+            "time": "2018-10-26T20:05:18+00:00"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -3179,16 +3179,16 @@
         },
         {
             "name": "spatie/laravel-backup",
-            "version": "5.11.1",
+            "version": "5.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-backup.git",
-                "reference": "fc5aa95db8868c9615ffa4cb2060214f95f1d5ce"
+                "reference": "cf018ba36402aa47f92fdc2bc18eb85417a5b58e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/fc5aa95db8868c9615ffa4cb2060214f95f1d5ce",
-                "reference": "fc5aa95db8868c9615ffa4cb2060214f95f1d5ce",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/cf018ba36402aa47f92fdc2bc18eb85417a5b58e",
+                "reference": "cf018ba36402aa47f92fdc2bc18eb85417a5b58e",
                 "shasum": ""
             },
             "require": {
@@ -3243,20 +3243,20 @@
                 "laravel-backup",
                 "spatie"
             ],
-            "time": "2018-10-20T07:24:26+00:00"
+            "time": "2018-10-29T21:32:09+00:00"
         },
         {
             "name": "spatie/laravel-googletagmanager",
-            "version": "2.5.1",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-googletagmanager.git",
-                "reference": "d47746e5a86d92f5b9412dc99dc09cd206d6c5d7"
+                "reference": "8e58e47767df0484055b415ec49dc7ef42bc3a9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-googletagmanager/zipball/d47746e5a86d92f5b9412dc99dc09cd206d6c5d7",
-                "reference": "d47746e5a86d92f5b9412dc99dc09cd206d6c5d7",
+                "url": "https://api.github.com/repos/spatie/laravel-googletagmanager/zipball/8e58e47767df0484055b415ec49dc7ef42bc3a9c",
+                "reference": "8e58e47767df0484055b415ec49dc7ef42bc3a9c",
                 "shasum": ""
             },
             "require": {
@@ -3301,7 +3301,7 @@
                 "laravel-googletagmanager",
                 "spatie"
             ],
-            "time": "2018-10-15T12:44:03+00:00"
+            "time": "2018-10-29T10:21:45+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -4609,16 +4609,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v8.9.1",
+            "version": "v8.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "851c4d4d307a66a4f8ab5c12444c1eb0104ecc80"
+                "reference": "3b084b9b7b4aac46f0bfc2d71b9b3a67d794f4e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/851c4d4d307a66a4f8ab5c12444c1eb0104ecc80",
-                "reference": "851c4d4d307a66a4f8ab5c12444c1eb0104ecc80",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/3b084b9b7b4aac46f0bfc2d71b9b3a67d794f4e9",
+                "reference": "3b084b9b7b4aac46f0bfc2d71b9b3a67d794f4e9",
                 "shasum": ""
             },
             "require": {
@@ -4676,7 +4676,7 @@
                 "jquery",
                 "laravel"
             ],
-            "time": "2018-10-05T06:10:33+00:00"
+            "time": "2018-10-30T14:23:18+00:00"
         }
     ],
     "packages-dev": [
@@ -5761,16 +5761,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "21ad88bbba7c3d93530d93994e0a33cd45f02ace"
+                "reference": "c99e3be9d3e85f60646f152f9002d46ed7770d18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/21ad88bbba7c3d93530d93994e0a33cd45f02ace",
-                "reference": "21ad88bbba7c3d93530d93994e0a33cd45f02ace",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c99e3be9d3e85f60646f152f9002d46ed7770d18",
+                "reference": "c99e3be9d3e85f60646f152f9002d46ed7770d18",
                 "shasum": ""
             },
             "require": {
@@ -5806,7 +5806,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2018-02-01T13:16:43+00:00"
+            "time": "2018-10-30T05:52:18+00:00"
         },
         {
             "name": "phpunit/phpunit",

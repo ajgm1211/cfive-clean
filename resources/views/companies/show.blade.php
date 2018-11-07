@@ -47,7 +47,7 @@
                                 <div class="m-portlet__body text-center">
                                     @if($company->logo!='')
                                     <div class="" style="line-height: .5;">
-                                        <img src="/{{$company->logo}}" class="img img-fluid" style="width: 200px; height: auto; margin-bottom:25px">
+                                        <img src="/{{$company->logo}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
                                     </div>
                                     <br>
                                     @endif
@@ -112,6 +112,26 @@
                         <div class="col-md-12">
                             <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
                                 <div class="m-portlet__body">
+                                    <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#about_company" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Payment conditions</b></h4>
+                                    <hr>
+                                    <div class="collapse show" id="about_company">
+                                        {!! Form::open(['route' => 'companies.update.payments','class' => 'form-group m-form__group','type'=>'POST']) !!}
+                                            <input type="hidden" name="company_id" value="{{$company->id}}"/>
+                                            {!! Form::textarea('payment_conditions', $company->payment_conditions, ['placeholder' => 'Please enter payment conditions','class' => 'form-control m-input address_input editor','id'=>'payment_conditions','rows'=>4]) !!}
+                                            <br>
+                                            <button class="btn btn-primary" type="submit">
+                                                Save
+                                            </button>
+                                        {!! Form::close() !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="m-portlet m-portlet--brand m-portlet--head-solid-bg">
+                                <div class="m-portlet__body">
                                     <h4 class="size-16px color-blue" data-toggle="collapse" data-target="#company_contacts" style="cursor: pointer"><i class="fa fa-angle-down"></i> &nbsp;<b>Contacts</b></h4>
                                     <hr>
                                     <div class="collapse show" id="company_contacts"> 
@@ -126,7 +146,7 @@
                                         @endif
                                         <br>
                                         <div class="text-center">
-                                            <button class="btn btn-default" onclick="AbrirModal('addContact',0)">
+                                            <button class="btn btn-default" onclick="AbrirModal('addContact',{{$company->id}})">
                                                 Add contact
                                             </button>
                                         </div>
@@ -237,7 +257,47 @@
 @parent
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
+<script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+<script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
+
+    var editor_config = {
+        path_absolute : "/",
+        selector: "textarea#payment_conditions",
+        plugins: ["template"],
+        toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+        external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
+        nanospell_server:"php",
+        browser_spellcheck: true,
+        relative_urls: false,
+        remove_script_host: false,
+        file_browser_callback : function(field_name, url, type, win) {
+            var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+            var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+
+            var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+            if (type == 'image') {
+                cmsURL = cmsURL + "&type=Images";
+            } else {
+                cmsURL = cmsURL + "&type=Files";
+            }
+
+            tinymce.activeEditor.windowManager.open({
+                file: '<?= route('elfinder.tinymce4') ?>',// use an absolute path!
+                title: 'File manager',
+                width: 900,
+                height: 450,
+                resizable: 'yes'
+            }, {
+                setUrl: function (url) {
+                    win.document.getElementById(field_name).value = url;
+                }
+            });
+        }
+    };
+
+    tinymce.init(editor_config);
+
     function AbrirModal(action,id){
         if(action == "edit"){
             var url = '{{ route("companies.edit", ":id") }}';
@@ -259,7 +319,8 @@
             });
         }
         if(action == "addContact"){
-            var url = '{{ route("contacts.add") }}';
+            var url = '{{ route("contacts.addCMC",":id") }}';
+            url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#addContactModal').modal({show:true});
             });

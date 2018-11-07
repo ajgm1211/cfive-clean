@@ -6,30 +6,29 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddExtraFieldsQuotesTermTable extends Migration
 {
-    /**
+  /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->text('term_orig')->nullable()->after('status_quote_id');
-            $table->text('term_dest')->nullable()->after('term_orig');
-        });
-    }
+  public function up()
+  {
+    Schema::table('quotes', function (Blueprint $table) {
+      $table->text('term')->nullable()->after('status_quote_id');
 
-    /**
+    });
+  }
+
+  /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn('term_orig');
-            $table->dropColumn('term_dest');
+  public function down()
+  {
+    Schema::table('quotes', function (Blueprint $table) {
+      $table->dropColumn('term');
 
-        });
-    }
+    });
+  }
 }

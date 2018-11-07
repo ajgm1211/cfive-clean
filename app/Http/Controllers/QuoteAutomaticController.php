@@ -107,6 +107,10 @@ class QuoteAutomaticController extends Controller
       }
     }
     if(\Auth::user()->company_user_id){
+      $port_all = harbor::where('name','ALL')->first();
+      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+      })->get();
       $terms_origin = TermsPort::where('port_id',$info->origin_port)->with('term')->whereHas('term', function($q)  {
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
@@ -114,7 +118,7 @@ class QuoteAutomaticController extends Controller
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
     }
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
   }
 
 
@@ -651,6 +655,12 @@ class QuoteAutomaticController extends Controller
       // id de los carrier ALL 
       $carrier_all = 26;
       array_push($carrier,$carrier_all);
+      // Id de los paises 
+      array_push($origin_country,250);
+      array_push($destiny_country,250);
+
+
+
 
       //  calculo de los local charges en freight , origin y destiny
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
@@ -1030,7 +1040,7 @@ class QuoteAutomaticController extends Controller
 
         //#######################################################################
         //NUEVOS CONTENEDORES 40nor , 45 LOCALCHARGE
-        
+
         if(in_array($local->calculationtype_id, $array40Nor)){
           if($request->input('fortynor') != "0") {
             foreach($local->localcharcarriers as $carrierGlobal){

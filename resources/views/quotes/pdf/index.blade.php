@@ -9,17 +9,13 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-fluid" style="width: 200px; height: auto; margin-bottom:25px">
+                <img src="{{$user->companyUser->logo}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
                 <div><span class="color-title"><b>Quotation Id:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><span class="color-title"><b>Date of issue:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
-                @if($quote->validity!='')
-                @php
-                $date = DateTime::createFromFormat('Y-m-d', $quote->validity);
-                $validity = $date->format('M d, Y');
-                @endphp
-                <div><span class="color-title"><b>Valid up to: </b></span>{{$validity}}</div>
+                @if($quote->validity!=''&&$quote->since_validity!='')
+                <div><span class="color-title"><b>Validity: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
                 @endif
             </div>
         </header>
@@ -49,10 +45,9 @@
                 </div>
             </div>
             <br>
-            <br>
             <div class="clearfix">
                 <div class="">
-                    <table class="table-border" style="width: 350px; border-radius:2px !Important;">
+                    <table class="" style="width: 45%; float: left;">
                         <thead class="title-quote text-center header-table">
                             <tr >
                                 <th class="unit"><b>Origin</b></th>
@@ -77,7 +72,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table-border" style="width: 350px; right:0; top:271px; position:absolute;">
+                    <table class="" style="width: 45%; float: right;">
                         <thead class="title-quote text-center ">
                             <tr>
                                 <th class="unit"><b>Destination</b></th>
@@ -104,6 +99,7 @@
                     </table>
                 </div>
             </div>
+            <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? ' Airline':' Carrier'}}</b></p>
@@ -187,7 +183,7 @@
             </div>
             <br>
             @if($charges_type==1)
-            <table class="table table-bordered color-blue page-break" border="0" cellspacing="0" cellpadding="0">
+            <table class="page-break" border="0" cellspacing="1" cellpadding="1">
                 <thead class="title-quote text-center header-table">
                     <tr >
                         @if($quote->sub_total_origin!='')
@@ -391,7 +387,7 @@
             @endif
             @endif
         </main>
-        @if($charges_type==2)
+        @if($charges_type!=1)
         <div class="clearfix details page-break">
             <div class="company">
                 <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
@@ -406,32 +402,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(isset($terms_all) && $terms_all->count()>0)
-                    <tr>
-                        <td style="padding:20px;">
-                            @foreach($terms_all as $v)
-                            <span class="text-justify">{!! $quote->modality==1 ? $v->term->import : $v->term->export!!}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+
+                    @if($quote->term!='')
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">                                
+                                    {!! $quote->term !!}
+                                </span>
+                            </td>
+                        </tr>
                     @endif
+
+                </tbody>
+            </table>
+        </div>
+        @if($quote->payment_conditions!='')
+        <div class="clearfix">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <thead class="title-quote header-table">
                     <tr>
-                        <td style="padding:20px;">
-                            <span class="text-justify">                                
-                                {!! $quote->term_orig!!}
-                            </span>
-                        </td>
+                        <th class="unit text-left"><b>&nbsp;&nbsp;&nbsp;Payment conditions</b></th>
                     </tr>
+                </thead>
+                <tbody>
                     <tr>
                         <td style="padding:20px;">
-                            <span class="text-justify">
-                                {!! $quote->term_dest!!}    
-                            </span>
+                            <span class="text-justify">{!! $quote->payment_conditions!!}</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        @endif
         <!--<footer>
 Cargofive &copy; {{date('Y')}}
 </footer>-->
