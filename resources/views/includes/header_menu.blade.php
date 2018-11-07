@@ -10,14 +10,14 @@
          <div class="m-stack__item m-stack__item--middle m-brand__tools">
             <!-- BEGIN: Left Aside Minimize Toggle 1 -->
             <!--<a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block 
-                                                                            ">
-               <span></span>
-            </a>-->
+">
+<span></span>
+</a>-->
             <!-- END -->
             <!-- BEGIN: Responsive Aside Left Menu Toggler 2 -->
             <!--<a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
-               <span></span>
-            </a>-->
+<span></span>
+</a>-->
             <!-- END -->
             <!-- BEGIN: Responsive Header Menu Toggler 3 -->
             <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
@@ -26,8 +26,8 @@
             <!-- END -->
             <!-- BEGIN: Topbar Toggler 4 -->
             <!--<a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
-               <i class="flaticon-more"></i>
-            </a>-->
+<i class="flaticon-more"></i>
+</a>-->
             <!-- BEGIN: Topbar Toggler 5 -->
          </div>
       </div>
@@ -275,6 +275,41 @@
                   </ul>
                </div>
             </li>
+            
+            
+            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+               <a  href="#" class="m-menu__link m-menu__toggle">
+                  <span class="m-menu__link-title">
+                     <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            {{\Auth::user()->name}} {{\Auth::user()->lastname}}
+                        </span>
+                     </span>
+                  </span>
+                  <i class="m-menu__hor-arrow la la-angle-down"></i>
+                  <i class="m-menu__ver-arrow la la-angle-right"></i>
+               </a>
+               <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                  <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                  <ul class="m-menu__subnav">
+             
+                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                        <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                           <span class="m-menu__link-text">
+                           <span class="la la-sign-out" style="font-size:23px;"></span> 
+                              &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout </b>
+                           </span>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                           {{ csrf_field() }}
+                        </form>
+                     </li>
+                  </ul>
+               </div>
+            </li>
+
+            
+            
             <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
                <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                   <div class='row'>
@@ -356,17 +391,12 @@
                   </div>
                </div>
             </li>
-            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-               <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                  <span class="m-menu__link-text">
-                     &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout ( {{\Auth::user()->name}} {{\Auth::user()->lastname}} ) </b>
-                  </span>
-               </a>
-               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                  {{ csrf_field() }}
-               </form>
-            </li>
+           
 
+            
+
+
+            <!-- /////////////////////////////////////////////////////////////////// -->
          </ul>
       </div>
    </div>
