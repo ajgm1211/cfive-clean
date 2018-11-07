@@ -107,6 +107,10 @@ class QuoteAutomaticController extends Controller
       }
     }
     if(\Auth::user()->company_user_id){
+      $port_all = harbor::where('name','ALL')->first();
+      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
+      })->get();
       $terms_origin = TermsPort::where('port_id',$info->origin_port)->with('term')->whereHas('term', function($q)  {
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
@@ -114,7 +118,7 @@ class QuoteAutomaticController extends Controller
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
     }
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
   }
 
 
