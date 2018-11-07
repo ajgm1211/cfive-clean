@@ -32,6 +32,6 @@ class NewRequestToAdminMail extends Mailable
     {
         return $this->markdown('emails.Requests.ToAdminMailabel')->with(['admin' => $this->admin,
                                                                          'user' => $this->user,
-                                                                         'contract' => $this->contract]);
+                                                                         'contract' => $this->contract])->from('info@cargofive.com');
     }
 }

@@ -8942,7 +8942,7 @@ class   HarborsTableSeeder extends Seeder
             'code' => 'ALL',
             'display_name' => 'ALL',
             'coordinates' => '',
-            'country_id' => 1,
+            'country_id' => 250,
             'varation' => '{"type": ["", ""]}',
             'created_at' => NULL,
             'updated_at' => NULL,

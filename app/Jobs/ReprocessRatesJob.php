@@ -15,6 +15,7 @@ use App\Currency;
 use App\Contract;
 use App\User;
 use App\Notifications\N_general;
+use PrvHarbor;
 
 class ReprocessRatesJob implements ShouldQueue
 {

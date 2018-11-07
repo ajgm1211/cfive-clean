@@ -12,29 +12,32 @@ use App\Quote;
 
 class AppServiceProvider extends ServiceProvider
 {
-  /**
+    /**
      * Bootstrap any application services.
      *
      * @return void
      */
-  public function boot()
-  {
-    Schema::defaultStringLength(191);
-    Contract::observe(ContractObserver::class);
-    Quote::observe(QuoteObserver::class);
+    public function boot()
+    {
+        Schema::defaultStringLength(191);
+        Contract::observe(ContractObserver::class);
+        Quote::observe(QuoteObserver::class);
 
-  }
+    }
 
-  /**
+    /**
      * Register any application services.
      *
      * @return void
      */
-  public function register()
-  {
-    // Dusk, if env is appropiate
-    if ($this->app->environment('local', 'testing')) {
-      $this->app->register(DuskServiceProvider::class);
+
+
+    public function register()
+    {
+        // Dusk, if env is appropiate
+        /*if ($this->app->environment('local', 'testing')) {
+            $this->app->register(DuskServiceProvider::class);
+        }*/
     }
-  }
+
 }

@@ -242,6 +242,7 @@
                         { data: 'currency_id', name: 'currency_id' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
+                   "scrollX": true,
                     "lengthChange": false,
                     "searching": true,
                     "ordering": true,
@@ -277,7 +278,8 @@
                     "autoWidth": false,
                     "processing": true,
                     "dom": 'Bfrtip',
-                    "paging": true
+                    "paging": true,
+                   "scrollX": true
                 });
             });
 

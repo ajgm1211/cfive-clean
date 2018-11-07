@@ -96,6 +96,7 @@ class CompanyController extends Controller
         $company->company_user_id = \Auth::user()->company_user_id;
         $company->owner = \Auth::user()->id;
         $company->pdf_language = $request->pdf_language;
+        $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
             $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
         }
@@ -136,11 +137,11 @@ class CompanyController extends Controller
     }
 
     public function storeOwner(Request $request){
-        
+
         $input = Input::all();
-        
+
         $company = Company::find($input['company_id']);
-        
+
         if ((isset($input['users'])) && (count($input['users']) > 0)) {
             foreach ($input['users'] as $key => $item) {            
                 $userCompany_group = new GroupUserCompany();
@@ -156,9 +157,9 @@ class CompanyController extends Controller
         return redirect()->back();
 
     }    
-    
+
     public function deleteOwner(Request $request,$user_id){
-        
+
         $user=GroupUserCompany::where('user_id',$user_id)->delete();
 
         $request->session()->flash('message.nivel', 'success');
@@ -190,6 +191,7 @@ class CompanyController extends Controller
         $company->email = $request->email;
         $company->tax_number = $request->tax_number;
         $company->pdf_language = $request->pdf_language;
+        $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
             $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
         }
@@ -268,6 +270,19 @@ class CompanyController extends Controller
         $contacts = Contact::where('company_id',$id)->pluck('first_name','id');
 
         return $contacts;
+    }    
+
+    public function updatePaymentConditions(Request $request){
+
+        $company = Company::find($request->company_id);
+        $company->payment_conditions=$request->payment_conditions;
+        $company->update();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'Register updated successfully!');
+        return redirect()->back();
+
     }
 
     public function getCompanies(){

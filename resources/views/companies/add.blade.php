@@ -21,6 +21,10 @@
             {!! Form::label('users_id', 'Associate User') !!}<br>
             {{ Form::select('users[]',$users,null,['class'=>'custom-select form-control','id' => 'users_company','multiple'=>'true']) }}
         </div>
+        <div class="form-group m-form__group">
+            {!! Form::label('logo', 'Logo') !!}
+            {!! Form::file('logo', null, ['placeholder' => 'Please upload a logo','class' => 'form-control m-input logo_input','required' => 'required']) !!}
+        </div>        
     </div>
 </div>
 <div class="m-portlet__foot m-portlet__foot--fit">

@@ -211,6 +211,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
     Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
+    Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
 
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
@@ -259,6 +260,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
    Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+   Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
    Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
    Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
    Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
@@ -266,6 +268,8 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
    Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
    Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
+   Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
+   Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
