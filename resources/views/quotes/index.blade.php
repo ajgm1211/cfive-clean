@@ -201,7 +201,7 @@
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },
             ] ,
-            "scrollX": true,
+
             buttons: [
                 {
                     extend: 'copyHtml5',
