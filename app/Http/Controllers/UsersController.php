@@ -64,6 +64,9 @@ class UsersController extends Controller
     if($request->type == "subuser"){
       $user->assignRole('subuser');
     }
+    if($request->type == "company"){
+      $user->assignRole('company');
+    }
     $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
     $user->notify(new SlackNotification($message));
 
@@ -133,6 +136,15 @@ class UsersController extends Controller
   {
     $requestForm = $request->all();
     $user = User::find($id);
+    $roles = $user->getRoleNames();
+    $user->removeRole($roles[0]);
+
+    if($request->type == "subuser"){
+      $user->assignRole('subuser');
+    }
+    if($request->type == "company"){
+      $user->assignRole('company');
+    }
     $user->update($requestForm);
 
     $request->session()->flash('message.nivel', 'success');

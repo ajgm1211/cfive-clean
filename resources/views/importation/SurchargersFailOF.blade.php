@@ -243,7 +243,8 @@
                     "autoWidth": false,
                     "processing": true,
                     "dom": 'Bfrtip',
-                    "paging": true
+                    "paging": true,
+                   "scrollX": true,
                 });
 
                 $('#myatest2').DataTable({
@@ -269,7 +270,8 @@
                     "autoWidth": false,
                     "processing": true,
                     "dom": 'Bfrtip',
-                    "paging": true
+                    "paging": true,
+                   "scrollX": true,
                 }); 
             });
 

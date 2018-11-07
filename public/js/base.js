@@ -45,7 +45,7 @@ function save(id,idval){
                 'Updated!',
                 'Your rate has been updated.',
                 'success'
-            )
+                )
             $("#save"+id).attr('hidden','true');
             $("#cancel"+id).attr('hidden','true');
             $("#edit"+id).removeAttr('hidden');
@@ -114,7 +114,7 @@ function save_l(id,idval){
                 'Updated!',
                 'Your local charge has been updated.',
                 'success'
-            )
+                )
             $("#save_l"+id).attr('hidden','true');
             $("#cancel_l"+id).attr('hidden','true');
             $("#remove_l"+id).attr('hidden','true');
@@ -163,44 +163,53 @@ $(document).on('click', '#default-currency-submit', function () {
     var id = $('#company_id').val();
     var form = $('#default-currency');
     //event.preventDefault();
-    swal({
-        title: 'Are you sure?',
-        text: "Please confirm!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, I am sure!'
-    }).then(function(result) {
-        if (result.value) {
+    if($('#company_id').val()!=''&&$('#name').val()!=''&&$('#phone').val()&&$('#address').val()) {
+        swal({
+            title: 'Are you sure?',
+            text: "Please confirm!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, I am sure!'
+        }).then(function (result) {
+            if (result.value) {
 
-            // Create an FormData object 
-            //var data = new FormData(form);
-            var data = new FormData($("#default-currency")[0]);
+                // Create an FormData object
+                //var data = new FormData(form);
+                var data = new FormData($("#default-currency")[0]);
 
-            // disabled the submit button
-            $("#default-currency-submit").prop("disabled", true);
+                // disabled the submit button
+                $("#default-currency-submit").prop("disabled", true);
 
-            $.ajax({
-                type: 'POST',
-                enctype: 'multipart/form-data',
-                url: '/settings/store/profile/company',
-                data: data,
-                processData: false,
-                contentType: false,      
-                success: function(data) {
-                    if(data.message=='Ok'){
-                        swal(
-                            'Done!',
-                            'Your choice has been saved.',
-                            'success'
-                        )
+                $.ajax({
+                    type: 'POST',
+                    enctype: 'multipart/form-data',
+                    url: '/settings/store/profile/company',
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.message == 'Ok') {
+                            swal(
+                                'Done!',
+                                'Your choice has been saved.',
+                                'success'
+                            )
+                        }
+                        $("#default-currency-submit").prop("disabled", false);
                     }
-                    $("#default-currency-submit").prop("disabled", false);
-                }
-            });
+                });
 
-        }
+            }
 
-    });
+        });
+    }else{
+        swal({
+            title: 'There are empty fields',
+            text: "",
+            type: 'error',
+            showCancelButton: false,
+        })
+    }
 });
 
 //Surcharges
@@ -226,14 +235,14 @@ $(document).on('click', '#delete-surcharge', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                        )
+                            )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this surcharge because have sale terms related.',
                             'warning'
-                        )
+                            )
                         console.log(data.message);
                     }
                 }
@@ -266,7 +275,7 @@ $(document).on('click', '#delete-contact', function () {
                         'Deleted!',
                         'The contact has been deleted.',
                         'success'
-                    )
+                        )
                     $(theElement).closest('ul').remove();
                 }
             });
@@ -297,7 +306,7 @@ $(document).on('click', '#delete-owner', function () {
                         'Deleted!',
                         'The owner has been deleted.',
                         'success'
-                    )
+                        )
                     $(theElement).closest('li').remove();
                 }
             });
@@ -544,7 +553,7 @@ $(document).on('click', '#air_type', function (e) {
 //Clone load lcl form
 $(document).on('click', '#add_load_lcl_air', function (e) {
     var $template = $('#lcl_air_load_template'),
-        $clone = $template
+    $clone = $template
     .clone()
     .removeClass('hide')
     .removeAttr('id')
@@ -574,7 +583,7 @@ $(document).on('click', '#duplicate-quote', function (e) {
                 'Success!',
                 'The quote has been duplicated.',
                 'success'
-            )
+                )
         }
     });
 });
@@ -583,20 +592,20 @@ $(document).on('change', '#modality', function (e) {
     var origin_harbor_id = $('#origin_harbor').val();
     var destination_harbor_id = $('#destination_harbor').val();
     var modality = $('#modality').val();
-    if(origin_harbor_id!=''){
+    if(origin_harbor_id!='' && destination_harbor_id!=''){
         $.ajax({
-            url: "/quotes/terms/"+origin_harbor_id,
+            url: "/quotes/terms/"+origin_harbor_id+"/"+destination_harbor_id,
             dataType: 'json',
             success: function(data) {        
                 $('#terms_box').show();
                 tinymce.init({
-                    selector: "#origin_terms",
+                    selector: "#terms_and_conditions",
                     plugins: [
-                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons paste textcolor colorpicker textpattern codesample",
-                        "fullpage toc imagetools help"
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
                     ],
                     toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                     menubar: false,
@@ -614,174 +623,21 @@ $(document).on('change', '#modality', function (e) {
                 });
                 $.each(data, function(key, value) {
                     if(modality==1){
-                        $('.editor').html(value.term.export).tinymce({
-                            theme: "modern",
-                        });
-
-                        $('#origin_terms').val(value.term.export);
+                        terms += value.term.export;
                     }else{
-                        $('.editor').html(value.term.import).tinymce({
-                            theme: "modern",
-                        });
-
-                        $('#origin_terms').val(value.term.import);                    
+                        terms += value.term.import;
                     }
                 });
+                $('#terms_and_conditions').val(terms);
             }
         });
     }
-    if(destination_harbor_id!=''){
-        $.ajax({
-            url: "/quotes/terms/"+destination_harbor_id,
-            dataType: 'json',
-            success: function(data) {        
-                $('#terms_box').show();
-                tinymce.init({
-                    selector: "#origin_terms",
-                    plugins: [
-                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons paste textcolor colorpicker textpattern codesample",
-                        "fullpage toc imagetools help"
-                    ],
-                    toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                    menubar: false,
-                    toolbar_items_size: 'small',
-                    paste_as_text: true,
-                    browser_spellcheck: true,
-                    statusbar: false,
-                    height: 200,
-
-                    style_formats: [{
-                        title: 'Bold text',
-                        inline: 'b'
-                    }, ],
-
-                });
-                $.each(data, function(key, value) {
-                    if(modality==1){
-                        $('.editor').html(value.term.export).tinymce({
-                            theme: "modern",
-                        });
-
-                        $('#origin_terms').val(value.term.export);
-                    }else{
-                        $('.editor').html(value.term.import).tinymce({
-                            theme: "modern",
-                        });
-
-                        $('#origin_terms').val(value.term.import);                    
-                    }
-                });
-            }
-        });        
-    }
+    
 });
-
-$(document).on('change', '#origin_harbor', function (e) {
-    var harbor_id = $('#origin_harbor').val();
-    var modality = $('#modality').val();
-    $.ajax({
-        url: "/quotes/terms/"+harbor_id,
-        dataType: 'json',
-        success: function(data) {        
-            $('#terms_box').show();
-            tinymce.init({
-                selector: "#origin_terms",
-                plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
-                ],
-                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                menubar: false,
-                toolbar_items_size: 'small',
-                paste_as_text: true,
-                browser_spellcheck: true,
-                statusbar: false,
-                height: 200,
-
-                style_formats: [{
-                    title: 'Bold text',
-                    inline: 'b'
-                }, ],
-
-            });
-            $.each(data, function(key, value) {
-                if(modality==1){
-                    $('.editor').html(value.term.export).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#origin_terms').val(value.term.export);
-                }else{
-                    $('.editor').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#origin_terms').val(value.term.import);                    
-                }
-            });
-        }
-    });
-});
-
-$(document).on('change', '#destination_harbor', function (e) {
-    var harbor_id = $('#destination_harbor').val();
-    $.ajax({
-        url: "/quotes/terms/"+harbor_id,
-        dataType: 'json',
-        success: function(data) {        
-            $('#terms_box').show();
-            tinymce.init({
-                selector: "#destination_terms",
-                plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
-                ],
-                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-                menubar: false,
-                toolbar_items_size: 'small',
-                paste_as_text: true,
-                browser_spellcheck: true,
-                statusbar: false,
-                height: 200,
-
-                style_formats: [{
-                    title: 'Bold text',
-                    inline: 'b'
-                }, ],
-
-            });            
-            $.each(data, function(key, value) {
-                if(modality==1){
-                    $('.editor').html(value.term.export).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#destination_terms').val(value.term.export);
-                }else{
-                    $('.editor').html(value.term.import).tinymce({
-                        theme: "modern",
-                    });
-
-                    $('#destination_terms').val(value.term.import);                    
-                }                
-            });
-        }
-    });
-});
-
 
 $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
-        $clone = $template
+    $clone = $template
     .clone()
     .removeClass('hide')
     .removeAttr('id')
@@ -789,7 +645,7 @@ $(document).on('click', '.addButtonOrigin', function (e) {
 });
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
-        $clone = $template
+    $clone = $template
     .clone()
     .removeClass('hide')
     .removeAttr('id')
@@ -815,7 +671,7 @@ $(document).on('click', '#delete-quote', function () {
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
-                    )
+                        )
                     $(theElement).closest('tr').remove();
                 }
             });
@@ -826,7 +682,7 @@ $(document).on('click', '#delete-quote', function () {
 
 $(document).on('click', '.addButtonDestination', function (e) {
     var $template = $('#destination_ammounts'),
-        $clone = $template
+    $clone = $template
     .clone()
     .removeClass('hide')
     .removeAttr('id')
@@ -945,6 +801,7 @@ $(document).on('click', '#create-quote', function (e) {
     var origin_address=$("#origin_address").val();
     var origin_airport=$("#origin_airport").val();
     var destination_airport=$("#destination_airport").val();
+    var modality = $('#modality').val();
     var qty_20='';
     var qty_40='';
     var qty_40_hc='';
@@ -973,6 +830,47 @@ $(document).on('click', '#create-quote', function (e) {
     var myTableDiv = document.getElementById("label_package_loads");
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
+    var terms = '';
+
+    $.ajax({
+        url: "/quotes/terms/"+origin_harbor+"/"+destination_harbor,
+        dataType: 'json',
+        success: function(data) {        
+            $('#terms_box').show();
+            tinymce.init({
+                selector: "#terms_and_conditions",
+                plugins: [
+                "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                "insertdatetime nonbreaking save table contextmenu directionality",
+                "emoticons paste textcolor colorpicker textpattern codesample",
+                "fullpage toc imagetools help"
+                ],
+                toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                menubar: false,
+                toolbar_items_size: 'small',
+                paste_as_text: true,
+                browser_spellcheck: true,
+                statusbar: false,
+                height: 200,
+
+                style_formats: [{
+                    title: 'Bold text',
+                    inline: 'b'
+                }, ],
+
+            });
+            $.each(data, function(key, value) {
+
+                if(modality==1){
+                    terms += value.term.export;
+                }else{
+                    terms += value.term.import;
+                }
+            });
+            $('#terms_and_conditions').val(terms);
+        }
+    });
 
     if($(".qty_20").val()>0){
         qty_20=$(".qty_20").val();
@@ -1001,9 +899,9 @@ $(document).on('click', '#create-quote', function (e) {
     if($(".qty_40_open_top").val()>0){
         qty_40_open_top=$(".qty_40_open_top").val();
     }
-    if($(".qty_40_hc_open_top").val()>0){
+    /*if($(".qty_40_hc_open_top").val()>0){
         qty_40_hc_open_top=$(".qty_40_hc_open_top").val();
-    }        
+    }  */      
     if($("#total_quantity").val()>0){
         total_quantity=$("#total_quantity").val();
     }
@@ -1222,12 +1120,12 @@ $(document).on('click', '#create-quote', function (e) {
     }else{
         $("#cargo_details_40_open_top_p").addClass('hide');
     }
-    if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
+    /*if(qty_40_hc_open_top!='' || qty_40_hc_open_top>0){
         $("#cargo_details_40_hc_open_top").html(qty_40_hc_open_top);
         $("#cargo_details_40_hc_open_top_p").removeClass('hide');
     }else{
         $("#cargo_details_40_hc_open_top_p").addClass('hide');
-    }        
+    } */       
     if(total_quantity!='' && type_cargo!=''){
         $("#cargo_details_cargo_type").html(" "+type_cargo);
         $("#cargo_details_cargo_type_p").removeClass('hide');
@@ -1304,6 +1202,40 @@ $( document ).ready(function() {
                     $.each(data, function(key, value) {
                         $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
                     });
+                }
+            });
+            $.ajax({
+                url: "/quotes/payments/"+company_id,
+                dataType: 'json',
+                success: function(data) {
+                    tinymce.init({
+                        selector: "#payment_conditions",
+                        plugins: [
+                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons paste textcolor colorpicker textpattern codesample",
+                        "fullpage toc imagetools help"
+                        ],
+                        toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+                        menubar: false,
+                        toolbar_items_size: 'small',
+                        paste_as_text: true,
+                        browser_spellcheck: true,
+                        statusbar: false,
+                        height: 200,
+
+                        style_formats: [{
+                            title: 'Bold text',
+                            inline: 'b'
+                        }, ],
+
+                    });
+                    if(data.payment_conditions!=''){
+                        $('#payment_conditions').val(data.payment_conditions).tinymce({
+                            theme: "modern",
+                        });
+                    }
                 }
             });
         }else{
@@ -1760,13 +1692,13 @@ $(document).on('click', '#send-pdf-quote', function () {
                         'Done!',
                         'Your message has been sent.',
                         'success'
-                    )
+                        )
                 }else{
                     swal(
                         'Error!',
                         'Your message has not been sent.',
                         'error'
-                    )
+                        )
                 }
             }
         });
@@ -1775,7 +1707,7 @@ $(document).on('click', '#send-pdf-quote', function () {
             '',
             'Please choose an email template.',
             'warning'
-        )
+            )
     }
 });
 
@@ -1795,13 +1727,13 @@ $(document).on('change', '#status_quote_id', function () {
                     'Done!',
                     'Status updated.',
                     'success'
-                )
+                    )
             }else{
                 swal(
                     'Error!',
                     'Has ocurred an error.',
                     'error'
-                )
+                    )
             }
         }
     });
@@ -1828,11 +1760,11 @@ $(document).on('change', '#email_template', function () {
                 tinymce.init({
                     selector: "#email-body",
                     plugins: [
-                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons paste textcolor colorpicker textpattern codesample",
-                        "fullpage toc imagetools help"
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
                     ],
                     toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                     menubar: false,
@@ -1888,14 +1820,14 @@ $(document).on('click', '#delete-contact', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                        )
+                            )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this contact because have quotes related.',
                             'warning'
-                        )
+                            )
                         console.log(data.message);
                     }
                 }
@@ -1941,14 +1873,14 @@ $(document).on('click', '#delete-company', function () {
                                                 'Deleted!',
                                                 'Your file has been deleted.',
                                                 'success'
-                                            )
+                                                )
                                             $(theElement).closest('tr').remove();
                                         }else{
                                             swal(
                                                 'Error!',
                                                 'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                                 'error'
-                                            )
+                                                )
                                             console.log(data.message);
                                         }
                                     }
@@ -1965,14 +1897,14 @@ $(document).on('click', '#delete-company', function () {
                                         'Deleted!',
                                         'Your file has been deleted.',
                                         'success'
-                                    )
+                                        )
                                     $(theElement).closest('tr').remove();
                                 }else{
                                     swal(
                                         'Error!',
                                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                         'warning'
-                                    )
+                                        )
                                     console.log(data.message);
                                 }
                             }
@@ -2017,14 +1949,14 @@ $(document).on('click', '#delete-company-show', function () {
                                                 'Deleted!',
                                                 'Your file has been deleted.',
                                                 'success'
-                                            )
+                                                )
                                             $(theElement).closest('tr').remove();
                                         }else{
                                             swal(
                                                 'Error!',
                                                 'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                                 'error'
-                                            )
+                                                )
                                             console.log(data.message);
                                         }
                                     }
@@ -2041,14 +1973,14 @@ $(document).on('click', '#delete-company-show', function () {
                                         'Deleted!',
                                         'Your file has been deleted.',
                                         'success'
-                                    )
+                                        )
                                     window.location.href = '/companies';
                                 }else{
                                     swal(
                                         'Error!',
                                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                         'warning'
-                                    )
+                                        )
                                     console.log(data.message);
                                 }
                             }
@@ -2080,7 +2012,7 @@ $(document).on('click', '#delete-company-user', function () {
                             'Deleted!',
                             'The company and all associated data has been deleted.',
                             'success'
-                        )
+                            )
                         $(theElement).closest('tr').remove();
                     }
                 }
@@ -2119,7 +2051,7 @@ $(document).on('click', '#delete-pricing', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                        )
+                            )
                         $(theElement).closest('tr').remove();
 
                     }
@@ -2156,14 +2088,14 @@ $(document).on('click', '#delete-saleterm', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                        )
+                            )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this contact because have quotes related.',
                             'warning'
-                        )
+                            )
                         console.log(data.message);
                     }
                 }
@@ -2224,7 +2156,7 @@ $(document).on('click', '#savecompany', function () {
                         'Done!',
                         'Register completed',
                         'success'
-                    )
+                        )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2270,7 +2202,7 @@ $(document).on('click', '#savecontact', function () {
                         'Done!',
                         'Register completed',
                         'success'
-                    )
+                        )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2314,7 +2246,7 @@ $(document).on('click', '#savecontactmanualquote', function () {
                         'Done!',
                         'Register completed',
                         'success'
-                    )
+                        )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);

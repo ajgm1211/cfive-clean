@@ -2,7 +2,9 @@
 @section('title', 'Add Quote')
 @section('content')
 @php 
-
+$termOrig ="";
+$termDest ="";
+$termAll = "";
 $subtotalOrigin = 0;
 
 $subtotalDestiny = 0;
@@ -64,7 +66,7 @@ $subtotalDestiny = 0;
                     <div class="pull-right text-right" style="line-height: .5">                                
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
-                      <p><b>Validity: </b>  {{ $info->contract->expire }}</p>
+                      <p><b>Validity: </b> {{   \Carbon\Carbon::parse( $info->contract->validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $info->contract->expire)->format('d M Y') }} </p>
                     </div>
                   </div>
                 </div>
@@ -902,24 +904,56 @@ $subtotalDestiny = 0;
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group ">
+
+                              @if(isset($terms_all) && $terms_all->count()>0)  
+                              @foreach($terms_all as $v)
+                              @php
+                              $termAll .= $form->modality==1 ? $v->term->export : $v->term->import;
+                              @endphp
+                              @endforeach
+                              @endif
+
+
                               @if(isset($terms_origin) && $terms_origin->count()>0)  
-                              <h5 class="title-quote">Origin harbor</h5>
                               @foreach($terms_origin as $v)
-
-                              {!! Form::textarea('term_orig', $form->modality==1 ? $v->term->export : $v->term->import, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
-
+                              @php
+                              $termOrig .= $form->modality==1 ? $v->term->export : $v->term->import;
+                              @endphp
                               @endforeach
                               @endif
-                              @if(isset($terms_destination) && $terms_destination->count()>0)
-                              <h5 class="title-quote">Destination harbor</h5>
-                              @foreach($terms_destination as $v)
-                              {!! Form::textarea('term_dest', $form->modality==1 ? $v->term->export : $v->term->import, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
-
+                              @if(isset($terms_destination) && $terms_destination->count()>0)           @foreach($terms_destination as $v)
+                              @php
+                              $termDest .= $form->modality==1 ? $v->term->export : $v->term->import;
+                              @endphp
                               @endforeach
                               @endif
+
+                              @if($termOrig != "" || $termDest!="" || $termAll != "" )
+
+                              {!! Form::textarea('term',$termAll." ".$termOrig." ".$termDest, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'Export']) !!}
+                              @else
+                              {!! Form::textarea('term',null, ['placeholder' => 'Please enter your export text','class' => 'form-control editor m-input','id'=>'term']) !!}
+                              @endif
+
                             </div>
                           </div>
                         </div> 
+                        <div class="row">
+                          <div class="col-md-12">      
+                            <div class="header-table title-quote size-14px" style="padding-left: 10px;">
+                              <b>Payment conditions</b>        
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <br>
+                            <div class="" style="margin-bottom:40px;">
+                              {!! Form::textarea('payment_conditions', $companyInfo->payment_conditions, ['placeholder' => 'Please enter your payment conditions text','class' => 'form-control editor m-input','id'=>'payment_conditions']) !!}
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                     <div class="row">
@@ -946,7 +980,21 @@ $subtotalDestiny = 0;
           </div>
         </div>
       </div>
-     <!-- <div class="col-md-2">
+      <!-- <div class="col-md-2">
+<h3 class="title-quote size-16px">Settings</h3>
+<hr>
+<p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
+@if(isset($currency_cfg->alphacode))
+<input type="hidden" value="{{$currency_cfg->alphacode}}" id="currency_id">
+@endif
+<p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
+<hr>
+<p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
+@if(isset($currency_cfg->alphacode))
+<p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
+@endif
+</div>        -->
+      <div class="col-lg-2 col-md-2 col-sm-2 col-12 desktop">
         <h3 class="title-quote size-16px">Settings</h3>
         <hr>
         <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
@@ -959,30 +1007,20 @@ $subtotalDestiny = 0;
         @if(isset($currency_cfg->alphacode))
         <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
         @endif
-      </div>        -->
-      <div class="col-lg-2 col-md-2 col-sm-2 col-12 desktop">
-            <h3 class="title-quote size-16px">Settings</h3>
-            <hr>
-            <p class="title-quote size-14px" data-toggle="collapse" data-target="#main_currency" style="cursor: pointer">Main currency <i class="fa fa-angle-down pull-right"></i></p>
-            @if(isset($currency_cfg->alphacode))
-            <input type="hidden" value="{{$currency_cfg->alphacode}}" id="currency_id">
-            @endif
-            <p class="settings size-12px" id="main_currency" class="collapse" style="font-weight: lighter">  @if(isset($currency_cfg->alphacode)){{$currency_cfg->alphacode}}@endif </p>
-            <hr>
-            <p class="title-quote title-quote size-14px" data-toggle="collapse" data-target="#exchange_rate" style="cursor: pointer">Exchange rate <i class="fa fa-angle-down pull-right"></i></p>
-            @if(isset($currency_cfg->alphacode))
-            <p class="settings size-12px" id="exchange_rate" style="font-weight: 100">@if($currency_cfg->alphacode=='EUR') 1 EUR = {{$exchange->rates}} USD @else 1 USD = {{$exchange->rates_eur}} EUR @endif</p>
-            @endif
-            <hr>
-            <label class="title-quote title-quote size-14px">PDF language</label>
-            {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],$user->companyUser->pdf_language, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
-            <hr>
-            <label class="title-quote title-quote size-14px">PDF type</label>
-            {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
-            <hr>
-            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
-            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
-        </div>        
+        <hr>
+        <label class="title-quote title-quote size-14px">PDF language</label>
+        @if($companyInfo->pdf_language  == null )
+        {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],$user->companyUser->pdf_language, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
+        @else
+        {!! Form::select('pdf_language', [1=>'English',2=>'Spanish',3=>'Portuguese'],$companyInfo->pdf_language, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_language']) !!}
+        @endif
+        <hr>
+        <label class="title-quote title-quote size-14px">PDF type</label>
+        {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
+        <hr>
+        <label class="title-quote title-quote size-14px">PDF Ammounts</label>
+        {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
+      </div>        
 
     </div>
 
@@ -997,6 +1035,7 @@ $subtotalDestiny = 0;
     @endif
     <input type="hidden" class="form-control" id="incoterm" name="incoterm" value="{{ $form->incoterm }} ">
     <input type="hidden" class="form-control" id="modality" name="modality" value="{{ $form->modality }} ">
+    <input type="hidden" class="form-control" id="since_validity" name="since_validity" value="{{ $info->contract->validity }}">
     <input type="hidden" class="form-control" id="validity" name="validity" value="{{ $info->contract->expire }}">
     <input type="hidden" class="form-control" id="origin_address" name="origin_address" value="{{ $form->origin_address }} ">
     <input type="hidden" class="form-control" id="destination_address" name="destination_address" value="{{ $form->destination_address }} ">
@@ -1052,7 +1091,7 @@ $subtotalDestiny = 0;
 
 <script>
 
- var editor_config = {
+  var editor_config = {
     path_absolute : "/",
     selector: "textarea.editor",
     plugins: ["template"],
