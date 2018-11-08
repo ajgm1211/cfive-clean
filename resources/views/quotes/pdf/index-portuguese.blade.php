@@ -117,16 +117,33 @@
                 <div class="company" style="color: #525F7F;">
                     <p class="title" style="color: #031B4E"><b>Detalhes da carga</b></p>
                     <hr style="margin-bottom:5px;margin-top:1px;border:0.1px solid #f1f1f1">
-                    <p>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</p>
-                    <p>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</p>
-                    <p>{!! $quote->qty_40_hc != '' &&  $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</p>
-                    <p>{!! $quote->qty_45_hc != '' &&  $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':'' !!}</p>
-                    <p>{!! $quote->qty_20_reefer != '' &&  $quote->qty_20_reefer > 0 ? $quote->qty_20_reefer.' x 20\' Reefer container':'' !!}</p>
-                    <p>{!! $quote->qty_40_reefer != '' &&  $quote->qty_40_reefer > 0 ? $quote->qty_40_reefer.' x 40\' Reefer container':'' !!}</p>
-                    <p>{!! $quote->qty_40_hc_reefer != '' &&  $quote->qty_40_hc_reefer > 0 ? $quote->qty_40_hc_reefer.' x 40\' HC Reefer container':'' !!}</p>
-                    <p>{!! $quote->qty_20_open_top != '' &&  $quote->qty_20_open_top > 0 ? $quote->qty_20_open_top.' x 20\' Open Top container':'' !!}</p>
-                    <p>{!! $quote->qty_40_open_top != '' &&  $quote->qty_40_open_top > 0 ? $quote->qty_40_open_top.' x 40\' Open Top container':'' !!}</p>
-                    <p>{!! $quote->qty_40_hc_open_top != '' &&  $quote->qty_40_hc_open_top > 0 ? $quote->qty_40_hc_open_top.' x 40\' HC Open Top container':'' !!}</p>                    
+
+                    @if($quote->qty_20 != '' || $quote->qty_40 != '' || $quote->qty_40_hc != '' || $quote->qty_45_hc != '' || $quote->qty_20_reefer != '' || $quote->qty_40_reefer != '' || $quote->qty_40_hc_reefer != '' || $quote->qty_20_open_top != '' || $quote->qty_40_open_top != '')
+                        <table style="text-align: left !important;">
+                            @if($quote->qty_20 != '' || $quote->qty_40 != '' || $quote->qty_40_hc != '' || $quote->qty_45_hc != '')
+                                <tr>
+                                    @if($quote->qty_20 != '')<td>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</td>@endif
+                                    @if($quote->qty_40 != '')<td>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</td>@endif
+                                    @if($quote->qty_40_hc != '')<td>{!! $quote->qty_40_hc != '' && $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</td>@endif
+                                    @if($quote->qty_45_hc != '')<td>{!! $quote->qty_45_hc != '' && $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':'' !!}</td>@endif
+                                </tr>
+                            @endif
+                            @if($quote->qty_20_reefer != '' || $quote->qty_40_reefer != '' || $quote->qty_40_hc_reefer != '')
+                                <tr>
+                                    @if($quote->qty_20_reefer != '')<td>{!! $quote->qty_20_reefer != '' &&  $quote->qty_20_reefer > 0 ? $quote->qty_20_reefer.' x 20\' Reefer container':'' !!}</td>@endif
+                                    @if($quote->qty_40_reefer != '')<td>{!! $quote->qty_40_reefer != '' &&  $quote->qty_40_reefer > 0 ? $quote->qty_40_reefer.' x 40\' Reefer container':'' !!}</td>@endif
+                                    @if($quote->qty_40_hc_reefer != '')<td>{!! $quote->qty_40_hc_reefer != '' &&  $quote->qty_40_hc_reefer > 0 ? $quote->qty_40_hc_reefer.' x 40\' HC Reefer container':'' !!}</td>@endif
+                                </tr>
+                            @endif
+                            @if($quote->qty_20_open_top != '' || $quote->qty_40_open_top != '')
+                                <tr>
+                                    @if($quote->qty_20_open_top != '')<td>{!! $quote->qty_20_open_top != '' &&  $quote->qty_20_open_top > 0 ? $quote->qty_20_open_top.' x 20\' Open Top container':'' !!}</td>@endif
+                                    @if($quote->qty_40_open_top != '')<td>{!! $quote->qty_40_open_top != '' &&  $quote->qty_40_open_top > 0 ? $quote->qty_40_open_top.' x 40\' Open Top container':'' !!}</td>@endif
+                                </tr>
+                            @endif
+                        </table>
+                    @endif
+
                     @if($quote->total_quantity!='' && $quote->total_quantity>0)
                     <div class="row">
                         <div class="col-md-3">
