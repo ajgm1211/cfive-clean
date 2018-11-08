@@ -14027,7 +14027,7 @@ function addNotifications(data) {
   notifications.map(function (notification) {
 
     var htmlElements = notifications.map(function (notification) {
-      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>The user " + notification.data.name_user + " " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>" + notification.data.name_user + " " + notification.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
       return text;
     });
 
@@ -14042,7 +14042,7 @@ function addNotifications_old(data) {
   notifications_old.map(function (notification_old) {
 
     var htmlElements = notifications_old.map(function (notification_old) {
-      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>The user " + notification_old.data.name_user + " " + notification_old.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
+      var text = "<div class='m-list-timeline__item'> <span class='m-list-timeline__badge'></span><span class='m-list-timeline__text'>" + notification_old.data.name_user + " " + notification_old.data.message + " </span> <span class='m-list-timeline__time'> </span> </div>";
       return text;
     });
 
