@@ -117,7 +117,7 @@ class NewContractRequestsController extends Controller
     $admins = User::where('type','admin')->get();
     $message = 'has created an new request: '.$Ncontract->id;
     foreach($admins as $userNotifique){
-      \Mail::to($userNotifique->email)->from('info@cargofive.com')->send(new NewRequestToAdminMail($userNotifique->toArray(),
+      \Mail::to($userNotifique->email)->send(new NewRequestToAdminMail($userNotifique->toArray(),
                                                                        $user->toArray(),
                                                                        $Ncontract->toArray()));
       $userNotifique->notify(new N_general($user,$message));
@@ -284,7 +284,7 @@ class NewContractRequestsController extends Controller
         $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
         foreach ($usersCompa as $userCmp) {
           if($userCmp->id != $Ncontract->user_id){
-            \Mail::to($userCmp->email)->from('info@cargofive.com')->send(new RequestToUserMail($userCmp->toArray(),
+            \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
                                                                    $Ncontract->toArray()));
           }
         }
@@ -293,7 +293,7 @@ class NewContractRequestsController extends Controller
         $message = "The importation ".$Ncontract->id." was completed";
         $usercreador->notify(new SlackNotification($message));
 
-        \Mail::to($usercreador->email)->from('info@cargofive.com')->send(new RequestToUserMail($usercreador->toArray(),
+        \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
                                                                    $Ncontract->toArray()));
 
       }

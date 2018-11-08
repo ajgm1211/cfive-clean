@@ -30,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+
     public function register()
     {
         // Dusk, if env is appropiate
@@ -37,4 +39,5 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(DuskServiceProvider::class);
         }*/
     }
+
 }
