@@ -19,7 +19,7 @@ class QuoteObserver
     $userLogin  = auth()->user();
     $idCompany = $userLogin->company_user_id;
     $users = User::where('company_user_id','=',$idCompany)->where('type','company')->orWhere('id','=',$userLogin->id)->get();
-    $message = ' Created the quote number :  '.$quote->id ;
+    $message = ' created the '.$quote->company_quote ;
     foreach ($users as $user) {
       $user->notify(new N_general($userLogin,$message));
     }

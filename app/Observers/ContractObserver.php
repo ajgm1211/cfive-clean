@@ -20,7 +20,7 @@ class ContractObserver
         $idCompany = $contract->company_user_id;
 
         $users = User::all()->where('company_user_id','=',$idCompany);
-        $message = 'add the contract :' . $contract->number ;
+        $message = 'created the contract ' . $contract->name ;
         foreach ($users as $user) {
             $user->notify(new N_general($userLogin,$message));
         }
@@ -41,7 +41,7 @@ class ContractObserver
       $userLogin  = auth()->user();
       $idCompany = $contract->company_user_id;
       $users = User::all()->where('company_user_id','=',$idCompany);
-      $message = 'updated contract :' . $contract->number ;
+      $message = ' updated the contract ' . $contract->name ;
 
       foreach ($users as $user) {
         $user->notify(new N_general($userLogin,$message));
@@ -65,7 +65,7 @@ class ContractObserver
         $idCompany = $contract->company_user_id;
 
         $users = User::all()->where('company_user_id','=',$idCompany);
-        $message = 'deleted contract :' . $contract->number ;
+        $message = 'deleted he contract ' . $contract->name ;
         foreach ($users as $user) {
             $user->notify(new N_general($userLogin,$message));
         }

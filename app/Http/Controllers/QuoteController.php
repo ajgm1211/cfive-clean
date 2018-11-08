@@ -1329,7 +1329,7 @@ class QuoteController extends Controller
     //  $userLogin->notify(new SlackNotification('Ejemplo'));
     $idCompany = $userLogin->company_user_id;
     $users = User::where('company_user_id','=',$idCompany)->where('type','company')->orWhere('id','=',$userLogin->id)->get();
-    $message = ' changed the status of the quote number :  '.$quote->id. ' to  '.$quote->status->name;
+    $message = " ".$quote->status->name." the quote ".$quote->company_quote ;
     foreach ($users as $user) {
       $user->notify(new N_general($userLogin,$message));
     }
