@@ -58,7 +58,7 @@ class SettingController extends Controller
 
     $file = Input::file('image');
 
-    if($file != ""){
+    if($file != ""){    
       //Creamos una instancia de la libreria instalada   
       $image = Image::make(Input::file('image'));
       //Ruta donde queremos guardar las imagenes
