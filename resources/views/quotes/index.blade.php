@@ -82,7 +82,7 @@
 
             .quote-options:hover {
                color: #041A4E;
-               
+
             }
          </style>
 
@@ -195,7 +195,8 @@
       $('#select-destination--2').select2();
    });
 
-
+  // $('#tablequote').css('height', '180px');
+  
    $(function() {
 
 
@@ -222,7 +223,7 @@
             {data: 'action', name: 'action', orderable: false, searchable: false },
          ] ,
          "autoWidth": true,
-
+         'overflow':false,
          "ordering": true,
          "paging":         true,
          buttons: [
