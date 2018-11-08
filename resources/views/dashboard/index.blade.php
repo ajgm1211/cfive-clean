@@ -51,7 +51,7 @@
                             Quotes Draft:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:18px;">
                             <b>{{ $draft }}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -70,13 +70,13 @@ Change
                     </div>
                 </div>
                 <br>
-                <div class="m-widget24 card" style="height: 220px;">
+                <div class="m-widget24 card" style="height: 220px; width: auto;">
                     <div class="m-widget24__item">
                         <h4 class="m-widget24__title">
                             Total:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-default" style="font-size:18px;">
                             <b>{{ $totalDraft}} {{$currency}}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -103,7 +103,7 @@ Change
                             Quotes Sent:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:18px;">
                             <b>{{ $sent }}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -128,7 +128,7 @@ Change
                             Total:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-success" style="font-size:18px;">
                             <b>{{ $totalSent }} {{$currency}}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -154,7 +154,7 @@ Change
                             Quotes Negotiated:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:18px;">
                             <b>{{ $negotiated }}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -179,7 +179,7 @@ Change
                             Total:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-warning" style="font-size:18px;">
                             <b>{{ $totalNegotiated }} {{$currency}}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -206,7 +206,7 @@ Change
                             Quotes Won:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:18px;">
                             <b>{{ $won }}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -231,7 +231,7 @@ Change
                             Total:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-info" style="font-size:18px;">
                             <b>{{ $totalWon }} {{$currency}}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -259,7 +259,7 @@ Change
                             Quotes Lost:
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:18px;">
                             <b>{{ $lost }}</b>
                         </span>
                         <div class="m--space-10"></div>
@@ -284,7 +284,7 @@ Change
                             Total: 
                         </h4>
                         <br>
-                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:22px;">
+                        <span class="m-widget24__desc widget24__stats m--font-danger" style="font-size:18px;">
                             <b>{{ $totalLost }} {{ $currency }}</b>
                         </span>
                         <div class="m--space-10"></div>

@@ -22,6 +22,10 @@
                     <b>Sending</b> &nbsp;<i class="fa fa-spinner fa-spin"></i>
                 </div>
                 <div class="form-group m-form__group">
+                    <label style="letter-spacing: 0.7px"><b>To</b></label>
+                    {{ Form::text('addresse',null,['placeholder' => 'Please choose a addresse','class'=>'form-control','id'=>'addresse']) }}
+                </div>
+                <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Email template</b></label>
                     {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
                 </div>

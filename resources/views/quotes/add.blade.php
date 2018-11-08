@@ -567,7 +567,7 @@
                                                         </div>
                                                         <div class="col-md-4 col-sm-4 ol-xs-12">
                                                             <label>Contact</label>
-                                                            {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control contact_id','required'=>true]) }}<br><br>
+                                                            {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control contact_id','required'=>true,'id'=>'contact_id']) }}<br><br>
                                                             <a  class="btn btn-sm btn-primary m-btn m-btn--icon" onclick="AbrirModal('addContact',0)">
                                                                 <span style="color: white;">
                                                                     <i class="la la-plus"></i>
