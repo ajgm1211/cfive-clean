@@ -360,7 +360,6 @@
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
          ] ,
-         "scrollX": true,
          "autoWidth": true,
          'overflow':false,
          buttons: [
