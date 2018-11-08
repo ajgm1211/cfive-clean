@@ -7,8 +7,8 @@ if (!defined('RDS_HOSTNAME')) {
     define('RDS_PASSWORD', $_SERVER['RDS_PASSWORD']);
     define('RDS_DB_NAME', $_SERVER['RDS_DB_NAME']);
 
-}*/
-
+}
+*/
 
 
 
@@ -52,8 +52,8 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
         ],
-
-       /* 'mysql' => [
+/*
+        'mysql' => [
             'driver' => 'mysql',
             'host' => RDS_HOSTNAME,
             'port' => env('DB_PORT', '3306'),
@@ -66,9 +66,10 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],*/
+        ],
+*/
 
-       'mysql' => [
+        'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
