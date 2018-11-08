@@ -270,6 +270,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
    Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
    Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
+   Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

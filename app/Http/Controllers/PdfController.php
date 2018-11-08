@@ -300,18 +300,35 @@ class PdfController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        if(count($contact_email)>0) {
+        $subject = $request->subject;
+        $body = $request->body;
+        $to = $request->to;
+        if($to!=''){
+            \Mail::to($to)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+        }else{
+            \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+        }
+
+        $quote->status_quote_id=2;
+        $quote->update();
+        return response()->json(['message' => 'Ok']);
+
+        /*if(count($contact_email)>0) {
 
             $subject = $request->subject;
             $body = $request->body;
-
-            \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+            $to = $request->to;
+            if($to!=''){
+                \Mail::to($to)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+            }else{
+                \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+            }
 
             $quote->status_quote_id=2;
             $quote->update();
             return response()->json(['message' => 'Ok']);
         }else{
             return response()->json(['message' => 'Error']);
-        }
+        }*/
     }
 }

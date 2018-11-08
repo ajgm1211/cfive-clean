@@ -802,6 +802,7 @@ $(document).on('click', '#create-quote', function (e) {
     var origin_airport=$("#origin_airport").val();
     var destination_airport=$("#destination_airport").val();
     var modality = $('#modality').val();
+    var contact_id = $('#contact_id').val();
     var qty_20='';
     var qty_40='';
     var qty_40_hc='';
@@ -831,6 +832,17 @@ $(document).on('click', '#create-quote', function (e) {
     var table = document.createElement('table');
     var tableBody = document.createElement('tbody');
     var terms = '';
+    var contact_id=$('#contact_id').val();
+    $.ajax({
+        type: 'GET',
+        url: '/quotes/contact/email/'+contact_id,
+        success: function(data) {
+            $('#addresse').val(data);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
 
     $.ajax({
         url: "/quotes/terms/"+origin_harbor+"/"+destination_harbor,
@@ -1664,15 +1676,16 @@ $(document).on("change keydown keyup", ".weight_input", function(){
 $(document).on('click', '#send-pdf-quote', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
+    var to = $('#addresse').val();
     var email_template_id = $('#email_template').val();
     var email_subject = $('#email-subject').val();
     var email_body = $('#email-body').val();
 
-    if(email_template_id!=''){
+    if(email_template_id!=''&&to!=''){
         $.ajax({
             type: 'POST',
             url: '/quotes/send/pdf',
-            data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body},
+            data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
             beforeSend: function () {
                 $('#send-pdf-quote').hide();
                 $('#send-pdf-quote-sending').show();
@@ -1705,8 +1718,8 @@ $(document).on('click', '#send-pdf-quote', function () {
     }else{
         swal(
             '',
-            'Please choose an email template.',
-            'warning'
+            'Please complete all fields',
+            'error'
             )
     }
 });
