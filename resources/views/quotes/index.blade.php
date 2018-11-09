@@ -38,12 +38,12 @@
                   <div class="form-group m-form__group row align-items-center">
                      <div class="col-md-4">
                         <div class="m-input-icon m-input-icon--left">
-                           <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
+                           <!--<input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
                            <span class="m-input-icon__icon m-input-icon__icon--left">
                               <span>
                                  <i class="la la-search"></i>
                               </span>
-                           </span>
+                           </span>-->
                         </div>
                      </div>
                   </div>
@@ -195,11 +195,14 @@
       $('#select-destination--2').select2();
    });
 
-  // $('#tablequote').css('height', '180px');
-  
+   // $('#tablequote').css('height', '180px');
+
+ /*  $(window).resize(function() {
+      console.log($(window).height());
+      $('.dataTables_scrollBody').css('height', ($(window).height() - 500));
+   });*/
+
    $(function() {
-
-
 
       $('#tablequote').DataTable({
          ordering: true,
@@ -225,7 +228,10 @@
          "autoWidth": true,
          'overflow':false,
          "ordering": true,
-         "paging":         true,
+         "paging":true,
+         "sScrollY": ($(window).height() - 437),         
+         "bPaginate": false,
+         "bJQueryUI": true,
          buttons: [
             {
                extend: 'copyHtml5',
