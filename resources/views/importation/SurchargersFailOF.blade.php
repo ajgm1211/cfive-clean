@@ -2,6 +2,7 @@
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 @section('title', 'Contracts')
 @section('content')
@@ -106,8 +107,8 @@
                         <div class="m-portlet__body">
                             <!--begin: tab body -->
 
-                            <table class="table m-table m-table--head-separator-primary"  id="myatest" >
-                                <thead >
+                            <table class="table tableData"  id="myatest" width="100%">
+                                <thead width="100%">
                                     <tr>
                                         <th> Surcharge </th>
                                         <th> Origin </th>
@@ -155,8 +156,8 @@
                             <div class="m-portlet__body">
                                 <!--begin: tab body -->
 
-                                <table class="table m-table m-table--head-separator-primary"  id="myatest2" >
-                                    <thead >
+                                <table class="table tableData"  id="myatest2" width="100%">
+                                    <thead width="100%">
                                         <tr>
                                             <th> Surcharge </th>
                                             <th> Origin </th>
@@ -222,7 +223,6 @@
             $(function() {
                 $('#myatest').DataTable({
                     processing: true,
-                    //serverSide: true,
                     ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
                     columns: [
                         { data: 'surchargelb', name: 'surchargelb' },
@@ -240,11 +240,11 @@
                     "ordering": true,
                     "info": true,
                     "deferLoading": 57,
-                    "autoWidth": false,
+                    "autoWidth": true,
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   "scrollX": true,
+                   //"scrollX": true,
                 });
 
                 $('#myatest2').DataTable({
@@ -267,11 +267,11 @@
                     "ordering": true,
                     "info": true,
                     "deferLoading": 57,
-                    "autoWidth": false,
+                    "autoWidth": true,
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   "scrollX": true,
+                   //"scrollX": true,
                 }); 
             });
 
