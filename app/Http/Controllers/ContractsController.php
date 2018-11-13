@@ -573,48 +573,51 @@ class ContractsController extends Controller
 
   }
   public function storeLocalChar(Request $request,$id){
-    $localcharge = new LocalCharge();
-    $request->request->add(['contract_id' => $id]);
-    $localcharge =  $localcharge->create($request->all());
-
-    $detailcarrier = $request->input('carrier_id');
-    foreach($detailcarrier as $c => $value)
+    
+    $calculation_type  = $request->input('calculationtype_id');
+    foreach($calculation_type as $ct => $ctype)
     {
-      $detailcarrier = new LocalCharCarrier();
-      $detailcarrier->carrier_id =$value;
-      $detailcarrier->localcharge()->associate($localcharge);
-      $detailcarrier->save();
-    }
-    $typeroute =  $request->input('typeroute');
-    if($typeroute == 'port'){
-      $detailportOrig = $request->input('port_origlocal');
-      $detailportDest = $request->input('port_destlocal');
-      foreach($detailportOrig as $orig => $valueOrig){
-        foreach($detailportDest as $dest => $valueDest){
-          $detailport = new LocalCharPort();
-          $detailport->port_orig =$valueOrig;
-          $detailport->port_dest =$valueDest;
-          $detailport->localcharge()->associate($localcharge);
-          $detailport->save();
+      $localcharge = new LocalCharge();
+      $request->request->add(['contract_id' => $id,'calculationtype_id'=>$ctype]);
+      $localcharge =  $localcharge->create($request->all());
+      $detailcarrier = $request->input('carrier_id');
+
+      foreach($detailcarrier as $c => $value)
+      {
+        $detailcarrier = new LocalCharCarrier();
+        $detailcarrier->carrier_id =$value;
+        $detailcarrier->localcharge()->associate($localcharge);
+        $detailcarrier->save();
+      }
+      $typeroute =  $request->input('typeroute');
+      if($typeroute == 'port'){
+        $detailportOrig = $request->input('port_origlocal');
+        $detailportDest = $request->input('port_destlocal');
+        foreach($detailportOrig as $orig => $valueOrig){
+          foreach($detailportDest as $dest => $valueDest){
+            $detailport = new LocalCharPort();
+            $detailport->port_orig =$valueOrig;
+            $detailport->port_dest =$valueDest;
+            $detailport->localcharge()->associate($localcharge);
+            $detailport->save();
+          }
+        }
+      }elseif($typeroute == 'country'){
+
+        $detailcountryOrig = $request->input('country_orig');
+        $detailcountryDest = $request->input('country_dest');
+
+        foreach($detailcountryOrig as $orig => $valueOrigC){
+          foreach($detailcountryDest as $dest => $valueDestC){
+            $detailcountry = new LocalCharCountry();
+            $detailcountry->country_orig =$valueOrigC;
+            $detailcountry->country_dest = $valueDestC;
+            $detailcountry->localcharge()->associate($localcharge);
+            $detailcountry->save();
+
+          }
         }
       }
-    }elseif($typeroute == 'country'){
-
-      $detailcountryOrig = $request->input('country_orig');
-      $detailcountryDest = $request->input('country_dest');
-
-      foreach($detailcountryOrig as $orig => $valueOrigC){
-        foreach($detailcountryDest as $dest => $valueDestC){
-          $detailcountry = new LocalCharCountry();
-          $detailcountry->country_orig =$valueOrigC;
-          $detailcountry->country_dest = $valueDestC;
-          $detailcountry->localcharge()->associate($localcharge);
-          $detailcountry->save();
-
-        }
-      }
-
-
     }
     return redirect()->back()->with('localcharSave','true')->with('activeS','active');
   }
