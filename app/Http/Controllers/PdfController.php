@@ -308,7 +308,10 @@ class PdfController extends Controller
         $body = $request->body;
         $to = $request->to;
         if($to!=''){
-            \Mail::to($to)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+            $explode=explode(';',$to);
+            foreach($explode as $item) {
+                \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+            }
         }else{
             \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
         }
