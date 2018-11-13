@@ -2,6 +2,14 @@
 @section('css')
 @parent
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
+<style>
+
+  .select2-selection__choice {
+    width: 50px !important;
+    
+  }
+
+</style>
 @endsection
 
 @section('title', 'Contracts')
@@ -197,20 +205,20 @@ $validation_expire = 'Please enter validity date';
                     <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
                     <td width='15%'>
                       <div class="divport1" >
-                        {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}
+                        {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_orig1[]', $country,
-                        null,['class'=>'m-select2-general form-control col-lg-12' ,'multiple' => 'multiple']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}			
                       </div>
                     </td>
                     <td width='12%'>
                       <div class="divport1" >
-                        {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}
+                        {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
                       </div>
                       <div class="divcountry1" hidden="true">	
                         {{ Form::select('country_dest1[]', $country,
-                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}			
+                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}			
                       </div>
                     </td>
                     <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
