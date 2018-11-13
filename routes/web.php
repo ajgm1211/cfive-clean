@@ -125,6 +125,7 @@ Route::middleware(['auth'])->prefix('Requests')->group(function () {
    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
    Route::resource('RequestImportation','NewContractRequestsController');
    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+   Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request');
 });
 
 
