@@ -37,10 +37,9 @@ class SettingController extends Controller
         return view('settings/index',compact('company','currencies'));
     }
 
-    public function idPersonalizado(){
-        $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
-        $iniciales =  strtoupper(substr($user_company->name,0, 2));
-        $quote = Quote::where('company_user_id',$user_company->id)->orderBy('created_at', 'desc')->first();
+    public function idPersonalizado($name,$company_id){
+        $iniciales =  strtoupper(substr($name,0, 2));
+        $quote = Quote::where('company_user_id',$company_id)->orderBy('created_at', 'desc')->first();
 
         if($quote == null){
             $iniciales = $iniciales."-1";
@@ -177,10 +176,10 @@ class SettingController extends Controller
         return view('settings/list_companies',compact('companies'));
     }
 
-    public function duplicate(Request $request,$id)
+    public function duplicate(Request $request)
     {
-        $id = obtenerRouteKey($id);
-        $company_user = CompanyUser::findOrFail($id);
+        //$id = obtenerRouteKey($id);
+        $company_user = CompanyUser::findOrFail($request->company_user_id);
 
         $company_user_duplicate = new CompanyUser();
         $company_user_duplicate->name=$request->name;
@@ -195,10 +194,12 @@ class SettingController extends Controller
         $company_user_duplicate->save();
 
         $quotes = Quote::where('company_user_id',$company_user->id)->get();
+
         $companies = Company::where('company_user_id',$company_user->id)->get();
         $contracts = Contract::where('company_user_id',$company_user->id)->get();
         $surcharges = Surcharge::where('company_user_id',$company_user->id)->get();
         $terms = TermAndCondition::where('company_user_id',$company_user->id)->get();
+        $custom_id =0;
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
 
@@ -259,14 +260,14 @@ class SettingController extends Controller
             }
         }
 
-        foreach($quotes as $quote){;
-            $custom_id_quote = explode('-',$quote->company_quote);
-            $custom_id = $custom_id_quote[1]+1;
-            $company_quote = $custom_id_quote[0]."-".$custom_id;
-            $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-            $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-            $prices = Price::all()->pluck('name','id');
-            $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
+        foreach($quotes as $quote){
+
+            //Set custom quote id
+            $custom_id_quote = $this->idPersonalizado($request->name,$request->company_user_id);
+            $explode=explode('-',$custom_id_quote);
+            $custom_id +=1;
+            $company_quote = $explode[0]."-".$custom_id;
+
             $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
             $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
             $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
@@ -432,6 +433,18 @@ class SettingController extends Controller
             }
 
         }
+
+        $user = new User();
+        $user->name='Admin_'.$company_user_duplicate->name;
+        $user->lastname='Admin_'.$company_user_duplicate->name;
+        $user->email=$company_user_duplicate->name.'@example.com';
+        $user->phone='1234567890';
+        $user->password=bcrypt('secret');
+        $user->type='admin';
+        $user->verified=1;
+        $user->state=1;
+        $user->company_user_id=$company_user_duplicate->id;
+        $user->save();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');

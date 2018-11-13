@@ -7,7 +7,7 @@
  */
 ?>
 
-<div class="modal fade" id="companyUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="companyUserModal{{$company_user_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,7 +18,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {!! Form::open(['route' => array('settings.duplicate',setearRouteKey($company->id)),'class' => 'form-group m-form__group']) !!}
+            {!! Form::open(['route' => array('settings.duplicate'),'class' => 'form-group m-form__group']) !!}
             <div class="modal-body">
                 <div class="m-form__section m-form__section--first">
                     <div class="form-group m-form__group">
@@ -26,6 +26,7 @@
                             <div class="form-group m-form__group">
                                 <label for="name">Name</label>
                                 <input type="text" placeholder="Company's name" id="name" name="name" class="form-control" required/>
+                                <input type="hidden" placeholder="Company's name" id="company_user_id" name="company_user_id" value="{{$company_user_id}}" class="form-control" required/>
                             </div>
                         </div>
                         <div class="col-md-12">
