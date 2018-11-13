@@ -45,9 +45,10 @@ $("#new2").on("click", function() {
   $myClone.find(".portDest").attr('name', 'port_destlocal'+$ids+'[]');
   $myClone.find(".carrier").attr('name', 'localcarrier_id'+$id_carrier+'[]');
   // se agrega el nombre a los nuevos combos pais 
-
   $myClone.find(".countryOrig").attr('name', 'country_orig'+$ids+'[]');
   $myClone.find(".countryDest").attr('name', 'country_dest'+$ids+'[]');
+  // se agrega el nombre al calculation type
+  $myClone.find(".calculationT").attr('name', 'calculationtype'+$ids+'[]');
 
   $id_radio = $( ".rdrouteP" ).length;
   $id_radio = $id_radio + 1;
