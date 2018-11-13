@@ -36,6 +36,7 @@ use App\ViewLocalCharges;
 use App\ViewRates;
 use App\ViewContractRates;
 use App\LocalCharCountry;
+use Illuminate\Support\Collection as Collection;
 
 
 class ContractsController extends Controller
@@ -249,6 +250,30 @@ class ContractsController extends Controller
 
     $localchar = new  ViewLocalCharges();
     $data = $localchar->select('id','surcharge','port_orig','port_dest','country_orig','country_dest','changetype','carrier','calculation_type','ammount','currency')->where('contract_id',$id);
+    
+    
+
+    $data1 = \DB::select(\DB::raw('call proc_localchar('.$id.')'));
+
+
+    $data = new Collection;
+    for ($i = 0; $i < count($data1); $i++) {
+      $data->push([
+        'id' => $data1[$i]->id,
+        'surcharge' =>  $data1[$i]->surcharge,
+        'port_orig' =>   $data1[$i]->port_orig,
+        'port_dest' =>   $data1[$i]->port_dest,
+        'country_orig' =>  $data1[$i]->country_orig,
+        'country_dest' =>   $data1[$i]->country_dest,
+        'changetype' =>  $data1[$i]->changetype,
+        'carrier' =>   $data1[$i]->carrier,
+        'calculation_type' => $data1[$i]->calculation_type,
+        'ammount' =>   $data1[$i]->ammount,
+        'currency' =>   $data1[$i]->currency,
+
+      ]);
+    }
+
 
     return \DataTables::of($data)
       ->addColumn('origin', function ($data) {
@@ -573,7 +598,7 @@ class ContractsController extends Controller
 
   }
   public function storeLocalChar(Request $request,$id){
-    
+
     $calculation_type  = $request->input('calculationtype_id');
     foreach($calculation_type as $ct => $ctype)
     {
