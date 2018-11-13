@@ -27,19 +27,22 @@ class HelperSurchargers {
             $PuertosOrigins = $surcharge->localcharports->pluck('port_orig')->unique();
             foreach($PuertosOrigins as $PortOrigin){
                $OriginObj = Harbor::find($PortOrigin);
-               $origin = $origin.$OriginObj->name.'.';
+               $origin = $origin.$OriginObj->name.' | ';
             }
+             $origin = substr($origin,0,-2);
             //dd($surcharge->localcharports);
             $PuertosDestins = $surcharge->localcharports->pluck('port_dest')->unique();
             foreach($PuertosDestins as $PortDestiny){
                $DestinyObj = Harbor::find($PortDestiny);
-               $destiny = $destiny.$DestinyObj->name.'. ';
+               $destiny = $destiny.$DestinyObj->name.' | ';
             }
-
+             $destiny = substr($destiny,0,-2);
+             
             $carrierArre = $surcharge->localcharcarriers->pluck('carrier')->pluck('name');
             foreach($carrierArre as $carrierName){
-               $carrier = $carrier.$carrierName.'. ';
+               $carrier = $carrier.$carrierName.' | ';
             }
+             $carrier = substr($carrier,0,-2);
 
             $surchargeName   = $surcharge->surcharge['name'];
             $typedestiny     = $surcharge->typedestiny->description;

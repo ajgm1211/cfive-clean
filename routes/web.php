@@ -188,7 +188,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
    Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge');
 
    // Test
-   Route::get('/testExcelImportation/{id}','ImportationController@testExcelImportation')->name('testExcelImportation');
+   Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 
 });
 
