@@ -112,12 +112,12 @@
                                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                                         </a>
                                         &nbsp; &nbsp;  <!--
-                                        <a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
-                                            <samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
-                                        </a> -->
-                                        
-                                        <a href="#" class="eliminarrequest" data-id="{{$Ncontract->id}}" title="Delete" >
-                                            <samp class="la	la-delete" style="font-size:20px; color:#031B4E"></samp>
+<a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
+<samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
+</a> -->
+
+                                        <a href="#" class="eliminarrequest" data-info="{{'id: '.$Ncontract->id.' Number Contract: '.$Ncontract->numbercontract}}" data-id-request="{{$Ncontract->id}}" title="Delete" >
+                                            <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                                         </a>
                                     </td>
                                 </tr>
@@ -190,6 +190,53 @@
 <script type="application/x-javascript" src="/js/RequestContracts/Request.Index.Status.js">
 
 
+</script>
+<script>
+
+    $(document).on('click','.eliminarrequest',function(e){
+        var id = $(this).attr('data-id-request');
+        var info = $(this).attr('data-info');
+        var elemento = $(this);
+        swal({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this! "+info,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then(function(result){
+                    if (result.value) {
+
+                        url='{!! route("destroy.Request",":id") !!}';
+                        url = url.replace(':id', id);
+                        // $(this).closest('tr').remove();
+                        $.ajax({
+                            url:url,
+                            method:'get',
+                            success: function(data){
+                                if(data == 1){
+                                    swal(
+                                        'Deleted!',
+                                        'The Request has been deleted.',
+                                        'success'
+                                    )
+                                    $(elemento).closest('tr').remove();
+                                }else if(data == 2){
+                                    swal("Error!", "an internal error occurred!", "error");
+                                }
+                            }
+                        });
+                    } else if (result.dismiss === 'cancel') {
+                        swal(
+                            'Cancelled',
+                            'Your rate is safe :)',
+                            'error'
+                        )
+                    }
+                });
+
+    });
 </script>
 
 @stop
