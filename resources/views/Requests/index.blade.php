@@ -115,6 +115,10 @@
                                         <a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
                                             <samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
                                         </a> -->
+                                        
+                                        <a href="#" class="eliminarrequest" data-id="{{$Ncontract->id}}" title="Delete" >
+                                            <samp class="la	la-delete" style="font-size:20px; color:#031B4E"></samp>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

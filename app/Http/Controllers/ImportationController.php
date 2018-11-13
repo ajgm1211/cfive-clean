@@ -5194,74 +5194,11 @@ class ImportationController extends Controller
 
    }
    // Solo Para Testear ----------------------------------------------------------------
-   public function testExcelImportation($id){
+   public function testExcelImportation(){
 
-      Excel::create('Filename', function($excel) use($id) {
-         /*$excel->sheet('Contracto', function($sheet) {
-
-         });*/
-
-         $excel->sheet('Rates', function($sheet) use($id) {
-            $rates = PrvRates::get_rates($id);
-            $sheet->row(1, array(
-               "Origin",
-               "Destiny",
-               "Carrier",
-               "20'",
-               "40'",
-               "40'HC",
-               "40'NOR",
-               "45'",
-               "Currency"
-            ));
-            $i= 2;
-            foreach($rates as $rate){
-               $sheet->row($i, array(
-                  "Origin"    => $rate['origin_portLb'],
-                  "Destiny"   => $rate['destiny_portLb'],
-                  "Carrier"   => $rate['carrierLb'],
-                  "20'"       => $rate['twuenty'],
-                  "40'"       => $rate['forty'],
-                  "40'HC"     => $rate['fortyhc'],
-                  "40'NOR"    => $rate['fortynor'],
-                  "45'"       => $rate['fortyfive'],
-                  "Currency"  => $rate['currency_id']
-               ));
-               $i++;
-            }
-         });
-
-         $excel->sheet('Surchargers', function($sheet) use($id) {
-            $surchargers = PrvSurchargers::get_surchargers($id);
-            $sheet->row(1, array(
-               "Surcharge",
-               "Origin",
-               "Destiny",
-               "Carrier",
-               "typedestiny",
-               "Ammount",
-               "Calculation Type",
-               "Currency"
-            ));
-            $i= 2;
-            foreach($surchargers as $surcharger){
-               // dd($surcharger);
-               $sheet->row($i, array(
-                  "surcharge"       => $surcharger['surchargelb'],
-                  "Origin"          => $surcharger['origin_portLb'],
-                  "Destiny"         => $surcharger['destiny_portLb'],
-                  "Carrier"         => $surcharger['carrierlb'],
-                  "typedestiny"     => $surcharger['typedestinylb'],
-                  "Ammount"         => $surcharger['ammount'],
-                  "calculationtype" => $surcharger['calculationtypelb'],
-                  "Currency"        => $surcharger['currencylb']
-               ));
-               $i++;
-            }
-         });
-
-      })->download('xlsx');
-
+       $lugar = 'caracas | valencia | maracay |';
+       $lugar = substr($lugar,0,-2);
+       return $lugar;
    }
 
 }
