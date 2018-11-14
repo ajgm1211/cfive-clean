@@ -1324,7 +1324,7 @@ class QuoteAutomaticController extends Controller
 
         //#######################################################################
 
-        if($local->calculationtype_id == "6"){
+        if($local->calculationtype_id == "6" || $local->calculationtype_id == "9" ){
           foreach($local->localcharcarriers as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               if($local->typedestiny_id == '1'){
@@ -1918,7 +1918,7 @@ class QuoteAutomaticController extends Controller
 
         //##################################################################
 
-        if($global->calculationtype_id == "6"){
+        if($global->calculationtype_id == "6"  || $local->calculationtype_id == "9"){
           foreach($global->globalcharcarrier as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               if($global->typedestiny_id == '1'){
