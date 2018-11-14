@@ -148,7 +148,7 @@ class ExportationController extends Controller
                     "Destiny",
                     "Carrier",
                     "Type Destiny",
-                    "Ammount",
+                    "Amount",
                     "Calculation Type",
                     "Currency"
                 ));
