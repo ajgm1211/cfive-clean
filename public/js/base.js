@@ -45,7 +45,7 @@ function save(id,idval){
                 'Updated!',
                 'Your rate has been updated.',
                 'success'
-                )
+            )
             $("#save"+id).attr('hidden','true');
             $("#cancel"+id).attr('hidden','true');
             $("#edit"+id).removeAttr('hidden');
@@ -114,7 +114,7 @@ function save_l(id,idval){
                 'Updated!',
                 'Your local charge has been updated.',
                 'success'
-                )
+            )
             $("#save_l"+id).attr('hidden','true');
             $("#cancel_l"+id).attr('hidden','true');
             $("#remove_l"+id).attr('hidden','true');
@@ -235,14 +235,14 @@ $(document).on('click', '#delete-surcharge', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                            )
+                        )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this surcharge because have sale terms related.',
                             'warning'
-                            )
+                        )
                         console.log(data.message);
                     }
                 }
@@ -275,7 +275,7 @@ $(document).on('click', '#delete-contact', function () {
                         'Deleted!',
                         'The contact has been deleted.',
                         'success'
-                        )
+                    )
                     $(theElement).closest('ul').remove();
                 }
             });
@@ -306,7 +306,7 @@ $(document).on('click', '#delete-owner', function () {
                         'Deleted!',
                         'The owner has been deleted.',
                         'success'
-                        )
+                    )
                     $(theElement).closest('li').remove();
                 }
             });
@@ -463,8 +463,8 @@ $(document).on('change', '#type_local_markup_3', function (e) {
 });
 
 /********
-  Quotes
-  ********/
+ Quotes
+ ********/
 
 
 //Btn back
@@ -483,7 +483,7 @@ $(document).on('click', '#create-quote-back', function (e) {
 //Load types
 $(document).on('click', '#fcl_type', function (e) {
     $("#delivery_type").prop( "disabled", false );
-    $("#delivery_type_air").prop( "disabled", true );    
+    $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
     $("#delivery_type_air_label").hide();
     $("#fcl_load").show();
@@ -492,7 +492,7 @@ $(document).on('click', '#fcl_type', function (e) {
     $("#airline_label").hide();
     $("#carrier_label").show();
     $("#airline_id").prop( "disabled", true );
-    $("#carrier_id").prop( "disabled", false );    
+    $("#carrier_id").prop( "disabled", false );
     $("#lcl_air_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -511,14 +511,14 @@ $(document).on('click', '#lcl_type', function (e) {
     $("#delivery_type").prop( "disabled", false );
     $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
-    $("#delivery_type_air_label").hide();   
+    $("#delivery_type_air_label").hide();
     $("#lcl_air_load").show();
     $("#origin_harbor_label").show();
     $("#destination_harbor_label").show();
     $("#airline_label").hide();
     $("#carrier_label").show();
     $("#airline_id").prop( "disabled", true );
-    $("#carrier_id").prop( "disabled", false );    
+    $("#carrier_id").prop( "disabled", false );
     $("#fcl_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -526,20 +526,66 @@ $(document).on('click', '#lcl_type', function (e) {
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
     $("input[name=qty_45_hc]").val('');
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+        volume=$('#total_volume').val();
+        total_weight=$('#total_weight').val();
+        if($("input[name='type']:checked").val()==2){
+            total_volume=volume*1000;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }else if($("input[name='type']:checked").val()==3){
+            total_volume=volume*166;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }
+
+        $("#chargeable_weight_total").html(chargeable_weight);
+        $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+        if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+            sum_vol = $('#total_volume_pkg_input').val();
+            weight = $('#total_weight_pkg_input').val();
+
+            total_vol_chargeable = sum_vol * 1000;
+            if (total_vol_chargeable > weight) {
+                chargeable_weight = total_vol_chargeable;
+            } else {
+                chargeable_weight = weight;
+            }
+
+        }
+        $("#chargeable_weight_total").html(chargeable_weight+" kg");
+        $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
 });
 
 $(document).on('click', '#air_type', function (e) {
     $("#delivery_type").prop( "disabled", true );
     $("#delivery_type_air").prop( "disabled", false );
     $("#delivery_type_label").hide();
-    $("#delivery_type_air_label").show();  
+    $("#delivery_type_air_label").show();
     $("#lcl_air_load").show();
     $("#origin_airport_label").show();
     $("#destination_airport_label").show();
     $("#airline_label").show();
     $("#carrier_label").hide();
     $("#airline_id").prop( "disabled", false );
-    $("#carrier_id").prop( "disabled", true );   
+    $("#carrier_id").prop( "disabled", true );
     $("#fcl_load").hide();
     $("#origin_harbor_label").hide();
     $("#destination_harbor_label").hide();
@@ -547,17 +593,64 @@ $(document).on('click', '#air_type', function (e) {
     $("input[name=qty_40]").val('');
     $("input[name=qty_40_hc]").val('');
     $("input[name=qty_45_hc]").val('');
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+        volume=$('#total_volume').val();
+        total_weight=$('#total_weight').val();
+        if($("input[name='type']:checked").val()==2){
+            total_volume=volume*1000;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }else if($("input[name='type']:checked").val()==3){
+            total_volume=volume*166;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }
+
+        $("#chargeable_weight_total").html(chargeable_weight+" kg");
+        $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+        if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+            sum_vol = $('#total_volume_pkg_input').val();
+            weight = $('#total_weight_pkg_input').val();
+
+            total_vol_chargeable = sum_vol * 166;
+            if (total_vol_chargeable > weight) {
+                chargeable_weight = total_vol_chargeable;
+            } else {
+                chargeable_weight = weight;
+            }
+
+        }
+        $("#chargeable_weight_total").html('');
+        $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
 
 });
 
 //Clone load lcl form
 $(document).on('click', '#add_load_lcl_air', function (e) {
     var $template = $('#lcl_air_load_template'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertBefore($template);
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertBefore($template);
 });
 
 //Remove lcl closest row
@@ -578,12 +671,12 @@ $(document).on('click', '#duplicate-quote', function (e) {
     $.ajax({
         url: "/quotes/duplicate/"+quote_id,
         dataType: 'json',
-        success: function(data) {        
+        success: function(data) {
             swal(
                 'Success!',
                 'The quote has been duplicated.',
                 'success'
-                )
+            )
         }
     });
 });
@@ -596,16 +689,16 @@ $(document).on('change', '#modality', function (e) {
         $.ajax({
             url: "/quotes/terms/"+origin_harbor_id+"/"+destination_harbor_id,
             dataType: 'json',
-            success: function(data) {        
+            success: function(data) {
                 $('#terms_box').show();
                 tinymce.init({
                     selector: "#terms_and_conditions",
                     plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
+                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons paste textcolor colorpicker textpattern codesample",
+                        "fullpage toc imagetools help"
                     ],
                     toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                     menubar: false,
@@ -632,24 +725,24 @@ $(document).on('change', '#modality', function (e) {
             }
         });
     }
-    
+
 });
 
 $(document).on('click', '.addButtonOrigin', function (e) {
     var $template = $('#origin_ammounts'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertAfter($template);
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
 });
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertAfter($template);
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
 });
 
 $(document).on('click', '#delete-quote', function () {
@@ -671,7 +764,7 @@ $(document).on('click', '#delete-quote', function () {
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
-                        )
+                    )
                     $(theElement).closest('tr').remove();
                 }
             });
@@ -682,11 +775,11 @@ $(document).on('click', '#delete-quote', function () {
 
 $(document).on('click', '.addButtonDestination', function (e) {
     var $template = $('#destination_ammounts'),
-    $clone = $template
-    .clone()
-    .removeClass('hide')
-    .removeAttr('id')
-    .insertAfter($template);
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template);
 });
 
 $(document).on('click', '.removeOriginButton', function (e) {
@@ -792,7 +885,7 @@ $(document).on('click', '#create-quote', function (e) {
         //return;
     }else if($(".contact_id").val() == ''){
         msg('Sorry, contact is empty. Please go back and complete this field');
-        //return;        
+        //return;
     }
 
     var origin_harbor=$("#origin_harbor").val();
@@ -818,7 +911,7 @@ $(document).on('click', '#create-quote', function (e) {
     var total_volume='';
     var total_quantity_pkg='';
     var total_weight_pkg='';
-    var total_volume_pkg='';        
+    var total_volume_pkg='';
     var type_cargo='';
     var quantity = new Array();
     var height = new Array();
@@ -847,16 +940,16 @@ $(document).on('click', '#create-quote', function (e) {
     $.ajax({
         url: "/quotes/terms/"+origin_harbor+"/"+destination_harbor,
         dataType: 'json',
-        success: function(data) {        
+        success: function(data) {
             $('#terms_box').show();
             tinymce.init({
                 selector: "#terms_and_conditions",
                 plugins: [
-                "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                "searchreplace wordcount visualblocks visualchars code fullscreen",
-                "insertdatetime nonbreaking save table contextmenu directionality",
-                "emoticons paste textcolor colorpicker textpattern codesample",
-                "fullpage toc imagetools help"
+                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime nonbreaking save table contextmenu directionality",
+                    "emoticons paste textcolor colorpicker textpattern codesample",
+                    "fullpage toc imagetools help"
                 ],
                 toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                 menubar: false,
@@ -913,7 +1006,7 @@ $(document).on('click', '#create-quote', function (e) {
     }
     /*if($(".qty_40_hc_open_top").val()>0){
         qty_40_hc_open_top=$(".qty_40_hc_open_top").val();
-    }  */      
+    }  */
     if($("#total_quantity").val()>0){
         total_quantity=$("#total_quantity").val();
     }
@@ -1004,8 +1097,8 @@ $(document).on('click', '#create-quote', function (e) {
                     }
                 }
             }
-        }   
-    }   
+        }
+    }
 
     //TABLE COLUMNS
     var tr = document.createElement('tr');
@@ -1137,7 +1230,7 @@ $(document).on('click', '#create-quote', function (e) {
         $("#cargo_details_40_hc_open_top_p").removeClass('hide');
     }else{
         $("#cargo_details_40_hc_open_top_p").addClass('hide');
-    } */       
+    } */
     if(total_quantity!='' && type_cargo!=''){
         $("#cargo_details_cargo_type").html(" "+type_cargo);
         $("#cargo_details_cargo_type_p").removeClass('hide');
@@ -1223,11 +1316,11 @@ $( document ).ready(function() {
                     tinymce.init({
                         selector: "#payment_conditions",
                         plugins: [
-                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                        "searchreplace wordcount visualblocks visualchars code fullscreen",
-                        "insertdatetime nonbreaking save table contextmenu directionality",
-                        "emoticons paste textcolor colorpicker textpattern codesample",
-                        "fullpage toc imagetools help"
+                            "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                            "searchreplace wordcount visualblocks visualchars code fullscreen",
+                            "insertdatetime nonbreaking save table contextmenu directionality",
+                            "emoticons paste textcolor colorpicker textpattern codesample",
+                            "fullpage toc imagetools help"
                         ],
                         toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                         menubar: false,
@@ -1301,7 +1394,7 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
     var total_amount = 0;
     var self = this;
     var markup = 0;
-    var currency_cfg = $("#currency_id").val();        
+    var currency_cfg = $("#currency_id").val();
     $(".origin_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('tr').find('.origin_ammount_units').val();
@@ -1332,7 +1425,7 @@ $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per
                             }else{
                                 $(self).closest('tr').find('.origin_total_ammount_2').val(total);
                                 $(self).closest('tr').find('.origin_total_ammount_2').change();
-                            }                            
+                            }
                         }
                     });
 
@@ -1358,7 +1451,7 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
     var total_amount = 0;
     var self = this;
     var markup = 0;
-    var currency_cfg = $("#currency_id").val();        
+    var currency_cfg = $("#currency_id").val();
     $(".freight_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('tr').find('.freight_ammount_units').val();
@@ -1388,7 +1481,7 @@ $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_p
                             }else{
                                 $(self).closest('tr').find('.freight_total_ammount_2').val(total);
                                 $(self).closest('tr').find('.freight_total_ammount_2').change();
-                            }                            
+                            }
                         }
                     });
 
@@ -1413,7 +1506,7 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
     var markup = 0;
     var total=0;
     var self = this;
-    var currency_cfg = $("#currency_id").val();        
+    var currency_cfg = $("#currency_id").val();
     $(".destination_price_per_unit").each(function(){
         $( this).each(function() {
             var quantity = $(this).closest('tr').find('.destination_ammount_units').val();
@@ -1435,7 +1528,7 @@ $(document).on("change keyup keydown", ".destination_ammount_units, .destination
                             }else{
                                 total = sub_total / json.rates_eur;
                             }
-                            total = total.toFixed(2);                                
+                            total = total.toFixed(2);
                             if(markup > 0){
                                 var total_amount_m = Number(total)+ Number(markup);
                                 $(self).closest('tr').find('.destination_total_ammount_2').val(total_amount_m.toFixed(2));
@@ -1628,10 +1721,9 @@ $(document).on("change keydown keyup", ".quantity_input", function(){
     var sum = 0;
     //iterate through each textboxes and add the values
     $(".quantity_input").each(function() {
-        //add only if the value is number      
+        //add only if the value is number
         if ($(this).val()>0 && $(this).val()!='') {
             sum += parseInt($(this).val());
-            console.log($(this).val());
         }
         else if ($(this).val().length != 0){
             $(this).css("background-color", "red");
@@ -1645,10 +1737,9 @@ $(document).on("change keydown keyup", ".volume_input", function(){
     var sum = 0;
     //iterate through each textboxes and add the values
     $(".volume_input").each(function() {
-        //add only if the value is number      
+        //add only if the value is number
         if ($(this).val()>0 && $(this).val()!='') {
             sum += parseFloat($(this).val());
-            console.log($(this).val());
         }
         else if ($(this).val().length != 0){
             $(this).css("background-color", "red");
@@ -1661,16 +1752,79 @@ $(document).on("change keydown keyup", ".volume_input", function(){
 
 $(document).on("change keydown keyup", ".weight_input", function(){
     var sum = 0;
+    var sum_vol = 0;
+
     //iterate through each textboxes and add the values
     $(".weight_input").each(function() {
-        //add only if the value is number      
+        //add only if the value is number
         if ($(this).val()>0 && $(this).val()!='') {
             sum += parseFloat($(this).val());
-            console.log($(this).val());
         }
     });
     $("#total_weight_pkg").html(sum + " kg");
     $("#total_weight_pkg_input").val(sum);
+
+    $(".volume_input").each(function() {
+        //add only if the value is number
+        if ($(this).val()>0 && $(this).val()!='') {
+            sum_vol += parseFloat($(this).val());
+        }
+        else if ($(this).val().length != 0){
+            $(this).css("background-color", "red");
+        }
+    });
+    var chargeable_weight= 0;
+    var weight=sum;
+    //Calculate chargeable weight
+    if($("input[name='type']:checked").val()==2){
+        total_vol_chargeable=sum_vol*1000;
+        if(total_vol_chargeable>weight){
+            chargeable_weight=total_vol_chargeable;
+        }else{
+            chargeable_weight=weight;
+        }
+    }else if($("input[name='type']:checked").val()==3){
+        total_vol_chargeable=sum_vol*166;
+        if(total_vol_chargeable>weight){
+            chargeable_weight=total_vol_chargeable;
+        }else{
+            chargeable_weight=weight;
+        }
+    }
+
+    $("#chargeable_weight_pkg").html(chargeable_weight+" kg");
+    $("#chargeable_weight_pkg_input").val(chargeable_weight);
+});
+
+//Calculate chargeable weight by totals
+$(document).on('change keyup keydown', '#total_volume, #total_weight', function () {
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+        volume=$('#total_volume').val();
+        total_weight=$('#total_weight').val();
+        if($("input[name='type']:checked").val()==2){
+            total_volume=volume*1000;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }else if($("input[name='type']:checked").val()==3){
+            total_volume=volume*166;
+            if(total_volume>total_weight){
+                chargeable_weight=total_volume;
+            }else{
+                chargeable_weight=total_weight;
+            }
+        }
+
+        $("#chargeable_weight_total").html(chargeable_weight+" kg");
+        $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
 });
 
 $(document).on('click', '#send-pdf-quote', function () {
@@ -1700,18 +1854,18 @@ $(document).on('click', '#send-pdf-quote', function () {
                     $('.modal-backdrop').remove();
                     $('#subject-box').html('');
                     $('.editor').html('');
-                    $('#textarea-box').hide();         
+                    $('#textarea-box').hide();
                     swal(
                         'Done!',
                         'Your message has been sent.',
                         'success'
-                        )
+                    )
                 }else{
                     swal(
                         'Error!',
                         'Your message has not been sent.',
                         'error'
-                        )
+                    )
                 }
             }
         });
@@ -1720,7 +1874,7 @@ $(document).on('click', '#send-pdf-quote', function () {
             '',
             'Please complete all fields',
             'error'
-            )
+        )
     }
 });
 
@@ -1740,13 +1894,13 @@ $(document).on('change', '#status_quote_id', function () {
                     'Done!',
                     'Status updated.',
                     'success'
-                    )
+                )
             }else{
                 swal(
                     'Error!',
                     'Has ocurred an error.',
                     'error'
-                    )
+                )
             }
         }
     });
@@ -1773,11 +1927,11 @@ $(document).on('change', '#email_template', function () {
                 tinymce.init({
                     selector: "#email-body",
                     plugins: [
-                    "advlist autolink lists link charmap print preview hr anchor pagebreak",
-                    "searchreplace wordcount visualblocks visualchars code fullscreen",
-                    "insertdatetime nonbreaking save table contextmenu directionality",
-                    "emoticons paste textcolor colorpicker textpattern codesample",
-                    "fullpage toc imagetools help"
+                        "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons paste textcolor colorpicker textpattern codesample",
+                        "fullpage toc imagetools help"
                     ],
                     toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
                     menubar: false,
@@ -1833,14 +1987,14 @@ $(document).on('click', '#delete-contact', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                            )
+                        )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this contact because have quotes related.',
                             'warning'
-                            )
+                        )
                         console.log(data.message);
                     }
                 }
@@ -1886,14 +2040,14 @@ $(document).on('click', '#delete-company', function () {
                                                 'Deleted!',
                                                 'Your file has been deleted.',
                                                 'success'
-                                                )
+                                            )
                                             $(theElement).closest('tr').remove();
                                         }else{
                                             swal(
                                                 'Error!',
                                                 'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                                 'error'
-                                                )
+                                            )
                                             console.log(data.message);
                                         }
                                     }
@@ -1910,14 +2064,14 @@ $(document).on('click', '#delete-company', function () {
                                         'Deleted!',
                                         'Your file has been deleted.',
                                         'success'
-                                        )
+                                    )
                                     $(theElement).closest('tr').remove();
                                 }else{
                                     swal(
                                         'Error!',
                                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                         'warning'
-                                        )
+                                    )
                                     console.log(data.message);
                                 }
                             }
@@ -1962,14 +2116,14 @@ $(document).on('click', '#delete-company-show', function () {
                                                 'Deleted!',
                                                 'Your file has been deleted.',
                                                 'success'
-                                                )
+                                            )
                                             $(theElement).closest('tr').remove();
                                         }else{
                                             swal(
                                                 'Error!',
                                                 'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                                 'error'
-                                                )
+                                            )
                                             console.log(data.message);
                                         }
                                     }
@@ -1986,14 +2140,14 @@ $(document).on('click', '#delete-company-show', function () {
                                         'Deleted!',
                                         'Your file has been deleted.',
                                         'success'
-                                        )
+                                    )
                                     window.location.href = '/companies';
                                 }else{
                                     swal(
                                         'Error!',
                                         'This company has quotes associated. You can\'t deleted companies with quotes associated.',
                                         'warning'
-                                        )
+                                    )
                                     console.log(data.message);
                                 }
                             }
@@ -2025,7 +2179,7 @@ $(document).on('click', '#delete-company-user', function () {
                             'Deleted!',
                             'The company and all associated data has been deleted.',
                             'success'
-                            )
+                        )
                         $(theElement).closest('tr').remove();
                     }
                 }
@@ -2034,7 +2188,7 @@ $(document).on('click', '#delete-company-user', function () {
     });
 });
 
-// Pricing 
+// Pricing
 $(document).on('click', '#delete-pricing', function () {
     var id = $(this).attr('data-pricing-id');
     var theElement = $(this);
@@ -2064,7 +2218,7 @@ $(document).on('click', '#delete-pricing', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                            )
+                        )
                         $(theElement).closest('tr').remove();
 
                     }
@@ -2076,7 +2230,7 @@ $(document).on('click', '#delete-pricing', function () {
 
             });
         }
-    });   
+    });
 });
 
 //SaleTerms
@@ -2101,14 +2255,14 @@ $(document).on('click', '#delete-saleterm', function () {
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
-                            )
+                        )
                         $(theElement).closest('tr').remove();
                     }else{
                         swal(
                             'Error!',
                             'Your can\'t delete this contact because have quotes related.',
                             'warning'
-                            )
+                        )
                         console.log(data.message);
                     }
                 }
@@ -2132,7 +2286,7 @@ $('#users_company_2').select2({
 });
 
 
-// companies 
+// companies
 
 $(document).on('click', '#savecompany', function () {
 
@@ -2169,7 +2323,7 @@ $(document).on('click', '#savecompany', function () {
                         'Done!',
                         'Register completed',
                         'success'
-                        )
+                    )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2208,14 +2362,14 @@ $(document).on('click', '#savecontact', function () {
                     $('select[name="contact_id"]').empty();
                     $.each(dataC, function(key, value) {
                         $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-                    });                    
+                    });
                     $('#contactModal').modal('hide');
 
                     swal(
                         'Done!',
                         'Register completed',
                         'success'
-                        )
+                    )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2253,13 +2407,13 @@ $(document).on('click', '#savecontactmanualquote', function () {
                     $('select[name="contact_id"]').empty();
                     $.each(dataC, function(key, value) {
                         $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-                    });                    
+                    });
                     $('#contactModal').modal('hide');
                     swal(
                         'Done!',
                         'Register completed',
                         'success'
-                        )
+                    )
                 },
                 error: function (request, status, error) {
                     alert(request.responseText);
@@ -2454,6 +2608,9 @@ function change_tab(tab){
         $("#total_quantity").val('');
         $("#total_weight").val('');
         $("#total_volume").val('');
+        $("#chargeable_weight_pkg_input").val('');
+        $("#chargeable_weight_total").html('');
+
     }else{
         $('#lcl_air_load').find('.quantity').val('');
         $('#lcl_air_load').find('.height').val('');
@@ -2461,5 +2618,7 @@ function change_tab(tab){
         $('#lcl_air_load').find('.large').val('');
         $('#lcl_air_load').find('.weight').val('');
         $('#lcl_air_load').find('.volume').val('');
+        $("#chargeable_weight_pkg_input").val('');
+        $("#chargeable_weight_pkg").html('');
     }
 }

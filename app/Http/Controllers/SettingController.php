@@ -203,6 +203,18 @@ class SettingController extends Controller
         $harbors = Harbor::all()->pluck('name','id');
         $countries = Country::all()->pluck('name','id');
 
+        $user = new User();
+        $user->name='Admin_'.$company_user_duplicate->name;
+        $user->lastname='Admin_'.$company_user_duplicate->name;
+        $user->email=$company_user_duplicate->name.'@example.com';
+        $user->phone='1234567890';
+        $user->password=bcrypt('secret');
+        $user->type='company';
+        $user->verified=1;
+        $user->state=1;
+        $user->company_user_id=$company_user_duplicate->id;
+        $user->save();
+
         foreach ($contracts as $contract){
             $contract_duplicate = new Contract();
             $contract_duplicate->name = $contract->name;
@@ -226,7 +238,7 @@ class SettingController extends Controller
         foreach ($terms as $term){
             $term_duplicate = new TermAndCondition();
             $term_duplicate->name = $term->name;
-            $term_duplicate->user_id = \Auth::user()->id;
+            $term_duplicate->user_id = $user->id;
             $term_duplicate->import = $term->import;
             $term_duplicate->export = $term->export;
             $term_duplicate->company_user_id = $company_user_duplicate->id;
@@ -243,7 +255,7 @@ class SettingController extends Controller
             $company_duplicate->logo = $company->logo;
             $company_duplicate->associated_quotes = $company->associated_quotes;
             $company_duplicate->company_user_id = $company_user_duplicate->id;
-            $company_duplicate->owner = $company->owner;
+            $company_duplicate->owner = $user->id;
             $company_duplicate->save();
 
             $contacts = Contact::where('company_id',$company->id)->get();
@@ -274,7 +286,7 @@ class SettingController extends Controller
             $packaging_loads = PackageLoad::where('quote_id',$quote->id)->get();
 
             $quote_duplicate = new Quote();
-            $quote_duplicate->owner=\Auth::id();
+            $quote_duplicate->owner=$user->id;
             $quote_duplicate->company_user_id=$company_user_duplicate->id;
             $quote_duplicate->company_quote=$company_quote;
             $quote_duplicate->incoterm=$quote->incoterm;
@@ -433,18 +445,6 @@ class SettingController extends Controller
             }
 
         }
-
-        $user = new User();
-        $user->name='Admin_'.$company_user_duplicate->name;
-        $user->lastname='Admin_'.$company_user_duplicate->name;
-        $user->email=$company_user_duplicate->name.'@example.com';
-        $user->phone='1234567890';
-        $user->password=bcrypt('secret');
-        $user->type='admin';
-        $user->verified=1;
-        $user->state=1;
-        $user->company_user_id=$company_user_duplicate->id;
-        $user->save();
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
