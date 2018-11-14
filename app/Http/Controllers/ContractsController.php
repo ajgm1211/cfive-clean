@@ -248,14 +248,9 @@ class ContractsController extends Controller
   // FUNCIONES PARA EL DATATABLE
   public function data($id){
 
-    $localchar = new  ViewLocalCharges();
-    $data = $localchar->select('id','surcharge','port_orig','port_dest','country_orig','country_dest','changetype','carrier','calculation_type','ammount','currency')->where('contract_id',$id);
-    
-    
-
+ /*   $localchar = new  ViewLocalCharges();
+    $data = $localchar->select('id','surcharge','port_orig','port_dest','country_orig','country_dest','changetype','carrier','calculation_type','ammount','currency')->where('contract_id',$id);*/
     $data1 = \DB::select(\DB::raw('call proc_localchar('.$id.')'));
-
-
     $data = new Collection;
     for ($i = 0; $i < count($data1); $i++) {
       $data->push([
@@ -273,8 +268,6 @@ class ContractsController extends Controller
 
       ]);
     }
-
-
     return \DataTables::of($data)
       ->addColumn('origin', function ($data) {
         if($data['country_orig'] != null){
@@ -302,7 +295,6 @@ class ContractsController extends Controller
   }// local charges en edit
 
   public function dataRates($id){
-
 
     $rate = new  ViewRates();
     $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('contract_id',$id);
@@ -348,9 +340,6 @@ class ContractsController extends Controller
   public function contractTable(){
 
     $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-
-
-
     return \DataTables::collection($contractG)
 
       ->addColumn('options', function (Contract $contractG) {
@@ -365,9 +354,6 @@ class ContractsController extends Controller
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
   }
-
-
-
   public function edit(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
