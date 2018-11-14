@@ -101,7 +101,7 @@
                               {{$Ncontract->validation}}
                            </td>
                            <td>
-                              {{\Carbon\Carbon::parse($Ncontract->created)->format('d-m-Y')}}
+                              {{\Carbon\Carbon::parse($Ncontract->created_at)->format('d-m-Y h:i:s')}}
                            </td>
                            <td>
                               {{$Ncontract->user->name.' '.$Ncontract->user->lastname}}

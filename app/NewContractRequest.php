@@ -14,6 +14,7 @@ class NewContractRequest extends Model
                            'namefile',
                            'user_id',
                            'created',
+                           'created_at',
                            'type',
                            'data'];
     
