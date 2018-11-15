@@ -125,6 +125,7 @@ Route::middleware(['auth'])->prefix('Requests')->group(function () {
    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
    Route::resource('RequestImportation','NewContractRequestsController');
    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+   Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request');
 });
 
 
@@ -190,6 +191,10 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
    // Test
    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 
+});
+
+Route::middleware(['auth'])->prefix('Exportation')->group(function () {
+   Route::resource('Exportation','ExportationController');
 });
 
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {

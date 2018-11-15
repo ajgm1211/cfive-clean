@@ -85,7 +85,7 @@
 			<div class="col-lg-4">
 				{!! Form::label('calculationt', 'Calculation Type') !!}
 				<div class="m-input-icon m-input-icon--right">
-					{{ Form::select('calculationtype', $calculationT,null,['id' => 'calculationtype','class'=>'m-select2-general form-control ' ,'required' => 'true']) }}
+					{{ Form::select('calculationtype[]', $calculationT,null,['id' => 'calculationtype','class'=>'m-select2-general form-control ' ,'required' => 'true','multiple' => 'multiple']) }}
 					<span class="m-input-icon__icon m-input-icon__icon--right">
 						<span>
 							<i class="la la-map-marker"></i>
