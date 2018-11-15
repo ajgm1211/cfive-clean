@@ -288,7 +288,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
     Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
-    Route::get('duplicate/{company_id}', 'SettingController@duplicate')->name('settings.duplicate');
+    Route::post('duplicate', 'SettingController@duplicate')->name('settings.duplicate');
 
 });
 Route::resource('settings', 'SettingController')->middleware('auth');

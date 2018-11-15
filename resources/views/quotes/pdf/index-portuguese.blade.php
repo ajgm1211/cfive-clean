@@ -12,7 +12,7 @@
                 <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
-                <div><span class="color-title"><b>Citar:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
+                <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
                 <div><span class="color-title"><b>Data de emissão:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!=''&&$quote->since_validity!='')
                 <div><span class="color-title"><b>Validade: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
@@ -102,7 +102,7 @@
             <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
-                    <p class="title"><b>{{$quote->type==3 ? 'Companhia aérea':'Transportadora'}}</b></p>
+                    <p class="title"><b>{{$quote->type==3 ? 'Companhia aérea':'Linha Maritima'}}</b></p>
                     <hr style="margin-bottom:5px;margin-top:1px;">
                     @if($quote->carrier_id!='')
                     <p>{{$quote->carrier->name}}</p>
@@ -115,30 +115,30 @@
             <br>
             <div id="details" class="clearfix details">
                 <div class="company" style="color: #525F7F;">
-                    <p class="title" style="color: #031B4E"><b>Detalhes da carga</b></p>
+                    <p class="title" style="color: #031B4E"><b>Detalhes do equipamento</b></p>
                     <hr style="margin-bottom:5px;margin-top:1px;border:0.1px solid #f1f1f1">
 
                     @if($quote->qty_20 != '' || $quote->qty_40 != '' || $quote->qty_40_hc != '' || $quote->qty_45_hc != '' || $quote->qty_20_reefer != '' || $quote->qty_40_reefer != '' || $quote->qty_40_hc_reefer != '' || $quote->qty_20_open_top != '' || $quote->qty_40_open_top != '')
                         <table style="text-align: left !important;">
                             @if($quote->qty_20 != '' || $quote->qty_40 != '' || $quote->qty_40_hc != '' || $quote->qty_45_hc != '')
                                 <tr>
-                                    @if($quote->qty_20 != '')<td>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' container':'' !!}</td>@endif
-                                    @if($quote->qty_40 != '')<td>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' container':'' !!}</td>@endif
-                                    @if($quote->qty_40_hc != '')<td>{!! $quote->qty_40_hc != '' && $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC container':'' !!}</td>@endif
-                                    @if($quote->qty_45_hc != '')<td>{!! $quote->qty_45_hc != '' && $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC container':'' !!}</td>@endif
+                                    @if($quote->qty_20 != '')<td>{!! $quote->qty_20 != '' && $quote->qty_20 > 0 ? $quote->qty_20.' x 20\' contentor':'' !!}</td>@endif
+                                    @if($quote->qty_40 != '')<td>{!! $quote->qty_40 != '' && $quote->qty_40 > 0 ? $quote->qty_40.' x 40\' contentor':'' !!}</td>@endif
+                                    @if($quote->qty_40_hc != '')<td>{!! $quote->qty_40_hc != '' && $quote->qty_40_hc > 0 ? $quote->qty_40_hc.' x 40\' HC contentor':'' !!}</td>@endif
+                                    @if($quote->qty_45_hc != '')<td>{!! $quote->qty_45_hc != '' && $quote->qty_45_hc > 0 ? $quote->qty_45_hc.' x 45\' HC contentor':'' !!}</td>@endif
                                 </tr>
                             @endif
                             @if($quote->qty_20_reefer != '' || $quote->qty_40_reefer != '' || $quote->qty_40_hc_reefer != '')
                                 <tr>
-                                    @if($quote->qty_20_reefer != '')<td>{!! $quote->qty_20_reefer != '' &&  $quote->qty_20_reefer > 0 ? $quote->qty_20_reefer.' x 20\' Reefer container':'' !!}</td>@endif
-                                    @if($quote->qty_40_reefer != '')<td>{!! $quote->qty_40_reefer != '' &&  $quote->qty_40_reefer > 0 ? $quote->qty_40_reefer.' x 40\' Reefer container':'' !!}</td>@endif
-                                    @if($quote->qty_40_hc_reefer != '')<td>{!! $quote->qty_40_hc_reefer != '' &&  $quote->qty_40_hc_reefer > 0 ? $quote->qty_40_hc_reefer.' x 40\' HC Reefer container':'' !!}</td>@endif
+                                    @if($quote->qty_20_reefer != '')<td>{!! $quote->qty_20_reefer != '' &&  $quote->qty_20_reefer > 0 ? $quote->qty_20_reefer.' x 20\' Reefer contentor':'' !!}</td>@endif
+                                    @if($quote->qty_40_reefer != '')<td>{!! $quote->qty_40_reefer != '' &&  $quote->qty_40_reefer > 0 ? $quote->qty_40_reefer.' x 40\' Reefer contentor':'' !!}</td>@endif
+                                    @if($quote->qty_40_hc_reefer != '')<td>{!! $quote->qty_40_hc_reefer != '' &&  $quote->qty_40_hc_reefer > 0 ? $quote->qty_40_hc_reefer.' x 40\' HC Reefer contentor':'' !!}</td>@endif
                                 </tr>
                             @endif
                             @if($quote->qty_20_open_top != '' || $quote->qty_40_open_top != '')
                                 <tr>
-                                    @if($quote->qty_20_open_top != '')<td>{!! $quote->qty_20_open_top != '' &&  $quote->qty_20_open_top > 0 ? $quote->qty_20_open_top.' x 20\' Open Top container':'' !!}</td>@endif
-                                    @if($quote->qty_40_open_top != '')<td>{!! $quote->qty_40_open_top != '' &&  $quote->qty_40_open_top > 0 ? $quote->qty_40_open_top.' x 40\' Open Top container':'' !!}</td>@endif
+                                    @if($quote->qty_20_open_top != '')<td>{!! $quote->qty_20_open_top != '' &&  $quote->qty_20_open_top > 0 ? $quote->qty_20_open_top.' x 20\' Open Top contentor':'' !!}</td>@endif
+                                    @if($quote->qty_40_open_top != '')<td>{!! $quote->qty_40_open_top != '' &&  $quote->qty_40_open_top > 0 ? $quote->qty_40_open_top.' x 40\' Open Top contentor':'' !!}</td>@endif
                                 </tr>
                             @endif
                         </table>
@@ -168,8 +168,8 @@
                                 <th class="unit"><b>Tipo de carga</b></th>
                                 <th class="unit"><b>Quantidade</b></th>
                                 <th class="unit"><b>Altura</b></th>
-                                <th class="unit"><b>Width</b></th>
                                 <th class="unit"><b>Largura</b></th>
+                                <th class="unit"><b>Ampla</b></th>
                                 <th class="unit"><b>Peso</b></th>
                                 <th class="unit"><b>Peso total</b></th>
                                 <th class="unit"><b>Volume</b></th>
@@ -196,6 +196,13 @@
                             <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
                         </div>
                     </div>
+                    @endif
+                    @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <b>Peso taxável :</b> {{$quote->chargeable_weight}} kg
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -246,10 +253,10 @@
             <table border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
                     <tr >
-                        <th class="unit"><b>Carga</b></th>
+                        <th class="unit"><b>Taxa</b></th>
                         <th class="unit"><b>Detalhe</b></th>
                         <th class="unit"><b>Unidades</b></th>
-                        <th class="unit"><b>Preço por unidades</b></th>
+                        <th class="unit"><b>Preço Unitário</b></th>
                         <th class="unit"><b>Total </b></th>
                         <th class="unit"><b>Total &nbsp;{{$quote->currencies->alphacode}}</b></th>
                     </tr>
@@ -295,7 +302,7 @@
             </table>
             @endif
             @if(count($freight_ammounts)>0)
-            <p class="title">Taxas de frete</p>
+            <p class="title">Custos</p>
             <br>
             <table border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote text-center header-table">
