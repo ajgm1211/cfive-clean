@@ -632,7 +632,7 @@
                                                                     </div>
                                                                     <div class="col-md-4 col-sm-4 ol-xs-12">
                                                                         <label>Client</label>
-                                                                        {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true]) }}
+                                                                        {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true,'id'=>'contact_id']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1436,6 +1436,11 @@
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
+
+        $( document ).ready(function() {
+            $('#contact_id').prop("disabled", false);
+        });
+
         var editor_config = {
             path_absolute : "/",
             selector: "textarea.editor",
