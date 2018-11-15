@@ -37,7 +37,7 @@ class ExportationController extends Controller
    {
 
       $countsurchargers = PrvSurchargers::get_surchargers($id);
-      if(count($countsurchargers) <= 1200){
+      if(count($countsurchargers) <= 1300){
          $now = new \DateTime();
          $now = $now->format('dmY_His');
          $contract = Contract::find($id);
