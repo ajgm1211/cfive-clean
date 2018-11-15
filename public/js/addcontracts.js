@@ -95,6 +95,7 @@ $(document).on('click', '.removeL', function () {
     var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier_id'+$i+'[]');
     var countryO = $(".countryOrig").removeAttr('name').attr('name', 'country_orig'+$i+'[]');
     var countryD = $(".countryDest").removeAttr('name').attr('name', 'country_dest'+$i+'[]');
+    var ctype = $(".calculationT").removeAttr('name').attr('name','calculationtype'+$i+'[]');
 
     $i++;
   });
