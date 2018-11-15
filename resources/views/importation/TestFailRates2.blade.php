@@ -2,6 +2,7 @@
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 @section('title', 'Contracts')
 @section('content')
@@ -110,8 +111,8 @@
                         <div class="m-portlet__body">
                             <!--begin: tab body -->
 
-                            <table class="table m-table m-table--head-separator-primary"  id="myatest" >
-                                <thead >
+                            <table class="table tableData"  id="myatest" width="100%">
+                                <thead width="100%">
                                     <tr>
                                         <th>Origin</th>
                                         <th>Destiny</th>
@@ -160,8 +161,8 @@
                             <div class="m-portlet__body">
                                 <!--begin: tab body -->
 
-                                <table class="table m-table m-table--head-separator-primary"  id="myatest2" >
-                                    <thead >
+                                <table class="table tableData"  id="myatest2" width="100%">
+                                    <thead width="100%">
                                         <tr>
                                             <th>Origin</th>
                                             <th>Destiny</th>
@@ -242,13 +243,13 @@
                         { data: 'currency_id', name: 'currency_id' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
-                   "scrollX": true,
+                   //"scrollX": true,
                     "lengthChange": false,
                     "searching": true,
                     "ordering": true,
                     "info": true,
                     "deferLoading": 57,
-                    "autoWidth": false,
+                    "autoWidth": true,
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true
@@ -275,11 +276,11 @@
                     "ordering": true,
                     "info": true,
                     "deferLoading": 57,
-                    "autoWidth": false,
+                    "autoWidth": true,
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   "scrollX": true
+                   //"scrollX": true
                 });
             });
 

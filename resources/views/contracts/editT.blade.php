@@ -105,6 +105,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                         Failed Rates
                         <i class="fa flaticon-tool-1"></i>
                      </a>
+                     
+                     <a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
+                        Export Contract
+                        <i class="fa flaticon-tool-1"></i>
+                     </a>
                      @endrole
                      <br><br>
                      <table  class="table tableData" id="rateTable" width="100%">
