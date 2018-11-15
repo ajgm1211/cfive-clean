@@ -56,7 +56,7 @@
                      </a>
                   </li>
                   <li class="nav-item m-tabs__item">
-                     <a class="nav-link m-tabs__link " data-toggle="tab" href="#m_tabs_6_2" role="tab">
+                     <a class="nav-link m-tabs__link tabrates" data-toggle="tab" href="#m_tabs_6_2" role="tab">
                         <i class="la la-cog"></i>
                         FCL Rates
                      </a>
@@ -233,8 +233,8 @@
                         </div>
                      </div>
                   </div><br><br>
-                  <table class="table tableData" id="tableRates"  width="100%">
-                     <thead width="100%">
+                  <table class="table tableData" id="tableRates" class="tableRates" width="100%">
+                     <thead class="tableRatesTH">
                         <tr>
                            <th title="Field #1">
                               Name
@@ -332,9 +332,13 @@
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contracts.js"></script>
 <script>         
-  
-   $(function() {
+   $(document).on('click','.tabrates',function(e){
+      //console.log($(window).width());
+      //$('.tableRatesTH').css('width',$(window).width() );
+   });
 
+
+   $(function() {
 
       $('#tableRates').DataTable({
          ordering: true,
@@ -361,7 +365,10 @@
             {data: 'options', name: 'options'}
          ] ,
          "autoWidth": true,
-         'overflow':false,
+         "overflow":false,
+         //"scrollY": true,         
+         "bPaginate": false,
+         "bJQueryUI": true,
          buttons: [
             {
                extend: 'copyHtml5',
