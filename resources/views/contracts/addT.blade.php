@@ -5,8 +5,9 @@
 <style>
 
   .select2-selection__choice {
-    width: 50px !important;
-    
+    width: 40px !important;
+    display: inline-block;
+    white-space: pre-line;
   }
 
 </style>
