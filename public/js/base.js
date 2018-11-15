@@ -569,7 +569,8 @@ $(document).on('click', '#lcl_type', function (e) {
             }
 
         }
-        $("#chargeable_weight_total").html(chargeable_weight+" kg");
+
+        $("#chargeable_weight_pkg").html(chargeable_weight+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 });
@@ -637,7 +638,8 @@ $(document).on('click', '#air_type', function (e) {
             }
 
         }
-        $("#chargeable_weight_total").html('');
+
+        $("#chargeable_weight_pkg").html(chargeable_weight+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 
