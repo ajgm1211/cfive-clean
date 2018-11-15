@@ -147,63 +147,65 @@ class ContractsController extends Controller
     foreach($detailscharges as $key2 => $value)
     {
       $calculation_type = $request->input('calculationtype'.$contador); 
+      if(!empty($calculation_type)){
 
-      foreach($calculation_type as $ct => $ctype)
-      {
+        foreach($calculation_type as $ct => $ctype)
+        {
 
-        if(!empty($request->input('ammount.'.$key2))) {
-          $localcharge = new LocalCharge();
-          $localcharge->surcharge_id = $request->input('type.'.$key2);
-          $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
-          $localcharge->calculationtype_id = $ctype;//$request->input('calculationtype.'.$key2);
-          $localcharge->ammount = $request->input('ammount.'.$key2);
-          $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
-          $localcharge->contract()->associate($contract);
-          $localcharge->save();
+          if(!empty($request->input('ammount.'.$key2))) {
+            $localcharge = new LocalCharge();
+            $localcharge->surcharge_id = $request->input('type.'.$key2);
+            $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
+            $localcharge->calculationtype_id = $ctype;//$request->input('calculationtype.'.$key2);
+            $localcharge->ammount = $request->input('ammount.'.$key2);
+            $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+            $localcharge->contract()->associate($contract);
+            $localcharge->save();
 
-          $detailcarrier = $request->input('localcarrier_id'.$contador);
+            $detailcarrier = $request->input('localcarrier_id'.$contador);
 
-          foreach($detailcarrier as $c => $value)
-          {
-            $detailcarrier = new LocalCharCarrier();
-            $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
-            $detailcarrier->localcharge()->associate($localcharge);
-            $detailcarrier->save();
-          }
-
-          $typeroute =  $request->input('typeroute'.$contador);
-          if($typeroute == 'port'){
-            $detailportOrig = $request->input('port_origlocal'.$contador);
-            $detailportDest = $request->input('port_destlocal'.$contador);
-            foreach($detailportOrig as $orig => $value)
+            foreach($detailcarrier as $c => $value)
             {
-              foreach($detailportDest as $dest => $value)
-              {
-                $detailport = new LocalCharPort();
-                $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-                $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-                $detailport->localcharge()->associate($localcharge);
-                $detailport->save();
-              }
-
+              $detailcarrier = new LocalCharCarrier();
+              $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+              $detailcarrier->localcharge()->associate($localcharge);
+              $detailcarrier->save();
             }
-          }elseif($typeroute == 'country'){
 
-            $detailcountryOrig = $request->input('country_orig'.$contador);
-            $detailcountryDest = $request->input('country_dest'.$contador);
-            foreach($detailcountryOrig as $origC => $value)
-            {
-              foreach($detailcountryDest as $destC => $value)
+            $typeroute =  $request->input('typeroute'.$contador);
+            if($typeroute == 'port'){
+              $detailportOrig = $request->input('port_origlocal'.$contador);
+              $detailportDest = $request->input('port_destlocal'.$contador);
+              foreach($detailportOrig as $orig => $value)
               {
-                $detailcountry = new LocalCharCountry();
-                $detailcountry->country_orig =$request->input('country_orig'.$contador.'.'.$origC);
-                $detailcountry->country_dest = $request->input('country_dest'.$contador.'.'.$destC);
-                $detailcountry->localcharge()->associate($localcharge);
-                $detailcountry->save();
+                foreach($detailportDest as $dest => $value)
+                {
+                  $detailport = new LocalCharPort();
+                  $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                  $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                  $detailport->localcharge()->associate($localcharge);
+                  $detailport->save();
+                }
+
+              }
+            }elseif($typeroute == 'country'){
+
+              $detailcountryOrig = $request->input('country_orig'.$contador);
+              $detailcountryDest = $request->input('country_dest'.$contador);
+              foreach($detailcountryOrig as $origC => $value)
+              {
+                foreach($detailcountryDest as $destC => $value)
+                {
+                  $detailcountry = new LocalCharCountry();
+                  $detailcountry->country_orig =$request->input('country_orig'.$contador.'.'.$origC);
+                  $detailcountry->country_dest = $request->input('country_dest'.$contador.'.'.$destC);
+                  $detailcountry->localcharge()->associate($localcharge);
+                  $detailcountry->save();
+                }
               }
             }
+
           }
-
         }
       }
       $contador++;
@@ -229,11 +231,11 @@ class ContractsController extends Controller
       }
     }
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
-
-    return redirect()->action('ContractsController@index');
+    //$request->session()->flash('message.nivel', 'success');
+    //$request->session()->flash('message.title', 'Well done!');
+    //$request->session()->flash('message.content', 'You successfully add this contract.');
+    return redirect()->route('contracts.edit', [setearRouteKey($contract->id)]);
+    //return redirect()->action('ContractsController@index');
 
   }
 
@@ -248,7 +250,7 @@ class ContractsController extends Controller
   // FUNCIONES PARA EL DATATABLE
   public function data($id){
 
- /*   $localchar = new  ViewLocalCharges();
+    /*   $localchar = new  ViewLocalCharges();
     $data = $localchar->select('id','surcharge','port_orig','port_dest','country_orig','country_dest','changetype','carrier','calculation_type','ammount','currency')->where('contract_id',$id);*/
     $data1 = \DB::select(\DB::raw('call proc_localchar('.$id.')'));
     $data = new Collection;
