@@ -133,7 +133,7 @@
                     @endif
                     @if($quote->destination_airport_id!='')
                     {{$quote->destination_airport->name}}, {{$quote->destination_airport->code}}
-                    @endif                                        
+                    @endif
                   </span>
                 </div>
               </div>
@@ -304,6 +304,14 @@
             </span>
           </div>
         </div>
+        @endif
+        @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+            <div class="row">
+                <div class="col-md-12 ">
+                    <br>
+                    <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                </div>
+            </div>
         @endif
       </div>
       @if(count($origin_ammounts)>0)
