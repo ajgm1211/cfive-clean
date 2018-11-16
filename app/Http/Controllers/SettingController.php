@@ -169,11 +169,8 @@ class SettingController extends Controller
         TermAndCondition::where('company_user_id',$id)->delete();
         CompanyUser::where('id',$id)->delete();
 
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register completed successfully!');
+        return response()->json(['message' => 'Ok']);
 
-        return view('settings/list_companies',compact('companies'));
     }
 
     public function duplicate(Request $request)
