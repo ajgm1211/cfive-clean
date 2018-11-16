@@ -1,0 +1,268 @@
+//Business_name
+function display_business_name(){
+    $("#business_name_span").attr('hidden','true');
+    $("#business_name_input").removeAttr('hidden');
+    $("#save_business_name").removeAttr('hidden');
+    $("#cancel_business_name").removeAttr('hidden');
+    $("#edit_business_name").attr('hidden','true');
+}
+
+function cancel_business_name(){
+    $("#business_name_span").removeAttr('hidden');
+    $("#business_name_input").attr('hidden','true');
+    $("#save_business_name").attr('hidden','true');
+    $("#cancel_business_name").attr('hidden','true');
+    $("#edit_business_name").removeAttr('hidden');
+}
+
+function save_business_name(id){
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/name/' + id,
+        data: {
+            'business_name' : $("#business_name_input").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Business name has been updated.',
+                'success'
+            )
+            $("#business_name_span").removeAttr('hidden');
+            $("#business_name_input").attr('hidden','true');
+            $("#save_business_name").attr('hidden','true');
+            $("#cancel_business_name").attr('hidden','true');
+            $("#edit_business_name").removeAttr('hidden');
+            $("#business_name_span").html(data.business_name);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
+}
+
+//Phone
+function display_phone(){
+    $("#phone_span").attr('hidden','true');
+    $("#phone_input").removeAttr('hidden');
+    $("#save_phone").removeAttr('hidden');
+    $("#cancel_phone").removeAttr('hidden');
+    $("#edit_phone").attr('hidden','true');
+}
+
+function cancel_phone(){
+    $("#phone_span").removeAttr('hidden');
+    $("#phone_input").attr('hidden','true');
+    $("#save_phone").attr('hidden','true');
+    $("#cancel_phone").attr('hidden','true');
+    $("#edit_phone").removeAttr('hidden');
+}
+
+function save_phone(id){
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/phone/' + id,
+        data: {
+            'phone' : $("#phone_input").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Phone has been updated.',
+                'success'
+            )
+            $("#phone_span").removeAttr('hidden');
+            $("#phone_input").attr('hidden','true');
+            $("#save_phone").attr('hidden','true');
+            $("#cancel_phone").attr('hidden','true');
+            $("#edit_phone").removeAttr('hidden');
+            $("#phone_span").html(data.phone);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
+}
+
+//Address
+function display_address(){
+    $("#address_span").attr('hidden','true');
+    $("#address_input").removeAttr('hidden');
+    $("#save_address").removeAttr('hidden');
+    $("#cancel_address").removeAttr('hidden');
+    $("#edit_address").attr('hidden','true');
+}
+
+function cancel_address(){
+    $("#address_span").removeAttr('hidden');
+    $("#address_input").attr('hidden','true');
+    $("#save_address").attr('hidden','true');
+    $("#cancel_address").attr('hidden','true');
+    $("#edit_address").removeAttr('hidden');
+}
+
+function save_address(id){
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/address/' + id,
+        data: {
+            'address' : $("#address_input").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Address has been updated.',
+                'success'
+            )
+            $("#address_span").removeAttr('hidden');
+            $("#address_input").attr('hidden','true');
+            $("#save_address").attr('hidden','true');
+            $("#cancel_address").attr('hidden','true');
+            $("#edit_address").removeAttr('hidden');
+            $("#address_span").html(data.address);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
+}
+
+//Email
+function display_email(){
+    $("#email_span").attr('hidden','true');
+    $("#email_input").removeAttr('hidden');
+    $("#save_email").removeAttr('hidden');
+    $("#cancel_email").removeAttr('hidden');
+    $("#edit_email").attr('hidden','true');
+}
+
+function cancel_email(){
+    $("#email_span").removeAttr('hidden');
+    $("#email_input").attr('hidden','true');
+    $("#save_email").attr('hidden','true');
+    $("#cancel_email").attr('hidden','true');
+    $("#edit_email").removeAttr('hidden');
+}
+
+function save_email(id){
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/email/' + id,
+        data: {
+            'email' : $("#email_input").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Email has been updated.',
+                'success'
+            )
+            $("#email_span").removeAttr('hidden');
+            $("#email_input").attr('hidden','true');
+            $("#save_email").attr('hidden','true');
+            $("#cancel_email").attr('hidden','true');
+            $("#edit_email").removeAttr('hidden');
+            $("#email_span").html(data.email);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+
+    });
+}
+
+//Tax number
+function display_tax_number(){
+    $("#tax_number_span").attr('hidden','true');
+    $("#tax_number_input").removeAttr('hidden');
+    $("#save_tax_number").removeAttr('hidden');
+    $("#cancel_tax_number").removeAttr('hidden');
+    $("#edit_tax_number").attr('hidden','true');
+}
+
+function cancel_tax_number(){
+    $("#tax_number_span").removeAttr('hidden');
+    $("#tax_number_input").attr('hidden','true');
+    $("#save_tax_number").attr('hidden','true');
+    $("#cancel_tax_number").attr('hidden','true');
+    $("#edit_tax_number").removeAttr('hidden');
+}
+
+function save_tax_number(id){
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/tax/' + id,
+        data: {
+            'tax_number' : $("#tax_number_input").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Tax number has been updated.',
+                'success'
+            )
+            $("#tax_number_span").removeAttr('hidden');
+            $("#tax_number_input").attr('hidden','true');
+            $("#save_tax_number").attr('hidden','true');
+            $("#cancel_tax_number").attr('hidden','true');
+            $("#edit_tax_number").removeAttr('hidden');
+            $("#tax_number_span").html(data.tax_number);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+
+    });
+}
+
+//PDF Language
+function display_pdf_language(){
+    $("#pdf_language_span").attr('hidden','true');
+    $("#pdf_language_select").removeAttr('hidden');
+    $("#save_pdf_language").removeAttr('hidden');
+    $("#cancel_pdf_language").removeAttr('hidden');
+    $("#edit_pdf_language").attr('hidden','true');
+}
+
+function cancel_pdf_language(){
+    $("#pdf_language_span").removeAttr('hidden');
+    $("#pdf_language_select").attr('hidden','true');
+    $("#save_pdf_language").attr('hidden','true');
+    $("#cancel_pdf_language").attr('hidden','true');
+    $("#edit_pdf_language").removeAttr('hidden');
+}
+
+function save_pdf_language(id){
+    var language='';
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/pdf/' + id,
+        data: {
+            'pdf_language' : $("#pdf_language_select").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'PDF language has been updated.',
+                'success'
+            )
+            $("#pdf_language_span").removeAttr('hidden');
+            $("#pdf_language_select").attr('hidden','true');
+            $("#save_pdf_language").attr('hidden','true');
+            $("#cancel_pdf_language").attr('hidden','true');
+            $("#edit_pdf_language").removeAttr('hidden');
+            if(data.pdf_language==1) {
+                language = 'English';
+            }else if(data.pdf_language==2) {
+                language = 'Spanish';
+            }else{
+                language='Portuguese';
+            }
+            $("#pdf_language_span").html(language);
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+
+    });
+}
