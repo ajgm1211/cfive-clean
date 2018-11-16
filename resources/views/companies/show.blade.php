@@ -84,13 +84,112 @@
                                     <hr>
                                     <div class="collapse show" id="about_company">
                                         <label><b>Name</b></label>
-                                        <p class="color-black">{{$company->business_name}}</p>
+                                        <p class="color-black">
+                                            <span id="business_name_span">{{$company->business_name}}</span>
+                                            <input type="text" class="form-control" id="business_name_input" value="{{$company->business_name}}" hidden>
+                                            <a  id='edit_business_name' onclick="display_business_name()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_business_name' onclick="save_business_name({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_business_name' onclick="cancel_business_name()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
                                         <hr>
                                         <label><b>Phone</b></label>
-                                        <p class="color-black">{{$company->phone}}</p>
+                                        <p class="color-black">
+                                            <span id="phone_span">{{$company->phone}}</span>
+                                            <input type="text" class="form-control" id="phone_input" value="{{$company->phone}}" hidden>
+                                            <a  id='edit_phone' onclick="display_phone()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_phone' onclick="save_phone({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_phone' onclick="cancel_phone()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
+                                        <hr>
+                                        <label><b>Email</b></label>
+                                        <p class="color-black">
+                                            <span id="email_span">{{$company->email}}</span>
+                                            <input type="email" class="form-control" id="email_input" value="{{$company->email}}" hidden>
+                                            <a  id='edit_email' onclick="display_email()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_email' onclick="save_email({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_email' onclick="cancel_email()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
+                                        <hr>
+                                        <label><b>Tax number</b></label>
+                                        <p class="color-black">
+                                            <span id="tax_number_span">{{$company->tax_number}}</span>
+                                            <input type="text" class="form-control" id="tax_number_input" value="{{$company->tax_number}}" hidden>
+                                            <a  id='edit_tax_number' onclick="display_tax_number()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_tax_number' onclick="save_tax_number({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_tax_number' onclick="cancel_tax_number()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
+                                        <hr>
+                                        <label><b>PDF language</b></label>
+                                        <p class="color-black">
+                                            <span id="pdf_language_span">
+                                                @if($company->pdf_language==1)
+                                                    English
+                                                @elseif($company->pdf_language==2)
+                                                    Spanish
+                                                @else
+                                                    Portuguese
+                                                @endif
+                                            </span>
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language',1=>'English',2=>'Spanish',3=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
+                                            <a  id='edit_pdf_language' onclick="display_pdf_language()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_pdf_language' onclick="save_pdf_language({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_pdf_language' onclick="cancel_pdf_language()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
                                         <hr>
                                         <label><b>Address</b></label>
-                                        <p class="color-black">{{$company->address}}</p>
+                                        <p class="color-black">
+                                            <span id="address_span">{{$company->address}}</span>
+                                            <textarea class="form-control" id="address_input" hidden>
+                                                {{trim($company->address)}}
+                                            </textarea>
+                                            <a  id='edit_address' onclick="display_address()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"  title="Edit ">
+                                                <i class="la la-edit"></i>
+                                            </a>
+                                            <a  id='save_address' onclick="save_address({{$company->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden>
+
+                                                <i class="la la-save"></i>
+                                            </a>
+                                            <a  id='cancel_address' onclick="cancel_address()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden>
+                                                <i  class="la la-reply"></i>
+                                            </a>
+                                            <br>
+                                        </p>
                                         <hr>
                                         <label><b>Price level</b></label>
                                         @if(isset($company->price_name) && count($company->price_name)>0)
@@ -259,6 +358,7 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+<script src="{{asset('js/companies.js')}}"></script>
 <script>
 
     var editor_config = {

@@ -299,4 +299,58 @@ class CompanyController extends Controller
 
         return $companies;
     }
+
+    public function updateName(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->business_name=$request->business_name;
+        $company->update();
+
+        return response()->json(['business_name' => $request->business_name]);
+    }
+
+    public function updatePhone(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->phone=$request->phone;
+        $company->update();
+
+        return response()->json(['phone' => $request->phone]);
+    }
+
+    public function updateAddress(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->address=$request->address;
+        $company->update();
+
+        return response()->json(['address' => $request->address]);
+    }
+
+    public function updateEmail(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->email=$request->email;
+        $company->update();
+
+        return response()->json(['address' => $request->email]);
+    }
+
+    public function updateTaxNumber(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->tax_number=$request->tax_number;
+        $company->update();
+
+        return response()->json(['tax_number' => $request->tax_number]);
+    }
+
+    public function updatePdfLanguage(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->pdf_language=$request->pdf_language;
+        $company->update();
+
+        return response()->json(['pdf_language' => $request->pdf_language]);
+    }
 }
