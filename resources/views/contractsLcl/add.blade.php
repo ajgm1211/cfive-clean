@@ -100,28 +100,22 @@ $validation_expire = 'Please enter validity date';
                     <th title="Field #7">
                       Options
                     </th>
-
-
                   </tr>
                 </thead>
                 <tbody>
-
                   <tr   id='tr_clone'  >
                     <td width = '15%'>{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
                     <td  width = '15%'>{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
-                    <td  width = '10%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                    <td  width = '15%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
 
-                    <td  width = '10%'>{!! Form::number('uom[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0']) !!} </td>
-                    <td  width = '10%'>{!! Form::number('minimum[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-                    <td width = '10%'>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                    <td  width = '15%'>{!! Form::number('uom[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0']) !!} </td>
+                    <td  width = '15%'>{!! Form::number('minimum[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
+                    <td width = '12%'>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                     <td>-</td>
-
                   </tr>
-
               </table>
             </div>
             <div class="tab-pane" id="m_tabs_6_2" role="tabpanel">
-
               <div class="row">
                 <div class="col-md-2">
                   <a  id="new2" class="">
@@ -131,7 +125,6 @@ $validation_expire = 'Please enter validity date';
                     </button>
                   </a>
                 </div>
-
               </div>
               <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
                 <thead>
@@ -316,13 +309,9 @@ $validation_expire = 'Please enter validity date';
   </div>
   <!--End::Main Portlet-->
 </div>
-
 @endsection
-
 @section('js')
 @parent
-
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/contractsLcl.js"></script>
-
 @stop

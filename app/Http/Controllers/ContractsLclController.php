@@ -8,7 +8,7 @@ use App\Contact;
 use App\Country;
 use App\Carrier;
 use App\Harbor;
-use App\Rate;
+use App\RateLcl;
 use App\Currency;
 use App\CalculationType;
 use App\Surcharge;
@@ -97,6 +97,36 @@ class ContractsLclController extends Controller
     $contract->validity = $validation[0];
     $contract->expire = $validation[1];
     $contract->save();
+    $details = $request->input('currency_id');
+
+    // For Each de los rates
+    $contador = 1;
+    $contadorRate = 1;
+
+    // For each de los rates 
+    foreach($details as $key => $value)
+    {
+
+      $rateOrig = $request->input('origin_id'.$contadorRate);
+      $rateDest = $request->input('destiny_id'.$contadorRate);
+
+      foreach($rateOrig as $Rorig => $Origvalue)
+      {
+        foreach($rateDest as $Rdest => $Destvalue)
+        {
+          $rates = new RateLcl();
+          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig); 
+          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest); 
+          $rates->carrier_id = $request->input('carrier_id.'.$key);
+          $rates->uom = $request->input('uom.'.$key);
+          $rates->minimum = $request->input('minimum.'.$key);         
+          $rates->currency_id = $request->input('currency_id.'.$key);
+          $rates->contract()->associate($contract);
+          $rates->save();
+        }
+      }
+      $contadorRate++;
+    }
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
