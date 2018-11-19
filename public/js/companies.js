@@ -266,3 +266,56 @@ function save_pdf_language(id){
 
     });
 }
+
+//Price level
+function display_price_level(){
+    $("#price_level_span").attr('hidden','true');
+    $("#price_level_list").attr('hidden','true');
+    $("#price_level_select").removeAttr('hidden');
+    $("#save_prices").removeAttr('hidden');
+    $("#cancel_prices").removeAttr('hidden');
+    $("#edit_prices").attr('hidden','true');
+}
+
+function cancel_price_level(){
+    $("#price_level_span").removeAttr('hidden');
+    $("#price_level_list").removeAttr('hidden');
+    $("#price_level_select").attr('hidden','true');
+    $("#save_prices").attr('hidden','true');
+    $("#cancel_prices").attr('hidden','true');
+    $("#edit_prices").removeAttr('hidden');
+}
+
+function save_price_level(id){
+    var language='';
+    $.ajax({
+        type: 'GET',
+        url: '/companies/update/details/prices/' + id,
+        data: {
+            'price_id' : $("#price_level_select").val(),
+        },
+        success: function(data) {
+            swal(
+                'Updated!',
+                'Price levels has been updated.',
+                'success'
+            )
+            $("#price_level_span").removeAttr('hidden');
+            $("#price_level_list").removeAttr('hidden');
+            $("#price_level_select").attr('hidden','true');
+            $("#save_prices").attr('hidden','true');
+            $("#cancel_prices").attr('hidden','true');
+            $("#edit_prices").removeAttr('hidden');
+
+            $("#price_level_ul").html('');
+            $.each(data, function(key, value) {
+                $("#price_level_ul").append('<li style="margin-left: -25px;" class="color-black">'+value+'</li>');
+            });
+
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+
+    });
+}

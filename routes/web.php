@@ -223,6 +223,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('update/details/email/{company_id}', 'CompanyController@updateEmail')->name('companies.update.email');
     Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
     Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
+    Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
 
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');

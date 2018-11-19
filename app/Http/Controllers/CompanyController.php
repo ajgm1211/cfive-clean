@@ -78,8 +78,9 @@ class CompanyController extends Controller
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $quotes = Quote::where('company_id',$id)->get();
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
+        $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
-        return view('companies.show', compact('company','companies','contacts','quotes','users'));
+        return view('companies.show', compact('company','companies','contacts','quotes','users','prices'));
     }
 
     public function store(Request $request)
@@ -352,5 +353,26 @@ class CompanyController extends Controller
         $company->update();
 
         return response()->json(['pdf_language' => $request->pdf_language]);
+    }
+
+    public function updatePriceLevels(Request $request,$id)
+    {
+        $input = Input::all();
+
+        if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
+            $company_price = CompanyPrice::where('company_id',$id)->delete();
+            foreach ($input['price_id'] as $key => $item) {
+                $company_price = new CompanyPrice();
+                $company_price->company_id=$id;
+                $company_price->price_id=$input['price_id'][$key];
+                $company_price->save();
+            }
+        }
+
+        $prices = Price::whereHas('company_price', function ($query) use($id) {
+            $query->where('company_id',$id);
+        })->pluck('name','id');
+
+        return $prices;
     }
 }
