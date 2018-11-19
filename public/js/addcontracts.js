@@ -45,9 +45,10 @@ $("#new2").on("click", function() {
   $myClone.find(".portDest").attr('name', 'port_destlocal'+$ids+'[]');
   $myClone.find(".carrier").attr('name', 'localcarrier_id'+$id_carrier+'[]');
   // se agrega el nombre a los nuevos combos pais 
-
   $myClone.find(".countryOrig").attr('name', 'country_orig'+$ids+'[]');
   $myClone.find(".countryDest").attr('name', 'country_dest'+$ids+'[]');
+  // se agrega el nombre al calculation type
+  $myClone.find(".calculationT").attr('name', 'calculationtype'+$ids+'[]');
 
   $id_radio = $( ".rdrouteP" ).length;
   $id_radio = $id_radio + 1;
@@ -94,6 +95,7 @@ $(document).on('click', '.removeL', function () {
     var car = $(".carrier",this).removeAttr('name').attr('name', 'localcarrier_id'+$i+'[]');
     var countryO = $(".countryOrig").removeAttr('name').attr('name', 'country_orig'+$i+'[]');
     var countryD = $(".countryDest").removeAttr('name').attr('name', 'country_dest'+$i+'[]');
+    var ctype = $(".calculationT").removeAttr('name').attr('name','calculationtype'+$i+'[]');
 
     $i++;
   });
