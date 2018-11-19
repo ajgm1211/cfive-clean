@@ -21,6 +21,8 @@
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>To</b></label>
                     {{ Form::text('addresse',$quote->contact->email,['placeholder' => 'Please choose a addresse','class'=>'form-control','id'=>'addresse']) }}
+                    <br>
+                    <h6><label><small>To send to several recipients, separate them with a semicolon (;)</small></label></h6>
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Email template</b></label>

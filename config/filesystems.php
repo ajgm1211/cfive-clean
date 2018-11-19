@@ -2,7 +2,7 @@
 
 return [
 
-  /*
+   /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
     |--------------------------------------------------------------------------
@@ -13,9 +13,9 @@ return [
     |
     */
 
-  'default' => env('FILESYSTEM_DRIVER', 'local'),
+   'default' => env('FILESYSTEM_DRIVER', 'local'),
 
-  /*
+   /*
     |--------------------------------------------------------------------------
     | Default Cloud Filesystem Disk
     |--------------------------------------------------------------------------
@@ -26,9 +26,9 @@ return [
     |
     */
 
-  'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+   'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
-  /*
+   /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
@@ -41,58 +41,65 @@ return [
     |
     */
 
-  'disks' => [
+   'disks' => [
 
-    'local' => [
-      'driver' => 'local',
-      'root' => public_path().'/storage',
-    ],
+      'local' => [
+         'driver' => 'local',
+         'root' => public_path().'/storage',
+      ],
 
-    'public' => [
-      'driver' => 'local',
-      'root' => storage_path('app/public'),
-      'url' => env('APP_URL').'/storage',
-      'visibility' => 'public',
-    ],
+      'public' => [
+         'driver' => 'local',
+         'root' => storage_path('app/public'),
+         'url' => env('APP_URL').'/storage',
+         'visibility' => 'public',
+      ],
 
-    'UpLoadFile' => [
-      'driver' => 'local',
-      'root' => storage_path('app/public'),
-      'url' => 'storage',
-      'visibility' => 'public',
-    ],
+      'UpLoadFile' => [
+         'driver' => 'local',
+         'root' => storage_path('app/public'),
+         'url' => 'storage',
+         'visibility' => 'public',
+      ],
 
-    'DownLoadFile' => [
-      'driver' => 'local',
-      'root' => storage_path('app/files'),
-      'url' => 'storage',
-      'visibility' => 'public',
-    ],
+      'DownLoadFile' => [
+         'driver' => 'local',
+         'root' => storage_path('app/files'),
+         'url' => 'storage',
+         'visibility' => 'public',
+      ],
 
-    'image' => [
-      'driver' => 'local',
-      'root' => public_path(),
-      'url' => 'public',
-      'visibility' => 'public',
-    ],
+      'RequestFiles' => [
+         'driver' => 'local',
+         'root' => storage_path('app/exports'),
+         'url' => 'storage',
+         'visibility' => 'public',
+      ],
 
-    's3' => [
-      'driver' => 's3',
-      'key' => env('AWS_ACCESS_KEY_ID'),
-      'secret' => env('AWS_SECRET_ACCESS_KEY'),
-      'region' => env('AWS_DEFAULT_REGION'),
-      'bucket' => env('AWS_BUCKET'),
+      'image' => [
+         'driver' => 'local',
+         'root' => public_path(),
+         'url' => 'public',
+         'visibility' => 'public',
+      ],
 
-    ],
-    's3_upload' => [
-      'driver' => 's3',
-      'key' => env('AWS_ACCESS_KEY_ID'),
-      'secret' => env('AWS_SECRET_ACCESS_KEY'),
-      'region' => env('AWS_DEFAULT_REGION'),
-      'bucket' => env('AWS_UPLOAD'),
+      's3' => [
+         'driver' => 's3',
+         'key' => env('AWS_ACCESS_KEY_ID'),
+         'secret' => env('AWS_SECRET_ACCESS_KEY'),
+         'region' => env('AWS_DEFAULT_REGION'),
+         'bucket' => env('AWS_BUCKET'),
 
-    ],
+      ],
+      's3_upload' => [
+         'driver' => 's3',
+         'key' => env('AWS_ACCESS_KEY_ID'),
+         'secret' => env('AWS_SECRET_ACCESS_KEY'),
+         'region' => env('AWS_DEFAULT_REGION'),
+         'bucket' => env('AWS_UPLOAD'),
 
-  ],
+      ],
+
+   ],
 
 ];
