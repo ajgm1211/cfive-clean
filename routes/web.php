@@ -315,6 +315,12 @@ Route::prefix('impersonation')->group(function ($router) {
    # Impersonate route...
    $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
 });
+//Contracts LCL
 
+Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
+ Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
+});
+
+Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
 Auth::routes();
 
