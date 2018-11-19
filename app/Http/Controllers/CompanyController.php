@@ -78,8 +78,9 @@ class CompanyController extends Controller
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $quotes = Quote::where('company_id',$id)->get();
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
+        $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
-        return view('companies.show', compact('company','companies','contacts','quotes','users'));
+        return view('companies.show', compact('company','companies','contacts','quotes','users','prices'));
     }
 
     public function store(Request $request)
@@ -298,5 +299,80 @@ class CompanyController extends Controller
         }
 
         return $companies;
+    }
+
+    public function updateName(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->business_name=$request->business_name;
+        $company->update();
+
+        return response()->json(['business_name' => $request->business_name]);
+    }
+
+    public function updatePhone(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->phone=$request->phone;
+        $company->update();
+
+        return response()->json(['phone' => $request->phone]);
+    }
+
+    public function updateAddress(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->address=$request->address;
+        $company->update();
+
+        return response()->json(['address' => $request->address]);
+    }
+
+    public function updateEmail(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->email=$request->email;
+        $company->update();
+
+        return response()->json(['address' => $request->email]);
+    }
+
+    public function updateTaxNumber(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->tax_number=$request->tax_number;
+        $company->update();
+
+        return response()->json(['tax_number' => $request->tax_number]);
+    }
+
+    public function updatePdfLanguage(Request $request,$id)
+    {
+        $company = Company::find($id);
+        $company->pdf_language=$request->pdf_language;
+        $company->update();
+
+        return response()->json(['pdf_language' => $request->pdf_language]);
+    }
+
+    public function updatePriceLevels(Request $request,$id)
+    {
+        $input = Input::all();
+
+        if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
+            $company_price = CompanyPrice::where('company_id',$id)->delete();
+            foreach ($input['price_id'] as $key => $item) {
+                $company_price = new CompanyPrice();
+                $company_price->company_id=$id;
+                $company_price->price_id=$input['price_id'][$key];
+                $company_price->save();
+            }
+        }
+
+        $prices = Price::whereHas('company_price', function ($query) use($id) {
+            $query->where('company_id',$id);
+        })->pluck('name','id');
+
+        return $prices;
     }
 }

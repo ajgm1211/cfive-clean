@@ -196,6 +196,13 @@
                         </div>
                     </div>
                     @endif
+                    @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             <br>
