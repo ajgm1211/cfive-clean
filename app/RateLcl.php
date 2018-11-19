@@ -13,7 +13,7 @@ class RateLcl extends Model
   protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contractlcl_id','uom','minimum', 'currency_id'];
   public function contract()
   {
-    return $this->belongsTo('App\ContractLcl');
+    return $this->belongsTo('App\ContractLcl','contractlcl_id');
   }
 
   public function port_origin(){
