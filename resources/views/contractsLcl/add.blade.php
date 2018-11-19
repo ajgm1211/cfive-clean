@@ -37,7 +37,7 @@ $validation_expire = 'Please enter validity date';
       </div>
     </div>
     <div class="m-portlet__body">
-      {!! Form::open(['route' => 'contracts.store','class' => 'form-group m-form__group']) !!}
+      {!! Form::open(['route' => 'contractslcl.store','class' => 'form-group m-form__group']) !!}
       @include('contracts.partials.form_contractsT')
 
       <div class="m-portlet m-portlet--tabs">

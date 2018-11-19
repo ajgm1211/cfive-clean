@@ -35,7 +35,7 @@ class ContractsLclController extends Controller
      */
   public function index()
   {
-    $arreglo = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+    $arreglo = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
     $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
     return view('contractsLcl/index', compact('arreglo','contractG'));
   }
@@ -51,7 +51,7 @@ class ContractsLclController extends Controller
     $typedestiny = TypeDestiny::all()->pluck('description','id');
     $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
     $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
-    
+
     $contacts = Contact::whereHas('company', function ($query) {
       $query->where('company_user_id', '=', \Auth::user()->company_user_id);
     })->pluck('first_name','id');
@@ -91,7 +91,18 @@ class ContractsLclController extends Controller
      */
   public function store(Request $request)
   {
-    //
+    $contract = new ContractLcl($request->all());
+    $contract->company_user_id =Auth::user()->company_user_id;
+    $validation = explode('/',$request->validation_expire);
+    $contract->validity = $validation[0];
+    $contract->expire = $validation[1];
+    $contract->save();
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'You successfully add this contract.');
+
+    return redirect()->action('ContractsLclController@index');
+
   }
 
   /**
@@ -137,5 +148,22 @@ class ContractsLclController extends Controller
   public function destroy($id)
   {
     //
+  }
+  public function contractlclTable(){
+
+    $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
+    return \DataTables::collection($contractG)
+
+      ->addColumn('options', function (ContractLcl $contractG) {
+        return "      <a href='contractslcl/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                      <i class='la la-edit'></i>
+                    </a>
+                    <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
+                      <i class='la la-eraser'></i>
+                    </a>
+
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+
   }
 }
