@@ -81,11 +81,15 @@ Add Company
                             <button id="delete-company-user" data-company-id="{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete">
                                 <i class="la la-eraser"></i>
                             </button>
-                            <a href="{{route('settings.duplicate',setearRouteKey($company->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                            <button data-toggle="modal" data-target="#companyUserModal{{$company->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate">
                                 <i class="la la-plus"></i>
-                            </a> 
+                            </button>
+                            <!--<a href="{{route('settings.duplicate',setearRouteKey($company->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
+                                <i class="la la-plus"></i>
+                            </a>-->
                         </td>
                     </tr>
+                    @include('settings.partials.companyUserModal', ['company_user_id' => $company->id])
                     @endforeach
                 </tbody>
             </table>
@@ -94,6 +98,7 @@ Add Company
 </div>
 @include('companies.partials.companiesModal')
 @include('companies.partials.deleteCompaniesModal')
+
 @endsection
 
 @section('js')
@@ -102,8 +107,8 @@ Add Company
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 <script>
     function AbrirModal(action,id){
-        if(action == "edit"){
-            var url = '{{ route("companies.edit", ":id") }}';
+        if(action == "duplicate"){
+            var url = '{{ route("settings.duplicate", ":id") }}';
             url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#companyModal').modal({show:true});

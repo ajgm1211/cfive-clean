@@ -125,6 +125,7 @@ Route::middleware(['auth'])->prefix('Requests')->group(function () {
    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl');
    Route::resource('RequestImportation','NewContractRequestsController');
    Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status');
+   Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request');
 });
 
 
@@ -192,6 +193,10 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
 
 });
 
+Route::middleware(['auth'])->prefix('Exportation')->group(function () {
+   Route::resource('Exportation','ExportationController');
+});
+
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {
    Route::resource('UploadFile','FileHarborsPortsController');
    Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
@@ -212,6 +217,13 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
     Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
     Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
+    Route::get('update/details/name/{company_id}', 'CompanyController@updateName')->name('companies.update.name');
+    Route::get('update/details/phone/{company_id}', 'CompanyController@updatePhone')->name('companies.update.phone');
+    Route::get('update/details/address/{company_id}', 'CompanyController@updateAddress')->name('companies.update.address');
+    Route::get('update/details/email/{company_id}', 'CompanyController@updateEmail')->name('companies.update.email');
+    Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
+    Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
+    Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
 
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
@@ -283,7 +295,7 @@ Route::middleware(['auth'])->prefix('settings')->group(function () {
     Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
     Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
     Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
-    Route::get('duplicate/{company_id}', 'SettingController@duplicate')->name('settings.duplicate');
+    Route::post('duplicate', 'SettingController@duplicate')->name('settings.duplicate');
 
 });
 Route::resource('settings', 'SettingController')->middleware('auth');

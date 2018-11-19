@@ -632,7 +632,7 @@
                                                                     </div>
                                                                     <div class="col-md-4 col-sm-4 ol-xs-12">
                                                                         <label>Client</label>
-                                                                        {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true]) }}
+                                                                        {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'m-select2-general form-control','required'=>true,'id'=>'contact_id']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -794,7 +794,7 @@
                                                                                     <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="{{$origin_ammount->detail}}" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -807,10 +807,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -835,7 +835,7 @@
                                                                                     <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -848,10 +848,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" step="0.0001" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
                                                                                 </td>      
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -875,7 +875,7 @@
                                                                                     <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                                                                    <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -888,10 +888,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -923,10 +923,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                                                                    <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -990,7 +990,7 @@
                                                                                     <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="{{$freight_ammount->detail}}" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1003,10 +1003,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001" />
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1032,7 +1032,7 @@
                                                                                     <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1045,10 +1045,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step=".01" /> 
+                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001" />
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1073,7 +1073,7 @@
                                                                                     <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text" required/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" required/>
+                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001" required/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1089,7 +1089,7 @@
                                                                                     <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.0001" required/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step=".01"  required/> 
+                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001"  required/>
                                                                                 </td>                      
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1108,7 +1108,7 @@
                                                                                     <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                                                                    <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1121,10 +1121,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
+                                                                                    <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step=".01"  min="0"/> 
+                                                                                    <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step="0.0001"  min="0"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1189,7 +1189,7 @@
                                                                                     <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="{{$destination_ammount->detail}}" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1202,10 +1202,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" step=".01"  min="0"/> 
+                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1230,7 +1230,7 @@
                                                                                     <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1243,10 +1243,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step=".01"  min="0"/> 
+                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1270,7 +1270,7 @@
                                                                                     <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1283,10 +1283,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step=".01"  min="0"/> 
+                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1305,7 +1305,7 @@
                                                                                     <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                                                                    <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="input-group">
@@ -1318,10 +1318,10 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
+                                                                                    <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step=".01"  min="0"/> 
+                                                                                    <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="form-group">
@@ -1436,6 +1436,11 @@
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
+
+        $( document ).ready(function() {
+            $('#contact_id').prop("disabled", false);
+        });
+
         var editor_config = {
             path_absolute : "/",
             selector: "textarea.editor",

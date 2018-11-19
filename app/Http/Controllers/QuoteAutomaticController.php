@@ -1324,13 +1324,16 @@ class QuoteAutomaticController extends Controller
 
         //#######################################################################
 
-        if($local->calculationtype_id == "6"){
+        if($local->calculationtype_id == "6" || $local->calculationtype_id == "9" || $local->calculationtype_id == "10" ){
+
+          $cantidadT = 1;
+
           foreach($local->localcharcarriers as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               if($local->typedestiny_id == '1'){
                 $subtotal_local =  $local->ammount;
                 $totalAmmount =  $local->ammount  / $rateMount;
-                $cantidadT = 1;
+                //$cantidadT = 1;
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1354,7 +1357,7 @@ class QuoteAutomaticController extends Controller
               if($local->typedestiny_id == '2'){
                 $subtotal_local =  $local->ammount;
                 $totalAmmount =  $local->ammount  / $rateMount;
-                $cantidadT = 1;
+                //$cantidadT = 1;
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1378,7 +1381,7 @@ class QuoteAutomaticController extends Controller
               if($local->typedestiny_id == '3'){
                 $subtotal_local =  $local->ammount;
                 $totalAmmount =  $local->ammount  / $rateMount;
-                $cantidadT = 1;
+                //$cantidadT = 1;
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1918,13 +1921,16 @@ class QuoteAutomaticController extends Controller
 
         //##################################################################
 
-        if($global->calculationtype_id == "6"){
+        if($global->calculationtype_id == "6"  || $local->calculationtype_id == "9" || $local->calculationtype_id == "10" ){
+
+          $cantidadT = 1;
+
           foreach($global->globalcharcarrier as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               if($global->typedestiny_id == '1'){
                 $subtotal_global = $global->ammount;
                 $totalAmmount =  $global->ammount / $rateMountG;
-                $cantidadT = 1;
+
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1948,7 +1954,7 @@ class QuoteAutomaticController extends Controller
               if($global->typedestiny_id == '2'){
                 $subtotal_global = $global->ammount;
                 $totalAmmount =  $global->ammount / $rateMountG;
-                $cantidadT = 1;
+
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
@@ -1972,7 +1978,7 @@ class QuoteAutomaticController extends Controller
               if($global->typedestiny_id == '3'){
                 $subtotal_global = $global->ammount;
                 $totalAmmount =  $global->ammount / $rateMountG;
-                $cantidadT = 1;
+
                 // MARKUP
                 if($localPercentage != 0){
                   $markup = ( $totalAmmount *  $localPercentage ) / 100 ;

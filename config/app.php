@@ -171,6 +171,8 @@ return [
         OwenIt\Auditing\AuditingServiceProvider::class,
         Lab404\Impersonate\ImpersonateServiceProvider::class,
         App\Providers\HarborsServiceProvider::class,
+        App\Providers\RatesServiceProvider::class,
+        App\Providers\SurchargersServiceProvider::class,
 
 
 
@@ -230,6 +232,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'GoogleTagManager' => Spatie\GoogleTagManager\GoogleTagManagerFacade::class,
         'PrvHarbor' => App\Helpers\Helpharbors::class,
+        'PrvRates' => App\Helpers\Rates\HelperRates::class,
+        'PrvSurchargers' => App\Helpers\Surchargers\HelperSurchargers::class,
 
     ],
 

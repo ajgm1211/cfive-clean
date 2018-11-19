@@ -291,13 +291,19 @@
                                                                                 <div class="input-group">
                                                                                     <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
                                                                                     <div class="input-group-btn">
-                                                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CM <span class="caret"></span></button>
+                                                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
                                                                                         <ul class="dropdown-menu dropdown-menu-right">
                                                                                         </ul>
                                                                                     </div><!-- /btn-group -->
                                                                                 </div><!-- /input-group -->
                                                                             </div>
-                                                                        </div>                                                                 
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <br>
+                                                                            <br>
+                                                                            <b>Chargeable weight:</b>
+                                                                            <span id="chargeable_weight_total"></span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="tab_1_2">
@@ -420,6 +426,13 @@
                                                                             <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
                                                                             <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
                                                                             <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
+                                                                        </div>
+                                                                        <br>
+                                                                        <br>
+                                                                        <div class="col-md-12">
+                                                                            <b>Chargeable weight:</b>
+                                                                            <span id="chargeable_weight_pkg"></span>
+                                                                            <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
