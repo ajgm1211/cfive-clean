@@ -10,7 +10,7 @@ use App\Carrier;
 use App\Harbor;
 use App\RateLcl;
 use App\Currency;
-use App\CalculationType;
+use App\CalculationTypeLcl;
 use App\Surcharge;
 use App\User;
 use App\TypeDestiny;
@@ -22,7 +22,7 @@ use Yajra\Datatables\Datatables;
 use App\CompanyUser;
 use App\ViewLocalCharges;
 use App\ViewRates;
-use App\ViewContractRates;
+use App\ViewContractLclRates;
 use Illuminate\Support\Collection as Collection;
 use App\ContractLcl;
 
@@ -47,7 +47,7 @@ class ContractsLclController extends Controller
     $country = Country::all()->pluck('name','id');
     $carrier = Carrier::all()->pluck('name','id');
     $currency = Currency::all()->pluck('alphacode','id');
-    $calculationT = CalculationType::all()->pluck('name','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
     $typedestiny = TypeDestiny::all()->pluck('description','id');
     $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
     $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
@@ -190,6 +190,32 @@ class ContractsLclController extends Controller
                     </a>
                     <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
                       <i class='la la-eraser'></i>
+                    </a>
+
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
+
+  }
+  // DATATABLES 
+  
+  
+  public function contractLclRates(){
+    $contractRate = new  ViewContractLclRates();
+    $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency')->where('company_user_id', Auth::user()->company_user_id);
+
+
+    return \DataTables::of($data)
+
+      ->addColumn('validity', function ($data) {
+        return $data['validy'] ." / ".$data['expire'];
+      })
+      ->addColumn('options', function ($data) {
+        return "<a href='contracts/".setearRouteKey($data['contract_id'])."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+                      <i class='la la-edit'></i>
+                    </a>
+
+                    <a href='#' id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                    <i  class='la la-times-circle'></i>
                     </a>
 
         ";
