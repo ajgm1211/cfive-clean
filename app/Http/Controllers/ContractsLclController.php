@@ -25,6 +25,10 @@ use App\ViewRates;
 use App\ViewContractLclRates;
 use Illuminate\Support\Collection as Collection;
 use App\ContractLcl;
+use App\LocalChargeLcl;
+use App\LocalCharCarrierLcl;
+use App\LocalCharPortLcl;
+use App\LocalCharCountryLcl;
 
 class ContractsLclController extends Controller
 {
@@ -98,6 +102,8 @@ class ContractsLclController extends Controller
     $contract->expire = $validation[1];
     $contract->save();
     $details = $request->input('currency_id');
+    $detailscharges = $request->input('localcurrency_id');
+
 
     // For Each de los rates
     $contador = 1;
@@ -127,6 +133,75 @@ class ContractsLclController extends Controller
       }
       $contadorRate++;
     }
+    // for each de los localcharges
+
+    foreach($detailscharges as $key2 => $value)
+    {
+      $calculation_type = $request->input('calculationtype'.$contador); 
+      if(!empty($calculation_type)){
+
+        foreach($calculation_type as $ct => $ctype)
+        {
+
+          if(!empty($request->input('ammount.'.$key2))) {
+            $localcharge = new LocalChargeLcl();
+            $localcharge->surcharge_id = $request->input('type.'.$key2);
+            $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
+            $localcharge->calculationtypelcl_id = $ctype;//$request->input('calculationtype.'.$key2);
+            $localcharge->ammount = $request->input('ammount.'.$key2);
+            $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
+            $localcharge->contract()->associate($contract);
+            $localcharge->save();
+
+            $detailcarrier = $request->input('localcarrier_id'.$contador);
+
+            foreach($detailcarrier as $c => $value)
+            {
+              $detailcarrier = new LocalCharCarrierLcl();
+              $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+              $detailcarrier->localchargelcl()->associate($localcharge);
+              $detailcarrier->save();
+            }
+
+            $typeroute =  $request->input('typeroute'.$contador);
+            if($typeroute == 'port'){
+              $detailportOrig = $request->input('port_origlocal'.$contador);
+              $detailportDest = $request->input('port_destlocal'.$contador);
+              foreach($detailportOrig as $orig => $value)
+              {
+                foreach($detailportDest as $dest => $value)
+                {
+                  $detailport = new LocalCharPortLcl();
+                  $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
+                  $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                  $detailport->localchargelcl()->associate($localcharge);
+                  $detailport->save();
+                }
+
+              }
+            }elseif($typeroute == 'country'){
+
+              $detailcountryOrig = $request->input('country_orig'.$contador);
+              $detailcountryDest = $request->input('country_dest'.$contador);
+              foreach($detailcountryOrig as $origC => $value)
+              {
+                foreach($detailcountryDest as $destC => $value)
+                {
+                  $detailcountry = new LocalCharCountryLcl();
+                  $detailcountry->country_orig =$request->input('country_orig'.$contador.'.'.$origC);
+                  $detailcountry->country_dest = $request->input('country_dest'.$contador.'.'.$destC);
+                  $detailcountry->localchargelcl()->associate($localcharge);
+                  $detailcountry->save();
+                }
+              }
+            }
+
+          }
+        }
+      }
+      $contador++;
+    }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
@@ -197,8 +272,8 @@ class ContractsLclController extends Controller
 
   }
   // DATATABLES 
-  
-  
+
+
   public function contractLclRates(){
     $contractRate = new  ViewContractLclRates();
     $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency')->where('company_user_id', Auth::user()->company_user_id);
