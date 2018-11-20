@@ -325,6 +325,7 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
   // DATATABLES LCL
   Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
   Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
+  Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
 });
 
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
