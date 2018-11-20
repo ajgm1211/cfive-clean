@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Yajra\Datatables\Datatables;
 use App\CompanyUser;
 use App\ViewLocalCharges;
-use App\ViewRates;
+use App\ViewRatesLcl;
 use App\ViewContractLclRates;
 use Illuminate\Support\Collection as Collection;
 use App\ContractLcl;
@@ -227,9 +227,44 @@ class ContractsLclController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-  public function edit($id)
+  public function edit(Request $request,$id)
   {
-    //
+    $id = obtenerRouteKey($id);
+    $contracts = ContractLcl::where('id',$id)->first();
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $country = Country::all()->pluck('name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    //$company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
+   // $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
+   /* if(!empty($company_restriction)){
+      $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
+    }
+    if(!empty($user_restriction)){
+      $user = User::where('id',$user_restriction->user_id)->select('id')->first();
+    }*/
+    $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
+    if(Auth::user()->type == 'company' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
+    }
+    if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
+      $users =  User::whereHas('companyUser', function($q)
+                               {
+                                 $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                               })->pluck('Name','id');
+    }
+    //dd($contracts);
+    if (!$request->session()->exists('activeSLcl')) {
+      $request->session()->flash('activeRLcl', 'active');
+    }
+
+    return view('contractsLcl.edit', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
   }
 
   /**
@@ -295,6 +330,24 @@ class ContractsLclController extends Controller
 
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
+  }
+  public function dataRatesLcl($id){
+
+    $rate = new  ViewRatesLcl();
+    $data = $rate->select('id','port_orig','port_dest','carrier','uom','minimum','currency')->where('contract_id',$id);
+
+    return \DataTables::of($data)
+      ->addColumn('options', function ($data) {
+        return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
+          <i class='la la-edit'></i>
+          </a>
+             <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                    <i  class='la la-times-circle'></i>
+                    </a>
+
+        ";
+      }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
   }
+
 }
