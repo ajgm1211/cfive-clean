@@ -264,8 +264,57 @@
 <script src="/js/contractslcl.js"></script>
 <script>         
   $(function() {
+    $('#tableRates').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 3, "asc" ],[ 4, "asc" ]],
+      ajax:  "{{ route('contractlcl.table') }}",
+      columns: [
+
+        {data: 'name', name: 'name'},
+        {data: 'number', name: 'number'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'port_orig', name: 'port_orig'},
+        {data: 'port_dest', name: 'port_dest'},
+        {data: 'uom', name: 'uom'},
+        {data: 'minimum', name: 'minimum'},
+        {data: 'currency', name: 'currency'},
+        {data: 'validity', name: 'validity'},
+        {data: 'status', name: 'status'},
+        {data: 'options', name: 'options'}
+      ] ,
+      "autoWidth": true,
+      "overflow":false,
+      //"scrollY": true,         
+      "bPaginate": false,
+      "bJQueryUI": true,
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
+
+
+    });
     $('#tableContracts').DataTable({
-      ajax:  "{{ route('contract.tableG') }}",
+      ajax:  "{{ route('contractlcl.tableG') }}",
       columns: [        
         {data: 'name', name: 'name'},
         {data: 'number', name: 'number'},
