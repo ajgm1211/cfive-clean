@@ -524,9 +524,6 @@ class ContractsController extends Controller
   }
   public function storeRates(Request $request,$id){
 
-
-
-
     $rateOrig = $request->input('origin_port');
     $rateDest = $request->input('destiny_port');
 

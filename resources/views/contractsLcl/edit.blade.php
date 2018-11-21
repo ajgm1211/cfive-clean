@@ -631,10 +631,10 @@ Load
 </script>
 
 <script>
-  /* function AbrirModal(action,id){
+   function AbrirModal(action,id){
 
       if(action == "editRate"){
-         var url = '{{ route("edit-rates", ":id") }}';
+         var url = '{{ route("edit-rates-lcl", ":id") }}';
          url = url.replace(':id', id);
          $('#rate-body').load(url,function(){
             $('#modalRates').modal({show:true});
@@ -642,13 +642,14 @@ Load
 
       }
       if(action == "addRate"){
-         var url = '{{ route("add-rates", ":id") }}';
+         var url = '{{ route("add-rates-lcl", ":id") }}';
          url = url.replace(':id', id);
          $('#rate-body').load(url,function(){
             $('#modalRates').modal({show:true});
          });
 
       }
+     /*
       if(action == "editLocalCharge"){
          $('#spinner').show();
          $('#modalLocalcharge').modal({show:true});
@@ -670,8 +671,8 @@ Load
 
          });
 
-      }
-   }*/
+      }*/
+   }
 
 </script>
 
