@@ -96,23 +96,23 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                   <i class="fa fa-plus"></i>
                 </button>
               </a>
-                            <!--
-              @role('administrator')
-              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
-              Upload Rates
-              <i class="fa flaticon-tool-1"></i>
-              </button>
-              <a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-info">
-              Failed Rates
-              <i class="fa flaticon-tool-1"></i>
-              </a>
+              <!--
+@role('administrator')
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
+Upload Rates
+<i class="fa flaticon-tool-1"></i>
+</button>
+<a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-info">
+Failed Rates
+<i class="fa flaticon-tool-1"></i>
+</a>
 
-              <a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
-              Export Contract
-              <i class="fa flaticon-tool-1"></i>
-              </a>
-              @endrole
-              -->
+<a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
+Export Contract
+<i class="fa flaticon-tool-1"></i>
+</a>
+@endrole
+-->
               <br><br>
               <table  class="table tableData" id="rateTable" width="100%">
                 <thead>
@@ -152,23 +152,23 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 <button type="button"  onclick="AbrirModal('addLocalCharge',{{ $contracts->id }})"  class="btn btn-brand">
                   Add New
                   <i class="fa fa-plus"></i>
-                </button>
+                </button><br><br>
               </a>
               <!--
-              @role('administrator')
-              <a>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge">
-                  Upload Surcharge
-                  <i class="fa flaticon-tool-1"></i>
-                </button>
-              </a>
+@role('administrator')
+<a>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge">
+Upload Surcharge
+<i class="fa flaticon-tool-1"></i>
+</button>
+</a>
 
-              <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
-                Failed Surcharge
-                <i class="fa flaticon-tool-1"></i>
-              </a>
-              <br><br><br>
-              @endrole
+<a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
+Failed Surcharge
+<i class="fa flaticon-tool-1"></i>
+</a>
+<br><br><br>
+@endrole
 -->
               <table class="table tableData" id="users-table" width="100%" >
 
@@ -187,9 +187,6 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                   </tr>
                 </thead>
               </table>
-
-
-
               <table hidden="true">
                 <tr   id='tclone2' hidden="true"  >
                   <td>
@@ -548,7 +545,7 @@ Load
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
-            Ocean Freight
+            Ocean Freight LCL
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">
@@ -582,74 +579,93 @@ Load
 <script>                 
   $(function() {
 
+    $('#users-table').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 1, "asc" ],[ 2, "asc" ]],
+      ajax:  "{{ route('localcharlcl.table',['id' => $id]) }}",
+      columns: [
+        {data: 'surcharge', name: 'surcharge'},
+        {data: 'origin', name: 'origin'},
+        {data: 'destiny', name: 'destiny'},
+        {data: 'changetype', name: 'changetype'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'calculation_type', name: 'calculation_type'},
+        {data: 'ammount', name: 'ammount'},
+        {data: 'currency', name: 'currency'},
+        {data: 'options', name: 'options'}
+      ],
+
+    });
+
+    $('#rateTable').DataTable({
+      ordering: true,
+      searching: true,
+      processing: true,
+      serverSide: true,
+      order: [[ 0, "asc" ],[ 1, "asc" ]],
+
+      ajax:  "{{ route('ratelcl.table',['id' => $id]) }}",
+      columns: [
+        {data: 'port_orig', name: 'port_orig'},
+        {data: 'port_dest', name: 'port_dest'},
+        {data: 'carrier', name: 'carrier'},
+        {data: 'uom', name: 'uom'},
+        {data: 'minimum', name: 'minimum'},
+        {data: 'currency', name: 'currency'},
+        {data: 'options', name: 'options'}
+      ],
+
+      buttons: [
+        {
+          extend: 'copyHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'excelHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          exportOptions: {
+            columns: [0, 1, 2, 3]
+          }
+        }
+      ]
 
 
-      $('#rateTable').DataTable({
-         ordering: true,
-         searching: true,
-         processing: true,
-         serverSide: true,
-         order: [[ 0, "asc" ],[ 1, "asc" ]],
-
-         ajax:  "{{ route('ratelcl.table',['id' => $id]) }}",
-         columns: [
-            {data: 'port_orig', name: 'port_orig'},
-            {data: 'port_dest', name: 'port_dest'},
-            {data: 'carrier', name: 'carrier'},
-            {data: 'uom', name: 'uom'},
-            {data: 'minimum', name: 'minimum'},
-            {data: 'currency', name: 'currency'},
-            {data: 'options', name: 'options'}
-         ],
-
-         buttons: [
-            {
-               extend: 'copyHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'excelHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'pdfHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            }
-         ]
+    });
 
 
-      });
-
-
-   });  
+  });  
 </script>
 
 <script>
-   function AbrirModal(action,id){
+  function AbrirModal(action,id){
 
-      if(action == "editRate"){
-         var url = '{{ route("edit-rates-lcl", ":id") }}';
-         url = url.replace(':id', id);
-         $('#rate-body').load(url,function(){
-            $('#modalRates').modal({show:true});
-         });
+    if(action == "editRate"){
+      var url = '{{ route("edit-rates-lcl", ":id") }}';
+      url = url.replace(':id', id);
+      $('#rate-body').load(url,function(){
+        $('#modalRates').modal({show:true});
+      });
 
-      }
-      if(action == "addRate"){
-         var url = '{{ route("add-rates-lcl", ":id") }}';
-         url = url.replace(':id', id);
-         $('#rate-body').load(url,function(){
-            $('#modalRates').modal({show:true});
-         });
+    }
+    if(action == "addRate"){
+      var url = '{{ route("add-rates-lcl", ":id") }}';
+      url = url.replace(':id', id);
+      $('#rate-body').load(url,function(){
+        $('#modalRates').modal({show:true});
+      });
 
-      }
-     /*
+    }
+    /*
       if(action == "editLocalCharge"){
          $('#spinner').show();
          $('#modalLocalcharge').modal({show:true});
@@ -662,21 +678,21 @@ Load
 
       }
 
+*/
+    if(action == "addLocalCharge"){
+      var url = '{{ route("add-LocalCharge-lcl", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-add').load(url,function(){
+        $('#modalLocalchargeAdd').modal({show:true});
 
-      if(action == "addLocalCharge"){
-         var url = '{{ route("add-LocalCharge", ":id") }}';
-         url = url.replace(':id', id);
-         $('.modal-body-add').load(url,function(){
-            $('#modalLocalchargeAdd').modal({show:true});
+      });
 
-         });
-
-      }*/
-   }
+    }
+  }
 
 </script>
 
-@if(session('editRate'))
+@if(session('editRateLcl'))
 <script>
 
   swal(
@@ -686,7 +702,7 @@ Load
   )
 </script>
 @endif
-@if(session('localchar'))
+@if(session('localcharLcl'))
 <script>
   swal(
     'Done!',
@@ -697,7 +713,7 @@ Load
 @endif
 
 
-@if(session('localcharSave'))
+@if(session('localcharSaveLcl'))
 <script>
   swal(
     'Done!',
@@ -706,7 +722,7 @@ Load
   )
 </script>
 @endif
-@if(session('ratesSave'))
+@if(session('ratesSaveLcl'))
 <script>
   swal(
     'Done!',
