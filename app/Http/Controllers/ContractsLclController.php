@@ -484,6 +484,12 @@ class ContractsLclController extends Controller
     return redirect()->back()->with('localcharLcl','true')->with('activeSLcl','active');
   }
 
+   public function deleteLocalCharges($id)
+  {
+    $local = LocalChargeLcl::find($id);
+    $local->forceDelete();
+  }
+
 
   // DATATABLES 
 
@@ -568,7 +574,7 @@ class ContractsLclController extends Controller
         return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Edit '  onclick='AbrirModal(\"editLocalCharge\",$data[id])'>
           <i class='la la-edit'></i>
           </a>
-            <a  data-local-id='$data[id]'    class='m_sweetalert_demo_8  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
+            <a  data-locallcl-id='$data[id]'    class='delete-local-lcl  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
           <i id='rm_l' class='la la-times-circle'></i>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
