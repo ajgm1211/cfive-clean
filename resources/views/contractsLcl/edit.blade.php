@@ -577,7 +577,7 @@ Load
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="/js/editcontracts.js"></script>
+<script src="/js/contractsLcl.js"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 <script>                 
   $(function() {
