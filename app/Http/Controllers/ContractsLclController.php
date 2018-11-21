@@ -358,6 +358,14 @@ class ContractsLclController extends Controller
     $rate->update($requestForm);
     return redirect()->back()->with('editRate','true');
   }
+  public function deleteRates(Request $request,$id)
+  {
+    
+    $rate = RateLcl::find($id);
+    $rate->forceDelete();
+    return $rate;
+
+  }
 
   // DATATABLES 
 
@@ -394,7 +402,7 @@ class ContractsLclController extends Controller
         return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
           <i class='la la-edit'></i>
           </a>
-             <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+             <a id='delete-rate-lcl' data-ratelcl-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
 

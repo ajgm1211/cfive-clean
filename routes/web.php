@@ -327,11 +327,13 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
   Route::post('storeRatelcl/{id}', ['uses' => 'ContractsLclController@storeRates', 'as' => 'contractslcl.storeRate']);
   Route::get('editRatelcl/{id}', ['uses' => 'ContractsLclController@editRates', 'as' => 'edit-rates-lcl']);
   Route::put('updateRatelcl/{id}', ['uses' => 'ContractsLclController@updateRates', 'as' => 'update-rates-lcl']);
+  Route::get('deleteRateslcl/{rate_id}', ['uses' => 'ContractsLclController@deleteRates', 'as' => 'delete-rates-lcl']);
 
   // DATATABLES LCL
   Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
   Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
   Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
+
 });
 
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
