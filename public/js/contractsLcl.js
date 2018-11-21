@@ -168,3 +168,56 @@ $(document).on('click', '#delete-rate-lcl', function () {
 
   });
 });
+
+
+
+$(document).on('click', '.delete-local-lcl', function (e) {
+
+  var theElement = $(this);
+  var idval = $(this).attr('data-locallcl-id');
+
+
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+
+      $.ajax({
+        type: 'get',
+        url: '/contractslcl/deleteLocalChargeLcl/' + idval,
+        success: function(data) {
+          swal(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          $(theElement).closest('tr').remove();
+
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+
+    }
+
+  });
+
+});
+
+
+function activarCountry(act){
+  var divCountry = $( ".divcountry");
+  var divport = $( ".divport");
+  if(act == 'divcountry'){
+    divport.attr('hidden','true');
+    divCountry.removeAttr('hidden');
+  }else if(act == 'divport'){
+    divCountry.attr('hidden','true');
+    divport.removeAttr('hidden');
+  }
+}
