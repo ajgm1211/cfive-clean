@@ -332,6 +332,9 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
   // LocalCharges
   Route::get('addLocalChargelcl/{id}', ['uses' => 'ContractsLclController@addLocalChar', 'as' => 'add-LocalCharge-lcl']);
   Route::post('storeLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@storeLocalChar', 'as' => 'contracts.storeLocalChargeLcl']);
+  Route::get('editLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@editLocalChar', 'as' => 'edit-local-charge-lcl']);
+  Route::put('updateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@updateLocalChar', 'as' => 'update-local-charge-lcl']);
+  Route::get('deleteLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@destroyLocalCharges', 'as' => 'delete-local-charge-lcl']);
 
   // DATATABLES LCL
   Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');

@@ -289,7 +289,7 @@ class ContractsLclController extends Controller
   {
     //
   }
- 
+
   //RATES 
 
   public function addRates($id){
@@ -414,6 +414,76 @@ class ContractsLclController extends Controller
     }
     return redirect()->back()->with('localcharSaveLcl','true')->with('activeSLcl','active');
   }
+  public function editLocalChar($id){
+
+    $countries = Country::pluck('name','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $localcharges = LocalChargeLcl::find($id);
+    return view('contractsLcl.editLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
+  public function updateLocalChar(Request $request, $id){
+    $localC = LocalChargeLcl::find($id);
+    $localC->surcharge_id = $request->input('surcharge_id');
+    $localC->typedestiny_id  = $request->input('changetype');
+    $localC->calculationtypelcl_id = $request->input('calculationtype_id');
+    $localC->ammount = $request->input('ammount');
+    $localC->currency_id = $request->input('currency_id');
+    $localC->update();
+
+
+    $carrier = $request->input('carrier_id');
+    $deleteCarrier = LocalCharCarrierLcl::where("localchargelcl_id",$id);
+    $deleteCarrier->delete();
+    $deletePort = LocalCharPortLcl::where("localchargelcl_id",$id);
+    $deletePort->delete();
+    $deleteCountry = LocalCharCountryLcl::where("localchargelcl_id",$id);
+    $deleteCountry->delete();
+    $typerate =  $request->input('typeroute');
+    if($typerate == 'port'){
+      $detailportOrig = $request->input('port_origlocal');
+      $detailportDest = $request->input('port_destlocal');
+      foreach($detailportOrig as $orig => $valueOrig)
+      {
+        foreach($detailportDest as $dest => $valueDest)
+        {
+          $detailport = new LocalCharPortLcl();
+          $detailport->port_orig = $valueOrig;
+          $detailport->port_dest = $valueDest;
+          $detailport->localchargelcl_id = $id;
+          $detailport->save();
+        }
+      }
+    }elseif($typerate == 'country'){
+      $detailCountrytOrig =$request->input('country_orig');
+      $detailCountryDest = $request->input('country_dest');
+      foreach($detailCountrytOrig as $orig => $valueOrigC)
+      {
+        foreach($detailCountryDest as $dest => $valueDestC)
+        {
+          $detailcountry = new LocalCharCountryLcl();
+          $detailcountry->country_orig = $valueOrigC;
+          $detailcountry->country_dest =  $valueDestC;
+          $detailcountry->localchargelcl_id = $id;
+          $detailcountry->save();
+        }
+      }
+    }
+
+    foreach($carrier as $key)
+    {
+      $detailcarrier = new LocalCharCarrierLcl();
+      $detailcarrier->carrier_id = $key;
+      $detailcarrier->localchargelcl_id = $id;
+      $detailcarrier->save();
+    }
+    return redirect()->back()->with('localcharLcl','true')->with('activeSLcl','active');
+  }
+
 
   // DATATABLES 
 
@@ -503,7 +573,7 @@ class ContractsLclController extends Controller
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
   }// local charges en edit
-   public function contractlclTable(){
+  public function contractlclTable(){
 
     $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
     return \DataTables::collection($contractG)

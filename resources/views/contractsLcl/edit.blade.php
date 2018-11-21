@@ -665,20 +665,18 @@ Load
       });
 
     }
-    /*
-      if(action == "editLocalCharge"){
-         $('#spinner').show();
-         $('#modalLocalcharge').modal({show:true});
-         var url = '{{ route("edit-local-charge", ":id") }}';
-         url = url.replace(':id', id);
-         $('.modal-body-edit').load(url,function(){
-            $('#modalLocalcharge').modal({show:true});
-            $('#spinner').hide();
-         });
 
-      }
+    if(action == "editLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
+      var url = '{{ route("edit-local-charge-lcl", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-edit').load(url,function(){
+        $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
+      });
 
-*/
+    }
     if(action == "addLocalCharge"){
       var url = '{{ route("add-LocalCharge-lcl", ":id") }}';
       url = url.replace(':id', id);
