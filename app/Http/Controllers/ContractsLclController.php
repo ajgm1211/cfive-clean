@@ -239,8 +239,8 @@ class ContractsLclController extends Controller
     $typedestiny = TypeDestiny::all()->pluck('description','id');
     $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
     //$company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
-   // $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
-   /* if(!empty($company_restriction)){
+    // $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
+    /* if(!empty($company_restriction)){
       $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
     }
     if(!empty($user_restriction)){
@@ -306,6 +306,59 @@ class ContractsLclController extends Controller
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
   }
+  //RATES 
+
+  public function addRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    return view('contractsLcl.addRates', compact('harbor','carrier','currency','id'));
+  }
+  public function editRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = RateLcl::find($id);
+    return view('contractsLcl.editRates', compact('rates','harbor','carrier','currency'));
+  }
+
+  public function storeRates(Request $request,$id){
+
+    $rateOrig = $request->input('origin_port');
+    $rateDest = $request->input('destiny_port');
+
+    foreach($rateOrig as $Rorig => $Origvalue)
+    {
+      foreach($rateDest as $Rdest => $Destvalue)
+      {
+
+        $rates = new RateLcl();
+        $rates->origin_port =$Origvalue;
+        $rates->destiny_port =$Destvalue;
+        $rates->carrier_id = $request->input('carrier_id');
+        $rates->uom = $request->input('uom');
+        $rates->minimum = $request->input('minimum');
+        $rates->currency_id = $request->input('currency_id');
+        $rates->contractlcl_id = $id;
+        $rates->save();
+      }
+    }
+    return redirect()->back()->with('ratesSave','true');
+  }
+
+  public function updateRates(Request $request, $id){
+    $requestForm = $request->all();
+    $rate = RateLcl::find($id);
+    $rate->update($requestForm);
+    return redirect()->back()->with('editRate','true');
+  }
+
   // DATATABLES 
 
 
@@ -320,7 +373,7 @@ class ContractsLclController extends Controller
         return $data['validy'] ." / ".$data['expire'];
       })
       ->addColumn('options', function ($data) {
-        return "<a href='contracts/".setearRouteKey($data['contract_id'])."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
+        return "<a href='contractslcl/".setearRouteKey($data['contract_id'])."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
 
