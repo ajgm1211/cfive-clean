@@ -936,7 +936,7 @@ $(document).on('click', '#create-quote', function (e) {
             $('#addresse').val(data);
         },
         error: function (request, status, error) {
-            alert(request.responseText);
+            console.log(request.responseText);
         }
     });
 
@@ -1028,8 +1028,8 @@ $(document).on('click', '#create-quote', function (e) {
     if($("#total_volume_pkg_input").val()>0){
         total_volume_pkg=$("#total_volume_pkg_input").val();
     }
-    if($("chargeable_weight_pkg_input").val()>0){
-        chargeable_weight=$("chargeable_weight_pkg_input").val();
+    if($("#chargeable_weight_pkg_input").val()>0){
+        chargeable_weight=$("#chargeable_weight_pkg_input").val();
     }
     //Creating table to loads by packages
     table.appendChild(tableBody);
@@ -1177,7 +1177,7 @@ $(document).on('click', '#create-quote', function (e) {
         });
     }
     if(chargeable_weight!='' || chargeable_weight>0){
-        $("#chargeable_weight_span").html(chargeable_weight);
+        $("#chargeable_weight_span").html(parseFloat(chargeable_weight).toFixed(2));
         $("#chargeable_weight_div").removeClass('hide');
     }
     if(qty_20!='' || qty_20>0){

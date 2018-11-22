@@ -680,12 +680,9 @@
                                                                     <span id="cargo_details_total_weight_pkg"></span> km
                                                                 </div>
                                                                 <br>
-                                                            </div>
-                                                            <div class="col-md-12">
                                                                 <div id="chargeable_weight_div" class="hide">  <b>Chargeable weight:</b>
                                                                     <span id="chargeable_weight_span"></span> kg
                                                                 </div>
-                                                                <br>
                                                             </div>
                                                         </div>
                                                     </div>
