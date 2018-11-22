@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Routing\UrlGenerator;
 
 use App\Observers\ContractObserver;
 use App\Contract;
@@ -17,12 +18,16 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(UrlGenerator $url)
     {
         Schema::defaultStringLength(191);
         Contract::observe(ContractObserver::class);
         Quote::observe(QuoteObserver::class);
 
+        /*if(env('APP_ENV') !== 'local')
+        {
+            $url->forceScheme('https');
+        }*/
     }
 
     /**
