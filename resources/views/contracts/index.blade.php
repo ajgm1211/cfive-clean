@@ -365,10 +365,7 @@
             {data: 'options', name: 'options'}
          ] ,
          "autoWidth": true,
-         "overflow":false,
-         //"scrollY": true,         
-         "bPaginate": false,
-         "bJQueryUI": true,
+
          buttons: [
             {
                extend: 'copyHtml5',
