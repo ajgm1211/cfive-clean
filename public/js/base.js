@@ -553,7 +553,7 @@ $(document).on('click', '#lcl_type', function (e) {
             }
         }
 
-        $("#chargeable_weight_total").html(chargeable_weight.toFixed(2)+" kg");
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }else{
         if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
@@ -570,7 +570,7 @@ $(document).on('click', '#lcl_type', function (e) {
 
         }
 
-        $("#chargeable_weight_pkg").html(chargeable_weight.toFixed(2)+" kg");
+        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 });
@@ -622,7 +622,7 @@ $(document).on('click', '#air_type', function (e) {
             }
         }
 
-        $("#chargeable_weight_total").html(chargeable_weight.toFixed(2)+" kg");
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }else{
         if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
@@ -639,7 +639,7 @@ $(document).on('click', '#air_type', function (e) {
 
         }
 
-        $("#chargeable_weight_pkg").html(chargeable_weight.toFixed(2)+" kg");
+        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 
@@ -898,7 +898,7 @@ $(document).on('click', '#create-quote', function (e) {
     var destination_airport=$("#destination_airport").val();
     var modality = $('#modality').val();
     var contact_id = $('#contact_id').val();
-    var chargeable_weight='';
+    var chargeable_weight=0;
     var qty_20='';
     var qty_40='';
     var qty_40_hc='';
@@ -1801,7 +1801,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
         }
     }
 
-    $("#chargeable_weight_pkg").html(chargeable_weight.toFixed(2)+" kg");
+    $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
     $("#chargeable_weight_pkg_input").val(chargeable_weight);
 });
 
@@ -1831,7 +1831,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
             }
         }
 
-        $("#chargeable_weight_total").html(chargeable_weight.toFixed(2)+" kg");
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 });
