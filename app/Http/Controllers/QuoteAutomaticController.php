@@ -1921,7 +1921,7 @@ class QuoteAutomaticController extends Controller
 
         //##################################################################
 
-        if($global->calculationtype_id == "6"  || $local->calculationtype_id == "9" || $local->calculationtype_id == "10" ){
+        if($global->calculationtype_id == "6"  || $global->calculationtype_id == "9" || $global->calculationtype_id == "10" ){
 
           $cantidadT = 1;
 
