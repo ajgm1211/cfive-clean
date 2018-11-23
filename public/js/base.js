@@ -535,33 +535,34 @@ $(document).on('click', '#lcl_type', function (e) {
     var sum_vol = 0;
 
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
-        volume=$('#total_volume').val();
-        total_weight=$('#total_weight').val();
+        total_volume=$('#total_volume').val();
+        weight=$('#total_weight').val();
         if($("input[name='type']:checked").val()==2){
-            total_volume=volume/1000;
+            total_weight=weight/1000;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
                 chargeable_weight=total_weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
         }else if($("input[name='type']:checked").val()==3){
-            total_volume=volume*166;
-            if(total_volume>total_weight){
+            total_volume=total_volume*166;
+            if(total_volume>weight){
                 chargeable_weight=total_volume;
             }else{
-                chargeable_weight=total_weight;
+                chargeable_weight=weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         }
 
-        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }else{
         if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
 
             sum_vol = $('#total_volume_pkg_input').val();
-            weight = $('#total_weight_pkg_input').val();
+            weight = $('#total_weight_pkg_input').val()/1000;
 
-            total_vol_chargeable = sum_vol / 1000;
+            total_vol_chargeable = sum_vol;
             if (total_vol_chargeable > weight) {
                 chargeable_weight = total_vol_chargeable;
             } else {
@@ -570,7 +571,7 @@ $(document).on('click', '#lcl_type', function (e) {
 
         }
 
-        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 });
@@ -604,25 +605,26 @@ $(document).on('click', '#air_type', function (e) {
 
 
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
-        volume=$('#total_volume').val();
+        total_volume=$('#total_volume').val();
         total_weight=$('#total_weight').val();
         if($("input[name='type']:checked").val()==2){
-            total_volume=volume/1000;
+            total_weight=total_weight/1000;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
                 chargeable_weight=total_weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
         }else if($("input[name='type']:checked").val()==3){
-            total_volume=volume*166;
+            total_volume=total_volume*166;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
                 chargeable_weight=total_weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         }
 
-        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }else{
         if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
@@ -1786,12 +1788,14 @@ $(document).on("change keydown keyup", ".weight_input", function(){
     var weight=sum;
     //Calculate chargeable weight
     if($("input[name='type']:checked").val()==2){
-        total_vol_chargeable=sum_vol/1000;
-        if(total_vol_chargeable>weight){
+        total_vol_chargeable=sum_vol;
+        total_weight=weight/1000;
+        if(total_vol_chargeable>total_weight){
             chargeable_weight=total_vol_chargeable;
         }else{
-            chargeable_weight=weight;
+            chargeable_weight=total_weight;
         }
+        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
     }else if($("input[name='type']:checked").val()==3){
         total_vol_chargeable=sum_vol*166;
         if(total_vol_chargeable>weight){
@@ -1799,9 +1803,10 @@ $(document).on("change keydown keyup", ".weight_input", function(){
         }else{
             chargeable_weight=weight;
         }
+        $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
     }
 
-    $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+
     $("#chargeable_weight_pkg_input").val(chargeable_weight);
 });
 
@@ -1813,25 +1818,26 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
     var total_weight=0;
 
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
-        volume=$('#total_volume').val();
+        total_volume=$('#total_volume').val();
         total_weight=$('#total_weight').val();
         if($("input[name='type']:checked").val()==2){
-            total_volume=volume/1000;
+            total_weight=total_weight/1000;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
                 chargeable_weight=total_weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
         }else if($("input[name='type']:checked").val()==3){
-            total_volume=volume*166;
+            total_volume=total_volume*166;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
                 chargeable_weight=total_weight;
             }
+            $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         }
 
-        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
         $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 });
