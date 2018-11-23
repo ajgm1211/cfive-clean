@@ -20,4 +20,16 @@ class ContractLcl extends Model implements Auditable
   {
     return $this->belongsTo('App\User');
   }
+
+  public function rates(){
+    return $this->hasMany('App\RateLcl','contractlcl_id');
+  }
+
+  public function localcharges(){
+    //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
+    return $this->hasMany('App\LocalChargeLcl','contractlcl_id');
+  }
+
+
+
 }

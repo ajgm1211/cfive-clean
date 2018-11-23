@@ -320,7 +320,11 @@ Route::prefix('impersonation')->group(function ($router) {
 //Contracts LCL
 
 Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
+  //Contract LCL 
   Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
+  Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
+  Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+
 
   //Rates 
   Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);

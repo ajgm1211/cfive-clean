@@ -209,6 +209,82 @@ $(document).on('click', '.delete-local-lcl', function (e) {
 
 });
 
+$(document).on('click', '#delete-contract-lcl', function () {
+  var id = $(this).attr('data-contractlcl-id');
+
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Continue!'
+  }).then(function(result) {
+
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: '/contractslcl/deleteContractlcl/' + id,
+        success: function(data) {
+
+
+          if(data.message!= "SN"){
+
+            swal({
+              title: 'Warning!',
+              text: "There are "+data.message+" rates associated with this contract and "+data.local+" charges. If you delete it, those rates  and charges will be deleted.",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, delete it!'
+            }).then(function(result) {
+              if (result.value) {
+                $.ajax({
+                  type: 'get',
+                  url: '/contractslcl/destroyContractlcl/' + id,
+                  success: function(data) {
+                    if(data.message=='Ok'){
+                      swal(
+                        'Deleted!',
+                        'Your contract has been deleted.',
+                        'success'
+                      )
+                      $(theElement).closest('tr').remove();
+                    }
+                  }
+                });
+              }
+            });
+
+          }else{
+
+            $.ajax({
+              type: 'get',
+              url: '/contractslcl/destroyContractlcl/' + id,
+              success: function(data) {
+                if(data.message=='Ok'){
+                  swal(
+                    'Deleted!',
+                    'Your contract has been deleted.',
+                    'success'
+                  )
+                  $(theElement).closest('tr').remove();
+                }
+              }
+            });
+
+
+          }
+
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+
+    }
+
+  });
+});
 
 function activarCountry(act){
   var divCountry = $( ".divcountry");

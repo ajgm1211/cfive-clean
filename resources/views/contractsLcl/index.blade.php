@@ -261,7 +261,7 @@
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
-<script src="/js/contractslcl.js"></script>
+<script src="/js/contractsLcl.js"></script>
 <script>         
   $(function() {
     $('#tableRates').DataTable({
