@@ -114,7 +114,7 @@ class ContractsController extends Controller
   }
 
   function allCarrierid(){
-    $id = Carrier::where('code','ALL')->first();
+    $id = Carrier::where('name','ALL')->first();
     return $id->id;
   }
 
@@ -752,8 +752,8 @@ class ContractsController extends Controller
       $detailCountrytOrig =$request->input('country_orig');
       $detailCountryDest = $request->input('country_dest');
       // ALL
-      $detailcountryOrig = $this->arrayAll($detailcountryOrig,$countryAllid);     // Consultar el all en origen
-      $detailcountryDest = $this->arrayAll($detailcountryDest,$countryAllid);      // Consultar el all en Destino
+      $detailCountrytOrig = $this->arrayAll($detailCountrytOrig,$countryAllid);     // Consultar el all en origen
+      $detailCountryDest = $this->arrayAll($detailCountryDest,$countryAllid);      // Consultar el all en Destino
       foreach($detailCountrytOrig as $orig => $valueOrigC)
       {
         foreach($detailCountryDest as $dest => $valueDestC)
