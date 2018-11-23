@@ -94,6 +94,30 @@ class ContractsController extends Controller
     //
   }
 
+  function arrayAll($array,$id){
+
+
+    if (in_array($id, $array)) {
+      $id = array($id);
+      return $id;
+    }else{
+      return $array;
+    }
+  }
+  function allHarborid(){
+    $id = Harbor::where('code','ALL')->first();
+    return $id->id;
+  }
+  function allCountryid(){
+    $id = Country::where('code','ALL')->first();
+    return $id->id;
+  }
+
+  function allCarrierid(){
+    $id = Carrier::where('code','ALL')->first();
+    return $id->id;
+  }
+
   public function store(Request $request)
   {
     //  dd($request->all());
@@ -109,6 +133,11 @@ class ContractsController extends Controller
     $companies = $request->input('companies');
     $users = $request->input('users');
 
+    // All IDS
+    $carrierAllid = $this->allCarrierid();
+    $countryAllid = $this->allCountryid();
+    $portAllid = $this->allHarborid();
+
 
     // For Each de los rates
     $contador = 1;
@@ -120,7 +149,6 @@ class ContractsController extends Controller
 
       $rateOrig = $request->input('origin_id'.$contadorRate);
       $rateDest = $request->input('destiny_id'.$contadorRate);
-
       foreach($rateOrig as $Rorig => $Origvalue)
       {
         foreach($rateDest as $Rdest => $Destvalue)
@@ -163,11 +191,12 @@ class ContractsController extends Controller
             $localcharge->save();
 
             $detailcarrier = $request->input('localcarrier_id'.$contador);
+            $detailcarrier = $this->arrayAll($detailcarrier,$carrierAllid);     // Consultar el all en carrier
 
-            foreach($detailcarrier as $c => $value)
+            foreach($detailcarrier as $c => $valueCarrier)
             {
               $detailcarrier = new LocalCharCarrier();
-              $detailcarrier->carrier_id =$request->input('localcarrier_id'.$contador.'.'.$c);
+              $detailcarrier->carrier_id =  $valueCarrier;//$request->input('localcarrier_id'.$contador.'.'.$c);
               $detailcarrier->localcharge()->associate($localcharge);
               $detailcarrier->save();
             }
@@ -176,13 +205,17 @@ class ContractsController extends Controller
             if($typeroute == 'port'){
               $detailportOrig = $request->input('port_origlocal'.$contador);
               $detailportDest = $request->input('port_destlocal'.$contador);
-              foreach($detailportOrig as $orig => $value)
+
+              $detailportOrig = $this->arrayAll($detailportOrig,$portAllid);     // Consultar el all en origen
+              $detailportDest = $this->arrayAll($detailportDest,$portAllid);      // Consultar el all en Destino
+
+              foreach($detailportOrig as $orig => $valueOrig)
               {
-                foreach($detailportDest as $dest => $value)
+                foreach($detailportDest as $dest => $valueDest)
                 {
                   $detailport = new LocalCharPort();
-                  $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-                  $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
+                  $detailport->port_orig =$valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                  $detailport->port_dest = $valueDest;//$request->input('port_destlocal'.$contador.'.'.$dest);
                   $detailport->localcharge()->associate($localcharge);
                   $detailport->save();
                 }
@@ -192,13 +225,18 @@ class ContractsController extends Controller
 
               $detailcountryOrig = $request->input('country_orig'.$contador);
               $detailcountryDest = $request->input('country_dest'.$contador);
-              foreach($detailcountryOrig as $origC => $value)
+
+              // ALL
+              $detailcountryOrig = $this->arrayAll($detailcountryOrig,$countryAllid);     // Consultar el all en origen
+              $detailcountryDest = $this->arrayAll($detailcountryDest,$countryAllid);      // Consultar el all en Destino
+
+              foreach($detailcountryOrig as $origC => $originCounty)
               {
-                foreach($detailcountryDest as $destC => $value)
+                foreach($detailcountryDest as $destC => $destinyCountry)
                 {
                   $detailcountry = new LocalCharCountry();
-                  $detailcountry->country_orig =$request->input('country_orig'.$contador.'.'.$origC);
-                  $detailcountry->country_dest = $request->input('country_dest'.$contador.'.'.$destC);
+                  $detailcountry->country_orig = $originCounty;//$request->input('country_orig'.$contador.'.'.$origC);
+                  $detailcountry->country_dest = $destinyCountry; //;$request->input('country_dest'.$contador.'.'.$destC);
                   $detailcountry->localcharge()->associate($localcharge);
                   $detailcountry->save();
                 }
@@ -414,6 +452,7 @@ class ContractsController extends Controller
     $contract->expire = $validation[1];
     $contract->update($requestForm);
 
+    /*
     $details = $request->input('origin_id');
     $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
     $companies = $request->input('companies');
@@ -451,8 +490,14 @@ class ContractsController extends Controller
         $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
         $localcharge->contract()->associate($contract);
         $localcharge->save();
+
         $detailportOrig = $request->input('port_origlocal'.$contador);
         $detailportDest = $request->input('port_destlocal'.$contador);
+        // ALL
+        $detailportOrig = $this->arrayAll($detailportOrig,$portAllid);     // Consultar el all en origen
+        $detailportDest = $this->arrayAll($detailportDest,$portAllid);      // Consultar el all en Destino
+
+
         $detailcarrier = $request->input('localcarrier_id'.$contador);
         $companies = $request->input('companies');
         foreach($detailcarrier as $c => $value)
@@ -462,23 +507,22 @@ class ContractsController extends Controller
           $detailcarrier->localcharge()->associate($localcharge);
           $detailcarrier->save();
         }
-        foreach($detailportOrig as $orig => $value)
+        foreach($detailportOrig as $orig => $valueOrig)
         {
-          foreach($detailportDest as $dest => $value)
+          foreach($detailportDest as $dest => $valueDest)
           {
 
-
             $detailport = new LocalCharPort();
-            $detailport->port_orig = $request->input('port_origlocal'.$contador.'.'.$orig);
-            $detailport->port_dest = $request->input('port_destlocal'.$contador.'.'.$dest);
-            $detailport->localcharge()->associate($localcharge);
+            $detailport->port_orig = $valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+            $detailport->port_dest = $valueDest// $request->input('port_destlocal'.$contador.'.'.$dest);
+              $detailport->localcharge()->associate($localcharge);
             $detailport->save();
           }
 
         }
         $contador++;
       }
-    }
+    }*/
 
     if(!empty($companies)){
       ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
@@ -588,13 +632,17 @@ class ContractsController extends Controller
   public function storeLocalChar(Request $request,$id){
 
     $calculation_type  = $request->input('calculationtype_id');
+    // All IDS
+    $carrierAllid = $this->allCarrierid();
+    $countryAllid = $this->allCountryid();
+    $portAllid = $this->allHarborid();
     foreach($calculation_type as $ct => $ctype)
     {
       $localcharge = new LocalCharge();
       $request->request->add(['contract_id' => $id,'calculationtype_id'=>$ctype]);
       $localcharge =  $localcharge->create($request->all());
       $detailcarrier = $request->input('carrier_id');
-
+      $detailcarrier = $this->arrayAll($detailcarrier,$carrierAllid);     // Consultar el all en carrier
       foreach($detailcarrier as $c => $value)
       {
         $detailcarrier = new LocalCharCarrier();
@@ -606,6 +654,9 @@ class ContractsController extends Controller
       if($typeroute == 'port'){
         $detailportOrig = $request->input('port_origlocal');
         $detailportDest = $request->input('port_destlocal');
+        $detailportOrig = $this->arrayAll($detailportOrig,$portAllid);     // Consultar el all en origen
+        $detailportDest = $this->arrayAll($detailportDest,$portAllid);      // Consultar el all en Destino
+
         foreach($detailportOrig as $orig => $valueOrig){
           foreach($detailportDest as $dest => $valueDest){
             $detailport = new LocalCharPort();
@@ -619,6 +670,9 @@ class ContractsController extends Controller
 
         $detailcountryOrig = $request->input('country_orig');
         $detailcountryDest = $request->input('country_dest');
+        // ALL
+        $detailcountryOrig = $this->arrayAll($detailcountryOrig,$countryAllid);     // Consultar el all en origen
+        $detailcountryDest = $this->arrayAll($detailcountryDest,$countryAllid);      // Consultar el all en Destino
 
         foreach($detailcountryOrig as $orig => $valueOrigC){
           foreach($detailcountryDest as $dest => $valueDestC){
@@ -655,6 +709,10 @@ class ContractsController extends Controller
   public function updateLocalChar(Request $request, $id)
   {
     $localC = LocalCharge::find($id);
+    // All IDS
+    $carrierAllid = $this->allCarrierid();
+    $countryAllid = $this->allCountryid();
+    $portAllid = $this->allHarborid();
 
     $localC->surcharge_id = $request->input('surcharge_id');
     $localC->typedestiny_id  = $request->input('changetype');
@@ -665,6 +723,8 @@ class ContractsController extends Controller
 
 
     $carrier = $request->input('carrier_id');
+    $carrier = $this->arrayAll($carrier,$carrierAllid);     // Consultar el all en carrier
+    
     $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
     $deleteCarrier->delete();
     $deletePort = LocalCharPort::where("localcharge_id",$id);
@@ -675,6 +735,8 @@ class ContractsController extends Controller
     if($typerate == 'port'){
       $detailportOrig = $request->input('port_origlocal');
       $detailportDest = $request->input('port_destlocal');
+      $detailportOrig = $this->arrayAll($detailportOrig,$portAllid);     // Consultar el all en origen
+      $detailportDest = $this->arrayAll($detailportDest,$portAllid);      // Consultar el all en Destino
       foreach($detailportOrig as $orig => $valueOrig)
       {
         foreach($detailportDest as $dest => $valueDest)
@@ -689,6 +751,9 @@ class ContractsController extends Controller
     }elseif($typerate == 'country'){
       $detailCountrytOrig =$request->input('country_orig');
       $detailCountryDest = $request->input('country_dest');
+      // ALL
+      $detailcountryOrig = $this->arrayAll($detailcountryOrig,$countryAllid);     // Consultar el all en origen
+      $detailcountryDest = $this->arrayAll($detailcountryDest,$countryAllid);      // Consultar el all en Destino
       foreach($detailCountrytOrig as $orig => $valueOrigC)
       {
         foreach($detailCountryDest as $dest => $valueDestC)
@@ -700,8 +765,6 @@ class ContractsController extends Controller
           $detailcountry->save();
         }
       }
-
-
     }
 
     foreach($carrier as $key)
