@@ -364,8 +364,6 @@
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
          ] ,
-      
-
       });
 
       $('#tableContracts').DataTable({
