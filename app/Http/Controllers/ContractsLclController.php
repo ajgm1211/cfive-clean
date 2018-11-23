@@ -87,6 +87,39 @@ class ContractsLclController extends Controller
     //
   }
 
+  public function deleteContract($id){
+
+    $contract = ContractLcl::find($id);
+    if(isset($contract->rates)){
+      if(isset($contract->localcharges)){
+        return response()->json(['message' => count($contract->rates),'local' => count($contract->localcharges) ]);
+      }else{
+        return response()->json(['message' => count($contract->rates),'local' => 0]);
+      }
+    }
+    return response()->json(['message' => 'SN','local' => 0]);
+  }
+  public function destroyContract($id){
+
+    try { 
+
+      /*  $FileTmp = FileTmp::where('contract_id',$id)->first();
+      if(count($FileTmp) > 0){
+        Storage::Delete($FileTmp->name_file);
+        $FileTmp->delete();
+      }*/
+
+      $contract = ContractLcl::find($id);
+      $contract->delete();
+
+      return response()->json(['message' => 'Ok']);
+    }
+    catch (\Exception $e) {
+      return response()->json(['message' => $e]);
+    }
+
+
+  }
   /**
      * Store a newly created resource in storage.
      *
@@ -484,7 +517,7 @@ class ContractsLclController extends Controller
     return redirect()->back()->with('localcharLcl','true')->with('activeSLcl','active');
   }
 
-   public function deleteLocalCharges($id)
+  public function deleteLocalCharges($id)
   {
     $local = LocalChargeLcl::find($id);
     $local->forceDelete();
@@ -509,7 +542,7 @@ class ContractsLclController extends Controller
                       <i class='la la-edit'></i>
                     </a>
 
-                    <a href='#' id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
+                    <a href='#' id='delete-rate-lcl' data-ratelcl-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
 
@@ -588,7 +621,7 @@ class ContractsLclController extends Controller
         return "      <a href='contractslcl/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
-                    <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
+                    <a  id='delete-contract-lcl' data-contractlcl-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
                       <i class='la la-eraser'></i>
                     </a>
 
