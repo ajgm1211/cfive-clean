@@ -262,104 +262,104 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                   }
 
-                  // ----------------------- Validacion de comapos acios--------------------------------------
+                  // ----------------------- Validacion de comapos vacios--------------------------------------
+                  if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency para no llenar el valor del currency arreglo[posicion 2] -> ($twentyArr[1])
+                     // ------- 20'
+                     if($twentyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
 
-                  // ------- 20'
-                  if($twentyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+                        if($fortyArrBol == true){
+                           array_push($twentyArr,$fortyArr[1]);
 
-                     if($fortyArrBol == true){
-                        array_push($twentyArr,$fortyArr[1]);
+                        } elseif($fortyhcArrBol == true){
+                           array_push($twentyArr,$fortyhcArr[1]);
 
-                     } elseif($fortyhcArrBol == true){
-                        array_push($twentyArr,$fortyhcArr[1]);
+                        } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                           array_push($twentyArr,$fortynorArr[1]);
 
-                     } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
-                        array_push($twentyArr,$fortynorArr[1]);
+                        } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                           array_push($twentyArr,$fortyfiveArr[1]);
 
-                     } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
-                        array_push($twentyArr,$fortyfiveArr[1]);
+                        } else {
+                           array_push($twentyArr,'');
+                        }
+                     }
 
-                     } else {
-                        array_push($twentyArr,'');
+                     // ------- 40'
+                     if($fortyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+                        if($twentyArrBol == true){
+                           array_push($fortyArr,$twentyArr[1]);
+
+                        } elseif($fortyhcArrBol == true){
+                           array_push($fortyArr,$fortyhcArr[1]);
+
+                        } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                           array_push($fortyArr,$fortynorArr[1]);
+
+                        } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                           array_push($fortyArr,$fortyfiveArr[1]);
+                        } else {
+                           array_push($fortyArr,'');
+                        }
+                     }
+
+                     // ------- 40'HC
+                     if($fortyhcArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+                        if($twentyArrBol == true){
+                           array_push($fortyhcArr,$twentyArr[1]);
+
+                        } elseif($fortyArrBol == true){
+                           array_push($fortyhcArr,$fortyArr[1]);
+
+                        } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                           array_push($fortyhcArr,$fortynorArr[1]);
+
+                        } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                           array_push($fortyhcArr,$fortyfiveArr[1]);
+                        } else {
+                           array_push($fortyhcArr,'');
+                        }
+                     }
+
+                     // ------- 40'NOR
+                     if($fortynorArrBol == false && $statusexistfortynor == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+                        if($twentyArrBol == true){
+                           array_push($fortynorArr,$twentyArr[1]);
+
+                        } elseif($fortyArrBol == true){
+                           array_push($fortynorArr,$fortyArr[1]);
+
+                        } elseif($fortyhcArrBol == true){
+                           array_push($fortynorArr,$fortyhcArr[1]);
+
+                        } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
+                           array_push($fortynorArr,$fortyfiveArr[1]);
+                        } else {
+                           array_push($fortynorArr,'');
+                        }
+                     }
+
+                     // ------- 45'
+                     if($fortyfiveArrBol == false && $statusexistfortyfive == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
+
+                        if($twentyArrBol == true){
+                           array_push($fortyfiveArr,$twentyArr[1]);
+
+                        } elseif($fortyArrBol == true){
+                           array_push($fortyfiveArr,$fortyArr[1]);
+
+                        } elseif($fortyhcArrBol == true){
+                           array_push($fortyfiveArr,$fortyhcArr[1]);
+
+                        } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
+                           array_push($fortyfiveArr,$fortynorArr[1]);
+                        } else {
+                           array_push($fortyfiveArr,'');
+                        }
                      }
                   }
-
-                  // ------- 40'
-                  if($fortyArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
-
-                     if($twentyArrBol == true){
-                        array_push($fortyArr,$twentyArr[1]);
-
-                     } elseif($fortyhcArrBol == true){
-                        array_push($fortyArr,$fortyhcArr[1]);
-
-                     } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
-                        array_push($fortyArr,$fortynorArr[1]);
-
-                     } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
-                        array_push($fortyArr,$fortyfiveArr[1]);
-                     } else {
-                        array_push($fortyArr,'');
-                     }
-                  }
-
-                  // ------- 40'HC
-                  if($fortyhcArrBol == false){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
-
-                     if($twentyArrBol == true){
-                        array_push($fortyhcArr,$twentyArr[1]);
-
-                     } elseif($fortyArrBol == true){
-                        array_push($fortyhcArr,$fortyArr[1]);
-
-                     } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
-                        array_push($fortyhcArr,$fortynorArr[1]);
-
-                     } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
-                        array_push($fortyhcArr,$fortyfiveArr[1]);
-                     } else {
-                        array_push($fortyhcArr,'');
-                     }
-                  }
-
-                  // ------- 40'NOR
-                  if($fortynorArrBol == false && $statusexistfortynor == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
-
-                     if($twentyArrBol == true){
-                        array_push($fortynorArr,$twentyArr[1]);
-
-                     } elseif($fortyArrBol == true){
-                        array_push($fortynorArr,$fortyArr[1]);
-
-                     } elseif($fortyhcArrBol == true){
-                        array_push($fortynorArr,$fortyhcArr[1]);
-
-                     } elseif($fortyfiveArrBol == true && $statusexistfortyfive == 1){
-                        array_push($fortynorArr,$fortyfiveArr[1]);
-                     } else {
-                        array_push($fortynorArr,'');
-                     }
-                  }
-
-                  // ------- 45'
-                  if($fortyfiveArrBol == false && $statusexistfortyfive == 1){ // Cargamos el arreglo[1] para que el Rate se pueda registrar, y para que se validen los PER_DOC
-
-                     if($twentyArrBol == true){
-                        array_push($fortyfiveArr,$twentyArr[1]);
-
-                     } elseif($fortyArrBol == true){
-                        array_push($fortyfiveArr,$fortyArr[1]);
-
-                     } elseif($fortyhcArrBol == true){
-                        array_push($fortyfiveArr,$fortyhcArr[1]);
-
-                     } elseif($fortynorArrBol == true && $statusexistfortynor == 1){
-                        array_push($fortyfiveArr,$fortynorArr[1]);
-                     } else {
-                        array_push($fortyfiveArr,'');
-                     }
-                  }
-
 
                   //---------------- 20' ------------------------------------------------------------------
 
@@ -1395,7 +1395,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                      if($curreExiBol == true){
                         $currencyVal = $read[$requestobj[$currency]];
                      }
-                     
+
                      if( $twentyExiBol == true){
                         if(empty($read[$requestobj[$twenty]]) == true){
                            $twentyVal = '0';
@@ -1404,7 +1404,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                         }
                      }
-                     
+
                      if( $fortyExiBol == true){
                         if(empty($read[$requestobj[$forty]]) == true){
                            $fortyVal = '0';
@@ -1412,7 +1412,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                            $fortyVal = $read[$requestobj[$forty]];
                         }
                      }
-                     
+
                      if( $fortyhcExiBol == true){
                         if(empty($read[$requestobj[$fortyhc]]) == true){
                            $fortyhcVal = '0';
