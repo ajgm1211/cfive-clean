@@ -687,6 +687,9 @@
                                                         </div>
                                                     </div>
                                                     <br>
+                                                    <br>
+                                                    <br>
+                                                    <br>
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <h5 class="title-quote size-14px">Origin ammounts</h5>
