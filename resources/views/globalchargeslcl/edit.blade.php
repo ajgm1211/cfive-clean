@@ -171,7 +171,7 @@ $portRadio = false;
   {!! Form::close() !!}
 </div>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="/js/globalcharges.js"></script>
+<script src="/js/globalchargeslcl.js"></script>
 <script>
 
 

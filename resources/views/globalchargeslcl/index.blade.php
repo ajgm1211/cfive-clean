@@ -249,7 +249,7 @@
   }
 
 </script>
-<script src="/js/globalcharges.js"></script>
+<script src="/js/globalchargeslcl.js"></script>
 @if(session('globalchar'))
 <script>
   swal(
