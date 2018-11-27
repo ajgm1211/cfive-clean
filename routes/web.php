@@ -211,22 +211,22 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 Route::middleware(['auth'])->prefix('companies')->group(function () {
 
 
-    Route::get('add', 'CompanyController@add')->name('companies.add');
-    Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
-    Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
-    Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
-    Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
-    Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
-    Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
-    Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
-    Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
-    Route::get('update/details/name/{company_id}', 'CompanyController@updateName')->name('companies.update.name');
-    Route::get('update/details/phone/{company_id}', 'CompanyController@updatePhone')->name('companies.update.phone');
-    Route::get('update/details/address/{company_id}', 'CompanyController@updateAddress')->name('companies.update.address');
-    Route::get('update/details/email/{company_id}', 'CompanyController@updateEmail')->name('companies.update.email');
-    Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
-    Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
-    Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
+  Route::get('add', 'CompanyController@add')->name('companies.add');
+  Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
+  Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
+  Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
+  Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
+  Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
+  Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
+  Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
+  Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
+  Route::get('update/details/name/{company_id}', 'CompanyController@updateName')->name('companies.update.name');
+  Route::get('update/details/phone/{company_id}', 'CompanyController@updatePhone')->name('companies.update.phone');
+  Route::get('update/details/address/{company_id}', 'CompanyController@updateAddress')->name('companies.update.address');
+  Route::get('update/details/email/{company_id}', 'CompanyController@updateEmail')->name('companies.update.email');
+  Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
+  Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
+  Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
 
 
 });
@@ -358,5 +358,16 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
 });
 
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
+// GLOBAL CHARGES LCL 
+
+Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
+
+
+  Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
+  Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);
+  Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl']);
+  Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl']);
+});
+Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 Auth::routes();
 

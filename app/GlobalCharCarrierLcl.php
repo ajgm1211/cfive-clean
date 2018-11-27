@@ -9,7 +9,7 @@ class GlobalCharCarrierLcl extends Model
   protected $table    = "globalcharcarriers_lcl";
   protected $fillable =   ['carrier_id','globalchargelcl_id'];
   public $timestamps = false;
-  public function globchargelcl()
+  public function globalchargelcl()
   {
 
     return $this->belongsTo('App\GlobalChargeLcl');

@@ -110,7 +110,7 @@
                 <a  href="{{route('contractslcl.index')}}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-file"></i>
                   <span class="m-menu__link-text">
-                  Sea LCL
+                    Sea LCL
                   </span>
                 </a>
               </li>
@@ -147,6 +147,14 @@
                   <i class="m-menu__link-icon la la-globe"></i>
                   <span class="m-menu__link-text">
                     Sea Freight FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('globalchargeslcl.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-globe"></i>
+                  <span class="m-menu__link-text">
+                    Sea  LCL
                   </span>
                 </a>
               </li>
