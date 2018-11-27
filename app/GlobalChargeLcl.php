@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalChargeLcl extends Model
 {
-    use SoftDeletes;
-  protected $dates    = ['deleted_at'];
+
   protected $table    = "globalcharges_lcl";
   protected $fillable = ['id','surcharge_id','typedestiny_id','contractlcl_id','calculationtypelcl_id','ammount','currency_id','created_at','updated_at'];
-  public function contract()
+  public function companyUser()
   {
-     return $this->belongsTo('App\ContractLcl','contractlcl_id');
+    return $this->belongsTo('App\CompanyUser');
   }
+
 
   public function currency(){
 
@@ -30,12 +30,12 @@ class GlobalChargeLcl extends Model
     return $this->belongsTo('App\Surcharge');
 
   }
-  public function globalcharportslcl(){
+  public function globalcharportlcl(){
 
     return $this->hasMany('App\GlobalCharPortLcl','globalchargelcl_id');
 
   }
-  public function globalcharcountrieslcl(){
+  public function globalcharcountrylcl(){
 
     return $this->hasMany('App\GlobalCharCountryLcl','globalchargelcl_id');
 
@@ -44,6 +44,7 @@ class GlobalChargeLcl extends Model
     return $this->hasMany('App\GlobalCharCarrierLcl','globalchargelcl_id');
 
   }
+
   public function typedestiny(){
     return $this->belongsTo('App\TypeDestiny');
 
