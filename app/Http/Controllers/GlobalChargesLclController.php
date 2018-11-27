@@ -206,4 +206,10 @@ class GlobalChargesLclController extends Controller
     $global->update();
     return redirect()->back()->with('globalchar','true');
   }
+  public function destroyGlobalCharges($id)
+  {
+    $global = GlobalChargeLcl::find($id);
+    $global->delete();
+
+  }
 }
