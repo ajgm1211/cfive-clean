@@ -9,7 +9,7 @@ class LocalChargeLcl extends Model
   use SoftDeletes;
   protected $dates    = ['deleted_at'];
   protected $table    = "localcharges_lcl";
-  protected $fillable = ['id','surcharge_id','typedestiny_id','contractlcl_id','calculationtypelcl_id','ammount','currency_id','created_at','updated_at'];
+  protected $fillable = ['id','surcharge_id','typedestiny_id','contractlcl_id','calculationtypelcl_id','ammount','minimum','currency_id','created_at','updated_at'];
   public function contract()
   {
      return $this->belongsTo('App\ContractLcl','contractlcl_id');

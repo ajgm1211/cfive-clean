@@ -80,11 +80,12 @@
                   <th title="Field #7">
                     Calculation type
                   </th>
-                  <th title="Field #8">
-                    Minimum
-                  </th>
+
                   <th title="Field #8">
                     Amount
+                  </th>
+                  <th title="Field #8">
+                    Minimum
                   </th>
                   <th title="Field #9">
                     Currency
@@ -139,11 +140,12 @@
                   </td>
                   <td>   
                     <div id="divcalculation{{$loop->index}}"  class="val">{!! $globalcharges->calculationtypelcl->name !!}</div>
-                  <td> 
-                    <div id="divminimum{{$loop->index}}" class="val"> {!! $globalcharges->minimum !!} </div>
-                  </td>
+
                   <td> 
                     <div id="divammount{{$loop->index}}" class="val"> {!! $globalcharges->ammount !!} </div>
+                  </td>
+                  <td> 
+                    <div id="divminimum{{$loop->index}}" class="val"> {!! $globalcharges->minimum !!} </div>
                   </td>
                   <td>
                     <div id="divcurrency{{$loop->index}}"  class="val"> {!! $globalcharges->currency->alphacode !!} </div>

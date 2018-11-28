@@ -180,7 +180,8 @@ Failed Surcharge
                     <th>Change Type</th>
                     <th>Carrier</th>
                     <th>Calculation Type</th>
-                    <th>Ammount</th>
+                    <th>Amount</th>
+                    <th>Minimum</th>
                     <th>Currency</th>
                     <th>Options</th>
 
@@ -199,6 +200,7 @@ Failed Surcharge
 
                   <td>  {{ Form::select('calculationtype[]', $calculationT,null,['class'=>'custom-select form-control ','style' => 'width:100%;']) }}</td>
                   <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}</td>
+                  <td> {!! Form::text('minimumL[]', null, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input']) !!}</td>
                   <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
                   <td>  <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
                     <i class="la la-eraser"></i>
@@ -594,6 +596,7 @@ Load
         {data: 'carrier', name: 'carrier'},
         {data: 'calculation_type', name: 'calculation_type'},
         {data: 'ammount', name: 'ammount'},
+        {data: 'minimum', name: 'minimum'},
         {data: 'currency', name: 'currency'},
         {data: 'options', name: 'options'}
       ],
