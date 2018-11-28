@@ -299,7 +299,13 @@
                                                                                     </div><!-- /btn-group -->
                                                                                 </div><!-- /input-group -->
                                                                             </div>
-                                                                        </div>                 
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <br>
+                                                                            <br>
+                                                                            <b>Chargeable weight:</b>
+                                                                            <span id="chargeable_weight_total"></span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -486,6 +492,13 @@
                                                                             <span id="total_quantity_pkg">{{$quote->packages->sum('quantity')}} un</span>
                                                                             <span id="total_volume_pkg">{{$quote->packages->sum('volume')}} m<sup>3</sup></span>
                                                                             <span id="total_weight_pkg">{{$quote->packages->sum('weight')*$quote->packages->sum('quantity')}} kg</span>
+                                                                        </div>
+                                                                        <br>
+                                                                        <br>
+                                                                        <div class="col-md-12">
+                                                                            <b>Chargeable weight:</b>
+                                                                            <span id="chargeable_weight_pkg">{{$quote->chargeable_weight}} </span>
+                                                                            <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
@@ -758,9 +771,20 @@
 
                                                                         </div>
                                                                     </div>
+                                                                    <div class="row pull-right">
+                                                                        <div class="col-md-12">
+                                                                            <br>
+                                                                            <div id="chargeable_weight_div" class="hide">  <b>Chargeable weight:</b>
+                                                                                <span id="chargeable_weight_span"></span> kg
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <h5 class="title-quote size-14px">Origin ammounts</h5>
