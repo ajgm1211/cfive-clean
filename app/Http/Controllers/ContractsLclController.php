@@ -182,6 +182,7 @@ class ContractsLclController extends Controller
             $localcharge->typedestiny_id = $request->input('changetype.'.$key2);
             $localcharge->calculationtypelcl_id = $ctype;//$request->input('calculationtype.'.$key2);
             $localcharge->ammount = $request->input('ammount.'.$key2);
+            $localcharge->minimum = $request->input('minimumL.'.$key2);
             $localcharge->currency_id = $request->input('localcurrency_id.'.$key2);
             $localcharge->contract()->associate($contract);
             $localcharge->save();
@@ -465,6 +466,7 @@ class ContractsLclController extends Controller
     $localC->typedestiny_id  = $request->input('changetype');
     $localC->calculationtypelcl_id = $request->input('calculationtype_id');
     $localC->ammount = $request->input('ammount');
+    $localC->minimum = $request->input('minimum');
     $localC->currency_id = $request->input('currency_id');
     $localC->update();
 
@@ -583,6 +585,7 @@ class ContractsLclController extends Controller
         'carrier' =>   $data1[$i]->carrier,
         'calculation_type' => $data1[$i]->calculation_type,
         'ammount' =>   $data1[$i]->ammount,
+        'minimum' =>   $data1[$i]->minimum,
         'currency' =>   $data1[$i]->currency,
 
       ]);

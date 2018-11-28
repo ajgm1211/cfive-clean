@@ -110,9 +110,21 @@ $portRadio = false;
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
           {!! Form::text('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-bookmark-o"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+      <div class="col-lg-4">
+        {!! Form::label('minimumL', 'Minimum') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {!! Form::text('minimum', $localcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -139,7 +151,7 @@ $portRadio = false;
   <hr>
   <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
-     &nbsp;&nbsp; {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+      &nbsp;&nbsp; {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
       <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>

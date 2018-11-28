@@ -153,6 +153,9 @@ $validation_expire = 'Please enter validity date';
                     <th title="Field #8">
                       Amount
                     </th>
+                    <th>
+                      Minimum
+                    </th>
                     <th title="Field #9">
                       Currency
                     </th>
@@ -163,7 +166,7 @@ $validation_expire = 'Please enter validity date';
                 </thead>
                 <tbody>
                   <tr>
-                    <td width='10%'>				
+                    <td width='9%'>				
                       <div class="m-radio-inline">
                         <label class="m-radio">
                           <input type="radio" onclick="activarCountry('divport','1')" checked='true' name="typeroute1"  value="port"> Port
@@ -176,8 +179,8 @@ $validation_expire = 'Please enter validity date';
 
                       </div>
                     </td>
-                    <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
-                    <td width='15%'>
+                    <td width='9%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
+                    <td width='9%'>
                       <div class="divport1" >
                         {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
                       </div>
@@ -186,7 +189,7 @@ $validation_expire = 'Please enter validity date';
                         null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}			
                       </div>
                     </td>
-                    <td width='12%'>
+                    <td width='9%'>
                       <div class="divport1" >
                         {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
                       </div>
@@ -195,12 +198,13 @@ $validation_expire = 'Please enter validity date';
                         null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}			
                       </div>
                     </td>
-                    <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
-                    <td width='10%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
-                    <td width='11%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-                    <td width='10%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td width='14%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                    <td  width='8%'>-</td>
+                    <td width='9%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                    <td width='9%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                    <td width='9%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
+                    <td width='9%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'> {!! Form::text('minimumL[]', null, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                    <td  width='4%'>-</td>
 
                   </tr>
 
@@ -279,7 +283,8 @@ $validation_expire = 'Please enter validity date';
         <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
 
         <td>{{ Form::select(null, $calculationT,null,['class'=>'form-control calculationT','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the amount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+        <td> {!! Form::text('minimumL[]', null, ['placeholder' => 'Please enter the minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'form-control','style' => 'width:100%;']) }}</td>
         <td>  <a  class="removeL m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
           <i class="la la-eraser"></i>

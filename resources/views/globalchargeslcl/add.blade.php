@@ -109,20 +109,9 @@
         </div>
 
       </div>
-      <div class="col-lg-4">
-        {!! Form::label('currencyl', 'Currency') !!}
-        <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('localcurrency_id',$currency,null,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-bookmark-o"></i>
-            </span>
-          </span>
-        </div>
 
-      </div>
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
           {!! Form::text('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the Ammount','class' => 'form-control m-input' ,'required' => 'true']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -133,9 +122,6 @@
         </div>
 
       </div>
-    </div>
-    <div class="form-group m-form__group row">
-
       <div class="col-lg-4">
         {!! Form::label('minimum', 'Minimum') !!}
         <div class="m-input-icon m-input-icon--right">
@@ -148,6 +134,21 @@
         </div>
 
       </div>
+    </div>
+    <div class="form-group m-form__group row">
+      <div class="col-lg-4">
+        {!! Form::label('currencyl', 'Currency') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('localcurrency_id',$currency,null,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-bookmark-o"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+
     </div>
   </div>  
   <br>

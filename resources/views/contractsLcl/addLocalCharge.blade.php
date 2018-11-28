@@ -98,9 +98,21 @@
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::text('ammount', null, ['id' => 'ammountAdd','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+          {!! Form::text('ammount', null, ['id' => 'ammountAdd','placeholder' => 'Please enter amount','class' => 'form-control m-input']) !!}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-bookmark-o"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+      <div class="col-lg-4">
+        {!! Form::label('minimumL', 'Minimum') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {!! Form::text('minimum', null, ['id' => 'minimumAdd','placeholder' => 'Please enter minimum','class' => 'form-control m-input']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
