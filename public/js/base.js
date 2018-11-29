@@ -747,6 +747,8 @@ $(document).on('click', '.addButton', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+    $('#freight_ammount_charge').attr("required");
+
 });
 
 $(document).on('click', '#delete-quote', function () {
