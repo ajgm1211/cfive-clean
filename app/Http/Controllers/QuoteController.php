@@ -349,32 +349,40 @@ class QuoteController extends Controller
                 $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
                 $origin_total_markup = array_values( array_filter($input['origin_ammount_markup']) );
                 foreach ($origin_ammount_charge as $key => $item) {
-                    $origin_ammount = new OriginAmmount();
-                    $origin_ammount->quote_id = $quote->id;
-                    if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
-                        $origin_ammount->charge = $origin_ammount_charge[$key];
-                    }
-                    if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
-                        $origin_ammount->detail = $origin_ammount_detail[$key];
-                    }
-                    if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
-                        $origin_ammount->units = $origin_total_units[$key];
-                    }
-                    if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
-                        $origin_ammount->markup = $origin_total_markup[$key];
-                    }
-                    if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
-                        $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
-                        $origin_ammount->currency_id = $origin_ammount_currency[$key];
-                    }
-                    if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
-                        $origin_ammount->total_ammount = $origin_total_ammount[$key];
-                    }
 
-                    if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
-                        $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
+                    if (isset($origin_ammount_charge[$key]) && isset($origin_ammount_detail[$key]) && isset($origin_total_units[$key])
+                        && isset($origin_ammount_currency[$key]) && isset($origin_ammount_price_per_unit[$key]) && isset($origin_total_ammount[$key])) {
+
+                        $origin_ammount = new OriginAmmount();
+                        $origin_ammount->quote_id = $quote->id;
+
+                        if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
+                            $origin_ammount->charge = $origin_ammount_charge[$key];
+                        }
+                        if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
+                            $origin_ammount->detail = $origin_ammount_detail[$key];
+                        }
+                        if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
+                            $origin_ammount->units = $origin_total_units[$key];
+                        }
+                        if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
+                            $origin_ammount->markup = $origin_total_markup[$key];
+                        }
+                        if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
+                            $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
+                            $origin_ammount->currency_id = $origin_ammount_currency[$key];
+                        }
+                        if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
+                            $origin_ammount->total_ammount = $origin_total_ammount[$key];
+                        }
+
+                        if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
+                            $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
+                        }
+
+                        $origin_ammount->save();
+
                     }
-                    $origin_ammount->save();
                 }
             }
             if($input['freight_ammount_charge']!=[null]) {
@@ -388,32 +396,40 @@ class QuoteController extends Controller
                 $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
                 $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
 
+
                 foreach ($freight_ammount_charge as $key => $item) {
-                    $freight_ammount = new FreightAmmount();
-                    $freight_ammount->quote_id = $quote->id;
-                    if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
-                        $freight_ammount->charge = $freight_ammount_charge[$key];
+
+                    if (isset($freight_ammount_charge[$key]) && isset($freight_ammount_detail[$key]) && isset($freight_total_units[$key])
+                        && isset($freight_ammount_currency[$key]) && isset($freight_ammount_price_per_unit[$key]) && isset($freight_total_ammount[$key])){
+
+                        $freight_ammount = new FreightAmmount();
+                        $freight_ammount->quote_id = $quote->id;
+
+                        if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
+                            $freight_ammount->charge = $freight_ammount_charge[$key];
+                        }
+                        if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
+                            $freight_ammount->detail = $freight_ammount_detail[$key];
+                        }
+                        if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
+                            $freight_ammount->units = $freight_total_units[$key];
+                        }
+                        if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
+                            $freight_ammount->markup = $freight_total_markup[$key];
+                        }
+                        if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
+                            $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
+                            $freight_ammount->currency_id = $freight_ammount_currency[$key];
+                        }
+                        if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
+                            $freight_ammount->total_ammount = $freight_total_ammount[$key];
+                        }
+                        if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
+                            $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
+                        }
+                        $freight_ammount->save();
+                        
                     }
-                    if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
-                        $freight_ammount->detail = $freight_ammount_detail[$key];
-                    }
-                    if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
-                        $freight_ammount->units = $freight_total_units[$key];
-                    }
-                    if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
-                        $freight_ammount->markup = $freight_total_markup[$key];
-                    }
-                    if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
-                        $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
-                        $freight_ammount->currency_id = $freight_ammount_currency[$key];
-                    }
-                    if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
-                        $freight_ammount->total_ammount = $freight_total_ammount[$key];
-                    }
-                    if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
-                        $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
-                    }
-                    $freight_ammount->save();
                 }
             }
             if($input['destination_ammount_charge']!=[null]) {
@@ -426,31 +442,38 @@ class QuoteController extends Controller
                 $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
                 $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
                 foreach ($destination_ammount_charge as $key => $item) {
-                    $destination_ammount = new DestinationAmmount();
-                    $destination_ammount->quote_id = $quote->id;
-                    if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
-                        $destination_ammount->charge = $destination_ammount_charge[$key];
+
+                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_total_units[$key])
+                        && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
+
+                        $destination_ammount = new DestinationAmmount();
+                        $destination_ammount->quote_id = $quote->id;
+
+                        if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
+                            $destination_ammount->charge = $destination_ammount_charge[$key];
+                        }
+                        if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
+                            $destination_ammount->detail = $destination_ammount_detail[$key];
+                        }
+                        if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
+                            $destination_ammount->units = $destination_ammount_units[$key];
+                        }
+                        if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
+                            $destination_ammount->markup = $destination_ammount_markup[$key];
+                        }
+                        if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
+                            $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
+                            $destination_ammount->currency_id = $destination_ammount_currency[$key];
+                        }
+                        if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
+                            $destination_ammount->total_ammount = $destination_total_ammount[$key];
+                        }
+                        if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
+                            $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
+                        }
+                        $destination_ammount->save();
+
                     }
-                    if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
-                        $destination_ammount->detail = $destination_ammount_detail[$key];
-                    }
-                    if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
-                        $destination_ammount->units = $destination_ammount_units[$key];
-                    }
-                    if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
-                        $destination_ammount->markup = $destination_ammount_markup[$key];
-                    }
-                    if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
-                        $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
-                        $destination_ammount->currency_id = $destination_ammount_currency[$key];
-                    }
-                    if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
-                        $destination_ammount->total_ammount = $destination_total_ammount[$key];
-                    }
-                    if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
-                        $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
-                    }
-                    $destination_ammount->save();
                 }
             }
             if(isset($input['schedule'])){
