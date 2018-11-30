@@ -43,7 +43,7 @@ class ExportationController extends Controller
          $contract = Contract::find($id);
          $nameFile = str_replace([' '],'_',$now.'_'.$contract['name']);
          //dd(storage_path('RequestFiles').'/15112018_152304_Maersk_text_Export.xlsx');
-         Excel::create($nameFile, function($excel) use($id,$contract) {
+         $myFile = Excel::create($nameFile, function($excel) use($id,$contract,$nameFile) {
             $excel->sheet('Contract', function($sheet) use($contract) {
                //dd($contract);
                $sheet->cells('A1:D1', function($cells) {
@@ -194,7 +194,15 @@ class ExportationController extends Controller
                }
             });
 
-         })->download('xlsx');
+         });
+
+         $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+         $response =  array(
+            'name' => $nameFile.'.xlsx', //no extention needed
+            'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+         );
+         return response()->json($response);
+
       } else {
          $auth = \Auth::user()->toArray();
          ExportContractJob::dispatch($id,$auth);
