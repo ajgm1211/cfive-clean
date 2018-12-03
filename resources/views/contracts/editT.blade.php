@@ -107,12 +107,9 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                      </a>
 
                      @endrole
-                     <a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
+
+                     <a href="#" onclick="exportjs({{$id}})" class="btn btn-info">
                         Export Contract
-                        <i class="fa flaticon-tool-1"></i>
-                     </a>
-                     <a href="#" onclick="exportjs({{$id}})" class="btn btn-warning">
-                        Export Contract js
                         <i class="fa flaticon-tool-1"></i>
                      </a>
                      <br><br>
@@ -179,8 +176,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                         Failed Surcharge
                         <i class="fa flaticon-tool-1"></i>
                      </a>
-                     <br><br><br>
                      @endrole
+                     <a href="#" onclick="exportjs({{$id}})" class="btn btn-info">
+                        Export Contract
+                        <i class="fa flaticon-tool-1"></i>
+                     </a>
+                     <br><br>
                      <table class="table tableData" id="users-table" width="100%" >
 
                         <thead>
@@ -194,12 +195,9 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                               <th>Ammount</th>
                               <th>Currency</th>
                               <th>Options</th>
-
                            </tr>
                         </thead>
                      </table>
-
-
 
                      <table hidden="true">
                         <tr   id='tclone2' hidden="true"  >
@@ -578,16 +576,16 @@ Load
    <div class="modal fade bd-example-modal-lg"  id="modalwait"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
          <div class="modal-content">
-            <!-- <div class="modal-header">
-<h5 class="modal-title" id="exampleModalLongTitle">
-Ocean Freight
-</h5>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">
-&times;
-</span>
-</button>
-</div>-->
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLongTitle">
+                  Export Contract
+               </h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">
+                     &times;
+                  </span>
+               </button>
+            </div>
             <div id = 'rate-body'>
                <center>
                   <div class="form-group">
@@ -596,7 +594,7 @@ Ocean Freight
                         <img src="{{asset('images/ship.gif')}}" style="height:170px">
                      </div>
                      <div class="col-md-12">
-                        Please Wait
+                        The contract is being exported. Please wait. It can take up to a few minutes.
                      </div>
                   </div>
                </center>
@@ -633,15 +631,23 @@ Ocean Freight
          },
          success: function (response, textStatus, request) {
             if (request.status === 200) {
-
-               $('#modalwait').modal('hide');
-               console.log('Load: '+request.status);
-               var a = document.createElement("a");
-               a.href = response.file; 
-               a.download = response.name;
-               document.body.appendChild(a);
-               a.click();
-               a.remove();
+               if(response.actt == 1){
+                  $('#modalwait').modal('hide');
+                  console.log('Load: '+request.status);
+                  var a = document.createElement("a");
+                  a.href = response.file; 
+                  a.download = response.name;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+               } else if(response.actt == 2){
+                  $('#modalwait').modal('hide');
+                  swal(
+                     'Done!',
+                     'The export is being processed. We will send it to your email.',
+                     'success'
+                  )
+               }
             }
          },
          error: function (ajaxContext) {

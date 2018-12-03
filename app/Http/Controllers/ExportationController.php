@@ -198,6 +198,7 @@ class ExportationController extends Controller
 
          $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
          $response =  array(
+            'actt' => 1,
             'name' => $nameFile.'.xlsx', //no extention needed
             'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
          );
@@ -206,16 +207,21 @@ class ExportationController extends Controller
       } else {
          $auth = \Auth::user()->toArray();
          ExportContractJob::dispatch($id,$auth);
-         $request->session()->flash('message.nivel', 'success');
+         /*$request->session()->flash('message.nivel', 'success');
          $request->session()->flash('message.content', 'The export is being processed. We will send it to your email.');
-         return redirect()->route('contracts.edit',setearRouteKey($id));
+         return redirect()->route('contracts.edit',setearRouteKey($id));*/
+         $response =  array(
+            'actt' => 2
+         );
+         return response()->json($response);
       }
    }
 
 
    public function edit($id)
    {
-      //
+      $data1 = \DB::select(\DB::raw('call proc_localchar('.$id.')'));
+      dd($data1);
    }
 
    public function update(Request $request, $id)
