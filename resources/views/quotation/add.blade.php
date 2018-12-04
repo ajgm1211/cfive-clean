@@ -174,12 +174,69 @@ $subtotalDestiny = 0;
                         @if($form->fortyfive > 0)
                         <p id="cargo_details_45_hc_p" ><span id="cargo_details_45_hc"></span> {{ $form->fortyfive }} x 45' HC Containers</p> 
                         @endif
-
-
-
-
                       </div>
                     </div>
+                    @if($form->total_quantity != null)
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div id="cargo_details_cargo_type_p" ><b>Cargo type:</b> <span id="cargo_details_cargo_type">{{ $form->type_cargo == 1  ? 'Pallets' : 'Packages' }}</span></div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="cargo_details_total_quantity_p">  <b>Total quantity:</b> {{ $form->total_quantity }} <span id="cargo_details_total_quantity"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="cargo_details_total_weight_p" ><b>Total weight: </b>  {{ $form->total_weight }} <span id="cargo_details_total_weight"></span> KG</div>
+                      </div>
+                      <div class="col-md-3">
+                        <p id="cargo_details_total_volume_p" ><b>Total volume: </b> {{ $form->total_volume }} <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
+                      </div>
+                    </div>
+                    @endif
+                    @if($form->total_quantity_pkg != null)
+                    <div class="row">
+                      <table class="table table-bordered color-blue text-center">
+                        <tbody>
+                          <tr>
+                            <th width="75" class="header-table title-quote">Quantity</th>
+                            <th width="75" class="header-table title-quote">Height</th>
+                            <th width="75" class="header-table title-quote">Width</th>
+                            <th width="75" class="header-table title-quote">Large</th>
+                            <th width="75" class="header-table title-quote">Weight</th>
+                            <th width="75" class="header-table title-quote">Total Weight</th>
+                            <th width="75" class="header-table title-quote">Volume</th>
+                          </tr>
+                          @foreach($form->quantity as $key => $value)
+                          @if($value != null)
+                          <tr>
+                            <td width="75" >{{ $form->quantity[$key] }}</td>
+                            <td width="75" >{{ $form->height[$key]  }}</td>
+                            <td width="75" >{{ $form->width[$key]  }} </td>
+                            <td width="75" >{{ $form->large[$key]  }}</td>
+                            <td width="75" >{{ $form->weight[$key]  }} &nbsp; kg</td>
+                            <td width="75" >{{ $form->quantity[$key] * $form->weight[$key]  }} &nbsp; kg</td>
+                            <td width="75" >{{  $form->volume[$key] }} m<sup>3</sup>&nbsp;</td>
+                          </tr>
+                          @endif
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+                    @endif
+                    <div class="row pull-right">
+                      <div class="col-md-12">
+                        <div id="cargo_details_total_pkg_p" class="hide">  <b>Total:</b> 
+                          <span id="cargo_details_total_quantity_pkg"></span> un&nbsp;
+                          <span id="cargo_details_total_volume_pkg"></span> m<sup>3</sup>&nbsp;
+                          <span id="cargo_details_total_weight_pkg"></span> km
+                        </div>
+                        <br>
+                        <div id="chargeable_weight_div" class="hide">  <b>Chargeable weight:</b>
+                          <span id="chargeable_weight_span"></span> kg
+                        </div>
+                      </div>
+                    </div>
+                    <br><br><br>
                     <div class="row">
                       <div class="col-md-3">
                         <h5 class="title-quote size-14px">Origin ammounts</h5>

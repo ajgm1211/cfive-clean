@@ -29,9 +29,9 @@ class RateLcl extends Model
     return $this->belongsTo('App\Carrier');
 
   }
-  public function currency(){
+     public function currency(){
 
-    return $this->belongsTo('App\Currency');
+        return $this->belongsTo('App\Currency');
 
-  }
+    }
 }

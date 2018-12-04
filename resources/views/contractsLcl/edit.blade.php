@@ -58,7 +58,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
     <div class="m-portlet__body">
 
 
-      {!! Form::model($contracts, ['route' => ['contracts.update', $contracts], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
+      {!! Form::model($contracts, ['route' => ['contractslcl.update', $contracts], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
       @include('contracts.partials.form_contractsT')
       <div class="m-portlet m-portlet--tabs">
         <div class="m-portlet__head">
