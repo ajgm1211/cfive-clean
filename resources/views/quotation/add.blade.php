@@ -1120,6 +1120,11 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="weight" name="weight[]">
     <input type="hidden" class="form-control" id="volume" name="volume[]">
 
+    <input type="hidden" class="form-control" id="total_quantity" name="total_quantity" value="{{ $form->total_quantity }}">
+    <input type="hidden" class="form-control" id="total_weight" name="total_weight" value="{{ $form->total_weight }}">
+    <input type="hidden" class="form-control" id="total_volume" name="total_volume" value="{{ $form->total_volume }}">
+    <input type="hidden" class="form-control" id="type_cargo" name="type_cargo" value="{{ $form->type_cargo }}">
+
     <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
 
 
