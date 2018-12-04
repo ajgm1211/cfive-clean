@@ -310,7 +310,42 @@ class ContractsLclController extends Controller
      */
   public function update(Request $request, $id)
   {
-    //
+    $requestForm = $request->all();
+    $contract = ContractLcl::find($id);
+    $validation = explode('/',$request->validation_expire);
+    $contract->validity = $validation[0];
+    $contract->expire = $validation[1];
+    $contract->update($requestForm);
+/*
+    if(!empty($companies)){
+      ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
+
+      foreach($companies as $key3 => $value)
+      {
+        $contract_company_restriction = new ContractCompanyRestriction();
+        $contract_company_restriction->company_id=$value;
+        $contract_company_restriction->contract_id=$contract->id;
+        $contract_company_restriction->save();
+      }
+    }
+
+    if(!empty($users)){
+      ContractUserRestriction::where('contract_id',$contract->id)->delete();
+
+      foreach($users as $key4 => $value)
+      {
+        $contract_client_restriction = new ContractUserRestriction();
+        $contract_client_restriction->user_id=$value;
+        $contract_client_restriction->contract_id=$contract->id;
+        $contract_client_restriction->save();
+      }
+
+    }*/
+
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'You successfully update this contract.');
+    return redirect()->action('ContractsLclController@index');
   }
 
   /**

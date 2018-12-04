@@ -69,6 +69,14 @@ function display(id){
 
 }
 
+$(".fcl_label").on("click", function() {
+  $('#formId').attr('action', '/quotes/listRate');
+});
+$(".lcl_label").on("click", function() {
+  $('#formId').attr('action', '/quotes/listRateLcl');
+
+});
+
 
 
 
