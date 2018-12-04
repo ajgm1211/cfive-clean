@@ -99,7 +99,8 @@
                     </table>
                 </div>
             </div>
-            <br>            
+            @if($quote->hide_carrier==false)
+            <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
                     <p class="title"><b>{{$quote->type==3 ? 'Aerolínea':'Naviera'}}</b></p>
@@ -112,6 +113,7 @@
                     @endif
                 </div>
             </div>
+            @endif
             <br>
             <div id="details" class="clearfix details">
                 <div class="company" style="color: #1D3A6E;">
