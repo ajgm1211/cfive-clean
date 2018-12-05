@@ -283,6 +283,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
    Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
    Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
+   Route::get('carrier/visibility', 'QuoteController@updateCarrierVisibility')->name('quotes.carrier.visibility');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

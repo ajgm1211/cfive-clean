@@ -1812,4 +1812,12 @@ class QuoteController extends Controller
 
         return \Response::json($formatted_airports);
     }
+
+    public function updateCarrierVisibility(Request $request){
+        $quote=Quote::find($request->quote_id);
+        $quote->hide_carrier = $request->carrier_visibility;
+        $quote->update();
+
+        return response()->json(['message' => 'Ok']);
+    }
 }
