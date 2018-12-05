@@ -473,6 +473,19 @@ $(document).on('click', '#create-quote', function (e) {
     $("#create-quote-back").show();
 });
 
+$(document).on('change', '#hide_carrier', function () {
+    $.ajax({
+        type: 'GET',
+        url: '/quotes/carrier/visibility/',
+        data: {
+            'carrier_visibility': $("#hide_carrier").val(),
+            'quote_id': $("#quote-id").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
 
 //Btn next
 $(document).on('click', '#create-quote-back', function (e) {
