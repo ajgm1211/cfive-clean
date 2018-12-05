@@ -188,7 +188,7 @@ class QuoteAutomaticLclController extends Controller
         if($subtotalT < $data->minimum){
           $subtotalT = $data->minimum;
           $totalT =    $subtotalT / $rateC ;
-          $priceRate =  $data->minimum / $formulario->total_quantity;
+          $priceRate =  $data->minimum / $weight;
           $priceRate =  number_format($priceRate, 2, '.', '');
         }
 
@@ -211,7 +211,7 @@ class QuoteAutomaticLclController extends Controller
         $totalFreight += $totalT;
         $totalRates += $totalT;
 
-        $array = array('type'=>'Shipment', 'cantidad' => $formulario->total_quantity,'detail'=>'Shipment', 'price' => $priceRate, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Shipment', 'cantidad' => $weight,'detail'=>'Shipment', 'price' => $priceRate, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupT);
         $collectionRate->push($array);
         $data->setAttribute('montF',$array);
@@ -226,7 +226,7 @@ class QuoteAutomaticLclController extends Controller
         if($subtotalT < $data->minimum){
           $subtotalT = $data->minimum;
           $totalT =    $subtotalT / $rateC ;
-          $priceRate =  $data->minimum / $formulario->total_quantity_pkg;
+          $priceRate =  $data->minimum / $weight;
           $priceRate =  number_format($priceRate, 2, '.', '');
         }
         // MARKUPS
@@ -248,7 +248,7 @@ class QuoteAutomaticLclController extends Controller
         $totalT =  number_format($totalT, 2, '.', '');
         $totalFreight += $totalT;
         $totalRates += $totalT;
-        $array = array('type'=>'Package', 'cantidad' => $formulario->total_quantity_pkg,'detail'=>'Package', 'price' => $priceRate, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Package', 'cantidad' =>$weight ,'detail'=>'Package', 'price' => $priceRate, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupT);
         $collectionRate->push($array);
         $data->setAttribute('montF',$array);

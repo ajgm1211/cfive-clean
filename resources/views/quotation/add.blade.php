@@ -1112,20 +1112,25 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
     <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
-
-    <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
-    <input type="hidden" class="form-control" id="height" name="height[]">
-    <input type="hidden" class="form-control" id="width" name="width[]">
-    <input type="hidden" class="form-control" id="large" name="large[]">
-    <input type="hidden" class="form-control" id="weight" name="weight[]">
-    <input type="hidden" class="form-control" id="volume" name="volume[]">
+    
+    <input type="hidden" class="form-control" id="lclAuto" name="lclAuto" value="true" >
+    <input type="hidden" class="form-control" id="quantity" name="quantity" value="{{json_encode($form->quantity) }}" >
+    <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo" value="{{json_encode($form->type_load_cargo) }}">
+    <input type="hidden" class="form-control" id="height" name="height" value="{{json_encode($form->height) }}">
+    <input type="hidden" class="form-control" id="width" name="width" value="{{json_encode($form->width) }}" >
+    <input type="hidden" class="form-control" id="large" name="large" value="{{json_encode($form->large) }}" >
+    <input type="hidden" class="form-control" id="weight" name="weight" value="{{json_encode($form->weight) }}" >
+    <input type="hidden" class="form-control" id="volume" name="volume" value="{{json_encode($form->volume) }}" >
 
     <input type="hidden" class="form-control" id="total_quantity" name="total_quantity" value="{{ $form->total_quantity }}">
     <input type="hidden" class="form-control" id="total_weight" name="total_weight" value="{{ $form->total_weight }}">
     <input type="hidden" class="form-control" id="total_volume" name="total_volume" value="{{ $form->total_volume }}">
     <input type="hidden" class="form-control" id="type_cargo" name="type_cargo" value="{{ $form->type_cargo }}">
 
-    <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+    <input type="hidden" class="form-control" id="chargeable_weight" name="chargeable_weight" value="{{ $form->chargeable_weight }}">
+
+
+
 
 
     @if($email_templates)
