@@ -155,7 +155,7 @@
       </div>
    </div>
 </div>
-@include('quotes.partials.quotesModal');
+@include('quotes.partials.quotesModal')
 @endsection
 
 @section('js')
