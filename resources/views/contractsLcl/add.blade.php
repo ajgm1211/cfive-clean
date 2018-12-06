@@ -201,8 +201,8 @@ $validation_expire = 'Please enter validity date';
                     <td width='9%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
                     <td width='9%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
                     <td width='9%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-                    <td width='9%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td width='9%'> {!! Form::text('minimumL[]', null, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'> {!! Form::text('ammount[]', 0, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'> {!! Form::text('minimumL[]', 0, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
                     <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
                     <td  width='4%'>-</td>
 
@@ -283,8 +283,8 @@ $validation_expire = 'Please enter validity date';
         <td>{{ Form::select(null, $carrier,null,['class'=>'form-control carrier','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
 
         <td>{{ Form::select(null, $calculationT,null,['class'=>'form-control calculationT','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-        <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the amount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-        <td> {!! Form::text('minimumL[]', null, ['placeholder' => 'Please enter the minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+        <td> {!! Form::text('ammount[]', 0, ['placeholder' => 'Please enter the amount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+        <td> {!! Form::text('minimumL[]', 0, ['placeholder' => 'Please enter the minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
         <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'form-control','style' => 'width:100%;']) }}</td>
         <td>  <a  class="removeL m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
           <i class="la la-eraser"></i>

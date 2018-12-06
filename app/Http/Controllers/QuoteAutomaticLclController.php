@@ -32,6 +32,7 @@ class QuoteAutomaticLclController extends Controller
     $typeCurrency =  $company->companyUser->currency->alphacode ;
     $idCurrency = $company->companyUser->currency_id;
     $weight = $request->input("chargeable_weight");
+    $weight =  number_format($weight, 2, '.', '');
     // se separa el pais y el puerto 
     foreach($request->input('originport') as $origP){
 
@@ -244,7 +245,7 @@ class QuoteAutomaticLclController extends Controller
           $arraymarkupT = array("markup" => $markup , "markupConvert" => $freighMarkup, "typemarkup" => $markupFreightCurre) ;
         }
 
-        $totalT = $subtotalT;
+     
         $totalT =  number_format($totalT, 2, '.', '');
         $totalFreight += $totalT;
         $totalRates += $totalT;
@@ -303,7 +304,7 @@ class QuoteAutomaticLclController extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-    //dd($form);
+ 
     return view('quotation/lcl', compact('harbor','formulario','arreglo','form'));
     /*
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id)
