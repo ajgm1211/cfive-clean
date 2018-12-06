@@ -192,6 +192,13 @@ $subtotalDestiny = 0;
                         <p id="cargo_details_total_volume_p" ><b>Total volume: </b> {{ $form->total_volume }} <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div id="chargeable_weight_div" >  <b>Chargeable weight:</b>
+                          <span id="chargeable_weight_span"> {{ $form->chargeable_weight }}</span> kg
+                        </div>
+                      </div>
+                    </div>
                     @endif
                     @if($form->total_quantity_pkg != null)
                     <div class="row">
@@ -222,20 +229,21 @@ $subtotalDestiny = 0;
                         </tbody>
                       </table>
                     </div>
-                    @endif
                     <div class="row pull-right">
                       <div class="col-md-12">
-                        <div id="cargo_details_total_pkg_p" class="hide">  <b>Total:</b> 
-                          <span id="cargo_details_total_quantity_pkg"></span> un&nbsp;
-                          <span id="cargo_details_total_volume_pkg"></span> m<sup>3</sup>&nbsp;
-                          <span id="cargo_details_total_weight_pkg"></span> km
+                        <div id="cargo_details_total_pkg_p" >  <b>Total:</b> 
+                          <span id="cargo_details_total_quantity_pkg">{{ $form->total_quantity_pkg }}</span> un&nbsp;
+                          <span id="cargo_details_total_volume_pkg">{{ $form->total_volume_pkg }}</span> m<sup>3</sup>&nbsp;
+                          <span id="cargo_details_total_weight_pkg">{{ $form->total_weight_pkg }}</span> km
                         </div>
                         <br>
-                        <div id="chargeable_weight_div" class="hide">  <b>Chargeable weight:</b>
-                          <span id="chargeable_weight_span"></span> kg
+                        <div id="chargeable_weight_div" >  <b>Chargeable weight:</b>
+                          <span id="chargeable_weight_span"> {{ $form->chargeable_weight }}</span> kg
                         </div>
                       </div>
                     </div>
+                    @endif
+
                     <br><br><br>
                     <div class="row">
                       <div class="col-md-3">
@@ -1112,7 +1120,7 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="type" name="type" value="{{ $form->type }} ">
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
     <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
-    
+
     <input type="hidden" class="form-control" id="lclAuto" name="lclAuto" value="true" >
     <input type="hidden" class="form-control" id="quantity" name="quantity" value="{{json_encode($form->quantity) }}" >
     <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo" value="{{json_encode($form->type_load_cargo) }}">
