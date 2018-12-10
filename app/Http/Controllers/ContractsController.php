@@ -44,9 +44,13 @@ class ContractsController extends Controller
 
   public function index()
   {
-    $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
-    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-
+      if(\Auth::user()->hasRole('admin')){
+          $arreglo = Contract::all()->with('rates');
+          $contractG = Contract::all();
+      }else{
+          $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+          $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+      }
 
     return view('contracts/index', compact('arreglo','contractG'));
   }
