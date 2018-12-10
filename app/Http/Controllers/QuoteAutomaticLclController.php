@@ -15,6 +15,9 @@ use Illuminate\Support\Collection as Collection;
 use App\Carrier;
 use App\Harbor;
 use App\Price;
+use App\LocalChargeLcl;
+use App\LocalCharCarrierLcl;
+use App\LocalCharPortLcl;
 
 class QuoteAutomaticLclController extends Controller
 {
@@ -178,8 +181,29 @@ class QuoteAutomaticLclController extends Controller
 
     foreach($arreglo as $data){
       $totalFreight = 0;
+      $FreightCharges = 0;
       $totalRates = 0;
+      $totalOrigin = 0;
+      $totalDestiny =0;
+      $totalQuote= 0;
+      $totalAmmount = 0;
+      $collectionOrig = new Collection();
+      $collectionDest = new Collection();
+      $collectionFreight = new Collection();
+      $collectionGloOrig = new Collection();
+      $collectionGloDest = new Collection();
+      $collectionGloFreight = new Collection();
+      $collectionRate = new Collection();
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
+      $subtotal = 0;
+
+
+      $inlandDestiny = new Collection();
+      $inlandOrigin = new Collection();
+      $totalChargeOrig = 0;
+      $totalChargeDest =0;
+      $totalInland = 0;
+
       if($request->input('total_weight') != null ) {
 
         $subtotalT = $weight *  $data->uom;
@@ -245,7 +269,7 @@ class QuoteAutomaticLclController extends Controller
           $arraymarkupT = array("markup" => $markup , "markupConvert" => $freighMarkup, "typemarkup" => $markupFreightCurre) ;
         }
 
-     
+
         $totalT =  number_format($totalT, 2, '.', '');
         $totalFreight += $totalT;
         $totalRates += $totalT;
@@ -255,25 +279,145 @@ class QuoteAutomaticLclController extends Controller
         $data->setAttribute('montF',$array);
       }
 
-      $totalQuote = $totalFreight;// $totalFreight + $totalOrigin + $totalDestiny;
-      $totalQuoteSin = number_format($totalQuote, 2, ',', '');
 
       $data->setAttribute('rates',$collectionRate);
 
-      $collectionGloOrig = new Collection();
-      $collectionGloDest = new Collection();
-      $collectionGloFreight = new Collection();
-      $collectionOrig = new Collection();
-      $collectionDest = new Collection();
-      $collectionFreight = new Collection();
-      $FreightCharges = new Collection();
-      $totalOrigin ="";
-      $totalDestiny ="";
-      $inlandDestiny = new Collection();
-      $inlandOrigin = new Collection();
-      $totalChargeOrig = "";
-      $totalChargeDest ="";
-      $totalInland = "";
+
+      $orig_port = array($data->origin_port);
+      $dest_port = array($data->destiny_port);
+      $carrier[] = $data->carrier_id;
+
+      // id de los port  ALL
+      array_push($orig_port,1485);
+      array_push($dest_port,1485);
+      // id de los carrier ALL 
+      $carrier_all = 26;
+      array_push($carrier,$carrier_all);
+      // Id de los paises 
+      array_push($origin_country,250);
+      array_push($destiny_country,250);
+
+      $arrayBlHblShip = array('1','2','3'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL
+
+      // Local charges 
+      $localChar = LocalChargeLcl::where('contractlcl_id','=',$data->contractlcl_id)->whereHas('localcharcarrierslcl', function($q) use($carrier) {
+        $q->whereIn('carrier_id', $carrier);
+      })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
+        $query->whereHas('localcharportslcl', function($q) use($orig_port,$dest_port) {
+          $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
+        })->orwhereHas('localcharcountrieslcl', function($q) use($origin_country,$destiny_country) {
+          $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+        });
+      })->with('localcharportslcl.portOrig','localcharcarrierslcl.carrier','currency','surcharge.saleterm')->get();
+
+
+
+
+      foreach($localChar as $local){
+
+        $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
+        // Condicion para enviar los terminos de venta o compra
+        if(isset($local->surcharge->saleterm->name)){
+          $terminos = $local->surcharge->saleterm->name;
+        }else{
+          $terminos = $local->surcharge->name;
+        }
+        if(in_array($local->calculationtypelcl_id, $arrayBlHblShip)){
+          $cantidadT = 1;
+          foreach($local->localcharcarrierslcl as $carrierGlobal){
+            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
+              if($local->typedestiny_id == '1'){
+                $subtotal_local =  $local->ammount;
+                $totalAmmount =  $local->ammount  / $rateMount;
+
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                $totalOrigin += $totalAmmount ;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id );
+                $arregloOrig = array_merge($arregloOrig,$arraymarkupPC);
+                $origPer["origin"] =$arregloOrig;
+                $collectionOrig->push($origPer);
+              }
+              if($local->typedestiny_id == '2'){
+                $subtotal_local =  $local->ammount;
+                $totalAmmount =  $local->ammount  / $rateMount;
+                //$cantidadT = 1;
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                $totalDestiny += $totalAmmount;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT  , 'idCurrency' => $local->currency->id  );
+                $arregloDest = array_merge($arregloDest,$arraymarkupPC);
+                $destPer["destiny"] = $arregloDest;
+                $collectionDest->push($destPer);
+              }
+              if($local->typedestiny_id == '3'){
+                $subtotal_local =  $local->ammount;
+                $totalAmmount =  $local->ammount  / $rateMount;
+                //$cantidadT = 1;
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupPC = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                //$totalAmmount =  $local->ammout  / $rateMount;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $totalFreight += $totalAmmount;
+                $FreightCharges += $totalAmmount;
+                $arregloPC = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => "-" , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id  );
+                $arregloPC = array_merge($arregloPC,$arraymarkupPC);
+                $freightPer["freight"] = $arregloPC;
+                $collectionFreight->push($freightPer);
+              }
+            }
+          }
+        }
+      }// Fin del calculo de los local charges 
+      
+      
+      //#######################################################################
+      //Formato subtotales y operacion total quote
+      $totalFreight =  number_format($totalFreight, 2, '.', '');
+      $FreightCharges =  number_format($FreightCharges, 2, '.', '');
+      $totalOrigin  =  number_format($totalOrigin, 2, '.', '');
+      $totalDestiny =  number_format($totalDestiny, 2, '.', '');
+      $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
+      $totalQuoteSin = number_format($totalQuote, 2, ',', '');
+
+
+
+      
 
       $data->setAttribute('globalOrig',$collectionGloOrig);
       $data->setAttribute('globalDest',$collectionGloDest);
@@ -304,7 +448,9 @@ class QuoteAutomaticLclController extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
- 
+
+
+
     return view('quotation/lcl', compact('harbor','formulario','arreglo','form'));
     /*
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id)
