@@ -53,7 +53,7 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true])!!}
+        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -91,7 +91,7 @@ new registration
                                     <label for="numberid" class=" ">Company User</label>
                                     {!!  Form::select('CompanyUserId',$companysUser,null,['id'=>'CompanyUserId',
                                     'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
                                 </div>
                             </div>
                             <hr>
@@ -249,7 +249,7 @@ new registration
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2"></div>
-                                
+
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -267,7 +267,7 @@ new registration
                                         </span>
                                     </label>
                                 </div>
-                                
+
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -285,7 +285,7 @@ new registration
                                         </span>
                                     </label>
                                 </div>
-                            
+
                             </div>
                             <div class="form-group m-form__group row">
 
@@ -303,9 +303,11 @@ new registration
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-12 col-lg-offset-12">
                                     <center>
-                                        <button type="submit" class="btn btn-primary col-2 form-control">
+                                        <button type="submit" id="loadbutton" class="btn btn-primary col-2 form-control">
                                             Load
                                         </button>
+
+                                        <a href="#" id="validatebutton" onclick="validar()" class="btn btn-primary col-2 form-control"> Validate</a>
                                     </center>
                                 </div>
                             </div>
@@ -330,5 +332,61 @@ new registration
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#loadbutton').hide();
+    });
+
+    function selectvalidate(){
+        var id = $('#CompanyUserId').val();
+        //alert(id);
+        $('#validatebutton').show();
+        $('#loadbutton').hide();
+    }
+
+    function validar(){
+        var id = $('#CompanyUserId').val();
+
+        url='{!! route("validate.import",":id") !!}';
+        url = url.replace(':id', id);
+        // $(this).closest('tr').remove();
+        $.ajax({
+            url:url,
+            method:'get',
+            success: function(data){
+                swal({
+                    title: 'Are you sure?',
+                    text: "Selected company: "+data.name,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, select it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then(function(result){
+                    if (result.value) {
+
+                        $('#validatebutton').hide();
+                        $('#loadbutton').show();
+
+                    } else if (result.dismiss === 'cancel') {
+                        swal(
+                            'Cancelled',
+                            'You can validate again :)',
+                            'error'
+                        )
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+    }
+
+</script>
 
 @stop
