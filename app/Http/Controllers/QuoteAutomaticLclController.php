@@ -300,6 +300,7 @@ class QuoteAutomaticLclController extends Controller
       $arrayBlHblShip = array('1','2','3'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL
       $arraytonM3 = array('4'); //  calculation type 4 = Per ton/m3
       $arraytonCompli = array('6','7'); //  calculation type 4 = Per ton/m3
+      $arrayPerTon = array('5'); //  calculation type 5 = Per  TON 
 
       // Local charges 
       $localChar = LocalChargeLcl::where('contractlcl_id','=',$data->contractlcl_id)->whereHas('localcharcarrierslcl', function($q) use($carrier) {
@@ -318,6 +319,15 @@ class QuoteAutomaticLclController extends Controller
       foreach($localChar as $local){
 
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
+        //Totales peso y volumen
+        if($request->input('total_weight') != null){
+          $totalW = $request->input('total_weight') / 1000;
+          $totalV = $request->input('total_volume');
+        }else{            
+          $totalW = $request->input('total_weight_pkg') / 1000; ;
+          $totalV = $request->input('total_volume_pkg');
+        }
+
         // Condicion para enviar los terminos de venta o compra
         if(isset($local->surcharge->saleterm->name)){
           $terminos = $local->surcharge->saleterm->name;
@@ -508,17 +518,117 @@ class QuoteAutomaticLclController extends Controller
             }
           }
         }
-        if(in_array($local->calculationtypelcl_id, $arraytonCompli)){
-          //Totales peso y volumen
-          if($request->input('total_weight') != null){
-            $totalW = $request->input('total_weight') / 1000;
-            $totalV = $request->input('total_volume');
-          }else{            
-            $totalW = $request->input('total_weight_pkg') / 1000; ;
-            $totalV = $request->input('total_volume_pkg');
-          }
+        if(in_array($local->calculationtypelcl_id, $arrayPerTon)){
 
-          $cantidadT = $weight;
+          foreach($local->localcharcarrierslcl as $carrierGlobal){
+            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
+              if($local->typedestiny_id == '1'){
+                $subtotal_local =  $totalW * $local->ammount;
+                $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
+                $mont = $local->ammount;
+                $unidades = $totalW;
+                if($subtotal_local < $local->minimum){
+                  $subtotal_local = $local->minimum;
+                  $totalAmmount =    $subtotal_local / $rateMount ;
+                  $mont = $local->minimum / $totalW;
+                  $mont = number_format($mont, 2, '.', '');
+
+                }
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                $totalOrigin += $totalAmmount ;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id );
+                $arregloOrig = array_merge($arregloOrig,$arraymarkupTon);
+
+                $origTon["origin"] =$arregloOrig;
+                $collectionOrig->push($origTon);
+              }
+              if($local->typedestiny_id == '2'){
+                $subtotal_local =  $totalW * $local->ammount;
+                $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
+                $mont = $local->ammount;
+                $unidades = $totalW;
+                if($subtotal_local < $local->minimum){
+                  $subtotal_local = $local->minimum;
+                  $totalAmmount =    $subtotal_local / $rateMount ;
+                  $mont = $local->minimum / $totalW;
+                  $mont = number_format($mont, 2, '.', '');
+
+                }
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                $totalDestiny += $totalAmmount;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $mont, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT  , 'idCurrency' => $local->currency->id  );
+                $arregloDest = array_merge($arregloDest,$arraymarkupTon);
+                $destTon["destiny"] = $arregloDest;
+                $collectionDest->push($destTon);
+              }
+              if($local->typedestiny_id == '3'){
+
+                $subtotal_local =  $totalW * $local->ammount;
+                $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
+                $mont = $local->ammount;
+                $unidades = $totalW;
+                if($subtotal_local < $local->minimum){
+                  $subtotal_local = $local->minimum;
+                  $totalAmmount =    $subtotal_local / $rateMount ;
+                  $mont = $local->minimum / $totalW;
+                  $mont = number_format($mont, 2, '.', '');
+
+                }
+
+                // MARKUP
+                if($localPercentage != 0){
+                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $markup ;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                }else{
+                  $markup =$localAmmount;
+                  $markup = number_format($markup, 2, '.', '');
+                  $totalAmmount += $localMarkup;
+                  $arraymarkupTon = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                }
+                //$totalAmmount =  $local->ammout  / $rateMount;
+                $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                $totalFreight += $totalAmmount;
+                $FreightCharges += $totalAmmount;
+                $arregloPC = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades , 'monto' => $mont, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>' Shipment Local ', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $cantidadT , 'idCurrency' => $local->currency->id  );
+                $arregloPC = array_merge($arregloPC,$arraymarkupTon);
+                $freightTon["freight"] = $arregloPC;
+                $collectionFreight->push($freightTon);
+              }
+            }
+          }
+        }
+        if(in_array($local->calculationtypelcl_id, $arraytonCompli)){
+
+
           foreach($local->localcharcarrierslcl as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               if($local->typedestiny_id == '1'){
@@ -672,41 +782,46 @@ class QuoteAutomaticLclController extends Controller
       if(!empty($dataOrig)){
         $collectOrig = Collection::make($dataOrig);
 
-        $m3tonOrig= $collectOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin){
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->first();
-          $totalA = explode(' ',$test['totalAmmount']);
-          $totalOrigin += $totalA[0];  
+        $m3tonOrig= $collectOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin,$data){
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->where('carrier_id',$data->carrier_id)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalOrigin += $totalA[0];  
 
-          $arre['origin'] = $test;
-          $collectionOrig->push($arre);
-          return $test;
+            $arre['origin'] = $test;
+            $collectionOrig->push($arre);
+            return $test;
+          }
         });
       }
-
 
 
 
       if(!empty($dataDest)){
         $collectDest = Collection::make($dataDest);
-        $m3tonDest= $collectDest->groupBy('surcharge_name')->map(function($item) use($collectionDest,&$totalDestiny){
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->first();
-          $totalA = explode(' ',$test['totalAmmount']);
-          $totalDestiny += $totalA[0];  
-          $arre['destiny'] = $test;
-          $collectionDest->push($arre);
-          return $test;
+        $m3tonDest= $collectDest->groupBy('surcharge_name')->map(function($item) use($collectionDest,&$totalDestiny,$data){
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->where('carrier_id',$data->carrier_id)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalDestiny += $totalA[0];  
+            $arre['destiny'] = $test;
+            $collectionDest->push($arre);
+            return $test;
+          }
         });
       }
       if(!empty($dataFreight)){
 
         $collectFreight = Collection::make($dataFreight);
-        $m3tonFreight= $collectFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight){
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->first();
-          $totalA = explode(' ',$test['totalAmmount']);
-          $totalFreight += $totalA[0];  
-          $arre['destiny'] = $test;
-          $collectionFreight->push($arre);
-          return $test;
+        $m3tonFreight= $collectFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight,$data){
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->where('carrier_id',$data->carrier_id)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalFreight += $totalA[0];  
+            $arre['destiny'] = $test;
+            $collectionFreight->push($arre);
+            return $test;
+          }
         });
       }
 
