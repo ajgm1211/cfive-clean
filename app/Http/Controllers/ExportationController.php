@@ -7,7 +7,7 @@ use PrvRates;
 use DataTime;
 use App\Contract;
 use PrvSurchargers;
-use PrvSurchargersExport;
+//use PrvSurchargersExport;
 use Illuminate\Http\Request;
 use App\Jobs\ExportContractJob;
 use App\Mail\ExportContractMail;
@@ -167,7 +167,7 @@ class ExportationController extends Controller
                ));
                $i= 2;
 
-               $surchargersT        = PrvSurchargersExport::get_surchargers($id);
+               $surchargersT        = PrvSurchargers::get_surchargers($id);
                $ciclossurchargers   = $surchargersT->chunk(500);
                $ciclossurchargers   = $ciclossurchargers->toArray();;
                foreach($ciclossurchargers as $surchargers){
@@ -224,7 +224,7 @@ class ExportationController extends Controller
    {
       //$data1 = DB::select('call proc_localchar('.$id.')');
       
-      $data1 = PrvSurchargersExport::get_surchargers($id);
+      $data1 = PrvSurchargers::get_surchargers($id);
       dd($data1);
    }
 

@@ -173,7 +173,7 @@ return [
         App\Providers\HarborsServiceProvider::class,
         App\Providers\RatesServiceProvider::class,
         App\Providers\SurchargersServiceProvider::class,
-        App\Providers\SurchargersExportServiceProvider::class,
+       // App\Providers\SurchargersExportServiceProvider::class,
 
 
 
@@ -235,7 +235,7 @@ return [
         'PrvHarbor' => App\Helpers\Helpharbors::class,
         'PrvRates' => App\Helpers\Rates\HelperRates::class,
         'PrvSurchargers' => App\Helpers\Surchargers\HelperSurchargers::class,
-        'PrvSurchargersExport' => App\Helpers\Surchargers\HelperSurchargersExport::class,
+        //'PrvSurchargersExport' => App\Helpers\Surchargers\HelperSurchargersExport::class,
 
     ],
 
