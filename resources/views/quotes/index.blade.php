@@ -41,7 +41,7 @@
                               <a href="{{route('quotes.download')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                  <span>
                                     <span>
-                                       Export to csv
+                                       Export to excel
                                     </span>
                                     <i class="la la-download"></i>
                                  </span>
