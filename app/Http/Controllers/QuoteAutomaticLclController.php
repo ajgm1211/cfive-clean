@@ -1158,6 +1158,8 @@ class QuoteAutomaticLclController extends Controller
 
       //#######################################################################
       //Formato subtotales y operacion total quote
+      $totalChargeOrig += $totalOrigin;
+      $totalChargeDest += $totalDestiny;
       $totalFreight =  number_format($totalFreight, 2, '.', '');
       $FreightCharges =  number_format($FreightCharges, 2, '.', '');
       $totalOrigin  =  number_format($totalOrigin, 2, '.', '');
