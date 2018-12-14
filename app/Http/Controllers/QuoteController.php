@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use App\Exports\QuotesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Company;
 use App\CompanyPrice;
 use App\CompanyUser;
@@ -1819,5 +1821,9 @@ class QuoteController extends Controller
         $quote->update();
 
         return response()->json(['message' => 'Ok']);
+    }
+
+    public function downloadQuotes(){
+        return Excel::download(new QuotesExport, 'quotes.xlsx');
     }
 }
