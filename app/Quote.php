@@ -21,6 +21,11 @@ class Quote extends Model implements Auditable
         return $this->belongsTo('App\Contact');
     }
 
+    public function incoterm()
+    {
+        return $this->belongsTo('App\Incoterm','id','incoterm');
+    }
+
     public function carrier()
     {
         return $this->belongsTo('App\Carrier');

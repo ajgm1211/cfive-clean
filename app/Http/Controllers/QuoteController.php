@@ -430,7 +430,7 @@ class QuoteController extends Controller
                             $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
                         }
                         $freight_ammount->save();
-                        
+
                     }
                 }
             }
@@ -1824,6 +1824,7 @@ class QuoteController extends Controller
     }
 
     public function downloadQuotes(){
+
         return Excel::download(new QuotesExport, 'quotes.xlsx');
     }
 }
