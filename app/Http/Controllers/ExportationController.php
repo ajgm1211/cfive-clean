@@ -7,9 +7,11 @@ use PrvRates;
 use DataTime;
 use App\Contract;
 use PrvSurchargers;
+//use PrvSurchargersExport;
 use Illuminate\Http\Request;
 use App\Jobs\ExportContractJob;
 use App\Mail\ExportContractMail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ExportationController extends Controller
@@ -220,7 +222,9 @@ class ExportationController extends Controller
 
    public function edit($id)
    {
-      $data1 = \DB::select(\DB::raw('call proc_localchar('.$id.')'));
+      //$data1 = DB::select('call proc_localchar('.$id.')');
+      
+      $data1 = PrvSurchargers::get_surchargers($id);
       dd($data1);
    }
 
