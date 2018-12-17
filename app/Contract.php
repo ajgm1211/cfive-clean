@@ -10,7 +10,7 @@ class Contract extends Model implements Auditable
   use \OwenIt\Auditing\Auditable;
   protected $table    = "contracts";     
 
-  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status'];
+  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status','remarks'];
 
   public function rates(){
     return $this->hasMany('App\Rate');
