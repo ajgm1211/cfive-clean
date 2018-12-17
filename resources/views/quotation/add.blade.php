@@ -1087,7 +1087,7 @@ $subtotalDestiny = 0;
         {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
         <hr>
         <label class="title-quote title-quote size-14px">Carrier visibility</label>
-        {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
+        {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],true, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
       </div>
     </div>
 
