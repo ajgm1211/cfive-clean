@@ -432,7 +432,8 @@ class QuoteController extends Controller
           }
         }
       }
-      if($input['destination_ammount_charge']!=[null]) {
+   
+     // if($input['destination_ammount_charge']!=[null]) {
         $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
         $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
         $destination_ammount_price_per_unit = array_values( array_filter($input['destination_price_per_unit']) );
@@ -441,10 +442,12 @@ class QuoteController extends Controller
         $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
         $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
         $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
-        foreach ($destination_ammount_charge as $key => $item) {
 
-          if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_total_units[$key])
+        foreach ($destination_ammount_charge as $key => $item) {
+  
+          if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
               && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
+           
 
             $destination_ammount = new DestinationAmmount();
             $destination_ammount->quote_id = $quote->id;
@@ -471,11 +474,12 @@ class QuoteController extends Controller
             if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
               $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
             }
+         
             $destination_ammount->save();
 
           }
         }
-      }
+      //}
       if(isset($input['schedule'])){
         if($input['schedule'] != 'null'){
           $schedules = json_decode($input['schedule']);
