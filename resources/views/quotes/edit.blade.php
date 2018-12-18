@@ -49,11 +49,11 @@
                                     <div class="m-portlet__head-tools">
                                         <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
                                             <li class="nav-item m-tabs__item" style="padding-top: 20px;padding-bottom: 20px;">
-                                                <a class="btn btn-primary" id="create-quote" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
-                                                    Next
-                                                </a>
-                                                <a class="btn btn-primary" id="create-quote-back" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                                <a class="btn btn-primary" id="create-quote" style="display: none;" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
                                                     Back
+                                                </a>
+                                                <a class="btn btn-primary" id="create-quote-back" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                                    Go to first page
                                                 </a>
                                             </li>
                                         </ul>
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="m-portlet__body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="m_portlet_tab_1_1">
+                                        <div class="tab-pane" id="m_portlet_tab_1_1">
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="form-group m-form__group row">
@@ -653,7 +653,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane" id="m_portlet_tab_1_2">
+                                            <div class="tab-pane active" id="m_portlet_tab_1_2">
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -825,7 +825,7 @@
                                                                                         <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$origin_ammount->currency_id,['class'=>'origin_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$origin_ammount->currency_id,['class'=>'origin_ammount_currency form-control select2-origin']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -866,7 +866,7 @@
                                                                                         <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'origin_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'origin_ammount_currency form-control']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -906,7 +906,7 @@
                                                                                         <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency select2-origin']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1021,7 +1021,7 @@
                                                                                         <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,$freight_ammount->currency_id,['class'=>'freight_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,$freight_ammount->currency_id,['class'=>'freight_ammount_currency form-control select2-freight']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1063,7 +1063,7 @@
                                                                                         <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'freight_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'freight_ammount_currency form-control']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1104,7 +1104,7 @@
                                                                                         <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="..." required>
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency','required'=>true]) }}              
+                                                                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency select2-freight','required'=>true]) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1220,7 +1220,7 @@
                                                                                         <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$destination_ammount->currency_id,['class'=>'destination_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$destination_ammount->currency_id,['class'=>'destination_ammount_currency form-control select2-destination']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1261,7 +1261,7 @@
                                                                                         <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'destination_ammount_currency form-control']) }}              
+                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'destination_ammount_currency form-control']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1301,7 +1301,7 @@
                                                                                         <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
                                                                                         <div class="input-group-btn">
                                                                                             <div class="btn-group">
-                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency select2-destination']) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1460,6 +1460,16 @@
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
+
+        $('.select2-origin').select2({
+            placeholder: "Currency"
+        });
+        $('.select2-freight').select2({
+            placeholder: "Currency"
+        });
+        $('.select2-destination').select2({
+            placeholder: "Currency"
+        });
 
         $( document ).ready(function() {
             $('#contact_id').prop("disabled", false);
