@@ -1290,14 +1290,63 @@ class QuoteAutomaticLclController extends Controller
       if(!empty($dataFreight)){
 
         $collectFreight = Collection::make($dataFreight);
-        $m3tonFreight= $collectFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight,$data){
+        $m3tonFreight= $collectFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
           $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalFreight += $totalA[0];  
-            $arre['destiny'] = $test;
+            $arre['freight'] = $test;
             $collectionFreight->push($arre);
+            return $test;
+          }
+        });
+      }
+      
+       // Globales 
+      if(!empty($dataGOrig)){
+        $collectGOrig = Collection::make($dataGOrig);
+
+        $m3tonGOrig= $collectGOrig->groupBy('surcharge_name')->map(function($item) use($collectionGloOrig,&$totalOrigin,$data,$carrier_all){
+          $carrArreglo = array($data->carrier_id,$carrier_all);
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalOrigin += $totalA[0];  
+
+            $arre['origin'] = $test;
+            $collectionGloOrig->push($arre);
+            return $test;
+          }
+        });
+      }
+
+      if(!empty($dataGDest)){
+        $collectGDest = Collection::make($dataGDest);
+        $m3tonDestG= $collectGDest->groupBy('surcharge_name')->map(function($item) use($collectionGloDest,&$totalDestiny,$data,$carrier_all){
+          $carrArreglo = array($data->carrier_id,$carrier_all);
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalDestiny += $totalA[0];  
+            $arre['destiny'] = $test;
+            $collectionGloDest->push($arre);
+            return $test;
+          }
+        });
+      }
+
+      if(!empty($dataGFreight)){
+
+        $collectGFreight = Collection::make($dataGFreight);
+        $m3tonFreightG= $collectGFreight->groupBy('surcharge_name')->map(function($item) use($collectionGloFreight,&$totalFreight,$data,$carrier_all){
+          $carrArreglo = array($data->carrier_id,$carrier_all);
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalFreight += $totalA[0];  
+            $arre['freight'] = $test;
+            $collectionGloFreight->push($arre);
             return $test;
           }
         });
