@@ -752,6 +752,9 @@ $(document).on('click', '.addButtonOrigin', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
 });
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
@@ -760,6 +763,9 @@ $(document).on('click', '.addButton', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
     $('#freight_ammount_charge').attr("required");
 
 });
@@ -799,6 +805,9 @@ $(document).on('click', '.addButtonDestination', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
 });
 
 $(document).on('click', '.removeOriginButton', function (e) {
