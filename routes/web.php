@@ -193,6 +193,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
 
 // Importation LCL 
 Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
+  Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
   Route::resource('ImportationLCL','ImportationLclController');
 });
 
