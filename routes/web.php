@@ -190,6 +190,12 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
 
 });
 
+
+// Importation LCL 
+Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
+  Route::resource('ImportationLCL','ImportationLclController');
+});
+
 Route::middleware(['auth'])->prefix('Exportation')->group(function () {
   Route::resource('Exportation','ExportationController');
 });
