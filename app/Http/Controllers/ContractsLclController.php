@@ -133,6 +133,7 @@ class ContractsLclController extends Controller
     $validation = explode('/',$request->validation_expire);
     $contract->validity = $validation[0];
     $contract->expire = $validation[1];
+    $contract->comments =$request->input('comments');
     $contract->save();
     $details = $request->input('currency_id');
     $detailscharges = $request->input('localcurrency_id');
@@ -315,8 +316,9 @@ class ContractsLclController extends Controller
     $validation = explode('/',$request->validation_expire);
     $contract->validity = $validation[0];
     $contract->expire = $validation[1];
+    $contract->comments =$request->input('comments');
     $contract->update($requestForm);
-/*
+    /*
     if(!empty($companies)){
       ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
 
