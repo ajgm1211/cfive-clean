@@ -1,19 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Excel;
 use App\Harbor;
+use App\FileTmp;
 use App\Carrier;
 use App\CompanyUser;
+use App\ContractLcl;
 use Illuminate\Http\Request;
 
 class ImportationLclController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $harbor         = harbor::all()->pluck('display_name','id');
@@ -22,67 +20,178 @@ class ImportationLclController extends Controller
         return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function create(Request $request)
     {
-        //
+        dd($request->all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        
+    }
+    
+    // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
+    public function UploadFileNewContract(Request $request)
+    {
+
+        //dd($request->all());
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
+        $type       = $request->type;
+        $carrierVal     = $request->carrier;
+        $destinyArr     = $request->destiny;
+        $originArr      = $request->origin;
+        $CompanyUserId  = $request->CompanyUserId;
+        $carrierBol     = false;
+        $destinyBol     = false;
+        $originBol      = false;
+        $data= collect([]);
+        $harbor  = harbor::all()->pluck('display_name','id');
+        $carrier = carrier::all()->pluck('name','id');
+        // try {
+        $file = $request->file('file');
+        $ext = strtolower($file->getClientOriginalExtension());
+        $validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv')
+        );
+        $Contract_id;
+        if ($validator->fails()) {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+            return redirect()->route('ImportationLCL.index');
+        }
+        //obtenemos el nombre del archivo
+        $nombre = $file->getClientOriginalName();
+        $nombre = $now.'_'.$nombre;
+        $validatefile = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        
+        if($validatefile){
+            $contract     = new ContractLcl();
+            $contract->name             = $request->name;
+            $contract->number           = $request->number;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->status           = 'incomplete';
+            $contract->comments         = $request->comments;
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->save(); 
+            $Contract_id = $contract->id;
+           /* $fileTmp = new FileTmp();
+            $fileTmp->contract_id = $Contract_id;
+            $fileTmp->name_file   = $nombre;
+            $fileTmp->save(); //*/
+        }
+        
+        $statustypecurren = $request->valuesCurrency;
+        $targetsArr =[ 0 => "W/M", 1 => "Minimun"];
+
+        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
+
+        if($type == 2){
+            array_push($targetsArr,"Calculation Type","Charge");
+        }
+
+        // DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
+
+
+
+        /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
+        con los valores, si es uno el currency viene en una colmna aparte        
+        */
+
+        if($statustypecurren == 1){
+            array_push($targetsArr,"Currency");
+        }
+
+        if($request->DatOri == false){
+            array_push($targetsArr,'Origin');
+        }
+        else{
+            $originBol = true;
+            $originArr;
+        }
+        if($request->DatDes == false){
+            array_push($targetsArr,'Destiny');
+        } else {
+            $destinyArr;
+            $destinyBol = true;
+        }
+        if($request->DatCar == false){
+            array_push($targetsArr,'Carrier');
+        } else {
+            $carrierVal;
+            $carrierBol = true;
+        }
+        //dd($targetsArr);
+        //  dd($data);
+        $coordenates = collect([]);
+        //ini_set('max_execution_time', 300);
+        Excel::selectSheetsByIndex(0)
+            ->Load(\Storage::disk('UpLoadFile')
+                   ->url($nombre),function($reader) use($request,$coordenates) {
+                       $reader->noHeading = true;
+                       $reader->ignoreEmpty();
+                       $reader->takeRows(2);
+                       // foreach($reader->first() as $read){
+                       $read = $reader->first();
+                       $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
+                       for($i=0;$i<count($reader->first());$i++){
+                           $coordenates->push($columna[$i].' '.$read[$i]);
+                       }
+                       /*break;
+                       }*/
+
+                   });
+        $boxdinamy = [
+            'existorigin'     => $originBol,
+            'origin'          => $originArr,
+            'existdestiny'    => $destinyBol,
+            'destiny'         => $destinyArr,
+            'existcarrier'    => $carrierBol,
+            'carrier'         => $carrierVal,
+            'Contract_id'     => $Contract_id,
+            'number'          => $request->number,
+            'name'            => $request->name,
+            'fileName'        => $nombre,
+            'validatiion'     => $request->validation_expire,
+            'comments'        => $request->comments,
+        ];
+        $data->push($boxdinamy);
+        $countTarges = count($targetsArr);
+        //dd($data);
+
+        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
+        /*}catch(\Exception $e){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'Error with the archive');
+            return redirect()->route('importaion.fcl');
+        }//*/
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //

@@ -47,13 +47,13 @@ new registration
                 <ul class="m-portlet__nav">
                     <li class="m-portlet__nav-item">
                         <a href="#" data-toggle="m-tooltip" class="m-portlet__nav-link m-portlet__nav-link--icon" data-direction="left" data-width="auto" title="Get help with filling up this form">
-                            <i class="flaticon-info m--icon-font-size-lg3"></i> 
+
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true])!!}
+        {!! Form::open(['route'=>'Upload.File.LCL.New','method'=>'PUT','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -79,7 +79,7 @@ new registration
                                     'placeholder'=>'Number Contract',
                                     'required',
                                     'class'=>'form-control m-input'])!!}
-                                </div>
+                                </div>  
                                 <div class="col-lg-3">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
@@ -93,9 +93,16 @@ new registration
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
+                                <div class="col-lg-6">
+                                    <label for="commentsid" class=" ">Contract Comments</label>
+                                    {!!  Form::textArea('comments',null,['id'=>'commentsid',
+                                    'placeholder'=>'Contract Comments',
+                                    'required',
+                                    'class'=>'form-control m-input','rows' => '2' ])!!}
+                                </div>
                             </div>
                             <hr>
-                            <hr>
+                        
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
@@ -268,7 +275,9 @@ new registration
                                             Load
                                         </button>
 
-                                        <a href="#" id="validatebutton" onclick="validar()" class="btn btn-primary col-2 form-control"> Validate</a>
+                                        <!--<a href="#" id="validatebutton" onclick="validar()" class="btn btn-primary col-2 form-control"> 
+Validate
+</a>-->
                                     </center>
                                 </div>
                             </div>
@@ -295,7 +304,7 @@ new registration
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 
 <script>
-   $(document).ready(function(){
+    /* $(document).ready(function(){
       $('#loadbutton').hide();
    });
    function selectvalidate(){
@@ -306,7 +315,7 @@ new registration
    }
    function validar(){
       var id = $('#CompanyUserId').val();
-      url='{!! route("validate.import",":id") !!}';
+      url='';
       url = url.replace(':id', id);
       // $(this).closest('tr').remove();
       $.ajax({
@@ -338,6 +347,6 @@ new registration
             });
          }
       });
-   }
-</script>
+   }*/
+</script>git 
 @stop
