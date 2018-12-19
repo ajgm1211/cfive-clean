@@ -20,6 +20,7 @@ class CreateContractsLclTable extends Migration
       $table->date('validity');
       $table->date('expire');
       $table->enum('status',['publish','draft','incomplete'])->default('draft');
+      $table->text('comments');
       $table->integer('company_user_id')->unsigned()->nullable();
       $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');  
       $table->timestamps();
