@@ -95,7 +95,7 @@ $validation_expire = 'Please enter validity date';
                       Carrier
                     </th>
                     <th title="Field #4">
-                      Rate per UoM
+                     W/M
                     </th>
                     <th title="Field #5">
                       Minimum

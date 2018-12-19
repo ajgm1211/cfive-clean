@@ -134,7 +134,7 @@ Export Contract
                       Carrier
                     </th>
                     <th title="Field #4">
-                      UoM
+                      W/M
                     </th>
                     <th title="Field #5">
                       Minimum
