@@ -1827,7 +1827,16 @@ class QuoteController extends Controller
 
         //return Excel::download(new QuotesExport, 'quotes.xlsx');
 
-        $quotes = Quote::all();
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }else{
+            $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '],'_',$now.'_quotes');
@@ -1934,7 +1943,7 @@ class QuoteController extends Controller
                     if ($quote->carrier_id != '') {
                         $carrier = $quote->carrier->name;
                     } else {
-                        $carrier = $quote->airline->name;
+                        $carrier = '';
                     }
 
                     if ($quote->modality == 1) {
