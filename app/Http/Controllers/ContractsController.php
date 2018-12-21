@@ -44,8 +44,8 @@ class ContractsController extends Controller
 
   public function index()
   {
-      if(\Auth::user()->hasRole('admin')){
-          $arreglo = Contract::all()->with('rates');
+      if(\Auth::user()->type=='admin'){
+          $arreglo = Contract::with('rates')->get();
           $contractG = Contract::all();
       }else{
           $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
@@ -147,7 +147,7 @@ class ContractsController extends Controller
     $contador = 1;
     $contadorRate = 1;
 
-    // For each de los rates 
+    // For each de los rates
     foreach($details as $key => $value)
     {
 
@@ -158,8 +158,8 @@ class ContractsController extends Controller
         foreach($rateDest as $Rdest => $Destvalue)
         {
           $rates = new Rate();
-          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig); 
-          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest); 
+          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
+          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
           $rates->carrier_id = $request->input('carrier_id.'.$key);
           $rates->twuenty = $request->input('twuenty.'.$key);
           $rates->forty = $request->input('forty.'.$key);
@@ -178,7 +178,7 @@ class ContractsController extends Controller
 
     foreach($detailscharges as $key2 => $value)
     {
-      $calculation_type = $request->input('calculationtype'.$contador); 
+      $calculation_type = $request->input('calculationtype'.$contador);
       if(!empty($calculation_type)){
 
         foreach($calculation_type as $ct => $ctype)
@@ -462,7 +462,7 @@ class ContractsController extends Controller
     $companies = $request->input('companies');
     $users = $request->input('users');
     $contador = 1;
-    // for each rates 
+    // for each rates
     foreach($details as $key => $value)
     {
       if(is_numeric($request->input('twuenty.'.$key))) {
@@ -728,7 +728,7 @@ class ContractsController extends Controller
 
     $carrier = $request->input('carrier_id');
     $carrier = $this->arrayAll($carrier,$carrierAllid);     // Consultar el all en carrier
-    
+
     $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
     $deleteCarrier->delete();
     $deletePort = LocalCharPort::where("localcharge_id",$id);
@@ -803,7 +803,7 @@ class ContractsController extends Controller
   }
   public function destroyContract($id){
 
-    try { 
+    try {
 
       $FileTmp = FileTmp::where('contract_id',$id)->first();
       if(count($FileTmp) > 0){
@@ -963,18 +963,18 @@ class ContractsController extends Controller
       else{
         $currencyA = $currencyA[0].' (error)';
         $classcurrency='color:red';
-      }        
+      }
       $colec = ['rate_id'         =>  $failrate->id,
                 'contract_id'     =>  $id,
                 'origin_portLb'   =>  $originA,
-                'origin_port'     =>  $originAIn,   
+                'origin_port'     =>  $originAIn,
                 'destiny_portLb'  =>  $destinationA,
-                'destiny_port'    =>  $destinationAIn,     
+                'destiny_port'    =>  $destinationAIn,
                 'carrierLb'       =>  $carrierA,
                 'carrierAIn'      =>  $carrAIn,
-                'twuenty'         =>  $twuentyA,      
-                'forty'           =>  $fortyA,      
-                'fortyhc'         =>  $fortyhcA,  
+                'twuenty'         =>  $twuentyA,
+                'forty'           =>  $fortyA,
+                'fortyhc'         =>  $fortyhcA,
                 'currency_id'     =>  $currencyA,
                 'currencyAIn'     =>  $pruebacurre,
                 'classorigin'     =>  $classdorigin,
@@ -1096,7 +1096,7 @@ class ContractsController extends Controller
         'origin_portLb'         => $originA,
         'origin_port'           => $originAIn,
         'destiny_portLb'        => $destinationA,
-        'destiny_port'          => $destinationAIn, 
+        'destiny_port'          => $destinationAIn,
         'carrierlb'             => $carrierA,
         'carrier_id'            => $carrAIn,
         'typedestinylb'         => $typedestinyLB['description'],
