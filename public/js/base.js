@@ -475,8 +475,8 @@ $(document).on('click', '#create-quote', function (e) {
 
 $(document).on('change', '#hide_carrier', function () {
     $.ajax({
-        type: 'GET',
-        url: '/quotes/carrier/visibility/',
+        type: 'POST',
+        url: 'carrier/visibility',
         data: {
             'carrier_visibility': $("#hide_carrier").val(),
             'quote_id': $("#quote-id").val()
