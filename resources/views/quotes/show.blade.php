@@ -80,7 +80,7 @@
                     <div class="pull-left text-left" style="line-height: .5">
                       <p><b>From:</b></p>
                       <br>
-                      <p>{{$user->name}}</p>
+                      <p>{{$user->name}} {{$user->lastname}}</p>
                       <p><b>{{$user->companyUser->name}}</b></p>
                       <p>{{$user->companyUser->address}}</p>
                       <p>{{$user->phone}}</p>
