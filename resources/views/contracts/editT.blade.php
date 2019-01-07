@@ -36,10 +36,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
          <div class="m-portlet__head-caption">
             <div class="m-portlet__head-title">
                <h3 class="m-portlet__head-text">
-                  Contract 
-                  <small>
-                     new registration
-                  </small>
+                  Edit contract
                </h3>
             </div>
          </div>
@@ -80,6 +77,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                         <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_3" role="tab">
                            <i class="la la-bell-o"></i>
                            Restrictions
+                        </a>
+                     </li>
+                     <li class="nav-item m-tabs__item">
+                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_4" role="tab">
+                           <i class="la la-edit"></i>
+                           Remarks
                         </a>
                      </li>
                   </ul>
@@ -255,11 +258,20 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                         </div>
                      </div>
                   </div>
+                  <div class="tab-pane" id="m_tabs_6_4" role="tabpanel">
+                     <div class="form-group m-form__group row">
+                        <div class="col-lg-12">
+                           {!! Form::label('remarks', 'Remarks') !!}
+                           {!! Form::textarea('remarks', null, ['placeholder' => '','class' => 'form-control m-input','rows'=>4]) !!}
+                        </div>
+                     </div>
+                  </div>
                </div>
                <div class="m-portlet__foot m-portlet__foot--fit">
                   <div class="m-form__actions m-form__actions">
+                     <br>
                      {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-                     <a class="btn btn-success" href="{{url()->previous()}}">
+                     <a class="btn btn-danger" href="{{url()->previous()}}">
                         Cancel
                      </a>
                   </div>
