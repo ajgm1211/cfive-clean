@@ -29,6 +29,8 @@ use App\LocalChargeLcl;
 use App\LocalCharCarrierLcl;
 use App\LocalCharPortLcl;
 use App\LocalCharCountryLcl;
+use App\ContractLclCompanyRestriction;
+use App\ContractLclUserRestriction;
 
 class ContractsLclController extends Controller
 {
@@ -137,6 +139,8 @@ class ContractsLclController extends Controller
     $contract->save();
     $details = $request->input('currency_id');
     $detailscharges = $request->input('localcurrency_id');
+    $companies = $request->input('companies');
+    $users = $request->input('users');
 
 
     // For Each de los rates
@@ -237,6 +241,27 @@ class ContractsLclController extends Controller
       $contador++;
     }
 
+    if(!empty($companies)){
+
+      foreach($companies as $key3 => $value)
+      {
+        $contract_company_restriction = new ContractLclCompanyRestriction();
+        $contract_company_restriction->company_id=$value;
+        $contract_company_restriction->contractlcl_id=$contract->id;
+        $contract_company_restriction->save();
+      }
+    }
+
+    if(!empty($users)){
+      foreach($users as $key4 => $value)
+      {
+        $contract_client_restriction = new ContractLclUserRestriction();
+        $contract_client_restriction->user_id=$value;
+        $contract_company_restriction->contractlcl_id=$contract->id;
+        $contract_client_restriction->save();
+      }
+    }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
@@ -273,14 +298,14 @@ class ContractsLclController extends Controller
     $calculationT = CalculationTypeLcl::all()->pluck('name','id');
     $typedestiny = TypeDestiny::all()->pluck('description','id');
     $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    //$company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->first();
-    // $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
-    /* if(!empty($company_restriction)){
+    $company_restriction = ContractLclCompanyRestriction::where('contractlcl_id',$contracts->id)->first();
+    $user_restriction = ContractLclUserRestriction::where('contractlcl_id',$contracts->id)->first();
+    if(!empty($company_restriction)){
       $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
     }
     if(!empty($user_restriction)){
       $user = User::where('id',$user_restriction->user_id)->select('id')->first();
-    }*/
+    }
     $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
     if(Auth::user()->type == 'company' ){
       $users =  User::whereHas('companyUser', function($q)
@@ -318,31 +343,33 @@ class ContractsLclController extends Controller
     $contract->expire = $validation[1];
     $contract->comments =$request->input('comments');
     $contract->update($requestForm);
-    /*
+
+    $companies = $request->input('companies');
+    $users = $request->input('users');
+    ContractLclCompanyRestriction::where('contractlcl_id',$contract->id)->delete();
     if(!empty($companies)){
-      ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
+
 
       foreach($companies as $key3 => $value)
       {
-        $contract_company_restriction = new ContractCompanyRestriction();
+        $contract_company_restriction = new ContractLclCompanyRestriction();
         $contract_company_restriction->company_id=$value;
-        $contract_company_restriction->contract_id=$contract->id;
+        $contract_company_restriction->contractlcl_id=$contract->id;
         $contract_company_restriction->save();
       }
     }
-
+    ContractLclUserRestriction::where('contractlcl_id',$contract->id)->delete();
     if(!empty($users)){
-      ContractUserRestriction::where('contract_id',$contract->id)->delete();
 
       foreach($users as $key4 => $value)
       {
-        $contract_client_restriction = new ContractUserRestriction();
+        $contract_client_restriction = new ContractLclUserRestriction();
         $contract_client_restriction->user_id=$value;
-        $contract_client_restriction->contract_id=$contract->id;
+        $contract_client_restriction->contractlcl_id=$contract->id;
         $contract_client_restriction->save();
       }
 
-    }*/
+    }
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
