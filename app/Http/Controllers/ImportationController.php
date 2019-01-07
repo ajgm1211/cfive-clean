@@ -1041,10 +1041,11 @@ class ImportationController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
-        return redirect()->route('redirect.Processed.Information');
+        $id = $request['Contract_id'];
+        return redirect()->route('redirect.Processed.Information',$id);
     }
-    public function redirectProcessedInformation(){
-        return view('importation.ProcessedInformation');
+    public function redirectProcessedInformation($id){
+        return view('importation.ProcessedInformation',compact('id'));
     }
 
     // Rates ----------------------------------------------------------------------------
