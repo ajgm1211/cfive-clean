@@ -65,7 +65,7 @@ $validation_expire = 'Please enter validity date';
               <li class="nav-item m-tabs__item">
                 <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_4" role="tab">
                   <i class="la la-comments"></i>
-                  Comments
+                  Remarks
                 </a>
               </li>
             </ul>

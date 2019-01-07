@@ -8,5 +8,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 class ContractUserRestriction extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
+  
     protected $fillable = ['user_id','contract_id'];
 }

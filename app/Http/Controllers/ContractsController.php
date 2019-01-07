@@ -452,6 +452,9 @@ class ContractsController extends Controller
     $contract->expire = $validation[1];
     $contract->update($requestForm);
 
+    $companies = $request->input('companies');
+    $users = $request->input('users');
+
     /*
     $details = $request->input('origin_id');
     $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
@@ -721,7 +724,7 @@ class ContractsController extends Controller
 
     $carrier = $request->input('carrier_id');
     $carrier = $this->arrayAll($carrier,$carrierAllid);     // Consultar el all en carrier
-    
+
     $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
     $deleteCarrier->delete();
     $deletePort = LocalCharPort::where("localcharge_id",$id);
