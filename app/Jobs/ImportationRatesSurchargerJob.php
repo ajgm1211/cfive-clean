@@ -630,7 +630,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                            $companyUserId = $companyUserIdVal;
                            $surchargelist = Surcharge::create([
                               'name'              => $read[$requestobj[$Charge]],
-                              'description'       => 'created in the import of the file',
+                              'description'       => $read[$requestobj[$Charge]],
                               'company_user_id'   => $companyUserId
                            ]);
                            $surchargeVal = $surchargelist->id;
