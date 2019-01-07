@@ -30,7 +30,7 @@
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-        {!! Form::label('uom', 'uom') !!}
+        {!! Form::label(' W/M', ' W/M') !!}
         {!! Form::number('uom', $rates->uom, ['id' => 'uom','placeholder' => 'Please enter the Uom','class' => 'form-control m-input' ]) !!} 
       </div>
 
