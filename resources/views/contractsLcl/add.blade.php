@@ -65,7 +65,7 @@ $validation_expire = 'Please enter validity date';
               <li class="nav-item m-tabs__item">
                 <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_tabs_6_4" role="tab">
                   <i class="la la-comments"></i>
-                  Comments
+                  Remarks
                 </a>
               </li>
             </ul>
@@ -237,10 +237,10 @@ $validation_expire = 'Please enter validity date';
             </div>
             <div class="tab-pane" id="m_tabs_6_4" role="tabpanel">
               <div class="row">
-                <div class="col-md-5" id="comments">
-                  <label><b>Comments</b></label>
+                <div class="col-md-12" id="comments">
+                 
                   <div class="form-group m-form__group align-items-center">
-                    {{ Form::textarea('comments',null,['class'=>'form-control m-input m-input--air m-input--pill','rows'=>'10']) }}
+                    {{ Form::textarea('comments',null,['class'=>'form-control ','rows'=>'5']) }}
                   </div>
                 </div>
               </div>

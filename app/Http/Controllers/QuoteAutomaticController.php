@@ -348,7 +348,7 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
+                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
                   $arregloInland = array_merge($arraymarkupT,$arregloInland);
                   $data[] =$arregloInland;
                 }
@@ -429,7 +429,7 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
+                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
                   $arregloInland = array_merge($arregloInland,$arraymarkupT);
                   $dataOrig[] = $arregloInland;
                 }
