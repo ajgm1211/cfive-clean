@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use App\Exports\QuotesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Company;
 use App\CompanyPrice;
 use App\CompanyUser;
@@ -428,7 +430,7 @@ class QuoteController extends Controller
                             $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
                         }
                         $freight_ammount->save();
-                        
+
                     }
                 }
             }
@@ -1819,5 +1821,217 @@ class QuoteController extends Controller
         $quote->update();
 
         return response()->json(['message' => 'Ok']);
+    }
+
+    public function downloadQuotes(){
+
+        //return Excel::download(new QuotesExport, 'quotes.xlsx');
+
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }else{
+            $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
+        $nameFile = str_replace([' '],'_',$now.'_quotes');
+        Excel::create($nameFile, function($excel) use($nameFile, $quotes) {
+            $excel->sheet('Quotes', function($sheet) use($quotes) {
+                //dd($contract);
+                $sheet->cells('A1:AO1', function($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setValignment('center');
+                });
+
+                //$sheet->setBorder('A1:AO1', 'thin');
+
+                $sheet->row(1, array(
+                    'Id',
+                    'Owner',
+                    'Company quote',
+                    'Incoterm',
+                    'Validity',
+                    'Since validity',
+                    'Modality',
+                    'Pick up date',
+                    'Delivery type',
+                    'Cargo type',
+                    'Origin',
+                    'Destination',
+                    'Origin address',
+                    'Destination address',
+                    'Company',
+                    'Contact',
+                    'Currency',
+                    'Carrier',
+                    'Container 20',
+                    'Container 40',
+                    'Container 40 HC',
+                    'Container 45 HC',
+                    'Container 40 NOR',
+                    'Container 20 Reefer',
+                    'Container 40 Reefer',
+                    'Container 40 HC Reefer',
+                    'Container 20 Open Top',
+                    'Container 40 Open Top',
+                    'PDF language',
+                    'Total quantity',
+                    'Total weight',
+                    'Total volume',
+                    'Chargeable weight',
+                    'Sub total origin',
+                    'Sub total freight',
+                    'Sub total destination',
+                    'Total markup origin',
+                    'Total markup freight',
+                    'Total markup destination',
+                    'Status',
+                    'Created at',
+                ));
+                $i=2;
+                foreach($quotes as $quote) {
+                    if ($quote->origin_harbor) {
+                        $origin = $quote->origin_harbor->display_name;
+                    } elseif ($quote->origin_airport) {
+                        $origin = $quote->origin_airport->name;
+                    } else {
+                        $origin = $quote->origin_address;
+                    }
+
+                    if ($quote->destination_harbor) {
+                        $destination = $quote->destination_harbor->display_name;
+                    } elseif ($quote->destination_airport) {
+                        $destination = $quote->destination_airport->name;
+                    } else {
+                        $destination = $quote->destination_address;
+                    }
+
+                    if ($quote->pdf_language == 1) {
+                        $pdf_language = 'English';
+                    } elseif ($quote->pdf_language == 2) {
+                        $pdf_language = 'Spanish';
+                    } elseif ($quote->pdf_language == 3) {
+                        $pdf_language = 'Portuguese';
+                    } else {
+                        $pdf_language = 'English';
+                    }
+
+                    if ($quote->type_cargo == 1) {
+                        $cargo_type = 'FCL';
+                    } elseif ($quote->type_cargo == 2) {
+                        $cargo_type = 'LCL';
+                    } else {
+                        $cargo_type = 'AIR';
+                    }
+
+                    if ($quote->delivery_type == 1) {
+                        $delivery_type = 'Port to Port';
+                    } elseif ($quote->delivery_type == 2) {
+                        $delivery_type = 'Port to Door';
+                    } elseif ($quote->delivery_type == 3) {
+                        $delivery_type = 'Door to Port';
+                    } else {
+                        $delivery_type = 'Door to Door';
+                    }
+
+                    if ($quote->carrier_id != '') {
+                        $carrier = $quote->carrier->name;
+                    } else {
+                        $carrier = '';
+                    }
+
+                    if ($quote->modality == 1) {
+                        $modality = 'Export';
+                    } else {
+                        $modality = 'Import';
+                    }
+
+                    if ($quote->incoterm == 1) {
+                        $incoterm = 'EWX';
+                    } elseif ($quote->incoterm == 2) {
+                        $incoterm = 'FAS';
+                    } elseif ($quote->incoterm == 3) {
+                        $incoterm = 'FCA';
+                    } elseif ($quote->incoterm == 4) {
+                        $incoterm = 'FOB';
+                    } elseif ($quote->incoterm == 5) {
+                        $incoterm = 'CFR';
+                    } elseif ($quote->incoterm == 6) {
+                        $incoterm = 'CIF';
+                    } elseif ($quote->incoterm == 7) {
+                        $incoterm = 'CIP';
+                    } elseif ($quote->incoterm == 8) {
+                        $incoterm = 'DAT';
+                    } elseif ($quote->incoterm == 9) {
+                        $incoterm = 'DAP';
+                    } elseif ($quote->incoterm == 10) {
+                        $incoterm = 'DDP';
+                    }
+
+                    $sheet->row($i, array(
+                        "Id" => $quote->id,
+                        "Owner" => $quote->user->name.' '.$quote->user->lastname,
+                        "Company quote" => $quote->company_quote,
+                        "Incoterm" => $incoterm,
+                        "Validity" => $quote->validity,
+                        "Since validity" => $quote->since_validity,
+                        "Modality" => $modality,
+                        "Pick up date" => $quote->pick_up_date,
+                        "Delivery type" => $delivery_type,
+                        "Cargo type" => $cargo_type,
+                        "Origin" => $origin,
+                        "Destination" => $destination,
+                        "Origin address" => $quote->origin_address,
+                        "Destination address" => $quote->destination_address,
+                        "Client company" => $quote->company->business_name,
+                        "Contact" => $quote->contact->first_name . ' ' . $quote->contact->last_name,
+                        "Currency" => $quote->currencies->alphacode,
+                        "Carrier" => $carrier,
+                        "Container 20" => $quote->qty_20,
+                        "Container 40" => $quote->qty_40,
+                        "Container 40 HC" => $quote->qty_40_hc,
+                        "Container 45 HC" => $quote->qty_45_hc,
+                        "Container 40 NOR" => $quote->qty_40_nor,
+                        "Container 20 Reefer" => $quote->qty_20_reefer,
+                        "Container 40 Reefer" => $quote->qty_40_reefer,
+                        "Container 40 HC Reefer" => $quote->qty_40_hc_reefer,
+                        "Container 20 Open Top" => $quote->qty_20_open_top,
+                        "Container 40 Open Top" => $quote->qty_40_open_top,
+                        "Pdf language" => $pdf_language,
+                        "Quantity" => $quote->total_quantity,
+                        "Weight" => $quote->total_weight,
+                        "Volume" => $quote->total_volume,
+                        "Chargeable weight" => $quote->chargeable_weight,
+                        "Sub total origin" => $quote->sub_total_origin,
+                        "Sub total freight" => $quote->sub_total_freight,
+                        "Sub total destination" => $quote->sub_total_destination,
+                        "Total markup origin" => $quote->total_markup_origin,
+                        "Total markup freight" => $quote->total_markup_freight,
+                        "Total markup destination" => $quote->total_markup_destination,
+                        "Status" => $quote->status->name,
+                        "Created at" => $quote->created_at,
+                    ));
+                    $sheet->setBorder('A1:I' . $i, 'thin');
+
+                    $sheet->cells('C' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+
+                    $sheet->cells('I' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+
+                    $i++;
+                }
+
+            })->download('xlsx');
+
+        });
     }
 }
