@@ -87,21 +87,25 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 
-    //Route::get('add', 'ContractsController@add')->name('contracts.add');
-    Route::get('addT', 'ContractsController@add')->name('contracts.add');
-    Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
-    Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
-    Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
-    Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
-    Route::get('addRate/{id}', ['uses' => 'ContractsController@addRates', 'as' => 'add-rates']);
-    Route::post('storeRate/{id}', ['uses' => 'ContractsController@storeRates', 'as' => 'contracts.storeRate']);
-    Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
-    Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
-    Route::get('addLocalCharge/{id}', ['uses' => 'ContractsController@addLocalChar', 'as' => 'add-LocalCharge']);
-    Route::post('storeLocalCharge/{id}', ['uses' => 'ContractsController@storeLocalChar', 'as' => 'contracts.storeLocalCharge']);
-    Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
-    Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
-    Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+  //Route::get('add', 'ContractsController@add')->name('contracts.add');
+  Route::get('addT', 'ContractsController@add')->name('contracts.add');
+  Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
+  Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+
+  Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
+  Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
+  Route::get('addRate/{id}', ['uses' => 'ContractsController@addRates', 'as' => 'add-rates']);
+  Route::post('storeRate/{id}', ['uses' => 'ContractsController@storeRates', 'as' => 'contracts.storeRate']);
+  Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
+  Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
+  Route::get('duplicateRate/{id}', ['uses' => 'ContractsController@duplicateRates', 'as' => 'duplicate-rates']);
+  Route::get('addLocalCharge/{id}', ['uses' => 'ContractsController@addLocalChar', 'as' => 'add-LocalCharge']);
+  Route::post('storeLocalCharge/{id}', ['uses' => 'ContractsController@storeLocalChar', 'as' => 'contracts.storeLocalCharge']);
+  Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+  Route::get('duplicateLocalCharge/{id}', ['uses' => 'ContractsController@duplicateLocalChar', 'as' => 'duplicate-local-charge']);
+  Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
+  Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+
 
     //----- developer
 
@@ -267,35 +271,36 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
-    Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
-    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
-    Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
-    Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
-    Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
-    Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
-    Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
-    Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
-    Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
-    Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
-    Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
-    Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
-    Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
-    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
-    Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
-    Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
-    Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
-    Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
-    Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
-    Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
-    Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
-    Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
-    Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
-    Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
-    Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
-    Route::get('carrier/visibility', 'QuoteController@updateCarrierVisibility')->name('quotes.carrier.visibility');
-    // LCL
-    Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
+  Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
+  Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+  Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
+  Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
+  Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
+  Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
+  Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
+  Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
+  Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
+  Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+  Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
+  Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+  Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+  Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
+  Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+  Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
+  Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
+  Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
+  Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
+  Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
+  Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
+  Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
+  Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
+  Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
+  Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
+  Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
+  Route::get('carrier/visibility', 'QuoteController@updateCarrierVisibility')->name('quotes.carrier.visibility');
+  // LCL
+  Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
+
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
@@ -337,32 +342,33 @@ Route::prefix('impersonation')->group(function ($router) {
 });
 //Contracts LCL
 
-Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
-    //Contract LCL 
-    Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
-    Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
-    Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+  //Contract LCL 
+  Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
+  Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
+  Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
 
+  //Rates 
+  Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);
+  Route::post('storeRatelcl/{id}', ['uses' => 'ContractsLclController@storeRates', 'as' => 'contractslcl.storeRate']);
+  Route::get('editRatelcl/{id}', ['uses' => 'ContractsLclController@editRates', 'as' => 'edit-rates-lcl']);
+  Route::put('updateRatelcl/{id}', ['uses' => 'ContractsLclController@updateRates', 'as' => 'update-rates-lcl']);
+  Route::get('deleteRateslcl/{rate_id}', ['uses' => 'ContractsLclController@deleteRates', 'as' => 'delete-rates-lcl']);
+  Route::get('duplicateRatelcl/{id}', ['uses' => 'ContractsLclController@duplicateRates', 'as' => 'duplicate-rates-lcl']);
 
-    //Rates 
-    Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);
-    Route::post('storeRatelcl/{id}', ['uses' => 'ContractsLclController@storeRates', 'as' => 'contractslcl.storeRate']);
-    Route::get('editRatelcl/{id}', ['uses' => 'ContractsLclController@editRates', 'as' => 'edit-rates-lcl']);
-    Route::put('updateRatelcl/{id}', ['uses' => 'ContractsLclController@updateRates', 'as' => 'update-rates-lcl']);
-    Route::get('deleteRateslcl/{rate_id}', ['uses' => 'ContractsLclController@deleteRates', 'as' => 'delete-rates-lcl']);
+  // LocalCharges
+  Route::get('addLocalChargelcl/{id}', ['uses' => 'ContractsLclController@addLocalChar', 'as' => 'add-LocalCharge-lcl']);
+  Route::post('storeLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@storeLocalChar', 'as' => 'contracts.storeLocalChargeLcl']);
+  Route::get('editLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@editLocalChar', 'as' => 'edit-local-charge-lcl']);
+  Route::put('updateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@updateLocalChar', 'as' => 'update-local-charge-lcl']);
+  Route::get('deleteLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@deleteLocalCharges', 'as' => 'delete-local-charge-lcl']);
+  Route::get('duplicateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@duplicateLocalCharges', 'as' => 'duplicate-local-charge-lcl']);
 
-    // LocalCharges
-    Route::get('addLocalChargelcl/{id}', ['uses' => 'ContractsLclController@addLocalChar', 'as' => 'add-LocalCharge-lcl']);
-    Route::post('storeLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@storeLocalChar', 'as' => 'contracts.storeLocalChargeLcl']);
-    Route::get('editLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@editLocalChar', 'as' => 'edit-local-charge-lcl']);
-    Route::put('updateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@updateLocalChar', 'as' => 'update-local-charge-lcl']);
-    Route::get('deleteLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@deleteLocalCharges', 'as' => 'delete-local-charge-lcl']);
+  // DATATABLES LCL
+  Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
+  Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
+  Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
+  Route::get('eloquent/object-datalcl/{id}', 'ContractsLclController@dataLcl')->name('localcharlcl.table');
 
-    // DATATABLES LCL
-    Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
-    Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
-    Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
-    Route::get('eloquent/object-datalcl/{id}', 'ContractsLclController@dataLcl')->name('localcharlcl.table');
 
 });
 

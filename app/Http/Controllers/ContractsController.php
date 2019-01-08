@@ -329,7 +329,11 @@ class ContractsController extends Controller
           <i class='la la-edit'></i>
           </a>
             <a  data-local-id='$data[id]'    class='m_sweetalert_demo_8  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
-          <i id='rm_l' class='la la-times-circle'></i>
+          <i id='rm_l' class='la la-times-circle'></i></a>
+
+          <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Duplicate '  onclick='AbrirModal(\"duplicateLocalCharge\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
   }// local charges en edit
@@ -347,6 +351,9 @@ class ContractsController extends Controller
              <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
+                    <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Duplicate'  onclick='AbrirModal(\"duplicateRate\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
 
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
@@ -612,6 +619,17 @@ class ContractsController extends Controller
     return redirect()->back()->with('editRate','true');
   }
 
+  public function duplicateRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = Rate::find($id);
+    return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency'));
+  }
+
   public function addLocalChar($id){
     $objcarrier = new Carrier();
     $objharbor = new Harbor();
@@ -777,7 +795,24 @@ class ContractsController extends Controller
     return redirect()->back()->with('localchar','true')->with('activeS','active');
   }
 
+  public function duplicateLocalChar($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objtypedestiny = new TypeDestiny();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    $countries = Country::pluck('name','id');
 
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $localcharges = LocalCharge::find($id);
+    return view('contracts.duplicateLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
   public function destroy($id)
   {
     $rate = Rate::find($id);
