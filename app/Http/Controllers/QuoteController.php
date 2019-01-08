@@ -55,7 +55,7 @@ use Yajra\Datatables\Datatables;
 class QuoteController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
             $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
@@ -77,6 +77,9 @@ class QuoteController extends Controller
         }else{
             $company_user='';
             $currency_cfg = '';
+        }
+        if($request->ajax()){
+            return response()->json($quotes);
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
     }
