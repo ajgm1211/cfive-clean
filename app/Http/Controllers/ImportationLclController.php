@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Excel;
+use PrvHarbor;
 use App\Harbor;
 use App\FileTmp;
 use App\Carrier;
@@ -23,15 +24,174 @@ class ImportationLclController extends Controller
 
     public function create(Request $request)
     {
-        dd($request->all());
+        //dd($request->all());
+        $requestobj = $request->all();
+        $NameFile           = $requestobj['FileName'];
+        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
+        $companyUserIdVal       = $requestobj['CompanyUserId'];
+        //dd($path);
+        $errors = 0;
+        Excel::selectSheetsByIndex(0)
+            ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
+                $reader->noHeading = true;
+
+                $currency               = "Currency";
+                $origin                 = "origin";
+                $originExc              = "Origin";
+                $destiny                = "destiny";
+                $destinyExc             = "Destiny";
+                $carrier                = "Carrier";
+                $contractId             = "Contract_id";
+                $statustypecurren       = "statustypecurren";
+
+                $ratescollection         = collect([]);
+                $ratesFailcollection     = collect([]);
+                $i = 0;
+                foreach($reader->get() as $read){
+                    $carrierVal          = '';
+                    $originVal           = '';
+                    $destinyVal          = '';
+                    $currencyVal         = '';
+                    $randons             = '';
+                    $contractIdVal       = $requestobj['Contract_id'];
+
+                    $currencResul            = '';
+
+                    $originBol               = false;
+                    $origExiBol              = false;
+                    $destinyBol              = false;
+                    $destiExitBol            = false;
+                    $carriExitBol            = false;
+                    $carriBol                = false;
+                    $variantecurrency        = false;
+
+                    $values                  = true;
+
+                    if($i != 0){
+                        //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+
+                        if($requestobj['existorigin'] == 1){
+                            $originBol = true;
+                            $origExiBol = true; //segundo boolean para verificar campos errados
+                            $randons = $requestobj[$origin];
+                        } else {
+                            $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
+                            $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                            if($resultadoPortOri['boolean']){
+                                $origExiBol = true;    
+                            }
+                            $originVal  = $resultadoPortOri['puerto'];
+
+                        }
+                        //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                        if($requestobj['existdestiny'] == 1){
+                            $destinyBol = true;
+                            $destiExitBol = true; //segundo boolean para verificar campos errados
+                            $randons = $requestobj[$destiny];
+                        } else {
+                            $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
+                            $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                            if($resultadoPortDes['boolean']){
+                                $destiExitBol = true;    
+                            }
+                            $destinyVal  = $resultadoPortDes['puerto'];
+                        }
+
+
+                        //--------------- CARRIER -----------------------------------------------------------------
+                        if($requestobj['existcarrier'] == 1){
+                            $carriExitBol = true;
+                            $carriBol     = true;
+                            $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
+                        } else {
+                            $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
+                            $carrierResul = str_replace($caracteres,'',$carrierVal);
+                            $carrier = Carrier::where('name','=',$carrierResul)->first();
+                            if(empty($carrier->id) != true){
+                                $carriExitBol = true;
+                                $carrierVal = $carrier->id;
+                            }else{
+                                $carrierVal = $carrierVal.'_E_E';
+                            }
+                        }
+
+                        $data = [
+                            'carriExitBol'      => $carriExitBol,
+                            'carrierVal'        => $carrierVal,
+                            'destiExitBol'      => $destiExitBol,
+                            'destinyVal'        => $destinyVal,
+                            'origExiBol'        => $origExiBol,
+                            'originVal'         => $originVal,
+                            'randons'           => $randons,
+                            'contractIdVal'    => $contractIdVal,
+                            //''  => ,
+                        ];
+                        dd($data);
+                        /*  if(carriExitBol == true && destiExitBol == true &&
+origExiBol == true){
+                        if($originBol == true || $destinyBol == true){
+                            foreach($randons as  $rando){
+                                //insert por arreglo de puerto
+                                if($originBol == true ){
+                                    $originVal = $rando;
+                                } else {
+                                    $destinyVal = $rando;
+                                }
+
+                                if($requestobj[$statustypecurren] == 2){
+                                    $currencyVal = $currencyValtwen;
+                                }
+
+                                $ratesArre = RateLcl::create([
+                                'origin_port'    => $originVal,
+                                'destiny_port'   => $destinyVal,
+                                'carrier_id'     => $carrierVal,
+                                'contract_id'    => $contractIdVal,
+                                'twuenty'        => $twentyVal,
+                                'forty'          => $fortyVal,
+                                'fortyhc'        => $fortyhcVal,
+                                'fortynor'       => $fortynorVal,
+                                'fortyfive'      => $fortyfiveVal,
+                                'currency_id'    => $currencyVal
+                            ]);
+                                //dd($ratesArre);
+                            } 
+                        }else {
+                            // fila por puerto, sin expecificar origen ni destino manualmente
+                            if($requestobj[$statustypecurren] == 2){
+                                $currencyVal = $currencyValtwen;
+                            }
+
+                            /*$ratesArre =  RateLcl::create([
+                            'origin_port'    => $originVal,
+                            'destiny_port'   => $destinyVal,
+                            'carrier_id'     => $carrierVal,
+                            'contract_id'    => $contractIdVal,
+                            'twuenty'        => $twentyVal,
+                            'forty'          => $fortyVal,
+                            'fortyhc'        => $fortyhcVal,
+                            'fortynor'       => $fortynorVal,
+                            'fortyfive'      => $fortyfiveVal,
+                            'currency_id'    => $currencyVal
+                        ]);
+
+                            //dd($ratesArre);
+                        }
+                    } else {
+                        // aqui van los fallidos
+                    }*/
+                    }
+                    $i =$i + 1;
+                }
+            });
     }
 
 
     public function store(Request $request)
     {
-        
+
     }
-    
+
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
     public function UploadFileNewContract(Request $request)
     {
@@ -67,7 +227,7 @@ class ImportationLclController extends Controller
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
         $validatefile = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
-        
+
         if($validatefile){
             $contract     = new ContractLcl();
             $contract->name             = $request->name;
@@ -80,12 +240,12 @@ class ImportationLclController extends Controller
             $contract->company_user_id  = $CompanyUserId;
             $contract->save(); 
             $Contract_id = $contract->id;
-           /* $fileTmp = new FileTmp();
+            /* $fileTmp = new FileTmp();
             $fileTmp->contract_id = $Contract_id;
             $fileTmp->name_file   = $nombre;
             $fileTmp->save(); //*/
         }
-        
+
         $statustypecurren = $request->valuesCurrency;
         $targetsArr =[ 0 => "W/M", 1 => "Minimun"];
 
