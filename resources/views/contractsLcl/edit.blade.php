@@ -255,7 +255,7 @@ Failed Surcharge
             <div class="tab-pane" id="m_tabs_6_4" role="tabpanel">
               <div class="row">
                 <div class="col-md-12" id="comments">
-                 
+
                   <div class="form-group m-form__group align-items-center">
                     {{ Form::textarea('comments',null,['class'=>'form-control','rows'=>'5']) }}
                   </div>
@@ -679,6 +679,14 @@ Load
     }
     if(action == "addRate"){
       var url = '{{ route("add-rates-lcl", ":id") }}';
+      url = url.replace(':id', id);
+      $('#rate-body').load(url,function(){
+        $('#modalRates').modal({show:true});
+      });
+
+    }
+    if(action == "duplicateRate"){
+      var url = '{{ route("duplicate-rates-lcl", ":id") }}';
       url = url.replace(':id', id);
       $('#rate-body').load(url,function(){
         $('#modalRates').modal({show:true});

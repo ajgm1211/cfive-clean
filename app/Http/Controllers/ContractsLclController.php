@@ -449,6 +449,17 @@ class ContractsLclController extends Controller
 
   }
 
+  public function duplicateRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = RateLcl::find($id);
+    return view('contractsLcl.duplicateRates', compact('rates','harbor','carrier','currency'));
+  }
+
   //LOCALCHARGES
 
   public function addLocalChar($id){
@@ -612,6 +623,9 @@ class ContractsLclController extends Controller
                     <i  class='la la-times-circle'></i>
                     </a>
 
+
+
+
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
   }
@@ -628,6 +642,9 @@ class ContractsLclController extends Controller
              <a id='delete-rate-lcl' data-ratelcl-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
+             <a  class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='duplicate '  onclick='AbrirModal(\"duplicateRate\",$data[id])'>
+                      <i class='la la-plus'></i>
+             </a>
 
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
