@@ -108,12 +108,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
 Upload Rates
 <i class="fa flaticon-tool-1"></i>
-</button>-->
-                            <a href="{{route('Failed.Rates.lcl.view',[$id,1])}}" class="btn btn-info">
-                                Failed Rates Lcl
-                                <i class="fa flaticon-tool-1"></i>
-                            </a>
-                            <!--
+</button>
+<a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-info">
+Failed Rates
+<i class="fa flaticon-tool-1"></i>
+</a>
+
 <a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
 Export Contract
 <i class="fa flaticon-tool-1"></i>
@@ -168,13 +168,13 @@ Export Contract
 Upload Surcharge
 <i class="fa flaticon-tool-1"></i>
 </button>
-</a>
+</a>-->
 
-<a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
-Failed Surcharge
-<i class="fa flaticon-tool-1"></i>
-</a>
-<br><br><br>
+                            <a href="{{route('Failed.Rates.lcl.view',[$id,1])}}" class="btn btn-info">
+                                Failed Rates Lcl
+                                <i class="fa flaticon-tool-1"></i>
+                            </a>
+                            <!--<br><br><br>
 @endrole
 -->
                             <table class="table tableData" id="users-table" width="100%" >
@@ -685,6 +685,14 @@ Load
             });
 
         }
+        if(action == "duplicateRate"){
+            var url = '{{ route("duplicate-rates-lcl", ":id") }}';
+            url = url.replace(':id', id);
+            $('#rate-body').load(url,function(){
+                $('#modalRates').modal({show:true});
+            });
+
+        }
 
         if(action == "editLocalCharge"){
             $('#spinner').show();
@@ -703,6 +711,17 @@ Load
             $('.modal-body-add').load(url,function(){
                 $('#modalLocalchargeAdd').modal({show:true});
 
+            });
+
+        }
+        if(action == "duplicateLocalCharge"){
+            $('#spinner').show();
+            $('#modalLocalcharge').modal({show:true});
+            var url = '{{ route("duplicate-local-charge-lcl", ":id") }}';
+            url = url.replace(':id', id);
+            $('.modal-body-edit').load(url,function(){
+                $('#modalLocalcharge').modal({show:true});
+                $('#spinner').hide();
             });
 
         }
