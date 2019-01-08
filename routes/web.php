@@ -271,6 +271,7 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
+
   Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
   Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
@@ -342,10 +343,13 @@ Route::prefix('impersonation')->group(function ($router) {
 });
 //Contracts LCL
 
+Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
+
   //Contract LCL 
   Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
   Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
   Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+
 
   //Rates 
   Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);
