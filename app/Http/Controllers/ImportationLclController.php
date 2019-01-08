@@ -41,6 +41,7 @@ class ImportationLclController extends Controller
                 $destiny                = "destiny";
                 $destinyExc             = "Destiny";
                 $carrier                = "Carrier";
+                $wm                     = "W/M";
                 $contractId             = "Contract_id";
                 $statustypecurren       = "statustypecurren";
 
@@ -53,6 +54,7 @@ class ImportationLclController extends Controller
                     $destinyVal          = '';
                     $currencyVal         = '';
                     $randons             = '';
+                    $currencyVal         = '';
                     $contractIdVal       = $requestobj['Contract_id'];
 
                     $currencResul            = '';
@@ -64,6 +66,7 @@ class ImportationLclController extends Controller
                     $carriExitBol            = false;
                     $carriBol                = false;
                     $variantecurrency        = false;
+                    $curreExitBol            = false;
 
                     $values                  = true;
 
@@ -115,6 +118,50 @@ class ImportationLclController extends Controller
                             }
                         }
 
+                        //---------------- CURRENCY VALUES ------------------------------------------------------
+
+                   /*     $wmArr      = explode(' ',trim($read[$requestobj[$wm]]));
+
+                        if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
+
+                            // cargar  columna con el  valor y currency  juntos, se descompone
+
+                            //---------------- CURRENCY W/M + value ---------------------------------------------
+
+                            if(count($wmArr) > 1){
+                                $currencResultwm = str_replace($caracteres,'',$wmArr[1]);
+                            } else {
+                                $currencResultwm = '';
+                            }
+
+                            $currencwm = Currency::where('alphacode','=',$currencResultwm)->first();
+
+                            if(empty($currencwm->id) != true){
+                                $curreExitBol = true;
+                                $currencyValtwm =  $currencwm->id;
+                            }
+                            else{
+                                if(count($wmArr) > 1){
+                                    $currencyValtwm = $wmArr[1].'_E_E';
+                                } else{
+                                    $currencyValtwm = '_E_E';
+                                }
+                            }
+                            
+                            $currencyVal = $currencyValtwm;
+                            
+                        } else {
+                            if(empty($read[$requestobj[$currency]]) != true){
+                                $currencResul= str_replace($caracteres,'',$read[$requestobj[$currency]]);
+                                $currenc = Currency::where('alphacode','=',$currencResul)->first();
+                                $curreExitBol = true;
+                                $currencyVal =  $currenc->id;
+                            }
+                            else{
+                                $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                            }
+
+                        }*/
                         $data = [
                             'carriExitBol'      => $carriExitBol,
                             'carrierVal'        => $carrierVal,
