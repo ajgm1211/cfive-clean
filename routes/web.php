@@ -21,6 +21,11 @@ Route::get('/home', function () {
 
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 
+Route::middleware(['auth'])->prefix('oauth')->group(function () {
+    Route::get('list', 'ApiController@index')->name('oauth.tokens');
+    Route::get('create/token/{user_id}', 'ApiController@createToken')->name('create.token');
+    Route::get('delete/token/{id}', 'ApiController@deleteToken')->name('delete.token');
+});
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
@@ -34,14 +39,12 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::get('notifications', 'UsersController@notifications');
     Route::get('notifications_read', 'UsersController@notifications_read');
     Route::get('updatenot', 'UsersController@updateNotifications');
-    Route::get('create/token/{user_id}', 'AuthApiController@createToken')->name('create.token');
-    Route::get('delete/token/{user_id}', 'AuthApiController@deleteToken')->name('delete.token');
     Route::get('create-passport-client', function () {
         Artisan::call('passport:client',
             ['--password' => 1, '--name' => 'Password Grant Tokens' ]
         );
-        return redirect('users/home');
-    })->middleware(['auth'])->name('create.passport.client');
+        return redirect('/oauth/list');
+    })->name('create.passport.client');
 });
 
 Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {

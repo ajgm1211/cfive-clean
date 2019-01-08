@@ -79,7 +79,31 @@ class QuoteController extends Controller
             $currency_cfg = '';
         }
         if($request->ajax()){
-            return response()->json($quotes);
+            $collection = new Collection($quotes);
+
+
+            $collection->map(function ($quote) {
+
+                $quote['company_id'] = $quote->company->business_name;
+                $quote['currency_id'] = $quote->currencies->alphacode;
+                $quote['contact_id'] = $quote->contact->first_name.' '.$quote->contact->last_name;
+                if($quote['origin_harbor_id']!=''){
+                    $quote['origin_harbor_id'] = $quote->origin_harbor->display_name;
+                }
+                if($quote['origin_airport_id']!=''){
+                    $quote['origin_airport_id'] = $quote->origin_airport->display_name;
+                }
+                if($quote['destination_harbor_id']!=''){
+                    $quote['destination_harbor_id'] = $quote->destination_harbor->display_name;
+                }
+                if($quote['destination_airport_id']!=''){
+                    $quote['destination_airport_id'] = $quote->destination_airport->display_name;
+                }
+
+                return $quote;
+            });
+
+            return response()->json($collection);
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
     }

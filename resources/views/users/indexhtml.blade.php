@@ -85,14 +85,6 @@
                             </span>
                             </button>
                             <div class="m-separator m-separator--dashed d-xl-none"></div>
-                            <a href="{{route('create.passport.client')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-                            <span>
-                                <i class="la la-cogs"></i>
-                                <span>
-                                    Create Token
-                                </span>
-                            </span>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -112,20 +104,17 @@
                             Type
                         </th>
                         <th title="Field #5">
-                            Name Company
-                        </th>
-                        <th title="Field #6">
-                            API Token
+                            Company Name
                         </th>
                         @hasrole('administrator')
-                        <th title="Field #7">
+                        <th title="Field #6">
                             Last Login
                         </th>
                         @endhasrole
-                        <th title="Field #8">
+                        <th title="Field #7">
                             Status
                         </th>
-                        <th title="Field #9">
+                        <th title="Field #8">
                             Options
                         </th>
 
@@ -148,7 +137,6 @@
                                 @endif
                             </td>
                             <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>
-                            <td>{!! $arr->userToken ? 'Yes':'--'!!}</td>
                             @hasrole('administrator')
                             <td>
                                 {{ $arr->last_login }}
@@ -171,18 +159,6 @@
                                     <a href="{{route('users.activate',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Enable/Disable User" >
                                         <i class="la la-user"></i>
                                     </a>
-                                    @if( (Auth::user()->type == 'company') ||  (Auth::user()->type == 'admin')  )
-                                        @if($arr->userToken)
-                                            <a href="{{route('delete.token',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete API Token">
-                                                <i class="la la-trash"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{route('create.token',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Create API Token">
-                                                <i class="la la-plus"></i>
-                                            </a>
-                                        @endif
-
-                                    @endif
                                     @role('administrator')
                                     <a href="{{route('impersonate.impersonate',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Impersonate User" >
                                         <i class="la la-eye"></i>
