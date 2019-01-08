@@ -97,6 +97,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::post('storeRate/{id}', ['uses' => 'ContractsController@storeRates', 'as' => 'contracts.storeRate']);
   Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
   Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
+  Route::get('duplicateRate/{id}', ['uses' => 'ContractsController@duplicateRates', 'as' => 'duplicate-rates']);
   Route::get('addLocalCharge/{id}', ['uses' => 'ContractsController@addLocalChar', 'as' => 'add-LocalCharge']);
   Route::post('storeLocalCharge/{id}', ['uses' => 'ContractsController@storeLocalChar', 'as' => 'contracts.storeLocalCharge']);
   Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);

@@ -347,6 +347,9 @@ class ContractsController extends Controller
              <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
+                    <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Duplicate'  onclick='AbrirModal(\"duplicateRate\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
 
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
@@ -610,6 +613,17 @@ class ContractsController extends Controller
     $rate = Rate::find($id);
     $rate->update($requestForm);
     return redirect()->back()->with('editRate','true');
+  }
+
+  public function duplicateRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = Rate::find($id);
+    return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency'));
   }
 
   public function addLocalChar($id){
