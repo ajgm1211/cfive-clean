@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 use Excel;
 use PrvHarbor;
 use App\Harbor;
+use App\RateLcl;
 use App\FileTmp;
 use App\Carrier;
+use App\Currency;
 use App\CompanyUser;
 use App\ContractLcl;
 use Illuminate\Http\Request;
@@ -42,33 +44,38 @@ class ImportationLclController extends Controller
                 $destinyExc             = "Destiny";
                 $carrier                = "Carrier";
                 $wm                     = "W/M";
+                $minimun                = "Minimun";
                 $contractId             = "Contract_id";
                 $statustypecurren       = "statustypecurren";
+                $contractIdVal          = $requestobj['Contract_id'];
+
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
                 $ratescollection         = collect([]);
                 $ratesFailcollection     = collect([]);
                 $i = 0;
                 foreach($reader->get() as $read){
-                    $carrierVal          = '';
-                    $originVal           = '';
-                    $destinyVal          = '';
-                    $currencyVal         = '';
-                    $randons             = '';
-                    $currencyVal         = '';
-                    $contractIdVal       = $requestobj['Contract_id'];
 
-                    $currencResul            = '';
+                    $carrierVal         = '';
+                    $originVal          = '';
+                    $destinyVal         = '';
+                    $currencyVal        = '';
+                    $randons            = '';
+                    $currencyVal        = '';
+                    $wmVal              = '';
+                    $currencResul       = '';
+                    $minimunVal         = '';
 
-                    $originBol               = false;
-                    $origExiBol              = false;
-                    $destinyBol              = false;
-                    $destiExitBol            = false;
-                    $carriExitBol            = false;
-                    $carriBol                = false;
-                    $variantecurrency        = false;
-                    $curreExitBol            = false;
+                    $carriBol           = false;
+                    $wmExiBol           = false;
+                    $originBol          = false;
+                    $origExiBol         = false;
+                    $destinyBol         = false;
+                    $curreExitBol       = false;
+                    $destiExitBol       = false;
+                    $carriExitBol       = false;
+                    $minimunExiBol      = false;
 
-                    $values                  = true;
 
                     if($i != 0){
                         //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
@@ -118,9 +125,29 @@ class ImportationLclController extends Controller
                             }
                         }
 
-                        //---------------- CURRENCY VALUES ------------------------------------------------------
+                        //---------------- W/M ------------------------------------------------------------------
 
-                   /*     $wmArr      = explode(' ',trim($read[$requestobj[$wm]]));
+                        $wmArr      = explode(' ',trim($read[$requestobj[$wm]]));
+
+                        if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
+                            $wmExiBol = true;
+                            $wmVal   = (int)$wmArr[0];
+                        }else{
+                            $wmVal = $wmArr[0].'_E_E';
+                        }
+
+                        //---------------- MINIMUN --------------------------------------------------------------
+
+                        $minimunArr      = explode(' ',trim($read[$requestobj[$minimun]]));
+
+                        if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
+                            $minimunExiBol = true;
+                            $minimunVal   = (int)$minimunArr[0];
+                        }else{
+                            $minimunVal = $minimunArr[0].'_E_E';
+                        }
+
+                        //---------------- CURRENCY VALUES ------------------------------------------------------
 
                         if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
 
@@ -147,9 +174,9 @@ class ImportationLclController extends Controller
                                     $currencyValtwm = '_E_E';
                                 }
                             }
-                            
+
                             $currencyVal = $currencyValtwm;
-                            
+
                         } else {
                             if(empty($read[$requestobj[$currency]]) != true){
                                 $currencResul= str_replace($caracteres,'',$read[$requestobj[$currency]]);
@@ -161,72 +188,70 @@ class ImportationLclController extends Controller
                                 $currencyVal = $read[$requestobj[$currency]].'_E_E';
                             }
 
-                        }*/
+                        }
+
                         $data = [
                             'carriExitBol'      => $carriExitBol,
                             'carrierVal'        => $carrierVal,
+                            'destinyBol'        => $destinyBol,
                             'destiExitBol'      => $destiExitBol,
                             'destinyVal'        => $destinyVal,
+                            'originBol'         => $originBol,
                             'origExiBol'        => $origExiBol,
                             'originVal'         => $originVal,
                             'randons'           => $randons,
-                            'contractIdVal'    => $contractIdVal,
+                            'contractIdVal'     => $contractIdVal,
+                            'curreExitBol'      => $curreExitBol,
+                            'currencyVal'       => $currencyVal,
+                            'wmExiBol'          => $wmExiBol,
+                            'wmVal'             => $wmVal,
+                            'minimunExiBol'     => $minimunExiBol,
+                            'minimunVal'        => $minimunVal,
                             //''  => ,
                         ];
-                        dd($data);
-                        /*  if(carriExitBol == true && destiExitBol == true &&
-origExiBol == true){
-                        if($originBol == true || $destinyBol == true){
-                            foreach($randons as  $rando){
-                                //insert por arreglo de puerto
-                                if($originBol == true ){
-                                    $originVal = $rando;
-                                } else {
-                                    $destinyVal = $rando;
-                                }
+                        // dd($data);
+                        if($carriExitBol == true && $destiExitBol     == true &&
+                           $origExiBol   == true && $curreExitBol     == true &&
+                           $wmExiBol     == true && $minimunExiBol    == true ){
 
-                                if($requestobj[$statustypecurren] == 2){
-                                    $currencyVal = $currencyValtwen;
-                                }
+                            if($originBol == true || $destinyBol == true){
+                                foreach($randons as  $rando){
+                                    //insert por arreglo de puerto
+                                    if($originBol == true ){
+                                        $originVal = $rando;
+                                    } else {
+                                        $destinyVal = $rando;
+                                    }
+
+                                    $ratesArre = RateLcl::create([
+                                        'origin_port'    => $originVal,
+                                        'destiny_port'   => $destinyVal,
+                                        'carrier_id'     => $carrierVal,
+                                        'contractlcl_id' => $contractIdVal,
+                                        'uom'            => $wmVal,
+                                        'minimum'        => $minimunVal,
+                                        'currency_id'    => $currencyVal
+                                    ]);
+                                } 
+                                //dd($ratesArre);
+                            }else {
+                                // fila por puerto, sin expecificar origen ni destino manualmente
 
                                 $ratesArre = RateLcl::create([
-                                'origin_port'    => $originVal,
-                                'destiny_port'   => $destinyVal,
-                                'carrier_id'     => $carrierVal,
-                                'contract_id'    => $contractIdVal,
-                                'twuenty'        => $twentyVal,
-                                'forty'          => $fortyVal,
-                                'fortyhc'        => $fortyhcVal,
-                                'fortynor'       => $fortynorVal,
-                                'fortyfive'      => $fortyfiveVal,
-                                'currency_id'    => $currencyVal
-                            ]);
-                                //dd($ratesArre);
-                            } 
-                        }else {
-                            // fila por puerto, sin expecificar origen ni destino manualmente
-                            if($requestobj[$statustypecurren] == 2){
-                                $currencyVal = $currencyValtwen;
+                                    'origin_port'    => $originVal,
+                                    'destiny_port'   => $destinyVal,
+                                    'carrier_id'     => $carrierVal,
+                                    'contractlcl_id' => $contractIdVal,
+                                    'uom'            => $wmVal,
+                                    'minimum'        => $minimunVal,
+                                    'currency_id'    => $currencyVal
+                                ]);
+
+                                dd($ratesArre);
                             }
-
-                            /*$ratesArre =  RateLcl::create([
-                            'origin_port'    => $originVal,
-                            'destiny_port'   => $destinyVal,
-                            'carrier_id'     => $carrierVal,
-                            'contract_id'    => $contractIdVal,
-                            'twuenty'        => $twentyVal,
-                            'forty'          => $fortyVal,
-                            'fortyhc'        => $fortyhcVal,
-                            'fortynor'       => $fortynorVal,
-                            'fortyfive'      => $fortyfiveVal,
-                            'currency_id'    => $currencyVal
-                        ]);
-
-                            //dd($ratesArre);
+                        } else {
+                            // aqui van los fallidos
                         }
-                    } else {
-                        // aqui van los fallidos
-                    }*/
                     }
                     $i =$i + 1;
                 }
