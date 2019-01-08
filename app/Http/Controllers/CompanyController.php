@@ -20,7 +20,7 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $company_user_id=\Auth::user()->company_user_id;
         $user_id = \Auth::user()->id;
@@ -34,6 +34,9 @@ class CompanyController extends Controller
             $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->with('groupUserCompanies.user','user')->get();
         }
 
+        if($request->ajax()){
+            return response()->json($companies);
+        }
 
         return view('companies/index', ['companies' => $companies,'users'=>$users]);
     }
