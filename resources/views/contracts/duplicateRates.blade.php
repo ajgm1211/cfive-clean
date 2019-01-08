@@ -20,7 +20,6 @@
             </span>
           </span>
         </div>
-
       </div>
       <div class="col-lg-4">
         {!! Form::label('carrier', 'Carrier') !!}
