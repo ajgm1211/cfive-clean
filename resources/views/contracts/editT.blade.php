@@ -773,6 +773,18 @@ Load
 
     }
 
+    if(action == "duplicateLocalCharge"){
+      $('#spinner').show();
+      $('#modalLocalcharge').modal({show:true});
+      var url = '{{ route("duplicate-local-charge", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-edit').load(url,function(){
+        $('#modalLocalcharge').modal({show:true});
+        $('#spinner').hide();
+      });
+
+    }
+
 
     if(action == "addLocalCharge"){
       var url = '{{ route("add-LocalCharge", ":id") }}';
