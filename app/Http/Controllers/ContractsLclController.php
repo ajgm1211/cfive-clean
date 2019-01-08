@@ -599,6 +599,19 @@ class ContractsLclController extends Controller
     $local = LocalChargeLcl::find($id);
     $local->forceDelete();
   }
+  
+    public function duplicateLocalCharges($id){
+
+    $countries = Country::pluck('name','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $localcharges = LocalChargeLcl::find($id);
+    return view('contractsLcl.duplicateLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
 
 
   // DATATABLES 
@@ -692,7 +705,10 @@ class ContractsLclController extends Controller
           <i class='la la-edit'></i>
           </a>
             <a  data-locallcl-id='$data[id]'    class='delete-local-lcl  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
-          <i id='rm_l' class='la la-times-circle'></i>
+          <i id='rm_l' class='la la-times-circle'></i></a>
+          <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='duplicate '  onclick='AbrirModal(\"duplicateLocalCharge\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
   }// local charges en edit
