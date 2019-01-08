@@ -81,7 +81,8 @@ $portRadio = false;
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('typed', 'Destination type') !!}
-        {{ Form::select('typedestiny_id',$typedestiny, $localcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control','style' => 'width:100%;']) }}
+        {{ Form::select('typedestiny_id
+        ',$typedestiny, $localcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control','style' => 'width:100%;']) }}
       </div>
       <div class="col-lg-4">
         {!! Form::label('carrierL', 'Carrier') !!}
