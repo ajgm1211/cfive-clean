@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 use Excel;
 use PrvHarbor;
 use App\Harbor;
+use PrvRatesLcl;
 use App\RateLcl;
 use App\FileTmp;
 use App\Carrier;
 use App\Currency;
+use App\FailRateLcl;
 use App\CompanyUser;
 use App\ContractLcl;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Storage;
 
 class ImportationLclController extends Controller
 {
@@ -23,7 +27,7 @@ class ImportationLclController extends Controller
         return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
     }
 
-
+    // Importador de Rates LCL 
     public function create(Request $request)
     {
         //dd($request->all());
@@ -34,7 +38,7 @@ class ImportationLclController extends Controller
         //dd($path);
         $errors = 0;
         Excel::selectSheetsByIndex(0)
-            ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
+            ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal,$request) {
                 $reader->noHeading = true;
 
                 $currency               = "Currency";
@@ -76,7 +80,6 @@ class ImportationLclController extends Controller
                     $carriExitBol       = false;
                     $minimunExiBol      = false;
 
-
                     if($i != 0){
                         //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
 
@@ -93,6 +96,7 @@ class ImportationLclController extends Controller
                             $originVal  = $resultadoPortOri['puerto'];
 
                         }
+
                         //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
                         if($requestobj['existdestiny'] == 1){
                             $destinyBol = true;
@@ -106,7 +110,6 @@ class ImportationLclController extends Controller
                             }
                             $destinyVal  = $resultadoPortDes['puerto'];
                         }
-
 
                         //--------------- CARRIER -----------------------------------------------------------------
                         if($requestobj['existcarrier'] == 1){
@@ -181,8 +184,12 @@ class ImportationLclController extends Controller
                             if(empty($read[$requestobj[$currency]]) != true){
                                 $currencResul= str_replace($caracteres,'',$read[$requestobj[$currency]]);
                                 $currenc = Currency::where('alphacode','=',$currencResul)->first();
-                                $curreExitBol = true;
-                                $currencyVal =  $currenc->id;
+                                if(empty($currenc->id) != true){
+                                    $curreExitBol = true;
+                                    $currencyVal =  $currenc->id;
+                                } else{
+                                    $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                }
                             }
                             else{
                                 $currencyVal = $read[$requestobj[$currency]].'_E_E';
@@ -190,7 +197,7 @@ class ImportationLclController extends Controller
 
                         }
 
-                        $data = [
+                        /*  $data = [
                             'carriExitBol'      => $carriExitBol,
                             'carrierVal'        => $carrierVal,
                             'destinyBol'        => $destinyBol,
@@ -209,7 +216,8 @@ class ImportationLclController extends Controller
                             'minimunVal'        => $minimunVal,
                             //''  => ,
                         ];
-                        // dd($data);
+
+                        dd($data);*/
                         if($carriExitBol == true && $destiExitBol     == true &&
                            $origExiBol   == true && $curreExitBol     == true &&
                            $wmExiBol     == true && $minimunExiBol    == true ){
@@ -247,17 +255,267 @@ class ImportationLclController extends Controller
                                     'currency_id'    => $currencyVal
                                 ]);
 
-                                dd($ratesArre);
+                                //dd($ratesArre);
                             }
                         } else {
                             // aqui van los fallidos
+
+                            //---------------------------- CARRIER  ---------------------------------------------------------
+
+                            if($carriExitBol == true){
+                                if($carriBol == true){
+                                    $carrier = Carrier::find($requestobj['carrier']); 
+                                    $carrierVal = $carrier['name'];  
+                                }else{
+                                    $carrier = Carrier::find($carrierVal); 
+                                    //$carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
+                                    $carrierVal = $carrier['name']; 
+                                }
+                            }
+
+                            //---------------------------- CURRENCY  ---------------------------------------------------------
+
+                            if($curreExitBol == true){
+                                $currencyVal = $read[$requestobj[$currency]];
+                            }  
+
+                            //---------------------------- w/m  --------------------------------------------------------------                                    
+                            /*  $dataErr = [
+                                'carriExitBol'      => $carriExitBol,
+                                'carrierVal'        => $carrierVal,
+                                'destinyBol'        => $destinyBol,
+                                'destiExitBol'      => $destiExitBol,
+                                'destinyVal'        => $destinyVal,
+                                'originBol'         => $originBol,
+                                'origExiBol'        => $origExiBol,
+                                'originVal'         => $originVal,
+                                'randons'           => $randons,
+                                'contractIdVal'     => $contractIdVal,
+                                'curreExitBol'      => $curreExitBol,
+                                'currencyVal'       => $currencyVal,
+                                'wmExiBol'          => $wmExiBol,
+                                'wmVal'             => $wmVal,
+                                'minimunExiBol'     => $minimunExiBol,
+                                'minimunVal'        => $minimunVal,
+                                //''  => ,
+                            ];
+
+                            dd($dataErr); */
+
+                            if($originBol == true || $destinyBol == true){
+                                foreach($randons as  $rando){
+                                    //insert por arreglo de puerto
+                                    if($originBol == true ){
+                                        $originerr = Harbor::find($rando);
+                                        $originVal = $originerr['name'];
+                                        if($destiExitBol == true){    
+                                            $destinyVal = $read[$requestobj[$destinyExc]];
+                                        }
+                                    } else {
+                                        $destinyerr = Harbor::find($rando);
+                                        $destinyVal = $destinyerr['name'];
+                                        if($origExiBol == true){
+                                            $originVal = $read[$requestobj[$originExc]];                                      
+                                        }
+                                    }
+                                    $ratesArre = FailRateLcl::create([
+                                        'origin_port'    => $originVal,
+                                        'destiny_port'   => $destinyVal,
+                                        'carrier_id'     => $carrierVal,
+                                        'contractlcl_id' => $contractIdVal,
+                                        'uom'            => $wmVal,
+                                        'minimum'        => $minimunVal,
+                                        'currency_id'    => $currencyVal
+                                    ]);
+                                }
+
+                            } else {
+                                if($origExiBol == true){
+                                    $originExits = Harbor::find($originVal);
+                                    $originVal = $originExits->name;                                       
+                                }
+                                if($destiExitBol == true){  
+                                    $destinyExits = Harbor::find($destinyVal);
+                                    $destinyVal = $destinyExits->name;
+                                }
+
+                                $ratesArre = FailRateLcl::create([
+                                    'origin_port'    => $originVal,
+                                    'destiny_port'   => $destinyVal,
+                                    'carrier_id'     => $carrierVal,
+                                    'contractlcl_id' => $contractIdVal,
+                                    'uom'            => $wmVal,
+                                    'minimum'        => $minimunVal,
+                                    'currency_id'    => $currencyVal
+                                ]);
+                            }
+                            $errors = $errors + 1;
                         }
                     }
                     $i =$i + 1;
                 }
+
+                Storage::delete($requestobj['FileName']);
             });
+
+        $contract = ContractLcl::find($request['Contract_id']);
+        $contract->status = 'publish';
+        $contract->update();
+
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request['Contract_id'])->count();
+
+
+        if($countfailrates > 0){
+            
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Well done!');
+            if($countfailrates == 1){
+                $request->session()->flash('message.content', ' '.$countfailrates.' fee is not charged correctly');
+            }else{
+                $request->session()->flash('message.content', ' '.$countfailrates.' Rates did not load correctly');
+            }
+            return redirect()->route('Failed.Rates.lcl.view',[$request['Contract_id'],1]);
+            
+        } else{
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'You successfully added the rate ');
+            return redirect()->route('Failed.Rates.lcl.view',[$request['Contract_id'],0]);
+        }
+
     }
 
+    // Rates view
+    public function FailedRatesView($id,$tab){
+        //$id se refiere al id del contracto
+        $countrates = RateLcl::with('carrier','contract')->where('contractlcl_id','=',$id)->count();
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$id)->count();
+        return view('ImportationLcl.showrates',compact('countfailrates','countrates','id','tab'));
+    }
+
+    // Datatable de Rates
+    public function FailedRatesDT($id,$selector){
+        //$id se refiere al id del contracto
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcarrier = new Carrier();
+
+        $failrates = collect([]);
+
+        if($selector == 1){
+            $failratesFor = FailRateLcl::where('contractlcl_id','=',$id)->get();
+            foreach( $failratesFor as $failrate){
+
+                $carrAIn;
+                $pruebacurre = "";
+                $originA        = explode("_",$failrate['origin_port']);
+                $destinationA   = explode("_",$failrate['destiny_port']);
+                $carrierA       = explode("_",$failrate['carrier_id']);
+                $uomA           = explode("_",$failrate['uom']);
+                $minimumA       = explode("_",$failrate['minimum']);
+                $currencyA      = explode("_",$failrate['currency_id']);
+
+                //------------ ORIGIN ------------------------------------------------------------------------
+
+                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                    ->first();
+
+                $originC   = count($originA);
+                if($originC <= 1){
+                    $originA = $originOb['name'];
+                } else{
+                    $originA = $originA[0].' (error)';
+                }
+
+                //------------ DESTINATION -------------------------------------------------------------------
+
+                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                    ->first();
+
+                $destinationC   = count($destinationA);
+                if($destinationC <= 1){
+                    $destinationA = $destinationOb['name'];
+                } else{
+                    $destinationA = $destinationA[0].' (error)';
+                }
+
+
+                //------------ W/M ---------------------------------------------------------------------------
+
+                $uomC   = count($uomA);
+                if($uomC <= 1){
+                    $uomA = $uomA[0];
+                } else{
+                    $uomA = $uomA[0].' (error)';
+                }
+
+                //------------ MINIMUN ---------------------------------------------------------------------------
+
+                $minimumC   = count($minimumA);
+                if($minimumC <= 1){
+                    $minimumA = $minimumA[0];
+                } else{
+                    $minimumA = $minimumA[0].' (error)';
+                }
+
+                //------------ CARRIER ---------------------------------------------------------------------------
+
+                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+                //$carrAIn = $carrierOb['id'];
+                $carrierC = count($carrierA);
+                if($carrierC <= 1){
+                    $carrierA = $carrierA[0];
+                } else{
+                    $carrierA = $carrierA[0].' (error)';
+                }
+
+                //------------ CURRENCY --------------------------------------------------------------------------
+
+                $currencyC = count($currencyA);
+                if($currencyC <= 1){
+                    $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+                    $currencyA = $currenc['alphacode'];
+                } else{
+                    $currencyA = $currencyA[0].' (error)';
+                }        
+
+                $colec = ['id'              =>  $failrate->id,
+                          'contract_id'     =>  $id,
+                          'origin_portLb'   =>  $originA,      
+                          'destiny_portLb'  =>  $destinationA,  
+                          'carrierLb'       =>  $carrierA,     
+                          'w/m'             =>  $uomA,         
+                          'minimum'         =>  $minimumA,         
+                          'currency_id'     =>  $currencyA,    
+                          'operation'       =>  '1'
+                         ];
+
+                $failrates->push($colec);
+
+            }
+            return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
+                return '<a href="#" class="" onclick="showModalsavetorate('.$failrate['id'].','.$failrate['operation'].')"><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-remove"></i></a>';
+            })
+                ->editColumn('id', 'ID: {{$id}}')->toJson();
+
+
+
+        } else if($selector == 2){
+
+            $ratescol = PrvRatesLcl::get_rates($id);
+
+            return DataTables::of($ratescol)->addColumn('action', function ($ratescol) {
+                return '
+                <a href="#" onclick="showModalsavetorate('.$ratescol['id'].','.$ratescol['operation'].')" class=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-remove"></i></a>';
+            })
+                ->editColumn('id', 'ID: {{$id}}')->toJson();
+        }
+
+    }
 
     public function store(Request $request)
     {
