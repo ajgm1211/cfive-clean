@@ -108,13 +108,12 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
 Upload Rates
 <i class="fa flaticon-tool-1"></i>
-</button>
-<a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-info">
-Failed Rates
-<i class="fa flaticon-tool-1"></i>
-</a>
-
-<a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
+</button>-->
+                            <a href="{{route('Failed.Rates.lcl.view',[$id,1])}}" class="btn btn-info">
+                                Failed Rates Lcl
+                                <i class="fa flaticon-tool-1"></i>
+                            </a>
+                            <!--<a href="{{route('Exportation.show',$id)}}" class="btn btn-info">
 Export Contract
 <i class="fa flaticon-tool-1"></i>
 </a>
@@ -168,13 +167,13 @@ Export Contract
 Upload Surcharge
 <i class="fa flaticon-tool-1"></i>
 </button>
-</a>-->
+</a>
 
-                            <a href="{{route('Failed.Rates.lcl.view',[$id,1])}}" class="btn btn-info">
-                                Failed Rates Lcl
-                                <i class="fa flaticon-tool-1"></i>
-                            </a>
-                            <!--<br><br><br>
+<a href="{{route('Failed.Rates.lcl.view',[$id,1])}}" class="btn btn-info">
+Failed Rates Lcl
+<i class="fa flaticon-tool-1"></i>
+</a>
+<br><br><br>
 @endrole
 -->
                             <table class="table tableData" id="users-table" width="100%" >
