@@ -174,9 +174,24 @@ class QuoteAutomaticLclController extends Controller
     //Colecciones
 
     $collectionRate = new Collection();
+    
+    
+    
+
 
     // Rates LCL
-    $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$company_user_id){
+    $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id)
+        {
+          $q->whereHas('contract_user_restriction', function($a) use($user_id){
+            $a->where('user_id', '=',$user_id);
+          })->orDoesntHave('contract_user_restriction');
+        })->whereHas('contract', function($q) use($date,$user_id,$company_user_id,$company_id)
+                     {
+                       $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                         $b->where('company_id', '=',$company_id);
+                       })->orDoesntHave('contract_company_restriction');
+                     })->whereHas('contract', function($q) use($date,$company_user_id){
+      
       $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
     })->get();
 
