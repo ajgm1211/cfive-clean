@@ -195,22 +195,30 @@
                         </a>
                      </li>
                      @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
-                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{ route('settings.index') }}" class="m-menu__link ">
-                           <i class="m-menu__link-icon flaticon-profile"></i>
-                           <span class="m-menu__link-text">
+                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                           <a  href="{{ route('settings.index') }}" class="m-menu__link ">
+                              <i class="m-menu__link-icon flaticon-profile"></i>
+                              <span class="m-menu__link-text">
                               Company's Profile
                            </span>
-                        </a>
-                     </li>
-                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{ route('terms.list') }}" class="m-menu__link ">
-                           <i class="m-menu__link-icon flaticon-warning-sign"></i>
-                           <span class="m-menu__link-text">
+                           </a>
+                        </li>
+                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                           <a  href="{{ route('terms.list') }}" class="m-menu__link ">
+                              <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                              <span class="m-menu__link-text">
                               Terms & Conditions
                            </span>
-                        </a>
-                     </li>
+                           </a>
+                        </li>
+                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                           <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                              <i class="m-menu__link-icon flaticon-share"></i>
+                              <span class="m-menu__link-text">
+                              API tokens
+                           </span>
+                           </a>
+                        </li>
                      @endif
                      <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{ route('templates.index') }}" class="m-menu__link ">
@@ -255,7 +263,7 @@
                      </li>
                      <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="{{route('settings.companies')}}" class="m-menu__link ">
-                           <i class="m-menu__link-icon flaticon-business"></i>
+                           <i class="m-menu__link-icon flaticon-user-settings"></i>
                            <span class="m-menu__link-text">
                               User companies
                            </span>
@@ -263,20 +271,20 @@
                      </li>
                      @endrole
                      @if(Session::has('impersonate'))
-                     <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                        <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
-                           <i class="m-menu__link-icon flaticon-logout"></i>
-                           <span class="m-menu__link-text">
+                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                           <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
+                              <i class="m-menu__link-icon flaticon-logout"></i>
+                              <span class="m-menu__link-text">
                               Exit impersonate mode
                            </span>
-                        </a>
-                     </li>
+                           </a>
+                        </li>
                      @endif
                   </ul>
                </div>
             </li>
-            
-            
+
+
             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                <a  href="#" class="m-menu__link m-menu__toggle">
                   <span class="m-menu__link-title">
@@ -292,7 +300,7 @@
                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                   <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                   <ul class="m-menu__subnav">
-             
+
                      <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                         <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                            <span class="m-menu__link-text">
@@ -308,8 +316,8 @@
                </div>
             </li>
 
-            
-            
+
+
             <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
                <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                   <div class='row'>
@@ -391,9 +399,9 @@
                   </div>
                </div>
             </li>
-           
 
-            
+
+
 
 
             <!-- /////////////////////////////////////////////////////////////////// -->

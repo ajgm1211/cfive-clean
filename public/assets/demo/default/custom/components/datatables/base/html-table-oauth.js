@@ -53,6 +53,12 @@ var DatatableHtmlTableDemo = function() {
                     overflow: 'visible',
                 },
                 {
+                    field: "Created at",
+                    title: "Created at",
+                    width: 300,
+                    overflow: 'visible',
+                },
+                {
                     field: "Options",
                     title: "Options",
                     width: 60,

@@ -69,6 +69,9 @@
                         <th title="Secret">
                             Secret
                         </th>
+                        <th title="Created at">
+                            Created at
+                        </th>
                         <th title="Options">
                             Options
                         </th>
@@ -79,6 +82,7 @@
                         <tr>
                             <td>{{$token->name }}</td>
                             <td>{{$token->secret }}</td>
+                            <td>{{$token->created_at }}</td>
                             <td>
                                 <button id="delete-token" data-token-id="{{$token->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
                                     <i class="la la-eraser"></i>

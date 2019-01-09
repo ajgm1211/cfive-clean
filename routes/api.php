@@ -33,6 +33,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('logout', 'ApiController@logout');
         Route::get('user', 'ApiController@user');
         Route::get('quotes', 'QuoteController@index');
-        Route::get('clients', 'CompanyController@index');
+        Route::get('companies', 'CompanyController@index');
+        Route::get('contacts', 'ContactController@index');
     });
 });
