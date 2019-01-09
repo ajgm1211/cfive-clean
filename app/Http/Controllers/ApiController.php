@@ -14,10 +14,31 @@ class ApiController extends Controller
 {
     public function index(){
 
-        $tokens = OauthClient::all();
-
+        if(\Auth::user()->hasRole('company')) {
+            $tokens = OauthClient::where('company_user_id', \Auth::user()->company_user_id)->get();
+        }else{
+            $tokens = OauthClient::all();
+        }
         return view('oauth.index',compact('tokens'));
     }
+
+    public function createAccessToken(){
+
+        $token = new OauthClient();
+
+        $token->name="Password Grant Token ".str_random(5);
+        $token->company_user_id=\Auth::user()->company_user_id;
+        $token->secret=str_random(40);
+        $token->redirect="http://localhost";
+        $token->personal_access_client=0;
+        $token->password_client=1;
+        $token->revoked=0;
+
+        $token->save();
+
+        return redirect('/oauth/list');
+    }
+
 
     public function signup(Request $request)
     {

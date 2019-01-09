@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection as Collection;
 use App\Contact;
 use App\Company;
 
@@ -13,7 +14,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
@@ -28,6 +29,15 @@ class ContactController extends Controller
             $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
         }
 
+        if($request->ajax()){
+            $collection = Collection::make($contacts);
+            $collection->map(function ($contact) {
+                $contact['company'] = $contact->company->business_name;
+                unset($contact['company_id']);
+            });
+
+            return response()->json($collection);
+        }
 
         return view('contacts/index', ['contacts' => $contacts,'companies'=>$companies]);
     }

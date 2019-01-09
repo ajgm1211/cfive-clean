@@ -92,4 +92,16 @@ class Quote extends Model implements Auditable
     {
         return $this->hasOne('App\Currency','id','currency_id');
     }
+    public function freightAmmount()
+    {
+        return $this->hasMany('App\FreightAmmount','quote_id');
+    }
+    public function originAmmount()
+    {
+        return $this->hasMany('App\OriginAmmount','quote_id');
+    }
+    public function destinationAmmount()
+    {
+        return $this->hasMany('App\DestinationAmmount','quote_id');
+    }
 }
