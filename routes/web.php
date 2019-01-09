@@ -199,6 +199,14 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
 Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
 
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
+    
+    //Rates 
+    Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
+    Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
+    Route::get('DestroyRatesFailLcl/{id}','ImportationLclController@DestroyRatesF')->name('Destroy.RatesF.Lcl');
+    Route::get('EditRatesGoodLcl/{id}','ImportationLclController@EditRatesGood')->name('Edit.RatesG.Lcl');
+    Route::get('UpdateRatesFailLcl/{id}','ImportationLclController@UpdateRatesD')->name('Update.RatesG.Lcl');
+    Route::get('DestroyRatesGLcl/{id}','ImportationLclController@DestroyRatesG')->name('Destroy.RatesG.Lcl');
     Route::get('lcl/rates/{id}/{bo}','ImportationLclController@FailedRatesView')->name('Failed.Rates.lcl.view');
     Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
     Route::resource('ImportationLCL','ImportationLclController');
