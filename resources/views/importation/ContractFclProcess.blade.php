@@ -134,6 +134,13 @@ new registration
                                 </div>
                                 @endif
                                 
+                                @if($value['existtypedestiny'] == true)
+                                <div class="col-2 col-form-label">
+                                    <label for="carrier" class=" ">Type Destiny</label>
+                                    {!! Form::select('typedestiny',$typedestiny,$value['typedestiny'],['class'=>'m-select2-general form-control','id'=>'typedestiny'])!!}
+                                </div>
+                                @endif
+                                
                                 @if($value['existfortynor'] == true)
                                 <!--<input type="hidden" value="0" name="fortynor" />-->
                                 <input type="hidden" value="0" name="existfortynor" />
@@ -160,6 +167,7 @@ new registration
                                 @endif
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
+                                <input type="hidden" name="existtypedestiny" id="existtypedestiny" value="{{$value['existtypedestiny']}}" />
                                 <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
 
                             </div>
