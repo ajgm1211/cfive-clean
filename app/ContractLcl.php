@@ -30,6 +30,19 @@ class ContractLcl extends Model implements Auditable
     return $this->hasMany('App\LocalChargeLcl','contractlcl_id');
   }
 
+  public function contract_company_restriction(){
+
+    return $this->HasMany('App\ContractLclCompanyRestriction','contractlcl_id');
+
+  }
+
+  public function contract_user_restriction(){
+
+    return $this->HasMany('App\ContractLclUserRestriction','contractlcl_id');
+
+  }
+
+
 
 
 }
