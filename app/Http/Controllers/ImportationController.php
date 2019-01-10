@@ -4014,7 +4014,9 @@ class ImportationController extends Controller
         $ammountA           =  explode("_",$failsurcharge['ammount']);
         $currencyA          =  explode("_",$failsurcharge['currency_id']);
         $carrierA           =  explode("_",$failsurcharge['carrier_id']);
+        $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
+        // -------------- ORIGIN -------------------------------------------------------------
         $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
             ->first();
         $originAIn = $originOb['id'];
@@ -4025,6 +4027,8 @@ class ImportationController extends Controller
             //$originA = $originA[0].' (error)';
             $classdorigin='color:red';
         }
+        
+        // -------------- DESTINATION --------------------------------------------------------
         $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
             ->first();
         $destinationAIn = $destinationOb['id'];
@@ -4036,6 +4040,7 @@ class ImportationController extends Controller
             $classddestination='color:red';
         }
 
+        // -------------- SURCHARGE ....-----------------------------------------------------
         $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
         $surcharAin  = $surchargeOb['id'];
         $surchargeC = count($surchargeA);
@@ -4046,6 +4051,8 @@ class ImportationController extends Controller
             //$surchargeA         = $surchargeA[0].' (error)';
             $classsurcharger    = 'color:red';
         }
+        
+        // -------------- CARRIER -----------------------------------------------------------
         $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
         $carrAIn = $carrierOb['id'];
         $carrierC = count($carrierA);
@@ -4056,6 +4063,8 @@ class ImportationController extends Controller
             //$carrierA       = $carrierA[0].' (error)';
             $classcarrier   ='color:red';
         }
+        
+        // -------------- CALCULATION TYPE --------------------------------------------------
         $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
         $calculationtypeAIn = $calculationtypeOb['id'];
         $calculationtypeC   = count($calculationtypeA);
@@ -4066,6 +4075,8 @@ class ImportationController extends Controller
             //$calculationtypeA       = $calculationtypeA[0].' (error)';
             $classcalculationtype   = 'color:red';
         }
+        
+        // -------------- AMMOUNT -----------------------------------------------------------
         $ammountC = count($ammountA);
         if($ammountC <= 1){
             $ammountA = $failsurcharge['ammount'];
@@ -4074,6 +4085,8 @@ class ImportationController extends Controller
             $ammountA       = $ammountA[0].' (error)';
             $classammount   = 'color:red';
         }
+        
+        // -------------- CURRENCY ----------------------------------------------------------
         $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
         $currencyAIn  = $currencyOb['id'];
         $currencyC    = count($currencyA);
@@ -4084,10 +4097,20 @@ class ImportationController extends Controller
             $currencyA      = $currencyA[0].' (error)';
             $classcurrency  = 'color:red';
         }
-        $typedestinyLB    = TypeDestiny::find($failsurcharge['typedestiny_id']);
+
+        // -------------- TYPE DESTINY -----------------------------------------------------
+        //dd($failsurcharge['typedestiny_id']);
+        $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
+        if(count($typedestinyA) <= 1){
+            $typedestinyLB = $typedestinyobj['id'];
+        }
+        else{
+            $typedestinyLB      = $typedestinyA[0].' (error)';
+            $classtypedestiny   = 'color:red';
+        }
 
 
-        ////////////////////////////////////////////////////////////////////////////////////
+               ////////////////////////////////////////////////////////////////////////////////////
         $failsurchargeArre = [
             'id'                    => $failsurcharge['id'],
             'surcharge'             => $surcharAin,
@@ -4095,7 +4118,7 @@ class ImportationController extends Controller
             'destiny_port'          => $destinationAIn,
             'carrier'               => $carrAIn,
             'contract_id'           => $failsurcharge['contract_id'],
-            'typedestiny'           => $typedestinyLB['id'],
+            'typedestiny'           => $typedestinyLB,
             'ammount'               => $ammountA,
             'calculationtype'       => $calculationtypeAIn,
             'currency'              => $currencyAIn,
@@ -4416,6 +4439,9 @@ class ImportationController extends Controller
                 $ammountA           =  explode("_",$failsurcharge['ammount']);
                 $currencyA          =  explode("_",$failsurcharge['currency_id']);
                 $carrierA           =  explode("_",$failsurcharge['carrier_id']);
+                $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
+
+                // -------------- ORIGIN -------------------------------------------------------------
                 $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
                 $originAIn = $originOb['id'];
@@ -4426,6 +4452,8 @@ class ImportationController extends Controller
                     $originA = $originA[0].' (error)';
                     $classdorigin='color:red';
                 }
+
+                // -------------- DESTINY ------------------------------------------------------------
                 $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
                     ->first();
                 $destinationAIn = $destinationOb['id'];
@@ -4436,6 +4464,9 @@ class ImportationController extends Controller
                     $destinationA = $destinationA[0].' (error)';
                     $classddestination='color:red';
                 }
+
+                // -------------- SURCHARGE -----------------------------------------------------------
+
                 $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
                 $surcharAin  = $surchargeOb['id'];
                 $surchargeC = count($surchargeA);
@@ -4446,6 +4477,8 @@ class ImportationController extends Controller
                     $surchargeA         = $surchargeA[0].' (error)';
                     $classsurcharger    = 'color:red';
                 }
+
+                // -------------- CARRIER -------------------------------------------------------------
                 $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
                 $carrAIn = $carrierOb['id'];
                 $carrierC = count($carrierA);
@@ -4456,6 +4489,8 @@ class ImportationController extends Controller
                     $carrierA       = $carrierA[0].' (error)';
                     $classcarrier   ='color:red';
                 }
+
+                // -------------- CALCULATION TYPE ----------------------------------------------------
                 $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
                 $calculationtypeAIn = $calculationtypeOb['id'];
                 $calculationtypeC   = count($calculationtypeA);
@@ -4466,6 +4501,8 @@ class ImportationController extends Controller
                     $calculationtypeA       = $calculationtypeA[0].' (error)';
                     $classcalculationtype   = 'color:red';
                 }
+
+                // -------------- AMMOUNT ------------------------------------------------------------
                 $ammountC = count($ammountA);
                 if($ammountC <= 1){
                     $ammountA = $failsurcharge->ammount;
@@ -4474,6 +4511,8 @@ class ImportationController extends Controller
                     $ammountA       = $ammountA[0].' (error)';
                     $classammount   = 'color:red';
                 }
+
+                // -------------- CURRENCY ----------------------------------------------------------
                 $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
                 $currencyAIn  = $currencyOb['id'];
                 $currencyC    = count($currencyA);
@@ -4484,7 +4523,17 @@ class ImportationController extends Controller
                     $currencyA      = $currencyA[0].' (error)';
                     $classcurrency  = 'color:red';
                 }
-                $typedestinyLB    = TypeDestiny::where('description',$failsurcharge['typedestiny_id'])->first();
+                // -------------- TYPE DESTINY -----------------------------------------------------
+                //dd($failsurcharge['typedestiny_id']);
+                $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
+                if(count($typedestinyA) <= 1){
+                    $typedestinyLB = $typedestinyobj['description'];
+                }
+                else{
+                    $typedestinyLB      = $typedestinyA[0].' (error)';
+                    $classcurrency  = 'color:red';
+                }
+
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 $arreglo = [
@@ -4493,7 +4542,7 @@ class ImportationController extends Controller
                     'origin_portLb'         => $originA,
                     'destiny_portLb'        => $destinationA,
                     'carrierlb'             => $carrierA,
-                    'typedestinylb'         => $typedestinyLB['description'],
+                    'typedestinylb'         => $typedestinyLB,
                     'ammount'               => $ammountA,
                     'calculationtypelb'     => $calculationtypeA,
                     'currencylb'            => $currencyA,
