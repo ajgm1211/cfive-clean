@@ -137,66 +137,66 @@ Route::middleware(['auth'])->prefix('Requests')->group(function () {
 
 Route::middleware(['auth'])->prefix('Importation')->group(function () {
 
-    // Importar Contracto
-    Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
-    Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
-    Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-    Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
-    Route::get('RatesListFC/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
-    Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
-    Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
+   // Importar Contracto
+   Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
+   Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
+   Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
+   Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
+   Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
+   Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
+   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
 
-    // Rates
-    Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
-    Route::get('EditRatesGoodForContracts/{id}','ImportationController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
-    Route::get('EditRatesFailForContracts/{id}','ImportationController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
-    Route::PUT('CreateRatesFailForContracts/{id}','ImportationController@CreateRates')->name('create.Rates.For.Contracts');
-    Route::get('UpdateRatesFailForContracts/{id}','ImportationController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
-    Route::get('DestroyRatesFailForContracts/{id}','ImportationController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
-    Route::get('DestroyRatesGForContracts/{id}','ImportationController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
+   // Rates
+   Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
+   Route::get('EditRatesGoodForContracts/{id}','ImportationController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts');
+   Route::get('EditRatesFailForContracts/{id}','ImportationController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts');
+   Route::PUT('CreateRatesFailForContracts/{id}','ImportationController@CreateRates')->name('create.Rates.For.Contracts');
+   Route::get('UpdateRatesFailForContracts/{id}','ImportationController@UpdateRatesD')->name('Update.RatesD.For.Contracts');
+   Route::get('DestroyRatesFailForContracts/{id}','ImportationController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts');
+   Route::get('DestroyRatesGForContracts/{id}','ImportationController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts');
 
-    // Surcharge
-    Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
-    Route::get('FailSurchargeFC/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
-    Route::get('EditSurchargersGoodForContracts/{id}','ImportationController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
-    Route::get('EditSurchargersFailForContracts/{id}','ImportationController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
-    Route::PUT('CreateSurchargersFailForContracts/{id}','ImportationController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
-    Route::get('UpdateSurchargersForContracts/{id}','ImportationController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
-    Route::get('DestroySurchargersFForContracts/{id}','ImportationController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
-    Route::get('DestroySurchargersGForContracts/{id}','ImportationController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
+   // Surcharge
+   Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts');
+   Route::get('fcl/surcharge/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D');
+   Route::get('EditSurchargersGoodForContracts/{id}','ImportationController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts');
+   Route::get('EditSurchargersFailForContracts/{id}','ImportationController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts');
+   Route::PUT('CreateSurchargersFailForContracts/{id}','ImportationController@CreateSurchargers')->name('create.Surchargers.For.Contracts');
+   Route::get('UpdateSurchargersForContracts/{id}','ImportationController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts');
+   Route::get('DestroySurchargersFForContracts/{id}','ImportationController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts');
+   Route::get('DestroySurchargersGForContracts/{id}','ImportationController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts');
 
-    // Reprocesar
-    Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates');
-    Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers');
+   // Reprocesar
+   Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates');
+   Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers');
 
-    // Datatable Rates Y Surchargers
-    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
-    Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
+   // Datatable Rates Y Surchargers
+   Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts');
+   Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C');
 
-    // DownLoad Files
-    Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files');
+   // DownLoad Files
+   Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files');
 
-    // Companies
-    Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
-    Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company');
-    Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
-    Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
-    Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
-    Route::get('/UpdateFCompany/{id}','ImportationController@UpdateFailedCompany')->name('update.fail.company');
+   // Companies
+   Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company');
+   Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company');
+   Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company');
+   Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company');
+   Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company');
+   Route::get('/UpdateFCompany/{id}','ImportationController@UpdateFailedCompany')->name('update.fail.company');
 
-    // Contacts
-    Route::Post('/UploadContacts','ImportationController@UploadContacts')->name('Upload.Contacts');
-    Route::get('/ViewFContact','ImportationController@FailedContactView')->name('view.fail.contact');
-    Route::get('/ListFContact/{id}','ImportationController@FailedContactlist')->name('list.fail.contact');
-    Route::get('/DeleteFContact/{id}','ImportationController@DeleteFailedContact')->name('delete.fail.contact');
-    Route::get('/ShowFContact/{id}','ImportationController@ShowFailContact')->name('show.fail.contact');
-    Route::get('/UpdateFContact/{id}','ImportationController@UpdateFailedContact')->name('update.fail.contact');
+   // Contacts
+   Route::Post('/UploadContacts','ImportationController@UploadContacts')->name('Upload.Contacts');
+   Route::get('/ViewFContact','ImportationController@FailedContactView')->name('view.fail.contact');
+   Route::get('/ListFContact/{id}','ImportationController@FailedContactlist')->name('list.fail.contact');
+   Route::get('/DeleteFContact/{id}','ImportationController@DeleteFailedContact')->name('delete.fail.contact');
+   Route::get('/ShowFContact/{id}','ImportationController@ShowFailContact')->name('show.fail.contact');
+   Route::get('/UpdateFContact/{id}','ImportationController@UpdateFailedContact')->name('update.fail.contact');
 
-    // Srucharge for contract
-    Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge');
+   // Srucharge for contract
+   Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge');
 
-    // Test
-    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
+   // Test
+   Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 
 });
 
