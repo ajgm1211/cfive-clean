@@ -274,17 +274,17 @@
 
 
 
-            /*
+            
             function showModalsavetorate(id,operation){
 
                 if(operation == 1){
-                    var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
+                    var url = '{{ route("Edit.Rates.Fail.Lcl", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditRate').modal();
                     });
                 }else if(operation == 2){
-                    var url = '{{ route("Edit.Rates.Good.For.Contracts", ":id") }}';
+                    var url = '{{ route("Edit.RatesG.Lcl", ":id") }}';
                     url = url.replace(':id', id);
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditRate').modal();
@@ -306,7 +306,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.RatesF.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.RatesF.Lcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -353,7 +353,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.RatesG.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.RatesG.Lcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -384,7 +384,7 @@
                         )
                     }
                 });
-            });*/
+            });
 
         </script>
 

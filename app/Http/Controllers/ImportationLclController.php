@@ -27,6 +27,8 @@ class ImportationLclController extends Controller
         return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
     }
 
+    // --------------- Rates ---------------------------------------------
+
     // Importador de Rates LCL 
     public function create(Request $request)
     {
@@ -366,7 +368,7 @@ class ImportationLclController extends Controller
 
 
         if($countfailrates > 0){
-            
+
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', 'Well done!');
             if($countfailrates == 1){
@@ -375,7 +377,7 @@ class ImportationLclController extends Controller
                 $request->session()->flash('message.content', ' '.$countfailrates.' Rates did not load correctly');
             }
             return redirect()->route('Failed.Rates.lcl.view',[$request['Contract_id'],1]);
-            
+
         } else{
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
@@ -517,9 +519,206 @@ class ImportationLclController extends Controller
 
     }
 
-    public function store(Request $request)
-    {
+    // Rates a editar para pasar a good rates (show modal)
+    public function EditRatesFail($id){
+        $objcarrier     = new Carrier();
+        $objharbor      = new Harbor();
+        $objcurrency    = new Currency();
+        $harbor         = $objharbor->all()->pluck('display_name','id');
+        $carrier        = $objcarrier->all()->pluck('name','id');
+        $currency       = $objcurrency->all()->pluck('alphacode','id');
 
+        $failrate       = FailRateLcl::find($id);
+
+        $pruebacurre        = '';
+        $classdorigin       = 'color:green';
+        $classddestination  = 'color:green';
+        $classcarrier       = 'color:green';
+        $classcurrency      = 'color:green';
+        $classuom           = 'color:green';
+        $classminimum       = 'color:green';
+
+        $originA        = explode("_",$failrate['origin_port']);
+        $destinationA   = explode("_",$failrate['destiny_port']);
+        $carrierA       = explode("_",$failrate['carrier_id']);
+        $currencyA      = explode("_",$failrate['currency_id']);
+        $uomA           = explode("_",$failrate['uom']);
+        $minimumA       = explode("_",$failrate['minimum']);
+
+        // --------------------------  ORIGIN  ------------------------------------------------------------
+
+        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+            ->first();
+        $originAIn = $originOb['id'];
+        $originC   = count($originA);
+        if($originC <= 1){
+            $originA = $originOb['name'];
+        } else{
+            $originA = $originA[0].' (error)';
+            $classdorigin='color:red';
+        }
+
+        // --------------------------  DESTINATIO  --------------------------------------------------------
+
+        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+            ->first();
+        $destinationAIn = $destinationOb['id'];
+        $destinationC   = count($destinationA);
+        if($destinationC <= 1){
+            $destinationA = $destinationOb['name'];
+        } else{
+            $destinationA = $destinationA[0].' (error)';
+            $classddestination='color:red';
+        }
+
+        // --------------------------  W/M  ---------------------------------------------------------------
+
+        $uomC   = count($uomA);
+        if($uomC <= 1){
+            $uomA = $uomA[0];
+        } else{
+            $uomA       = $uomA[0].' (error)';
+            $classuom   = 'color:red';
+        }
+
+        // --------------------------  MINIMUM  -----------------------------------------------------------
+
+        $minimumC   = count($minimumA);
+        if($minimumC <= 1){
+            $minimumA = $minimumA[0];
+        } else{
+            $minimumA       = $minimumA[0].' (error)';
+            $classminimum   = 'color:red';
+        }
+
+        // --------------------------  CARRIER  -----------------------------------------------------------
+
+        $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+        $carrAIn = $carrierOb['id'];
+        $carrierC = count($carrierA);
+        if($carrierC <= 1){
+            //dd($carrierAIn);
+            $carrierA = $carrierA[0];
+        }
+        else{
+            $carrierA       = $carrierA[0].' (error)';
+            $classcarrier   = 'color:red';
+        }
+
+        // --------------------------  CURRENCY  ----------------------------------------------------------
+
+        $currencyC = count($currencyA);
+        if($currencyC <= 1){
+            $currenc        = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+            $pruebacurre    = $currenc['id'];
+            $currencyA      = $currencyA[0];
+        }
+        else{
+            $currencyA      = $currencyA[0].' (error)';
+            $classcurrency  = 'color:red';
+        }        
+
+        $failrates = ['rate_id'         =>  $failrate->id,
+                      'contract_id'     =>  $failrate->contractlcl_id,
+                      'origin_port'     =>  $originAIn,   
+                      'destiny_port'    =>  $destinationAIn,     
+                      'carrierAIn'      =>  $carrAIn,
+                      'uom'             =>  $uomA,      
+                      'minimum'         =>  $minimumA,      
+                      'currencyAIn'     =>  $pruebacurre,
+                      'classorigin'     =>  $classdorigin,
+                      'classdestiny'    =>  $classddestination,
+                      'classcarrier'    =>  $classcarrier,
+                      'classuom'        =>  $classuom,
+                      'classminimum'    =>  $classminimum,
+                      'classcurrency'   =>  $classcurrency
+                     ];
+        $pruebacurre = "";
+        $carrAIn = "";
+        // dd($failrates);
+        return view('ImportationLcl.Body-Modals.FailEditRates', compact('failrates','harbor','carrier','currency'));
+    }
+
+    // Rates crea desde la edicion fail rates y los elimina de fail Rates
+    public function CreateRates(Request $request, $id){
+        //dd($request->all());
+        $return = RateLcl::create([
+            "origin_port"   => $request->origin_port,
+            "destiny_port"  => $request->destiny_port,
+            "carrier_id"    => $request->carrier_id,
+            "contractlcl_id" => $request->contract_id,
+            "uom"           => (int)$request->uom,
+            "minimum"       => (int)$request->minimum,
+            "currency_id"   => $request->currency_id
+        ]);
+
+        $failrate = FailRateLcl::find($id);
+        $failrate->forceDelete();
+        $request->session()->flash('message.content', 'Updated Rate' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request->contract_id)->count();
+
+        if($countfailrates > 0){
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contract_id,1]);
+        } else{
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contract_id,0]);
+        }
+    }
+
+    // Rates Eliminar Fail Rates
+    public function DestroyRatesF($id){
+        try{
+            $failRate = FailRateLcl::find($id);
+            $failRate->forceDelete();
+            return 1;
+        }catch(\Exception $e){
+            return 2;
+        }
+    }
+
+    // Rates a editar (show modal)
+    public function EditRatesGood($id){
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $rates = RateLcl::find($id);
+        return view('ImportationLcl.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','currency'));
+    }
+
+    // Actualiza Los rates
+    public function UpdateRatesD(Request $request, $id){
+        //dd($request->all());
+        $rate = RateLcl::find($id);
+        $rate->origin_port      =  $request->origin_id;
+        $rate->destiny_port     =  $request->destiny_id;
+        $rate->carrier_id       =  $request->carrier_id;
+        $rate->contractlcl_id   =  $request->contract_id;
+        $rate->uom              =  $request->uom;
+        $rate->minimum          =  $request->minimum;
+        $rate->currency_id      =  $request->currency_id;
+        $rate->update();
+
+        $request->session()->flash('message.content', 'Updated Rate' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        return redirect()->route('Failed.Rates.lcl.view',[$request->contract_id,0]);
+
+    }
+
+    // Elimina los Rates Good
+    public function DestroyRatesG($id){
+        try{
+            $Rate = RateLcl::find($id);
+            $Rate->forceDelete();
+            return 1;
+        }catch(\Exception $e){
+            return 2;
+        }
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -663,6 +862,11 @@ class ImportationLclController extends Controller
 
     }
 
+    //********************************************************************
+    public function store(Request $request)
+    {
+
+    }
 
     public function show($id)
     {
