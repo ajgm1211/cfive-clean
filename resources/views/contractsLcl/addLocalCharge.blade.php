@@ -149,14 +149,7 @@
 </div>
 <script src="/js/editcontracts.js"></script>
 <script>
-
-
   $('.m-select2-general').select2({
     placeholder: "Select an option"
   });
-
-
-
-
-
 </script>
