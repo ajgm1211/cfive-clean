@@ -15,6 +15,9 @@ class Contract extends Model implements Auditable
   public function rates(){
     return $this->hasMany('App\Rate');
   }
+  public function addons(){
+    return $this->hasMany('App\ContractAddons');
+  }
   public function companyUser()
   {
     return $this->belongsTo('App\CompanyUser');
