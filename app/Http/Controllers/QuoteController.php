@@ -83,6 +83,7 @@ class QuoteController extends Controller
             $collection = Collection::make($quotes);
             $collection->transform(function ($quote, $key) {
                 $quote['client_company'] = $quote->company;
+                $quote['owner'] = $quote->user;
                 $quote['currency'] = $quote->currencies->alphacode;
                 $quote['origin_ammount'] = $quote->originAmmount;
                 $quote['freight_ammount'] = $quote->freightAmmount;
@@ -180,6 +181,7 @@ class QuoteController extends Controller
                 unset($quote['origin_airport']);
                 unset($quote['destination_airport']);
                 unset($quote['packages']);
+                unset($quote['user']);
 
                 return $quote;
             });

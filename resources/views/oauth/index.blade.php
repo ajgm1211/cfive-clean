@@ -66,6 +66,9 @@
                         <th title="Name">
                             Name
                         </th>
+                        <th title="Company user">
+                            Company
+                        </th>
                         <th title="Secret">
                             Secret
                         </th>
@@ -81,6 +84,7 @@
                     @foreach ($tokens as $token)
                         <tr>
                             <td>{{$token->name }}</td>
+                            <td>{{$token->company_user['name'] }}</td>
                             <td>{{$token->secret }}</td>
                             <td>{{$token->created_at }}</td>
                             <td>

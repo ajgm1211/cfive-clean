@@ -35,5 +35,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('quotes', 'QuoteController@index');
         Route::get('companies', 'CompanyController@index');
         Route::get('contacts', 'ContactController@index');
+        Route::post('create/company', 'CompanyController@store');
+        Route::post('create/contact', 'ContactController@store');
     });
 });

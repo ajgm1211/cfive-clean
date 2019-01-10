@@ -47,6 +47,12 @@ var DatatableHtmlTableDemo = function() {
                     overflow: 'visible',
                 },
                 {
+                    field: "Company user",
+                    title: "Company user",
+                    width: 300,
+                    overflow: 'visible',
+                },
+                {
                     field: "Secret",
                     title: "Secret",
                     width: 300,
