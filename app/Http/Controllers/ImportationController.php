@@ -1508,21 +1508,27 @@ class ImportationController extends Controller
         return view('importation.Body-Modals.FailEditRates', compact('failrates','harbor','carrier','currency'));
     }
     public function CreateRates(Request $request, $id){
+        $origins = $request->origin_port;
+        $destinis = $request->destiny_port;
+        foreach($origins as $origin){
+            foreach($destinis as $destiny){
+                if($origin != $destiny){
+                    $return = Rate::create([
+                        "origin_port"  => $origin,
+                        "destiny_port" => $destiny,
+                        "carrier_id"   => $request->carrier_id,
+                        "contract_id"  => $request->contract_id,
+                        "twuenty"      => (int)$request->twuenty,
+                        "forty"        => (int)$request->forty,
+                        "fortyhc"      => (int)$request->fortyhc,
+                        "fortynor"     => (int)$request->fortynor,
+                        "fortyfive"    => (int)$request->fortyfive,
+                        "currency_id"  => $request->currency_id
+                    ]);
+                }
+            }
+        }
 
-
-
-        $return = Rate::create([
-            "origin_port"  => $request->origin_port,
-            "destiny_port" => $request->destiny_port,
-            "carrier_id"   => $request->carrier_id,
-            "contract_id"  => $request->contract_id,
-            "twuenty"      => (int)$request->twuenty,
-            "forty"        => (int)$request->forty,
-            "fortyhc"      => (int)$request->fortyhc,
-            "fortynor"     => (int)$request->fortynor,
-            "fortyfive"    => (int)$request->fortyfive,
-            "currency_id"  => $request->currency_id
-        ]);
         $failrate = FailRate::find($id);
         $failrate->forceDelete();
         $request->session()->flash('message.content', 'Updated Rate' );
@@ -4027,7 +4033,7 @@ class ImportationController extends Controller
             //$originA = $originA[0].' (error)';
             $classdorigin='color:red';
         }
-        
+
         // -------------- DESTINATION --------------------------------------------------------
         $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
             ->first();
@@ -4051,7 +4057,7 @@ class ImportationController extends Controller
             //$surchargeA         = $surchargeA[0].' (error)';
             $classsurcharger    = 'color:red';
         }
-        
+
         // -------------- CARRIER -----------------------------------------------------------
         $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
         $carrAIn = $carrierOb['id'];
@@ -4063,7 +4069,7 @@ class ImportationController extends Controller
             //$carrierA       = $carrierA[0].' (error)';
             $classcarrier   ='color:red';
         }
-        
+
         // -------------- CALCULATION TYPE --------------------------------------------------
         $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
         $calculationtypeAIn = $calculationtypeOb['id'];
@@ -4075,7 +4081,7 @@ class ImportationController extends Controller
             //$calculationtypeA       = $calculationtypeA[0].' (error)';
             $classcalculationtype   = 'color:red';
         }
-        
+
         // -------------- AMMOUNT -----------------------------------------------------------
         $ammountC = count($ammountA);
         if($ammountC <= 1){
@@ -4085,7 +4091,7 @@ class ImportationController extends Controller
             $ammountA       = $ammountA[0].' (error)';
             $classammount   = 'color:red';
         }
-        
+
         // -------------- CURRENCY ----------------------------------------------------------
         $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
         $currencyAIn  = $currencyOb['id'];
@@ -4110,7 +4116,7 @@ class ImportationController extends Controller
         }
 
 
-               ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
         $failsurchargeArre = [
             'id'                    => $failsurcharge['id'],
             'surcharge'             => $surcharAin,
