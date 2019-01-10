@@ -624,9 +624,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                         //------------------ CALCULATION TYPE ---------------------------------------------------
                         $calculationvalvaration = '';
-                        if( $read[$requestobj[$CalculationType]] == 'PER_DOC'){
+                        if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
                             $calculationvalvaration = 'Per Shipment';
-                        } else if( $read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
+                        } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
                             $calculationvalvaration = 'Per Container';
                         } else{
                             $calculationvalvaration = $read[$requestobj[$CalculationType]];
@@ -783,7 +783,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                             } else{
                                 // se ejecuta la carga de los surcharges
-                                if($read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
+                                if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
                                     //dd($read[$request->$twenty]);
                                     // se verifica si los valores son iguales 
                                     if($statusexistfortynor == 1){
@@ -1315,7 +1315,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                     }
 
-                                } else if($read[$requestobj[$CalculationType]] == 'PER_DOC'){
+                                } 
+                                else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
                                     //per_shipment
                                     if($twentyVal != 0){
                                         if($requestobj[$statustypecurren] == 2){
@@ -1597,7 +1598,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 // Surcharges Fallidos
                                 if($calculationtypeExiBol == true){
                                     //
-                                    if($read[$requestobj[$CalculationType]] == 'PER_CONTAINER'){
+                                    if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
                                         // son tres cargas Per 20, Per 40, Per 40'HC
 
                                         if($originBol == true || $destinyBol == true){
@@ -1944,8 +1945,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                         }
 
-                                    } else if ($read[$requestobj[$CalculationType]] == 'PER_DOC' 
-                                               || $read[$requestobj[$CalculationType]] == 'Per Shipment'){
+                                    } 
+                                    else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0 
+                                               || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
                                         // es una sola carga Per Shipment
 
                                         // multiples puertos o por seleccion
