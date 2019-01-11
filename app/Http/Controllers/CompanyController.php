@@ -134,6 +134,10 @@ class CompanyController extends Controller
             }
         }
 
+        if($request->ajax()) {
+            return response()->json('Company created successfully!');
+        }
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
