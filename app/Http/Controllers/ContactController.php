@@ -103,6 +103,10 @@ class ContactController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
 
+        if($request->ajax()) {
+            return response()->json('Contact created successfully!');
+        }
+
         return redirect()->back();
     }
 
