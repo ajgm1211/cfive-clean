@@ -555,7 +555,7 @@ class QuoteController extends Controller
                 $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
                 foreach ($destination_ammount_charge as $key => $item) {
 
-                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_total_units[$key])
+                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
                         && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
 
                         $destination_ammount = new DestinationAmmount();
