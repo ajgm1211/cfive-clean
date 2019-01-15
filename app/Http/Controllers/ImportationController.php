@@ -601,7 +601,7 @@ class ImportationController extends Controller
     public function ProcessContractFcl(Request $request){
         //dd($request->all());
         $requestobj = $request->all();
-        try{
+        //try{
             $errors = 0;
             Excel::selectSheetsByIndex(0)
                 ->Load(\Storage::disk('UpLoadFile')
@@ -750,6 +750,7 @@ class ImportationController extends Controller
                                                    $currencyVal = $currenctwen->id;
                                                    break;
                                                }else {
+                                                   $curreExiBol = false;
                                                    $currencyVal = $currencyVal.'_E_E';
                                                }
                                            }
@@ -840,6 +841,7 @@ class ImportationController extends Controller
                                    if( $origExiBol == true 
                                       && $destiExitBol  == true
                                       && $carriExitBol  == true 
+                                      && $curreExiBol   == true 
                                       && $twentyExiBol  == true 
                                       && $fortyExiBol   == true 
                                       && $twentyExiBol  == true 
@@ -1046,7 +1048,7 @@ class ImportationController extends Controller
             $contract->update();
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
 
-        } catch(\Illuminate\Database\QueryException $e){
+        /*} catch(\Illuminate\Database\QueryException $e){
 
             Storage::delete($request->FileName);
             FileTmp::where('contract_id','=',$requestobj['Contract_id'])->delete();
@@ -1057,7 +1059,7 @@ class ImportationController extends Controller
             $requestobj->session()->flash('message.nivel', 'danger');
             $requestobj->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('importaion.fcl');
-        }
+        }*/
     }
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
