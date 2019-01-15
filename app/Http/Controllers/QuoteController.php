@@ -55,7 +55,7 @@ use Yajra\Datatables\Datatables;
 class QuoteController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
             $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
@@ -77,6 +77,116 @@ class QuoteController extends Controller
         }else{
             $company_user='';
             $currency_cfg = '';
+        }
+        if($request->ajax()){
+
+            $collection = Collection::make($quotes);
+            $collection->transform(function ($quote, $key) {
+                $quote['client_company'] = $quote->company;
+                $quote['owner'] = $quote->user;
+                $quote['currency'] = $quote->currencies->alphacode;
+                $quote['origin_ammount'] = $quote->originAmmount;
+                $quote['freight_ammount'] = $quote->freightAmmount;
+                $quote['destination_ammount'] = $quote->destinationAmmount;
+                $quote['client_contact'] = $quote->contact;
+                $quote['charges'] = $quote->packages;
+                if($quote['origin_harbor_id']!=''){
+                    $quote['origin_harbor_name'] = $quote->origin_harbor->display_name;
+                }
+                if($quote['origin_airport_id']!=''){
+                    $quote['origin_airport_name'] = $quote->origin_airport->display_name;
+                }
+                if($quote['destination_harbor_id']!=''){
+                    $quote['destination_harbor_name'] = $quote->destination_harbor->display_name;
+                }
+                if($quote['destination_airport_id']!=''){
+                    $quote['destination_airport_name'] = $quote->destination_airport->display_name;
+                }
+
+                if ($quote['pdf_language'] == 1) {
+                    $quote['pdf_language'] = 'English';
+                } elseif ($quote['pdf_language'] == 2) {
+                    $quote['pdf_language'] = 'Spanish';
+                } elseif ($quote['pdf_language']== 3) {
+                    $quote['pdf_language'] = 'Portuguese';
+                } else {
+                    $quote['pdf_language'] = 'English';
+                }
+
+                if ($quote['type_cargo'] == 1) {
+                    $quote['type_cargo'] = 'FCL';
+                } elseif ($quote['type_cargo'] == 2) {
+                    $quote['type_cargo'] = 'LCL';
+                } else {
+                    $quote['type_cargo'] = 'AIR';
+                }
+
+                if ($quote['delivery_type'] == 1) {
+                    $quote['delivery_type'] = 'Port to Port';
+                } elseif ($quote['delivery_type'] == 2) {
+                    $quote['delivery_type'] = 'Port to Door';
+                } elseif ($quote['delivery_type'] == 3) {
+                    $quote['delivery_type'] = 'Door to Port';
+                } else {
+                    $quote['delivery_type'] = 'Door to Door';
+                }
+
+                if ($quote['carrier_id'] != '') {
+                    $quote['carrier_name'] = $quote->carrier->name;
+                } else {
+                    $quote['carrier_name'] = '';
+                }
+
+                if ($quote['modality'] == 1) {
+                    $quote['modality'] = 'Export';
+                } else {
+                    $quote['modality'] = 'Import';
+                }
+
+                if ($quote['incoterm'] == 1) {
+                    $quote['incoterm'] = 'EWX';
+                } elseif ($quote['incoterm'] == 2) {
+                    $quote['incoterm'] = 'FAS';
+                } elseif ($quote['incoterm'] == 3) {
+                    $quote['incoterm'] = 'FCA';
+                } elseif ($quote['incoterm'] == 4) {
+                    $quote['incoterm'] = 'FOB';
+                } elseif ($quote['incoterm'] == 5) {
+                    $quote['incoterm'] = 'CFR';
+                } elseif ($quote['incoterm'] == 6) {
+                    $quote['incoterm'] = 'CIF';
+                } elseif ($quote['incoterm'] == 7) {
+                    $quote['incoterm'] = 'CIP';
+                } elseif ($quote['incoterm'] == 8) {
+                    $quote['incoterm'] = 'DAT';
+                } elseif ($quote['incoterm'] == 9) {
+                    $quote['incoterm'] = 'DAP';
+                } elseif ($quote['incoterm'] == 10) {
+                    $quote['incoterm'] = 'DDP';
+                }
+                unset($quote['company_id']);
+                unset($quote['contact_id']);
+                unset($quote['carrier_id']);
+                unset($quote['contact']);
+                unset($quote['company']);
+                unset($quote['currency_id']);
+                unset($quote['carrier']);
+                unset($quote['currencies']);
+                unset($quote['origin_harbor_id']);
+                unset($quote['destination_harbor_id']);
+                unset($quote['origin_airport_id']);
+                unset($quote['destination_airport_id']);
+                unset($quote['origin_harbor']);
+                unset($quote['destination_harbor']);
+                unset($quote['origin_airport']);
+                unset($quote['destination_airport']);
+                unset($quote['packages']);
+                unset($quote['user']);
+
+                return $quote;
+            });
+
+            return $collection;
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
     }
@@ -445,7 +555,7 @@ class QuoteController extends Controller
                 $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
                 foreach ($destination_ammount_charge as $key => $item) {
 
-                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_total_units[$key])
+                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
                         && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
 
                         $destination_ammount = new DestinationAmmount();

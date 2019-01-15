@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
   protected $commands = [
     Commands\UpdateCurrencies::class,
     Commands\UpdateCurrenciesEur::class,
+    'Laravel\Passport\Console\ClientCommand',
   ];
 
   /**
