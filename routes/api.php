@@ -24,3 +24,18 @@ Route::get('currency/{value}', function($value) {
 Route::get('airports/', function() {
     return \App\Airport::All();
 });
+
+Route::group(['prefix' => 'v1'], function () {
+    Route::post('login', 'ApiController@login');
+    Route::get('test', 'ApiController@test');
+
+    Route::group(['middleware' => 'auth:api'], function() {
+        Route::get('logout', 'ApiController@logout');
+        Route::get('user', 'ApiController@user');
+        Route::get('quotes', 'QuoteController@index');
+        Route::get('companies', 'CompanyController@index');
+        Route::get('contacts', 'ContactController@index');
+        Route::post('create/company', 'CompanyController@store');
+        Route::post('create/contact', 'ContactController@store');
+    });
+});
