@@ -5193,6 +5193,12 @@ class ImportationController extends Controller
         }
 
     }
+    
+    public function ValidateCompany($id){
+        $company = CompanyUser::find($id);
+        return response()->Json($company);
+    }
+    
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 

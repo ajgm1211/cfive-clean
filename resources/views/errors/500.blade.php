@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Be right back.</title>
+    <title>Error 500</title>
 
     <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
 
@@ -15,7 +15,7 @@
             width: 100%;
             /*color: #B0BEC5;*/
             display: table;
-            font-weight: 100;
+            font-weight: 900;
             font-family: 'Lato', sans-serif;
         }
         .container {
@@ -28,8 +28,13 @@
             display: inline-block;
         }
         .title {
-            font-size: 28px;
+            font-size: 26px;
+            font-weight: bold !important;
             margin-bottom: 40px;
+        }
+        .size-60{
+            font-size: 60px;
+            font-weight: bold !important;
         }
     </style>
 </head>
@@ -37,7 +42,11 @@
 <div class="container">
     <div class="content">
         <img class="img" src="{{asset('images/logo-icon.png')}}"/>
-        <div class="title"><p>><b>We’ll be back in a few minutes.</b></p</div>
+        <div class="title">
+            <h1 class="size-60">500</h1>
+            <p><b>An error has occurred while we were processing your request, please try again.</b></p>
+            <p><b>If it persists, contact the site administrator.</b></p>
+        </div>
     </div>
 </div>
 </body>

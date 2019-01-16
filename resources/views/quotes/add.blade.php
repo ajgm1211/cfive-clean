@@ -724,7 +724,7 @@
                                                                                     <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency select2-origin']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -832,7 +832,7 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="..." required>
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency','required'=>true]) }}              
+                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency select2-freight','required'=>true]) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -939,7 +939,7 @@
                                                                                     <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency select2-destination']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1189,6 +1189,9 @@
             <hr>
             <label class="title-quote title-quote size-14px">PDF Ammounts</label>
             {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
+            <hr>
+            <label class="title-quote title-quote size-14px">Carrier visibility</label>
+            {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
         </div>        
     </div>
 </div>
@@ -1212,6 +1215,15 @@
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+    $('.select2-origin').select2({
+        placeholder: "Currency"
+    });
+    $('.select2-freight').select2({
+        placeholder: "Currency"
+    });
+    $('.select2-destination').select2({
+        placeholder: "Currency"
+    });
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",

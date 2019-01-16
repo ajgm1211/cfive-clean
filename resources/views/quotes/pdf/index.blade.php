@@ -99,6 +99,7 @@
                     </table>
                 </div>
             </div>
+            @if($quote->hide_carrier==false)
             <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
@@ -112,6 +113,7 @@
                     @endif
                 </div>
             </div>
+            @endif
             <br>
             <div id="details" class="clearfix details">
                 <div class="company" style="color: #1D3A6E;">
