@@ -138,6 +138,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
    Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
    Route::get('RatesListFC/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
    Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
+   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
 
    // Rates
    Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
@@ -283,6 +284,8 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
    Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
    Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
    Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
+   Route::post('carrier/visibility', ['uses' => 'QuoteController@updateCarrierVisibility', 'as' => 'quotes.carrier.visibility']);
+   Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 

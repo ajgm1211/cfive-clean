@@ -473,6 +473,19 @@ $(document).on('click', '#create-quote', function (e) {
     $("#create-quote-back").show();
 });
 
+$(document).on('change', '#hide_carrier', function () {
+    $.ajax({
+        type: 'POST',
+        url: 'carrier/visibility',
+        data: {
+            'carrier_visibility': $("#hide_carrier").val(),
+            'quote_id': $("#quote-id").val()
+        },
+        success: function(data) {
+            //
+        }
+    });
+});
 
 //Btn next
 $(document).on('click', '#create-quote-back', function (e) {
@@ -739,6 +752,9 @@ $(document).on('click', '.addButtonOrigin', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
 });
 $(document).on('click', '.addButton', function (e) {
     var $template = $('#freight_ammounts'),
@@ -747,6 +763,11 @@ $(document).on('click', '.addButton', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
+    $('#freight_ammount_charge').attr("required");
+
 });
 
 $(document).on('click', '#delete-quote', function () {
@@ -784,6 +805,9 @@ $(document).on('click', '.addButtonDestination', function (e) {
             .removeClass('hide')
             .removeAttr('id')
             .insertAfter($template);
+        $clone.find("select").select2({
+            placeholder: "Currency"
+        });
 });
 
 $(document).on('click', '.removeOriginButton', function (e) {

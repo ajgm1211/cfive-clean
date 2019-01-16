@@ -6,7 +6,7 @@ use App\Harbor;
 use App\LocalCharge;
 use Illuminate\Support\Facades\DB;
 
-class HelperSurchargers {
+class HelperSurchargersExport {
    /**
      * @param int $user_id User-id
      * 
@@ -48,21 +48,20 @@ class HelperSurchargers {
          $calculationtype = $surcharge->calculation_type;
          $ammount         = $surcharge->ammount;
          $currency        = $surcharge->currency;
-            $arreglo = [
-               'id'                => $surcharge->id,
-               'surchargelb'       => $surchargeName,
-               'origin_portLb'     => $origin,
-               'destiny_portLb'    => $destiny,
-               'carrierlb'         => $carrier,
-               'typedestinylb'     => $typedestiny,
-               'ammount'           => $ammount,
-               'calculationtypelb' => $calculationtype,
-               'currencylb'        => $currency,
-               'operation'         => 2
-            ];
+         $arreglo = [
+            'surchargelb'       => $surchargeName,
+            'origin_portLb'     => $origin,
+            'destiny_portLb'    => $destiny,
+            'carrierlb'         => $carrier,
+            'typedestinylb'     => $typedestiny,
+            'ammount'           => $ammount,
+            'calculationtypelb' => $calculationtype,
+            'currencylb'        => $currency,
+            'operation'         => 2
+         ];
 
-            $surchargecollection->push($arreglo);
-         }
+         $surchargecollection->push($arreglo);
+      }
       return($surchargecollection);
    }
 }
