@@ -35,9 +35,9 @@ class ProcessContractFile implements ShouldQueue
   {
     $Ncontracts = NewContractRequest::find($this->id);
     $file  =$Ncontracts->namefile;
-    $s3 = \Storage::disk('s3_contracts');
+    $s3 = \Storage::disk('s3_upload');
     $filePath = $this->name;
     $file = \Storage::disk('UpLoadFile')->get($file); 
-    $s3->put($filePath, $file, 'public');
+    $s3->put('contracts/'.$filePath, $file, 'public');
   }
 }
