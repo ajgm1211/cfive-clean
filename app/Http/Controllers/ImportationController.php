@@ -810,6 +810,7 @@ class ImportationController extends Controller
                                    if( $origExiBol == true 
                                       && $destiExitBol  == true
                                       && $carriExitBol  == true 
+                                      && $curreExiBol   == true
                                       && $twentyExiBol  == true 
                                       && $fortyExiBol   == true 
                                       && $twentyExiBol  == true 
