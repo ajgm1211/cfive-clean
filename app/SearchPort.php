@@ -15,4 +15,12 @@ class SearchPort extends Model
     return $this->belongsTo('App\SearchRate');
   }
 
+  public function portOrig(){
+    return $this->belongsTo('App\Harbor','port_orig');
+  }
+  public function portDest(){
+    return $this->belongsTo('App\Harbor','port_dest');
+
+  }
+
 }
