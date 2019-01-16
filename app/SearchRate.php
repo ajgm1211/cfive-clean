@@ -12,5 +12,9 @@ class SearchRate extends Model
   public function search_ports(){
     return $this->hasMany('App\SearchPort');
   }
+  public function user()
+  {
+    return $this->belongsTo('App\User');
+  }
 
 }

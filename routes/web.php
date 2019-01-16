@@ -334,5 +334,7 @@ Route::prefix('impersonation')->group(function ($router) {
   $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
 });
 
+Route::resource('search', 'SearchController')->middleware('auth');
+
 Auth::routes();
 
