@@ -38,7 +38,8 @@ use App\EmailTemplate;
 use App\PackageLoad;
 use App\Mail\SendQuotePdf;
 use App\Quote;
-
+use App\SearchRate;
+use App\SearchPort;
 
 class QuoteAutomaticController extends Controller
 {
@@ -141,6 +142,30 @@ class QuoteAutomaticController extends Controller
     return $rateC;
   }
 
+  // Search save 
+
+  public function storeSearch($origPort,$destPort,$pickUpDate){
+
+    $searchRate = new SearchRate();
+    $searchRate->pick_up_date  = $pickUpDate;
+    $searchRate->user_id = \Auth::user()->company_user_id;
+    $searchRate->save();
+    foreach($origPort as $orig => $valueOrig)
+    {
+      foreach($destPort as $dest => $valueDest)
+      {
+        $detailport = new SearchPort();
+        $detailport->port_orig =$valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+        $detailport->port_dest = $valueDest;//$request->input('port_destlocal'.$contador.'.'.$dest);
+        $detailport->search_rate()->associate($searchRate);
+        $detailport->save();
+      }
+
+    }
+
+  }
+
+
   // COTIZACION AUTOMATICA
 
   public function listRate(Request $request){
@@ -165,6 +190,9 @@ class QuoteAutomaticController extends Controller
       $destiny_country[] = $infoDest[1];
     }
 
+    // Save search 
+
+    $this->storeSearch($origin_port,$destiny_port,$request->input('date'));
 
     $delivery_type = $request->input('delivery_type');
     //$typeCurrency = 'USD';
@@ -348,7 +376,7 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
+                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
                   $arregloInland = array_merge($arraymarkupT,$arregloInland);
                   $data[] =$arregloInland;
                 }
@@ -429,7 +457,7 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
+                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
                   $arregloInland = array_merge($arregloInland,$arraymarkupT);
                   $dataOrig[] = $arregloInland;
                 }
@@ -2114,6 +2142,7 @@ class QuoteAutomaticController extends Controller
       // SCHEDULES
       $data->setAttribute('schedulesFin',$schedulesFin);
     }
+    // dd($arreglo);
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
