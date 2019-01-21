@@ -67,6 +67,7 @@ $subtotalDestiny = 0;
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
                       <p><b>Validity: </b> {{   \Carbon\Carbon::parse( $info->contract->validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $info->contract->expire)->format('d M Y') }} </p>
+                      <p><b>Contract Ref: <span style="color: #CFAC6C">#{{$quote->contract_number}}</span></b></p>
                     </div>
                   </div>
                 </div>
