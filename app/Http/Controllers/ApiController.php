@@ -14,9 +14,9 @@ class ApiController extends Controller
 {
     public function index(){
 
-        if(\Auth::user()->hasRole('company')) {
+        if(\Auth::user()->type=='company') {
             $tokens = OauthClient::where('company_user_id', \Auth::user()->company_user_id)->get();
-        }else{
+        }else if(\Auth::user()->type=='admin') {
             $tokens = OauthClient::all();
         }
         return view('oauth.index',compact('tokens'));
