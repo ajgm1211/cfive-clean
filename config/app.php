@@ -174,6 +174,7 @@ return [
         App\Providers\RatesServiceProvider::class,
         App\Providers\SurchargersServiceProvider::class,
        // App\Providers\SurchargersExportServiceProvider::class,
+	Laravel\Passport\PassportServiceProvider::class,
 
 
 
