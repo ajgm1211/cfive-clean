@@ -404,5 +404,6 @@ Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
   Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl']);
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
+Route::resource('search', 'SearchController')->middleware('auth');
 Auth::routes();
 
