@@ -116,16 +116,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.85.1",
+            "version": "3.86.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "e232d117d0124ccb7059cd6db90f45dd23cda3f3"
+                "reference": "0f38d6b5625c4e6ea8891abd6a75e3d35e3ef465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e232d117d0124ccb7059cd6db90f45dd23cda3f3",
-                "reference": "e232d117d0124ccb7059cd6db90f45dd23cda3f3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0f38d6b5625c4e6ea8891abd6a75e3d35e3ef465",
+                "reference": "0f38d6b5625c4e6ea8891abd6a75e3d35e3ef465",
                 "shasum": ""
             },
             "require": {
@@ -195,7 +195,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-01-11 19:22:05"
+            "time": "2019-01-21 22:52:28"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -3421,16 +3421,16 @@
         },
         {
             "name": "pusher/pusher-php-server",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pusher/pusher-http-php.git",
-                "reference": "5eb4ea29db6d61484a64ae6b0c249aa9d1c84943"
+                "reference": "2279bcd21a608a76f9be1fe0675aa2dd1efb2fa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/5eb4ea29db6d61484a64ae6b0c249aa9d1c84943",
-                "reference": "5eb4ea29db6d61484a64ae6b0c249aa9d1c84943",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/2279bcd21a608a76f9be1fe0675aa2dd1efb2fa0",
+                "reference": "2279bcd21a608a76f9be1fe0675aa2dd1efb2fa0",
                 "shasum": ""
             },
             "require": {
@@ -3471,7 +3471,7 @@
                 "rest",
                 "trigger"
             ],
-            "time": "2019-01-03 11:08:11"
+            "time": "2019-01-18 12:10:21"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -3933,16 +3933,16 @@
         },
         {
             "name": "studio-42/elfinder",
-            "version": "2.1.44",
+            "version": "2.1.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Studio-42/elFinder.git",
-                "reference": "8dadc8cb94ffb3b932b8c7af4077b548062719a6"
+                "reference": "67799d42e7ee0afd3ed13e95f935694a8b3820d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/8dadc8cb94ffb3b932b8c7af4077b548062719a6",
-                "reference": "8dadc8cb94ffb3b932b8c7af4077b548062719a6",
+                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/67799d42e7ee0afd3ed13e95f935694a8b3820d1",
+                "reference": "67799d42e7ee0afd3ed13e95f935694a8b3820d1",
                 "shasum": ""
             },
             "require": {
@@ -3987,7 +3987,7 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
-            "time": "2018-12-15 10:55:18"
+            "time": "2019-01-14 03:59:31"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -6532,16 +6532,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.1",
+            "version": "7.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f"
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c23d78776ad415d5506e0679723cb461d71f488f",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7c89093bd00f7d5ddf0ab81dee04f801416b4944",
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944",
                 "shasum": ""
             },
             "require": {
@@ -6612,7 +6612,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-12 07:20:32"
+            "time": "2019-01-15 08:19:08"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

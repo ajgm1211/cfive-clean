@@ -107,6 +107,14 @@
                 </a>
               </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('contractslcl.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-file"></i>
+                  <span class="m-menu__link-text">
+                    Sea LCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{route('surcharges.index')}}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-list-1"></i>
                   <span class="m-menu__link-text">
@@ -139,6 +147,14 @@
                   <i class="m-menu__link-icon la la-globe"></i>
                   <span class="m-menu__link-text">
                     Sea Freight FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('globalchargeslcl.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-globe"></i>
+                  <span class="m-menu__link-text">
+                    Sea  LCL
                   </span>
                 </a>
               </li>
@@ -263,7 +279,7 @@
               </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
-                  <i class="m-menu__link-icon flaticon-user-settings"></i>
+                  <i class="m-menu__link-icon flaticon-business"></i>
                   <span class="m-menu__link-text">
                     User companies
                   </span>
@@ -407,11 +423,6 @@
             </div>
           </div>
         </li>
-
-
-
-
-
         <!-- /////////////////////////////////////////////////////////////////// -->
       </ul>
     </div>
