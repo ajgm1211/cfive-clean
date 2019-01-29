@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
   protected $commands = [
     Commands\UpdateCurrencies::class,
     Commands\UpdateCurrenciesEur::class,
+    'Laravel\Passport\Console\ClientCommand',
   ];
 
   /**
@@ -31,7 +32,7 @@ class Kernel extends ConsoleKernel
       ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
     $schedule->command('command:updateCurrenciesEur')
       ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
-    $schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')->withoutOverlapping();
+    $schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
    // Comandos para backups 
     $schedule->command('backup:clean')->daily()->at('01:40');
     $schedule->command('backup:run')->daily()->at('02:00');
