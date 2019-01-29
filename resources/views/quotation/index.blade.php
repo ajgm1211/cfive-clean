@@ -190,7 +190,9 @@
                       <div class="col-md-4">
                         <div class="progress m-progress--sm">
                           <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
+                        </div><br>
+                        Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
+        
                       </div>
                       <div class="col-md-4">
                         <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
@@ -206,7 +208,8 @@
 
                   <td width = '20%'>
 
-                    <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
+                    <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>                  
+
                   </td>
                   <td width = '20%'>     
                     <div class="m-widget5" style="float:right;">
@@ -391,7 +394,7 @@
                 @if((!empty($inlandDestiny)) || (!empty($inlandOrigin)))
                 <tr id="inlands{{$loop->iteration}}" hidden="true" >
                   <td colspan="6">
-                           <span class="darkblue cabezeras">Inland Charges</span>
+                    <span class="darkblue cabezeras">Inland Charges</span>
                     <hr>
                     <table class="table table-hover">
                       <tr class="thead-light">
@@ -588,7 +591,7 @@
                 <span>Manual Quote </span>
               </span>
             </a>
-          <a  class="btn btn-sm btn-primary m-btn m-btn--icon" href="{{route('quotes.automatic')}}">
+            <a  class="btn btn-sm btn-primary m-btn m-btn--icon" href="{{route('quotes.automatic')}}">
               <span style="color: white;">  
                 <span>
                   Automatic Quote

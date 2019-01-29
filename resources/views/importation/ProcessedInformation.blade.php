@@ -55,6 +55,17 @@
                                 <div class="col-md-12">
                                     We will notify you when the file has been processed
                                 </div>
+                                <br>
+                                <div class="col-md-12">
+                                    <a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                        Failed Rates
+                                        <i class="fa flaticon-tool-1"></i>
+                                    </a>
+                                    <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                        Failed Surcharge
+                                        <i class="fa flaticon-tool-1"></i>
+                                    </a>
+                                </div>
                             </div>
                         </center>
                     </div>
