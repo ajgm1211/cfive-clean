@@ -41,8 +41,6 @@ class HelperSurchargers {
 
          // Carrier ----------------
          $carrier = str_replace(',',' | ',$surcharge->carrier);
-
-
          $surchargeName   = $surcharge->surcharge;
          $typedestiny     = $surcharge->changetype;
          $calculationtype = $surcharge->calculation_type;
