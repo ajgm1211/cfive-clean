@@ -10,7 +10,7 @@
                                 <div class="m-login__signin">
                                     <div class="m-login__head">
                                         <h3 class="m-login__title">
-                                            Welcome to CargofivE
+                                            Welcome to Cargofive
                                         </h3>
                                     </div>
                                     @if (session('status'))
