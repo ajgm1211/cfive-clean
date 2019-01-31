@@ -142,7 +142,8 @@ class NewContractRequestsController extends Controller
     $extObj     = new \SplFileInfo($Ncontract->namefile);
     $ext        = $extObj->getExtension();
     $name       = $company->name.'_'.$now.'.'.$ext;
-    return Storage::download($Ncontract->namefile,$name);
+    //return Storage::download($Ncontract->namefile,$name);
+    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
   }
 
 
