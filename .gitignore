@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /storage/*.key
+/storage/public
 /vendor
 /.idea
 /.vscode
