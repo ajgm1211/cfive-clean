@@ -173,6 +173,8 @@ return [
         App\Providers\HarborsServiceProvider::class,
         App\Providers\RatesServiceProvider::class,
         App\Providers\SurchargersServiceProvider::class,
+       // App\Providers\SurchargersExportServiceProvider::class,
+	Laravel\Passport\PassportServiceProvider::class,
 
 
 
@@ -234,6 +236,7 @@ return [
         'PrvHarbor' => App\Helpers\Helpharbors::class,
         'PrvRates' => App\Helpers\Rates\HelperRates::class,
         'PrvSurchargers' => App\Helpers\Surchargers\HelperSurchargers::class,
+        //'PrvSurchargersExport' => App\Helpers\Surchargers\HelperSurchargersExport::class,
 
     ],
 

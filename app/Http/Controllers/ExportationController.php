@@ -7,9 +7,11 @@ use PrvRates;
 use DataTime;
 use App\Contract;
 use PrvSurchargers;
+//use PrvSurchargersExport;
 use Illuminate\Http\Request;
 use App\Jobs\ExportContractJob;
 use App\Mail\ExportContractMail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ExportationController extends Controller
@@ -43,7 +45,7 @@ class ExportationController extends Controller
          $contract = Contract::find($id);
          $nameFile = str_replace([' '],'_',$now.'_'.$contract['name']);
          //dd(storage_path('RequestFiles').'/15112018_152304_Maersk_text_Export.xlsx');
-         Excel::create($nameFile, function($excel) use($id,$contract) {
+         $myFile = Excel::create($nameFile, function($excel) use($id,$contract,$nameFile) {
             $excel->sheet('Contract', function($sheet) use($contract) {
                //dd($contract);
                $sheet->cells('A1:D1', function($cells) {
@@ -194,20 +196,36 @@ class ExportationController extends Controller
                }
             });
 
-         })->download('xlsx');
+         });
+
+         $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+         $response =  array(
+            'actt' => 1,
+            'name' => $nameFile.'.xlsx', //no extention needed
+            'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+         );
+         return response()->json($response);
+
       } else {
          $auth = \Auth::user()->toArray();
          ExportContractJob::dispatch($id,$auth);
-         $request->session()->flash('message.nivel', 'success');
+         /*$request->session()->flash('message.nivel', 'success');
          $request->session()->flash('message.content', 'The export is being processed. We will send it to your email.');
-         return redirect()->route('contracts.edit',setearRouteKey($id));
+         return redirect()->route('contracts.edit',setearRouteKey($id));*/
+         $response =  array(
+            'actt' => 2
+         );
+         return response()->json($response);
       }
    }
 
 
    public function edit($id)
    {
-      //
+      //$data1 = DB::select('call proc_localchar('.$id.')');
+      
+      $data1 = PrvSurchargers::get_surchargers($id);
+      dd($data1);
    }
 
    public function update(Request $request, $id)

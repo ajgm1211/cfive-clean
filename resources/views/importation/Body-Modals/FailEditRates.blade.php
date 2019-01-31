@@ -8,12 +8,12 @@
         <div class="form-group m-form__group row"> 
             <div class="col-lg-4">
                 {!! Form::label('origin_port', 'Origin Port',['style' => $failrates['classorigin']]) !!}
-                {{ Form::select('origin_port', $harbor,$failrates['origin_port'],['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;']) }} 
+                {{ Form::select('origin_port[]', $harbor,$failrates['origin_port'],['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;','multiple'=>'multiple']) }} 
             </div>
             <div class="col-lg-4">
                 {!! Form::label('destination_port', 'Destination Port',['style' => $failrates['classdestiny']]) !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('destiny_port', $harbor,$failrates['destiny_port'],['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
+                    {{ Form::select('destiny_port[]', $harbor,$failrates['destiny_port'],['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;','multiple'=>'multiple']) }}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-info-circle"></i>

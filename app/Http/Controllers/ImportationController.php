@@ -415,7 +415,8 @@ class ImportationController extends Controller
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('importation.ImporContractFcl',compact('harbor','carrier','companysUser'));
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        return view('importation.ImporContractFcl',compact('harbor','carrier','companysUser','typedestiny'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -423,23 +424,27 @@ class ImportationController extends Controller
         //dd($request->all());
         $now = new \DateTime();
         $now = $now->format('dmY_His');
-        $type       = $request->type;
+        $type           = $request->type;
         $carrierVal     = $request->carrier;
+        $typedestinyVal = $request->typedestiny;
         $destinyArr     = $request->destiny;
         $originArr      = $request->origin;
         $CompanyUserId  = $request->CompanyUserId;
         $carrierBol     = false;
         $destinyBol     = false;
         $originBol      = false;
+        $typedestinyBol = false;
         $fortynorBol    = false;
         $fortyfiveBol   = false;
-        $data= collect([]);
-        $harbor  = harbor::all()->pluck('display_name','id');
-        $carrier = carrier::all()->pluck('name','id');
-        // try {
-        $file = $request->file('file');
-        $ext = strtolower($file->getClientOriginalExtension());
-        $validator = \Validator::make(
+        $filebool       = false;
+        $data           = collect([]);
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+
+        $file           = $request->file('file');
+        $ext            = strtolower($file->getClientOriginalExtension());
+        $validator      = \Validator::make(
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
@@ -450,23 +455,31 @@ class ImportationController extends Controller
             return redirect()->route('contracts.edit',$request->contract_id);
         }
         //obtenemos el nombre del archivo
-        $nombre = $file->getClientOriginalName();
-        $nombre = $now.'_'.$nombre;
-        \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
-        $contract     = new Contract();
-        $contract->name             = $request->name;
-        $contract->number           = $request->number;
-        $validity                   = explode('/',$request->validation_expire);
-        $contract->validity         = $validity[0];
-        $contract->expire           = $validity[1];
-        $contract->status           = 'incomplete';
-        $contract->company_user_id  = $CompanyUserId;
-        $contract->save(); 
-        $Contract_id = $contract->id;
-        $fileTmp = new FileTmp();
-        $fileTmp->contract_id = $Contract_id;
-        $fileTmp->name_file   = $nombre;
-        $fileTmp->save(); //*/
+        $nombre     = $file->getClientOriginalName();
+        $nombre     = $now.'_'.$nombre;
+        $filebool   = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+
+        if($filebool){
+            $contract   = new Contract();
+            $contract->name             = $request->name;
+            $contract->number           = $request->number;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->status           = 'incomplete';
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->save(); 
+
+            $Contract_id = $contract->id;
+            $fileTmp    = new FileTmp();
+            $fileTmp->contract_id = $Contract_id;
+            $fileTmp->name_file   = $nombre;
+            $fileTmp->save(); //*/
+        } else {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'Error storage:link!!');
+            return redirect()->route('contracts.edit',$request->contract_id);
+        }
 
         $statustypecurren = $request->valuesCurrency;
         $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
@@ -499,6 +512,7 @@ class ImportationController extends Controller
             array_push($targetsArr,"Currency");
         }
 
+        // ------- ORIGIN -------------------------
         if($request->DatOri == false){
             array_push($targetsArr,'Origin');
         }
@@ -506,65 +520,81 @@ class ImportationController extends Controller
             $originBol = true;
             $originArr;
         }
+
+        // ------- DESTINY ------------------------
         if($request->DatDes == false){
             array_push($targetsArr,'Destiny');
         } else {
             $destinyArr;
             $destinyBol = true;
         }
+
+        // ------- CARRIER ------------------------
         if($request->DatCar == false){
             array_push($targetsArr,'Carrier');
         } else {
             $carrierVal;
             $carrierBol = true;
         }
-        //dd($targetsArr);
-        //  dd($data);
+
+        // ------- TYPE DESTINY -------------------
+        if($type == 2){
+            if($request->DatTypeDes == false){
+                array_push($targetsArr,'Type Destiny');
+            } else {
+                $typedestinyVal;
+                $typedestinyBol = true;
+            }
+        }
+
         $coordenates = collect([]);
-        //ini_set('max_execution_time', 300);
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
                    ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->noHeading = true;
                        $reader->ignoreEmpty();
                        $reader->takeRows(2);
-                       // foreach($reader->first() as $read){
+
                        $read = $reader->first();
                        $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
                        for($i=0;$i<count($reader->first());$i++){
                            $coordenates->push($columna[$i].' '.$read[$i]);
                        }
-                       /*break;
-                       }*/
-
                    });
+
         $boxdinamy = [
-            'existorigin'     => $originBol,
-            'origin'          => $originArr,
-            'existdestiny'    => $destinyBol,
-            'destiny'         => $destinyArr,
-            'existcarrier'    => $carrierBol,
-            'carrier'         => $carrierVal,
-            'Contract_id'     => $Contract_id,
-            'number'          => $request->number,
-            'name'            => $request->name,
-            'existfortynor'   => $fortynorBol,
-            'fortynor'        => 0,
-            'existfortyfive'  => $fortyfiveBol,
-            'fortyfive'       => 0,
-            'fileName'        => $nombre,
-            'validatiion'     => $request->validation_expire,
+            'existorigin'       => $originBol,
+            'origin'            => $originArr,
+            'existdestiny'      => $destinyBol,
+            'destiny'           => $destinyArr,
+            'existcarrier'      => $carrierBol,
+            'carrier'           => $carrierVal,            
+            'existtypedestiny'  => $typedestinyBol,
+            'typedestiny'       => $typedestinyVal,
+            'Contract_id'       => $Contract_id,
+            'number'            => $request->number,
+            'name'              => $request->name,
+            'existfortynor'     => $fortynorBol,
+            'fortynor'          => 0,
+            'existfortyfive'    => $fortyfiveBol,
+            'fortyfive'         => 0,
+            'fileName'          => $nombre,
+            'validatiion'       => $request->validation_expire,
         ];
         $data->push($boxdinamy);
         $countTarges = count($targetsArr);
         //dd($data);
 
-        return view('importation.ContractFclProcess',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
-        /*}catch(\Exception $e){
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'Error with the archive');
-            return redirect()->route('importaion.fcl');
-        }//*/
+        return view('importation.ContractFclProcess',compact('harbor',
+                                                             'data',
+                                                             'type',
+                                                             'carrier',
+                                                             'targetsArr',
+                                                             'coordenates',
+                                                             'countTarges',
+                                                             'statustypecurren',
+                                                             'CompanyUserId',
+                                                             'typedestiny'));
     }
 
     // * proccesa solo cuando son rates --------------------------------------------------
@@ -1041,10 +1071,11 @@ class ImportationController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
-        return redirect()->route('redirect.Processed.Information');
+        $id = $request['Contract_id'];
+        return redirect()->route('redirect.Processed.Information',$id);
     }
-    public function redirectProcessedInformation(){
-        return view('importation.ProcessedInformation');
+    public function redirectProcessedInformation($id){
+        return view('importation.ProcessedInformation',compact('id'));
     }
 
     // Rates ----------------------------------------------------------------------------
@@ -1477,21 +1508,27 @@ class ImportationController extends Controller
         return view('importation.Body-Modals.FailEditRates', compact('failrates','harbor','carrier','currency'));
     }
     public function CreateRates(Request $request, $id){
+        $origins = $request->origin_port;
+        $destinis = $request->destiny_port;
+        foreach($origins as $origin){
+            foreach($destinis as $destiny){
+                if($origin != $destiny){
+                    $return = Rate::create([
+                        "origin_port"  => $origin,
+                        "destiny_port" => $destiny,
+                        "carrier_id"   => $request->carrier_id,
+                        "contract_id"  => $request->contract_id,
+                        "twuenty"      => (int)$request->twuenty,
+                        "forty"        => (int)$request->forty,
+                        "fortyhc"      => (int)$request->fortyhc,
+                        "fortynor"     => (int)$request->fortynor,
+                        "fortyfive"    => (int)$request->fortyfive,
+                        "currency_id"  => $request->currency_id
+                    ]);
+                }
+            }
+        }
 
-
-
-        $return = Rate::create([
-            "origin_port"  => $request->origin_port,
-            "destiny_port" => $request->destiny_port,
-            "carrier_id"   => $request->carrier_id,
-            "contract_id"  => $request->contract_id,
-            "twuenty"      => (int)$request->twuenty,
-            "forty"        => (int)$request->forty,
-            "fortyhc"      => (int)$request->fortyhc,
-            "fortynor"     => (int)$request->fortynor,
-            "fortyfive"    => (int)$request->fortyfive,
-            "currency_id"  => $request->currency_id
-        ]);
         $failrate = FailRate::find($id);
         $failrate->forceDelete();
         $request->session()->flash('message.content', 'Updated Rate' );
@@ -3983,7 +4020,9 @@ class ImportationController extends Controller
         $ammountA           =  explode("_",$failsurcharge['ammount']);
         $currencyA          =  explode("_",$failsurcharge['currency_id']);
         $carrierA           =  explode("_",$failsurcharge['carrier_id']);
+        $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
+        // -------------- ORIGIN -------------------------------------------------------------
         $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
             ->first();
         $originAIn = $originOb['id'];
@@ -3994,6 +4033,8 @@ class ImportationController extends Controller
             //$originA = $originA[0].' (error)';
             $classdorigin='color:red';
         }
+
+        // -------------- DESTINATION --------------------------------------------------------
         $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
             ->first();
         $destinationAIn = $destinationOb['id'];
@@ -4005,6 +4046,7 @@ class ImportationController extends Controller
             $classddestination='color:red';
         }
 
+        // -------------- SURCHARGE ....-----------------------------------------------------
         $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
         $surcharAin  = $surchargeOb['id'];
         $surchargeC = count($surchargeA);
@@ -4015,6 +4057,8 @@ class ImportationController extends Controller
             //$surchargeA         = $surchargeA[0].' (error)';
             $classsurcharger    = 'color:red';
         }
+
+        // -------------- CARRIER -----------------------------------------------------------
         $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
         $carrAIn = $carrierOb['id'];
         $carrierC = count($carrierA);
@@ -4025,6 +4069,8 @@ class ImportationController extends Controller
             //$carrierA       = $carrierA[0].' (error)';
             $classcarrier   ='color:red';
         }
+
+        // -------------- CALCULATION TYPE --------------------------------------------------
         $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
         $calculationtypeAIn = $calculationtypeOb['id'];
         $calculationtypeC   = count($calculationtypeA);
@@ -4035,6 +4081,8 @@ class ImportationController extends Controller
             //$calculationtypeA       = $calculationtypeA[0].' (error)';
             $classcalculationtype   = 'color:red';
         }
+
+        // -------------- AMMOUNT -----------------------------------------------------------
         $ammountC = count($ammountA);
         if($ammountC <= 1){
             $ammountA = $failsurcharge['ammount'];
@@ -4043,6 +4091,8 @@ class ImportationController extends Controller
             $ammountA       = $ammountA[0].' (error)';
             $classammount   = 'color:red';
         }
+
+        // -------------- CURRENCY ----------------------------------------------------------
         $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
         $currencyAIn  = $currencyOb['id'];
         $currencyC    = count($currencyA);
@@ -4053,7 +4103,17 @@ class ImportationController extends Controller
             $currencyA      = $currencyA[0].' (error)';
             $classcurrency  = 'color:red';
         }
-        $typedestinyLB    = TypeDestiny::find($failsurcharge['typedestiny_id']);
+
+        // -------------- TYPE DESTINY -----------------------------------------------------
+        //dd($failsurcharge['typedestiny_id']);
+        $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
+        if(count($typedestinyA) <= 1){
+            $typedestinyLB = $typedestinyobj['id'];
+        }
+        else{
+            $typedestinyLB      = $typedestinyA[0].' (error)';
+            $classtypedestiny   = 'color:red';
+        }
 
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -4064,7 +4124,7 @@ class ImportationController extends Controller
             'destiny_port'          => $destinationAIn,
             'carrier'               => $carrAIn,
             'contract_id'           => $failsurcharge['contract_id'],
-            'typedestiny'           => $typedestinyLB['id'],
+            'typedestiny'           => $typedestinyLB,
             'ammount'               => $ammountA,
             'calculationtype'       => $calculationtypeAIn,
             'currency'              => $currencyAIn,
@@ -4385,6 +4445,9 @@ class ImportationController extends Controller
                 $ammountA           =  explode("_",$failsurcharge['ammount']);
                 $currencyA          =  explode("_",$failsurcharge['currency_id']);
                 $carrierA           =  explode("_",$failsurcharge['carrier_id']);
+                $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
+
+                // -------------- ORIGIN -------------------------------------------------------------
                 $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
                 $originAIn = $originOb['id'];
@@ -4395,6 +4458,8 @@ class ImportationController extends Controller
                     $originA = $originA[0].' (error)';
                     $classdorigin='color:red';
                 }
+
+                // -------------- DESTINY ------------------------------------------------------------
                 $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
                     ->first();
                 $destinationAIn = $destinationOb['id'];
@@ -4405,6 +4470,9 @@ class ImportationController extends Controller
                     $destinationA = $destinationA[0].' (error)';
                     $classddestination='color:red';
                 }
+
+                // -------------- SURCHARGE -----------------------------------------------------------
+
                 $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
                 $surcharAin  = $surchargeOb['id'];
                 $surchargeC = count($surchargeA);
@@ -4415,6 +4483,8 @@ class ImportationController extends Controller
                     $surchargeA         = $surchargeA[0].' (error)';
                     $classsurcharger    = 'color:red';
                 }
+
+                // -------------- CARRIER -------------------------------------------------------------
                 $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
                 $carrAIn = $carrierOb['id'];
                 $carrierC = count($carrierA);
@@ -4425,6 +4495,8 @@ class ImportationController extends Controller
                     $carrierA       = $carrierA[0].' (error)';
                     $classcarrier   ='color:red';
                 }
+
+                // -------------- CALCULATION TYPE ----------------------------------------------------
                 $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
                 $calculationtypeAIn = $calculationtypeOb['id'];
                 $calculationtypeC   = count($calculationtypeA);
@@ -4435,6 +4507,8 @@ class ImportationController extends Controller
                     $calculationtypeA       = $calculationtypeA[0].' (error)';
                     $classcalculationtype   = 'color:red';
                 }
+
+                // -------------- AMMOUNT ------------------------------------------------------------
                 $ammountC = count($ammountA);
                 if($ammountC <= 1){
                     $ammountA = $failsurcharge->ammount;
@@ -4443,6 +4517,8 @@ class ImportationController extends Controller
                     $ammountA       = $ammountA[0].' (error)';
                     $classammount   = 'color:red';
                 }
+
+                // -------------- CURRENCY ----------------------------------------------------------
                 $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
                 $currencyAIn  = $currencyOb['id'];
                 $currencyC    = count($currencyA);
@@ -4453,7 +4529,17 @@ class ImportationController extends Controller
                     $currencyA      = $currencyA[0].' (error)';
                     $classcurrency  = 'color:red';
                 }
-                $typedestinyLB    = TypeDestiny::where('description',$failsurcharge['typedestiny_id'])->first();
+                // -------------- TYPE DESTINY -----------------------------------------------------
+                //dd($failsurcharge['typedestiny_id']);
+                $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
+                if(count($typedestinyA) <= 1){
+                    $typedestinyLB = $typedestinyobj['description'];
+                }
+                else{
+                    $typedestinyLB      = $typedestinyA[0].' (error)';
+                    $classcurrency  = 'color:red';
+                }
+
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 $arreglo = [
@@ -4462,7 +4548,7 @@ class ImportationController extends Controller
                     'origin_portLb'         => $originA,
                     'destiny_portLb'        => $destinationA,
                     'carrierlb'             => $carrierA,
-                    'typedestinylb'         => $typedestinyLB['description'],
+                    'typedestinylb'         => $typedestinyLB,
                     'ammount'               => $ammountA,
                     'calculationtypelb'     => $calculationtypeA,
                     'currencylb'            => $currencyA,
@@ -5193,6 +5279,12 @@ class ImportationController extends Controller
         }
 
     }
+
+    public function ValidateCompany($id){
+        $company = CompanyUser::find($id);
+        return response()->Json($company);
+    }
+
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 

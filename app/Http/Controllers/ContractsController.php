@@ -44,9 +44,13 @@ class ContractsController extends Controller
 
   public function index()
   {
-    $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
-    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-
+    if(\Auth::user()->type=='admin'){
+      $arreglo = Contract::with('rates')->get();
+      $contractG = Contract::all();
+    }else{
+      $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+      $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+    }
 
     return view('contracts/index', compact('arreglo','contractG'));
   }
@@ -143,7 +147,7 @@ class ContractsController extends Controller
     $contador = 1;
     $contadorRate = 1;
 
-    // For each de los rates 
+    // For each de los rates
     foreach($details as $key => $value)
     {
 
@@ -154,8 +158,8 @@ class ContractsController extends Controller
         foreach($rateDest as $Rdest => $Destvalue)
         {
           $rates = new Rate();
-          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig); 
-          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest); 
+          $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
+          $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
           $rates->carrier_id = $request->input('carrier_id.'.$key);
           $rates->twuenty = $request->input('twuenty.'.$key);
           $rates->forty = $request->input('forty.'.$key);
@@ -174,7 +178,7 @@ class ContractsController extends Controller
 
     foreach($detailscharges as $key2 => $value)
     {
-      $calculation_type = $request->input('calculationtype'.$contador); 
+      $calculation_type = $request->input('calculationtype'.$contador);
       if(!empty($calculation_type)){
 
         foreach($calculation_type as $ct => $ctype)
@@ -329,7 +333,11 @@ class ContractsController extends Controller
           <i class='la la-edit'></i>
           </a>
             <a  data-local-id='$data[id]'    class='m_sweetalert_demo_8  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
-          <i id='rm_l' class='la la-times-circle'></i>
+          <i id='rm_l' class='la la-times-circle'></i></a>
+
+           <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Duplicate '  onclick='AbrirModal(\"duplicateLocalCharge\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
   }// local charges en edit
@@ -347,6 +355,9 @@ class ContractsController extends Controller
              <a id='delete-rate' data-rate-id='$data[id]' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' title='Delete' >
                     <i  class='la la-times-circle'></i>
                     </a>
+                    <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Duplicate'  onclick='AbrirModal(\"duplicateRate\",$data[id])'>
+          <i class='la la-plus'></i>
+          </a>
 
         ";
       }) ->setRowId('id')->rawColumns(['options'])->make(true);
@@ -458,7 +469,7 @@ class ContractsController extends Controller
     $companies = $request->input('companies');
     $users = $request->input('users');
     $contador = 1;
-    // for each rates 
+    // for each rates
     foreach($details as $key => $value)
     {
       if(is_numeric($request->input('twuenty.'.$key))) {
@@ -612,6 +623,17 @@ class ContractsController extends Controller
     return redirect()->back()->with('editRate','true');
   }
 
+  public function duplicateRates($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $rates = Rate::find($id);
+    return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency'));
+  }
+
   public function addLocalChar($id){
     $objcarrier = new Carrier();
     $objharbor = new Harbor();
@@ -724,7 +746,7 @@ class ContractsController extends Controller
 
     $carrier = $request->input('carrier_id');
     $carrier = $this->arrayAll($carrier,$carrierAllid);     // Consultar el all en carrier
-    
+
     $deleteCarrier = LocalCharCarrier::where("localcharge_id",$id);
     $deleteCarrier->delete();
     $deletePort = LocalCharPort::where("localcharge_id",$id);
@@ -777,7 +799,24 @@ class ContractsController extends Controller
     return redirect()->back()->with('localchar','true')->with('activeS','active');
   }
 
+  public function duplicateLocalChar($id){
+    $objcarrier = new Carrier();
+    $objharbor = new Harbor();
+    $objcurrency = new Currency();
+    $objtypedestiny = new TypeDestiny();
+    $objcalculation = new CalculationType();
+    $objsurcharge = new Surcharge();
+    $countries = Country::pluck('name','id');
 
+    $calculationT = $objcalculation->all()->pluck('name','id');
+    $typedestiny = $objtypedestiny->all()->pluck('description','id');
+    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = $objharbor->all()->pluck('display_name','id');
+    $carrier = $objcarrier->all()->pluck('name','id');
+    $currency = $objcurrency->all()->pluck('alphacode','id');
+    $localcharges = LocalCharge::find($id);
+    return view('contracts.duplicateLocalCharge', compact('localcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
   public function destroy($id)
   {
     $rate = Rate::find($id);
@@ -799,7 +838,7 @@ class ContractsController extends Controller
   }
   public function destroyContract($id){
 
-    try { 
+    try {
 
       $FileTmp = FileTmp::where('contract_id',$id)->first();
       if(count($FileTmp) > 0){
@@ -959,18 +998,18 @@ class ContractsController extends Controller
       else{
         $currencyA = $currencyA[0].' (error)';
         $classcurrency='color:red';
-      }        
+      }
       $colec = ['rate_id'         =>  $failrate->id,
                 'contract_id'     =>  $id,
                 'origin_portLb'   =>  $originA,
-                'origin_port'     =>  $originAIn,   
+                'origin_port'     =>  $originAIn,
                 'destiny_portLb'  =>  $destinationA,
-                'destiny_port'    =>  $destinationAIn,     
+                'destiny_port'    =>  $destinationAIn,
                 'carrierLb'       =>  $carrierA,
                 'carrierAIn'      =>  $carrAIn,
-                'twuenty'         =>  $twuentyA,      
-                'forty'           =>  $fortyA,      
-                'fortyhc'         =>  $fortyhcA,  
+                'twuenty'         =>  $twuentyA,
+                'forty'           =>  $fortyA,
+                'fortyhc'         =>  $fortyhcA,
                 'currency_id'     =>  $currencyA,
                 'currencyAIn'     =>  $pruebacurre,
                 'classorigin'     =>  $classdorigin,
@@ -1092,7 +1131,7 @@ class ContractsController extends Controller
         'origin_portLb'         => $originA,
         'origin_port'           => $originAIn,
         'destiny_portLb'        => $destinationA,
-        'destiny_port'          => $destinationAIn, 
+        'destiny_port'          => $destinationAIn,
         'carrierlb'             => $carrierA,
         'carrier_id'            => $carrAIn,
         'typedestinylb'         => $typedestinyLB['description'],
