@@ -12,7 +12,7 @@
          <div class="m-portlet__head-caption">
             <div class="m-portlet__head-title">
                <h3 class="m-portlet__head-text">
-                  Importation Request FCL
+                  Importation Request LCL
                </h3>
             </div>
          </div>
@@ -112,7 +112,7 @@
                               <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
                            </td>
                            <td>
-                              <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
+                              <a href="{{route('RequestImportationLcl.show',$Ncontract->id)}}" title="Download File">
                                  <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                               </a>
                               &nbsp; &nbsp;  <!--
@@ -192,7 +192,7 @@
 @parent
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="application/x-javascript" src="/js/RequestContracts/Request.Index.Status.js"></script>
+<script type="application/x-javascript" src="/js/RequestContracts/RequestLcl.Index.Status.js"></script>
 <script>
 
    $(document).on('click','.eliminarrequest',function(e){
@@ -210,7 +210,7 @@
       }).then(function(result){
          if (result.value) {
 
-            url='{!! route("destroy.Request",":id") !!}';
+            url='{!! route("destroy.RequestLcl",":id") !!}';
             url = url.replace(':id', id);
             // $(this).closest('tr').remove();
             $.ajax({

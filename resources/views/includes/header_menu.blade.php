@@ -265,7 +265,15 @@
                 <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>
                   <span class="m-menu__link-text">
-                    Request Importation
+                    Request Importation FCL
+                  </span>
+                </a>
+              </li>
+               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Importation LCL
                   </span>
                 </a>
               </li>
