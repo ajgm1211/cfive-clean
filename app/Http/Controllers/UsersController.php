@@ -17,6 +17,7 @@ use App\VerifyUser;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
+use Intercom\IntercomClient;
 
 class UsersController extends Controller
 {
@@ -76,6 +77,20 @@ class UsersController extends Controller
     ]);
 
     \Mail::to($user->email)->send(new VerifyMail($user));
+
+    // INTERCOM CLIENTE
+
+    $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=');
+    $client->users->create([
+      "email" => $user->email,
+      "user_id" => $user->id,
+      "name" => $user->name,
+      "companies" => [
+        [
+          "company_id" => $user->company_user_id,
+        ]
+      ]
+    ]);
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
