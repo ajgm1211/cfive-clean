@@ -334,8 +334,7 @@ class ContractsController extends Controller
           </a>
             <a  data-local-id='$data[id]'    class='m_sweetalert_demo_8  m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='delete' >
           <i id='rm_l' class='la la-times-circle'></i></a>
-
-           <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Duplicate '  onclick='AbrirModal(\"duplicateLocalCharge\",$data[id])'>
+          <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Duplicate '  onclick='AbrirModal(\"duplicateLocalCharge\",$data[id])'>
           <i class='la la-plus'></i>
           </a>
         ";
@@ -463,6 +462,9 @@ class ContractsController extends Controller
     $contract->expire = $validation[1];
     $contract->update($requestForm);
 
+    $companies = $request->input('companies');
+    $users = $request->input('users');
+
     /*
     $details = $request->input('origin_id');
     $detailscharges =  $request->input('localcurrency_id');//  $request->input('ammount');
@@ -578,9 +580,6 @@ class ContractsController extends Controller
     return view('contracts.addRates', compact('harbor','carrier','currency','id'));
   }
   public function storeRates(Request $request,$id){
-
-
-
 
     $rateOrig = $request->input('origin_port');
     $rateDest = $request->input('destiny_port');

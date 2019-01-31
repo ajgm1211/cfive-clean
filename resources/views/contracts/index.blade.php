@@ -364,30 +364,6 @@
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
          ] ,
-         "autoWidth": true,
-
-         buttons: [
-            {
-               extend: 'copyHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'excelHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'pdfHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            }
-         ]
-
-
       });
 
       $('#tableContracts').DataTable({

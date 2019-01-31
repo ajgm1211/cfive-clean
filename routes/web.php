@@ -29,7 +29,7 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
 });
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::middleware(['auth'])->prefix('users')->group(function () {
-  Route::resource('users', 'UsersController');
+  Route::resource('users', 'UsersController'); 
   Route::get('home', 'UsersController@datahtml')->name('users.home');
   Route::get('add', 'UsersController@add')->name('users.add');
   Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
@@ -97,6 +97,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('addT', 'ContractsController@add')->name('contracts.add');
   Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
   Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+
   Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
   Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
   Route::get('addRate/{id}', ['uses' => 'ContractsController@addRates', 'as' => 'add-rates']);
@@ -112,11 +113,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
 
 
-
   //----- developer
-
-
-
 
   Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
 
@@ -126,6 +123,8 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
   Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
   Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
+
+
 });
 
 Route::middleware(['auth'])->prefix('Requests')->group(function () {
@@ -143,7 +142,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
   Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
   Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
   Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-  Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
+  Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
   Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
   Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
@@ -202,6 +201,24 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
 
 });
 
+
+// Importation LCL 
+Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
+
+  Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
+
+  //Rates 
+  Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
+  Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
+  Route::get('DestroyRatesFailLcl/{id}','ImportationLclController@DestroyRatesF')->name('Destroy.RatesF.Lcl');
+  Route::get('EditRatesGoodLcl/{id}','ImportationLclController@EditRatesGood')->name('Edit.RatesG.Lcl');
+  Route::get('UpdateRatesFailLcl/{id}','ImportationLclController@UpdateRatesD')->name('Update.RatesG.Lcl');
+  Route::get('DestroyRatesGLcl/{id}','ImportationLclController@DestroyRatesG')->name('Destroy.RatesG.Lcl');
+  Route::get('lcl/rates/{id}/{bo}','ImportationLclController@FailedRatesView')->name('Failed.Rates.lcl.view');
+  Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
+  Route::resource('ImportationLCL','ImportationLclController');
+});
+
 Route::middleware(['auth'])->prefix('Exportation')->group(function () {
   Route::resource('Exportation','ExportationController');
 });
@@ -216,6 +233,7 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 //Companies
 Route::middleware(['auth'])->prefix('companies')->group(function () {
+
 
   Route::get('add', 'CompanyController@add')->name('companies.add');
   Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
@@ -233,6 +251,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
   Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
   Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
   Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
+
 
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
@@ -266,6 +285,8 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
+
+
   Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
   Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
@@ -292,8 +313,11 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
   Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
   Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
-  Route::post('carrier/visibility', ['uses' => 'QuoteController@updateCarrierVisibility', 'as' => 'quotes.carrier.visibility']);
-  Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
+  Route::get('carrier/visibility', 'QuoteController@updateCarrierVisibility')->name('quotes.carrier.visibility');
+    Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
+  // LCL
+  Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
+
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
@@ -333,8 +357,53 @@ Route::prefix('impersonation')->group(function ($router) {
   # Impersonate route...
   $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
 });
+//Contracts LCL
 
+Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
+
+  //Contract LCL 
+  Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
+  Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
+  Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+
+
+  //Rates 
+  Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);
+  Route::post('storeRatelcl/{id}', ['uses' => 'ContractsLclController@storeRates', 'as' => 'contractslcl.storeRate']);
+  Route::get('editRatelcl/{id}', ['uses' => 'ContractsLclController@editRates', 'as' => 'edit-rates-lcl']);
+  Route::put('updateRatelcl/{id}', ['uses' => 'ContractsLclController@updateRates', 'as' => 'update-rates-lcl']);
+  Route::get('deleteRateslcl/{rate_id}', ['uses' => 'ContractsLclController@deleteRates', 'as' => 'delete-rates-lcl']);
+  Route::get('duplicateRatelcl/{id}', ['uses' => 'ContractsLclController@duplicateRates', 'as' => 'duplicate-rates-lcl']);
+
+  // LocalCharges
+  Route::get('addLocalChargelcl/{id}', ['uses' => 'ContractsLclController@addLocalChar', 'as' => 'add-LocalCharge-lcl']);
+  Route::post('storeLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@storeLocalChar', 'as' => 'contracts.storeLocalChargeLcl']);
+  Route::get('editLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@editLocalChar', 'as' => 'edit-local-charge-lcl']);
+  Route::put('updateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@updateLocalChar', 'as' => 'update-local-charge-lcl']);
+  Route::get('deleteLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@deleteLocalCharges', 'as' => 'delete-local-charge-lcl']);
+  Route::get('duplicateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@duplicateLocalCharges', 'as' => 'duplicate-local-charge-lcl']);
+
+  // DATATABLES LCL
+  Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
+  Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
+  Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
+  Route::get('eloquent/object-datalcl/{id}', 'ContractsLclController@dataLcl')->name('localcharlcl.table');
+
+
+});
+
+Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
+// GLOBAL CHARGES LCL 
+
+Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
+
+
+  Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
+  Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);
+  Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl']);
+  Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl']);
+});
+Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 Route::resource('search', 'SearchController')->middleware('auth');
-
 Auth::routes();
 
