@@ -4,6 +4,7 @@ namespace App\Helpers\Surchargers;
 
 use App\Harbor;
 use App\LocalCharge;
+use Illuminate\Support\Facades\DB;
 
 class HelperSurchargers {
    /**
@@ -12,43 +13,39 @@ class HelperSurchargers {
      * @return string
      */
    public static function get_surchargers($id) {
-      $goodsurcharges     = LocalCharge::where('contract_id','=',$id)->with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->get();
-         $surchargecollection = collect([]);
-         foreach($goodsurcharges as $surcharge){
-            $origin             = '';
-            $destiny            = '';
-            $surchargeName      = '';
-            $typedestiny        = '';
-            $calculationtype    = '';
-            $ammount            = '';
-            $carrier            = '';
-            $currency           = '';
-            //dd($surcharge->localcharports);
-            $PuertosOrigins = $surcharge->localcharports->pluck('port_orig')->unique();
-            foreach($PuertosOrigins as $PortOrigin){
-               $OriginObj = Harbor::find($PortOrigin);
-               $origin = $origin.$OriginObj->name.' | ';
-            }
-             $origin = substr($origin,0,-2);
-            //dd($surcharge->localcharports);
-            $PuertosDestins = $surcharge->localcharports->pluck('port_dest')->unique();
-            foreach($PuertosDestins as $PortDestiny){
-               $DestinyObj = Harbor::find($PortDestiny);
-               $destiny = $destiny.$DestinyObj->name.' | ';
-            }
-             $destiny = substr($destiny,0,-2);
-             
-            $carrierArre = $surcharge->localcharcarriers->pluck('carrier')->pluck('name');
-            foreach($carrierArre as $carrierName){
-               $carrier = $carrier.$carrierName.' | ';
-            }
-             $carrier = substr($carrier,0,-2);
+      $goodsurcharges     = DB::select('call proc_localchar('.$id.')');;
+      $surchargecollection = collect([]);
+      foreach($goodsurcharges as $surcharge){
+         $origin             = '';
+         $destiny            = '';
+         $surchargeName      = '';
+         $typedestiny        = '';
+         $calculationtype    = '';
+         $ammount            = '';
+         $carrier            = '';
+         $currency           = '';
+         
+         // Origen -----------------
+         if(empty($surcharge->port_orig) != true){
+            $origin = str_replace(',',' | ',$surcharge->port_orig);
+         } else if(empty($surcharge->country_orig) != true){
+            $origin = str_replace(',',' | ',$surcharge->country_orig);  
+         }
+        
+         // Destino -----------------
+         if(empty($surcharge->port_dest	) != true){
+            $destiny = str_replace(',',' | ',$surcharge->port_dest);
+         } else if(empty($surcharge->country_orig) != true){
+            $destiny = str_replace(',',' | ',$surcharge->country_dest);  
+         }
 
-            $surchargeName   = $surcharge->surcharge['name'];
-            $typedestiny     = $surcharge->typedestiny->description;
-            $calculationtype = $surcharge->calculationtype->name;
-            $ammount         = $surcharge->ammount;
-            $currency        = $surcharge->currency->alphacode;
+         // Carrier ----------------
+         $carrier = str_replace(',',' | ',$surcharge->carrier);
+         $surchargeName   = $surcharge->surcharge;
+         $typedestiny     = $surcharge->changetype;
+         $calculationtype = $surcharge->calculation_type;
+         $ammount         = $surcharge->ammount;
+         $currency        = $surcharge->currency;
             $arreglo = [
                'id'                => $surcharge->id,
                'surchargelb'       => $surchargeName,

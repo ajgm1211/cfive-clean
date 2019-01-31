@@ -24,7 +24,7 @@
                 <div class="client">
                     <p><b>From:</b></p>
                     <span id="destination_input" style="line-height: 0.5">
-                        <p>{{$user->name}}</p>
+                        <p>{{$user->name}} {{$user->lastname}}</p>
                         <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
                         <p>{{$user->companyUser->address}}</p>
                         <p>{{$user->phone}}</p>
@@ -99,6 +99,7 @@
                     </table>
                 </div>
             </div>
+            @if($quote->hide_carrier==false)
             <br>
             <div class="clearfix">
                 <div class="client" style="color: #525F7F;">
@@ -112,6 +113,7 @@
                     @endif
                 </div>
             </div>
+            @endif
             <br>
             <div id="details" class="clearfix details">
                 <div class="company" style="color: #1D3A6E;">

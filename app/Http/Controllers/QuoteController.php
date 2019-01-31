@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use App\Exports\QuotesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Company;
 use App\CompanyPrice;
 use App\CompanyUser;
@@ -53,7 +55,7 @@ use Yajra\Datatables\Datatables;
 class QuoteController extends Controller
 {
 
-    public function index(){
+    public function index(Request $request){
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
             $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
@@ -75,6 +77,116 @@ class QuoteController extends Controller
         }else{
             $company_user='';
             $currency_cfg = '';
+        }
+        if($request->ajax()){
+
+            $collection = Collection::make($quotes);
+            $collection->transform(function ($quote, $key) {
+                $quote['client_company'] = $quote->company;
+                $quote['owner'] = $quote->user;
+                $quote['currency'] = $quote->currencies->alphacode;
+                $quote['origin_ammount'] = $quote->originAmmount;
+                $quote['freight_ammount'] = $quote->freightAmmount;
+                $quote['destination_ammount'] = $quote->destinationAmmount;
+                $quote['client_contact'] = $quote->contact;
+                $quote['charges'] = $quote->packages;
+                if($quote['origin_harbor_id']!=''){
+                    $quote['origin_harbor_name'] = $quote->origin_harbor->display_name;
+                }
+                if($quote['origin_airport_id']!=''){
+                    $quote['origin_airport_name'] = $quote->origin_airport->display_name;
+                }
+                if($quote['destination_harbor_id']!=''){
+                    $quote['destination_harbor_name'] = $quote->destination_harbor->display_name;
+                }
+                if($quote['destination_airport_id']!=''){
+                    $quote['destination_airport_name'] = $quote->destination_airport->display_name;
+                }
+
+                if ($quote['pdf_language'] == 1) {
+                    $quote['pdf_language'] = 'English';
+                } elseif ($quote['pdf_language'] == 2) {
+                    $quote['pdf_language'] = 'Spanish';
+                } elseif ($quote['pdf_language']== 3) {
+                    $quote['pdf_language'] = 'Portuguese';
+                } else {
+                    $quote['pdf_language'] = 'English';
+                }
+
+                if ($quote['type_cargo'] == 1) {
+                    $quote['type_cargo'] = 'FCL';
+                } elseif ($quote['type_cargo'] == 2) {
+                    $quote['type_cargo'] = 'LCL';
+                } else {
+                    $quote['type_cargo'] = 'AIR';
+                }
+
+                if ($quote['delivery_type'] == 1) {
+                    $quote['delivery_type'] = 'Port to Port';
+                } elseif ($quote['delivery_type'] == 2) {
+                    $quote['delivery_type'] = 'Port to Door';
+                } elseif ($quote['delivery_type'] == 3) {
+                    $quote['delivery_type'] = 'Door to Port';
+                } else {
+                    $quote['delivery_type'] = 'Door to Door';
+                }
+
+                if ($quote['carrier_id'] != '') {
+                    $quote['carrier_name'] = $quote->carrier->name;
+                } else {
+                    $quote['carrier_name'] = '';
+                }
+
+                if ($quote['modality'] == 1) {
+                    $quote['modality'] = 'Export';
+                } else {
+                    $quote['modality'] = 'Import';
+                }
+
+                if ($quote['incoterm'] == 1) {
+                    $quote['incoterm'] = 'EWX';
+                } elseif ($quote['incoterm'] == 2) {
+                    $quote['incoterm'] = 'FAS';
+                } elseif ($quote['incoterm'] == 3) {
+                    $quote['incoterm'] = 'FCA';
+                } elseif ($quote['incoterm'] == 4) {
+                    $quote['incoterm'] = 'FOB';
+                } elseif ($quote['incoterm'] == 5) {
+                    $quote['incoterm'] = 'CFR';
+                } elseif ($quote['incoterm'] == 6) {
+                    $quote['incoterm'] = 'CIF';
+                } elseif ($quote['incoterm'] == 7) {
+                    $quote['incoterm'] = 'CIP';
+                } elseif ($quote['incoterm'] == 8) {
+                    $quote['incoterm'] = 'DAT';
+                } elseif ($quote['incoterm'] == 9) {
+                    $quote['incoterm'] = 'DAP';
+                } elseif ($quote['incoterm'] == 10) {
+                    $quote['incoterm'] = 'DDP';
+                }
+                unset($quote['company_id']);
+                unset($quote['contact_id']);
+                unset($quote['carrier_id']);
+                unset($quote['contact']);
+                unset($quote['company']);
+                unset($quote['currency_id']);
+                unset($quote['carrier']);
+                unset($quote['currencies']);
+                unset($quote['origin_harbor_id']);
+                unset($quote['destination_harbor_id']);
+                unset($quote['origin_airport_id']);
+                unset($quote['destination_airport_id']);
+                unset($quote['origin_harbor']);
+                unset($quote['destination_harbor']);
+                unset($quote['origin_airport']);
+                unset($quote['destination_airport']);
+                unset($quote['packages']);
+                unset($quote['user']);
+
+                return $quote;
+            });
+
+            return $collection;
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
     }
@@ -349,32 +461,40 @@ class QuoteController extends Controller
                 $origin_total_ammount_2 = array_values( array_filter($input['origin_total_ammount_2']) );
                 $origin_total_markup = array_values( array_filter($input['origin_ammount_markup']) );
                 foreach ($origin_ammount_charge as $key => $item) {
-                    $origin_ammount = new OriginAmmount();
-                    $origin_ammount->quote_id = $quote->id;
-                    if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
-                        $origin_ammount->charge = $origin_ammount_charge[$key];
-                    }
-                    if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
-                        $origin_ammount->detail = $origin_ammount_detail[$key];
-                    }
-                    if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
-                        $origin_ammount->units = $origin_total_units[$key];
-                    }
-                    if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
-                        $origin_ammount->markup = $origin_total_markup[$key];
-                    }
-                    if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
-                        $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
-                        $origin_ammount->currency_id = $origin_ammount_currency[$key];
-                    }
-                    if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
-                        $origin_ammount->total_ammount = $origin_total_ammount[$key];
-                    }
 
-                    if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
-                        $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
+                    if (isset($origin_ammount_charge[$key]) && isset($origin_ammount_detail[$key]) && isset($origin_total_units[$key])
+                        && isset($origin_ammount_currency[$key]) && isset($origin_ammount_price_per_unit[$key]) && isset($origin_total_ammount[$key])) {
+
+                        $origin_ammount = new OriginAmmount();
+                        $origin_ammount->quote_id = $quote->id;
+
+                        if ((isset($origin_ammount_charge[$key])) && (!empty($origin_ammount_charge[$key]))) {
+                            $origin_ammount->charge = $origin_ammount_charge[$key];
+                        }
+                        if ((isset($origin_ammount_detail[$key])) && (!empty($origin_ammount_detail[$key]))) {
+                            $origin_ammount->detail = $origin_ammount_detail[$key];
+                        }
+                        if ((isset($origin_total_units[$key])) && (!empty($origin_total_units[$key]))) {
+                            $origin_ammount->units = $origin_total_units[$key];
+                        }
+                        if ((isset($origin_total_markup[$key])) && (!empty($origin_total_markup[$key]))) {
+                            $origin_ammount->markup = $origin_total_markup[$key];
+                        }
+                        if ((isset($origin_ammount_price_per_unit[$key])) && ($origin_ammount_price_per_unit[$key]) != '') {
+                            $origin_ammount->price_per_unit = $origin_ammount_price_per_unit[$key];
+                            $origin_ammount->currency_id = $origin_ammount_currency[$key];
+                        }
+                        if ((isset($origin_total_ammount[$key])) && ($origin_total_ammount[$key] != '')) {
+                            $origin_ammount->total_ammount = $origin_total_ammount[$key];
+                        }
+
+                        if ((isset($origin_total_ammount_2[$key])) && ($origin_total_ammount_2[$key] != '')) {
+                            $origin_ammount->total_ammount_2 = $origin_total_ammount_2[$key];
+                        }
+
+                        $origin_ammount->save();
+
                     }
-                    $origin_ammount->save();
                 }
             }
             if($input['freight_ammount_charge']!=[null]) {
@@ -388,32 +508,40 @@ class QuoteController extends Controller
                 $freight_total_ammount_2 = array_values( array_filter($input['freight_total_ammount_2']) );
                 $freight_total_markup = array_values( array_filter($input['freight_ammount_markup']) );
 
+
                 foreach ($freight_ammount_charge as $key => $item) {
-                    $freight_ammount = new FreightAmmount();
-                    $freight_ammount->quote_id = $quote->id;
-                    if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
-                        $freight_ammount->charge = $freight_ammount_charge[$key];
+
+                    if (isset($freight_ammount_charge[$key]) && isset($freight_ammount_detail[$key]) && isset($freight_total_units[$key])
+                        && isset($freight_ammount_currency[$key]) && isset($freight_ammount_price_per_unit[$key]) && isset($freight_total_ammount[$key])){
+
+                        $freight_ammount = new FreightAmmount();
+                        $freight_ammount->quote_id = $quote->id;
+
+                        if ((isset($freight_ammount_charge[$key])) && (!empty($freight_ammount_charge[$key]))) {
+                            $freight_ammount->charge = $freight_ammount_charge[$key];
+                        }
+                        if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
+                            $freight_ammount->detail = $freight_ammount_detail[$key];
+                        }
+                        if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
+                            $freight_ammount->units = $freight_total_units[$key];
+                        }
+                        if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
+                            $freight_ammount->markup = $freight_total_markup[$key];
+                        }
+                        if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
+                            $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
+                            $freight_ammount->currency_id = $freight_ammount_currency[$key];
+                        }
+                        if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
+                            $freight_ammount->total_ammount = $freight_total_ammount[$key];
+                        }
+                        if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
+                            $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
+                        }
+                        $freight_ammount->save();
+
                     }
-                    if ((isset($freight_ammount_detail[$key])) && (!empty($freight_ammount_detail[$key]))) {
-                        $freight_ammount->detail = $freight_ammount_detail[$key];
-                    }
-                    if ((isset($freight_total_units[$key])) && (!empty($freight_total_units[$key]))) {
-                        $freight_ammount->units = $freight_total_units[$key];
-                    }
-                    if ((isset($freight_total_markup[$key])) && (!empty($freight_total_markup[$key]))) {
-                        $freight_ammount->markup = $freight_total_markup[$key];
-                    }
-                    if ((isset($freight_ammount_price_per_unit[$key])) && ($freight_ammount_price_per_unit[$key]) != '') {
-                        $freight_ammount->price_per_unit = $freight_ammount_price_per_unit[$key];
-                        $freight_ammount->currency_id = $freight_ammount_currency[$key];
-                    }
-                    if ((isset($freight_total_ammount[$key])) && ($freight_total_ammount[$key] != '')) {
-                        $freight_ammount->total_ammount = $freight_total_ammount[$key];
-                    }
-                    if ((isset($freight_total_ammount_2[$key])) && ($freight_total_ammount_2[$key] != '')) {
-                        $freight_ammount->total_ammount_2 = $freight_total_ammount_2[$key];
-                    }
-                    $freight_ammount->save();
                 }
             }
             if($input['destination_ammount_charge']!=[null]) {
@@ -426,31 +554,38 @@ class QuoteController extends Controller
                 $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
                 $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
                 foreach ($destination_ammount_charge as $key => $item) {
-                    $destination_ammount = new DestinationAmmount();
-                    $destination_ammount->quote_id = $quote->id;
-                    if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
-                        $destination_ammount->charge = $destination_ammount_charge[$key];
+
+                    if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
+                        && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
+
+                        $destination_ammount = new DestinationAmmount();
+                        $destination_ammount->quote_id = $quote->id;
+
+                        if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
+                            $destination_ammount->charge = $destination_ammount_charge[$key];
+                        }
+                        if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
+                            $destination_ammount->detail = $destination_ammount_detail[$key];
+                        }
+                        if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
+                            $destination_ammount->units = $destination_ammount_units[$key];
+                        }
+                        if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
+                            $destination_ammount->markup = $destination_ammount_markup[$key];
+                        }
+                        if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
+                            $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
+                            $destination_ammount->currency_id = $destination_ammount_currency[$key];
+                        }
+                        if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
+                            $destination_ammount->total_ammount = $destination_total_ammount[$key];
+                        }
+                        if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
+                            $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
+                        }
+                        $destination_ammount->save();
+
                     }
-                    if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
-                        $destination_ammount->detail = $destination_ammount_detail[$key];
-                    }
-                    if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
-                        $destination_ammount->units = $destination_ammount_units[$key];
-                    }
-                    if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
-                        $destination_ammount->markup = $destination_ammount_markup[$key];
-                    }
-                    if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
-                        $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
-                        $destination_ammount->currency_id = $destination_ammount_currency[$key];
-                    }
-                    if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
-                        $destination_ammount->total_ammount = $destination_total_ammount[$key];
-                    }
-                    if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
-                        $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
-                    }
-                    $destination_ammount->save();
                 }
             }
             if(isset($input['schedule'])){
@@ -1788,5 +1923,225 @@ class QuoteController extends Controller
         }
 
         return \Response::json($formatted_airports);
+    }
+
+    public function updateCarrierVisibility(Request $request){
+        $quote=Quote::find($request->quote_id);
+        $quote->hide_carrier = $request->carrier_visibility;
+        $quote->update();
+
+        return response()->json(['message' => 'Ok']);
+    }
+
+    public function downloadQuotes(){
+
+        //return Excel::download(new QuotesExport, 'quotes.xlsx');
+
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }else{
+            $quotes = Quote::whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->get();
+        }
+        $now = new \DateTime();
+        $now = $now->format('dmY_His');
+        $nameFile = str_replace([' '],'_',$now.'_quotes');
+        Excel::create($nameFile, function($excel) use($nameFile, $quotes) {
+            $excel->sheet('Quotes', function($sheet) use($quotes) {
+                //dd($contract);
+                $sheet->cells('A1:AO1', function($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setValignment('center');
+                });
+
+                //$sheet->setBorder('A1:AO1', 'thin');
+
+                $sheet->row(1, array(
+                    'Id',
+                    'Owner',
+                    'Company quote',
+                    'Incoterm',
+                    'Validity',
+                    'Since validity',
+                    'Modality',
+                    'Pick up date',
+                    'Delivery type',
+                    'Cargo type',
+                    'Origin',
+                    'Destination',
+                    'Origin address',
+                    'Destination address',
+                    'Company',
+                    'Contact',
+                    'Currency',
+                    'Carrier',
+                    'Container 20',
+                    'Container 40',
+                    'Container 40 HC',
+                    'Container 45 HC',
+                    'Container 40 NOR',
+                    'Container 20 Reefer',
+                    'Container 40 Reefer',
+                    'Container 40 HC Reefer',
+                    'Container 20 Open Top',
+                    'Container 40 Open Top',
+                    'PDF language',
+                    'Total quantity',
+                    'Total weight',
+                    'Total volume',
+                    'Chargeable weight',
+                    'Sub total origin',
+                    'Sub total freight',
+                    'Sub total destination',
+                    'Total markup origin',
+                    'Total markup freight',
+                    'Total markup destination',
+                    'Status',
+                    'Created at',
+                ));
+                $i=2;
+                foreach($quotes as $quote) {
+                    if ($quote->origin_harbor) {
+                        $origin = $quote->origin_harbor->display_name;
+                    } elseif ($quote->origin_airport) {
+                        $origin = $quote->origin_airport->name;
+                    } else {
+                        $origin = $quote->origin_address;
+                    }
+
+                    if ($quote->destination_harbor) {
+                        $destination = $quote->destination_harbor->display_name;
+                    } elseif ($quote->destination_airport) {
+                        $destination = $quote->destination_airport->name;
+                    } else {
+                        $destination = $quote->destination_address;
+                    }
+
+                    if ($quote->pdf_language == 1) {
+                        $pdf_language = 'English';
+                    } elseif ($quote->pdf_language == 2) {
+                        $pdf_language = 'Spanish';
+                    } elseif ($quote->pdf_language == 3) {
+                        $pdf_language = 'Portuguese';
+                    } else {
+                        $pdf_language = 'English';
+                    }
+
+                    if ($quote->type_cargo == 1) {
+                        $cargo_type = 'FCL';
+                    } elseif ($quote->type_cargo == 2) {
+                        $cargo_type = 'LCL';
+                    } else {
+                        $cargo_type = 'AIR';
+                    }
+
+                    if ($quote->delivery_type == 1) {
+                        $delivery_type = 'Port to Port';
+                    } elseif ($quote->delivery_type == 2) {
+                        $delivery_type = 'Port to Door';
+                    } elseif ($quote->delivery_type == 3) {
+                        $delivery_type = 'Door to Port';
+                    } else {
+                        $delivery_type = 'Door to Door';
+                    }
+
+                    if ($quote->carrier_id != '') {
+                        $carrier = $quote->carrier->name;
+                    } else {
+                        $carrier = '';
+                    }
+
+                    if ($quote->modality == 1) {
+                        $modality = 'Export';
+                    } else {
+                        $modality = 'Import';
+                    }
+
+                    if ($quote->incoterm == 1) {
+                        $incoterm = 'EWX';
+                    } elseif ($quote->incoterm == 2) {
+                        $incoterm = 'FAS';
+                    } elseif ($quote->incoterm == 3) {
+                        $incoterm = 'FCA';
+                    } elseif ($quote->incoterm == 4) {
+                        $incoterm = 'FOB';
+                    } elseif ($quote->incoterm == 5) {
+                        $incoterm = 'CFR';
+                    } elseif ($quote->incoterm == 6) {
+                        $incoterm = 'CIF';
+                    } elseif ($quote->incoterm == 7) {
+                        $incoterm = 'CIP';
+                    } elseif ($quote->incoterm == 8) {
+                        $incoterm = 'DAT';
+                    } elseif ($quote->incoterm == 9) {
+                        $incoterm = 'DAP';
+                    } elseif ($quote->incoterm == 10) {
+                        $incoterm = 'DDP';
+                    }
+
+                    $sheet->row($i, array(
+                        "Id" => $quote->id,
+                        "Owner" => $quote->user->name.' '.$quote->user->lastname,
+                        "Company quote" => $quote->company_quote,
+                        "Incoterm" => $incoterm,
+                        "Validity" => $quote->validity,
+                        "Since validity" => $quote->since_validity,
+                        "Modality" => $modality,
+                        "Pick up date" => $quote->pick_up_date,
+                        "Delivery type" => $delivery_type,
+                        "Cargo type" => $cargo_type,
+                        "Origin" => $origin,
+                        "Destination" => $destination,
+                        "Origin address" => $quote->origin_address,
+                        "Destination address" => $quote->destination_address,
+                        "Client company" => $quote->company->business_name,
+                        "Contact" => $quote->contact->first_name . ' ' . $quote->contact->last_name,
+                        "Currency" => $quote->currencies->alphacode,
+                        "Carrier" => $carrier,
+                        "Container 20" => $quote->qty_20,
+                        "Container 40" => $quote->qty_40,
+                        "Container 40 HC" => $quote->qty_40_hc,
+                        "Container 45 HC" => $quote->qty_45_hc,
+                        "Container 40 NOR" => $quote->qty_40_nor,
+                        "Container 20 Reefer" => $quote->qty_20_reefer,
+                        "Container 40 Reefer" => $quote->qty_40_reefer,
+                        "Container 40 HC Reefer" => $quote->qty_40_hc_reefer,
+                        "Container 20 Open Top" => $quote->qty_20_open_top,
+                        "Container 40 Open Top" => $quote->qty_40_open_top,
+                        "Pdf language" => $pdf_language,
+                        "Quantity" => $quote->total_quantity,
+                        "Weight" => $quote->total_weight,
+                        "Volume" => $quote->total_volume,
+                        "Chargeable weight" => $quote->chargeable_weight,
+                        "Sub total origin" => $quote->sub_total_origin,
+                        "Sub total freight" => $quote->sub_total_freight,
+                        "Sub total destination" => $quote->sub_total_destination,
+                        "Total markup origin" => $quote->total_markup_origin,
+                        "Total markup freight" => $quote->total_markup_freight,
+                        "Total markup destination" => $quote->total_markup_destination,
+                        "Status" => $quote->status->name,
+                        "Created at" => $quote->created_at,
+                    ));
+                    $sheet->setBorder('A1:I' . $i, 'thin');
+
+                    $sheet->cells('C' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+
+                    $sheet->cells('I' . $i, function ($cells) {
+                        $cells->setAlignment('center');
+                    });
+
+                    $i++;
+                }
+
+            })->download('xlsx');
+
+        });
     }
 }
