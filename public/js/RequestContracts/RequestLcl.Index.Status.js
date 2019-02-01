@@ -31,6 +31,7 @@
                     swal("Good job!", "Updated The Status!", "success");
                     var posicion = $('#posicionval').val();
                     $('#thstatus'+posicion).text(data.data);
+                    location.reload();
                 } else {
                     swal("Error!", "An error occurred!", "error");
                 }

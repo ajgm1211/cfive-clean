@@ -18,11 +18,14 @@ class AddNewContractRequestLclTable extends Migration
          $table->string('namecontract');
          $table->string('numbercontract');
          $table->string('validation');
+         $table->string('description');
          $table->integer('company_user_id')->unsigned();
          $table->string('namefile');
          $table->enum('status',['Pending','Processing','Done'])->default('Pending');
          $table->integer('user_id')->unsigned();
-         $table->date('created');
+         $table->dateTime('created');
+         $table->dateTime('updated')->nullable();
+         $table->string('username_load')->default('Not assigned');
          $table->json('type');
          $table->json('data');
          $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
