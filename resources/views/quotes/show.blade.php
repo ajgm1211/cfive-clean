@@ -55,7 +55,7 @@
                   <div class="col-md-12" style="margin-top: 20px;">
                     @if($user->companyUser->logo!='')
                       <div class="pull-left text-left" style="line-height: .5;">
-                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                        <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
                       </div>
                     @endif
                     <div class="pull-right text-right" style="line-height: .5">
@@ -63,6 +63,7 @@
                       <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                       @if($quote->validity!=''&&$quote->since_validity!='')
                         <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
+                       <p><b>Contract Ref: <span style="color: #CFAC6C">#{{$quote->contract_number}}</span></b></p>
                       @endif
                     </div>
                   </div>
@@ -89,7 +90,7 @@
                     <div class="pull-right text-right" style="line-height: .5">
                       <p><b>To:</b></p>
                       @if($quote->company->logo!='')
-                        <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
+                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
                       @endif
                       <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                       <p><b>{{$quote->company->business_name}}</b></p>

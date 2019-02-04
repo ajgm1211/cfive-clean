@@ -4,7 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-    #Force to https in aws
+    #Force to https in aws..
     #RewriteCond %{HTTP:X-Forwarded-Proto} =http
     #RewriteRule .* https://%{HTTP:Host}%{REQUEST_URI} [L,R=permanent]
 
@@ -23,7 +23,6 @@
     RewriteRule ^ index.php [L]
 
     # Allow access from all domains for webfonts.
-    # Alternatively you could only whitelist your
     # subdomains like "subdomain.example.com".
     <IfModule mod_headers.c>
        <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css)$">
