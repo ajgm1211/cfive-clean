@@ -22,7 +22,7 @@
         <main>
             <div id="details" class="clearfix details">
                 <div class="client">
-                    <p ><b>Desde:</b></p>
+                    <p ><b>De:</b></p>
                     <span id="destination_input" style="line-height: 0.5">
                         <p>{{$user->name}} {{$user->lastname}}</p>
                         <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
@@ -33,7 +33,7 @@
 
                 </div>
                 <div class="company text-right" style="float: right; width: 350px;">
-                    <p><b>Hasta:</b></p>
+                    <p><b>Para:</b></p>
                     <span id="destination_input" style="line-height: 0.5">
                         <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">-->
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>

@@ -75,6 +75,8 @@ class SettingController extends Controller
 
             */
             $image->save($path.$file->getClientOriginalName());
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,$image);
 
             ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
 
@@ -96,7 +98,7 @@ class SettingController extends Controller
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
             if($file != ""){
-                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = $file->getClientOriginalName();
             }
             $company->save();
 
@@ -110,7 +112,7 @@ class SettingController extends Controller
             $company->currency_id=$request->currency_id;
             $company->pdf_language = $request->pdf_language;
             if($file != ""){
-                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = $file->getClientOriginalName();
             }
             $company->update();
         }
