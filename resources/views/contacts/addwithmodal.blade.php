@@ -14,7 +14,7 @@
     <div class="form-group m-form__group">
         @include('contacts.partials.form_add_contacts')
         <div class="form-group m-form__group">
-            {!! Form::label('company_id', 'Company') !!}<br>
+            {!! Form::label('company_id', 'Company') !!}<span style="color:red">*</span><br>
             {{ Form::select('company_id',$companies,null,['placeholder' => 'Please choose a company','class'=>'custom-select form-control companyc_input','id' => 'm_select2_2_modal']) }}
         </div>
     </div>

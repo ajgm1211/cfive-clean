@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\CompanyPrice;
 use App\Contact;
+use App\Jobs\ProcessLogo;
 use App\Quote;
 use App\Price;
 use App\User;
@@ -102,7 +103,7 @@ class CompanyController extends Controller
         $company->pdf_language = $request->pdf_language;
         $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
-            $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            $company->logo = $file->getClientOriginalName();
         }
         $company->save();
 
@@ -111,10 +112,10 @@ class CompanyController extends Controller
             $image = Image::make(Input::file('logo'));
             //Ruta donde queremos guardar las imagenes
             $path = public_path().'/uploads/logos/';
-            // Cambiar de tamaño
-            //$image->resize(300,500);
-            // Guardar
             $image->save($path.$file->getClientOriginalName());
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,$image);
+            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
         }
 
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
@@ -201,7 +202,7 @@ class CompanyController extends Controller
         $company->pdf_language = $request->pdf_language;
         $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
-            $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            $company->logo = $file->getClientOriginalName();
         }
         $company->update();
 
@@ -210,10 +211,11 @@ class CompanyController extends Controller
             $image = Image::make(Input::file('logo'));
             //Ruta donde queremos guardar las imagenes
             $path = public_path().'/uploads/logos/';
-            // Cambiar de tamaño
-            //$image->resize(300,500);
             // Guardar
             $image->save($path.$file->getClientOriginalName());
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,$image);
+            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
         }
 
 

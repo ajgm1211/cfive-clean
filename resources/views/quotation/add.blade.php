@@ -67,6 +67,7 @@ $subtotalDestiny = 0;
 
                       <p><b>Date of issue:</b> {{ $form->date }} </p>
                       <p><b>Validity: </b> {{   \Carbon\Carbon::parse( $info->contract->validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $info->contract->expire)->format('d M Y') }} </p>
+                      <p><b>Contract Ref: <span style="color: #CFAC6C">#{{$info->contract->name}} / {{ $info->contract->number }}</span></b></p>
                     </div>
                   </div>
                 </div>
@@ -1066,6 +1067,8 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="volume" name="volume[]">
 
     <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+
+    <input type="hidden" class="form-control" id="contract_number" name="contract_number" value="{{$info->contract->name}} / {{ $info->contract->number }}">
 
 
     @if($email_templates)

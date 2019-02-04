@@ -41,7 +41,7 @@ class ProcessLogo implements ShouldQueue
     $s3 = \Storage::disk('s3_upload');
     $filePath = $this->name;
     
-    $file = \Storage::disk('image')->get($file); 
+    $file = \Storage::disk('logos')->get($file);
     $s3->put($filePath, $file, 'public');
 
   }
