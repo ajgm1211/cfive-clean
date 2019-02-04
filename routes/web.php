@@ -87,6 +87,7 @@ Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
   Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
   Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge']);
   Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge']);
+  Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge']);
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
@@ -314,7 +315,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
   Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
   Route::get('carrier/visibility', 'QuoteController@updateCarrierVisibility')->name('quotes.carrier.visibility');
-    Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
+  Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
   // LCL
   Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
 
