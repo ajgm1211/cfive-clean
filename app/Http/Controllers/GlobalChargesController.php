@@ -278,6 +278,21 @@ class GlobalChargesController extends Controller
     return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
   }
 
+  public function duplicateGlobalCharges($id){
+
+    $countries = Country::pluck('name','id');
+    $calculationT = CalculationType::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $globalcharges = GlobalCharge::find($id);
+    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+    $globalcharges->setAttribute('validation_expire',$validation_expire);
+    return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
+
   /**
      * Display the specified resource.
      *

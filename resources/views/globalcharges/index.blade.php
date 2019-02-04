@@ -153,6 +153,10 @@
                       <i id='rm_l{{$globalcharges->id}}' class="la la-times-circle"></i>
                     </a>
 
+                    <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test'  title='Duplicate '  onclick='AbrirModal("duplicateGlobalCharge",{{$globalcharges->id}})'>
+                      <i class='la la-plus'></i>
+                    </a>
+
 
                   </td>
                 </tr>
@@ -190,7 +194,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">
-            Add Global Charges
+           Global Charges
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">
@@ -240,6 +244,15 @@
       });
 
     }
+    if(action == "duplicateGlobalCharge"){
+
+      var url = '{{ route("duplicate-global-charge", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-add').load(url,function(){
+        $('#modalGlobalchargeAdd').modal({show:true});
+      });
+    }
+    
   }
 
 </script>
