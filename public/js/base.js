@@ -193,7 +193,8 @@ $(document).on('click', '#default-currency-submit', function () {
                                 'Done!',
                                 'Your choice has been saved.',
                                 'success'
-                            )
+                            );
+                            window.location='/';
                         }
                         $("#default-currency-submit").prop("disabled", false);
                     }
