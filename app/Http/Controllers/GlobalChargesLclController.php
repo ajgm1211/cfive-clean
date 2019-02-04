@@ -206,6 +206,20 @@ class GlobalChargesLclController extends Controller
     $global->update();
     return redirect()->back()->with('globalchar','true');
   }
+  public function duplicateGlobalCharges($id){
+
+    $countries = Country::pluck('name','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $globalcharges = GlobalChargeLcl::find($id);
+    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+    $globalcharges->setAttribute('validation_expire',$validation_expire);
+    return view('globalchargeslcl.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+  }
   public function destroyGlobalCharges($id)
   {
     $global = GlobalChargeLcl::find($id);
