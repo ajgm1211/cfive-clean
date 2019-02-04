@@ -14,6 +14,7 @@ use App\Mail\NewRequestToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use App\Jobs\ProcessContractFile;
+use Intercom\IntercomClient;
 
 class NewContractRequestsController extends Controller
 {
@@ -114,8 +115,28 @@ class NewContractRequestsController extends Controller
     $Ncontract->save();
 
     ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile );
+    // INTERCOM EVENT
+
+
+    $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=');
+
 
     $user = User::find($request->user);
+
+    $users = User::all()->where('company_user_id','=',$user->company_user_id);
+
+    foreach ($users as $u) {
+      $client->events->create([
+        "event_name" => "REQUEST IMPORTATION",
+        "created_at" => strtotime("now"),
+        "email" => $u->email,
+        "metadata" => [
+          "order_date" => strtotime("now")
+
+        ]
+      ]);
+    }
+    /*
     $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
     $user->notify(new SlackNotification($message));
     $admins = User::where('type','admin')->get();
@@ -125,7 +146,7 @@ class NewContractRequestsController extends Controller
                                                                        $user->toArray(),
                                                                        $Ncontract->toArray()));
       $userNotifique->notify(new N_general($user,$message));
-    }
+    }*/
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.content', 'Your request was created');

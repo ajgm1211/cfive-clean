@@ -48,16 +48,28 @@ class LoginController extends Controller
       "user_id" => $user->id,
       "name" => $user->name,
     ]);
+
     
-    if (!$user->verified) {
-      auth()->logout();
-      return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
-    }else if($user->state!=1){
-      auth()->logout();
-      return back()->with('warning', 'This user has been disabled.');
-    }else  if($user->company_user_id==''){
-      return redirect('/settings');
+    if($user->company_user_id != ""){
+      $client->users->create([
+        "email" => $user->email,
+        "companies" => [
+          [
+            "company_id" => $user->company_user_id,
+          ]
+        ]
+      ]);
     }
+
+      if (!$user->verified) {
+        auth()->logout();
+        return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+      }else if($user->state!=1){
+        auth()->logout();
+        return back()->with('warning', 'This user has been disabled.');
+      }else  if($user->company_user_id==''){
+        return redirect('/settings');
+      }
 
     return redirect()->intended($this->redirectPath());
   }
