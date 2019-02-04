@@ -149,7 +149,7 @@ class QuoteAutomaticController extends Controller
 
     $searchRate = new SearchRate();
     $searchRate->pick_up_date  = $pickUpDate;
-    $searchRate->user_id = \Auth::user()->company_user_id;
+    $searchRate->user_id = \Auth::id();
     $searchRate->save();
     foreach($origPort as $orig => $valueOrig)
     {
