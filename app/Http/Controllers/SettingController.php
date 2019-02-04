@@ -33,11 +33,9 @@ class SettingController extends Controller
 {
   public function index()
   {
+    
     $company = User::where('id',\Auth::id())->with('companyUser')->first();
     $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
-
-
-
 
     return view('settings/index',compact('company','currencies'));
   }

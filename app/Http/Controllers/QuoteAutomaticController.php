@@ -40,6 +40,7 @@ use App\Mail\SendQuotePdf;
 use App\Quote;
 use App\SearchRate;
 use App\SearchPort;
+use Intercom\IntercomClient;
 
 class QuoteAutomaticController extends Controller
 {
@@ -162,6 +163,17 @@ class QuoteAutomaticController extends Controller
       }
 
     }
+    // Intercom SEARCH 
+      $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=');
+      $client->events->create([
+        "event_name" => "SEARCH RATE",
+        "created_at" => strtotime("now"),
+        "email" =>  \Auth::user()->email,
+        "metadata" => [
+          "order_date" => strtotime("now")
+
+        ]
+      ]);
 
   }
 
