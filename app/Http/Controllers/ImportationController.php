@@ -548,12 +548,15 @@ class ImportationController extends Controller
         }
 
         $coordenates = collect([]);
+       
+       ini_set('memory_limit', '512M');
+       
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
                    ->url($nombre),function($reader) use($request,$coordenates) {
+                       $reader->takeRows(2);
                        $reader->noHeading = true;
                        $reader->ignoreEmpty();
-                       $reader->takeRows(2);
 
                        $read = $reader->first();
                        $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');

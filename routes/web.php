@@ -142,7 +142,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
    Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
    Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
    Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-   Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
+   Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
    Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
    Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
    Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
