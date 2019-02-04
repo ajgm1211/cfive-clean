@@ -22,17 +22,19 @@
             <div class="modal-body">
                 <div class="m-form__section m-form__section--first">
                     <div class="form-group m-form__group">
+                        <span class="size-8px">Fields with <span style="color:red">*</span> are mandatory</span>
+                        <hr>
                         <div class="form-group m-form__group">
-                            {!! Form::label('first_name', 'First Name') !!}
+                            {!! Form::label('first_name', 'First Name') !!}<span style="color:red">*</span>
                             {!! Form::text('first_name', null, ['placeholder' => 'Please enter your first name','class' => 'form-control m-input','required' => 'required']) !!}
                             {!! Form::hidden('company_id', $company->id, ['class' => 'form-control m-input','required' => 'required']) !!}
                         </div>
                         <div class="form-group m-form__group">
-                            {!! Form::label('last_name', 'Last Name') !!}
+                            {!! Form::label('last_name', 'Last Name') !!}<span style="color:red">*</span>
                             {!! Form::text('last_name', null, ['placeholder' => 'Please enter your last name','class' => 'form-control m-input','required' => 'required']) !!}
                         </div>
                         <div class="form-group m-form__group">
-                            {!! Form::label('email', 'Email') !!}
+                            {!! Form::label('email', 'Email') !!}<span style="color:red">*</span>
                             {!! Form::email('email', null, ['placeholder' => 'Please enter a valid email','class' => 'form-control m-input','required' => 'required']) !!}
                         </div>
                         <div class="form-group m-form__group">

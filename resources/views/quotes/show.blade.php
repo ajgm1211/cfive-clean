@@ -55,7 +55,7 @@
                   <div class="col-md-12" style="margin-top: 20px;">
                     @if($user->companyUser->logo!='')
                       <div class="pull-left text-left" style="line-height: .5;">
-                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                        <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
                       </div>
                     @endif
                     <div class="pull-right text-right" style="line-height: .5">
@@ -90,7 +90,7 @@
                     <div class="pull-right text-right" style="line-height: .5">
                       <p><b>To:</b></p>
                       @if($quote->company->logo!='')
-                        <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
+                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
                       @endif
                       <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                       <p><b>{{$quote->company->business_name}}</b></p>
