@@ -175,6 +175,7 @@ return [
     App\Providers\SurchargersServiceProvider::class,
     App\Providers\RatesLclServiceProvider::class,
     Laravel\Passport\PassportServiceProvider::class,
+    App\Providers\EventIntercomServiceProvider::class,
 
 
 
@@ -237,8 +238,7 @@ return [
     'PrvRates' => App\Helpers\Rates\HelperRates::class,
     'PrvSurchargers' => App\Helpers\Surchargers\HelperSurchargers::class,
     'PrvRatesLcl' => App\Helpers\Rates\HelperRatesLcl::class,
-
-
+    'EventIntercom' => App\Helpers\Intercom::class,
   ],
 
 ];

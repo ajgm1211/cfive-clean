@@ -51,7 +51,7 @@ $portRadio = false;
       <div class="col-lg-4">
         <div class="divport" >
           {!! Form::label('orig', 'Origin Port') !!}
-          {{ Form::select('port_origlocal[]', $harbor,$globalcharges->globalcharport->pluck('port_orig'),['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
+          {{ Form::select('port_orig[]', $harbor,$globalcharges->globalcharport->pluck('port_orig'),['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
         </div>
         <div class="divcountry" hidden="true">
           {!! Form::label('origC', 'Origin Country') !!}
@@ -64,7 +64,7 @@ $portRadio = false;
         <div class="divport" >
           {!! Form::label('dest', 'Destination Port') !!}
           <div class="m-input-icon m-input-icon--right">
-            {{ Form::select('port_destlocal[]', $harbor,$globalcharges->globalcharport->pluck('port_dest'),['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
+            {{ Form::select('port_dest[]', $harbor,$globalcharges->globalcharport->pluck('port_dest'),['id' => 'portDest','class'=>'m-select2-general  form-control ','multiple' => 'multiple','style' => 'width:100%;']) }}
             <span class="m-input-icon__icon m-input-icon__icon--right">
               <span>
                 <i class="la la-info-circle"></i>

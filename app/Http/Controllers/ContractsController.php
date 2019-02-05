@@ -37,6 +37,7 @@ use App\ViewRates;
 use App\ViewContractRates;
 use App\LocalCharCountry;
 use Illuminate\Support\Collection as Collection;
+use EventIntercom;
 
 
 class ContractsController extends Controller
@@ -272,6 +273,9 @@ class ContractsController extends Controller
         $contract_client_restriction->save();
       }
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_contractFcl();
 
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
