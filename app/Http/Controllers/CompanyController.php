@@ -108,14 +108,9 @@ class CompanyController extends Controller
         $company->save();
 
         if($file != ""){
-            //Creamos una instancia de la libreria instalada   
-            $image = Image::make(Input::file('logo'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            $image->save($path.$file->getClientOriginalName());
             $name     = $file->getClientOriginalName();
-            \Storage::disk('logos')->put($name,$image);
-            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
+            \Storage::disk('logos')->put($name,file_get_contents($file));
+            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName(),2);
         }
 
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
@@ -207,15 +202,9 @@ class CompanyController extends Controller
         $company->update();
 
         if($file != ""){
-            //Creamos una instancia de la libreria instalada   
-            $image = Image::make(Input::file('logo'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            // Guardar
-            $image->save($path.$file->getClientOriginalName());
             $name     = $file->getClientOriginalName();
-            \Storage::disk('logos')->put($name,$image);
-            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
+            \Storage::disk('logos')->put($name,file_get_contents($file));
+            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName(),2);
         }
 
 

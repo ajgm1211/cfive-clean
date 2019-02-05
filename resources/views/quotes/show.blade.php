@@ -59,7 +59,7 @@
                       </div>
                     @endif
                     <div class="pull-right text-right" style="line-height: .5">
-                      <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
+                      <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</span></b></p>
                       <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                       @if($quote->validity!=''&&$quote->since_validity!='')
                         <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>

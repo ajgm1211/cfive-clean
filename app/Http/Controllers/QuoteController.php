@@ -1080,7 +1080,11 @@ class QuoteController extends Controller
         $validation = explode('/',$request->validity_date);
         $since = $validation[0];
         $until = $validation[1];
-        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until]);
+        $custom_id='';
+        if($request->custom_id!='' && $request->custom_id!==$quote->company_quote){
+            $custom_id=$request->custom_id;
+        }
+        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until,'custom_id'=>$custom_id]);
 
         $quote->update($request->all());
 

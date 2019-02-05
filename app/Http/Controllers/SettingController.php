@@ -58,30 +58,10 @@ class SettingController extends Controller
         $file = Input::file('image');
 
         if($file != ""){
-            //Creamos una instancia de la libreria instalada
-            $image = Image::make(Input::file('image'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            // Guardar Original
-            //$image->save($path.$file->getClientOriginalName());
-            // Cambiar de tamaño
-            //$image->resize(300,500);
-            // Guardar
-            /*
-            $name = $file->getClientOriginalName();
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = '/logos/' . $name;
-            $s3->put($filePath, file_get_contents($file), 'public');
-
-            */
-            $image->save($path.$file->getClientOriginalName());
             $name     = $file->getClientOriginalName();
-            \Storage::disk('logos')->put($name,$image);
+            \Storage::disk('logos')->put($name,file_get_contents($file));
 
-            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
-
-
-
+            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName(),1);
         }
 
         if(!$request->company_id){
