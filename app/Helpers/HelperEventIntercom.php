@@ -26,7 +26,7 @@ class Intercom{
     ]);
   }
   //EVENTOS QUOTE 
-    public static function event_quoteEmail(){
+  public static function event_quoteEmail(){
     $obj  = self::$client;    
     $obj->events->create([
       "event_name" => "QUOTE SEND EMAIL",
@@ -163,6 +163,61 @@ class Intercom{
         ]
       ]);
     }
+  }
+  // INLANDS
+
+  public static function event_inlands(){
+    $obj  = self::$client;    
+    $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
+    foreach ($users as $u) {
+      $obj->events->create([
+        "event_name" => "INLANDS",
+        "created_at" => strtotime("now"),
+        "email" => $u->email,
+        "metadata" => [
+          "order_date" => strtotime("now")
+        ]
+      ]);
+    }
+  }
+
+  // COMPAÑIAS y CONTACTOS
+  public static function event_companies(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "COMPANIES",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
+  }
+  public static function event_contacts(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "CONTACTS",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
+  }
+
+  // PRICING 
+
+
+  public static function event_pricing(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "PRICING",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
   }
 
 
