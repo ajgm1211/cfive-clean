@@ -36,6 +36,7 @@ use App\Jobs\ImportationRatesSurchargerJob;
 
 class ImportationController extends Controller
 {
+    
 
     public function ReprocesarRates(Request $request, $id){
 
@@ -549,7 +550,7 @@ class ImportationController extends Controller
 
         $coordenates = collect([]);
        
-       ini_set('memory_limit', '512M');
+       ini_set('memory_limit', '1024M');
        
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
@@ -5293,9 +5294,7 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $lugar = 'caracas | valencia | maracay |';
-        $lugar = substr($lugar,0,-2);
-        return $lugar;
+       phpinfo();
     }
 
 }

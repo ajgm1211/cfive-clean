@@ -39,36 +39,37 @@ use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
-   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-   public $request,$companyUserId,$UserId;
-   /**
+    public $request,$companyUserId,$UserId;
+    /**
      * Create a new job instance.
      *
      * @return void
      */
-   public function __construct($request,$companyUserId,$UserId)
-   {
-      $this->request          = $request;
-      $this->companyUserId    = $companyUserId;
-      $this->UserId           = $UserId;
+    public function __construct($request,$companyUserId,$UserId)
+    {
+        $this->request          = $request;
+        $this->companyUserId    = $companyUserId;
+        $this->UserId           = $UserId;
 
-   }
+    }
 
-   /**
+    /**
      * Execute the job.
      *
      * @return void
      */
-   public function handle()
-   {
-      $requestobj = $this->request;
-      $companyUserIdVal = $this->companyUserId;
-      $errors = 0;
-      $NameFile = $requestobj['FileName'];
-      $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
-      //dd($path);
-      Excel::selectSheetsByIndex(0)
+    public function handle()
+    {
+        $requestobj = $this->request;
+        $companyUserIdVal = $this->companyUserId;
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
+        //dd($path);
+        //ini_set('memory_limit', '1024M');
+        Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
                 $reader->noHeading = true;
                 //$reader->ignoreEmpty();
@@ -1947,7 +1948,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                     } 
                                     else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0 
-                                               || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
+                                             || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
                                         // es una sola carga Per Shipment
 
                                         // multiples puertos o por seleccion
@@ -2424,21 +2425,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
 
-      // dd($collection);
-      //no borrar
-      $contractData = new Contract();
-      $contractData = Contract::find($requestobj['Contract_id']);
-      $contractData->status = 'publish';
-      $contractData->update();
+        // dd($collection);
+        //no borrar
+        $contractData = new Contract();
+        $contractData = Contract::find($requestobj['Contract_id']);
+        $contractData->status = 'publish';
+        $contractData->update();
 
-      Storage::Delete($NameFile);
-      $FileTmp = new FileTmp();
-      $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
+        Storage::Delete($NameFile);
+        $FileTmp = new FileTmp();
+        $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
 
-      $userNotifique = User::find($this->UserId);
-      $message = 'The file imported was processed :' . $contractData->number ;
-      $userNotifique->notify(new SlackNotification($message));
-      $userNotifique->notify(new N_general($userNotifique,$message)); 
+        $userNotifique = User::find($this->UserId);
+        $message = 'The file imported was processed :' . $contractData->number ;
+        $userNotifique->notify(new SlackNotification($message));
+        $userNotifique->notify(new N_general($userNotifique,$message)); 
 
-   }
+    }
 }
