@@ -350,7 +350,7 @@ class QuoteAutomaticController extends Controller
                       //  echo $monto;
                       //echo '<br>';
 
-                    }
+                    }// AQUI IRIA EL ELSE PARA EL CALCULO DE KM 
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);

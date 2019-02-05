@@ -11,6 +11,7 @@ use App\Currency;
 use Illuminate\Support\Facades\Auth;
 use App\Company;
 use App\InlandCompanyRestriction;
+use EventIntercom;
 class InlandsController extends Controller
 {
   /**
@@ -130,6 +131,11 @@ class InlandsController extends Controller
         $inland_company_restriction->save();
       }
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_inlands();
+    
+    
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this Inland.');

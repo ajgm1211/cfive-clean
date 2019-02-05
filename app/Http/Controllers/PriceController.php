@@ -11,6 +11,7 @@ use App\Price;
 use App\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use EventIntercom;
 
 class PriceController extends Controller
 {
@@ -110,6 +111,10 @@ class PriceController extends Controller
       $inland_markup->price_id = $price->id;
       $inland_markup->save();
     }
+
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_pricing();
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
