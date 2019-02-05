@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendQuotes;
 use Illuminate\Http\Request;
 use App\Company;
 use App\CompanyUser;
@@ -180,12 +181,8 @@ class PdfController extends Controller
 
         $quote = Quote::findOrFail($request->id);
         $contact_email = Contact::find($quote->contact_id);
-        $companies = Company::all()->pluck('business_name','id');
-        $harbors = Harbor::all()->pluck('name','id');
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-        $prices = Price::all()->pluck('name','id');
-        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
         $origin_ammounts = OriginAmmount::where('quote_id',$quote->id)->get();
         $freight_ammounts = FreightAmmount::where('quote_id',$quote->id)->get();
         $destination_ammounts = DestinationAmmount::where('quote_id',$quote->id)->get();
@@ -307,17 +304,12 @@ class PdfController extends Controller
         $subject = $request->subject;
         $body = $request->body;
         $to = $request->to;
-        if($to!=''){
-            $explode=explode(';',$to);
-            foreach($explode as $item) {
-                \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
-            }
-        }else{
-            \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
-        }
+
+        SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
 
         $quote->status_quote_id=2;
         $quote->update();
+
         return response()->json(['message' => 'Ok']);
 
         /*if(count($contact_email)>0) {

@@ -605,9 +605,9 @@
                                                                             @endphp
                                                                             {!! Form::text('validity_date', $validity, ['placeholder' => 'Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
                                                                             <div class="input-group-append">
-                                        <span class="input-group-text">
-                                          <i class="la la-calendar-check-o"></i>
-                                        </span>
+                                                                                <span class="input-group-text">
+                                                                                  <i class="la la-calendar-check-o"></i>
+                                                                                </span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -660,10 +660,10 @@
                                                         <div style="min-height: 100px;">
                                                             <div style="margin-top: 20px;">
                                                                 <div class="pull-left text-left" style="line-height: .5;">
-                                                                    <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                                                                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
                                                                 </div>
                                                                 <div class="pull-right text-right" style="line-height: .5">
-                                                                    <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
+                                                                    <p><b>Quotation ID: <span style="color: #CFAC6C"><br><br>@if($quote->custom_id!='') {!! Form::text('custom_id', $quote->custom_id, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @else {!! Form::text('custom_id', $quote->company_quote, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @endif</span></b></p>
                                                                     <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                                                     @if($quote->validity!=''&&$quote->since_validity!='')
                                                                         <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
