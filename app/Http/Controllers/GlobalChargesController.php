@@ -16,6 +16,7 @@ use App\GlobalCharCarrier;
 use App\TypeDestiny;
 use App\Country;
 use App\GlobalCharCountry;
+use EventIntercom;
 
 class GlobalChargesController extends Controller
 {
@@ -132,6 +133,10 @@ class GlobalChargesController extends Controller
 
       }
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_globalChargesFcl();
+    
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');

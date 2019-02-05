@@ -1147,6 +1147,7 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
 
     <input type="hidden" class="form-control" id="lclAuto" name="lclAuto" value="true" >
+    <input type="hidden" class="form-control" id="quot_auto" name="quot_auto" value="true" >
     <input type="hidden" class="form-control" id="quantity" name="quantity" value="{{json_encode($form->quantity) }}" >
     <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo" value="{{json_encode($form->type_load_cargo) }}">
     <input type="hidden" class="form-control" id="height" name="height" value="{{json_encode($form->height) }}">
