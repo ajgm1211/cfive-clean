@@ -14,7 +14,7 @@ use App\Mail\NewRequestToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use App\Jobs\ProcessContractFile;
-use Intercom\IntercomClient;
+use EventIntercom;
 
 class NewContractRequestsController extends Controller
 {
@@ -115,9 +115,9 @@ class NewContractRequestsController extends Controller
     $Ncontract->save();
 
     ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile );
-    
+
     $user = User::find($request->user);
-  
+
     $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
     $user->notify(new SlackNotification($message));
     $admins = User::where('type','admin')->get();
@@ -294,6 +294,11 @@ class NewContractRequestsController extends Controller
                                                                    $Ncontract->toArray()));
           }
         }
+
+        // Intercom SEARCH 
+        $event = new  EventIntercom();
+        $event->event_requestDone($Ncontract->user_id);
+
 
         $usercreador = User::find($Ncontract->user_id);
         $message = "The importation ".$Ncontract->id." was completed";

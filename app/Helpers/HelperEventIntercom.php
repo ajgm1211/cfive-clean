@@ -14,6 +14,18 @@ class Intercom{
 
   }
 
+  // EVENTOS RATES
+  public static function event_selectRate(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "SELECT RATE",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
+  }
   public static function event_searchRate(){
     $obj  = self::$client;    
     $obj->events->create([
@@ -220,6 +232,23 @@ class Intercom{
     ]);
   }
 
+  // REQUEST CONTRACT 
+
+  public static function event_requestDone($idUser){
+    $usercreador = User::find($idUser);
+    $obj  = self::$client;    
+    $users = User::all()->where('company_user_id','=', $usercreador->company_user_id);
+    foreach ($users as $u) {
+      $obj->events->create([
+        "event_name" => "REQUEST DONE",
+        "created_at" => strtotime("now"),
+        "email" => $u->email,
+        "metadata" => [
+          "order_date" => strtotime("now")
+        ]
+      ]);
+    }
+  }
 
 
 
