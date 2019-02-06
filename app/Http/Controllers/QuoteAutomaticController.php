@@ -120,6 +120,11 @@ class QuoteAutomaticController extends Controller
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
     }
+    // Intercom SEARCH 
+    $event = new  EventIntercom();
+    $event->event_selectRate();
+    
+    
     return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
   }
 
