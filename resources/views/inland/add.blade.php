@@ -26,11 +26,11 @@ $validation_expire = 'Please enter valididity date';
       </div>
     </div>
     @endif
-    <div class="m-portlet__body">
-      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'm_form']) !!}
-      <div class="row">
-        @include('inland.partials.form_inlands')
-      </div>
+    <div class="m-portlet__body col-md-12">
+      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'm2_form']) !!}
+
+      @include('inland.partials.form_inlands')
+
       <hr>
       <!--begin: Form Wizard-->
       <div class="m-portlet m-portlet--tabs">
@@ -66,33 +66,7 @@ $validation_expire = 'Please enter valididity date';
           <div class="m-portlet__body">
             <div class="">
 
-              <div class="m-portlet m-portlet--responsive-mobile">
-                <div class="m-portlet__head">
-                  <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                      <span class="m-portlet__head-icon">
-                        <i class="m-menu__link-icon la la-truck"></i>
-                      </span>
-                      <h3 class="m-portlet__head-text m--font-brand">
-                        Km aditional Charge for 20' Container
-                      </h3>
-                    </div>
-                  </div>
 
-                </div>
-                <div class="text-center" style="font-size: 11px !important;">
-
-                  <table id='twuentykm' class="table m-table ">
-                    <thead>
-                      <tr>
-                        <th> <span><b>Aditional <br> Charge (KM)</b></span></th>
-                        <th>  {!! Form::text('lowertwuenty[]', null, ['placeholder' => 'Enter amount for aditional  km  ','class' => 'form-control m-input km20 ', 'id' => 'km20','style'=>'width:50%']) !!}</th>
-
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-              </div>
 
               <div class="m-portlet m-portlet--responsive-mobile">
                 <div id="msg20" style="display:none" class="m-alert m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
@@ -185,33 +159,7 @@ $validation_expire = 'Please enter valididity date';
         <div class="tab-pane " id="m_tabs_2" role="tabpanel">
           <div class="m-portlet__body">
             <div class="">
-              <div class="m-portlet m-portlet--responsive-mobile">
-                <div class="m-portlet__head">
-                  <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                      <span class="m-portlet__head-icon">
-                        <i class="m-menu__link-icon la la-truck"></i>
-                      </span>
-                      <h3 class="m-portlet__head-text m--font-brand">
-                        Km aditional Charge for 40' Container
-                      </h3>
-                    </div>
-                  </div>
 
-                </div>
-                <div class="text-center" style="font-size: 11px !important;">
-
-                  <table id='fortykm' class="table m-table ">
-                    <thead>
-                      <tr>
-                        <th> <span><b>Aditional <br> Charge (KM)</b></span></th>
-                        <th>  {!! Form::text('kmforty[]', null, ['placeholder' => 'Enter amount for aditional  km  ','class' => 'form-control m-input km40 ', 'id' => 'km40','style'=>'width:50%']) !!}</th>
-
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-              </div>
               <div class="m-portlet m-portlet--responsive-mobile">
                 <div id="msg40" style="display:none" class="m-alert m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>I'm Sorry!</strong> the upper limit can not be less than the initial limit
@@ -298,33 +246,7 @@ $validation_expire = 'Please enter valididity date';
         <div class="tab-pane " id="m_tabs_3" role="tabpanel">
           <div class="m-portlet__body">
             <div class="">
-              <div class="m-portlet m-portlet--responsive-mobile">
-                <div class="m-portlet__head">
-                  <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                      <span class="m-portlet__head-icon">
-                        <i class="m-menu__link-icon la la-truck"></i>
-                      </span>
-                      <h3 class="m-portlet__head-text m--font-brand">
-                        Km aditional Charge for 40HC' Container
-                      </h3>
-                    </div>
-                  </div>
 
-                </div>
-                <div class="text-center" style="font-size: 11px !important;">
-
-                  <table id='fortyhckm' class="table m-table ">
-                    <thead>
-                      <tr>
-                        <th> <span><b>Aditional <br> Charge (KM)</b></span></th>
-                        <th>  {!! Form::text('kmfortyhc[]', null, ['placeholder' => 'Enter amount for aditional  km  ','class' => 'form-control m-input km40HC ', 'id' => 'km40HC','style'=>'width:50%']) !!}</th>
-
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
-              </div>
               <div class="m-portlet m-portlet--responsive-mobile">
                 <div id="msg40H" style="display:none" class="m-alert m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>I'm Sorry!</strong> the upper limit can not be less than the initial limit
@@ -412,9 +334,14 @@ $validation_expire = 'Please enter valididity date';
       <div class="m-portlet__foot m-portlet__foot--fit">
         <br>
         <div class="m-form__actions">
-          <button type="button"  data-wizard-action="submit" class="btn btn-primary">
-            Submit
-          </button>
+
+          <input type='submit' name="btn" value="sub">
+
+          <!--
+<button type="button"  data-wizard-action="submit" class="btn btn-primary">
+Submit
+</button>
+-->
           <button type="reset" class="btn btn-danger">
             Cancel
           </button>
