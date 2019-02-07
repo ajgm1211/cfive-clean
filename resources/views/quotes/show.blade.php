@@ -316,7 +316,7 @@
         @if(count($origin_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Origin ammounts</h5>
+              <h5 class="title-quote size-14px">Origin amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -362,7 +362,7 @@
         @if(count($freight_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Freight ammounts</h5>
+              <h5 class="title-quote size-14px">Freight amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -408,7 +408,7 @@
         @if(count($destination_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Destination ammounts</h5>
+              <h5 class="title-quote size-14px">Destination amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -524,8 +524,8 @@
         <label class="title-quote title-quote size-14px">PDF type</label>
         {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
         <hr>
-        <label class="title-quote title-quote size-14px">PDF ammounts</label>
-        {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
+        <label class="title-quote title-quote size-14px">PDF amounts</label>
+        {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original amounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
         <hr>
         <label class="title-quote title-quote size-14px">Carrier visibility</label>
         {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],$quote->hide_carrier, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}

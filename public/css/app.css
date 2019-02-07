@@ -14198,7 +14198,11 @@ select.selectpicker {
   margin: 0;
   position: relative;
   vertical-align: middle;
-  width: 100% !important;
+  width: 100%;
+}
+
+.select-2-width {
+  width: 100px !important;
 }
 
 .select2-container .select2-selection--single {

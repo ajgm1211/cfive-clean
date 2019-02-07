@@ -692,7 +692,7 @@
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Origin ammounts</h5>
+                                                            <h5 class="title-quote size-14px">Origin amounts</h5>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
@@ -724,7 +724,7 @@
                                                                                     <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency select2-origin']) }}
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select2-origin select-2-width']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -759,7 +759,7 @@
                                                                                     <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -799,7 +799,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Freight ammounts</h5>
+                                                            <h5 class="title-quote size-14px">Freight amounts</h5>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
@@ -832,7 +832,7 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="..." required>
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency select2-freight','required'=>true]) }}
+                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -867,7 +867,7 @@
                                                                                     <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}              
+                                                                                            {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency select-2-width']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -907,7 +907,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-3">
-                                                            <h5 class="title-quote size-14px">Destination ammounts</h5>
+                                                            <h5 class="title-quote size-14px">Destination amounts</h5>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
@@ -939,7 +939,7 @@
                                                                                     <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency select2-destination']) }}
+                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select2-destination select-2-width']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -971,10 +971,10 @@
                                                                             </td>
                                                                             <td>
                                                                                 <div class="input-group">
-                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
+                                                                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="..." style="width: 100px !important;">
                                                                                     <div class="input-group-btn">
                                                                                         <div class="btn-group">
-                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}              
+                                                                                            {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select-2-width']) }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1187,8 +1187,8 @@
             <label class="title-quote title-quote size-14px">PDF type</label>
             {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_type']) !!}
             <hr>
-            <label class="title-quote title-quote size-14px">PDF Ammounts</label>
-            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
+            <label class="title-quote title-quote size-14px">PDF Amounts</label>
+            {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original amounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
             <hr>
             <label class="title-quote title-quote size-14px">Carrier visibility</label>
             {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
