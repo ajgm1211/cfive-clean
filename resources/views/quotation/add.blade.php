@@ -1166,7 +1166,7 @@ $subtotalDestiny = 0;
 
 
     <input type="hidden" class="form-control" id="contract_number" name="contract_number" value="{{$info->contract->name}} / {{ $info->contract->number }}">
-
+     <input type="hidden" id="emaildimanicdata" value="{{$emaildimanicdata}}"/>
 
     @if($email_templates)
     @include('quotes.partials.submitQuoteEmailModal')
