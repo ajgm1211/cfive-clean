@@ -115,7 +115,7 @@
 
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencytwuenty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -135,7 +135,7 @@
 
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencytwuenty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -204,7 +204,7 @@
                             {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'widht:100%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '','style'=>'widht:50%']) }}
+                                {{ Form::select('currencyforty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '','style'=>'widht:50%']) }}
                               </div>
                             </div>
                           </div>
@@ -222,7 +222,7 @@
                             {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','style' => 'width:50%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencyforty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -289,7 +289,7 @@
                             {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'width:50%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencyfortyhc[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -307,7 +307,7 @@
                             {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencyfortyhc[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
