@@ -43,7 +43,7 @@
                                     Save
                                 </button>
                                 @if($email_templates)
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
+                                <button type="button" class="btn btn-primary" onclick="capturedataemail()" data-toggle="modal" data-target="#SendQuoteModal">
                                     Save and send
                                 </button>
                                 @endif
@@ -1104,7 +1104,7 @@
                                                             Save
                                                         </button>
                                                         @if($email_templates)
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendQuoteModal">
+                                                        <button type="button" class="btn btn-primary" onclick="capturedataemail()" data-toggle="modal" data-target="#SendQuoteModal">
                                                             Save and send
                                                         </button>
                                                         @endif
@@ -1195,6 +1195,7 @@
         </div>        
     </div>
 </div>
+<input type="hidden" id="emaildimanicdata" value='{"quote_bool":"false","company_id":"","contact_id":"","quote_id":""}'/>
 {!! Form::close() !!}
 
 @include('quotes.partials.schedulesModal')
@@ -1215,6 +1216,15 @@
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+
+    function capturedataemail(){
+        var company_id       = $( ".company_id option:selected" ).val();
+        var contact_id       = $( "#contact_id option:selected" ).val();
+        var myJson           = {"quote_bool":"false","company_id":company_id,"contact_id":contact_id,"quote_id":""};
+        var myJson           = JSON.stringify(myJson);
+        var emaildimanicdata = $( "#emaildimanicdata" ).val(myJson);
+    }
+
     $('.select2-origin').select2({
         placeholder: "Currency"
     });
