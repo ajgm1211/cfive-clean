@@ -301,7 +301,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->upper }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'upperforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up up40','disabled' => 'true','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}
+                            {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'upperforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up up40','disabled' => 'true','onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}
                           </div>
 
 
