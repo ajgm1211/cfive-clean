@@ -696,7 +696,6 @@ class QuoteController extends Controller
   {
     $rules = array(
       'pick_up_date' => 'required',
-      'validity_date' => 'required',
       'company_id' => 'required',
       'contact_id' => 'required',
       'type' => 'required',
@@ -888,13 +887,13 @@ class QuoteController extends Controller
         }
       }
       if(isset($input['lclAuto'])){
-        $quantity = array_values(json_decode($input['quantity']));
-        $type_cargo = array_values(json_decode($input['type_load_cargo']));
-        $height = array_values(json_decode($input['height']));
-        $width = array_values(json_decode($input['width']));
-        $large = array_values(json_decode($input['large']));
-        $weight = array_values(json_decode($input['weight']));
-        $volume = array_values(json_decode($input['volume']));
+        $quantity = array_values(array_filter(json_decode($input['quantity'])));
+        $type_cargo = array_values(array_filter(json_decode($input['type_load_cargo'])));
+        $height = array_values(array_filter(json_decode($input['height'])));
+        $width = array_values(array_filter(json_decode($input['width'])));
+        $large = array_values(array_filter(json_decode($input['large'])));
+        $weight = array_values(array_filter(json_decode($input['weight'])));
+        $volume = array_values(array_filter(json_decode($input['volume'])));
 
 
       }else{
@@ -906,7 +905,6 @@ class QuoteController extends Controller
         $weight = array_values( array_filter($input['weight']) );
         $volume = array_values( array_filter($input['volume']) );
       }
-
       if(count($quantity)>0){
         foreach($type_cargo as $key=>$item){
           $package_load = new PackageLoad();

@@ -27,7 +27,7 @@ $validation_expire = 'Please enter valididity date';
     </div>
     @endif
     <div class="m-portlet__body col-md-12">
-      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'm2_form']) !!}
+      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'm_form']) !!}
 
       @include('inland.partials.form_inlands')
 
@@ -334,14 +334,9 @@ $validation_expire = 'Please enter valididity date';
       <div class="m-portlet__foot m-portlet__foot--fit">
         <br>
         <div class="m-form__actions">
-
-          <input type='submit' name="btn" value="sub">
-
-          <!--
-<button type="button"  data-wizard-action="submit" class="btn btn-primary">
-Submit
-</button>
--->
+          <button type="button"  data-wizard-action="submit" class="btn btn-primary">
+            Submit
+          </button>
           <button type="reset" class="btn btn-danger">
             Cancel
           </button>

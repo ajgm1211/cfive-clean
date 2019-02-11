@@ -7,10 +7,15 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Inland extends Model implements Auditable
 {
   use \OwenIt\Auditing\Auditable;
-  
+
   protected $table    = "inlands";
   protected $fillable =   ['id','provider','type','validity','expire'];
 
+  public function inlandadditionalkm(){
+
+    return $this->hasOne('App\InlandAdditionalKm');
+
+  }
   public function inlandports(){
 
     return $this->hasMany('App\InlandPort');
@@ -19,7 +24,7 @@ class Inland extends Model implements Auditable
   public function inlanddetails(){
 
     return $this->hasMany('App\InlandDetail');
-   
+
   }
   public function companyUser()
   {
