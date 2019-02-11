@@ -50,10 +50,17 @@ use App\Mail\SendQuotePdf;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use Yajra\Datatables\Datatables;
+use App\Repositories\Schedules;
 
 
 class QuoteController extends Controller
 {
+    protected $schedules;
+
+    public function __construct(Schedules $schedules)
+    {
+        $this->schedules = $schedules;
+    }
 
     public function index(Request $request){
         $company_user_id = \Auth::user()->company_user_id;
@@ -1523,43 +1530,39 @@ class QuoteController extends Controller
         $status_quotes=StatusQuote::pluck('name','id');
         return view('quotes.changeStatus',compact('quote','status_quotes'));
     }
+
     public function scheduleManual($orig_port,$dest_port,$date_pick)
     {
         $code_orig = $this->getHarborName($orig_port);
         $code_dest = $this->getHarborName($dest_port);
         $date  = $date_pick;
         $carrier = 'maersk';
-        // Armar los schedules
-        try{
-            $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
-            $client = new Client();
-            $res = $client->request('GET', $url, [
-            ]);
-            $schedules = Collection::make(json_decode($res->getBody()));
-            //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
-            $schedulesArr = new Collection();
-            $schedulesFin = new Collection();
-            if(!$schedules->isEmpty()){
-                foreach($schedules['schedules'] as $schedules){
-                    $collectS = Collection::make($schedules);
-                    $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
-                    $collectS->put('days',$days);
-                    if($schedules->Transfer > 1){
-                        $collectS->put('type','Scale');
-                    }else{
-                        $collectS->put('type','Direct');
-                    }
-                    $schedulesArr->push($collectS);
+
+        //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
+        $access_token = $this->schedules->authentication();
+        $data = $this->schedules->getSchedules($access_token->access_token,$carrier,$code_orig->code,$code_dest->code);
+        $schedules = Collection::make($data);
+
+        $schedulesArr = new Collection();
+        $schedulesFin = new Collection();
+        if(!$schedules->isEmpty()){
+            foreach($schedules['data'] as $schedules){
+                $collectS = Collection::make($schedules);
+                $days =  $this->dias_transcurridos($schedules->eta,$schedules->etd);
+                $collectS->put('days',$days);
+                if($schedules->route_type > 1){
+                    $collectS->put('type','Scale');
+                }else{
+                    $collectS->put('type','Direct');
                 }
-                //'2018-07-24'
-                $dateSchedule = strtotime($date);
-                $dateSchedule =  date('Y-m-d',$dateSchedule);
-                if(!$schedulesArr->isEmpty()){
-                    $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-                    $schedulesFin->push($schedulesArr);
-                }
+                $schedulesArr->push($collectS);
             }
-        }catch (\Guzzle\Http\Exception\ConnectException $e) {
+            $dateSchedule = strtotime($date);
+            $dateSchedule =  date('Y-m-d',$dateSchedule);
+            if(!$schedulesArr->isEmpty()){
+                $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
+                $schedulesFin->push($schedulesArr);
+            }
         }
         return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
     }
