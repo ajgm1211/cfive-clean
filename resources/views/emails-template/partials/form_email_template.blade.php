@@ -26,7 +26,7 @@
 
 <div class="form-group m-form__group">
     {!! Form::label('Text', 'Text') !!}
-    {!! Form::textarea('menssage', '', ['placeholder' => 'Please enter your  menssage','id' => 'textarea_id','class' => 'form-control editor m-input']) !!}
+    {!! Form::textarea('menssage', null, ['placeholder' => 'Please enter your  menssage','id' => 'textarea_id','class' => 'form-control editor m-input']) !!}
 
 </div>
 
