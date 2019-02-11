@@ -227,6 +227,16 @@ class InlandsController extends Controller
     $inland->validity = $validation[0];
     $inland->expire = $validation[1];
     $inland->update();
+
+
+    $inlandKM = InlandAdditionalKm::where("inland_id",$id)->first();
+    $inlandKM->km_20 = $request->input('km_20');
+    $inlandKM->km_40 = $request->input('km_40');
+    $inlandKM->km_40hc = $request->input('km_40hc');
+    $inlandKM->currency_id = $request->input('chargecurrencykm');
+    $inlandKM->update();
+
+
     $ports = $request->input('inlandport');
     $detailstwuenty =  $request->input('lowertwuenty');
     $detailsforty =  $request->input('lowerforty');
