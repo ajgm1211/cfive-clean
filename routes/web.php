@@ -404,6 +404,10 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
 // GLOBAL CHARGES LCL 
 
+Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(function () {
+   Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
+});
+
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
 
 

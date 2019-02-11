@@ -47,6 +47,8 @@
 
     var title = <?php echo json_encode($templates) ?>;
 
+        
+    
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",
