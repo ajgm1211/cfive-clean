@@ -26,7 +26,7 @@ return array(
     |    ]
     */
     'disks' => [
-
+       's3_upload'
     ],
 
     /*
@@ -40,7 +40,7 @@ return array(
 
     'route' => [
         'prefix' => 'elfinder',
-        'middleware' => 'replace-this-with-your-middleware', //Set to null to disable middleware filter
+        'middleware' => ['web'], //Set to null to disable middleware filter
     ],
 
     /*
