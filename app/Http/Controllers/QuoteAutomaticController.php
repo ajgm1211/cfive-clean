@@ -330,6 +330,10 @@ class QuoteAutomaticController extends Controller
 
       foreach($inlands as $inlandsValue){
         $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+        $km20 = true;
+        $km40 = true;
+        $km40hc = true;
+
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -354,33 +358,42 @@ class QuoteAutomaticController extends Controller
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('twuenty') * $details->ammount) / $rateI;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
-                      $monto += $request->input('twuenty') * $montoKm;
-
+                      $km20 = false;
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('forty') * $details->ammount) / $rateI;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
-                      $monto += $request->input('forty') * $montoKm;
-
+                      $km40 = false;
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
-                      $monto += $request->input('fortyhc') * $montoKm;
-
+                      $km40hc = false;
                     }
                   }
                 }
+                // KILOMETROS ADICIONALES 
+
+                if($km20){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+                  $monto += $request->input('twuenty') * $montoKm;
+
+                }
+                if($km40){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+                  $monto += $request->input('forty') * $montoKm;
+
+                }
+                if($km40hc){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+                  $monto += $request->input('fortyhc') * $montoKm;
+
+                }
+
                 // MARKUPS
                 if($inlandPercentage != 0){
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
@@ -414,7 +427,7 @@ class QuoteAutomaticController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo
       }
-   //  dd($inlandDestiny);
+
     }
 
     // Origin Addrees
@@ -428,6 +441,9 @@ class QuoteAutomaticController extends Controller
 
       foreach($inlands as $inlandsValue){
         $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+        $km20 = true;
+        $km40 = true;
+        $km40hc = true;
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -451,33 +467,43 @@ class QuoteAutomaticController extends Controller
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('twuenty') * $details->ammount) / $rateI ;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
-                      $monto += $request->input('twuenty') * $montoKm;
-
+                      $km20 = false;
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('forty') * $details->ammount)  / $rateI;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
-                      $monto += $request->input('forty') * $montoKm;
-
+                      $km40 = false;
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
-                    }else{
-                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
-                      $monto += $request->input('fortyhc') * $montoKm;
-
+                      $km40hc = false;
                     }
                   }
+                }              
+
+                // KILOMETROS ADICIONALES 
+
+                if($km20){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+                  $monto += $request->input('twuenty') * $montoKm;
+
                 }
+                if($km40){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+                  $monto += $request->input('forty') * $montoKm;
+
+                }
+                if($km40hc){
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+                  $monto += $request->input('fortyhc') * $montoKm;
+
+                }
+
                 // MARKUPS
                 if($inlandPercentage != 0){
                   $markup = ( $monto *  $inlandPercentage ) / 100 ;
