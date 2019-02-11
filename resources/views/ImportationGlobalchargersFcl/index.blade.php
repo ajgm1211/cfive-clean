@@ -39,16 +39,6 @@
             </div>
          </div>
 
-
-         <div class="m-portlet__head-tools">
-            <ul class="m-portlet__nav">
-               <li class="m-portlet__nav-item">
-                  <a href="#" data-toggle="m-tooltip" class="m-portlet__nav-link m-portlet__nav-link--icon" data-direction="left" data-width="auto" title="Get help with filling up this form">
-                     <i class="flaticon-info m--icon-font-size-lg3"></i> 
-                  </a>
-               </li>
-            </ul>
-         </div>
       </div>
       {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
       <div class="m-portlet__body">
@@ -62,34 +52,27 @@
                         <div class="col-lg-2">
                            <label class="col-form-labe"><b>CONTRACT:</b></label>
                         </div>
-
-                        <div class="col-lg-3">
-                           <label for="nameid" class="">Contract Name</label>
-                           {!!  Form::text('name',null,['id'=>'nameid',
-                           'placeholder'=>'Contract Name',
-                           'required',
-                           'class'=>'form-control m-input'])!!}
-                        </div>
-                        <div class="col-lg-3">
-                           <label for="numberid" class=" ">Contract Number</label>
-                           {!!  Form::text('number',null,['id'=>'numberid',
-                           'placeholder'=>'Number Contract',
-                           'required',
-                           'class'=>'form-control m-input'])!!}
-                        </div>
-                        <div class="col-lg-3">
-                           <label for="validation_expire" class=" ">Validation</label>
-                           <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
-                        </div>
-                     </div>
-                     <div class="form-group m-form__group row">
-                        <div class="col-lg-2"> </div>
                         <div class="col-lg-3">
                            <label for="numberid" class=" ">Company User</label>
                            {!!  Form::select('CompanyUserId',$companysUser,null,['id'=>'CompanyUserId',
                            'required',
                            'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
                         </div>
+                        <div class="col-lg-3">
+                           <label for="nameid" class="">Importation Name</label>
+                           {!!  Form::text('name',null,['id'=>'nameid',
+                           'placeholder'=>'Contract Name',
+                           'required',
+                           'class'=>'form-control m-input'])!!}
+                        </div>
+                        <div class="col-lg-3">
+                           <label for="numberid" class=" ">Date Importation</label>
+                           {!!  Form::date('number',\Carbon\Carbon::now(),['id'=>'dateid',
+                           'placeholder'=>'Number Contract',
+                           'required',
+                           'class'=>'form-control m-input'])!!}
+                        </div>
+
                      </div>
 
                      <hr>
@@ -346,7 +329,7 @@ Rates &nbsp; + &nbsp; Surcharges
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
+<script src="{{asset('js/Globalchargers/ImporttationGlobalchargersFcl.js')}}"></script>
 
 <script>
    $(document).ready(function(){
