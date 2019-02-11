@@ -85,7 +85,6 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                   Remarks
                 </a>
               </li>
-
             </ul>
           </div>
         </div>
@@ -259,7 +258,6 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                 </div>
               </div>
             </div>
-
             <div class="tab-pane" id="m_tabs_6_4" role="tabpanel">
               <div class="form-group m-form__group row">
                 <div class="col-lg-12">
@@ -269,11 +267,11 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
               </div>
             </div>
           </div>
-
           <div class="m-portlet__foot m-portlet__foot--fit">
             <div class="m-form__actions m-form__actions">
+              <br>
               {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-              <a class="btn btn-success" href="{{url()->previous()}}">
+              <a class="btn btn-danger" href="{{url()->previous()}}">
                 Cancel
               </a>
             </div>
@@ -354,267 +352,271 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
                   </span>
                 </span>
               </label>
-
-              <div class="col-lg-2"></div>
-              <div class="col-lg-5">
-                <label class="m-option">
-                  <span class="m-option__control">
-                    <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                      <input name="DatCar" id="carrierchk" type="checkbox">
-                      <span></span>
-                    </span>
-                  </span>
-                  <span class="m-option__label">
-                    <span class="m-option__head">
-                      <span class="m-option__title">
-                        Carrier Not Included
-                      </span>
-                    </span>
-                  </span>
-                </label>
-                <div class="col-form-label" hidden="hidden" id="carrierinp">
-                  {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
-                </div>
-              </div>
             </div>
-            <div class="form-group m-form__group row"  id="divvaluescurren">
-              <div class="col-2"></div>
-              <div class="col-lg-5">
-                <label class="m-option">
-                  <span class="m-option__control">
-                    <span class="m-radio m-radio--brand m-radio--check-bold">
-                      <input name="valuesCurrency" value="1"  type="radio" >
-                      <span></span>
+            <div class="col-lg-2"></div>
+            <div class="col-lg-5">
+              <label class="m-option">
+                <span class="m-option__control">
+                  <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                    <input name="DatCar" id="carrierchk" type="checkbox">
+                    <span></span>
+                  </span>
+                </span>
+                <span class="m-option__label">
+                  <span class="m-option__head">
+                    <span class="m-option__title">
+                      Carrier Not Included
                     </span>
                   </span>
-                  <span class="m-option__label">
-                    <span class="m-option__head">
-                      <span class="m-option__title">
-                        Values Only
-                      </span>
-                    </span>
-                  </span>
-                </label>
-              </div>
-              <div class="col-lg-5">
-                <label class="m-option">
-                  <span class="m-option__control">
-                    <span class="m-radio m-radio--brand m-radio--check-bold">
-                      <input name="valuesCurrency" value="2"  type="radio" checked>
-                      <span></span>
-                    </span>
-                  </span>
-                  <span class="m-option__label">
-                    <span class="m-option__head">
-                      <span class="m-option__title">
-                        Values With Currency
-                      </span>
-                    </span>
-                  </span>
-                </label>
-              </div>
-              <div class="col-2"></div>
-              <div class="col-lg-5">
-                <label class="m-option">
-                  <span class="m-option__control">
-                    <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                      <input name="DatOri" id="originchk" type="checkbox">
-                      <span></span>
-                    </span>
-                  </span>
-                  <span class="m-option__label">
-                    <span class="m-option__head">
-                      <span class="m-option__title">
-                        Origin Port Not Included
-                      </span>
-                    </span>
-                  </span>
-                </label>
-                <div class="col-form-label" id="origininp" hidden="hidden" >
-                  {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
-                </div>
-              </div>
-
-              <div class="col-lg-5">
-                <label class="m-option">
-                  <span class="m-option__control">
-                    <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                      <input name="DatDes" id="destinychk" type="checkbox">
-                      <span></span>
-                    </span>
-                  </span>
-                  <span class="m-option__label">
-                    <span class="m-option__head">
-                      <span class="m-option__title">
-                        Destiny Port Not Included
-                      </span>
-                    </span>
-                  </span>
-                </label>
-                <div class="col-form-label" id="destinyinp" hidden="hidden" >
-                  {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
-                </div>
-              </div>
-            </div>
-            {!!Form::hidden('contract_id',$id,['id'=>''])!!}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              Close
-            </button>
-            <!--  <button type="submit" class="btn btn-success">
-Load
-</button>-->
-            <input type="submit" class="btn btn-success">
-            {!! Form::close()!!}
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-    <div class="modal fade" id="uploadfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-
-          {!! Form::open(['route' => 'Upload.File.Rates.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">
-              Upload File Of Rates
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">
-                ×
-              </span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-            <div class="form-group">
-              <label for="recipient-name" class="form-control-label">
-                Single File Upload:
+                </span>
               </label>
-              {!!Form::file('file',['id'=>'recipient-name','required'])!!}
+              <div class="col-form-label" hidden="hidden" id="carrierinp">
+                {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+              </div>
             </div>
-            {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
-
-
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              Close
-            </button>
-            <!--  <button type="submit" class="btn btn-success">
+          <div class="form-group m-form__group row"  id="divvaluescurren">
+            <div class="col-2"></div>
+            <div class="col-lg-5">
+              <label class="m-option">
+                <span class="m-option__control">
+                  <span class="m-radio m-radio--brand m-radio--check-bold">
+                    <input name="valuesCurrency" value="1"  type="radio" >
+                    <span></span>
+                  </span>
+                </span>
+                <span class="m-option__label">
+                  <span class="m-option__head">
+                    <span class="m-option__title">
+                      Values Only
+                    </span>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div class="col-lg-5">
+              <label class="m-option">
+                <span class="m-option__control">
+                  <span class="m-radio m-radio--brand m-radio--check-bold">
+                    <input name="valuesCurrency" value="2"  type="radio" checked>
+                    <span></span>
+                  </span>
+                </span>
+                <span class="m-option__label">
+                  <span class="m-option__head">
+                    <span class="m-option__title">
+                      Values With Currency
+                    </span>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-lg-5">
+              <label class="m-option">
+                <span class="m-option__control">
+                  <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                    <input name="DatOri" id="originchk" type="checkbox">
+                    <span></span>
+                  </span>
+                </span>
+                <span class="m-option__label">
+                  <span class="m-option__head">
+                    <span class="m-option__title">
+                      Origin Port Not Included
+                    </span>
+                  </span>
+                </span>
+              </label>
+              <div class="col-form-label" id="origininp" hidden="hidden" >
+                {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
+              </div>
+            </div>
+
+            <div class="col-lg-5">
+              <label class="m-option">
+                <span class="m-option__control">
+                  <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                    <input name="DatDes" id="destinychk" type="checkbox">
+                    <span></span>
+                  </span>
+                </span>
+                <span class="m-option__label">
+                  <span class="m-option__head">
+                    <span class="m-option__title">
+                      Destiny Port Not Included
+                    </span>
+                  </span>
+                </span>
+              </label>
+              <div class="col-form-label" id="destinyinp" hidden="hidden" >
+                {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+              </div>
+            </div>
+          </div>
+
+
+          {!!Form::hidden('contract_id',$id,['id'=>''])!!}
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <!--  <button type="submit" class="btn btn-success">
 Load
 </button>-->
-            <input type="submit" class="btn btn-success">
-            {!! Form::close()!!}
-          </div>
+          <input type="submit" class="btn btn-success">
+          {!! Form::close()!!}
         </div>
       </div>
     </div>
-
-    <div class="modal fade bd-example-modal-lg" id="modalLocalchargeAdd"   role="dialog" aria-labelledby="exampleModalCenterTitleAdd" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitleAdd">
-              Add Local Charges
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">
-                &times;
-              </span>
-            </button>
-          </div>
-          <div class="modal-body-add">
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-
-    <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle2">
-              Update Local Charges
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">
-                &times;
-              </span>
-            </button>
-          </div>
-          <div class="modal-body-edit">
-            <center>
-              <div id="spinner" style="display:none">
-                <img src="/images/ship.gif" alt="Loading" />
-              </div>
-            </center>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade bd-example-modal-lg"  id="modalRates"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">
-              Ocean Freight
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">
-                &times;
-              </span>
-            </button>
-          </div>
-          <div id = 'rate-body'>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade bd-example-modal-lg"  id="modalwait"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">
-              Export Contract
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">
-                &times;
-              </span>
-            </button>
-          </div>
-          <div id = 'rate-body'>
-            <center>
-              <div class="form-group">
-                <div class="col-sm-6"></div>
-                <div class="col-sm-6">
-                  <img src="{{asset('images/ship.gif')}}" style="height:170px">
-                </div>
-                <div class="col-md-12">
-                  The contract is being exported. Please wait. It can take up to a few minutes.
-                </div>
-              </div>
-            </center>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
   </div>
+
+
+
+  <div class="modal fade" id="uploadfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+
+        {!! Form::open(['route' => 'Upload.File.Rates.For.Contracts','method' => 'PUT', 'files'=>true]) !!}
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Upload File Of Rates
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              ×
+            </span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="recipient-name" class="form-control-label">
+              Single File Upload:
+            </label>
+            {!!Form::file('file',['id'=>'recipient-name','required'])!!}
+          </div>
+          {!!Form::hidden('contract_id',$id,['id'=>'contract_id'])!!}
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <!--  <button type="submit" class="btn btn-success">
+Load
+</button>-->
+          <input type="submit" class="btn btn-success">
+          {!! Form::close()!!}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade bd-example-modal-lg" id="modalLocalchargeAdd"   role="dialog" aria-labelledby="exampleModalCenterTitleAdd" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitleAdd">
+            Add Local Charges
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div class="modal-body-add">
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade bd-example-modal-lg" id="modalLocalcharge"   role="dialog" aria-labelledby="exampleModalLongTitle2" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle2">
+            Update Local Charges
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div class="modal-body-edit">
+          <center>
+            <div id="spinner" style="display:none">
+              <img src="/images/ship.gif" alt="Loading" />
+            </div>
+          </center>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade bd-example-modal-lg"  id="modalRates"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">
+            Ocean Freight
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div id = 'rate-body'>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade bd-example-modal-lg"  id="modalwait"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">
+            Export Contract
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+              &times;
+            </span>
+          </button>
+        </div>
+        <div id = 'rate-body'>
+          <center>
+            <div class="form-group">
+              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <img src="{{asset('images/ship.gif')}}" style="height:170px">
+              </div>
+              <div class="col-md-12">
+                The contract is being exported. Please wait. It can take up to a few minutes.
+              </div>
+            </div>
+          </center>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
 
 </div>
 @endsection
@@ -746,12 +748,14 @@ Load
 
 <script>
   function AbrirModal(action,id){
+
     if(action == "editRate"){
       var url = '{{ route("edit-rates", ":id") }}';
       url = url.replace(':id', id);
       $('#rate-body').load(url,function(){
         $('#modalRates').modal({show:true});
       });
+
     }
     if(action == "addRate"){
       var url = '{{ route("add-rates", ":id") }}';
@@ -759,6 +763,7 @@ Load
       $('#rate-body').load(url,function(){
         $('#modalRates').modal({show:true});
       });
+
     }
     if(action == "duplicateRate"){
       var url = '{{ route("duplicate-rates", ":id") }}';
@@ -766,6 +771,7 @@ Load
       $('#rate-body').load(url,function(){
         $('#modalRates').modal({show:true});
       });
+
     }
     if(action == "editLocalCharge"){
       $('#spinner').show();
@@ -776,7 +782,9 @@ Load
         $('#modalLocalcharge').modal({show:true});
         $('#spinner').hide();
       });
+
     }
+
     if(action == "duplicateLocalCharge"){
       $('#spinner').show();
       $('#modalLocalcharge').modal({show:true});
@@ -786,15 +794,19 @@ Load
         $('#modalLocalcharge').modal({show:true});
         $('#spinner').hide();
       });
+
     }
     if(action == "addLocalCharge"){
       var url = '{{ route("add-LocalCharge", ":id") }}';
       url = url.replace(':id', id);
       $('.modal-body-add').load(url,function(){
         $('#modalLocalchargeAdd').modal({show:true});
+
       });
+
     }
   }
+
 </script>
 
 @if(session('editRate'))
