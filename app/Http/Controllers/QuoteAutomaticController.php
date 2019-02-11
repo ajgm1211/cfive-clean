@@ -123,8 +123,8 @@ class QuoteAutomaticController extends Controller
     // Intercom SEARCH 
     $event = new  EventIntercom();
     $event->event_selectRate();
-    
-    
+
+
     return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
   }
 
@@ -329,6 +329,7 @@ class QuoteAutomaticController extends Controller
 
 
       foreach($inlands as $inlandsValue){
+        $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -347,26 +348,36 @@ class QuoteAutomaticController extends Controller
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
                 foreach($inlandsValue->inlanddetails as $details){
+
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('twuenty') * $details->ammount) / $rateI;
-                      //  echo $monto;
-                      //echo '<br>';
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+                      $monto += $request->input('twuenty') * $montoKm;
 
-                    }// AQUI IRIA EL ELSE PARA EL CALCULO DE KM 
+                    }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('forty') * $details->ammount) / $rateI;
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+                      $monto += $request->input('forty') * $montoKm;
+
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+                      $monto += $request->input('fortyhc') * $montoKm;
+
                     }
                   }
                 }
@@ -403,7 +414,9 @@ class QuoteAutomaticController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo
       }
+   //  dd($inlandDestiny);
     }
+
     // Origin Addrees
     if($delivery_type == "3" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
@@ -414,6 +427,7 @@ class QuoteAutomaticController extends Controller
 
 
       foreach($inlands as $inlandsValue){
+        $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -437,18 +451,30 @@ class QuoteAutomaticController extends Controller
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('twuenty') * $details->ammount) / $rateI ;
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+                      $monto += $request->input('twuenty') * $montoKm;
+
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('forty') * $details->ammount)  / $rateI;
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+                      $monto += $request->input('forty') * $montoKm;
+
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
+                    }else{
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+                      $monto += $request->input('fortyhc') * $montoKm;
+
                     }
                   }
                 }
