@@ -158,7 +158,6 @@ $("#newL").on("click", function() {
 
 
 });
-
 $(document).on('click', '#default-currency-submit', function () {
   var id = $('#company_id').val();
   var form = $('#default-currency');
@@ -2006,6 +2005,7 @@ $(document).on('change', '#email_template', function () {
   });
 
 });
+
 
 $(document).on('click', '#show_email_templates', function () {
   $('#email_templates_box').show();

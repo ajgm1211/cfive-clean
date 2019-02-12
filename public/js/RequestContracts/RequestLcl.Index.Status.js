@@ -22,7 +22,7 @@
         var status = $('#statusSelectMD').val();
         
         $.ajax({
-            url:'/Requests/RequestStatus',
+            url:'/RequestsLcl/RequestLclStatus',
             method:'get',
             data:{id:id,status:status},
             success: function(data){
@@ -31,7 +31,7 @@
                     swal("Good job!", "Updated The Status!", "success");
                     var posicion = $('#posicionval').val();
                     $('#thstatus'+posicion).text(data.data);
-                   location.reload();
+                    location.reload();
                 } else {
                     swal("Error!", "An error occurred!", "error");
                 }
