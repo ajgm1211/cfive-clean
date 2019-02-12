@@ -34,21 +34,21 @@ class Schedules
 
     public function getSchedules($token,$carrier,$origin,$destination){
         try{
-        $client = new Client();
+            $client = new Client();
 
-        $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination;
+            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination;
 
-        $get_response = $client->request('GET', $get_url, [
+            $get_response = $client->request('GET', $get_url, [
 
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer '.$token,
-            ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$token,
+                ],
 
-        ]);
+            ]);
         }catch (\Guzzle\Http\Exception\ConnectException $e) {
 
         }
-        return json_decode($get_response->getBody()->getContents());
+        return json_decode($get_response->getBody());
     }
 }
