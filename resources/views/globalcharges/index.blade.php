@@ -56,7 +56,7 @@
                               </button>
                            </a>
                            @role('administrator')
-                           <!--<a href="{{route('ImportationGlobalchargeFcl.index')}}">
+                           <a href="{{route('ImportationGlobalchargeFcl.index')}}">
 
                               <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                  <span>
@@ -66,7 +66,7 @@
                                     <i class="la la-cloud-upload"></i>
                                  </span>
                               </button>
-                           </a>-->
+                           </a>
                            @endrole
                         </div>
 
