@@ -831,12 +831,12 @@ class QuoteController extends Controller
                     $schedules = json_decode($input['schedule']);
                     foreach( $schedules as $schedule){
                         $sche = json_decode($schedule);
-                        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                        $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                         $saveSchedule  = new Schedule();
-                        $saveSchedule->vessel = $sche->VesselName;
-                        $saveSchedule->etd = $sche->Etd;
+                        $saveSchedule->vessel = $sche->vessel;
+                        $saveSchedule->etd = $sche->etd;
                         $saveSchedule->transit_time =  $dias;
-                        $saveSchedule->eta = $sche->Eta;
+                        $saveSchedule->eta = $sche->eta;
                         $saveSchedule->type = 'direct';
                         $saveSchedule->quotes()->associate($quote);
                         $saveSchedule->save();
@@ -848,12 +848,12 @@ class QuoteController extends Controller
                 if($input['schedule_manual'] != 'null'){
                     $sche = json_decode($input['schedule_manual']);
                     // dd($sche);
-                    $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                    $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                     $saveSchedule  = new Schedule();
-                    $saveSchedule->vessel = $sche->VesselName;
-                    $saveSchedule->etd = $sche->Etd;
+                    $saveSchedule->vessel = $sche->vessel;
+                    $saveSchedule->etd = $sche->etd;
                     $saveSchedule->transit_time =  $dias;
-                    $saveSchedule->eta = $sche->Eta;
+                    $saveSchedule->eta = $sche->eta;
                     $saveSchedule->type = 'direct';
                     $saveSchedule->quotes()->associate($quote);
                     $saveSchedule->save();
