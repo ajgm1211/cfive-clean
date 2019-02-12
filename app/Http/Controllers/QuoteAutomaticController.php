@@ -427,7 +427,7 @@ class QuoteAutomaticController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo
       }
-
+    //  dd($inlandDestiny);
     }
 
     // Origin Addrees

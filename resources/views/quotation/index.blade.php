@@ -192,7 +192,7 @@
                           <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div><br>
                         Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
-        
+
                       </div>
                       <div class="col-md-4">
                         <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
@@ -437,6 +437,23 @@
                         <td colspan="4"></td>
                         <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>
                         <td> <span  class="darkblue px12" > {{ $arr->totalInland }} {{ $arr->quoteCurrency }}</span>  </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                @else
+                <tr id="inlands{{$loop->iteration}}" hidden="true" >
+                  <td colspan="6">
+                    <span class="darkblue cabezeras">Inland Charges</span>
+                    <hr>
+                    <table class="table table-hover">
+                      <tr class="thead-light">
+                        <td>
+                          <div class="col-md-5 col-md-m-alert m-alert--outline alert alert-info alert-dismissible fade show" role="alert">
+                            <strong> I'm sorry  inland not available.</strong>
+                          </div>
+                        </td>
+
                       </tr>
                     </table>
                   </td>
