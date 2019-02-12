@@ -1541,14 +1541,18 @@ class QuoteController extends Controller
         //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
         $access_token = $this->schedules->authentication();
         $data = $this->schedules->getSchedules($access_token->access_token,$carrier,$code_orig->code,$code_dest->code);
+
         $schedules = Collection::make($data);
 
         $schedulesArr = new Collection();
         $schedulesFin = new Collection();
         if(!$schedules->isEmpty()){
             foreach($schedules['data'] as $schedules){
+
                 $collectS = Collection::make($schedules);
+
                 $days =  $this->dias_transcurridos($schedules->eta,$schedules->etd);
+
                 $collectS->put('days',$days);
                 if($schedules->route_type > 1){
                     $collectS->put('type','Scale');
@@ -1556,14 +1560,19 @@ class QuoteController extends Controller
                     $collectS->put('type','Direct');
                 }
                 $schedulesArr->push($collectS);
+
             }
             $dateSchedule = strtotime($date);
             $dateSchedule =  date('Y-m-d',$dateSchedule);
+
             if(!$schedulesArr->isEmpty()){
-                $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
+
+                $schedulesArr =  $schedulesArr->where('etd','>=', $dateSchedule)->first();
                 $schedulesFin->push($schedulesArr);
+
             }
         }
+
         return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
     }
 
