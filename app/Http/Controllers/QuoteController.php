@@ -1531,16 +1531,16 @@ class QuoteController extends Controller
         return view('quotes.changeStatus',compact('quote','status_quotes'));
     }
 
-    public function scheduleManual($orig_port,$dest_port,$date_pick)
+    public function scheduleManual($carrier,$orig_port,$dest_port,$date_pick)
     {
         $code_orig = $this->getHarborName($orig_port);
         $code_dest = $this->getHarborName($dest_port);
         $date  = $date_pick;
-        $carrier = 'maersk';
+        $carrier_name = Carrier::find($carrier);
 
         //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
         $access_token = $this->schedules->authentication();
-        $data = $this->schedules->getSchedules($access_token->access_token,$carrier,$code_orig->code,$code_dest->code);
+        $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code);
 
         $schedules = Collection::make($data);
 
@@ -1569,7 +1569,6 @@ class QuoteController extends Controller
 
                 $schedulesArr =  $schedulesArr->where('etd','>=', $dateSchedule)->first();
                 $schedulesFin->push($schedulesArr);
-
             }
         }
 

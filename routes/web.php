@@ -273,7 +273,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
     Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
     Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
-    Route::get('quoteSchedules/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
+    Route::get('quoteSchedules/{carrier?}/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
     Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
     Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
     Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');

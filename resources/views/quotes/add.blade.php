@@ -1285,9 +1285,14 @@
 
     function AbrirModal(action){
         if(action == "add"){
+            var carrier = $('#carrier_id').val();
             var orig_p = $('#origin_harbor').val();
             var dest_p = $('#destination_harbor').val();
             var date_p = $('.pick_up_date').val();
+            if(carrier ==""){
+                msg('Sorry the carrier is empty');
+                return;
+            }
             if(orig_p ==""){
                 msg('Sorry the origin port is empty');
                 return;
@@ -1300,9 +1305,9 @@
                 msg('Sorry the date is empty');
                 return;
             }
-            var url = '{{ route("quotes.schedule", "orig_port/dest_port/date_p") }}';
+            var url = '{{ route("quotes.schedule", "/carrier/orig_port/dest_port/date_p") }}';
 
-            url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p);
+            url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p).replace('carrier', carrier);
 
             $('#spinner').show();
             $('#scheduleModal').modal({show:true});
