@@ -9,10 +9,10 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:25px">
+                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
             </div>
             <div id="company">
-                <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
+                <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</b></span></div>
                 <div><span class="color-title"><b>Data de emissão:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!=''&&$quote->since_validity!='')
                 <div><span class="color-title"><b>Validade: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>

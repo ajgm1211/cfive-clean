@@ -1,5 +1,4 @@
 <?php
-
 /*
 if (!defined('RDS_HOSTNAME')) {
 

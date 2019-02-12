@@ -63,6 +63,9 @@
                 <table class="m-datatable">
                     <thead>
                     <tr>
+                        <th title="Client id">
+                            Client id
+                        </th>
                         <th title="Name">
                             Name
                         </th>
@@ -83,6 +86,7 @@
                     <tbody>
                     @foreach ($tokens as $token)
                         <tr>
+                            <td>{{$token->id }}</td>
                             <td>{{$token->name }}</td>
                             <td>{{$token->company_user['name'] }}</td>
                             <td>{{$token->secret }}</td>

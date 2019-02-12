@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\CompanyPrice;
 use App\Contact;
+use App\Jobs\ProcessLogo;
 use App\Quote;
 use App\Price;
 use App\User;
@@ -104,21 +105,15 @@ class CompanyController extends Controller
     $company->pdf_language = $request->pdf_language;
     $company->payment_conditions = $request->payment_conditions;
     if($file != ""){
-      $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+      $company->logo = $file->getClientOriginalName();
     }
     $company->save();
 
     if($file != ""){
-      //Creamos una instancia de la libreria instalada   
-      $image = Image::make(Input::file('logo'));
-      //Ruta donde queremos guardar las imagenes
-      $path = public_path().'/uploads/logos/';
-      // Cambiar de tamaño
-      //$image->resize(300,500);
-      // Guardar
-      $image->save($path.$file->getClientOriginalName());
+      $name     = $file->getClientOriginalName();
+      \Storage::disk('logos')->put($name,file_get_contents($file));
+      ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName(),2);
     }
-
     if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
       foreach ($input['price_id'] as $key => $item) {            
         $company_price = new CompanyPrice();
@@ -205,22 +200,15 @@ class CompanyController extends Controller
     $company->pdf_language = $request->pdf_language;
     $company->payment_conditions = $request->payment_conditions;
     if($file != ""){
-      $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+      $company->logo = $file->getClientOriginalName();
     }
     $company->update();
 
     if($file != ""){
-      //Creamos una instancia de la libreria instalada   
-      $image = Image::make(Input::file('logo'));
-      //Ruta donde queremos guardar las imagenes
-      $path = public_path().'/uploads/logos/';
-      // Cambiar de tamaño
-      //$image->resize(300,500);
-      // Guardar
-      $image->save($path.$file->getClientOriginalName());
+      $name     = $file->getClientOriginalName();
+      \Storage::disk('logos')->put($name,file_get_contents($file));
+      ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName(),2);
     }
-
-
     if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
       $company_price = CompanyPrice::where('company_id',$company->id)->delete();
       foreach ($input['price_id'] as $key => $item) {            

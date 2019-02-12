@@ -1960,7 +1960,7 @@ $(document).on('change', '#email_template', function () {
       url: '/templates/preview',
       data:{"id":id},
       success: function(data) {
-     
+
         $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
 
         $('#textarea-box').show();

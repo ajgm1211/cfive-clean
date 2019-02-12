@@ -51,11 +51,18 @@ use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use Yajra\Datatables\Datatables;
 use EventIntercom;
+use App\Repositories\Schedules;
 
 
 class QuoteController extends Controller
 {
 
+  protected $schedules;
+
+  public function __construct(Schedules $schedules)
+  {
+    $this->schedules = $schedules;
+  }
 
   public function index(Request $request){
     $company_user_id = \Auth::user()->company_user_id;
@@ -535,53 +542,53 @@ class QuoteController extends Controller
         }
       }
 
-      // if($input['destination_ammount_charge']!=[null]) {
-      $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
-      $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
-      $destination_ammount_price_per_unit = array_values( array_filter($input['destination_price_per_unit']) );
-      $destination_ammount_currency = array_values( array_filter($input['destination_ammount_currency']) );
-      $destination_ammount_units = array_values( array_filter($input['destination_ammount_units']) );
-      $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
-      $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
-      $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
+      if($input['destination_ammount_charge']!=[null]) {
+        $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
+        $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
+        $destination_ammount_price_per_unit = array_values( array_filter($input['destination_price_per_unit']) );
+        $destination_ammount_currency = array_values( array_filter($input['destination_ammount_currency']) );
+        $destination_ammount_units = array_values( array_filter($input['destination_ammount_units']) );
+        $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
+        $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
+        $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
 
-      foreach ($destination_ammount_charge as $key => $item) {
+        foreach ($destination_ammount_charge as $key => $item) {
 
-        if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
-            && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
+          if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
+              && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
 
 
-          $destination_ammount = new DestinationAmmount();
-          $destination_ammount->quote_id = $quote->id;
+            $destination_ammount = new DestinationAmmount();
+            $destination_ammount->quote_id = $quote->id;
 
-          if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
-            $destination_ammount->charge = $destination_ammount_charge[$key];
-          }
-          if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
-            $destination_ammount->detail = $destination_ammount_detail[$key];
-          }
-          if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
-            $destination_ammount->units = $destination_ammount_units[$key];
-          }
-          if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
-            $destination_ammount->markup = $destination_ammount_markup[$key];
-          }
-          if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
-            $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
-            $destination_ammount->currency_id = $destination_ammount_currency[$key];
-          }
-          if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
-            $destination_ammount->total_ammount = $destination_total_ammount[$key];
-          }
-          if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
-            $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
-          }
+            if ((isset($destination_ammount_charge[$key])) && (!empty($destination_ammount_charge[$key]))) {
+              $destination_ammount->charge = $destination_ammount_charge[$key];
+            }
+            if ((isset($destination_ammount_detail[$key])) && (!empty($destination_ammount_detail[$key]))) {
+              $destination_ammount->detail = $destination_ammount_detail[$key];
+            }
+            if ((isset($destination_ammount_units[$key])) && (!empty($destination_ammount_units[$key]))) {
+              $destination_ammount->units = $destination_ammount_units[$key];
+            }
+            if ((isset($destination_ammount_markup[$key])) && (!empty($destination_ammount_markup[$key]))) {
+              $destination_ammount->markup = $destination_ammount_markup[$key];
+            }
+            if ((isset($destination_ammount_price_per_unit[$key])) && (!empty($destination_ammount_price_per_unit[$key]))) {
+              $destination_ammount->price_per_unit = $destination_ammount_price_per_unit[$key];
+              $destination_ammount->currency_id = $destination_ammount_currency[$key];
+            }
+            if ((isset($destination_total_ammount[$key])) && (!empty($destination_total_ammount[$key]))) {
+              $destination_ammount->total_ammount = $destination_total_ammount[$key];
+            }
+            if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
+              $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
+            }
 
-          $destination_ammount->save();
+            $destination_ammount->save();
 
+          }
         }
       }
-      //}
       if(isset($input['schedule'])){
         if($input['schedule'] != 'null'){
           $schedules = json_decode($input['schedule']);
@@ -858,12 +865,12 @@ class QuoteController extends Controller
           $schedules = json_decode($input['schedule']);
           foreach( $schedules as $schedule){
             $sche = json_decode($schedule);
-            $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+            $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
             $saveSchedule  = new Schedule();
-            $saveSchedule->vessel = $sche->VesselName;
-            $saveSchedule->etd = $sche->Etd;
+            $saveSchedule->vessel = $sche->vessel;
+            $saveSchedule->etd = $sche->etd;
             $saveSchedule->transit_time =  $dias;
-            $saveSchedule->eta = $sche->Eta;
+            $saveSchedule->eta = $sche->eta;
             $saveSchedule->type = 'direct';
             $saveSchedule->quotes()->associate($quote);
             $saveSchedule->save();
@@ -875,12 +882,12 @@ class QuoteController extends Controller
         if($input['schedule_manual'] != 'null'){
           $sche = json_decode($input['schedule_manual']);
           // dd($sche);
-          $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+          $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
           $saveSchedule  = new Schedule();
-          $saveSchedule->vessel = $sche->VesselName;
-          $saveSchedule->etd = $sche->Etd;
+          $saveSchedule->vessel = $sche->vessel;
+          $saveSchedule->etd = $sche->etd;
           $saveSchedule->transit_time =  $dias;
-          $saveSchedule->eta = $sche->Eta;
+          $saveSchedule->eta = $sche->eta;
           $saveSchedule->type = 'direct';
           $saveSchedule->quotes()->associate($quote);
           $saveSchedule->save();
@@ -1131,8 +1138,11 @@ class QuoteController extends Controller
     $validation = explode('/',$request->validity_date);
     $since = $validation[0];
     $until = $validation[1];
-    $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until]);
-
+    $custom_id='';
+    if($request->custom_id!='' && $request->custom_id!==$quote->company_quote){
+      $custom_id=$request->custom_id;
+    }
+    $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until,'custom_id'=>$custom_id]);
     $quote->update($request->all());
 
     OriginAmmount::where('quote_id',$quote->id)->delete();
@@ -1583,44 +1593,48 @@ class QuoteController extends Controller
     $status_quotes=StatusQuote::pluck('name','id');
     return view('quotes.changeStatus',compact('quote','status_quotes'));
   }
-  public function scheduleManual($orig_port,$dest_port,$date_pick)
+
+  public function scheduleManual($carrier,$orig_port,$dest_port,$date_pick)
   {
     $code_orig = $this->getHarborName($orig_port);
     $code_dest = $this->getHarborName($dest_port);
     $date  = $date_pick;
-    $carrier = 'maersk';
-    // Armar los schedules
-    try{
-      $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
-      $client = new Client();
-      $res = $client->request('GET', $url, [
-      ]);
-      $schedules = Collection::make(json_decode($res->getBody()));
-      //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
-      $schedulesArr = new Collection();
-      $schedulesFin = new Collection();
-      if(!$schedules->isEmpty()){
-        foreach($schedules['schedules'] as $schedules){
-          $collectS = Collection::make($schedules);
-          $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
-          $collectS->put('days',$days);
-          if($schedules->Transfer > 1){
-            $collectS->put('type','Scale');
-          }else{
-            $collectS->put('type','Direct');
-          }
-          $schedulesArr->push($collectS);
+    $carrier_name = Carrier::find($carrier);
+
+    //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
+    $access_token = $this->schedules->authentication();
+    $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code);
+
+    $schedules = Collection::make($data);
+
+    $schedulesArr = new Collection();
+    $schedulesFin = new Collection();
+    if(!$schedules->isEmpty()){
+      foreach($schedules['data'] as $schedules){
+
+        $collectS = Collection::make($schedules);
+
+        $days =  $this->dias_transcurridos($schedules->eta,$schedules->etd);
+
+        $collectS->put('days',$days);
+        if($schedules->route_type > 1){
+          $collectS->put('type','Scale');
+        }else{
+          $collectS->put('type','Direct');
         }
-        //'2018-07-24'
-        $dateSchedule = strtotime($date);
-        $dateSchedule =  date('Y-m-d',$dateSchedule);
-        if(!$schedulesArr->isEmpty()){
-          $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-          $schedulesFin->push($schedulesArr);
-        }
+        $schedulesArr->push($collectS);
+
       }
-    }catch (\Guzzle\Http\Exception\ConnectException $e) {
+      $dateSchedule = strtotime($date);
+      $dateSchedule =  date('Y-m-d',$dateSchedule);
+
+      if(!$schedulesArr->isEmpty()){
+
+        $schedulesArr =  $schedulesArr->where('etd','>=', $dateSchedule)->first();
+        $schedulesFin->push($schedulesArr);
+      }
     }
+
     return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
   }
 

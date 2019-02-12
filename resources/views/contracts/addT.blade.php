@@ -134,7 +134,7 @@
                     <td  width = '10%'> {!! Form::number('fortyhc[]', 0, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
                     <td  width = '10%'> {!! Form::number('fortynor[]', 0, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
                     <td  width = '10%'> {!! Form::number('fortyfive[]', 0, ['placeholder' => 'Enter 45','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-                    <td width = '10%'>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                    <td width = '10%'>{{ Form::select('currency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                     <td>-</td>
 
                   </tr>
@@ -227,7 +227,7 @@
                     <td width='10%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
                     <td width='11%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
                     <td width='10%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td width='14%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                    <td width='14%'>{{ Form::select('localcurrency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
                     <td  width='8%'>-</td>
 
                   </tr>
@@ -316,7 +316,7 @@
 
           <td>{{ Form::select(null, $calculationT,null,['class'=>'form-control calculationT','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
           <td> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-          <td>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'form-control','style' => 'width:100%;']) }}</td>
+          <td>{{ Form::select('localcurrency_id[]', $currency,$currency_cfg->id,['class'=>'form-control','style' => 'width:100%;']) }}</td>
           <td>  <a  class="removeL m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete "  >
               <i class="la la-eraser"></i>
             </a>
@@ -336,7 +336,7 @@
           <td> {!! Form::number('fortyhc[]', 0, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
           <td> {!! Form::number('fortynor[]', 0, ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
           <td> {!! Form::number('fortyfive[]', 0, ['placeholder' => 'Enter 45','class' => 'form-control m-input','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
-          <td>{{ Form::select('currency_id[]', $currency,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
+          <td>{{ Form::select('currency_id[]', $currency,$currency_cfg->id,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
           <td>   <a  class="remove m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
               <i class="la la-eraser"></i>
             </a>

@@ -66,8 +66,6 @@ $validation_expire = 'Please enter valididity date';
           <div class="m-portlet__body">
             <div class="">
 
-
-
               <div class="m-portlet m-portlet--responsive-mobile">
                 <div id="msg20" style="display:none" class="m-alert m-alert--outline alert alert-danger alert-dismissible fade show" role="alert">
                   <strong>I'm Sorry!</strong> the upper limit can not be less than the initial limit
@@ -117,7 +115,7 @@ $validation_expire = 'Please enter valididity date';
 
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencytwuenty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -137,7 +135,7 @@ $validation_expire = 'Please enter valididity date';
 
                           <div class="input-group-btn">
                             <div class="btn-group">
-                              {{ Form::select('currencytwuenty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                              {{ Form::select('currencytwuenty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                             </div>
                           </div>
                         </div>
@@ -207,7 +205,7 @@ $validation_expire = 'Please enter valididity date';
                             {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'widht:100%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '','style'=>'widht:50%']) }}
+                                {{ Form::select('currencyforty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '','style'=>'widht:50%']) }}
                               </div>
                             </div>
                           </div>
@@ -225,7 +223,7 @@ $validation_expire = 'Please enter valididity date';
                           {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','style' => 'width:50%']) !!}
                           <div class="input-group-btn">
                             <div class="btn-group">
-                              {{ Form::select('currencyforty[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                              {{ Form::select('currencyforty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                             </div>
                           </div>
                         </div>
@@ -293,7 +291,7 @@ $validation_expire = 'Please enter valididity date';
                             {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'width:50%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                                {{ Form::select('currencyfortyhc[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                               </div>
                             </div>
                           </div>
@@ -311,7 +309,7 @@ $validation_expire = 'Please enter valididity date';
                           {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
                           <div class="input-group-btn">
                             <div class="btn-group">
-                              {{ Form::select('currencyfortyhc[]',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+                              {{ Form::select('currencyfortyhc[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
                             </div>
                           </div>
                         </div>
