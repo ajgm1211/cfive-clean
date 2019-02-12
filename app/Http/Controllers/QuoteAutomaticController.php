@@ -124,8 +124,14 @@ class QuoteAutomaticController extends Controller
     $event = new  EventIntercom();
     $event->event_selectRate();
 
+    $emaildimanicdata = json_encode([
+      'quote_bool'   => 'false',
+      'company_id'   => $companiesInfo->id,
+      'contact_id'   => $contactInfo->id,
+      'quote_id'     => ''
+    ]);
 
-    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
+    return view('quotation/add', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$user,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'info'=> $info,'form' => $form ,'currency' => $currency , 'schedules' => $schedules ,'exchange'=>$exchange ,'email_templates'=>$email_templates,'user'=>$user,'companyInfo' => $companiesInfo , 'contactInfo' => $contactInfo ,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'emaildimanicdata'=>$emaildimanicdata]);
   }
 
 
@@ -427,7 +433,7 @@ class QuoteAutomaticController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo
       }
-    //  dd($inlandDestiny);
+      //  dd($inlandDestiny);
     }
 
     // Origin Addrees

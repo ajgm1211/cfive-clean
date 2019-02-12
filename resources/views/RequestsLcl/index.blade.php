@@ -12,7 +12,7 @@
          <div class="m-portlet__head-caption">
             <div class="m-portlet__head-title">
                <h3 class="m-portlet__head-text">
-                  Importation Request FCL
+                  Importation Request LCL
                </h3>
             </div>
          </div>
@@ -50,6 +50,23 @@
          <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
             <div class="row align-items-center">
                <div class="col-xl-12 order-2 order-xl-1 conten_load">
+                  <style>
+
+                     a {
+                        position: relative;
+                     }
+
+                     .tet {
+          
+                        left: 100%;
+                        top: 100%;
+                        display: none;
+                     }
+
+                     a:hover .tet {
+                        display: block;
+                     }
+                  </style>
                   <table class="table tableData"  id="html_table" >
                      <thead >
                         <tr>
@@ -80,6 +97,9 @@
                            <th width="5%" >
                               Username Load
                            </th>
+                           <th width='15%' >
+                              Description
+                           </th>
                            <th width="5%" >
                               Status
                            </th>
@@ -107,7 +127,7 @@
                               {{$Ncontract->validation}}
                            </td>
                            <td>
-                              {{\Carbon\Carbon::parse($Ncontract->created_at)->format('d-m-Y h:i:s')}}
+                              {{\Carbon\Carbon::parse($Ncontract->created)->format('d-m-Y h:i:s')}}
                            </td>
                            @if(empty($Ncontract->updated) != true)
                            <td>
@@ -125,12 +145,28 @@
                               {{$Ncontract->username_load}}
                            </td>
                            <td>
+                              <a href="#">
+                                 Show
+                                 
+                                 <div  class="tet">
+                                    <!--begin::Portlet-->
+                                    <div class="m-portlet m-portlet--mobile">
+                      
+                                       <div class="m-portlet__body">
+                                          {{$Ncontract->description}}
+                                       </div>
+                                    </div>
+                                    <!--end::Portlet-->
+                                 </div>
+                              </a>
+                           </td>
+                           <td>
                               <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
                               &nbsp;
                               <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
                            </td>
                            <td>
-                              <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
+                              <a href="{{route('RequestImportationLcl.show',$Ncontract->id)}}" title="Download File">
                                  <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                               </a>
                               &nbsp; &nbsp;  <!--
@@ -210,7 +246,7 @@
 @parent
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="application/x-javascript" src="/js/RequestContracts/Request.Index.Status.js"></script>
+<script type="application/x-javascript" src="/js/RequestContracts/RequestLcl.Index.Status.js"></script>
 <script>
 
    $(document).on('click','.eliminarrequest',function(e){
@@ -228,7 +264,7 @@
       }).then(function(result){
          if (result.value) {
 
-            url='{!! route("destroy.Request",":id") !!}';
+            url='{!! route("destroy.RequestLcl",":id") !!}';
             url = url.replace(':id', id);
             // $(this).closest('tr').remove();
             $.ajax({

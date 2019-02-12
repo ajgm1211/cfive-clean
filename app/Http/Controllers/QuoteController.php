@@ -1106,9 +1106,15 @@ class QuoteController extends Controller
       }
     }
 
+    $emaildimanicdata = json_encode([
+      'quote_bool'   => 'true',
+      'company_id'   => '',
+      'contact_id'   => '',
+      'quote_id'     => $quote->id
+    ]);
     return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
                                 'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all]);
+                                'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all,'emaildimanicdata' => $emaildimanicdata]);
   }
 
   public function update(Request $request, $id)

@@ -3,9 +3,16 @@
   <div class="m-stack__item m-brand  m-brand--skin-dark ">
     <div class="m-stack m-stack--ver m-stack--general">
       <div class="m-stack__item m-stack__item--middle m-brand__logo">
+          @if(empty(\Auth::user()->company_user_id) != true)
         <a href="/" class="m-brand__logo-wrapper">
           <img alt="" src="/logo.png"/>
+         </a>
+         @else
+        <a href="/settings" class="m-brand__logo-wrapper">
+          <img alt="" src="/logo.png"/>
         </a>
+         
+         @endif
       </div>
       <div class="m-stack__item m-stack__item--middle m-brand__tools">
         <!-- BEGIN: Left Aside Minimize Toggle 1 -->
@@ -40,6 +47,8 @@
     </button>
     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
       <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+
+         @if(empty(\Auth::user()->company_user_id) != true)
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
           <a  href="{{route('quotes.index')}}" class="m-menu__link ">
             <span class="m-menu__link-text">
@@ -265,7 +274,15 @@
                 <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>
                   <span class="m-menu__link-text">
-                    Request Importation
+                    Request Importation FCL
+                  </span>
+                </a>
+              </li>
+               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Importation LCL
                   </span>
                 </a>
               </li>
@@ -307,14 +324,14 @@
             </ul>
           </div>
         </li>
-
+         @endif
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
           <a  href="#" class="m-menu__link m-menu__toggle">
             <span class="m-menu__link-title">
               <span class="m-menu__link-wrap">
                 <span class="m-menu__link-text">
-                  {{\Auth::user()->name}} {{\Auth::user()->lastname}}
+                  {{\Auth::user()->name}} {{\Auth::user()->lastname}} 
                 </span>
               </span>
             </span>

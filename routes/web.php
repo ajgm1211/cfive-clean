@@ -143,7 +143,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
   Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts');
   Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl');
   Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch');
-  Route::get('RedirectProcessedInformation/','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
+  Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information');
   Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
   Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
@@ -200,6 +200,13 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
   // Test
   Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation');
 
+});
+//New Request Importation Lcl
+Route::middleware(['auth'])->prefix('RequestsLcl')->group(function () {
+  Route::get('Requestimporlcl','NewContractRequestLclController@LoadViewRequestImporContractLcl')->name('Request.importaion.lcl');
+  Route::resource('RequestImportationLcl','NewContractRequestLclController');
+  Route::get('RequestLclStatus','NewContractRequestLclController@UpdateStatusRequest')->name('RequestLcl.status');
+  Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl');
 });
 
 
@@ -395,7 +402,9 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
 
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
 // GLOBAL CHARGES LCL 
-
+Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(function () {
+  Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
+});
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
 
 

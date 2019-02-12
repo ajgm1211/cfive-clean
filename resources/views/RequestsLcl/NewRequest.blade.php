@@ -43,7 +43,7 @@
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
 
-                        New import request for new contract FCL
+                        New import request for new contract LCL
                         <!--<small>
 new registration
 </small>-->
@@ -62,7 +62,7 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestImportation.store','method'=>'POST','files'=>true])!!}
+        {!! Form::open(['route'=>'RequestImportationLcl.store','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -95,9 +95,21 @@ new registration
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                             </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2">
+                          
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="numberid" class=" ">Description</label>
+                                    {!!  Form::textArea('description',null,['id'=>'descriptionid',
+                                    'placeholder'=>'Description',
+                                    'required',
+                                    'class'=>'form-control m-input','rows'=>'3'])!!}
+                                </div>
+                            </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
-                           <!-- <hr> -->
+                            <!-- <hr> -->
                             <div class="form-group m-form__group row" style='display:none;'>
 
                                 <div class="col-lg-2">
@@ -179,7 +191,7 @@ new registration
                                     </label>
                                 </div>
                             </div>
-                        <!--    <hr> -->
+                            <!--    <hr> -->
                             <div class="form-group m-form__group row"style='display:none;'>
 
                                 <div class="col-lg-2">
@@ -262,10 +274,13 @@ new registration
                                 </div>
                             </div>
                             <div class="form-group m-form__group ">
-                                <div class="col-lg-12 col-lg-offset-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        Load Request
-                                    </button>
+                                <div class="col-lg-12 col-lg-offset-12 ">
+                                    <center>
+                                        <br />
+                                        <button type="submit" class="btn btn-primary">
+                                            Load Request
+                                        </button>
+                                    </center>
                                 </div>
                             </div>
 
