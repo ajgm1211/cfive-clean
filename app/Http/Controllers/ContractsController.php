@@ -90,7 +90,11 @@ class ContractsController extends Controller
                                })->pluck('Name','id');
     }
 
-    return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users'));
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
+
+    return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg'));
+
 
   }
 

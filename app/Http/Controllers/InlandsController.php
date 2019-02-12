@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CompanyUser;
 use Illuminate\Http\Request;
 use App\Harbor;
 use App\Inland;
@@ -41,7 +42,9 @@ class InlandsController extends Controller
     $harbor = $objharbor->all()->pluck('display_name','id');
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
-    return view('inland/add', compact('harbor','currency','companies'));
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
+    return view('inland/add', compact('harbor','currency','companies','currency_cfg'));
   }
 
   /**

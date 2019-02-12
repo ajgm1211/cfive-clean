@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendQuotes;
 use Illuminate\Http\Request;
 use App\Company;
 use App\CompanyUser;
@@ -308,21 +309,15 @@ class PdfController extends Controller
     // EVENTO INTERCOM 
     $event = new  EventIntercom();
     $event->event_quoteEmail();
-    
+
     $pdf = \App::make('dompdf.wrapper');
     $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
     $subject = $request->subject;
     $body = $request->body;
     $to = $request->to;
-    if($to!=''){
-      $explode=explode(';',$to);
-      foreach($explode as $item) {
-        \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
-      }
-    }else{
-      \Mail::to($contact_email->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
-    }
+
+    SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
 
     $quote->status_quote_id=2;
     $quote->update();

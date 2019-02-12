@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CompanyUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\GlobalCharge;
@@ -46,10 +47,11 @@ class GlobalChargesController extends Controller
     $currency = $objcurrency->all()->pluck('alphacode','id');
     $calculationT = $objcalculation->all()->pluck('name','id');
     $typedestiny = $objtypedestiny->all()->pluck('description','id');
-
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
     $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
 
-    return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));
+    return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny','currency_cfg'));
   }
 
   /**
@@ -136,7 +138,7 @@ class GlobalChargesController extends Controller
     // EVENTO INTERCOM 
     $event = new  EventIntercom();
     $event->event_globalChargesFcl();
-    
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
@@ -279,8 +281,10 @@ class GlobalChargesController extends Controller
     $harbor = $objharbor->all()->pluck('display_name','id');
     $carrier = $objcarrier->all()->pluck('name','id');
     $currency = $objcurrency->all()->pluck('alphacode','id');
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
 
-    return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+    return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','currency_cfg'));
   }
 
   public function duplicateGlobalCharges($id){

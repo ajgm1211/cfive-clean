@@ -4,10 +4,13 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
     "hash": "d8accd769280368b0980dd75cb3ff7d7",
     "content-hash": "4a78c5894839a71764998634a5229243",
 =======
+=======
+>>>>>>> remotes/origin/julio:composer.lock
     "content-hash": "7755dc83904b91416e06e4d7b25486c4",
 >>>>>>> remotes/origin/lblanco
     "packages": [
@@ -120,6 +123,7 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "version": "3.87.2",
             "source": {
@@ -143,6 +147,18 @@
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/52e0590429cf6a80909a93636fed9c929224a2f6",
                 "reference": "52e0590429cf6a80909a93636fed9c929224a2f6",
 >>>>>>> remotes/origin/lblanco
+=======
+            "version": "3.87.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "5f9caa48b7871ff24231898c01f51580a83f59b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5f9caa48b7871ff24231898c01f51580a83f59b9",
+                "reference": "5f9caa48b7871ff24231898c01f51580a83f59b9",
+>>>>>>> remotes/origin/julio:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -211,11 +227,15 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-25 22:29:49"
 =======
             "time": "2019-02-08T22:10:20+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-02-04T22:38:14+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -385,6 +405,7 @@
                 "tinymce"
             ],
             "time": "2018-02-08T07:54:10+00:00"
+<<<<<<< HEAD:composer.lock.old
         },
         {
             "name": "clue/stream-filter",
@@ -437,6 +458,8 @@
                 "stream_filter_register"
             ],
             "time": "2017-08-18 09:54:01"
+=======
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "defuse/php-encryption",
@@ -1221,6 +1244,7 @@
                 "youtube"
             ],
             "time": "2018-03-12T16:30:09+00:00"
+<<<<<<< HEAD:composer.lock.old
         },
         {
             "name": "intercom/intercom-php",
@@ -1276,6 +1300,8 @@
                 "intercom.io"
             ],
             "time": "2019-01-15 11:17:08"
+=======
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "intervention/image",
@@ -1871,11 +1897,15 @@
                 "oauth",
                 "passport"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-22 14:41:41"
 =======
             "time": "2019-01-22T14:41:41+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-01-22T14:41:41+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "laravel/tinker",
@@ -2198,11 +2228,15 @@
                 "sftp",
                 "storage"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-02-01 08:50:36"
 =======
             "time": "2019-02-01T08:50:36+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-02-01T08:50:36+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -2249,11 +2283,15 @@
                 }
             ],
             "description": "Flysystem adapter for the AWS S3 SDK v3.x",
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-31 15:07:25"
 =======
             "time": "2019-01-31T15:07:25+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-01-31T15:07:25+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "league/flysystem-cached-adapter",
@@ -3039,6 +3077,7 @@
             "description": "A library to read, parse and export to PDF SVG files.",
             "homepage": "https://github.com/PhenX/php-svg-lib",
             "time": "2018-06-03T10:10:03+00:00"
+<<<<<<< HEAD:composer.lock.old
         },
         {
             "name": "php-http/discovery",
@@ -3395,6 +3434,8 @@
                 "promise"
             ],
             "time": "2016-01-26 13:27:02"
+=======
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "phpoffice/phpexcel",
@@ -3549,11 +3590,15 @@
                 "x.509",
                 "x509"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-27 19:37:29"
 =======
             "time": "2019-01-27T19:37:29+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-01-27T19:37:29+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "predis/predis",
@@ -3699,6 +3744,7 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+<<<<<<< HEAD:composer.lock.old
         },
         {
             "name": "psr/http-client",
@@ -3748,6 +3794,8 @@
                 "psr-18"
             ],
             "time": "2018-10-30 23:29:13"
+=======
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "psr/http-message",
@@ -4371,6 +4419,7 @@
         },
         {
             "name": "spatie/laravel-permission",
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "version": "2.30.0",
             "source": {
@@ -4383,6 +4432,8 @@
                 "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/60744813f22535415b8a716fb9252ba063ba056c",
                 "reference": "60744813f22535415b8a716fb9252ba063ba056c",
 =======
+=======
+>>>>>>> remotes/origin/julio:composer.lock
             "version": "2.31.0",
             "source": {
                 "type": "git",
@@ -4393,7 +4444,10 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/5f9960854295c6aec1c706aaa3b146962d6ee905",
                 "reference": "5f9960854295c6aec1c706aaa3b146962d6ee905",
+<<<<<<< HEAD:composer.lock.old
 >>>>>>> remotes/origin/lblanco
+=======
+>>>>>>> remotes/origin/julio:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -4445,11 +4499,15 @@
                 "security",
                 "spatie"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-28 23:50:25"
 =======
             "time": "2019-02-04T03:56:54+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-02-04T03:56:54+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "spatie/temporary-directory",
@@ -5831,11 +5889,15 @@
                 "env",
                 "environment"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-29 11:11:52"
 =======
             "time": "2019-01-29T11:11:52+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-01-29T11:11:52+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "yajra/laravel-datatables-oracle",
@@ -5906,11 +5968,15 @@
                 "jquery",
                 "laravel"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-01-29 03:12:37"
 =======
             "time": "2019-01-29T03:12:37+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-01-29T03:12:37+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -6253,6 +6319,7 @@
         },
         {
             "name": "laravel/browser-kit-testing",
+<<<<<<< HEAD:composer.lock.old
             "version": "v4.2.1",
             "source": {
                 "type": "git",
@@ -6263,13 +6330,25 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/browser-kit-testing/zipball/b042ed965910a4ba69c0ebe8863d4029af3e242e",
                 "reference": "b042ed965910a4ba69c0ebe8863d4029af3e242e",
+=======
+            "version": "v4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/browser-kit-testing.git",
+                "reference": "c80ace74ccb097bc02c047387fe8d18a45a39682"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/browser-kit-testing/zipball/c80ace74ccb097bc02c047387fe8d18a45a39682",
+                "reference": "c80ace74ccb097bc02c047387fe8d18a45a39682",
+>>>>>>> remotes/origin/julio:composer.lock
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": "^5.6",
                 "mockery/mockery": "^1.0",
                 "php": ">=7.1.3",
-                "phpunit/phpunit": "^7.0",
+                "phpunit/phpunit": "^7.0|^8.0",
                 "symfony/css-selector": "~4.0",
                 "symfony/dom-crawler": "~4.0"
             },
@@ -6299,7 +6378,11 @@
                 "laravel",
                 "testing"
             ],
+<<<<<<< HEAD:composer.lock.old
             "time": "2019-02-05T13:27:14+00:00"
+=======
+            "time": "2019-02-04T16:49:55+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "laravel/dusk",
@@ -6425,7 +6508,11 @@
                 "test double",
                 "testing"
             ],
+<<<<<<< HEAD:composer.lock.old
             "time": "2019-02-08T14:43:54+00:00"
+=======
+            "time": "2018-10-02T21:52:37+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "myclabs/deep-copy",
@@ -7110,7 +7197,10 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
+=======
+>>>>>>> remotes/origin/julio:composer.lock
             "version": "7.5.3",
             "source": {
                 "type": "git",
@@ -7121,6 +7211,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2cb759721e53bc05f56487f628c6b9fbb6c18746",
                 "reference": "2cb759721e53bc05f56487f628c6b9fbb6c18746",
+<<<<<<< HEAD:composer.lock.old
 =======
             "version": "7.5.4",
             "source": {
@@ -7133,6 +7224,8 @@
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2896657da5fb237bc316bdfc18c2650efeee0dc0",
                 "reference": "2896657da5fb237bc316bdfc18c2650efeee0dc0",
 >>>>>>> remotes/origin/lblanco
+=======
+>>>>>>> remotes/origin/julio:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -7203,11 +7296,15 @@
                 "testing",
                 "xunit"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-02-01 05:24:07"
 =======
             "time": "2019-02-07T14:15:04+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-02-01T05:24:07+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -7425,11 +7522,15 @@
                 "environment",
                 "hhvm"
             ],
+<<<<<<< HEAD:composer.lock.old
 <<<<<<< HEAD
             "time": "2019-02-01 05:27:49"
 =======
             "time": "2019-02-01T05:27:49+00:00"
 >>>>>>> remotes/origin/lblanco
+=======
+            "time": "2019-02-01T05:27:49+00:00"
+>>>>>>> remotes/origin/julio:composer.lock
         },
         {
             "name": "sebastian/exporter",
