@@ -401,12 +401,15 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
 });
 
 Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
-// GLOBAL CHARGES LCL 
+
+// IMPORTATION GLOBAL CHARGE FCL
 Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(function () {
+  Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
+  Route::get('DeleteAccountsGlobalchargesFcl/{id}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl');
   Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
 });
+// GLOBAL CHARGES LCL 
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
-
 
   Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
   Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);

@@ -40,7 +40,7 @@
          </div>
 
       </div>
-      {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
+      {!! Form::open(['route'=>'Upload.File.Globalcharges.Fcl','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
       <div class="m-portlet__body">
          <div class="tab-content">
             <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -67,7 +67,7 @@
                         </div>
                         <div class="col-lg-3">
                            <label for="numberid" class=" ">Date Importation</label>
-                           {!!  Form::date('number',\Carbon\Carbon::now(),['id'=>'dateid',
+                           {!!  Form::date('date',\Carbon\Carbon::now(),['id'=>'dateid',
                            'placeholder'=>'Number Contract',
                            'required',
                            'class'=>'form-control m-input'])!!}
