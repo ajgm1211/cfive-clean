@@ -3,16 +3,16 @@
   <div class="m-stack__item m-brand  m-brand--skin-dark ">
     <div class="m-stack m-stack--ver m-stack--general">
       <div class="m-stack__item m-stack__item--middle m-brand__logo">
-          @if(empty(\Auth::user()->company_user_id) != true)
+        @if(empty(\Auth::user()->company_user_id) != true)
         <a href="/" class="m-brand__logo-wrapper">
           <img alt="" src="/logo.png"/>
-         </a>
-         @else
+        </a>
+        @else
         <a href="/settings" class="m-brand__logo-wrapper">
           <img alt="" src="/logo.png"/>
         </a>
-         
-         @endif
+
+        @endif
       </div>
       <div class="m-stack__item m-stack__item--middle m-brand__tools">
         <!-- BEGIN: Left Aside Minimize Toggle 1 -->
@@ -48,7 +48,7 @@
     <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
       <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
-         @if(empty(\Auth::user()->company_user_id) != true)
+        @if(empty(\Auth::user()->company_user_id) != true)
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
           <a  href="{{route('quotes.index')}}" class="m-menu__link ">
             <span class="m-menu__link-text">
@@ -278,7 +278,7 @@
                   </span>
                 </a>
               </li>
-               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>
                   <span class="m-menu__link-text">
@@ -296,7 +296,7 @@
               </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
-                  <i class="m-menu__link-icon flaticon-business"></i>
+                  <i class="m-menu__link-icon flaticon-user-settings"></i>
                   <span class="m-menu__link-text">
                     User companies
                   </span>
@@ -304,7 +304,7 @@
               </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{route('search.index')}}" class="m-menu__link ">
-                  <i class="m-menu__link-icon flaticon-user-settings"></i>
+                  <i class="m-menu__link-icon flaticon-search"></i>
                   <span class="m-menu__link-text">
                     Search History
                   </span>
@@ -324,7 +324,7 @@
             </ul>
           </div>
         </li>
-         @endif
+        @endif
 
         <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
           <a  href="#" class="m-menu__link m-menu__toggle">

@@ -16,6 +16,7 @@ use App\GlobalCharCarrierLcl;
 use App\TypeDestiny;
 use App\Country;
 use App\GlobalCharCountryLcl;
+use EventIntercom;
 
 class GlobalChargesLclController extends Controller
 {
@@ -135,6 +136,10 @@ class GlobalChargesLclController extends Controller
 
       }
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_globalChargesLcl();
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
@@ -205,6 +210,20 @@ class GlobalChargesLclController extends Controller
     }
     $global->update();
     return redirect()->back()->with('globalchar','true');
+  }
+  public function duplicateGlobalCharges($id){
+
+    $countries = Country::pluck('name','id');
+    $calculationT = CalculationTypeLcl::all()->pluck('name','id');
+    $typedestiny = TypeDestiny::all()->pluck('description','id');
+    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+    $harbor = Harbor::all()->pluck('display_name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $currency = Currency::all()->pluck('alphacode','id');
+    $globalcharges = GlobalChargeLcl::find($id);
+    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+    $globalcharges->setAttribute('validation_expire',$validation_expire);
+    return view('globalchargeslcl.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
   }
   public function destroyGlobalCharges($id)
   {
