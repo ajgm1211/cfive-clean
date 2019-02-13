@@ -2543,14 +2543,13 @@ $('.select2-company_id').select2({
 
 $(document).on('click', '#select-schedule', function () {
 
-	var schevalues = new Array();
-	var n = jQuery(".sche:checked").length;
-	if (n > 0){
-		jQuery(".sche:checked").each(function(){
-			$valor =  $(this).val();
-			var $obj = jQuery.parseJSON($valor);
-			$('#schetable > tbody:last-child').append("<tr><td>"+$obj['VesselName']+"</td><td>"+$obj['Etd']+"</td><td> <div class='col-md-4'><center> "+$obj['days']+" Days</center><div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> <center>"+$obj['type']+"</center></div></td><td>"+$obj['Eta']+"</td></tr>");
-
+    var schevalues = new Array();
+    var n = jQuery(".sche:checked").length;
+    if (n > 0){
+        jQuery(".sche:checked").each(function(){
+            $valor =  $(this).val();
+            var $obj = jQuery.parseJSON($valor);
+            $('#schetable > tbody:last-child').append("<tr><td>"+$obj['vessel']+"</td><td>"+$obj['etd']+"</td><td> <div class='col-md-4 offset-md-4'> "+$obj['days']+" Days<div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> "+$obj['type']+"</div></td><td>"+$obj['eta']+"</td></tr>");
 			schevalues.push($valor);
 		});
 
