@@ -80,7 +80,7 @@
                                                                                 <span></span>
                                                                               </span>
                                                                             </span>
-                                                                                                                    <span class="m-option__label" >
+                                                                            <span class="m-option__label" >
                                                                               <span class="m-option__head">
                                                                                 <span class="m-option__title">
                                                                                   FCL
@@ -97,7 +97,7 @@
                                                                                 <span></span>
                                                                               </span>
                                                                             </span>
-                                                                                                                    <span class="m-option__label">
+                                                                            <span class="m-option__label">
                                                                               <span class="m-option__head">
                                                                                 <span class="m-option__title">
                                                                                   LCL
@@ -114,7 +114,7 @@
                                                                                 <span></span>
                                                                               </span>
                                                                             </span>
-                                                                                                                    <span class="m-option__label">
+                                                                            <span class="m-option__label">
                                                                               <span class="m-option__head">
                                                                                 <span class="m-option__title">
                                                                                   AIR
@@ -1404,6 +1404,74 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <hr>
+                                                        <div id="infoschedule" class="row">
+                                                            <div class="col-lg-12">
+                                                                <label class="size-14px">
+                                                                    <b>Schedules</b>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <br>
+                                                                <div class="" style="margin-bottom:40px;">
+                                                                    <table id="schetable" class="table table-bordered color-blue text-center">
+                                                                        <thead class="title-quote header-table">
+                                                                        <tr>
+                                                                            <td><b>Vessel</b></td>
+                                                                            <td><b>ETD</b></td>
+                                                                            <td><b>Transit time</b></td>
+                                                                            <td><b>ETA</b></td>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody id="scheduleBody">
+                                                                        @forelse($quote->schedules as $item)
+                                                                            <tr>
+                                                                                <td>{{$item->vessel}}</td>
+                                                                                <td>{{$item->etd}}</td>
+                                                                                <td><div class='col-md-4 offset-md-4'>{{$item->transit_time}} days <div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div></div> {{$item->type}}</div></td>
+                                                                                <td>{{$item->eta}}</td>
+                                                                            </tr>
+                                                                        @empty
+                                                                            <tr>
+                                                                                <td colspan="5">
+                                                                                    There are not schedules
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforelse
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <a class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('add')">
+                                                                    <span style="color: white;">
+                                                                        <i class="la la-plus"></i>
+                                                                        <span>Schedules </span>
+                                                                    </span>
+                                                                </a>
+                                                                <br>
+                                                                <br>
+                                                                @if(!$quote->schedules->isEmpty())
+                                                                    <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche">
+                                                                        <span>
+                                                                            <i class="la la-remove"></i>
+                                                                            <span>Remove</span>
+                                                                        </span>
+                                                                    </a>
+                                                                @else
+                                                                    <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true">
+                                                                    <span>
+                                                                        <i class="la la-remove"></i>
+                                                                        <span>Remove</span>
+                                                                    </span>
+                                                                    </a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1444,7 +1512,8 @@
         </div>
     </div>
 
-    @include('quotes.partials.sendQuoteModal');
+    @include('quotes.partials.sendQuoteModal')
+    @include('quotes.partials.schedulesModal')
 
 @endsection
 
@@ -1533,6 +1602,54 @@
                     alert('Geocode was not successful for the following reason: ' + status);
                 }
             });
+        }
+
+        function AbrirModal(action){
+            if(action == "add"){
+                var carrier = $('#carrier_id').val();
+                var orig_p = $('#origin_harbor').val();
+                var dest_p = $('#destination_harbor').val();
+                var date_p = $('.pick_up_date').val();
+                if(carrier ==""){
+                    msg('Sorry the carrier is empty');
+                    return;
+                }
+                if(orig_p ==""){
+                    msg('Sorry the origin port is empty');
+                    return;
+                }
+                if(dest_p ==""){
+                    msg('Sorry the destination port is empty');
+                    return;
+                }
+                if(date_p ==""){
+                    msg('Sorry the date is empty');
+                    return;
+                }
+                var url = '{{ route("quotes.schedule", "carrier/orig_port/dest_port/date_p") }}';
+
+                url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p).replace('carrier', carrier);
+
+                $('#spinner').show();
+                $('#scheduleModal').modal({show:true});
+                $('.modal-body').load(url, function (response, status, xhr) {
+
+                    $('#scheduleModal').modal({show:true});
+                    $('#spinner').hide();
+                });
+            }
+            if(action == "addCompany"){
+                var url = '{{ route("companies.addM") }}';
+                $('#modal-body').load(url,function(){
+                    $('#companyModal').modal({show:true});
+                });
+            }
+            if(action == "addContact"){
+                var url = '{{ route("contacts.addCMMQ") }}';
+                $('.modal-body').load(url,function(){
+                    $('#contactModal').modal({show:true});
+                });
+            }
         }
     </script>
 @stop

@@ -1057,14 +1057,13 @@
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="table-responsive">
-                                                                <table id="schetable" class="table table-bordered color-blue">
-                                                                    <thead class="title-quote text-center header-table">
+                                                                <table id="schetable" class="table text-center table-bordered color-blue">
+                                                                    <thead class="title-quote header-table">
                                                                         <tr>
-                                                                            <th><span class="">Vessel</span></th>
-                                                                            <th><span class="">ETD</span></th>
-                                                                            <th><span class=""><center>Transit Time</center></span>  </th>
-                                                                            <th><span class="">ETA</span></th>
-
+                                                                            <th><span class=""><b>Vessel</b></span></th>
+                                                                            <th><span class=""><b>ETD</b></span></th>
+                                                                            <th><span class=""><b><center>Transit Time</center></b></span> </th>
+                                                                            <th><span class=""><b>ETA</b></span></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="scheduleBody">
@@ -1305,7 +1304,8 @@
                 msg('Sorry the date is empty');
                 return;
             }
-            var url = '{{ route("quotes.schedule", "/carrier/orig_port/dest_port/date_p") }}';
+
+            var url = '{{ route("quotes.schedule", "carrier/orig_port/dest_port/date_p") }}';
 
             url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p).replace('carrier', carrier);
 
