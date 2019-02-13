@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CompanyPrice;
+use App\CompanyUser;
 use App\FreightMarkup;
 use App\InlandChargeMarkup;
 use App\LocalChargeMarkup;
@@ -11,6 +12,7 @@ use App\Price;
 use App\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use EventIntercom;
 
 class PriceController extends Controller
 {
@@ -23,10 +25,12 @@ class PriceController extends Controller
 
   public function add()
   {
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
     $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->get();
     $companies = Company::where('company_user_id',\Auth::user()->company_user_id)->pluck('business_name','id');
-    $currencies = Currency::all();
-    return view('prices.add', ['prices' => $prices,'companies' => $companies,'currencies'=>$currencies]);
+    $currencies = Currency::pluck('alphacode','id');
+    $currency_cfg = Currency::find($company_user->currency_id);
+    return view('prices.add', ['prices' => $prices,'companies' => $companies,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg]);
   }
 
 
@@ -110,13 +114,15 @@ class PriceController extends Controller
       $inland_markup->price_id = $price->id;
       $inland_markup->save();
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_pricing();
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');
     return redirect()->route('prices.index');
   }
-
 
 
   public function edit($id)

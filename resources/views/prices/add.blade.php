@@ -134,36 +134,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Freight Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_1">
+                                                        <div class="col-md-8 freight_percent_markup_1">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 freight_fixed_markup_1" style="display: none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Freight rate markup</span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_1">
+                                                        <div class="col-md-8 freight_percent_markup_1">
                                                             <input type="hidden" class="form-control" value="1" name="freight_type[]"/>
                                                             <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
                                                             <input type="number" class="form-control" id="freight_percent_markup_1" value="0" name="freight_percent_markup[]"/>
                                                         </div>
-                                                        <div class="col-md-6 freight_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 freight_fixed_markup_1" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="freight_fixed_markup_1" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="freight_markup_currency_1" name="freight_markup_currency[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('freight_markup_currency[]',$currencies,$currency_cfg->id,['id'=>'freight_markup_currency_1','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -195,36 +191,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Local Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_1">
+                                                        <div class="col-md-8 local_percent_markup_1">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_1" style="display: none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_1">
+                                                        <div class="col-md-8 local_percent_markup_1">
                                                             <input type="hidden" class="form-control" value="1" name="local_type[]"/>
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="number" class="form-control"  id="local_percent_markup_1" value="0" name="local_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_1" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_1" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_1" name="local_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_import[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_1','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -232,23 +224,19 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_1_2">
+                                                        <div class="col-md-8 local_percent_markup_1_2">
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="number" class="form-control" id="local_percent_markup_1_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_1_2" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_1_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_1_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_1_2" name="local_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_export[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_1_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -281,36 +269,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Inland Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_1">
+                                                        <div class="col-md-8 inland_percent_markup_1">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_1" style="display: none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_1">
+                                                        <div class="col-md-8 inland_percent_markup_1">
                                                             <input type="hidden" class="form-control" value="1" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_1" value="0" name="inland_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_1" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_1" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_1" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_1" name="inland_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_import[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_1','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -318,23 +302,19 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_1_2">
+                                                        <div class="col-md-8 inland_percent_markup_1_2">
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_1_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_1_2" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_1_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_1_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_1_2" name="inland_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_export[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_1_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -371,36 +351,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Freight Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_2">
+                                                        <div class="col-md-8 freight_percent_markup_2">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_fixed_markup_2" style="display:none;">
+                                                        <div class="col-md-8 freight_fixed_markup_2" style="display:none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Freight rate markup</span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_2">
+                                                        <div class="col-md-8 freight_percent_markup_2">
                                                             <input type="hidden" class="form-control" value="2" name="freight_type[]"/>
                                                             <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
                                                             <input type="number" class="form-control" id="freight_percent_markup_2" value="0" name="freight_percent_markup[]"/>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-8">
                                                             <div class="input-group freight_fixed_markup_2" style="display: none;">
                                                                 <input type="number" id="freight_fixed_markup_2" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="freight_markup_currency_2" name="freight_markup_currency[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('freight_markup_currency[]',$currencies,$currency_cfg->id,['id'=>'freight_markup_currency_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -432,36 +408,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Local Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_2">
+                                                        <div class="col-md-8 local_percent_markup_2">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_2" style="display: none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_2">
+                                                        <div class="col-md-8 local_percent_markup_2">
                                                             <input type="hidden" class="form-control" value="2" name="local_type[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype[]"/>
                                                             <input type="number" class="form-control" id="local_percent_markup_2" value="0" name="local_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_2" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_2" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_2" name="local_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_import[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -469,23 +441,19 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_2_2" >
+                                                        <div class="col-md-8 local_percent_markup_2_2" >
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="number" class="form-control" id="local_percent_markup_2_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_2_2" style="display: none;">
+                                                        <div class="col-md-8 local_fixed_markup_2_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_2_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_2_2" name="local_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_export[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_2_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -518,36 +486,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Inland Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_2">
+                                                        <div class="col-md-8 inland_percent_markup_2">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_2" style="display: none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_2">
+                                                        <div class="col-md-8 inland_percent_markup_2">
                                                             <input type="hidden" class="form-control" value="2" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_2" value="0" name="inland_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_2" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_2" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_2" name="inland_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_import[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -555,23 +519,19 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_2_2">
+                                                        <div class="col-md-8 inland_percent_markup_2_2">
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_2_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_2_2" style="display: none;">
+                                                        <div class="col-md-8 inland_fixed_markup_2_2" style="display: none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_2_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_2_2" name="inland_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_export[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_2_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -608,36 +568,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Freight Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_3">
+                                                        <div class="col-md-8 freight_percent_markup_3">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 freight_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 freight_fixed_markup_3" style="display:none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Freight rate markup</span>
                                                         </div>
-                                                        <div class="col-md-6 freight_percent_markup_3">
+                                                        <div class="col-md-8 freight_percent_markup_3">
                                                             <input type="hidden" class="form-control" value="3" name="freight_type[]"/>
                                                             <input type="hidden" class="form-control" value="3" name="subtype_3[]"/>
                                                             <input type="number" class="form-control" id="freight_percent_markup_3" value="0" name="freight_percent_markup[]"/>
                                                         </div>
-                                                        <div class="col-md-6 freight_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 freight_fixed_markup_3" style="display:none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="freight_fixed_markup_3" name="freight_fixed_markup[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="freight_currency_markup_3" name="freight_markup_currency[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('freight_markup_currency[]',$currencies,$currency_cfg->id,['id'=>'freight_currency_markup_3','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -669,37 +625,33 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Local Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_3">
+                                                        <div class="col-md-8 local_percent_markup_3">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 local_fixed_markup_3" style="display:none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_3">
+                                                        <div class="col-md-8 local_percent_markup_3">
                                                             <input type="hidden" class="form-control" value="3" name="local_type[]"/>
                                                             <input type="hidden" class="form-control" value="3" name="local_type_import[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype[]"/>
                                                             <input type="number" class="form-control" id="local_percent_markup_3" value="0" name="local_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 local_fixed_markup_3" style="display:none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_3" name="local_fixed_markup_import[]" value="0" min="0" step="0.01" class="destination_exp_amount form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_3" name="local_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_import[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_3','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -707,24 +659,20 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 local_percent_markup_3_2">
+                                                        <div class="col-md-8 local_percent_markup_3_2">
 
                                                             <input type="hidden" class="form-control" value="2" name="subtype[]"/>
                                                             <input type="number" class="form-control" id="local_percent_markup_3_2" value="0" name="local_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 local_fixed_markup_3_2" style="display:none;">
+                                                        <div class="col-md-8 local_fixed_markup_3_2" style="display:none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="local_fixed_markup_3_2" name="local_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="local_currency_markup_3_2" name="local_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('local_currency_export[]',$currencies,$currency_cfg->id,['id'=>'local_currency_markup_3_2','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -757,36 +705,32 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span><b>Inland Charges</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_3">
+                                                        <div class="col-md-8 inland_percent_markup_3">
                                                             <span><b>Percent Markup</b></span>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 inland_fixed_markup_3" style="display:none;">
                                                             <span><b>Fixed Markup</b></span>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Import</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_3">
+                                                        <div class="col-md-8 inland_percent_markup_3">
                                                             <input type="hidden" class="form-control" value="3" name="inland_type[]"/>
                                                             <input type="hidden" class="form-control" value="1" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_3" value="0" name="inland_percent_markup_import[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_3" style="display:none;">
+                                                        <div class="col-md-8 inland_fixed_markup_3" style="display:none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_3" name="inland_fixed_markup_import[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_3" name="inland_currency_import[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_import[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_3','class'=>'form-control select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -794,23 +738,19 @@
                                                     </div>
                                                     <hr>
                                                     <div class="row" style="font-size: 11px !important;">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <span>Export</span>
                                                         </div>
-                                                        <div class="col-md-6 inland_percent_markup_3_2">
+                                                        <div class="col-md-8 inland_percent_markup_3_2">
                                                             <input type="hidden" class="form-control" value="2" name="subtype_2[]"/>
                                                             <input type="number" class="form-control" id="inland_percent_markup_3_2" value="0" name="inland_percent_markup_export[]"/>
                                                         </div>
-                                                        <div class="col-md-6 inland_fixed_markup_3_2" style="display:none;">
+                                                        <div class="col-md-8 inland_fixed_markup_3_2" style="display:none;">
                                                             <div class="input-group">
                                                                 <input type="number" id="inland_fixed_markup_3_2" name="inland_fixed_markup_export[]" value="0" min="0" step="0.01" class="form-control" placeholder="" aria-label="...">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        <select class="btn btn-default" id="inland_currency_markup_3_2" name="inland_currency_export[]">
-                                                                            @foreach($currencies as $currency)
-                                                                            <option value="{{$currency->id}}">{{$currency->alphacode}}</option>
-                                                                            @endforeach
-                                                                        </select>
+                                                                        {{ Form::select('inland_currency_export[]',$currencies,$currency_cfg->id,['id'=>'inland_currency_markup_3_2','class'=>'form-control destination_ammount_currency select-2-width']) }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -831,7 +771,7 @@
                             <button type="submit" class="btn btn-primary">
                                 Submit
                             </button>
-                            <a href="javascript:history.back()" class="btn btn-success">
+                            <a href="javascript:history.back()" class="btn btn-danger">
                                 Cancel
                             </a>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CompanyUser;
 use Illuminate\Http\Request;
 use App\Harbor;
 use App\Inland;
@@ -11,6 +12,8 @@ use App\Currency;
 use Illuminate\Support\Facades\Auth;
 use App\Company;
 use App\InlandCompanyRestriction;
+use EventIntercom;
+use App\InlandAdditionalKm;
 class InlandsController extends Controller
 {
   /**
@@ -39,7 +42,9 @@ class InlandsController extends Controller
     $harbor = $objharbor->all()->pluck('display_name','id');
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
-    return view('inland/add', compact('harbor','currency','companies'));
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    $currency_cfg = Currency::find($company_user->currency_id);
+    return view('inland/add', compact('harbor','currency','companies','currency_cfg'));
   }
 
   /**
@@ -70,6 +75,16 @@ class InlandsController extends Controller
     $inland->expire = $validation[1];
     $inland->company_user_id = Auth::user()->company_user_id;
     $inland->save();
+    // ADITIONAL KM 
+
+    $inlandKM = new InlandAdditionalKm();
+    $inlandKM->km_20 = $request->input('km_20');
+    $inlandKM->km_40 = $request->input('km_40');
+    $inlandKM->km_40hc = $request->input('km_40hc');
+    $inlandKM->currency_id = $request->input('chargecurrencykm');
+    $inlandKM->inland()->associate($inland);
+    $inlandKM->save();
+
     $ports = $request->input('irelandports');
     $detailstwuenty =  $request->input('lowertwuenty');
     $detailsforty =  $request->input('lowerforty');
@@ -130,6 +145,11 @@ class InlandsController extends Controller
         $inland_company_restriction->save();
       }
     }
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_inlands();
+
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this Inland.');
@@ -210,6 +230,16 @@ class InlandsController extends Controller
     $inland->validity = $validation[0];
     $inland->expire = $validation[1];
     $inland->update();
+
+
+    $inlandKM = InlandAdditionalKm::where("inland_id",$id)->first();
+    $inlandKM->km_20 = $request->input('km_20');
+    $inlandKM->km_40 = $request->input('km_40');
+    $inlandKM->km_40hc = $request->input('km_40hc');
+    $inlandKM->currency_id = $request->input('chargecurrencykm');
+    $inlandKM->update();
+
+
     $ports = $request->input('inlandport');
     $detailstwuenty =  $request->input('lowertwuenty');
     $detailsforty =  $request->input('lowerforty');

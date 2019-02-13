@@ -31,6 +31,7 @@ use App\LocalCharPortLcl;
 use App\LocalCharCountryLcl;
 use App\ContractLclCompanyRestriction;
 use App\ContractLclUserRestriction;
+use EventIntercom;
 
 class ContractsLclController extends Controller
 {
@@ -261,7 +262,9 @@ class ContractsLclController extends Controller
         $contract_client_restriction->save();
       }
     }
-
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_contractLcl();
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully add this contract.');
@@ -599,8 +602,8 @@ class ContractsLclController extends Controller
     $local = LocalChargeLcl::find($id);
     $local->forceDelete();
   }
-  
-    public function duplicateLocalCharges($id){
+
+  public function duplicateLocalCharges($id){
 
     $countries = Country::pluck('name','id');
     $calculationT = CalculationTypeLcl::all()->pluck('name','id');
