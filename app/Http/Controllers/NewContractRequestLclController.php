@@ -104,7 +104,6 @@ class NewContractRequestLclController extends Controller
             $Ncontract  = new NewContractRequestLcl();
             $Ncontract->namecontract    = $request->name;
             $Ncontract->numbercontract  = $request->number;
-            $Ncontract->description     = $request->description;
             $Ncontract->validation      = $request->validation_expire;
             $Ncontract->company_user_id = $request->CompanyUserId;
             $Ncontract->namefile        = $nombre;

@@ -97,9 +97,6 @@
                            <th width="5%" >
                               Username Load
                            </th>
-                           <th width='15%' >
-                              Description
-                           </th>
                            <th width="5%" >
                               Status
                            </th>
@@ -143,22 +140,6 @@
                            </td>
                            <td>
                               {{$Ncontract->username_load}}
-                           </td>
-                           <td>
-                              <a href="#">
-                                 Show
-                                 
-                                 <div  class="tet">
-                                    <!--begin::Portlet-->
-                                    <div class="m-portlet m-portlet--mobile">
-                      
-                                       <div class="m-portlet__body">
-                                          {{$Ncontract->description}}
-                                       </div>
-                                    </div>
-                                    <!--end::Portlet-->
-                                 </div>
-                              </a>
                            </td>
                            <td>
                               <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
