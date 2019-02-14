@@ -753,6 +753,9 @@ $(document).on('click', '.addButtonOrigin', function (e) {
   .removeClass('hide')
   .removeAttr('id')
   .insertAfter($template);
+  $clone.find("select").select2({
+    placeholder: "Currency"
+  });
 });
 $(document).on('click', '.addButton', function (e) {
   var $template = $('#freight_ammounts'),
@@ -761,6 +764,9 @@ $(document).on('click', '.addButton', function (e) {
   .removeClass('hide')
   .removeAttr('id')
   .insertAfter($template);
+  $clone.find("select").select2({
+    placeholder: "Currency"
+  });
   $('#freight_ammount_charge').attr("required");
 
 });
@@ -800,6 +806,9 @@ $(document).on('click', '.addButtonDestination', function (e) {
   .removeClass('hide')
   .removeAttr('id')
   .insertAfter($template);
+  $clone.find("select").select2({
+    placeholder: "Currency"
+  });
 });
 
 $(document).on('click', '.removeOriginButton', function (e) {
@@ -2534,7 +2543,7 @@ $(document).on('click', '#select-schedule', function () {
     jQuery(".sche:checked").each(function(){
       $valor =  $(this).val();
       var $obj = jQuery.parseJSON($valor);
-      $('#schetable > tbody:last-child').append("<tr><td>"+$obj['VesselName']+"</td><td>"+$obj['Etd']+"</td><td> <div class='col-md-4'><center> "+$obj['days']+" Days</center><div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> <center>"+$obj['type']+"</center></div></td><td>"+$obj['Eta']+"</td></tr>");
+      $('#schetable > tbody:last-child').append("<tr><td>"+$obj['vessel']+"</td><td>"+$obj['etd']+"</td><td> <div class='col-md-4 offset-md-4'> "+$obj['days']+" Days<div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> "+$obj['type']+"</div></td><td>"+$obj['eta']+"</td></tr>");
 
       schevalues.push($valor);
     });

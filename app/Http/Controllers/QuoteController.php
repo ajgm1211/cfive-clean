@@ -601,12 +601,12 @@ class QuoteController extends Controller
           $schedules = json_decode($input['schedule']);
           foreach( $schedules as $schedule){
             $sche = json_decode($schedule);
-            $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+            $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
             $saveSchedule  = new Schedule();
-            $saveSchedule->vessel = $sche->VesselName;
-            $saveSchedule->etd = $sche->Etd;
+            $saveSchedule->vessel = $sche->vessel;
+            $saveSchedule->etd = $sche->etd;
             $saveSchedule->transit_time =  $dias;
-            $saveSchedule->eta = $sche->Eta;
+            $saveSchedule->eta = $sche->eta;
             $saveSchedule->type = 'direct';
             $saveSchedule->quotes()->associate($quote);
             $saveSchedule->save();
@@ -620,10 +620,10 @@ class QuoteController extends Controller
           // dd($sche);
           $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
           $saveSchedule  = new Schedule();
-          $saveSchedule->vessel = $sche->VesselName;
-          $saveSchedule->etd = $sche->Etd;
+          $saveSchedule->vessel = $sche->vessel;
+          $saveSchedule->etd = $sche->etd;
           $saveSchedule->transit_time =  $dias;
-          $saveSchedule->eta = $sche->Eta;
+          $saveSchedule->eta = $sche->eta;
           $saveSchedule->type = 'direct';
           $saveSchedule->quotes()->associate($quote);
           $saveSchedule->save();
@@ -1319,6 +1319,43 @@ class QuoteController extends Controller
         $package_load->save();
       }
     }
+    //Deleting previous schedules
+    Schedule::where('quote_id',$quote->id)->delete();
+
+    if(isset($input['schedule'])){
+      if($input['schedule'] != 'null'){
+        $schedules = json_decode($input['schedule']);
+        foreach( $schedules as $schedule){
+          $sche = json_decode($schedule);
+          $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
+          $saveSchedule  = new Schedule();
+          $saveSchedule->vessel = $sche->vessel;
+          $saveSchedule->etd = $sche->etd;
+          $saveSchedule->transit_time =  $dias;
+          $saveSchedule->eta = $sche->eta;
+          $saveSchedule->type = 'direct';
+          $saveSchedule->quotes()->associate($quote);
+          $saveSchedule->save();
+        }
+      }
+    }
+    // Schedule manual
+    if(isset($input['schedule_manual'])){
+      if($input['schedule_manual'] != 'null'){
+        $sche = json_decode($input['schedule_manual']);
+        // dd($sche);
+        $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
+        $saveSchedule  = new Schedule();
+        $saveSchedule->vessel = $sche->vessel;
+        $saveSchedule->etd = $sche->etd;
+        $saveSchedule->transit_time =  $dias;
+        $saveSchedule->eta = $sche->eta;
+        $saveSchedule->type = 'direct';
+        $saveSchedule->quotes()->associate($quote);
+        $saveSchedule->save();
+      }
+    }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Quote updated successfully!');
@@ -1792,12 +1829,12 @@ class QuoteController extends Controller
         $schedules = json_decode($input['schedule']);
         foreach( $schedules as $schedule){
           $sche = json_decode($schedule);
-          $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+          $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
           $saveSchedule  = new Schedule();
-          $saveSchedule->vessel = $sche->VesselName;
-          $saveSchedule->etd = $sche->Etd;
+          $saveSchedule->vessel = $sche->vessel;
+          $saveSchedule->etd = $sche->etd;
           $saveSchedule->transit_time =  $dias;
-          $saveSchedule->eta = $sche->Eta;
+          $saveSchedule->eta = $sche->eta;
           $saveSchedule->type = 'direct';
           $saveSchedule->quotes()->associate($quote);
           $saveSchedule->save();
@@ -1809,12 +1846,12 @@ class QuoteController extends Controller
       if($input['schedule_manual'] != 'null'){
         $sche = json_decode($input['schedule_manual']);
         // dd($sche);
-        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+        $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
         $saveSchedule  = new Schedule();
-        $saveSchedule->vessel = $sche->VesselName;
-        $saveSchedule->etd = $sche->Etd;
+        $saveSchedule->vessel = $sche->vessel;
+        $saveSchedule->etd = $sche->etd;
         $saveSchedule->transit_time =  $dias;
-        $saveSchedule->eta = $sche->Eta;
+        $saveSchedule->eta = $sche->eta;
         $saveSchedule->type = 'direct';
         $saveSchedule->quotes()->associate($quote);
         $saveSchedule->save();
