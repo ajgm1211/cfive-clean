@@ -132,7 +132,7 @@ $validation_expire = 'Please enter validity date';
                   </a>
                 </div>
               </div>
-              <table class="table m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
+              <table cellpadding='4' cellspacing='4' class="col-md-12  m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
                 <thead>
                   <tr>
                     <th title="Field #0">
@@ -205,11 +205,11 @@ $validation_expire = 'Please enter validity date';
                       </div>
                     </td>
                     <td width='9%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                    <td width='9%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                    <td width='5%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:50%;']) }}</td>
                     <td width='9%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
                     <td width='9%'> {!! Form::text('ammount[]', 0, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
                     <td width='9%'> {!! Form::text('minimumL[]', 0, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                    <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-contro col-lg-7']) }}</td>
                     <td  width='4%'>-</td>
 
                   </tr>
