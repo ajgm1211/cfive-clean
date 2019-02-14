@@ -439,24 +439,7 @@
                       </tr>
                     </table>
                   </td>
-                </tr>
-                @else
-                <tr id="inlands{{$loop->iteration}}" hidden="true" >
-                  <td colspan="6">
-                    <span class="darkblue cabezeras">Inland Charges</span>
-                    <hr>
-                    <table class="table table-hover">
-                      <tr class="thead-light">
-                        <td>
-                          <div class="col-md-5 col-md-m-alert m-alert--outline alert alert-info alert-dismissible fade show" role="alert">
-                            <strong> I'm sorry  inland not available.</strong>
-                          </div>
-                        </td>
-
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                </tr>                
                 @endif
                 @if(!$arr->schedulesFin->isEmpty())
                 <tr id="schedules{{$loop->iteration}}" hidden="true"   >
