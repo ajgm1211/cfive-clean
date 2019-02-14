@@ -394,8 +394,15 @@ class QuoteController extends Controller
     }
     $incoterm = Incoterm::pluck('name','id');
 
+    $emaildimanicdata = json_encode([
+      'quote_bool'   => 'true',
+      'company_id'   => '',
+      'contact_id'   => '',
+      'quote_id'     => $quote->id
+    ]);
+
     return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
+                                'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'emaildimanicdata' => $emaildimanicdata]);
 
   }
 
