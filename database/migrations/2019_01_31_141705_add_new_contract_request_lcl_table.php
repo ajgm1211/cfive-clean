@@ -18,7 +18,6 @@ class AddNewContractRequestLclTable extends Migration
          $table->string('namecontract');
          $table->string('numbercontract');
          $table->string('validation');
-         $table->string('description');
          $table->integer('company_user_id')->unsigned();
          $table->string('namefile');
          $table->enum('status',['Pending','Processing','Done'])->default('Pending');

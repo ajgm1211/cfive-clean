@@ -1941,7 +1941,9 @@ $(document).on('change', '#status_quote_id', function () {
 
 //Select email template to send quote
 $(document).on('change', '#email_template', function () {
+  var ed;
   var id = $('#email_template').val();
+  var data = $('#emaildimanicdata').val();
   if(id==''){
     $('#subject-box').html('');
     $('#textarea-box').hide();
@@ -1950,11 +1952,12 @@ $(document).on('change', '#email_template', function () {
     $.ajax({
       type: 'GET',
       url: '/templates/preview',
-      data:{"id":id},
+      data:{"id":id,data:data},
       success: function(data) {
         $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
         $('#textarea-box').show();
 
+        ed = data.message;
         tinymce.init({
           selector: "#email-body",
           plugins: [
