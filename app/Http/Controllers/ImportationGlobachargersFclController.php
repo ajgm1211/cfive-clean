@@ -1870,68 +1870,8 @@ class ImportationGlobachargersFclController extends Controller
                             }
 
                             //////////////////////////////////////////////////////////////////////////////////////////////
-                            if($read[$requestobj[$Charge]] == $chargeVal){
-                                // Rates Fallidos
-                                if($values == true){
-                                    // si todos los valores son iguales a cero
-
-                                    if($originBol == true || $destinyBol == true){
-                                        foreach($randons as  $rando){
-                                            //insert por arreglo de puerto
-                                            if($originBol == true ){
-                                                $originerr = Harbor::find($rando);
-                                                $originVal = $originerr['name'];
-                                                if($destiExitBol == true){    
-                                                    $destinyVal = $read[$requestobj[$destinyExc]];
-                                                }
-                                            } else {
-                                                $destinyerr = Harbor::find($rando);
-                                                $destinyVal = $destinyerr['name'];
-                                                if($origExiBol == true){
-                                                    $originVal = $read[$requestobj[$originExc]];                                      
-                                                }
-                                            }
-                                            FailRate::create([
-                                                'origin_port'   => $originVal,
-                                                'destiny_port'  => $destinyVal,
-                                                'carrier_id'    => $carrierVal,
-                                                'contract_id'   => $contractIdVal,
-                                                'twuenty'       => $twentyVal,
-                                                'forty'         => $fortyVal,
-                                                'fortyhc'       => $fortyhcVal,
-                                                'fortynor'      => $fortynorVal,
-                                                'fortyfive'     => $fortyfiveVal,
-                                                'currency_id'   => $currencyVal,
-                                            ]);
-
-                                        }
-                                    } else {
-                                        if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
-                                        }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
-                                        }
-                                        FailRate::create([
-                                            'origin_port'   => $originVal,
-                                            'destiny_port'  => $destinyVal,
-                                            'carrier_id'    => $carrierVal,
-                                            'contract_id'   => $contractIdVal,
-                                            'twuenty'       => $twentyVal,
-                                            'forty'         => $fortyVal,
-                                            'fortyhc'       => $fortyhcVal,
-                                            'fortynor'      => $fortynorVal,
-                                            'fortyfive'     => $fortyfiveVal,
-                                            'currency_id'   => $currencyVal,
-                                        ]);
-
-                                    } 
-                                }
-                                //////-------------------////////////////////////////////////-----------------------------
-                            } else {
-                                // Surcharges Fallidos
+      
+                                // Globalchargers Fallidos
                                 if($calculationtypeExiBol == true){
                                     //
                                     if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
@@ -2972,7 +2912,7 @@ class ImportationGlobachargersFclController extends Controller
                                     }
                                 }
 
-                            }
+                            
                             $falli++;
                             //echo $i;
                             //dd($ratescollection);
