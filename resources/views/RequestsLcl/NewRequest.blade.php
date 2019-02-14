@@ -95,18 +95,6 @@ new registration
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                             </div>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-2">
-                          
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="numberid" class=" ">Description</label>
-                                    {!!  Form::textArea('description',null,['id'=>'descriptionid',
-                                    'placeholder'=>'Description',
-                                    'required',
-                                    'class'=>'form-control m-input','rows'=>'3'])!!}
-                                </div>
-                            </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
                             <!-- <hr> -->
