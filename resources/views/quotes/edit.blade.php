@@ -660,7 +660,7 @@
                             <div style="min-height: 100px;">
                               <div style="margin-top: 20px;">
                                 <div class="pull-left text-left" style="line-height: .5;">
-                                  <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">      
+                                 <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">      
                                 </div>
                                 <div class="pull-right text-right" style="line-height: .5">
                                   <p><b>Quotation ID: <span style="color: #CFAC6C"><br><br>@if($quote->custom_id!='') {!! Form::text('custom_id', $quote->custom_id, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @else {!! Form::text('custom_id', $quote->company_quote, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @endif</span></b></p>
