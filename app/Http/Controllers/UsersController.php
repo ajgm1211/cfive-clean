@@ -68,6 +68,9 @@ class UsersController extends Controller
     if($request->type == "company"){
       $user->assignRole('company');
     }
+    if($request->type == "admin"){
+      $user->assignRole('administrator');
+    }
     $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
     $user->notify(new SlackNotification($message));
 
