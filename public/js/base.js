@@ -752,7 +752,7 @@ $(document).on('click', '.addButtonOrigin', function (e) {
   .clone()
   .removeClass('hide')
   .removeAttr('id')
-  .insertAfter($template);
+  .insertAfter($template)
   $clone.find("select").select2({
     placeholder: "Currency"
   });
@@ -763,7 +763,7 @@ $(document).on('click', '.addButton', function (e) {
   .clone()
   .removeClass('hide')
   .removeAttr('id')
-  .insertAfter($template);
+  .insertAfter($template)
   $clone.find("select").select2({
     placeholder: "Currency"
   });
@@ -805,7 +805,7 @@ $(document).on('click', '.addButtonDestination', function (e) {
   .clone()
   .removeClass('hide')
   .removeAttr('id')
-  .insertAfter($template);
+  .insertAfter($template)
   $clone.find("select").select2({
     placeholder: "Currency"
   });

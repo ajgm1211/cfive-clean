@@ -453,7 +453,7 @@ $subtotalDestiny = 0;
                                     <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,null,['class'=>'m-select2-general form-control origin_ammount_currency']) }}              
+                                        {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
@@ -667,9 +667,7 @@ $subtotalDestiny = 0;
                                     <input type="number"  name="freight_price_per_unit[]" value="" min="0" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-
-                                        {{ Form::select('freight_ammount_currency[]',$currency,null,['class'=>'m-select2-general form-control freight_ammount_currency']) }}
-
+                                        {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
@@ -918,9 +916,7 @@ $subtotalDestiny = 0;
                                     <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-
-                                        {{ Form::select('destination_ammount_currency[]',$currency,null,['class'=>'m-select2-general form-control destination_ammount_currency']) }}
-
+                                        {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
