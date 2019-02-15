@@ -1,5 +1,5 @@
  $(document).ready(function(){
-        $('#processid').hide(); 
+        $('#processid').hide();
     });
 
     $('.m-select2-general').select2({
