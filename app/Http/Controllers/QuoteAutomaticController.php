@@ -387,7 +387,7 @@ class QuoteAutomaticController extends Controller
         $q->whereIn('port', $destiny_port);
       })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
-      })->orDoesntHave('inland_company_restriction')->with('inlandports.ports','inlanddetails.currency')->get();
+      })->orDoesntHave('inland_company_restriction')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
 
 
 
@@ -504,11 +504,11 @@ class QuoteAutomaticController extends Controller
         $q->whereIn('port', $origin_port);
       })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
-      })->orDoesntHave('inland_company_restriction')->with('inlandports.ports','inlanddetails.currency')->get();
+      })->orDoesntHave('inland_company_restriction')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
 
 
       foreach($inlands as $inlandsValue){
-        dd($inlandsValue);
+   
 
         $km20 = true;
         $km40 = true;
