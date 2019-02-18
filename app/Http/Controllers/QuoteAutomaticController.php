@@ -389,7 +389,7 @@ class QuoteAutomaticController extends Controller
         $a->where('company_id', '=',$company_inland);
       })->orDoesntHave('inland_company_restriction')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
 
-
+      // se agregan los aditional km
 
       foreach($inlands as $inlandsValue){
 
