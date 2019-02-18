@@ -13,7 +13,7 @@ class Inland extends Model implements Auditable
 
   public function inlandadditionalkm(){
 
-    return $this->hasOne('App\InlandAdditionalKm');
+    return $this->hasOne('App\InlandAdditionalKm','inland_id');
 
   }
   public function inlandports(){

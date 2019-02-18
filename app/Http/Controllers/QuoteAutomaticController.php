@@ -441,21 +441,22 @@ class QuoteAutomaticController extends Controller
                 }
                 // KILOMETROS ADICIONALES 
 
+                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                 if($km20){
 
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
                   $monto += $request->input('twuenty') * $montoKm;
 
                 }
                 if($km40){
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
                   $monto += $request->input('forty') * $montoKm;
 
                 }
                 if($km40hc){
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
                   $monto += $request->input('fortyhc') * $montoKm;
 
