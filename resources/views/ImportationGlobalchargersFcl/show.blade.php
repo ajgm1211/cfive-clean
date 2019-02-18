@@ -189,7 +189,7 @@
                             </button>
                         </div>
                         <div class="col-lg-2 col-lg-offset-2">
-                            <a href="{{route('delete.Accounts.Globalcharges.Fcl',$account_id)}}">
+                            <a href="{{route('delete.Accounts.Globalcharges.Fcl',[$account_id,1])}}">
 
                                 <button type="button" class="btn btn-danger form-control" >
                                     <span>
