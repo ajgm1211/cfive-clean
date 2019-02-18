@@ -459,8 +459,8 @@
                       @foreach($arr->schedulesFin as $schedule)
 
                       <tr>
-                        <td width='15%'>{{ $schedule['VesselName'] }}</td>
-                        <td width='15%'>{{ $schedule['Etd'] }}</td>
+                        <td width='15%'>{{ $schedule['vessel'] }}</td>
+                        <td width='15%'>{{ $schedule['etd'] }}</td>
                         <td width='45%'>
                           <div class="row">
                             <div class="col-md-4">
@@ -480,7 +480,7 @@
                             </div>
                           </div>                        
                         </td>
-                        <td width='15%'>{{ $schedule['Eta'] }}</td>
+                        <td width='15%'>{{ $schedule['eta'] }}</td>
                         <td width='10%'>      
                           <label class="m-checkbox m-checkbox--state-brand">
                             <input name="schedules[]" type="checkbox" value="{{ json_encode($schedule) }}"> 
