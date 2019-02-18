@@ -508,6 +508,7 @@ class QuoteAutomaticController extends Controller
 
 
       foreach($inlands as $inlandsValue){
+        dd($inlandsValue);
 
         $km20 = true;
         $km40 = true;
