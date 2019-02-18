@@ -11,9 +11,9 @@ class Inland extends Model implements Auditable
   protected $table    = "inlands";
   protected $fillable =   ['id','provider','type','validity','expire'];
 
-  public function inlandadditionalkm(){
+  public function inlandadditionalkms(){
 
-    return $this->hasOne('App\InlandAdditionalKm','inland_id');
+    return $this->hasOne('App\InlandAdditionalKm');
 
   }
   public function inlandports(){
