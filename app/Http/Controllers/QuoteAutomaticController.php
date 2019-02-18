@@ -41,9 +41,17 @@ use App\Quote;
 use App\SearchRate;
 use App\SearchPort;
 use EventIntercom;
+use App\Repositories\Schedules;
 
 class QuoteAutomaticController extends Controller
 {
+
+  protected $schedules;
+
+  public function __construct(Schedules $schedules)
+  {
+    $this->schedules = $schedules;
+  }
   public function automatic(){
     $quotes = Quote::all();
     $company_user_id=\Auth::user()->company_user_id;
@@ -180,7 +188,7 @@ class QuoteAutomaticController extends Controller
 
   }
 
-  public function inlandDistance($deliveyType,$direccion,$port_id,$currency){
+  public function inlandDistance($deliveyType,$direccion,$port_id,$currency,$type){
 
     $isInland = false; // sirve para crear el arreglo solo si la persona eligio una opcion valida en el combo
 
@@ -189,13 +197,13 @@ class QuoteAutomaticController extends Controller
       $harborRate  = Harbor::where('id',$port_id)->first();
       $origin = $harborRate->coordinates;
       $destination = $direccion;
-      $type  = 'Destiny Port To Door';
+
       $isInland = true;
     }else if($deliveyType == "3" || $deliveyType == "4" ){ 
       $harborRate  = Harbor::where('id',$port_id)->first();
       $origin = $direccion;
       $destination = $harborRate->coordinates;
-      $type  = 'Origin Port To Door';
+
       $isInland = true;
     }
 
@@ -384,7 +392,7 @@ class QuoteAutomaticController extends Controller
 
 
       foreach($inlands as $inlandsValue){
-        $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+
         $km20 = true;
         $km40 = true;
         $km40hc = true;
@@ -434,16 +442,20 @@ class QuoteAutomaticController extends Controller
                 // KILOMETROS ADICIONALES 
 
                 if($km20){
+
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
                   $monto += $request->input('twuenty') * $montoKm;
 
                 }
                 if($km40){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
                   $monto += $request->input('forty') * $montoKm;
 
                 }
                 if($km40hc){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
                   $monto += $request->input('fortyhc') * $montoKm;
 
@@ -495,7 +507,7 @@ class QuoteAutomaticController extends Controller
 
 
       foreach($inlands as $inlandsValue){
-        $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+
         $km20 = true;
         $km40 = true;
         $km40hc = true;
@@ -544,16 +556,20 @@ class QuoteAutomaticController extends Controller
                 // KILOMETROS ADICIONALES 
 
                 if($km20){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
                   $monto += $request->input('twuenty') * $montoKm;
 
                 }
                 if($km40){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
                   $monto += $request->input('forty') * $montoKm;
 
                 }
                 if($km40hc){
+
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
                   $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
                   $monto += $request->input('fortyhc') * $montoKm;
 
@@ -2151,45 +2167,41 @@ class QuoteAutomaticController extends Controller
       // fin calculo Global charges
       //#######################################################################
       // Armar los schedules
-      try{
-        $schedulesFin = new Collection();
-        $existUrl = true;
-        $url = "http://schedules.cargofive.com/schedule/".strtolower($data->carrier->name)."/".$data->port_origin->code."/".$data->port_destiny->code;
-        $client = new Client();
-        try{
-          $res = $client->request('GET', $url, [
-          ]);
-        }catch (\GuzzleHttp\Exception\ClientException $e) {
-          $existUrl = false;
-        }
-        if($existUrl){
-          $schedules = Collection::make(json_decode($res->getBody()));
-          //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
-          $schedulesArr = new Collection();
 
-          if(!$schedules->isEmpty()){
-            foreach($schedules['schedules'] as $schedules){
-              $collectS = Collection::make($schedules);
-              $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
-              $collectS->put('days',$days);
-              if($schedules->Transfer > 1){
-                $collectS->put('type','Scale');
-              }else{
-                $collectS->put('type','Direct');
-              }
-              $schedulesArr->push($collectS);
-            }
-            //'2018-07-24'
-            $dateSchedule = strtotime($date);
-            $dateSchedule =  date('Y-m-d',$dateSchedule);
-            if(!$schedulesArr->isEmpty()){
-              $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-              $schedulesFin->push($schedulesArr);
-            }
+      $schedulesFin = new Collection();
+      $access_token = $this->schedules->authentication();
+      $dataSchedule = $this->schedules->getSchedules($access_token->access_token,$data->carrier->name,$data->port_origin->code,$data->port_destiny->code);
+
+      $schedules = Collection::make($dataSchedule);
+
+      $schedulesArr = new Collection();
+      $schedulesFin = new Collection();
+      if(!$schedules->isEmpty()){
+        foreach($schedules['data'] as $schedules){
+
+          $collectS = Collection::make($schedules);
+
+          $days =  $this->dias_transcurridos($schedules->eta,$schedules->etd);
+
+          $collectS->put('days',$days);
+          if($schedules->route_type > 1){
+            $collectS->put('type','Scale');
+          }else{
+            $collectS->put('type','Direct');
           }
+          $schedulesArr->push($collectS);
+
         }
-      }catch (\Guzzle\Http\Exception\ConnectException $e) {
+        $dateSchedule = strtotime($date);
+        $dateSchedule =  date('Y-m-d',$dateSchedule);
+        if(!$schedulesArr->isEmpty()){
+          $schedulesArr =  $schedulesArr->where('etd','>=', $dateSchedule)->first();
+          $schedulesFin->push($schedulesArr);
+        }
       }
+
+
+
 
       //#######################################################################
       //Formato subtotales y operacion total quote
@@ -2212,8 +2224,11 @@ class QuoteAutomaticController extends Controller
         }
       }else{           
         if($delivery_type == "3" || $delivery_type == "4" ){ 
-          $inlandOrigin = $this->inlandDistance($delivery_type,$request->input('origin_address'), $data->port_origin->id , $typeCurrency);
-         // dd($inlandOrigin);
+          $inlandOrigin = $this->inlandDistance($delivery_type,$request->input('origin_address'), $data->port_origin->id , $typeCurrency,'Origin Port To Door');
+          // dd($inlandOrigin);
+
+
+
         }else{
           $inlandOrigin = array();
         }
@@ -2229,7 +2244,7 @@ class QuoteAutomaticController extends Controller
         }
       }else{     
         if($delivery_type == "2" || $delivery_type == "4" ){ 
-          $inlandDestiny = $this->inlandDistance($delivery_type,$request->input('destination_address'), $data->port_destiny->id , $typeCurrency);
+          $inlandDestiny = $this->inlandDistance($delivery_type,$request->input('destination_address'), $data->port_destiny->id , $typeCurrency,'Destiny Port To Door');
         }else{
           $inlandDestiny = array();
         }
