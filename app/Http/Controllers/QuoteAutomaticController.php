@@ -441,23 +441,23 @@ class QuoteAutomaticController extends Controller
                 }
                 // KILOMETROS ADICIONALES 
 
-                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
+                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                 if($km20){
 
 
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
                   $monto += $request->input('twuenty') * $montoKm;
 
                 }
                 if($km40){
 
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
                   $monto += $request->input('forty') * $montoKm;
 
                 }
                 if($km40hc){
 
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
                   $monto += $request->input('fortyhc') * $montoKm;
 
                 }
@@ -555,23 +555,23 @@ class QuoteAutomaticController extends Controller
                 }              
 
                 // KILOMETROS ADICIONALES 
-
+                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                 if($km20){
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_20) / $rateGeneral;
+
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
                   $monto += $request->input('twuenty') * $montoKm;
 
                 }
                 if($km40){
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40) / $rateGeneral;
+
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
                   $monto += $request->input('forty') * $montoKm;
 
                 }
                 if($km40hc){
 
-                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkm->currency_id,$typeCurrency);
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkm->km_40hc) / $rateGeneral;
+
+                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
                   $monto += $request->input('fortyhc') * $montoKm;
 
                 }
