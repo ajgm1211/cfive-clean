@@ -259,7 +259,7 @@ class ImportationGlobachargersFclController extends Controller
 
 	public function edit($id)
 	{
-		//
+        dd('llega'.$id);
 	}
 
 	public function update(Request $request, $id)
