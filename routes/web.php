@@ -413,10 +413,13 @@ Route::middleware(['auth'])->prefix('RequestsGlobalchargers')->group(function ()
 Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(function () {
 	Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
 	Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
-
 	Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
 	Route::get('FailedGlobalchargers/{id}/{tab}','ImportationGlobachargersFclController@showviewfailedandgood')->name('showview.globalcharge.fcl');
 	Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
+    
+    //failed and good
+	Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');
+    
 });
 // GLOBAL CHARGES LCL 
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
