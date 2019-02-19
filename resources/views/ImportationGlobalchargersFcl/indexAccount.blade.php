@@ -92,7 +92,7 @@
                                         {{$account->companyuser->name}}
                                     </td>
                                     <td>
-                                        <a href="{{route('ImportationGlobalchargeFcl.edit',$account->id)}}" class="show"  title="Failed-Good" >
+                                        <a href="{{route('showview.globalcharge.fcl',[$account->id,1])}}" class="show"  title="Failed-Good" >
                                             <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
                                         </a>
                                         &nbsp; &nbsp;

@@ -415,6 +415,7 @@ Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(functi
 	Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
 
 	Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
+	Route::get('FailedGlobalchargers/{id}/{tab}','ImportationGlobachargersFclController@showviewfailedandgood')->name('showview.globalcharge.fcl');
 	Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
 });
 // GLOBAL CHARGES LCL 
