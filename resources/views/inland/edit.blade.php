@@ -51,15 +51,15 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
       <div class="form-group m-form__group row">
         <div class="col-lg-3">
           {!! Form::label('KM 20', 'Charge for 20') !!}
-          {!! Form::number('km_20',$inland->inlandadditionalkm->km_20, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0']) !!}
+          {!! Form::number('km_20',$inland->inlandadditionalkms->km_20, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0']) !!}
         </div>
         <div class="col-lg-3">
           {!! Form::label('KM 40', 'Charge for 40') !!}
-          {!! Form::number('km_40',$inland->inlandadditionalkm->km_40, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0']) !!}
+          {!! Form::number('km_40',$inland->inlandadditionalkms->km_40, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0']) !!}
         </div>
         <div class="col-lg-3">
           {!! Form::label('KM 40 HC', 'Charge for 40HC') !!}
-          {!! Form::number('km_40hc',$inland->inlandadditionalkm->km_40hc, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0' ]) !!}
+          {!! Form::number('km_40hc',$inland->inlandadditionalkms->km_40hc, ['placeholder' => 'Enter Aditional Charge per KM','class' => 'form-control m-input','step'=>'.01','min'=>'0' ]) !!}
         </div>
         <div class="col-lg-3">
           <label>Company Restriction</label>
@@ -71,7 +71,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
       <div class="form-group m-form__group row">
         <div class="col-lg-3">
           {!! Form::label('Charge Currency', 'Charge Currency') !!}
-          {{ Form::select('chargecurrencykm',$currency,$inland->inlandadditionalkm->currency_id,['class'=>'custom-select form-control','id' => '']) }}
+          {{ Form::select('chargecurrencykm',$currency,$inland->inlandadditionalkms->currency_id,['class'=>'custom-select form-control','id' => '']) }}
         </div>
       </div>
 
