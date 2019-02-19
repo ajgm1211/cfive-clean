@@ -177,9 +177,11 @@ class InlandsController extends Controller
   public function edit($id)
   {
     $id = obtenerRouteKey($id);
-    $inland = Inland::with('inlandports.ports','inlanddetails.currency')->get()->find($id);
+    $inland = Inland::with('inlandports.ports','inlanddetails.currency','inland_company_restriction')->get()->find($id);
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
+    
+   // dd($inland);
 
     $company_user_id=\Auth::user()->company_user_id;
     if(\Auth::user()->hasRole('subuser')){
@@ -189,14 +191,14 @@ class InlandsController extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-    $company_restriction = InlandCompanyRestriction::where('inland_id',$inland->id)->first();
+  //  $company_restriction = InlandCompanyRestriction::where('inland_id',$inland->id);
     $company = array();
-    if(!empty($company_restriction)){
+    /*if(!empty($company_restriction)){
       $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
-    }
+    }*/
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('display_name','id');
-    return view('inland/edit', compact('harbor','inland','currency','company','companies'));
+    return view('inland/edit', compact('harbor','inland','currency','companies'));
 
   }
 
@@ -295,6 +297,7 @@ class InlandsController extends Controller
     }
 
     InlandCompanyRestriction::where('inland_id',$inland->id)->delete();
+
     if(!empty($companies)){
       foreach($companies as $key3 => $value)
       {
