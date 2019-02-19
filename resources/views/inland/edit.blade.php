@@ -64,7 +64,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
         <div class="col-lg-3">
           <label>Company Restriction</label>
           <div class="form-group m-form__group align-items-center">
-            {{ Form::select('companies[]',$companies,@$company->id,['multiple','class'=>'m-select2-general','id' => 'm-select2-company']) }}
+            {{ Form::select('companies[]',$companies,$inland->inland_company_restriction->pluck('company_id'),['multiple','class'=>'m-select2-general','id' => 'm-select2-company']) }}
           </div>
         </div>
       </div>
