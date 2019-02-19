@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
-@section('title', 'Contracts')
+@section('title', 'Global Charge')
 @section('content')
 
 <div class="m-content">
@@ -13,7 +13,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Surchargers
+                        Global Charge
                     </h3><br>
 
                 </div>
@@ -55,26 +55,26 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Surcharge 
+                                Fail Global Charge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Surcharge
+                                Good Global Charge
                             </a>
                         </li>
                         @else
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link " data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Surcharge 
+                                Fail Global Charge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Surcharge
+                                Good Global Charge
                             </a>
                         </li>
                         @endif
@@ -93,13 +93,13 @@
                             <label >
                                 <i class="fa fa-dot-circle-o" style="color:red;"> </i>
                                 <strong >
-                                    Failed Surcharges: 
+                                    Failed Global Charge: 
                                 </strong>
-                                <strong id="strfail">{{$countfailsurcharge}}</strong>
-                                <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
+                                <strong id="strfail">{{$countfailglobal}}</strong>
+                                <input type="hidden" value="{{$countfailglobal}}" id="strfailinput" />
                             </label>
                             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                            <!--<a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>-->
                             <br>
 
                         </div>
@@ -144,12 +144,12 @@
                                 <label>
                                     <i class="fa fa-dot-circle-o" style="color:green;"> </i>
                                     <strong id="">
-                                        Good Surcharges: 
+                                        Good Global Charge: 
                                     </strong>
                                     <strong id="strgood">
-                                        {{$countgoodsurcharge}}
+                                        {{$countgoodglobal}}
                                     </strong>
-                                    <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinput" />
+                                    <input type="hidden" value="{{$countgoodglobal}}" id="strgoodinput" />
                                 </label>
                             </div>
 
@@ -194,7 +194,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Edit Surcharge
+                            Edit Global Charge
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -220,7 +220,7 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
         <script>
-            $(function() {
+           /* $(function() {
                 $('#myatest').DataTable({
                     processing: true,
                     ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
@@ -273,7 +273,7 @@
                     "paging": true,
                    //"scrollX": true,
                 }); 
-            });
+            });*/
 
 
 
