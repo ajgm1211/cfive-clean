@@ -188,6 +188,7 @@ class QuoteAutomaticController extends Controller
 
   }
 
+
   public function inlandDistance($deliveyType,$direccion,$port_id,$currency,$type){
 
     $isInland = false; // sirve para crear el arreglo solo si la persona eligio una opcion valida en el combo
@@ -309,6 +310,9 @@ class QuoteAutomaticController extends Controller
       // markup currency
 
 
+
+
+
       if($request->modality == "1"){
         $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_export'));
         // valor de la conversion segun la moneda
@@ -385,13 +389,14 @@ class QuoteAutomaticController extends Controller
     if($delivery_type == "2" || $delivery_type == "4" ){ 
       $inlands = Inland::whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
+      })->whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
-      })->orDoesntHave('inland_company_restriction')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
+      })->orDoesntHave('inland_company_restriction')->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
 
       // se agregan los aditional km
 
       foreach($inlands as $inlandsValue){
+
 
         $km20 = true;
         $km40 = true;
@@ -441,26 +446,22 @@ class QuoteAutomaticController extends Controller
                 }
                 // KILOMETROS ADICIONALES 
 
-                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
-                if($km20){
-
-
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-                  $monto += $request->input('twuenty') * $montoKm;
-
+                if(isset($inlandsValue->inlandadditionalkms)){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
+                  if($km20){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
+                    $monto += $request->input('twuenty') * $montoKm;
+                  }
+                  if($km40){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
+                    $monto += $request->input('forty') * $montoKm;
+                  }
+                  if($km40hc){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
+                    $monto += $request->input('fortyhc') * $montoKm;
+                  }
                 }
-                if($km40){
 
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
-                  $monto += $request->input('forty') * $montoKm;
-
-                }
-                if($km40hc){
-
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
-                  $monto += $request->input('fortyhc') * $montoKm;
-
-                }
 
                 // MARKUPS
                 if($inlandPercentage != 0){
@@ -502,13 +503,15 @@ class QuoteAutomaticController extends Controller
     if($delivery_type == "3" || $delivery_type == "4" ){
       $inlands = Inland::whereHas('inlandports', function($q) use($origin_port) {
         $q->whereIn('port', $origin_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->whereHas('inland_company_restriction', function($a) use($company_inland){
+      })->whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
-      })->orDoesntHave('inland_company_restriction')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
+      })->orDoesntHave('inland_company_restriction')->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
+
+
 
 
       foreach($inlands as $inlandsValue){
-   
+
 
         $km20 = true;
         $km40 = true;
@@ -556,26 +559,22 @@ class QuoteAutomaticController extends Controller
                 }              
 
                 // KILOMETROS ADICIONALES 
-                $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
-                if($km20){
-
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-                  $monto += $request->input('twuenty') * $montoKm;
-
+                if(isset($inlandsValue->inlandadditionalkms)){
+                  $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
+                  if($km20){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
+                    $monto += $request->input('twuenty') * $montoKm;
+                  }
+                  if($km40){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
+                    $monto += $request->input('forty') * $montoKm;
+                  }
+                  if($km40hc){
+                    $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
+                    $monto += $request->input('fortyhc') * $montoKm;
+                  }
                 }
-                if($km40){
 
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
-                  $monto += $request->input('forty') * $montoKm;
-
-                }
-                if($km40hc){
-
-
-                  $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
-                  $monto += $request->input('fortyhc') * $montoKm;
-
-                }
 
                 // MARKUPS
                 if($inlandPercentage != 0){
