@@ -118,6 +118,8 @@
                                         <th> Ammount </th>
                                         <th> Currency </th>
                                         <th> Carrier </th>
+                                        <th> Validity To </th>
+                                        <th> Validity From </th>
                                         <th> Options </th>
                                     </tr>
                                 </thead>
@@ -220,10 +222,10 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
         <script>
-           /* $(function() {
+            $(function() {
                 $('#myatest').DataTable({
                     processing: true,
-                    ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
+                    ajax: '{!! route("Fail.Load.globalcharge.fcl",[$id,1]) !!}',
                     columns: [
                         { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
@@ -233,6 +235,8 @@
                         { data: 'ammount', name: "ammount" },
                         { data: 'currencylb', name: 'currencylb' },
                         { data: 'carrierlb', name: 'carrierlb' },
+                        { data: 'validitytolb', name: 'validitytolb' },
+                        { data: 'validityfromlb', name: 'validityfromlb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -246,7 +250,7 @@
                     "paging": true,
                    //"scrollX": true,
                 });
-
+/*
                 $('#myatest2').DataTable({
                     processing: true,
                     //serverSide: true,
@@ -272,8 +276,8 @@
                     "dom": 'Bfrtip',
                     "paging": true,
                    //"scrollX": true,
-                }); 
-            });*/
+                }); */
+            });
 
 
 
