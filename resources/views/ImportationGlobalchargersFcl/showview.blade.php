@@ -169,6 +169,8 @@
                                             <th> Ammount </th>
                                             <th> Currency </th>
                                             <th> Carrier </th>
+                                            <th> Validity To </th>
+                                            <th> Validity From </th>
                                             <th> Options </th>
                                         </tr>
                                     </thead>
@@ -248,13 +250,13 @@
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   //"scrollX": true,
+                    //"scrollX": true,
                 });
-/*
+
                 $('#myatest2').DataTable({
                     processing: true,
                     //serverSide: true,
-                    ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,2]) !!}',
+                    ajax: '{!! route("Fail.Load.globalcharge.fcl",[$id,2]) !!}',
                     columns: [
                         { data: 'surchargelb', name: 'surchargelb' },
                         { data: 'origin_portLb', name: 'origin_portLb' },
@@ -264,6 +266,8 @@
                         { data: 'ammount', name: "ammount" },
                         { data: 'currencylb', name: 'currencylb' },
                         { data: 'carrierlb', name: 'carrierlb' },
+                        { data: 'validitytolb', name: 'validitytolb' },
+                        { data: 'validityfromlb', name: 'validityfromlb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -275,14 +279,14 @@
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   //"scrollX": true,
-                }); */
+                    //"scrollX": true,
+                }); 
             });
 
 
 
 
-         /*   function showModalsavetosurcharge(id,operation){
+            /*   function showModalsavetosurcharge(id,operation){
 
                 if(operation == 1){
                     var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
@@ -299,7 +303,7 @@
                 }
             }*/
 
-      /*      $(document).on('click','#delete-Fail-Surcharge',function(){
+            /*      $(document).on('click','#delete-Fail-Surcharge',function(){
                 var id = $(this).attr('data-id-failSurcharge');
                 var elemento = $(this);
                 swal({
@@ -346,7 +350,7 @@
                 });
             });*/
 
-      /*      $(document).on('click','#delete-Surcharge',function(){
+            /*      $(document).on('click','#delete-Surcharge',function(){
                 var id = $(this).attr('data-id-Surcharge');
                 var elemento = $(this);
                 swal({
