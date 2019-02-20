@@ -107,11 +107,11 @@ $validation_expire = 'Please enter valididity date';
                     </thead>
                     <tbody>
                       <tr>
-                        <td width="30%"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low20 ','required' => 'required' , 'id' => 'lo201','style'=>'width:100%']) !!}</td>
-                        <td width="30%">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input prove up up20','required' => 'required','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')','style'=>'width:100%']) !!}</td>
+                        <td width="30%"> {!! Form::text('lowertwuenty[]', null, ['placeholder' => '0','class' => 'form-control m-input low20 ' , 'id' => 'lo201','style'=>'width:100%']) !!}</td>
+                        <td width="30%">  {!! Form::text('uppertwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input prove up up20','id' => 'up201' ,'onblur' => 'validateRange(this.id,\'t20\')','style'=>'width:100%']) !!}</td>
                         <td width="40%">
                           <div class="input-group">
-                            {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'width:50%']) !!}
+                            {!! Form::number('ammounttwuenty[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
 
                             <div class="input-group-btn">
                               <div class="btn-group">
@@ -198,11 +198,11 @@ $validation_expire = 'Please enter valididity date';
                     </thead>
                     <tbody>
                       <tr>
-                        <td width="30%"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40','required' => 'required' , 'id' => 'lo401','style'=>'width:100%']) !!}</td>
-                        <td width="30%">  {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40','required' => 'required','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}</td>
+                        <td width="30%"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40' , 'id' => 'lo401','style'=>'width:100%']) !!}</td>
+                        <td width="30%">  {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40','id' => 'up401' ,'onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}</td>
                         <td  width="40%">
                           <div class="input-group">
-                            {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'widht:100%']) !!}
+                            {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'widht:100%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
                                 {{ Form::select('currencyforty[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '','style'=>'widht:50%']) }}
@@ -284,11 +284,11 @@ $validation_expire = 'Please enter valididity date';
                     </thead>
                     <tbody>
                       <tr>
-                        <td width="30%"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40H','required' => 'required' ,'id' => 'lo40H1','style'=>'width:100%']) !!}</td>
-                        <td width="30%">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40H','required' => 'required', 'id' => 'up40H1' ,'onblur' => 'validateRange40hc(this.id,\'t40H\')','style'=>'width:100%' ]) !!}</td>
+                        <td width="30%"> {!! Form::text('lowerfortyhc[]', null, ['placeholder' => '0','class' => 'form-control m-input low low40H' ,'id' => 'lo40H1','style'=>'width:100%']) !!}</td>
+                        <td width="30%">  {!! Form::text('upperfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input up up40H', 'id' => 'up40H1' ,'onblur' => 'validateRange40hc(this.id,\'t40H\')','style'=>'width:100%' ]) !!}</td>
                         <td  width="40%">
                           <div class="input-group">
-                            {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','required' => 'required','style'=>'width:50%']) !!}
+                            {!! Form::number('ammountfortyhc[]', null, ['placeholder' => '50','class' => 'form-control m-input','style'=>'width:50%']) !!}
                             <div class="input-group-btn">
                               <div class="btn-group">
                                 {{ Form::select('currencyfortyhc[]',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
