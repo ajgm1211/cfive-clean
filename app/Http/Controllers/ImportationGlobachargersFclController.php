@@ -6,6 +6,7 @@ use Excel;
 use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
+use App\Country;
 use App\Currency;
 use Carbon\Carbon;
 use App\Surcharge;
@@ -14,6 +15,7 @@ use App\TypeDestiny;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\CalculationType;
+use App\GlobalCharCountry;
 use App\GlobalCharCarrier;
 use App\FailedGlobalcharge;
 use App\FileTmpGlobalcharge;
@@ -461,17 +463,15 @@ class ImportationGlobachargersFclController extends Controller
             }
             //dd($failsurchargecoll);
             return DataTables::of($failglobalcoll)->addColumn('action', function ( $failglobalcoll) {
-                return '----------<!--<a href="#" class="" onclick="showModalsavetoglobal('.$failglobalcoll['id'].','.$failglobalcoll['operation'].')"><i class="la la-edit"></i></a>
+                return '---<!--<a href="#" class="" onclick="showModalsavetoglobalcharge('.$failglobalcoll['id'].',1)"><i class="la la-edit"></i></a>-->
                 &nbsp;
-                <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>-->';
+                <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>';
             })
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
 
         }else if($selector == 2){
 
-
             $globalcharges = DB::select('call select_globalcharge('.$id.')');
-            // dd($globalcharges);
 
             return DataTables::of($globalcharges)
                 ->editColumn('surchargelb', function ($globalcharges){ 
@@ -510,11 +510,137 @@ class ImportationGlobachargersFclController extends Controller
                     return $globalcharges->expire;
                 })
                 ->addColumn('action', function ( $globalcharges) {
-                    return '----<!--<a href="#" class="" onclick="showModalsavetosurcharge('.$globalcharges->id.',1)"><i class="la la-edit"></i></a>
+                    return '<a href="#" class="" onclick="showModalsavetoglobalcharge('.$globalcharges->id.',2)"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Surcharge" data-id-Surcharge="'.$globalcharges->id.'" class=""><i class="la la-remove"></i></a>-->';
+                <a href="#" id="delete-globalcharge" data-id-globalcharge="'.$globalcharges->id.'" class=""><i class="la la-remove"></i></a>';
                 })
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
+        }
+    }
+
+    //Editar un global charge good -- precarga de body modal AJAX
+    public function editGlobalChar($id){
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objtypedestiny = new TypeDestiny();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $countries = Country::pluck('name','id');
+
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $globalcharges = GlobalCharge::find($id);
+        $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+        return view('ImportationGlobalchargersFcl.Body-Modal.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+    }
+
+    //Actualiza el globalcharge good
+    public function updateGlobalChar(Request $request, $id)
+    {
+
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $objtypedestiny = new TypeDestiny();
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+
+        $global = GlobalCharge::find($id);
+        $validation = explode('/',$request->validation_expire);
+        $global->validity = $validation[0];
+        $global->expire = $validation[1];
+        $global->surcharge_id = $request->input('surcharge_id');
+        $global->typedestiny_id = $request->input('changetype');
+        $global->calculationtype_id = $request->input('calculationtype_id');
+        $global->ammount = $request->input('ammount');
+        $global->currency_id = $request->input('currency_id');
+
+        $carrier = $request->input('carrier_id');
+        $deleteCarrier = GlobalCharCarrier::where("globalcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort->delete();
+        $deleteCountry = GlobalCharCountry::where("globalcharge_id",$id);
+        $deleteCountry->delete();
+
+        $typerate =  $request->input('typeroute');
+        if($typerate == 'port'){
+            $port_orig = $request->input('port_orig');
+            $port_dest = $request->input('port_dest');
+            foreach($port_orig as  $orig => $valueorig)
+            {
+                foreach($port_dest as $dest => $valuedest)
+                {
+                    $detailport = new GlobalCharPort();
+                    $detailport->port_orig = $valueorig;
+                    $detailport->port_dest = $valuedest;
+                    $detailport->typedestiny_id = $request->input('changetype');
+                    $detailport->globalcharge_id = $id;
+                    $detailport->save();
+                }
+            }
+        }elseif($typerate == 'country'){
+
+            $detailCountrytOrig =$request->input('country_orig');
+            $detailCountryDest = $request->input('country_dest');
+            foreach($detailCountrytOrig as $p => $valueC)
+            {
+                foreach($detailCountryDest as $dest => $valuedestC)
+                {
+                    $detailcountry = new GlobalCharCountry();
+                    $detailcountry->country_orig = $valueC;
+                    $detailcountry->country_dest =  $valuedestC;
+                    $detailcountry->globalcharge()->associate($global);
+                    $detailcountry->save();
+                }
+            }
+        }
+
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new GlobalCharCarrier();
+            $detailcarrier->carrier_id = $key;
+            $detailcarrier->globalcharge_id = $id;
+            $detailcarrier->save();
+        }
+
+        $global->update();
+        
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The Global Charge was updated');
+        return redirect()->route('showview.globalcharge.fcl',[$global->account_importation_globalcharge_id,0]);
+    }
+
+    // Elininar glog¿balcharger Good
+    public function DestroyGlobalchargeG($id){
+        try{
+            $globalcharge = GlobalCharge::find($id);
+            $globalcharge->delete();
+            return 1;
+        }catch(\Exception $e){
+            return 2;
+        }
+    }
+
+    // Elininar glog¿balcharger Fail
+    public function DestroyGlobalchargeF($id){
+        try{
+            $globalcharge = FailedGlobalcharge::find($id);
+            $globalcharge->forceDelete();
+            return 1;
+        }catch(\Exception $e){
+            return 2;
         }
     }
 

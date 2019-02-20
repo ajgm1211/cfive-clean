@@ -191,14 +191,13 @@
             <input type="hidden" value="{{$id}}" id="idcontract" />
         </div>
 
-        <!--  begin modal editar rate -->
-
-        <div class="modal fade bd-example-modal-lg" id="modaleditSurcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!--  begin modal editar edit -->
+        <div class="modal fade bd-example-modal-lg" id="modalGlobalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Edit Global Charge
+                            Edit Global Charges
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -206,7 +205,31 @@
                             </span>
                         </button>
                     </div>
-                    <div id="edit-modal-body" class="modal-body">
+                    <div class="modal-body">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--  begin modal editar add -->
+
+        <div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Global Charges
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body-add">
 
                     </div>
 
@@ -283,28 +306,24 @@
                 }); 
             });
 
-
-
-
-            /*   function showModalsavetosurcharge(id,operation){
-
+            function showModalsavetoglobalcharge(id,operation){
                 if(operation == 1){
-                    var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
+                    /*var url = '{{ route("edit-global-charge", ":id") }}';
                     url = url.replace(':id', id);
-                    $('#edit-modal-body').load(url,function(){
-                        $('#modaleditSurcharge').modal();
-                    });
+                    $('#.modal-body').load(url,function(){
+                        $('#modalGlobalchargeAdd').modal();
+                    });*/
                 }else if(operation == 2){
-                    var url = '{{ route("Edit.Surchargers.Good.For.Contracts", ":id") }}';
+                    var url = '{{ route("edit.globalcharge.modal.fcl",":id") }}';
                     url = url.replace(':id', id);
-                    $('#edit-modal-body').load(url,function(){
-                        $('#modaleditSurcharge').modal();
+                    $('.modal-body').load(url,function(){
+                        $('#modalGlobalcharge').modal({show:true});
                     });
                 }
-            }*/
+            }
 
-            /*      $(document).on('click','#delete-Fail-Surcharge',function(){
-                var id = $(this).attr('data-id-failSurcharge');
+            $(document).on('click','#delete-Fail-global',function(){
+                var id = $(this).attr('data-id-failglobal');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
@@ -317,7 +336,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.SurchargersF.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.globalcharge.Fail.fcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -348,10 +367,10 @@
                         )
                     }
                 });
-            });*/
+            });
 
-            /*      $(document).on('click','#delete-Surcharge',function(){
-                var id = $(this).attr('data-id-Surcharge');
+            $(document).on('click','#delete-globalcharge',function(){
+                var id = $(this).attr('data-id-globalcharge');
                 var elemento = $(this);
                 swal({
                     title: 'Are you sure?',
@@ -364,7 +383,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.SurchargersG.For.Contracts",":id") !!}';
+                        url='{!! route("Destroy.globalcharge.good.fcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -395,7 +414,7 @@
                         )
                     }
                 });
-            });*/
+            });
 
         </script>
 
