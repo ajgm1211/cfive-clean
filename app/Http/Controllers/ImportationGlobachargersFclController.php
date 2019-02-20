@@ -19,6 +19,7 @@ use App\FailedGlobalcharge;
 use App\FileTmpGlobalcharge;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationGlobalchargeJob;
@@ -253,6 +254,7 @@ class ImportationGlobachargersFclController extends Controller
         //
     }
 
+    // view de informacion despues de despachar el job
     public function show($id)
     {
         return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id'));
@@ -321,7 +323,7 @@ class ImportationGlobachargersFclController extends Controller
                     $validitytoA = $validitytoA[0].' (error)';
                     $classvalidityTo='color:red';
                 }
-                
+
                 // -------------- VALIDITYTO -------------------------------------------------------------
 
                 $validityfromC   = count($validityfromA);
@@ -452,28 +454,67 @@ class ImportationGlobachargersFclController extends Controller
                     'classvalidityfrom'     => $classvalidityfrom,
                     'operation'             => 1
                 ];
-                
+
                 //dd($arreglo);
                 $failglobalcoll->push($arreglo);
 
             }
             //dd($failsurchargecoll);
             return DataTables::of($failglobalcoll)->addColumn('action', function ( $failglobalcoll) {
-                return '<a href="#" class="" onclick="showModalsavetoglobal('.$failglobalcoll['id'].','.$failglobalcoll['operation'].')"><i class="la la-edit"></i></a>
+                return '----------<!--<a href="#" class="" onclick="showModalsavetoglobal('.$failglobalcoll['id'].','.$failglobalcoll['operation'].')"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>-->';
             })
                 ->editColumn('id', 'ID: {{$id}}')->toJson();
 
         }else if($selector == 2){
-            /* $surchargecollection = '';
-            $surchargecollection = PrvSurchargers::get_surchargers($id);
-            return DataTables::of($surchargecollection)->addColumn('action', function ( $surchargecollection) {
-                return '<a href="#" class="" onclick="showModalsavetosurcharge('.$surchargecollection['id'].','.$surchargecollection['operation'].')"><i class="la la-edit"></i></a>
+
+
+            $globalcharges = DB::select('call select_globalcharge('.$id.')');
+            // dd($globalcharges);
+
+            return DataTables::of($globalcharges)
+                ->editColumn('surchargelb', function ($globalcharges){ 
+                    return $globalcharges->surcharges;
+                })
+                ->editColumn('origin_portLb', function ($globalcharges){ 
+                    if(empty($globalcharges->port_orig) != true){
+                        return $globalcharges->port_orig;
+                    } else if(empty($globalcharges->country_orig) != true) {
+                        return $globalcharges->country_orig; 
+                    }
+                })
+                ->editColumn('destiny_portLb', function ($globalcharges){ 
+                    if(empty($globalcharges->port_dest) != true){
+                        return $globalcharges->port_dest;
+                    } else if(empty($globalcharges->country_dest) != true) {
+                        return $globalcharges->country_dest; 
+                    }
+                })
+                ->editColumn('typedestinylb', function ($globalcharges){ 
+                    return $globalcharges->typedestiny;
+                })
+                ->editColumn('calculationtypelb', function ($globalcharges){ 
+                    return $globalcharges->calculationtype;
+                })
+                ->editColumn('currencylb', function ($globalcharges){ 
+                    return $globalcharges->currency;
+                })
+                ->editColumn('carrierlb', function ($globalcharges){ 
+                    return $globalcharges->carrier;
+                })
+                ->editColumn('validitytolb', function ($globalcharges){ 
+                    return $globalcharges->validity;
+                })
+                ->editColumn('validityfromlb', function ($globalcharges){ 
+                    return $globalcharges->expire;
+                })
+                ->addColumn('action', function ( $globalcharges) {
+                    return '----<!--<a href="#" class="" onclick="showModalsavetosurcharge('.$globalcharges->id.',1)"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Surcharge" data-id-Surcharge="'.$surchargecollection['id'].'" class=""><i class="la la-remove"></i></a>';
-            })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();*/
+                <a href="#" id="delete-Surcharge" data-id-Surcharge="'.$globalcharges->id.'" class=""><i class="la la-remove"></i></a>-->';
+                })
+                ->editColumn('id', 'ID: {{$id}}')->toJson();
         }
     }
 
