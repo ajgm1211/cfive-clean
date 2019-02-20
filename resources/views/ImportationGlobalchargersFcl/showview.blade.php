@@ -308,11 +308,11 @@
 
             function showModalsavetoglobalcharge(id,operation){
                 if(operation == 1){
-                    /*var url = '{{ route("edit-global-charge", ":id") }}';
+                    var url = '{{ route("ImportationGlobalchargeFcl.edit", ":id") }}';
                     url = url.replace(':id', id);
-                    $('#.modal-body').load(url,function(){
-                        $('#modalGlobalchargeAdd').modal();
-                    });*/
+                    $('.modal-body').load(url,function(){
+                        $('#modalGlobalcharge').modal();
+                    });
                 }else if(operation == 2){
                     var url = '{{ route("edit.globalcharge.modal.fcl",":id") }}';
                     url = url.replace(':id', id);

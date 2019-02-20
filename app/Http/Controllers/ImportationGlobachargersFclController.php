@@ -29,7 +29,6 @@ use App\Jobs\ImportationGlobalchargeJob;
 class ImportationGlobachargersFclController extends Controller
 {
 
-
     // precarga la vista para importar rates o rates mas surchargers
     public function index()
     {
@@ -262,9 +261,184 @@ class ImportationGlobachargersFclController extends Controller
         return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id'));
     }
 
-
     public function edit($id){
 
+        $failglobal = FailedGlobalcharge::find($id);
+
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        $surcharge      = Surcharge::where('company_user_id','=', $failglobal['company_user_id'])->pluck('name','id');
+        $carrier        = Carrier::all()->pluck('name','id');
+        $harbor         = Harbor::all()->pluck('display_name','id');
+        $currency       = Currency::all()->pluck('alphacode','id');
+        $calculationT   = CalculationType::all()->pluck('name','id');
+        $countries      = Country::pluck('name','id');
+
+        $classdorigin           =  'color:green';
+        $classddestination      =  'color:green';
+        $classtypedestiny       =  'color:green';
+        $classcarrier           =  'color:green';
+        $classsurcharger        =  'color:green';
+        $classcalculationtype   =  'color:green';
+        $classammount           =  'color:green';
+        $classcurrency          =  'color:green';
+        $classvalidityto        =  'color:green';
+        $classvalidityfrom      =  'color:green';
+
+        $surchargeA         =  explode("_",$failglobal['surcharge']);
+        $originA            =  explode("_",$failglobal['origin']);
+        $destinationA       =  explode("_",$failglobal['destiny']);
+        $calculationtypeA   =  explode("_",$failglobal['calculationtype']);
+        $ammountA           =  explode("_",$failglobal['ammount']);
+        $currencyA          =  explode("_",$failglobal['currency']);
+        $carrierA           =  explode("_",$failglobal['carrier']);
+        $typedestinyA       =  explode("_",$failglobal['typedestiny']);
+        $validitytoA        =  explode("_",$failglobal['validityto']);
+        $validityfromA      =  explode("_",$failglobal['validityfrom']);
+
+        // -------------- ORIGIN -------------------------------------------------------------
+        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+            ->first();
+        $originC   = count($originA);
+        if($originC <= 1){
+            $originAIn = [$originOb['id']];
+        } else{
+            $originAIn = [];
+            $classdorigin='color:red';
+        }
+
+        // -------------- DESTINATION --------------------------------------------------------
+        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+            ->first();
+        $destinationC   = count($destinationA);
+        if($destinationC <= 1){
+            $destinationAIn = collect(['id'=>$destinationOb]);
+            
+        } else{
+            $destinationAIn = '';
+            $classddestination='color:red';
+        }
+
+        // -------------- SURCHARGE ....-----------------------------------------------------
+        $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',$failglobal['company_user_id'])->first();
+        $surchargeC = count($surchargeA);
+        if($surchargeC <= 1){
+            $surcharAin  = $surchargeOb['id'];
+        }
+        else{
+            $surcharAin  = '';
+            $classsurcharger    = 'color:red';
+        }
+
+        // -------------- CARRIER -----------------------------------------------------------
+        $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+        $carrierC = count($carrierA);
+        if($carrierC <= 1){
+            $carrAIn = ['id'=>$carrierOb['id']];
+        }
+        else{
+            $carrAIn = [];
+            $classcarrier   ='color:red';
+        }
+
+        // -------------- CALCULATION TYPE --------------------------------------------------
+        $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
+        $calculationtypeC   = count($calculationtypeA);
+        if($calculationtypeC <= 1){
+            $calculationtypeAIn = $calculationtypeOb['id'];
+        }
+        else{
+            $calculationtypeAIn = '';
+            $classcalculationtype   = 'color:red';
+        }
+
+        // -------------- AMMOUNT -----------------------------------------------------------
+        $ammountC = count($ammountA);
+        if($ammountC <= 1){
+            $ammountA = $failglobal['ammount'];
+        }
+        else{
+            $ammountA       = $ammountA[0].' (error)';
+            $classammount   = 'color:red';
+        }
+
+        // -------------- CURRENCY ----------------------------------------------------------
+        $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
+        $currencyC    = count($currencyA);
+        if($currencyC <= 1){
+            $currencyAIn  = $currencyOb['id'];
+        }
+        else{
+            $currencyAIn  = '';
+            $classcurrency  = 'color:red';
+        }
+
+        // -------------- TYPE DESTINY -----------------------------------------------------
+        //dd($failsurcharge['typedestiny_id']);
+        $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
+        if(count($typedestinyA) <= 1){
+            $typedestinyLB = $typedestinyobj['id'];
+        }
+        else{
+            $typedestinyLB = '';
+            $classtypedestiny   = 'color:red';
+        }
+
+        // -------------- VALIDITYTO -----------------------------------------------------
+
+        if(count($classvalidityto) <= 1){
+            $validitytoLB = $validitytoA[0];
+        }
+        else{
+            $validitytoLB = '';
+            $classvalidityto   = 'color:red';
+        }
+
+        // -------------- VALIDITYFROM -----------------------------------------------------
+
+        if(count($validityfromA) <= 1){
+            $validityfromLB = $validityfromA[0];
+        }
+        else{
+            $validityfromLB      = '';
+            $classvalidityfrom   = 'color:red';
+        }
+
+        $validation_expire = $validitytoLB.' / '.$validityfromLB;
+        
+        
+        ////////////////////////////////////////////////////////////////////////////////////
+        $arre = [
+            'id'                    => $failglobal['id'],
+            'surcharge_id'          => $surcharAin,
+            'origin_port'           => $originAIn,
+            'destiny_port'          => $destinationAIn->pluck('name','id'),
+            'carrier'               => $carrAIn,
+            'company_user_id'       => $failglobal['company_user_id'],
+            'typedestiny_id'        => $typedestinyLB,
+            'ammount'               => $ammountA,
+            'calculationtype_id'    => $calculationtypeAIn,
+            'currency_id'           => $currencyAIn,
+            'validityto'            => $validitytoLB,
+            'validityfromLB'        => $validityfromLB,
+            'validation_expire'     => $validation_expire,
+            'classsurcharge'        => $classsurcharger,
+            'classorigin'           => $classdorigin,
+            'classdestiny'          => $classddestination,
+            'classtypedestiny'      => $classtypedestiny,
+            'classcarrier'          => $classcarrier,
+            'classcalculationtype'  => $classcalculationtype,
+            'classammount'          => $classammount,
+            'classcurrency'         => $classcurrency,
+            'classvalidityto'       => $classvalidityto,
+            'classvalidityfrom'     => $classvalidityfrom,
+            'classvalidityfrom'     => $classvalidityfrom,
+            'globalcharcountry'     => [],
+        ];
+
+        //dd($arre['destiny_port']);
+        //dd($arre['destiny_port']->pluck('name','id'));
+
+        return view('ImportationGlobalchargersFcl.Body-Modal.saveFailToGood', compact('failglobal','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
     }
 
     // Carga la vista de failed y goog globalchargers
@@ -277,17 +451,19 @@ class ImportationGlobachargersFclController extends Controller
         return view('ImportationGlobalchargersFcl.showview',compact('id','tab','countfailglobal','countgoodglobal'));
     }
 
+    // LLena los datatables
     public function FailglobalchargeLoad($id,$selector){
 
         if($selector == 1){
-            $objharbor          = new Harbor();
-            $objcurrency        = new Currency();
-            $objcarrier         = new Carrier();
-            $objsurcharge       = new Surcharge();
-            $objtypedestiny     = new TypeDestiny();
-            $objCalculationType = new CalculationType();
-            $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-            $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
+            $account = AccountImportationGlobalcharge::find($id);
+            $objharbor              = new Harbor();
+            $objcurrency            = new Currency();
+            $objcarrier             = new Carrier();
+            $objsurcharge           = new Surcharge();
+            $objtypedestiny         = new TypeDestiny();
+            $objCalculationType     = new CalculationType();
+            $typedestiny            = $objtypedestiny->all()->pluck('description','id');
+            $surchargeSelect        = $objsurcharge->where('company_user_id','=', $account['company_user_id'])->pluck('name','id');
             $carrierSelect         = $objcarrier->all()->pluck('name','id');
             $harbor                = $objharbor->all()->pluck('display_name','id');
             $currency              = $objcurrency->all()->pluck('alphacode','id');
@@ -463,7 +639,7 @@ class ImportationGlobachargersFclController extends Controller
             }
             //dd($failsurchargecoll);
             return DataTables::of($failglobalcoll)->addColumn('action', function ( $failglobalcoll) {
-                return '---<!--<a href="#" class="" onclick="showModalsavetoglobalcharge('.$failglobalcoll['id'].',1)"><i class="la la-edit"></i></a>-->
+                return '<a href="#" class="" onclick="showModalsavetoglobalcharge('.$failglobalcoll['id'].',1)"><i class="la la-edit"></i></a>
                 &nbsp;
                 <a href="#" id="delete-Fail-global" data-id-failglobal="'.$failglobalcoll['id'].'" class=""><i class="la la-remove"></i></a>';
             })
@@ -528,13 +704,13 @@ class ImportationGlobachargersFclController extends Controller
         $objsurcharge = new Surcharge();
         $countries = Country::pluck('name','id');
 
+        $globalcharges = GlobalCharge::find($id);
         $calculationT = $objcalculation->all()->pluck('name','id');
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
-        $surcharge = $objsurcharge->where('company_user_id','=',\Auth::user()->company_user_id)->pluck('name','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',$globalcharges['company_user_id'])->pluck('name','id');
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
-        $globalcharges = GlobalCharge::find($id);
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
         return view('ImportationGlobalchargersFcl.Body-Modal.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
@@ -616,7 +792,7 @@ class ImportationGlobachargersFclController extends Controller
         }
 
         $global->update();
-        
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'The Global Charge was updated');
         return redirect()->route('showview.globalcharge.fcl',[$global->account_importation_globalcharge_id,0]);
