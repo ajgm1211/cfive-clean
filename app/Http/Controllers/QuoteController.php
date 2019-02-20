@@ -127,7 +127,15 @@ class QuoteController extends Controller
                     $quote['delivery_type'] = 'Port to Door';
                 } elseif ($quote['delivery_type'] == 3) {
                     $quote['delivery_type'] = 'Door to Port';
-                } else {
+                } elseif ($quote['delivery_type'] == 4) {
+                    $quote['delivery_type'] = 'Door to Door';
+                } elseif ($quote['delivery_type'] == 5) {
+                    $quote['delivery_type'] = 'Airport to Airport';
+                } elseif ($quote['delivery_type'] == 6) {
+                    $quote['delivery_type'] = 'Airport to Door';
+                } elseif ($quote['delivery_type'] == 7) {
+                    $quote['delivery_type'] = 'Door to Airport';
+                } elseif ($quote['delivery_type'] == 8) {
                     $quote['delivery_type'] = 'Door to Door';
                 }
 
@@ -2046,7 +2054,15 @@ class QuoteController extends Controller
                         $delivery_type = 'Port to Door';
                     } elseif ($quote->delivery_type == 3) {
                         $delivery_type = 'Door to Port';
-                    } else {
+                    } elseif ($quote->delivery_type == 4) {
+                        $delivery_type = 'Door to Door';
+                    } elseif ($quote->delivery_type == 5) {
+                        $delivery_type = 'Airport to Airport';
+                    } elseif ($quote['delivery_type'] == 6) {
+                        $delivery_type = 'Airport to Door';
+                    } elseif ($quote->delivery_type == 7) {
+                        $delivery_type = 'Door to Airport';
+                    } elseif ($quote->delivery_type == 8) {
                         $delivery_type = 'Door to Door';
                     }
 
