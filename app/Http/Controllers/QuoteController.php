@@ -1338,6 +1338,9 @@ class QuoteController extends Controller
         if($quote->validity){
             $quote_duplicate->validity=$quote->validity;
         }
+        if($quote->since_validity){
+            $quote_duplicate->since_validity=$quote->since_validity;
+        }
         if($quote->origin_address){
             $quote_duplicate->origin_address=$quote->origin_address;
         }
