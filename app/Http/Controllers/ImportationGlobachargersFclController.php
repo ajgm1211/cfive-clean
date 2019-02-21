@@ -781,6 +781,9 @@ class ImportationGlobachargersFclController extends Controller
 
         $counfail = FailedGlobalcharge::where('account_id','=',$global->account_importation_globalcharge_id)->count();
 
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The Global Charge was updated from fail to good');
+
         if($counfail == 0){
             return redirect()->route('showview.globalcharge.fcl',[$global->account_importation_globalcharge_id,0]);
         }else {
