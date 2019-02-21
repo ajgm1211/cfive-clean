@@ -120,13 +120,14 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('globalcharges.index');
-
+            //return redirect()->route('globalcharges.index');
+            return response()->json(['success'=>'You have successfully upload file.']);
         } else {
 
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
             return redirect()->route('globalcharges.index');
+            //return response()->json(['danger'=>'You was not upload file.']);
 
         }
     }
@@ -140,8 +141,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $company->name.'_'.$now.'.'.$ext;
-        //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        //return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
     }
 
 
