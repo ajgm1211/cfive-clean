@@ -104,8 +104,8 @@
                                 <i class="la la-eye"></i>
                             </a>
                             <a href="{{ route('terms.edit', ['id' => setearRouteKey($arr->id)]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
-                            </a>                       
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
+                            </a>
+                            <a href="#" id="delete-terms" data-terms-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
                                 <i class="la la-eraser"></i>
                             </a>
                         </td>
@@ -148,6 +148,7 @@
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
+<script src="/js/terms.js" type="text/javascript"></script>
 <script>
 
     function AbrirModal(action,id){
