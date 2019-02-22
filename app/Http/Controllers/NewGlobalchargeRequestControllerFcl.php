@@ -120,8 +120,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            //return redirect()->route('globalcharges.index');
-            return response()->json(['success'=>'You have successfully upload file.']);
+            return redirect()->route('globalcharges.index');
+            //return response()->json(['success'=>'You have successfully upload file.']);
         } else {
 
             $request->session()->flash('message.nivel', 'error');
