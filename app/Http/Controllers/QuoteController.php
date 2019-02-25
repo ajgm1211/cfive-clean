@@ -52,7 +52,7 @@ use App\Notifications\SlackNotification;
 use Yajra\Datatables\Datatables;
 use EventIntercom;
 use App\Repositories\Schedules;
-
+use Carbon\Carbon;
 
 class QuoteController extends Controller
 {
@@ -1645,12 +1645,12 @@ class QuoteController extends Controller
     {
         $code_orig = $this->getHarborName($orig_port);
         $code_dest = $this->getHarborName($dest_port);
-        $date  = $date_pick;
+        $date = strtotime($date_pick);
         $carrier_name = Carrier::find($carrier);
 
         //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
         $access_token = $this->schedules->authentication();
-        $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code);
+        $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code,$date);
 
         $schedules = Collection::make($data);
 
