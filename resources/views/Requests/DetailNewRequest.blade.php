@@ -8,7 +8,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Detail New Importation Request
+                        Detail New Importation Request FCL
                     </h3>
                 </div>
             </div>

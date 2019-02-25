@@ -36,7 +36,7 @@ class Schedules
         try{
             $client = new Client();
 
-            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier;
+            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination;
 
             $get_response = $client->request('GET', $get_url, [
 

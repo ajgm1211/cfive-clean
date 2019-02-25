@@ -1,0 +1,30 @@
+Si los Jobs dejan de funcionar, ejecutar los siguientes comandos
+
+ingresar en la terminal por ssh:
+
+1     	php artisan queue:restart
+
+2	ps -fea | grep php
+
+	matar todos los procesos, ejemplo : 
+
+			luis-li+  6075  1615  0 09:53 ?        00:00:04 gedit /var/www/html/docker-cargofive/cargofive/config/app.php
+		  --->  luis-li+  9021  6159  1 11:47 pts/1    00:00:00 php artisan queue:work --timeout=3700 --tries=7
+			luis-li+  9031  6159  0 11:47 pts/1    00:00:00 grep --color=auto php
+
+2.1 	kill -9 9021
+
+
+	hasta quedar asi:  
+			
+			luis-li+  9031  6159  0 11:47 pts/1    00:00:00 grep --color=auto php
+
+3	borrar todos los jobs dentro de la tabla jobs y failed_jobs de MYSQL
+
+4	php artisan cache:clear
+
+5	php artisan config:cache
+
+6	php artisan queue:restart
+
+7	php artisan run:schedule
