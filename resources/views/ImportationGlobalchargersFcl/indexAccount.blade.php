@@ -12,7 +12,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation Request LCL
+                        Account Importation GlobalCherge FCL
                     </h3>
                 </div>
             </div>

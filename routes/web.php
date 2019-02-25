@@ -421,10 +421,13 @@ Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(functi
     Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');
     Route::get('DestroyglobalchargeGoodFcl/{id}','ImportationGlobachargersFclController@DestroyGlobalchargeG')->name('Destroy.globalcharge.good.fcl');
     Route::get('DestroyglobalchargeFailFcl/{id}','ImportationGlobachargersFclController@DestroyGlobalchargeF')->name('Destroy.globalcharge.Fail.fcl');
-    
+
     Route::get('editGlobalChargeMDFCL/{id}','ImportationGlobachargersFclController@editGlobalChar')->name('edit.globalcharge.modal.fcl');
     Route::put('updateGlobalChargeMDFCL/{id}','ImportationGlobachargersFclController@updateGlobalChar')->name('update.globalcharge.modal.fcl');
     Route::get('saveTofailToGoddGCFCL/{id}','ImportationGlobachargersFclController@saveFailToGood')->name('save.fail.good.globalcharge.fcl');
+
+    // Reprocesar
+    Route::get('/ReprocesarGlobalchargers/{id}','ImportationGlobachargersFclController@ReprocesarGlobalchargers')->name('Reprocesar.globalcharge.fcl');
 
 });
 // GLOBAL CHARGES LCL 
