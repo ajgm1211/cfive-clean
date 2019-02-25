@@ -17,26 +17,24 @@ class Schedules
     public function authentication(){
         try{
             $client = new Client();
-
             $url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/oauth/token";
-
-            $myBody['client_id'] = "1";
-            $myBody['client_secret'] = "MrGWuViDv1r8LI8ETzceRHTfpC48Nn7hm4GeAIBA";
-            $myBody['grant_type'] = "password";
-            $myBody['username'] = "info@cargofive.com";
-            $myBody['password'] = "secret";
+            $myBody['client_id'] = \Config::get('values.client_id');
+            $myBody['client_secret'] = \Config::get('values.client_secret');
+            $myBody['grant_type'] = \Config::get('values.grant_type');
+            $myBody['username'] = \Config::get('values.username');
+            $myBody['password'] = \Config::get('values.password');
             $res = $client->request('POST', $url, ['form_params'=>$myBody])->getBody()->getContents();
         }catch (\Guzzle\Http\Exception\ConnectException $e) {
-
+            return json_decode($e);
         }
         return json_decode($res);
     }
 
-    public function getSchedules($token,$carrier,$origin,$destination){
+    public function getSchedules($token,$carrier,$origin,$destination,$date){
         try{
             $client = new Client();
 
-            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination;
+            $get_url = "http://smanual-ec2.eu-central-1.elasticbeanstalk.com/api/".$carrier."/".$origin."/".$destination."/".$date;
 
             $get_response = $client->request('GET', $get_url, [
 
@@ -47,7 +45,7 @@ class Schedules
 
             ]);
         }catch (\Guzzle\Http\Exception\ConnectException $e) {
-
+            return json_decode($e);
         }
         return json_decode($get_response->getBody());
     }
