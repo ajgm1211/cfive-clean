@@ -105,6 +105,17 @@
                                  </span>
                               </button>
                            </a>
+                           <!-- <a href="{{route('testExcelImportation')}}">
+
+                              <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                 <span>
+                                    <span>
+                                       Test&nbsp;
+                                    </span>
+                                    <i class="la la-cloud-upload"></i>
+                                 </span>
+                              </button>
+                           </a>-->
                            @endrole
                            <a href="{{route('Request.importaion.fcl')}}">
 
@@ -364,30 +375,6 @@
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
          ] ,
-         "autoWidth": true,
-
-         buttons: [
-            {
-               extend: 'copyHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'excelHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            },
-            {
-               extend: 'pdfHtml5',
-               exportOptions: {
-                  columns: [0, 1, 2, 3]
-               }
-            }
-         ]
-
-
       });
 
       $('#tableContracts').DataTable({

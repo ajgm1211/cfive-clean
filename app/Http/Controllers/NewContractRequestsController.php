@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\User;
 use App\Harbor;
 use App\Carrier;
@@ -14,6 +15,7 @@ use App\Mail\NewRequestToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use App\Jobs\ProcessContractFile;
+use EventIntercom;
 
 class NewContractRequestsController extends Controller
 {
@@ -35,7 +37,7 @@ class NewContractRequestsController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-
+        $fileBoll = false;
         $time   = new \DateTime();
         $now    = $time->format('dmY_His');
         $now2   = $time->format('Y-m-d');
@@ -54,7 +56,7 @@ class NewContractRequestsController extends Controller
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
-        \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $fileBoll = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
 
         $typeVal = 1;
         $arreglotype = '';
@@ -101,37 +103,46 @@ class NewContractRequestsController extends Controller
         $type         = json_encode($type);
         $data         = json_encode($data);
 
-        $Ncontract  = new NewContractRequest();
-        $Ncontract->namecontract    = $request->name;
-        $Ncontract->numbercontract  = $request->number;
-        $Ncontract->validation      = $request->validation_expire;
-        $Ncontract->company_user_id = $request->CompanyUserId;
-        $Ncontract->namefile        = $nombre;
-        $Ncontract->user_id         = $request->user;
-        $Ncontract->created         = $now2;
-        $Ncontract->type            = $type;
-        $Ncontract->data            = $data;
-        $Ncontract->save();
+        if($fileBoll){
+            $Ncontract  = new NewContractRequest();
+            $Ncontract->namecontract    = $request->name;
+            $Ncontract->numbercontract  = $request->number;
+            $Ncontract->validation      = $request->validation_expire;
+            $Ncontract->company_user_id = $request->CompanyUserId;
+            $Ncontract->namefile        = $nombre;
+            $Ncontract->user_id         = $request->user;
+            $Ncontract->created         = $now2;
+            $Ncontract->username_load   = 'Not assigned';
+            $Ncontract->type            = $type;
+            $Ncontract->data            = $data;
+            $Ncontract->save();
 
-        ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile );
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile );
 
-        $user = User::find($request->user);
-        $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
-        $user->notify(new SlackNotification($message));
-        $admins = User::where('type','admin')->get();
-        $message = 'has created an new request: '.$Ncontract->id;
-        foreach($admins as $userNotifique){
-            \Mail::to($userNotifique->email)->send(new NewRequestToAdminMail($userNotifique->toArray(),
-                $user->toArray(),
-                $Ncontract->toArray()));
-            $userNotifique->notify(new N_general($user,$message));
+            $user = User::find($request->user);
+            $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
+            $user->notify(new SlackNotification($message));
+            $admins = User::where('type','admin')->get();
+            $message = 'has created an new request: '.$Ncontract->id;
+            foreach($admins as $userNotifique){
+                \Mail::to($userNotifique->email)->send(new NewRequestToAdminMail($userNotifique->toArray(),
+                    $user->toArray(),
+                    $Ncontract->toArray()));
+                $userNotifique->notify(new N_general($user,$message));
+            }
+
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.content', 'Your request was created');
+
+            return redirect()->route('contracts.index');
+        } else {
+
+            $request->session()->flash('message.nivel', 'error');
+            $request->session()->flash('message.content', 'Your request was not created');
+            return redirect()->route('contracts.index');
+
         }
-
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.content', 'Your request was created');
-        return redirect()->route('contracts.index');
     }
-
     //Para descargar el archivo
     public function show($id)
     {
@@ -142,7 +153,6 @@ class NewContractRequestsController extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $company->name.'_'.$now.'.'.$ext;
-        //return Storage::download($Ncontract->namefile,$name);
         //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
         return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
     }
@@ -273,9 +283,14 @@ class NewContractRequestsController extends Controller
         // $id     = 1;
         // $status = 'Done';
 
+        $time   = new \DateTime();
+        $now2   = $time->format('Y-m-d H:i:s');
+
         try {
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
+            $Ncontract->updated       = $now2;
+            $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
             $Ncontract->save();
 
             if($Ncontract->status == 'Done'){
@@ -294,6 +309,11 @@ class NewContractRequestsController extends Controller
                             $Ncontract->toArray()));
                     }
                 }
+
+                // Intercom SEARCH
+                $event = new  EventIntercom();
+                $event->event_requestDone($Ncontract->user_id);
+
 
                 $usercreador = User::find($Ncontract->user_id);
                 $message = "The importation ".$Ncontract->id." was completed";

@@ -192,7 +192,6 @@
                           <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div><br>
                         Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
-        
                       </div>
                       <div class="col-md-4">
                         <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
@@ -440,7 +439,7 @@
                       </tr>
                     </table>
                   </td>
-                </tr>
+                </tr>                
                 @endif
                 @if(!$arr->schedulesFin->isEmpty())
                 <tr id="schedules{{$loop->iteration}}" hidden="true"   >
@@ -460,8 +459,8 @@
                       @foreach($arr->schedulesFin as $schedule)
 
                       <tr>
-                        <td width='15%'>{{ $schedule['VesselName'] }}</td>
-                        <td width='15%'>{{ $schedule['Etd'] }}</td>
+                        <td width='15%'>{{ $schedule['vessel'] }}</td>
+                        <td width='15%'>{{ $schedule['etd'] }}</td>
                         <td width='45%'>
                           <div class="row">
                             <div class="col-md-4">
@@ -481,7 +480,7 @@
                             </div>
                           </div>                        
                         </td>
-                        <td width='15%'>{{ $schedule['Eta'] }}</td>
+                        <td width='15%'>{{ $schedule['eta'] }}</td>
                         <td width='10%'>      
                           <label class="m-checkbox m-checkbox--state-brand">
                             <input name="schedules[]" type="checkbox" value="{{ json_encode($schedule) }}"> 

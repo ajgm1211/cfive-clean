@@ -12,7 +12,7 @@
          <div class="m-portlet__head-caption">
             <div class="m-portlet__head-title">
                <h3 class="m-portlet__head-text">
-                  Importation Request
+                  Importation Request FCL
                </h3>
             </div>
          </div>
@@ -68,11 +68,17 @@
                            <th width="4%" >
                               Contract Validation
                            </th>
-                           <th width="3%" >
+                           <th width="5%" >
                               Date
+                           </th>
+                           <th width="3%" >
+                              Last Management
                            </th>
                            <th width="5%" >
                               User
+                           </th>
+                           <th width="5%" >
+                              Username Load
                            </th>
                            <th width="5%" >
                               Status
@@ -103,8 +109,20 @@
                            <td>
                               {{\Carbon\Carbon::parse($Ncontract->created_at)->format('d-m-Y h:i:s')}}
                            </td>
+                           @if(empty($Ncontract->updated) != true)
+                           <td>
+                              {{\Carbon\Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s')}}
+                           </td>
+                           @else
+                           <td>
+                              00-00-0000 00:00:00
+                           </td>
+                           @endif
                            <td>
                               {{$Ncontract->user->name.' '.$Ncontract->user->lastname}}
+                           </td>
+                           <td>
+                              {{$Ncontract->username_load}}
                            </td>
                            <td>
                               <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
