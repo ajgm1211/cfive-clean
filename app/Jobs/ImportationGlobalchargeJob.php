@@ -787,12 +787,12 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         $globalChargeArreG = GlobalCharge::create([ // tabla GlobalCharge
                                             'surcharge_id'       						=> $surchargeVal,
                                             'typedestiny_id'     						=> $typedestinyVal,
-                                            'account_importation_globalcharge_id'  => $account_idVal,
+                                            'account_importation_globalcharge_id'       => $account_idVal,
                                             'company_user_id'    						=> $companyUserIdVal,
                                             'calculationtype_id' 						=> $calculationtypeVal,
                                             'ammount'            						=> $ammount,
-                                            'validity' 										=> $validityfromVal,
-                                            'expire'					 						=> $validitytoVal,
+                                            'validity' 									=> $validityfromVal,
+                                            'expire'					 				=> $validitytoVal,
                                             'currency_id'        						=> $currencyVal
                                         ]);
 
