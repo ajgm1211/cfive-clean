@@ -388,15 +388,16 @@ class QuoteAutomaticController extends Controller
     // Destination Address
     if($delivery_type == "2" || $delivery_type == "4" ){ 
 
-
-
-
       $inlands = Inland::whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
       })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($destiny_port) {
         $q->whereIn('port', $destiny_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency');
 
+      $inlands->where(function ($query) use($modality_inland)  {
+        $query->where('type',$modality_inland)->orwhere('type','3');
+      });
+      $inlands = $inlands->get();
       //dd($inlands);
       // se agregan los aditional km
 
@@ -510,7 +511,13 @@ class QuoteAutomaticController extends Controller
         $a->where('company_id', '=',$company_inland);
       })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($origin_port) {
         $q->whereIn('port', $origin_port);
-      })->where('company_user_id','=',$company_user_id)->where('type',$modality_inland)->orwhere('type','3')->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency')->get();
+      })->where('company_user_id','=',$company_user_id)->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency');
+
+      $inlands->where(function ($query) use($modality_inland) {
+        $query->where('type',$modality_inland)->orwhere('type','3');
+      });
+
+      $inlands = $inlands->get();
 
 
 
