@@ -456,6 +456,7 @@ class QuoteAutomaticController extends Controller
                       $monto += $sub_40hc;
                       $km40hc = false;
                       $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ) ; 
+                      $inlandDetails[] = $arrayInland40hc;
                     }
                   }
                 }
@@ -481,14 +482,10 @@ class QuoteAutomaticController extends Controller
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
                     $sub_40hc = $request->input('fortyhc') * $montoKm;
                     $monto += $sub_40hc;
-                    $arrayInland40HC = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ) ; 
-                    $inlandDetails[] = $arrayInland40HC;
+                    $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ) ; 
+                    $inlandDetails[] = $arrayInland40hc;
                   }
                 }
-
-                // ARREGLO DETALLES 
-
-
 
                 // MARKUPS
                 if($inlandPercentage != 0){
@@ -507,10 +504,7 @@ class QuoteAutomaticController extends Controller
                 if($monto > 0){
                   $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
                   $arregloInland = array_merge($arraymarkupT,$arregloInland);
-
                   $arregloInland['inlandDetails'] = $inlandDetails;
-
-
                   $data[] =$arregloInland;
                 }
               }
@@ -527,7 +521,7 @@ class QuoteAutomaticController extends Controller
         });
         // dd($inlandDestiny); // filtraor por el minimo
       }
-      dd($inlandDestiny);
+
     }
 
     // Origin Addrees
@@ -544,15 +538,11 @@ class QuoteAutomaticController extends Controller
 
       $inlands = $inlands->get();
 
-
-
-
       foreach($inlands as $inlandsValue){
-
-
         $km20 = true;
         $km40 = true;
         $km40hc = true;
+        $inlandDetailsOrig;
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
           $temporal = 0;
@@ -575,22 +565,32 @@ class QuoteAutomaticController extends Controller
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $monto += ($request->input('twuenty') * $details->ammount) / $rateI ;
+                      $sub_20 = ($request->input('twuenty') * $details->ammount) / $rateI ;
+                      $monto += $sub_20;
                       $km20 = false;
+                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20' ) ; 
+                      $inlandDetailsOrig[] = $arrayInland20;
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $monto += ($request->input('forty') * $details->ammount)  / $rateI;
+                      $sub_40 = ($request->input('forty') * $details->ammount)  / $rateI;
+                      $monto += $sub_40;
                       $km40 = false;
+                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40' ) ; 
+                      $inlandDetailsOrig[] = $arrayInland40;
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
                     $distancia = intval($km[0]);
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $monto += ($request->input('fortyhc') * $details->ammount) / $rateI;
+                      $sub_40hc = ($request->input('fortyhc') * $details->ammount) / $rateI;
+                      $monto += $sub_40hc;
                       $km40hc = false;
+                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ) ; 
+                      $inlandDetailsOrig[] = $arrayInland40hc;
+
                     }
                   }
                 }              
@@ -598,17 +598,26 @@ class QuoteAutomaticController extends Controller
                 // KILOMETROS ADICIONALES 
                 if(isset($inlandsValue->inlandadditionalkms)){
                   $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
-                  if($km20){
+                  if($km20 && $request->input('twuenty') != "0"){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-                    $monto += $request->input('twuenty') * $montoKm;
+                    $sub_20 = $request->input('twuenty') * $montoKm;
+                    $monto += $sub_20;
+                    $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20' ) ; 
+                    $inlandDetailsOrig[] = $arrayInland20;
                   }
-                  if($km40){
+                  if($km40 && $request->input('forty') != "0"){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
-                    $monto += $request->input('forty') * $montoKm;
+                    $sub_40 = $request->input('forty') * $montoKm;
+                    $monto += $sub_40;
+                    $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40' ) ; 
+                    $inlandDetailsOrig[] = $arrayInland40;
                   }
-                  if($km40hc){
+                  if($km40hc && $request->input('fortyhc') != "0"){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
-                    $monto += $request->input('fortyhc') * $montoKm;
+                    $sub_40hc = $request->input('fortyhc') * $montoKm;
+                    $monto += $sub_40hc;
+                    $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ) ; 
+                    $inlandDetailsOrig[] = $arrayInland40hc;
                   }
                 }
 
@@ -629,6 +638,7 @@ class QuoteAutomaticController extends Controller
                 if($monto > 0){
                   $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
                   $arregloInland = array_merge($arregloInland,$arraymarkupT);
+                  $arregloInland['inlandDetails'] = $inlandDetailsOrig;
                   $dataOrig[] = $arregloInland;
                 }
               }
@@ -2207,9 +2217,9 @@ class QuoteAutomaticController extends Controller
       // Armar los schedules
 
       $schedulesFin = new Collection();
-      $access_token = $this->schedules->authentication();
-      $dataSchedule = $this->schedules->getSchedules($access_token->access_token,$data->carrier->name,$data->port_origin->code,$data->port_destiny->code);
-
+      // $access_token = $this->schedules->authentication();
+      //$dataSchedule = $this->schedules->getSchedules($access_token->access_token,$data->carrier->name,$data->port_origin->code,$data->port_destiny->code);
+      $dataSchedule = array();
       $schedules = Collection::make($dataSchedule);
 
       $schedulesArr = new Collection();
