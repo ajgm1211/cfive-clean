@@ -1647,7 +1647,7 @@ class QuoteController extends Controller
         $code_dest = $this->getHarborName($dest_port);
         $date = strtotime($date_pick);
         $carrier_name = Carrier::find($carrier);
-
+//dd($date);
         //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
         $access_token = $this->schedules->authentication();
         $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code,$date);
