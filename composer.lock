@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bec49d691ccc7ba44688c5be568bac1",
+    "content-hash": "bfea0903aff5f1d7775405632c1673e0",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.87.17",
+            "version": "3.87.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2f38294b8c0ce62278e53b060f488516eb4e9163"
+                "reference": "fbb29745f8f67be4ba6505c83c0be2c3760fad75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2f38294b8c0ce62278e53b060f488516eb4e9163",
-                "reference": "2f38294b8c0ce62278e53b060f488516eb4e9163",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fbb29745f8f67be4ba6505c83c0be2c3760fad75",
+                "reference": "fbb29745f8f67be4ba6505c83c0be2c3760fad75",
                 "shasum": ""
             },
             "require": {
@@ -193,7 +193,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-02-22T19:34:32+00:00"
+            "time": "2019-02-25T19:10:35+00:00"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -4444,16 +4444,16 @@
         },
         {
             "name": "studio-42/elfinder",
-            "version": "2.1.47",
+            "version": "2.1.48",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Studio-42/elFinder.git",
-                "reference": "6884c4f0b742bd343cb2c873321fc9bb0cbde3fa"
+                "reference": "0740028f6adc6505c5897cc740e51e4638d41d6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/6884c4f0b742bd343cb2c873321fc9bb0cbde3fa",
-                "reference": "6884c4f0b742bd343cb2c873321fc9bb0cbde3fa",
+                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/0740028f6adc6505c5897cc740e51e4638d41d6a",
+                "reference": "0740028f6adc6505c5897cc740e51e4638d41d6a",
                 "shasum": ""
             },
             "require": {
@@ -4498,7 +4498,7 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
-            "time": "2019-02-25T00:08:43+00:00"
+            "time": "2019-02-26T13:44:09+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5729,37 +5729,38 @@
         },
         {
             "name": "unisharp/laravel-filemanager",
-            "version": "v1.9.2",
+            "version": "v2.0.0-alpha7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UniSharp/laravel-filemanager.git",
-                "reference": "aaf2764f26eb8dcc9356bea1e25010333c2e61f4"
+                "reference": "f25ea4d4f4e782fc20e690d121daacf1539ae032"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UniSharp/laravel-filemanager/zipball/aaf2764f26eb8dcc9356bea1e25010333c2e61f4",
-                "reference": "aaf2764f26eb8dcc9356bea1e25010333c2e61f4",
+                "url": "https://api.github.com/repos/UniSharp/laravel-filemanager/zipball/f25ea4d4f4e782fc20e690d121daacf1539ae032",
+                "reference": "f25ea4d4f4e782fc20e690d121daacf1539ae032",
                 "shasum": ""
             },
             "require": {
                 "ext-exif": "*",
                 "ext-fileinfo": "*",
-                "illuminate/support": ">=4.2.0",
+                "illuminate/config": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/container": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/filesystem": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/http": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/support": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
                 "intervention/image": "2.*",
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "orchestra/testbench": "~3.0",
-                "phpspec/phpspec": "~2.1",
-                "phpunit/phpunit": "~4.8"
+                "mockery/mockery": "^0.9.9",
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.1"
             },
             "suggest": {
                 "ext-gd": "to use GD library based image processing.",
                 "ext-imagick": "to use Imagick based image processing."
             },
-            "bin": [
-                "bin/debug"
-            ],
             "type": "library",
             "extra": {
                 "laravel": {
@@ -5785,7 +5786,7 @@
                 },
                 {
                     "name": "UniSharp Ltd.",
-                    "email": "unisharp-service@unisharp.com"
+                    "email": "opensource@unisharp.com"
                 }
             ],
             "description": "A file upload/editor intended for use with Laravel 5 and CKEditor / TinyMCE",
@@ -5799,7 +5800,7 @@
                 "tinymce",
                 "upload"
             ],
-            "time": "2018-07-05T11:36:08+00:00"
+            "time": "2018-12-05T14:33:04+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
