@@ -401,6 +401,7 @@
                         <th><span class="portalphacode">Type</span></th>
                         <th><span class="portalphacode">Distance</span>  </th>
                         <th><span class="portalphacode">Port Name</span></th>
+                        <th><span class="portalphacode">Amount</span></th>
                         <th><span class="portalphacode">Markup</span></th>
                         <th><span class="portalphacode">Total Ammount</span></th>
                       </tr>
@@ -416,6 +417,7 @@
                         <th>{{ $details['des_in'] }}</th>
                         <th>{{ $inlandDest['km'] }} KM</th>
                         <th>{{ $inlandDest['port_name'] }}</th>
+                        <th>{{ $details['amount'] }} {{ $details['currency'] }}</th>
                         <th>{{ $details['markup'] }} {{ $details['typemarkup'] }}</th>
                         <th>{{ $details['sub_in'] }} {{  $inlandDest['type_currency'] }}</th>
                       </tr>
@@ -436,6 +438,7 @@
                         <th>{{ $detailsOrig['des_in'] }}</th>
                         <th>{{ $inlandOrig['km'] }} KM</th>
                         <th>{{ $inlandOrig['port_name'] }}</th>
+                        <th>{{ $detailsOrig['amount'] }} {{ $detailsOrig['currency'] }}</th>
                         <th>{{ $detailsOrig['markup'] }} {{ $detailsOrig['typemarkup'] }}</th>
                         <th>{{ $detailsOrig['sub_in'] }} {{  $inlandOrig['type_currency'] }}</th>
                       </tr>
@@ -444,7 +447,7 @@
                       @endforeach
                       @endif
                       <tr>
-                        <td colspan="4"></td>
+                        <td colspan="5"></td>
                         <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>
                         <td> <span  class="darkblue px12" > {{ $arr->totalInland }} {{ $arr->quoteCurrency }}</span>  </td>
                       </tr>
