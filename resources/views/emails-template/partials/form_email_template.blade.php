@@ -75,8 +75,8 @@
       tinyMCE.activeEditor.windowManager.open({
         file : cmsURL,
         title : 'Filemanager',
-        width : x * 0.8,
-        height : y * 0.8,
+        width : x * 0.9,
+        height : y * 0.9,
         resizable : "yes",
         close_previous : "no"
       });

@@ -43,7 +43,7 @@ return [
 
     'allow_multi_user'         => true,
 
-    'allow_share_folder'       => false,
+    'allow_share_folder'       => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -193,6 +193,6 @@ return [
     | directives are not supported.
      */
     'php_ini_overrides'        => [
-        'memory_limit' => '512M',
+        'memory_limit' => '256M',
     ],
 ];

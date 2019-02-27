@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.87.18",
+            "version": "3.87.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fbb29745f8f67be4ba6505c83c0be2c3760fad75"
+                "reference": "79366d3335649960f49694eb052cbdac6616f843"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fbb29745f8f67be4ba6505c83c0be2c3760fad75",
-                "reference": "fbb29745f8f67be4ba6505c83c0be2c3760fad75",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/79366d3335649960f49694eb052cbdac6616f843",
+                "reference": "79366d3335649960f49694eb052cbdac6616f843",
                 "shasum": ""
             },
             "require": {
@@ -193,7 +193,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-02-25T19:10:35+00:00"
+            "time": "2019-02-26T19:08:43+00:00"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -253,21 +253,21 @@
         },
         {
             "name": "barryvdh/laravel-dompdf",
-            "version": "v0.8.3",
+            "version": "v0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-dompdf.git",
-                "reference": "46781d0304277845a19c09c169bc595fd182cce4"
+                "reference": "3fd817065e1c820b1ddace8b2bf65ca45088df4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/46781d0304277845a19c09c169bc595fd182cce4",
-                "reference": "46781d0304277845a19c09c169bc595fd182cce4",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/3fd817065e1c820b1ddace8b2bf65ca45088df4f",
+                "reference": "3fd817065e1c820b1ddace8b2bf65ca45088df4f",
                 "shasum": ""
             },
             "require": {
                 "dompdf/dompdf": "^0.8",
-                "illuminate/support": "5.5.x|5.6.x|5.7.x",
+                "illuminate/support": "5.5.x|5.6.x|5.7.x|5.8.x",
                 "php": ">=7"
             },
             "type": "library",
@@ -305,7 +305,7 @@
                 "laravel",
                 "pdf"
             ],
-            "time": "2018-08-31T13:25:44+00:00"
+            "time": "2019-02-26T18:07:43+00:00"
         },
         {
             "name": "barryvdh/laravel-elfinder",
@@ -4333,16 +4333,16 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.33.0",
+            "version": "2.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "9da0a1618b0c85f71ef7e11b942d5f6f92d2c063"
+                "reference": "10f6b2e19cce79936e42b65f08549cbf564c052e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/9da0a1618b0c85f71ef7e11b942d5f6f92d2c063",
-                "reference": "9da0a1618b0c85f71ef7e11b942d5f6f92d2c063",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/10f6b2e19cce79936e42b65f08549cbf564c052e",
+                "reference": "10f6b2e19cce79936e42b65f08549cbf564c052e",
                 "shasum": ""
             },
             "require": {
@@ -4394,7 +4394,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2019-02-20T15:56:22+00:00"
+            "time": "2019-02-26T21:25:08+00:00"
         },
         {
             "name": "spatie/temporary-directory",
