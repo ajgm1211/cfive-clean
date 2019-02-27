@@ -535,9 +535,9 @@ class QuoteAutomaticController extends Controller
                   if($km20 && $request->input('twuenty') != "0" ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
                     $sub_20 = $request->input('twuenty') * $montoKm;
-                    $amount_inland = $request->input('twuenty') * $distancia;
-                    $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                     $monto += $sub_20;
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_20) * $request->input('twuenty');
+                    $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                     // CALCULO MARKUPS 
                     if($inlandPercentage != 0){
                       $markup = ( $sub_20 *  $inlandPercentage ) / 100 ;
@@ -560,8 +560,9 @@ class QuoteAutomaticController extends Controller
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
                     $sub_40 = $request->input('forty') * $montoKm;
                     $price_per_unit = number_format($sub_40 / $montoKm, 2, '.', '');
-                    $amount_inland = $request->input('forty') * $distancia;
                     $monto += $sub_40;
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_40) * $request->input('forty');
+                    $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                     // CALCULO MARKUPS 
                     if($inlandPercentage != 0){
                       $markup = ( $sub_40 *  $inlandPercentage ) / 100 ;
@@ -583,9 +584,11 @@ class QuoteAutomaticController extends Controller
                   if($km40hc && $request->input('fortyhc') != "0"){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
                     $sub_40hc = $request->input('fortyhc') * $montoKm;
-                    $price_per_unit = number_format($sub_40hc / $montoKm, 2, '.', '');
-                    $amount_inland = $request->input('fortyhc') * $distancia;
                     $monto += $sub_40hc;
+
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) * $request->input('fortyhc');
+                    $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
+                    
                     // CALCULO MARKUPS 
                     if($inlandPercentage != 0){
                       $markup = ( $sub_40hc *  $inlandPercentage ) / 100 ;
@@ -667,7 +670,7 @@ class QuoteAutomaticController extends Controller
                 $km = explode(" ",$dist->distance->text);
                 foreach($inlandsValue->inlanddetails as $details){
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
-                  $distancia = intval($km[0]);
+                  $distancia = floatval($km[0]);
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
@@ -764,7 +767,7 @@ class QuoteAutomaticController extends Controller
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
                     $sub_20 = $request->input('twuenty') * $montoKm;
                     $monto += $sub_20;
-                    $amount_inland = $request->input('twuenty') * $distancia;
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_20) * $request->input('twuenty');
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                     // CALCULO MARKUPS 
                     if($inlandPercentage != 0){
@@ -788,7 +791,7 @@ class QuoteAutomaticController extends Controller
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
                     $sub_40 = $request->input('forty') * $montoKm;
                     $monto += $sub_40;
-                    $amount_inland = $request->input('forty') * $distancia;
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_40) * $request->input('forty');
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
 
                     // CALCULO MARKUPS 
@@ -808,14 +811,15 @@ class QuoteAutomaticController extends Controller
                     $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40' ,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                     $arrayInland40 = array_merge($arraymarkupT,$arrayInland40);
                     $inlandDetailsOrig[] = $arrayInland40;
+
                   }
                   if($km40hc && $request->input('fortyhc') != "0"){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
                     $sub_40hc = $request->input('fortyhc') * $montoKm;
                     $monto += $sub_40hc;
-                    $amount_inland = $request->input('fortyhc') * $distancia;
+                    $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) * $request->input('fortyhc');
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
-                    
+
                     // CALCULO MARKUPS 
                     if($inlandPercentage != 0){
                       $markup = ( $sub_40hc *  $inlandPercentage ) / 100 ;
@@ -839,7 +843,7 @@ class QuoteAutomaticController extends Controller
 
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $km[0] , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
+                  $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
 
                   $arregloInland['inlandDetails'] = $inlandDetailsOrig;
                   $dataOrig[] = $arregloInland;
@@ -856,7 +860,7 @@ class QuoteAutomaticController extends Controller
           $test = $item->where('monto', $item->min('monto'))->first();
           return $test;
         });
-        // dd($inlandOrigin); // filtraor por el minimo
+        //dd($inlandOrigin); // filtraor por el minimo
       }
     }
     // Fin del calculo de los inlands

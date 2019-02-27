@@ -369,11 +369,11 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->type }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->km }} " readonly/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="text" min="0" value="{{ $origin->km }} " readonly/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $detailsOrig->price_units }}">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $detailsOrig->price_unit }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
                                         {{ Form::select('origin_ammount_currency[]',$currency,$info->idCurrency,['class'=>'m-select2-general form-control origin_ammount_currency']) }}              
@@ -402,7 +402,7 @@ $subtotalDestiny = 0;
                               @endforeach
                               @endforeach
 
-                              @if((empty($info->localOrig)) && (empty($info->globalOrig)))
+                              @if((empty($info->localOrig)) && (empty($info->globalOrig)) && (empty($info->inlandOrigin)))
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
