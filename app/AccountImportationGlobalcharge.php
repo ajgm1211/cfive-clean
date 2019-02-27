@@ -13,6 +13,10 @@ class AccountImportationGlobalcharge extends Model
     public function FileTmp(){
 		return $this->hasOne('App\FileTmpGlobalcharge','account_id');
 	}
+	
+	public function companyuser(){
+		return $this->belongsTo('App\CompanyUser','company_user_id');
+	}
 
     
 }
