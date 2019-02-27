@@ -360,6 +360,7 @@ $subtotalDestiny = 0;
                               @endforeach
 
                               @foreach($info->inlandOrigin as $origin)
+                              @foreach($origin->inlandDetails as $detailsOrig)
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->provider }} " />
@@ -368,11 +369,11 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->type }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="1" readonly/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->km }} " readonly/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->monto }}">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $detailsOrig->price_units }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
                                         {{ Form::select('origin_ammount_currency[]',$currency,$info->idCurrency,['class'=>'m-select2-general form-control origin_ammount_currency']) }}              
@@ -382,15 +383,15 @@ $subtotalDestiny = 0;
                                 </td>
 
                                 <td>
-                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->monto  }}"/>
+                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $detailsOrig->sub_in  }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.01"  type="number" min="0" value="{{ $origin->markupConvert }}"/>
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.01"  type="number" min="0" value="{{ $detailsOrig->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $origin->monto }}">
+                                      <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $detailsOrig->sub_in }}">
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -398,6 +399,7 @@ $subtotalDestiny = 0;
                                   </div>
                                 </td>
                               </tr>
+                              @endforeach
                               @endforeach
 
                               @if((empty($info->localOrig)) && (empty($info->globalOrig)))
@@ -821,6 +823,7 @@ $subtotalDestiny = 0;
                               @endforeach
 
                               @foreach($info->inlandDestiny as $destiny)
+                              @foreach($destiny->inlandDetails  as $detailsDest)
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" name="destination_ammount_charge[]"  value="{{ $destiny->provider }} " />
@@ -829,11 +832,11 @@ $subtotalDestiny = 0;
                                   <input name="destination_ammount_detail[]" class="form-control" type="text" value="{{ $destiny->type }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="1" readonly='true'/>
+                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="text" step="0.01" value="{{  $destiny->km }}" readonly='true'/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" name="destination_price_per_unit[]" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->monto }}">
+                                    <input type="number" name="destination_price_per_unit[]" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $detailsDest->price_unit }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
 
@@ -845,15 +848,15 @@ $subtotalDestiny = 0;
                                 </td>
 
                                 <td>
-                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{  $destiny->monto }}"/>
+                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{  $detailsDest->amount }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" step=".01" type="number" min="0" value="{{ $destiny->markupConvert }}" />
+                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" step=".01" type="number" min="0" value="{{ $detailsDest->markupConvert }}" />
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $destiny->monto }}">
+                                      <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $detailsDest->sub_in }}">
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -861,6 +864,7 @@ $subtotalDestiny = 0;
                                   </div>
                                 </td>
                               </tr>
+                              @endforeach
                               @endforeach
                               @if(empty($info->localDest) && (empty($info->globalDest )) && (empty($info->inlandDestiny)))
                               <tr>
