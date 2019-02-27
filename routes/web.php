@@ -43,14 +43,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
 });
 
 Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
-<<<<<<< HEAD
-    Route::resource('terms', 'TermsAndConditionsController');
-    Route::get('list', 'TermsAndConditionsController@index')->name('terms.list');
-    Route::get('add', 'TermsAndConditionsController@add')->name('terms.add');
-    Route::get('edit/{id}', 'TermsAndConditionsController@edit')->name('terms.edit');
-    Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
-    Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
-=======
+
   Route::resource('terms', 'TermsAndConditionsController');
   Route::get('list', 'TermsAndConditionsController@index')->name('terms.list');
   Route::get('add', 'TermsAndConditionsController@add')->name('terms.add');
@@ -58,7 +51,7 @@ Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
   Route::get('delete/{id}', 'TermsAndConditionsController@destroy')->name('terms.delete');
   Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
   Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
->>>>>>> desarrollo
+
 });
 
 Route::group(['prefix' => 'templates', 'middleware' => ['auth']], function () {
