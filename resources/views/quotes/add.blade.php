@@ -743,7 +743,6 @@
                                         </div>
                                       </td>
                                     </tr>
-
                                     <tr class="hide" id="origin_ammounts">
                                       <td>
                                         <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
