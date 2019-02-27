@@ -120,6 +120,13 @@
                                 </div>
                                 @endif
 
+                                @if($value['existdatevalidity'] == true)
+                                <div class="col-2 col-form-label">
+                                    <label for="m_daterangepicker_1" class=" ">Date Validity</label>
+                                    {!! Form::text('validitydate',$value['validitydate'],['class'=>'form-control m-input datevalidityinp','id'=>'m_daterangepicker_1','placeholder' => 'Date Validity' ])!!}
+                                </div>
+                                @endif
+
                                 @if($value['existfortynor'] == true)
                                 <!--<input type="hidden" value="0" name="fortynor" />-->
                                 <input type="hidden" value="0" name="existfortynor" />
@@ -136,6 +143,7 @@
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
                                 <input type="hidden" name="existtypedestiny" id="existtypedestiny" value="{{$value['existtypedestiny']}}" />
+                                <input type="hidden" name="existdatevalidity" id="existdatevalidity" value="{{$value['existdatevalidity']}}" />
                                 <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
 
                             </div>
@@ -143,6 +151,7 @@
                         @endforeach
                         <div class="form-group m-form__group row"></div>
                         <div class="form-group m-form__group row">
+                            <input type="hidden" name="slopp" value="{{ count($targetsArr)}}" id="loop_id">
                             @foreach($targetsArr as $targets)
                             <div class="col-md-3">
                                 <div class="m-portlet m-portlet--metal m-portlet--head-solid-bg m-portlet--bordered">
@@ -180,7 +189,7 @@
                             </button>
                         </div>
                         <div class="col-lg-2 col-lg-offset-2">
-                            <a href="{{route('delete.Accounts.Globalcharges.Fcl',$account_id)}}">
+                            <a href="{{route('delete.Accounts.Globalcharges.Fcl',[$account_id,1])}}">
 
                                 <button type="button" class="btn btn-danger form-control" >
                                     <span>
