@@ -193,27 +193,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade bd-example-modal-lg" id="modalGlobalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">
-						Edit Global Charges
-					</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">
-							&times;
-						</span>
-					</button>
-				</div>
-				<div class="modal-body">
 
-				</div>
-
-			</div>
-		</div>
-	</div>
-	<div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -227,6 +208,28 @@
 					</button>
 				</div>
 				<div class="modal-body-add">
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+  
+  
+	<div class="modal fade bd-example-modal-lg" id="global-modal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">
+						Edit Global Charges
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+				</div>
+				<div id="global-body">
 
 				</div>
 
@@ -255,8 +258,8 @@
 		if(action == "editGlobalCharge"){
 			var url = '{{ route("edit-global-charge", ":id") }}';
 			url = url.replace(':id', id);
-			$('.modal-body').load(url,function(){
-				$('#modalGlobalcharge').modal({show:true});
+			$('#global-body').load(url,function(){
+				$('#global-modal').modal({show:true});
 			});
 
 		}
