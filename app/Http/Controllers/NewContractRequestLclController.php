@@ -113,7 +113,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract->data            = $data;
             $Ncontract->save();
 
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile );
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile,'lcl' );
 
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
