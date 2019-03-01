@@ -26,7 +26,9 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ImportationGlobalchargeJob;
 use App\Jobs\ReprocessGlobalChargersJob;
+
 
 class ImportationGlobachargersFclController extends Controller
 {
