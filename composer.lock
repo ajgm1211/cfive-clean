@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d8accd769280368b0980dd75cb3ff7d7",
-    "content-hash": "4a78c5894839a71764998634a5229243",
+    "hash": "12a2ec7c3a83008cb2f2e0f5f599dab5",
+    "content-hash": "bfea0903aff5f1d7775405632c1673e0",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -116,16 +116,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.87.12",
+            "version": "3.87.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2f3f01d43a8d90b68e6fa0a17257d16fa7f07c47"
+                "reference": "79366d3335649960f49694eb052cbdac6616f843"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2f3f01d43a8d90b68e6fa0a17257d16fa7f07c47",
-                "reference": "2f3f01d43a8d90b68e6fa0a17257d16fa7f07c47",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/79366d3335649960f49694eb052cbdac6616f843",
+                "reference": "79366d3335649960f49694eb052cbdac6616f843",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-02-15 19:08:26"
+            "time": "2019-02-26 19:08:43"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -254,21 +254,21 @@
         },
         {
             "name": "barryvdh/laravel-dompdf",
-            "version": "v0.8.3",
+            "version": "v0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-dompdf.git",
-                "reference": "46781d0304277845a19c09c169bc595fd182cce4"
+                "reference": "3fd817065e1c820b1ddace8b2bf65ca45088df4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/46781d0304277845a19c09c169bc595fd182cce4",
-                "reference": "46781d0304277845a19c09c169bc595fd182cce4",
+                "url": "https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/3fd817065e1c820b1ddace8b2bf65ca45088df4f",
+                "reference": "3fd817065e1c820b1ddace8b2bf65ca45088df4f",
                 "shasum": ""
             },
             "require": {
                 "dompdf/dompdf": "^0.8",
-                "illuminate/support": "5.5.x|5.6.x|5.7.x",
+                "illuminate/support": "5.5.x|5.6.x|5.7.x|5.8.x",
                 "php": ">=7"
             },
             "type": "library",
@@ -306,7 +306,7 @@
                 "laravel",
                 "pdf"
             ],
-            "time": "2018-08-31 13:25:44"
+            "time": "2019-02-26 18:07:43"
         },
         {
             "name": "barryvdh/laravel-elfinder",
@@ -3009,16 +3009,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "02b7ea21eafa0757af04140890a67d8ed45f83b2"
+                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/02b7ea21eafa0757af04140890a67d8ed45f83b2",
-                "reference": "02b7ea21eafa0757af04140890a67d8ed45f83b2",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
+                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
                 "shasum": ""
             },
             "require": {
@@ -3069,7 +3069,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2019-01-23 12:41:22"
+            "time": "2019-02-23 07:42:53"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -4334,27 +4334,27 @@
         },
         {
             "name": "spatie/laravel-permission",
-            "version": "2.32.0",
+            "version": "2.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-permission.git",
-                "reference": "a6ddad06f2d8899178a909f72cddfea497e1e9cf"
+                "reference": "10f6b2e19cce79936e42b65f08549cbf564c052e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/a6ddad06f2d8899178a909f72cddfea497e1e9cf",
-                "reference": "a6ddad06f2d8899178a909f72cddfea497e1e9cf",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/10f6b2e19cce79936e42b65f08549cbf564c052e",
+                "reference": "10f6b2e19cce79936e42b65f08549cbf564c052e",
                 "shasum": ""
             },
             "require": {
-                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
-                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
-                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0",
-                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0|~5.7.0",
+                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0",
                 "php": ">=7.0"
             },
             "require-dev": {
-                "orchestra/testbench": "~3.4.2|~3.5.0|~3.6.0|~3.7.0",
+                "orchestra/testbench": "~3.4.2|~3.5.0|~3.6.0|~3.7.0|~3.8.0",
                 "phpunit/phpunit": "^5.7|6.2|^7.0",
                 "predis/predis": "^1.1"
             },
@@ -4395,7 +4395,7 @@
                 "security",
                 "spatie"
             ],
-            "time": "2019-02-13 16:05:27"
+            "time": "2019-02-26 21:25:08"
         },
         {
             "name": "spatie/temporary-directory",
@@ -4445,16 +4445,16 @@
         },
         {
             "name": "studio-42/elfinder",
-            "version": "2.1.46",
+            "version": "2.1.48",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Studio-42/elFinder.git",
-                "reference": "67799d42e7ee0afd3ed13e95f935694a8b3820d1"
+                "reference": "0740028f6adc6505c5897cc740e51e4638d41d6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/67799d42e7ee0afd3ed13e95f935694a8b3820d1",
-                "reference": "67799d42e7ee0afd3ed13e95f935694a8b3820d1",
+                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/0740028f6adc6505c5897cc740e51e4638d41d6a",
+                "reference": "0740028f6adc6505c5897cc740e51e4638d41d6a",
                 "shasum": ""
             },
             "require": {
@@ -4499,7 +4499,7 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
-            "time": "2019-01-14 03:59:31"
+            "time": "2019-02-26 13:44:09"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5729,6 +5729,81 @@
             "time": "2017-11-27 11:13:29"
         },
         {
+            "name": "unisharp/laravel-filemanager",
+            "version": "v2.0.0-alpha7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UniSharp/laravel-filemanager.git",
+                "reference": "f25ea4d4f4e782fc20e690d121daacf1539ae032"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UniSharp/laravel-filemanager/zipball/f25ea4d4f4e782fc20e690d121daacf1539ae032",
+                "reference": "f25ea4d4f4e782fc20e690d121daacf1539ae032",
+                "shasum": ""
+            },
+            "require": {
+                "ext-exif": "*",
+                "ext-fileinfo": "*",
+                "illuminate/config": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/container": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/filesystem": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/http": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/support": "5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "intervention/image": "2.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.9",
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.1"
+            },
+            "suggest": {
+                "ext-gd": "to use GD library based image processing.",
+                "ext-imagick": "to use Imagick based image processing."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "UniSharp\\LaravelFilemanager\\LaravelFilemanagerServiceProvider"
+                    ],
+                    "aliases": []
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "UniSharp\\LaravelFilemanager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Trevor Sawler",
+                    "email": "trevor.sawler@gmail.com"
+                },
+                {
+                    "name": "UniSharp Ltd.",
+                    "email": "opensource@unisharp.com"
+                }
+            ],
+            "description": "A file upload/editor intended for use with Laravel 5 and CKEditor / TinyMCE",
+            "keywords": [
+                "CKEditor",
+                "file",
+                "filemanager",
+                "image",
+                "laravel",
+                "manager",
+                "tinymce",
+                "upload"
+            ],
+            "time": "2018-12-05 14:33:04"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v2.6.1",
             "source": {
@@ -6950,16 +7025,16 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "2.0.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "8b8454ea6958c3dee38453d3bd571e023108c91f"
+                "reference": "8b389aebe1b8b0578430bda0c7c95a829608e059"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/8b8454ea6958c3dee38453d3bd571e023108c91f",
-                "reference": "8b8454ea6958c3dee38453d3bd571e023108c91f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/8b389aebe1b8b0578430bda0c7c95a829608e059",
+                "reference": "8b389aebe1b8b0578430bda0c7c95a829608e059",
                 "shasum": ""
             },
             "require": {
@@ -6971,7 +7046,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
@@ -6995,7 +7070,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2018-02-01 13:07:23"
+            "time": "2019-02-20 10:12:59"
         },
         {
             "name": "phpunit/php-token-stream",

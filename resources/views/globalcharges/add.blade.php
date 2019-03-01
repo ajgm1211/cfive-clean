@@ -36,7 +36,7 @@
 				<div class="divport" >
 					{!! Form::label('orig', 'Origin Port') !!}
 					{{ Form::select('port_orig[]', $harbor,
-					null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+					null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ,'required' => 'true' ]) }}
 				</div>
 				<div class="divcountry" hidden="true">
 				
@@ -51,7 +51,7 @@
 					{!! Form::label('dest', 'Destination Port') !!}
 					<div class="m-input-icon m-input-icon--right">
 						{{ Form::select('port_dest[]', $harbor,
-						null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+						null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple','required' => 'true' ]) }}
 						<span class="m-input-icon__icon m-input-icon__icon--right">
 							<span>
 								<i class="la la-info-circle"></i>

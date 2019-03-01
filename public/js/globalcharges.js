@@ -178,12 +178,35 @@ $(document).on('click', '.cancel', function () {
 function activarCountry(act){
   var divCountry = $( ".divcountry");
   var divport = $( ".divport");
+
+  var idPortOrig = $( "#port_orig"); 
+  var idCountryOrig = $( "#country_orig");  
+
+
+  var idPortDest = $( "#port_dest"); 
+  var idCountryDest = $( "#country_dest"); 
+
   if(act == 'divcountry'){
     divport.attr('hidden','true');
     divCountry.removeAttr('hidden');
+
+    idCountryOrig.attr('required','true');
+    idCountryDest.attr('required','true');
+
+    idPortOrig.removeAttr('required');
+    idPortDest.removeAttr('required');
+
   }else if(act == 'divport'){
     divCountry.attr('hidden','true');
     divport.removeAttr('hidden');
+    
+    
+    idPortOrig.attr('required','true');
+    idPortDest.attr('required','true');
+
+    idCountryOrig.removeAttr('required');
+    idCountryDest.removeAttr('required');
+
   }
 }
 
