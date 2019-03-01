@@ -38,15 +38,22 @@ class ProcessContractFile implements ShouldQueue
   {
     if($this->tipo == 'fcl'){
       $Ncontracts = NewContractRequest::find($this->id);
-    }
-    if($this->tipo == 'lcl'){
+
+      $file  =$Ncontracts->namefile;
+      $s3 = \Storage::disk('s3_upload');
+      $filePath = $this->name;
+      $file = \Storage::disk('UpLoadFile')->get($file); 
+      $s3->put('contracts/'.$filePath, $file, 'public');
+    }else{
       $Ncontracts = NewContractRequestLcl::find($this->id);
+      $file  =$Ncontracts->namefile;
+      $s3 = \Storage::disk('s3_upload');
+      $filePath = $this->name;
+      $file = \Storage::disk('UpLoadFile')->get($file); 
+      $s3->put('contracts/'.$filePath, $file, 'public');
+
+
     }
 
-    $file  =$Ncontracts->namefile;
-    $s3 = \Storage::disk('s3_upload');
-    $filePath = $this->name;
-    $file = \Storage::disk('UpLoadFile')->get($file); 
-    $s3->put('contracts/'.$filePath, $file, 'public');
   }
 }
