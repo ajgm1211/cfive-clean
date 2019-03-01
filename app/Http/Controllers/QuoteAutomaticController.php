@@ -435,6 +435,9 @@ class QuoteAutomaticController extends Controller
                 $km = explode(" ",$dist->distance->text);
                 foreach($inlandsValue->inlanddetails as $details){
                   $distancia = floatval($km[0]);
+                  if($distancia < 1){
+                    $distancia = 1;
+                  }
 
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
@@ -670,6 +673,9 @@ class QuoteAutomaticController extends Controller
                 foreach($inlandsValue->inlanddetails as $details){
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   $distancia = floatval($km[0]);
+                  if($distancia < 1){
+                    $distancia = 1;
+                  }
                   if($details->type == 'twuenty' && $request->input('twuenty') != "0"){
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
