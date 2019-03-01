@@ -37,6 +37,7 @@ $('#carrierchk').on('click',function(){
     }
 });
 
+
 $('#typedestinychk').on('click',function(){
     if($('#typedestinychk').prop('checked')){
         $('#typedestinyinp').removeAttr('hidden');
@@ -47,30 +48,15 @@ $('#typedestinychk').on('click',function(){
     }
 });
 
-/*$(document).ready(function(){
-     if($('#rdRateSurcharge').prop('checked') != true){
-        $('#typedestinychk').attr('disabled','disabled');
-        $('#divtyped').attr('hidden','hidden');
-    } else {
-        $('#typedestinychk').removeAttr('disabled');
-        $('#divtyped').removeAttr('hidden');
+$('#datevaiditychk').on('click',function(){
+    if($('#datevaiditychk').prop('checked')){
+        $('#datevaiditydiv').removeAttr('hidden');
+        $('.datevalidityinp').attr('required','required');
+    } else{
+        $('#datevaiditydiv').attr('hidden','hidden');
+        $('.datevalidityinp').removeAttr('required');
     }
 });
-
-$('#rdRate').on('click',function(){ 
-    if($('#rdRateSurcharge').prop('checked') != true){
-        $('#typedestinychk').attr('disabled','disabled');
-        $('#divtyped').attr('hidden','hidden');
-    }
-}); 
-
-$('#rdRateSurcharge').on('click',function(){
-    if($('#rdRateSurcharge').prop('checked')){
-        $('#typedestinychk').removeAttr('disabled');
-        $('#divtyped').removeAttr('hidden');
-    }
-});*/
-
 
 jQuery(document).ready(function($){
     Dropzone.options.mss = {
