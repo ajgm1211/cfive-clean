@@ -976,7 +976,7 @@ class QuoteAutomaticController extends Controller
         $totalT =  number_format($totalT, 2, '.', '');
         $totalFreight += $totalT;
         $totalRates += $totalT;
-        $array = array('type'=>'Ocean Freight', 'cantidad' => $formulario->twuenty,'detail'=>'W/M', 'price' => $data->twuenty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id );
+        $array = array('type'=>'Ocean Freight 20', 'cantidad' => $formulario->twuenty,'detail'=>'Container 20', 'price' => $data->twuenty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalT , 'total' =>$totalT." ". $typeCurrency , 'idCurrency' => $data->currency_id );
         $array = array_merge($array,$arraymarkupT);
         $collectionRate->push($array);
         $data->setAttribute('montT',$array);
@@ -1000,7 +1000,7 @@ class QuoteAutomaticController extends Controller
         $totalF =  number_format($totalF, 2, '.', '');
         $totalFreight += $totalF;
         $totalRates += $totalF;
-        $array = array('type'=>'Ocean Freight', 'cantidad' => $formulario->forty,'detail'=>'W/M', 'price' => $data->forty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalF , 'total' =>$totalF." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight 40', 'cantidad' => $formulario->forty,'detail'=>'Container 40', 'price' => $data->forty, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalF , 'total' =>$totalF." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupF);
         $collectionRate->push($array);
         $data->setAttribute('montF',$array);
@@ -1024,7 +1024,7 @@ class QuoteAutomaticController extends Controller
         $totalFHC =  number_format($totalFHC, 2, '.', '');
         $totalFreight += $totalFHC;
         $totalRates += $totalFHC;
-        $array = array('type'=>'Ocean Freight', 'cantidad' => $formulario->fortyhc,'detail'=>'W/M', 'price' => $data->fortyhc, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFHC , 'total' =>$totalFHC." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight 40HC', 'cantidad' => $formulario->fortyhc,'detail'=>'Container 40HC', 'price' => $data->fortyhc, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFHC , 'total' =>$totalFHC." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupFH);
         $data->setAttribute('montFHC',$array);
         $collectionRate->push($array);
@@ -1049,7 +1049,7 @@ class QuoteAutomaticController extends Controller
         $totalNOR =  number_format($totalNOR, 2, '.', '');
         $totalFreight += $totalNOR;
         $totalRates += $totalNOR;
-        $array = array('type'=>'Ocean Freight ', 'cantidad' => $formulario->fortynor,'detail'=>'W/M', 'price' => $data->fortynor, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalNOR , 'total' =>$totalNOR." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight 40NOR ', 'cantidad' => $formulario->fortynor,'detail'=>'Container 40NOR', 'price' => $data->fortynor, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalNOR , 'total' =>$totalNOR." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupNOR);
         $data->setAttribute('montNOR',$array);
         $collectionRate->push($array);
@@ -1073,7 +1073,7 @@ class QuoteAutomaticController extends Controller
         $totalFIVE =  number_format($totalFIVE, 2, '.', '');
         $totalFreight += $totalFIVE;
         $totalRates += $totalFIVE;
-        $array = array('type'=>'Ocean Freight', 'cantidad' => $formulario->fortyfive,'detail'=>'W/M', 'price' => $data->fortyfive, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFIVE , 'total' =>$totalFIVE." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight 45', 'cantidad' => $formulario->fortyfive,'detail'=>'Container 45', 'price' => $data->fortyfive, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFIVE , 'total' =>$totalFIVE." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupFIVE);
         $data->setAttribute('montFIVE',$array);
         $collectionRate->push($array);
