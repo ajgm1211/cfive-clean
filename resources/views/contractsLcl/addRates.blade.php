@@ -22,7 +22,7 @@
       </div>
       <div class="col-lg-4">
         {!! Form::label('carrier', 'Carrier') !!}
-        {{ Form::select('carrier_id', $carrier,null,['id' => 'carrier','class'=>'m-select2-general form-control']) }}
+        {{ Form::select('carrier_id', $carrier,null,['id' => 'carrier','class'=>'m-select2-general form-control','required' => 'true']) }}
 
       </div>
     </div>
