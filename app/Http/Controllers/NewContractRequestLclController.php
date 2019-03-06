@@ -92,12 +92,12 @@ class NewContractRequestLclController extends Controller
         }
 
         $data = array('DatOri'  => $DatOriBol,
-            'origin'  => $origin,
-            'DatDes'  => $DatDesBol,
-            'destiny' => $destiny,
-            'DatCar'  => $DatCarBol,
-            'carrier' => $carrier
-        );
+                      'origin'  => $origin,
+                      'DatDes'  => $DatDesBol,
+                      'destiny' => $destiny,
+                      'DatCar'  => $DatCarBol,
+                      'carrier' => $carrier
+                     );
         $type         = json_encode($type);
         $data         = json_encode($data);
         if($fileBoll){
@@ -122,8 +122,8 @@ class NewContractRequestLclController extends Controller
             $message = 'has created an new request: '.$Ncontract->id;
             foreach($admins as $userNotifique){
                 \Mail::to($userNotifique->email)->send(new NewRequestLclToAdminMail($userNotifique->toArray(),
-                    $user->toArray(),
-                    $Ncontract->toArray()));
+                                                                                    $user->toArray(),
+                                                                                    $Ncontract->toArray()));
                 $userNotifique->notify(new N_general($user,$message));
             }
 
@@ -150,8 +150,12 @@ class NewContractRequestLclController extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $company->name.'_'.$now.'.'.$ext;
-        //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+
+        try{
+            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
     }
 
 
@@ -191,7 +195,7 @@ class NewContractRequestLclController extends Controller
                 foreach ($usersCompa as $userCmp) {
                     if($userCmp->id != $Ncontract->user_id){
                         \Mail::to($userCmp->email)->send(new RequestLclToUserMail($userCmp->toArray(),
-                            $Ncontract->toArray()));
+                                                                                  $Ncontract->toArray()));
                     }
                 }
 
@@ -200,7 +204,7 @@ class NewContractRequestLclController extends Controller
                 $usercreador->notify(new SlackNotification($message));
 
                 \Mail::to($usercreador->email)->send(new RequestLclToUserMail($usercreador->toArray(),
-                    $Ncontract->toArray()));
+                                                                              $Ncontract->toArray()));
 
             }
 
