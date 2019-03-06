@@ -1,7 +1,7 @@
 /node_modules
-public/storage
-public/pdf
+/public/storage
 /public/hot
+/public/pdf
 storage
 /vendor
 /.idea
