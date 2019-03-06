@@ -392,6 +392,9 @@ class QuoteAutomaticController extends Controller
     // Calculo de los inlands
     $modality_inland = $request->modality;
     $company_inland = $request->input('company_id_quote');
+    $texto20 = 'Inland 20 x' $request->input('twuenty'); 
+    $texto40 = 'Inland 40 x' $request->input('forty');
+    $texto40hc = 'Inland 40HC x' $request->input('fortyhc');
     // Destination Address
     if($delivery_type == "2" || $delivery_type == "4" ){ 
 
@@ -435,6 +438,7 @@ class QuoteAutomaticController extends Controller
                 $km = explode(" ",$dist->distance->text);
                 foreach($inlandsValue->inlanddetails as $details){
                   $distancia = floatval($km[0]);
+
                   if($distancia < 1){
                     $distancia = 1;
                   }
@@ -467,7 +471,7 @@ class QuoteAutomaticController extends Controller
                       // FIN CALCULO MARKUPS 
 
 
-                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20' ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit) ; 
+                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => $texto20  ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit) ; 
                       $arrayInland20 = array_merge($arraymarkupT,$arrayInland20);
                       $inlandDetails[] = $arrayInland20;
 
@@ -497,7 +501,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40' ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => $texto40 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40 = array_merge($arraymarkupT,$arrayInland40);
                       $inlandDetails[] = $arrayInland40;
                     }
@@ -525,7 +529,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC','amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => $texto40hc,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40hc = array_merge($arraymarkupT,$arrayInland40hc);
                       $inlandDetails[] = $arrayInland40hc;
                     }
@@ -555,7 +559,7 @@ class QuoteAutomaticController extends Controller
                       $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                     }
                     // FIN CALCULO MARKUPS 
-                    $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20' ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                    $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                     $arrayInland20 = array_merge($arraymarkupT,$arrayInland20);
                     $inlandDetails[] = $arrayInland20;
                   }
@@ -580,7 +584,7 @@ class QuoteAutomaticController extends Controller
                       $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                     }
                     // FIN CALCULO MARKUPS
-                    $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40','amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                    $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" =>  $texto40,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                     $arrayInland40 = array_merge($arraymarkupT,$arrayInland40);
                     $inlandDetails[] = $arrayInland40;
                   }
@@ -606,7 +610,7 @@ class QuoteAutomaticController extends Controller
                       $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                     }
                     // FIN CALCULO MARKUPS
-                    $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC','amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                    $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => $texto40hc,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                     $arrayInland40hc = array_merge($arraymarkupT,$arrayInland40hc);
                     $inlandDetails[] = $arrayInland40hc;
                   }
@@ -701,7 +705,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20' ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ; 
+                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ; 
                       $arrayInland20 = array_merge($arraymarkupT,$arrayInland20);
                       $inlandDetailsOrig[] = $arrayInland20;
                     }
@@ -729,7 +733,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40','amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => $texto40,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40 = array_merge($arraymarkupT,$arrayInland40);
                       $inlandDetailsOrig[] = $arrayInland40;
                     }
@@ -757,7 +761,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC','amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => $texto40hc,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40hc = array_merge($arraymarkupT,$arrayInland40hc);
                       $inlandDetailsOrig[] = $arrayInland40hc;
 
@@ -788,7 +792,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => 'Inland 20','amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland20 = array("cant_cont" => $request->input('twuenty') , "sub_in" => $sub_20, "des_in" => $texto20,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland20 = array_merge($arraymarkupT,$arrayInland20);
                       $inlandDetailsOrig[] = $arrayInland20;
                     }
@@ -813,7 +817,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => 'Inland 40' ,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40 = array("cant_cont" => $request->input('forty') , "sub_in" => $sub_40, "des_in" => $texto40 ,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40 = array_merge($arraymarkupT,$arrayInland40);
                       $inlandDetailsOrig[] = $arrayInland40;
 
@@ -839,7 +843,7 @@ class QuoteAutomaticController extends Controller
                         $arraymarkupT = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
                       }
                       // FIN CALCULO MARKUPS 
-                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => 'Inland 40HC' ,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
+                      $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => $texto40hc ,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit ) ;
                       $arrayInland40hc = array_merge($arraymarkupT,$arrayInland40hc);
                       $inlandDetailsOrig[] = $arrayInland40hc;
                     }
