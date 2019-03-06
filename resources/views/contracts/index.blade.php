@@ -93,30 +93,7 @@
                                  </span>
                               </button>
                            </a>
-                           @role('administrator')
-                           <a href="{{route('importaion.fcl')}}">
 
-                              <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                 <span>
-                                    <span>
-                                       Import Contract&nbsp;
-                                    </span>
-                                    <i class="la la-cloud-upload"></i>
-                                 </span>
-                              </button>
-                           </a>
-                           <!-- <a href="{{route('testExcelImportation')}}">
-
-                              <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                 <span>
-                                    <span>
-                                       Test&nbsp;
-                                    </span>
-                                    <i class="la la-cloud-upload"></i>
-                                 </span>
-                              </button>
-                           </a>-->
-                           @endrole
                            <a href="{{route('Request.importaion.fcl')}}">
 
                               <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
