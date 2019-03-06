@@ -16,10 +16,11 @@ class SendQuotePdf extends Mailable
      *
      * @return void
      */
-    public function __construct($subject,$body,$quote)
+    public function __construct($subject,$body,$quote,$sender)
     {
         $this->subject = $subject;
         $this->text = $body;
+        $this->sender = $sender;
         $this->quote_id = $quote->id;
         $this->created = $quote->created_at;
     }
@@ -31,13 +32,13 @@ class SendQuotePdf extends Mailable
      */
     public function build()
     {
-        return $this->from(\Auth::user()->email)
-        ->view('emails.quote_pdf')
-        ->subject($this->subject)
-        ->with(['text' => $this->text])
-        ->attach('pdf/temp_' . $this->quote_id . '.pdf', [
-                    'as' => 'Quote_'.$this->quote_id.'_'.$this->created.'.pdf',
-                    'mime' => 'application/pdf',
-                ]);
+        return $this->from($this->sender)
+            ->view('emails.quote_pdf')
+            ->subject($this->subject)
+            ->with(['text' => $this->text])
+            ->attach(public_path().'/pdf/temp_' . $this->quote_id . '.pdf', [
+                'as' => 'Quote_'.$this->quote_id.'_'.$this->created.'.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 }

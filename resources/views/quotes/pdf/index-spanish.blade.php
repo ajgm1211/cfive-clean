@@ -9,7 +9,9 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                @if($user->companyUser->logo!='')
+                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                @endif
             </div>
             <div id="company">
                 <div><span class="color-title"><b>Cotización: </b> </span><span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</b></span></div>
@@ -284,7 +286,7 @@
                         @if($origin_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @if($ammounts_type==1)
                         <td>{{$origin_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
-                        @else   
+                        @else
                         <td>{{number_format((float)$origin_ammount->total_ammount + $origin_ammount->markup_converted, 2,'.', '')}} {{$origin_ammount->currency->alphacode}}</td>
                         @endif
                         @else
@@ -338,7 +340,7 @@
                         @if($freight_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @if($ammounts_type==1)
                         <td>{{$freight_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
-                        @else   
+                        @else
                         <td>{{number_format((float)$freight_ammount->total_ammount + $freight_ammount->markup_converted, 2,'.', '')}} {{$freight_ammount->currency->alphacode}}</td>
                         @endif
                         @else
@@ -376,7 +378,7 @@
                     <tr class="text-center color-table">
                         <td>{{$destination_ammount->charge}}</td>
                         <td>{{$destination_ammount->detail}}</td>
-                        <td>{{$destination_ammount->units}}</td>                  
+                        <td>{{$destination_ammount->units}}</td>
                         @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @if($ammounts_type==1)
                         <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}} {{$quote->currencies->alphacode}}</td>
@@ -388,16 +390,16 @@
                         @endif
                         @else
                         <td>{{number_format((float)$destination_ammount->total_ammount_2 / $destination_ammount->units, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
-                        @endif                    
+                        @endif
                         @if($destination_ammount->currency->alphacode!=$quote->currencies->alphacode)
                         @if($ammounts_type==1)
                         <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
-                        @else   
+                        @else
                         <td>{{number_format((float)$destination_ammount->total_ammount + $destination_ammount->markup_converted, 2,'.', '')}} {{$destination_ammount->currency->alphacode}}</td>
                         @endif
                         @else
                         <td>{{$destination_ammount->total_ammount + $destination_ammount->markup}} {{$destination_ammount->currency->alphacode}}</td>
-                        @endif                    
+                        @endif
                         <td>{{$destination_ammount->total_ammount_2}} &nbsp;{{$quote->currencies->alphacode}}</td>
                     </tr>
                     @endforeach
@@ -406,7 +408,7 @@
                     <tr class="text-center">
                         <td colspan="4"></td>
                         <td style="font-size: 12px; color: #01194F"><b>Monto total</b></td>
-                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}} 
+                        <td style="font-size: 12px; color: #01194F"><b>{{$quote->sub_total_destination}}
                             &nbsp; {{$quote->currencies->alphacode}}</b></td>
                     </tr>
                 </tfoot>
@@ -419,7 +421,7 @@
             <div class="company">
                 <p class="title text-center pull-right total"><b>Total: {{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} &nbsp;{{$quote->currencies->alphacode}}</b></p>
             </div>
-        </div>    
+        </div>
         @endif
         <div class="clearfix">
             <table class="table-border" border="0" cellspacing="0" cellpadding="0">
@@ -433,7 +435,7 @@
                     @if($quote->term!='')
                         <tr>
                             <td style="padding:20px;">
-                                <span class="text-justify">                                
+                                <span class="text-justify">
                                     {!! $quote->term !!}
                                 </span>
                             </td>
