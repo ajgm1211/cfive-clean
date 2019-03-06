@@ -1000,7 +1000,7 @@ class QuoteController extends Controller
                 $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
                 $explode=explode(';',$to);
                 foreach($explode as $item) {
-                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote,\Auth::user()->email));
                 }
             }else{
                 $request->session()->flash('message.nivel', 'danger');
