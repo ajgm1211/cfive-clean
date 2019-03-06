@@ -143,8 +143,11 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $company->name.'_'.$now.'.'.$ext;
-        //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        try{
+            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
     }
 
 
