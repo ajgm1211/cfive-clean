@@ -112,6 +112,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
+                                        @if($company->companyUser->logo!='')
+                                            <img src="{{Storage::disk('s3_upload')->url($company->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                                        @endif
+                                    </div>
+                                    <hr>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group m-form__group">
                                         <button type="button" id="default-currency-submit" class="btn btn-primary btn-block">Update</button>
                                     </div>
                                 </div>
