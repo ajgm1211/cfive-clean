@@ -80,19 +80,6 @@
                            </div>
                         </div>
                         <div class="col-xl-12 order-1 order-xl-2 m--align-right">
-                           @role('administrator')
-                           <a href="{{route('ImportationLCL.index')}}">
-
-                              <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                 <span>
-                                    <span>
-                                       Import Contract&nbsp;
-                                    </span>
-                                    <i class="la la-cloud-upload"></i>
-                                 </span>
-                              </button>
-                           </a>
-                           @endrole
 
                            <a href="{{route('Request.importaion.lcl')}}">
 
