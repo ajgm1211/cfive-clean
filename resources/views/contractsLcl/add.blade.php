@@ -116,7 +116,7 @@ $validation_expire = 'Please enter validity date';
 
                     <td  width = '15%'>{!! Form::number('uom[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0']) !!} </td>
                     <td  width = '15%'>{!! Form::number('minimum[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!} </td>
-                    <td width = '12%'>{{ Form::select('currency_id[]', $currency,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                    <td width = '12%'>{{ Form::select('currency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                     <td>-</td>
                   </tr>
               </table>
@@ -183,38 +183,35 @@ $validation_expire = 'Please enter validity date';
                             <input type="radio"  onclick="activarCountry('divcountry','1')"  name="typeroute1" value="country"> Country
                             <span></span>
                           </label>
-
-                        </div>
-                      </td>
-                      <td width='9%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
-                      <td width='9%'>
-                        <div class="divport1" >
-                          {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
-                        </div>
-                        <div class="divcountry1" hidden="true">	
-                          {{ Form::select('country_orig1[]', $country,
-                          null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}			
-                        </div>
-                      </td>
-                      <td width='9%'>
-                        <div class="divport1" >
-                          {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
-                        </div>
-                        <div class="divcountry1" hidden="true">	
-                          {{ Form::select('country_dest1[]', $country,
-                          null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}			
-                        </div>
-                      </td>
-                      <td width='9%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                      <td width='5%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:50%;']) }}</td>
-                      <td width='9%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-                      <td width='9%'> {!! Form::text('ammount[]', 0, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                      <td width='9%'> {!! Form::text('minimumL[]', 0, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                      <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,null,['class'=>'m-select2-general form-contro col-lg-7']) }}</td>
-                      <td  width='4%'>-</td>
-
+                      </div>
+                    </td>
+                    <td width='9%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
+                    <td width='9%'>
+                      <div class="divport1" >
+                        {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
+                      </div>
+                      <div class="divcountry1" hidden="true">	
+                        {{ Form::select('country_orig1[]', $country,
+                        null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}			
+                      </div>
+                    </td>
+                    <td width='9%'>
+                      <div class="divport1" >
+                        {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
+                      </div>
+                      <div class="divcountry1" hidden="true">	
+                        {{ Form::select('country_dest1[]', $country,
+                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}			
+                      </div>
+                    </td>
+                    <td width='9%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                    <td width='5%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:50%;']) }}</td>
+                    <td width='9%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
+                    <td width='9%'> {!! Form::text('ammount[]', 0, ['placeholder' => 'Please enter ammount','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'> {!! Form::text('minimumL[]', 0, ['placeholder' => 'Please enter minimum','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                    <td width='9%'>{{ Form::select('localcurrency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general form-contro col-lg-7']) }}</td>
+                    <td  width='4%'>-</td>
                     </tr>
-
                   </tbody>
                 </table>
               </div>

@@ -41,7 +41,7 @@
   <div class="form-group m-form__group row">
     <div class="col-lg-3">
       {!! Form::label('Charge Currency', 'Charge Currency') !!}
-      {{ Form::select('chargecurrencykm',$currency,null,['class'=>'custom-select form-control','id' => '']) }}
+      {{ Form::select('chargecurrencykm',$currency,$currency_cfg->id,['class'=>'custom-select form-control','id' => '']) }}
     </div>
   </div>
 

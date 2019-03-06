@@ -120,7 +120,7 @@ $portRadio = false;
       </div>
 
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
           {!! Form::text('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
