@@ -232,7 +232,7 @@ class QuoteAutomaticController extends Controller
       $arreglo =  array("prov_id" => '' ,"provider" => "Inland Haulage" ,"port_id" => $harborRate->id,"port_name" =>  $harborRate->name ,"km" => $kilometros  , "monto" => '0.00' ,'type' => $type,'type_currency' => $currency ,'idCurrency' => $currency );
 
 
-      $arrayDetail = array("cant_cont" => '1' , "sub_in" => '0.00', "des_in" => 'Inlands' ,'amount' => '1.00','currency' => 'USD' ,'price_unit' => '1') ; 
+      $arrayDetail = array("cant_cont" => '1' , "sub_in" => '0.00', "des_in" => 'Inlands' ,'amount' => '1.00','currency' => 'USD' ,'price_unit' => '0') ; 
       $arraymarkupCero = array("markup" => "0.00" , "markupConvert" => "0.00", "typemarkup" => $currency);
 
       $arrayDetail = array_merge($arraymarkupCero,$arrayDetail);
