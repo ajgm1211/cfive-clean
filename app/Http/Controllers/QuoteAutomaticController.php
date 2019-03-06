@@ -222,12 +222,17 @@ class QuoteAutomaticController extends Controller
           $km = explode(" ",$dist->distance->text);
         }
       }
+      if(isset($km)){
+        $kilometros = $km[0];
+      }else{
+        $kilometros = 1;
+      }
 
 
-      $arreglo =  array("prov_id" => '' ,"provider" => "Inland Haulage" ,"port_id" => $harborRate->id,"port_name" =>  $harborRate->name ,"km" => $km[0] , "monto" => '0.00' ,'type' => $type,'type_currency' => $currency ,'idCurrency' => $currency ,'price_unit' => '1');
+      $arreglo =  array("prov_id" => '' ,"provider" => "Inland Haulage" ,"port_id" => $harborRate->id,"port_name" =>  $harborRate->name ,"km" => $kilometros  , "monto" => '1.00' ,'type' => $type,'type_currency' => $currency ,'idCurrency' => $currency );
 
 
-      $arrayDetail = array("cant_cont" => '1' , "sub_in" => '0.00', "des_in" => 'Inlands' ,'amount' => '0.00','currency' => 'USD' ) ; 
+      $arrayDetail = array("cant_cont" => '1' , "sub_in" => '1.00', "des_in" => 'Inlands' ,'amount' => '1.00','currency' => 'USD' ,'price_unit' => '1') ; 
       $arraymarkupCero = array("markup" => "0.00" , "markupConvert" => "0.00", "typemarkup" => $currency);
 
       $arrayDetail = array_merge($arraymarkupCero,$arrayDetail);
@@ -392,9 +397,9 @@ class QuoteAutomaticController extends Controller
     // Calculo de los inlands
     $modality_inland = $request->modality;
     $company_inland = $request->input('company_id_quote');
-    $texto20 = 'Inland 20 x' $request->input('twuenty'); 
-    $texto40 = 'Inland 40 x' $request->input('forty');
-    $texto40hc = 'Inland 40HC x' $request->input('fortyhc');
+    $texto20 = 'Inland 20 x' .$request->input('twuenty'); 
+    $texto40 = 'Inland 40 x' .$request->input('forty');
+    $texto40hc = 'Inland 40HC x'. $request->input('fortyhc');
     // Destination Address
     if($delivery_type == "2" || $delivery_type == "4" ){ 
 
@@ -1044,7 +1049,7 @@ class QuoteAutomaticController extends Controller
         $totalNOR =  number_format($totalNOR, 2, '.', '');
         $totalFreight += $totalNOR;
         $totalRates += $totalNOR;
-        $array = array('type'=>'Ocean Freight 40NOR ', 'cantidad' => $formulario->fortynor,'detail'=>'Container 40NOR', 'price' => $data->fortynor, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalNOR , 'total' =>$totalNOR." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight ', 'cantidad' => $formulario->fortynor,'detail'=>'W/M', 'price' => $data->fortynor, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalNOR , 'total' =>$totalNOR." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupNOR);
         $data->setAttribute('montNOR',$array);
         $collectionRate->push($array);
@@ -1068,7 +1073,7 @@ class QuoteAutomaticController extends Controller
         $totalFIVE =  number_format($totalFIVE, 2, '.', '');
         $totalFreight += $totalFIVE;
         $totalRates += $totalFIVE;
-        $array = array('type'=>'Ocean Freight 45 ', 'cantidad' => $formulario->fortyfive,'detail'=>'Container 45', 'price' => $data->fortyfive, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFIVE , 'total' =>$totalFIVE." ". $typeCurrency , 'idCurrency' => $data->currency_id);
+        $array = array('type'=>'Ocean Freight', 'cantidad' => $formulario->fortyfive,'detail'=>'W/M', 'price' => $data->fortyfive, 'currency' => $data->currency->alphacode ,'subtotal' => $subtotalFIVE , 'total' =>$totalFIVE." ". $typeCurrency , 'idCurrency' => $data->currency_id);
         $array = array_merge($array,$arraymarkupFIVE);
         $data->setAttribute('montFIVE',$array);
         $collectionRate->push($array);
@@ -2492,7 +2497,11 @@ class QuoteAutomaticController extends Controller
         if($delivery_type == "3" || $delivery_type == "4" ){ 
           $inlandOrigin = $this->inlandDistance($delivery_type,$request->input('origin_address'), $data->port_origin->id , $typeCurrency,'Origin Port To Door');
 
-
+          foreach($inlandOrigin as $inlandOrig){
+            $totalQuote += $inlandOrig['monto'];
+            $totalChargeOrig += $inlandOrig['monto'];
+            $totalInland += $inlandOrig['monto'];
+          }
 
         }else{
           $inlandOrigin = array();
@@ -2510,11 +2519,18 @@ class QuoteAutomaticController extends Controller
       }else{     
         if($delivery_type == "2" || $delivery_type == "4" ){ 
           $inlandDestiny = $this->inlandDistance($delivery_type,$request->input('destination_address'), $data->port_destiny->id , $typeCurrency,'Destiny Port To Door');
+          foreach($inlandDestiny as $inlandDest){
+            $totalQuote += $inlandDest['monto'];
+            $totalChargeDest += $inlandDest['monto'];
+            $totalInland +=  $inlandDest['monto'];
+          }
         }else{
           $inlandDestiny = array();
         }
 
       }
+
+
       $totalChargeOrig += $totalOrigin;
       $totalChargeDest += $totalDestiny;
       $totalFreight = $totalFreight." ".$typeCurrency;
