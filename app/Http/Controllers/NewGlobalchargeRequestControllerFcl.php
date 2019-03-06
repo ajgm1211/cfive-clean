@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use App\Jobs\ProcessContractFile;
 use App\NewGlobalchargeRequestFcl;
+use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use App\Mail\NewRequestGlobalChargeToUserMail;
@@ -22,7 +23,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
     {
         $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
         //dd($Ncontracts);
-        return view('RequestGlobalChargeFcl.index',compact('Ncontracts'));
+        $accounts = AccountImportationGlobalcharge::with('companyuser')->orderBy('id','desc')->get();
+        return view('RequestGlobalChargeFcl.index',compact('Ncontracts','accounts'));
     }
 
     public function create()
@@ -104,7 +106,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->data            = $data;
             $Ncontract->save();
 
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile ,'fcl');
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile ,'gcfcl');
 
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -141,8 +143,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $company->name.'_'.$now.'.'.$ext;
-        return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        //return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
     }
 
 

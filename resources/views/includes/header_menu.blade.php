@@ -294,14 +294,14 @@
 									</span>
 								</a>
 							</li>
-							<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+							<!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
 								<a  href="{{route('indextwo.globalcharge.fcl')}}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-folder-2"></i>
 									<span class="m-menu__link-text">
 										Account Importation G.C-FCL
 									</span>
 								</a>
-							</li>
+							</li>-->
 							<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
 								<a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-business"></i>
