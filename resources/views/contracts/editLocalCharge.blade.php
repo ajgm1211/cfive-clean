@@ -86,7 +86,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('carrierL', 'Carrier') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('carrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
+          {{ Form::select('carrier_id[]', $carrier,$localcharges->localcharcarriers->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple','required' => 'true']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-info-circle"></i>
