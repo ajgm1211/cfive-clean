@@ -145,11 +145,11 @@ class NewContractRequestLclController extends Controller
     {
         $Ncontract = NewContractRequestLcl::find($id);
         $time       = new \DateTime();
-        $now        = $time->format('d-m-Y_s');
+        $now        = $time->format('d-m-y');
         $company    = CompanyUser::find($Ncontract->company_user_id);
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
-        $name       = $company->name.'_'.$now.'.'.$ext;
+        $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-LCL.'.$ext;
 
         try{
             return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
