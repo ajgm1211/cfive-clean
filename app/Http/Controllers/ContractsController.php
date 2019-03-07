@@ -396,7 +396,7 @@ class ContractsController extends Controller
 
   public function contractTable(){
 
-    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->take(50)->get();
+    $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
     return \DataTables::collection($contractG)
 
       ->addColumn('options', function (Contract $contractG) {
