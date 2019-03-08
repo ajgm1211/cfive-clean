@@ -117,7 +117,7 @@ class NewContractRequestsController extends Controller
             $Ncontract->data            = $data;
             $Ncontract->save();
 
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile,'fcl' );
+            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl');
 
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
