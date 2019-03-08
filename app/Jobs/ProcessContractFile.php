@@ -17,17 +17,17 @@ class ProcessContractFile implements ShouldQueue
 
     protected $id;
     protected $name;
-    protected $tipo;
+    protected $type;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id,$name,$tipo)
+    public function __construct($id,$name,$type)
     {
         $this->id  = $id;
         $this->name = $name;
-        $this->tipo = $tipo;
+        $this->type = $type;
     }
 
     /**
@@ -37,32 +37,27 @@ class ProcessContractFile implements ShouldQueue
      */
     public function handle()
     {
-        if($this->tipo == 'fcl'){
+        if($this->type == 'fcl'){
             $Ncontracts = NewContractRequest::find($this->id);
-
             $file  =$Ncontracts->namefile;
             $s3 = \Storage::disk('s3_upload');
             $filePath = $this->name;
             $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('contracts/'.$filePath, $file, 'public');
-        }else if($this->tipo == 'gcfcl'){
+            $s3->put('Request/FCL/'.$filePath, $file, 'public');
+        }else if($this->type == 'gcfcl'){
             $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
-
             $file  =$Ncontracts->namefile;
             $s3 = \Storage::disk('s3_upload');
             $filePath = $this->name;
             $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('contracts/'.$filePath, $file, 'public');
+            $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
         }else{
             $Ncontracts = NewContractRequestLcl::find($this->id);
             $file  =$Ncontracts->namefile;
             $s3 = \Storage::disk('s3_upload');
             $filePath = $this->name;
             $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('contracts/'.$filePath, $file, 'public');
-
-
+            $s3->put('Request/LCL/'.$filePath, $file, 'public');
         }
-
     }
 }
