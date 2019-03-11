@@ -26,24 +26,25 @@
         <div class="client">
             <p><b>From:</b></p>
             <span id="destination_input" style="line-height: 0.5">
-                        <p>{{$user->name}} {{$user->lastname}}</p>
-                        <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
-                        <p>{{$user->companyUser->address}}</p>
-                        <p>{{$user->phone}}</p>
-                        <p>{{$user->email}}</p>
-                    </span>
-
+                <p>{{$user->name}} {{$user->lastname}}</p>
+                <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
+                <p>{{$user->companyUser->address}}</p>
+                <p>{{$user->phone}}</p>
+                <p>{{$user->email}}</p>
+            </span>
         </div>
         <div class="company text-right" style="float: right; width: 350px;">
             <p><b>To:</b></p>
             <span id="destination_input" style="line-height: 0.5">
-                        <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">-->
-                            <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
-                        <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
-                        <p>{{$quote->company->address}}</p>
-                        <p>{{$quote->contact->phone}}</p>
-                        <p>{{$quote->contact->email}}</p>
-                    </span>
+                @if($quote->company->logo!='')
+                    <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
+                @endif
+                <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
+                <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
+                <p>{{$quote->company->address}}</p>
+                <p>{{$quote->contact->phone}}</p>
+                <p>{{$quote->contact->email}}</p>
+            </span>
         </div>
     </div>
     <br>

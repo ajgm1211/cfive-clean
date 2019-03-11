@@ -1000,7 +1000,7 @@ class QuoteController extends Controller
                 $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
                 $explode=explode(';',$to);
                 foreach($explode as $item) {
-                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote,\Auth::user()->email));
                 }
             }else{
                 $request->session()->flash('message.nivel', 'danger');
@@ -2050,7 +2050,8 @@ class QuoteController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $airports = Airport::where('name','like','%' . $term. '%')->limit(10)->get();
+        $airports = Airport::where('name','like','%' . $term. '%')
+            ->orWhere('code','like','%' . $term. '%')->get();
         $formatted_airports = [];
         foreach ($airports as $airport) {
             $formatted_airports[] = ['id' => $airport->id, 'text' => $airport->display_name];
