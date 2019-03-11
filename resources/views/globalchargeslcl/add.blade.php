@@ -139,12 +139,7 @@
       <div class="col-lg-4">
         {!! Form::label('currencyl', 'Currency') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('localcurrency_id',$currency,null,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-bookmark-o"></i>
-            </span>
-          </span>
+          {{ Form::select('localcurrency_id',$currency,$currency_cfg->id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
         </div>
 
       </div>
@@ -156,8 +151,8 @@
   <div class="m-portlet__foot m-portlet__foot--fit">
     <div class="m-form__actions m-form__actions">
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      {!! Form::submit('add', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
