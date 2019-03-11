@@ -1,7 +1,7 @@
 /node_modules
-public/storage
+/public/storage
 /public/hot
-storage
+/public/pdf
 /vendor
 /.idea
 /.vscode

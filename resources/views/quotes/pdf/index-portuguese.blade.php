@@ -9,7 +9,9 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                @if($user->companyUser->logo!='')
+                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                @endif
             </div>
             <div id="company">
                 <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</b></span></div>

@@ -155,86 +155,88 @@ $validation_expire = 'Please enter validity date';
 
               </div>
               <br><br>
-              <table cellpadding='4' cellspacing='4' class="col-md-12  m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
-                <thead>
-                  <tr>
-                    <th title="Field #0">
-                      Type Route
-                    </th>
-                    <th title="Field #1">
-                      Type
-                    </th>
-                    <th title="Field #2">
-                      Origin
-                    </th>
-                    <th title="Field #2">
-                      Destination
-                    </th>
-                    <th title="Field #3">
-                      Charge Type
-                    </th>
-                    <th title="Field #4">
-                      Carrier
-                    </th>
-                    <th title="Field #7">
-                      Calculation type
-                    </th>
-                    <th title="Field #8">
-                      Amount
-                    </th>
-                    <th title="Field #9">
-                      Currency
-                    </th>
-                    <th title="Field #10">
-                      Options
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td width='10%'>
-                      <div class="m-radio-inline">
-                        <label class="m-radio">
-                          <input type="radio" onclick="activarCountry('divport','1')" checked='true' name="typeroute1"  value="port"> Port
-                          <span></span>
-                        </label>
-                        <label class="m-radio">
-                          <input type="radio"  onclick="activarCountry('divcountry','1')"  name="typeroute1" value="country"> Country
-                          <span></span>
-                        </label>
+              <div class="table-responsive"> 
+                <table cellpadding='4' cellspacing='4' class="col-md-12  m-table m-table--head-separator-primary" id="sample_editable_2" width="100%">
+                  <thead>
+                    <tr>
+                      <th title="Field #0">
+                        Type Route
+                      </th>
+                      <th title="Field #1">
+                        Type
+                      </th>
+                      <th title="Field #2">
+                        Origin
+                      </th>
+                      <th title="Field #2">
+                        Destination
+                      </th>
+                      <th title="Field #3">
+                        Charge Type
+                      </th>
+                      <th title="Field #4">
+                        Carrier
+                      </th>
+                      <th title="Field #7">
+                        Calculation type
+                      </th>
+                      <th title="Field #8">
+                        Amount
+                      </th>
+                      <th title="Field #9">
+                        Currency
+                      </th>
+                      <th title="Field #10">
+                        Options
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td width='10%'>
+                        <div class="m-radio-inline">
+                          <label class="m-radio">
+                            <input type="radio" onclick="activarCountry('divport','1')" checked='true' name="typeroute1"  value="port"> Port
+                            <span></span>
+                          </label>
+                          <label class="m-radio">
+                            <input type="radio"  onclick="activarCountry('divcountry','1')"  name="typeroute1" value="country"> Country
+                            <span></span>
+                          </label>
 
-                      </div>
-                    </td>
-                    <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
-                    <td width='15%'>
-                      <div class="divport1" >
-                        {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
-                      </div>
-                      <div class="divcountry1" hidden="true">
-                        {{ Form::select('country_orig1[]', $country,
-                        null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}
-                      </div>
-                    </td>
-                    <td width='12%'>
-                      <div class="divport1" >
-                        {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
-                      </div>
-                      <div class="divcountry1" hidden="true">
-                        {{ Form::select('country_dest1[]', $country,
-                        null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}
-                      </div>
-                    </td>
-                    <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
-                    <td width='10%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
-                    <td width='11%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
-                    <td width='10%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
-                    <td width='14%'>{{ Form::select('localcurrency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
-                    <td  width='8%'>-</td>
+                        </div>
+                      </td>
+                      <td width='10%'>{{ Form::select('type[]', $surcharge,null,['class'=>'m-select2-general form-control type','style' => 'width:100%;']) }}</td>
+                      <td width='15%'>
+                        <div class="divport1" >
+                          {{ Form::select('port_origlocal1[]', $harbor,null,['class'=>'m-select2-general form-control col-lg-7','multiple' => 'multiple','style' => 'width:70%;']) }}
+                        </div>
+                        <div class="divcountry1" hidden="true">
+                          {{ Form::select('country_orig1[]', $country,
+                          null,['class'=>'m-select2-general form-control col-lg-7' ,'multiple' => 'multiple','style' => 'width:70%;']) }}
+                        </div>
+                      </td>
+                      <td width='12%'>
+                        <div class="divport1" >
+                          {{ Form::select('port_destlocal1[]', $harbor,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:70%;']) }}
+                        </div>
+                        <div class="divcountry1" hidden="true">
+                          {{ Form::select('country_dest1[]', $country,
+                          null,['class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple','style' => 'width:70%;']) }}
+                        </div>
+                      </td>
+                      <td width='10%'>{{ Form::select('changetype[]', $typedestiny,null,['class'=>'custom-select form-control','style' => 'width:100%;']) }}</td>
+                      <td width='10%'>{{ Form::select('localcarrier_id1[]', $carrier,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','style' => 'width:100%;']) }}</td>
+                      <td width='11%'>{{ Form::select('calculationtype1[]', $calculationT,null,['class'=>'m-select2-general form-control','style' => 'width:100%;','multiple' => 'multiple']) }}</td>
+                      <td width='10%'> {!! Form::text('ammount[]', null, ['placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','style' => 'width:100%;']) !!}</td>
+                      <td width='14%'>{{ Form::select('localcurrency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general form-control','style' => 'width:100%;']) }}</td>
+                      <td  width='8%'>-</td>
 
-                  </tr>
+                    </tr>
 
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane" id="m_tabs_6_3" role="tabpanel">
               <div class="row">

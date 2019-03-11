@@ -55,19 +55,7 @@
 											<i class="fa fa-plus"></i>
 										</button>
 									</a>
-									@role('administrator')
-									<a href="{{route('ImportationGlobalchargeFcl.index')}}">
 
-										<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-											<span>
-												<span>
-													Import Globalchargers&nbsp;
-												</span>
-												<i class="la la-cloud-upload"></i>
-											</span>
-										</button>
-									</a>
-									@endrole
 									<a href="{{route('RequestsGlobalchargersFcl.create')}}">
 
 										<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >

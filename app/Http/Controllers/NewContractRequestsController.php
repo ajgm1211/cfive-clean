@@ -94,12 +94,12 @@ class NewContractRequestsController extends Controller
         }
 
         $data = array('DatOri'  => $DatOriBol,
-            'origin'  => $origin,
-            'DatDes'  => $DatDesBol,
-            'destiny' => $destiny,
-            'DatCar'  => $DatCarBol,
-            'carrier' => $carrier
-        );
+                      'origin'  => $origin,
+                      'DatDes'  => $DatDesBol,
+                      'destiny' => $destiny,
+                      'DatCar'  => $DatCarBol,
+                      'carrier' => $carrier
+                     );
         $type         = json_encode($type);
         $data         = json_encode($data);
 
@@ -126,8 +126,8 @@ class NewContractRequestsController extends Controller
             $message = 'has created an new request: '.$Ncontract->id;
             foreach($admins as $userNotifique){
                 \Mail::to($userNotifique->email)->send(new NewRequestToAdminMail($userNotifique->toArray(),
-                    $user->toArray(),
-                    $Ncontract->toArray()));
+                                                                                 $user->toArray(),
+                                                                                 $Ncontract->toArray()));
                 $userNotifique->notify(new N_general($user,$message));
             }
 
@@ -148,13 +148,16 @@ class NewContractRequestsController extends Controller
     {
         $Ncontract = NewContractRequest::find($id);
         $time       = new \DateTime();
-        $now        = $time->format('d-m-Y_s');
+        $now        = $time->format('d-m-y');
         $company    = CompanyUser::find($Ncontract->company_user_id);
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
-        $name       = $company->name.'_'.$now.'.'.$ext;
-        //return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        try{
+            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
     }
 
 
@@ -306,7 +309,7 @@ class NewContractRequestsController extends Controller
                 foreach ($usersCompa as $userCmp) {
                     if($userCmp->id != $Ncontract->user_id){
                         \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
-                            $Ncontract->toArray()));
+                                                                               $Ncontract->toArray()));
                     }
                 }
 
@@ -320,7 +323,7 @@ class NewContractRequestsController extends Controller
                 $usercreador->notify(new SlackNotification($message));
 
                 \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
-                    $Ncontract->toArray()));
+                                                                           $Ncontract->toArray()));
 
             }
 
