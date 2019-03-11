@@ -228,6 +228,8 @@ Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
     Route::get('lcl/rates/{id}/{bo}','ImportationLclController@FailedRatesView')->name('Failed.Rates.lcl.view');
     Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
     Route::resource('ImportationLCL','ImportationLclController');
+    Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
+    
 });
 
 Route::middleware(['auth'])->prefix('Exportation')->group(function () {

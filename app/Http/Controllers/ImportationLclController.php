@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Excel;
+use App\User;
 use PrvHarbor;
 use App\Harbor;
 use PrvRatesLcl;
@@ -13,12 +14,164 @@ use App\FailRateLcl;
 use App\CompanyUser;
 use App\ContractLcl;
 use Illuminate\Http\Request;
+use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ReprocesarRatesLclJob;
 use Illuminate\Support\Facades\Storage;
 
 class ImportationLclController extends Controller
 {
 
+    // Reprocess ---------------------------------------------------------
+    public function reprocessRatesLcl(Request $request, $id){
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$id)->count();
+        if($countfailrates <= 150){
+            $failrates = FailRateLcl::where('contractlcl_id','=',$id)->get();
+            // dd($failrates);
+            foreach($failrates as $failrate){
+
+                $carrierEX          = '';
+                $wmEX               = '';
+                $minimunEX          = '';
+                $currencyEX         = '';
+                $originResul        = '';
+                $originExits        = '';
+                $originV            = '';
+                $destinResul        = '';
+                $destinationExits   = '';
+                $destinationV       = '';
+                $originEX           = '';
+                $destinyEX          = '';
+                $wmVal              = '';
+                $minimunVal         = '';
+                $carrierVal         = '';
+                $carrierArr         = '';
+                $wmArr              = '';
+                $minimunArr         = '';
+
+
+                $curreExitBol       = false;
+                $originB            = false;
+                $destinyB           = false;
+                $wmExiBol           = false;
+                $minimunExiBol      = false;
+                $values             = true;
+                $carriExitBol       = false;
+
+
+                $originEX       = explode('_',$failrate->origin_port);
+                $destinyEX      = explode('_',$failrate->destiny_port);
+                $carrierArr     = explode('_',$failrate->carrier_id);
+                $wmArr          = explode('_',$failrate->uom);
+                $minimunArr     = explode('_',$failrate->minimum);
+                $currencyArr    = explode('_',$failrate->currency_id);
+
+
+                $carrierEX     = count($carrierArr);
+                $wmEX          = count($wmArr);
+                $minimunEX     = count($minimunArr);
+                $currencyEX    = count($currencyArr);
+
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+                if($carrierEX   <= 1 &&  $wmEX        <= 1 &&
+                   $minimunEX   <= 1 &&  $currencyEX  <= 1 ){
+
+                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($resultadoPortOri['boolean']){
+                        $originB = true;    
+                    }
+                    $originV  = $resultadoPortOri['puerto'];
+
+                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($resultadoPortDes['boolean']){
+                        $destinyB = true;    
+                    }
+                    $destinationV  = $resultadoPortDes['puerto'];
+
+
+                    //---------------- Carrier ------------------------------------------------------------------
+
+                    $carrierResul = str_replace($caracteres,'',$carrierArr[0]);
+                    $carrier = Carrier::where('name','=',$carrierResul)->first();
+                    if(empty($carrier->id) != true){
+                        $carriExitBol = true;
+                        $carrierVal = $carrier->id;
+                    }
+
+                    //---------------- W/M ------------------------------------------------------------------
+
+                    if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
+                        $wmExiBol = true;
+                        $wmVal    = (int)$wmArr[0];
+                    }
+
+                    //----------------- 40' -----------------------------------------------------------------
+
+                    if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
+                        $minimunExiBol = true;
+                        $minimunVal    = (int)$minimunArr[0];
+                    }
+
+                    if($wmVal == 0 && $minimunVal == 0){
+                        $values = false;
+                    }
+                    //----------------- Currency -----------------------------------------------------------
+
+                    $currenct = Currency::where('alphacode','=',$currencyArr[0])->orWhere('id','=',$currencyArr[0])->first();
+
+                    if(empty($currenct->id) != true){
+                        $curreExitBol = true;
+                        $currencyVal =  $currenct->id;
+                    }
+
+                    // Validacion de los datos en buen estado ----------------------------------------------
+                    if($originB == true && $destinyB == true &&
+                       $wmExiBol   == true && $minimunExiBol    == true &&
+                       $carriExitBol   == true && $curreExitBol   == true){
+                        $collecciont = '';
+                        if($values){
+                            $collecciont = RateLcl::create([
+                                'origin_port'      => $originV,
+                                'destiny_port'     => $destinationV,
+                                'carrier_id'       => $carrierVal,                            
+                                'contractlcl_id'   => $id,
+                                'uom'              => $wmVal,
+                                'minimum'          => $minimunVal,
+                                'currency_id'      => $currencyVal
+                            ]);
+                        }
+                        $failrate->forceDelete();
+
+                    } 
+                }
+            }
+
+            $contractData = ContractLcl::find($id);
+            $usersNotifiques = User::where('type','=','admin')->get();
+            foreach($usersNotifiques as $userNotifique){
+                $message = 'The Rates was Reprocessed. Contract: ' . $contractData->number ;
+                $userNotifique->notify(new N_general($userNotifique,$message));
+            }
+
+        } else {
+            ReprocesarRatesLclJob::dispatch($id);
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.content', 'The rates are reprocessing in the background');
+            return redirect()->route('Failed.Rates.lcl.view',[$id,'1']);
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The rates are being reprocessed');
+        $countfailratesNew = FailRateLcl::where('contractlcl_id','=',$id)->count();
+        if($countfailratesNew > 0){
+            return redirect()->route('Failed.Rates.lcl.view',[$id,'1']);
+        }else{
+            return redirect()->route('Failed.Rates.lcl.view',[$id,'0']);
+        }
+    }
+
+    // -------------------------------------------------------------------
     public function index()
     {
         $harbor         = harbor::all()->pluck('display_name','id');
@@ -278,7 +431,8 @@ class ImportationLclController extends Controller
                             //---------------------------- CURRENCY  ---------------------------------------------------------
 
                             if($curreExitBol == true){
-                                $currencyVal = $read[$requestobj[$currency]];
+                                $currencyVal = Currency::find($currencyValtwm);
+                                $currencyVal = $currencyVal->id;
                             }  
 
                             //---------------------------- w/m  --------------------------------------------------------------                                    
