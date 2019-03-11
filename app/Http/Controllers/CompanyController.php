@@ -10,6 +10,7 @@ use App\Quote;
 use App\Price;
 use App\User;
 use App\GroupUserCompany;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Intervention\Image\Facades\Image;
@@ -93,7 +94,7 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
-        $filepath = 'Logos/Clients/'.$file->getClientOriginalName();
+        $filepath_tmp = 'Logos/Clients/'.$file->getClientOriginalName();
 
         $company = new Company();
         $company->business_name = $request->business_name;
@@ -106,9 +107,15 @@ class CompanyController extends Controller
         $company->pdf_language = $request->pdf_language;
         $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
-            $company->logo = $filepath;
+            $company->logo = $filepath_tmp;
         }
         $company->save();
+
+        $update_company_url = Company::find($company->id);
+        $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+        $update_company_url->update();
+
+        $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
 
         if($file != ""){
             $name     = $file->getClientOriginalName();
@@ -191,7 +198,7 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
-        $filepath = 'Logos/Clients/'.$file->getClientOriginalName();
+        $filepath = 'Logos/Clients/'.$id.'/'.$file->getClientOriginalName();
         $company = Company::find($id);
 
         $company->business_name = $request->business_name;

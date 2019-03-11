@@ -178,7 +178,7 @@ return [
         App\Providers\EventIntercomServiceProvider::class,
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-
+        Barryvdh\Debugbar\ServiceProvider::class,
 
 
     ],
@@ -242,6 +242,7 @@ return [
         'PrvRatesLcl' => App\Helpers\Rates\HelperRatesLcl::class,
         'EventIntercom' => App\Helpers\Intercom::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

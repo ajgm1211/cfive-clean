@@ -34,13 +34,14 @@
       "yajra/laravel-datatables-oracle": "^8.7"
    },
    "require-dev": {
-       "filp/whoops": "^2.0",
-       "fzaninotto/faker": "^1.4",
-       "laravel/browser-kit-testing": "^4.0",
-       "laravel/dusk": "^4.0",
-       "mockery/mockery": "^1.0",
-       "nunomaduro/collision": "^2.0",
-       "phpunit/phpunit": "^7.0"
+      "barryvdh/laravel-debugbar": "^3.2",
+      "filp/whoops": "^2.0",
+      "fzaninotto/faker": "^1.4",
+      "laravel/browser-kit-testing": "^4.0",
+      "laravel/dusk": "^4.0",
+      "mockery/mockery": "^1.0",
+      "nunomaduro/collision": "^2.0",
+      "phpunit/phpunit": "^7.0"
    },
    "autoload": {
        "classmap": [
