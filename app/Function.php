@@ -16,7 +16,7 @@ function setearRouteKey($key)
   return $hashids->encode($key);
 }
 
-function obtenerRouteKey($key)
+function obtenerRouteKey($keyP)
 {
   $user =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->first();
   if(!empty($user)){
@@ -25,8 +25,13 @@ function obtenerRouteKey($key)
     $hash = 'cargofivepapa';
   }
   $hashids = new \Hashids\Hashids($hash);
-  $key = $hashids->decode($key);
-  return $key[0];
+  $key = $hashids->decode($keyP);
+  if(isset($key[0])){
+    return $key[0];
+  }else{
+    return $keyP;
+  }
+
 }
 
 

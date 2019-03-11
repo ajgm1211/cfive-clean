@@ -620,6 +620,15 @@
     @endif
   </div>
 </div>
+<div class="row">
+  @php
+
+  $arreglo->appends($_REQUEST)->render();
+
+  @endphp
+  {{ $arreglo->links() }}
+
+</div>
 @endsection
 @section('js')
 @parent

@@ -925,7 +925,7 @@ class QuoteAutomaticController extends Controller
     } */ 
 
 
-    $arreglo = $arreglo->get();
+    $arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
 
     // Fin condiciones del cero
     $formulario = $request;
@@ -2581,4 +2581,9 @@ class QuoteAutomaticController extends Controller
     $dias 	= abs($dias); $dias = floor($dias);
     return intval($dias);
   }
+  
+  public function show(){
+  
+  }
+  
 }
