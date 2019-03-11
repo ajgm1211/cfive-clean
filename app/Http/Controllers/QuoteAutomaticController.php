@@ -229,7 +229,7 @@ class QuoteAutomaticController extends Controller
       }
 
 
-      $arreglo =  array("prov_id" => '' ,"provider" => "Inland Haulage" ,"port_id" => $harborRate->id,"port_name" =>  $harborRate->name ,"km" => $kilometros  , "monto" => '0.00' ,'type' => $type,'type_currency' => $currency ,'idCurrency' => $currency );
+      $arreglo =  array("prov_id" => '' ,"provider" => "Inland Haulage","providerName" => 'Inland Haulage' ,"port_id" => $harborRate->id,"port_name" =>  $harborRate->name ,"km" => $kilometros  , "monto" => '0.00' ,'type' => $type,'type_currency' => $currency ,'idCurrency' => $currency );
 
 
       $arrayDetail = array("cant_cont" => '1' , "sub_in" => '0.00', "des_in" => 'Inlands' ,'amount' => '1.00','currency' => 'USD' ,'price_unit' => '0') ; 
@@ -413,7 +413,7 @@ class QuoteAutomaticController extends Controller
         $query->where('type',$modality_inland)->orwhere('type','3');
       });
       $inlands = $inlands->get();
-      //dd($inlands);
+      
       // se agregan los aditional km
 
       foreach($inlands as $inlandsValue){
@@ -483,7 +483,7 @@ class QuoteAutomaticController extends Controller
                     }
                   }
                   if($details->type == 'forty' && $request->input('forty') != "0"){
-                    $distancia = intval($km[0]);
+
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40 = ($request->input('forty') * $details->ammount) / $rateI;
                       $monto += $sub_40;
@@ -512,7 +512,7 @@ class QuoteAutomaticController extends Controller
                     }
                   }
                   if($details->type == 'fortyhc' && $request->input('fortyhc') != "0"){
-                    $distancia = intval($km[0]);
+
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40hc = ($request->input('fortyhc') * $details->ammount) / $rateI;
                       $monto += $sub_40hc;
@@ -571,7 +571,6 @@ class QuoteAutomaticController extends Controller
                   if($km40 && $request->input('forty') != "0" ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
                     $sub_40 = $request->input('forty') * $montoKm;
-                    $price_per_unit = number_format($sub_40 / $montoKm, 2, '.', '');
                     $monto += $sub_40;
                     $amount_inland = ($distancia * $inlandsValue->inlandadditionalkms->km_40) * $request->input('forty');
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -622,7 +621,7 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
-                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia, "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
+                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia, "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id );
 
                   $arregloInland['inlandDetails'] = $inlandDetails;
                   $data[] =$arregloInland;
@@ -634,12 +633,12 @@ class QuoteAutomaticController extends Controller
       }//foreach inlands
       if(!empty($data)){
         $collection = Collection::make($data);
-        // dd($collection); //  completo
+       // dd($collection); //  completo
         $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
           return $test;
         });
-        //   dd($inlandDestiny); // filtraor por el minimo
+           //dd($inlandDestiny); // filtraor por el minimo
       }
 
     }
@@ -857,7 +856,7 @@ class QuoteAutomaticController extends Controller
 
                   $monto = number_format($monto, 2, '.', '');
                   if($monto > 0){
-                    $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage" ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
+                    $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
 
                     $arregloInland['inlandDetails'] = $inlandDetailsOrig;
                     $dataOrig[] = $arregloInland;
@@ -2581,9 +2580,9 @@ class QuoteAutomaticController extends Controller
     $dias 	= abs($dias); $dias = floor($dias);
     return intval($dias);
   }
-  
+
   public function show(){
-  
+
   }
-  
+
 }
