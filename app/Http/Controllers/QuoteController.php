@@ -2050,7 +2050,8 @@ class QuoteController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $airports = Airport::where('name','like','%' . $term. '%')->limit(10)->get();
+        $airports = Airport::where('name','like','%' . $term. '%')
+            ->orWhere('code','like','%' . $term. '%')->get();
         $formatted_airports = [];
         foreach ($airports as $airport) {
             $formatted_airports[] = ['id' => $airport->id, 'text' => $airport->display_name];
