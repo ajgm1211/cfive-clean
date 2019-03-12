@@ -621,12 +621,8 @@
   </div>
 </div>
 <div class="row">
-  @php
+{!! $arreglo->appends(Request::capture()->except('page'))->render() !!}
 
-  $arreglo->appends($_REQUEST)->render();
-
-  @endphp
-  {{ $arreglo->links() }}
 
 </div>
 @endsection
