@@ -174,9 +174,9 @@ class QuoteAutomaticLclController extends Controller
     //Colecciones
 
     $collectionRate = new Collection();
-    
-    
-    
+
+
+
 
 
     // Rates LCL
@@ -191,7 +191,7 @@ class QuoteAutomaticLclController extends Controller
                          $b->where('company_id', '=',$company_id);
                        })->orDoesntHave('contract_company_restriction');
                      })->whereHas('contract', function($q) use($date,$company_user_id){
-      
+
       $q->where('validity', '<=',$date)->where('expire', '>=', $date)->where('company_user_id','=',$company_user_id);
     })->get();
 
@@ -825,6 +825,7 @@ class QuoteAutomaticLclController extends Controller
         }
 
         if(in_array($global->calculationtypelcl_id, $arrayBlHblShip)){
+          $cantidadT = 1;
           foreach($global->globalcharcarrierslcl as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id  || $carrierGlobal->carrier_id ==  $carrier_all){
               if($global->typedestiny_id == '1'){
@@ -1317,8 +1318,8 @@ class QuoteAutomaticLclController extends Controller
           }
         });
       }
-      
-       // Globales 
+
+      // Globales 
       if(!empty($dataGOrig)){
         $collectGOrig = Collection::make($dataGOrig);
 
