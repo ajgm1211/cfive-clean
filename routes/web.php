@@ -242,6 +242,12 @@ Route::middleware(['auth'])->prefix('Harbors')->group(function () {
     Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
 });
 
+Route::middleware(['auth'])->prefix('Countries')->group(function () {
+    Route::resource('Countries','CountryController');
+    Route::get('/loadViewAdd','CountryController@loadviewAdd')->name('load.View.Add.country');
+    Route::get('/destroyharbor/{id}','CountryController@destroycountrie')->name('destroy.countrie');
+});
+
 Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 //Companies
