@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Harbors')
+@section('title', 'Countries')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -12,7 +12,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Manage Harbors
+                        Manage Countries
                     </h3>
                 </div>
             </div>
@@ -53,17 +53,15 @@
                 <div class="row align-items-center">
                     <a href="#" class="btn btn-primary " onclick="showModal(1,0)" > Add <span class="la la-plus"></span></a>
                     <div class="col-md-12">
-                        <table class="table m-table m-table--head-separator-primary"  id="myatest" >
+                        <table class="table m-table m-table--head-separator-primary"  id="myatest" width="100%" style="width:100%">
                             <thead >
                                 <tr>
-                                    <th style="width:3%">ID</th>
-                                    <th style="width:7%">Name</th>
-                                    <th style="width:7%">Code</th>
-                                    <th style="width:8%">Display Name</th>
-                                    <th style="width:10%">coordinates</th>
-                                    <th style="width:6%">Country ID</th>
-                                    <th style="width:40%">Variation</th>
-                                    <th style="width:5%">Options</th>
+                                    <th >ID</th>
+                                    <th >Name</th>
+                                    <th >Code</th>
+                                    <th >Continent</th>
+                                    <th >Variation</th>
+                                    <th >Options</th>
                                 </tr>
                             </thead>
 
@@ -76,12 +74,12 @@
 
 
 
-        <div class="modal fade bd-example-modal-lg" id="addHarborModal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="addCountriesModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Harbors
+                            Countries
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -127,20 +125,20 @@
 
     function showModal(selector,id){
         if(selector == 1){
-            var url = '{{ route("load.View.Add") }}';
+            var url = '{{ route("load.View.Add.country") }}';
             $('#modal-body').load(url,function(){
-                $('#addHarborModal').modal();
+                $('#addCountriesModal').modal();
             });
         } else if(selector == 2){
-            var url = '{{ route("UploadFile.show",":id") }}';
+            var url = '{{ route("Countries.show",":id") }}';
             url = url.replace(':id',id);
             $('#modal-body').load(url,function(){
-                $('#addHarborModal').modal();
+                $('#addCountriesModal').modal();
             });
         }
     }
 
-    $(document).on('click','.BorrarHarbor', function(e){
+    $(document).on('click','.BorrarCountry', function(e){
         var elemento = $(this);
         var id = $(elemento).attr('data-id-remove');
         swal({
@@ -154,7 +152,7 @@
         }).then(function(result){
             if (result.value) {
 
-                url='{!! route("destroy.harbor",":id") !!}';
+                url='{!! route("destroy.countrie",":id") !!}';
                 url = url.replace(':id', id);
                 // $(this).closest('tr').remove();
                 $.ajax({
@@ -164,7 +162,7 @@
                         if(data == 1){
                             swal(
                                 'Deleted!',
-                                'Your rate has been deleted.',
+                                'Your country has been deleted.',
                                 'success'
                             )
                             $(elemento).closest('tr').remove();
@@ -177,7 +175,7 @@
             } else if (result.dismiss === 'cancel') {
                 swal(
                     'Cancelled',
-                    'Your rate is safe :)',
+                    'Your country is safe :)',
                     'error'
                 )
             }
@@ -188,20 +186,19 @@
         $('#myatest').DataTable({
             processing: true,
             //serverSide: true,
-            ajax: '{!! route("UploadFile.create") !!}',
+            ajax: '{!! route("Countries.create") !!}',
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'name', name: 'name' },
                 { data: 'code', name: 'code' },
-                { data: 'display_name', name: 'display_name' },
-                { data: 'coordinates', name: 'coordinates' },
-                { data: 'country_id', name: "country_id" },
-                { data: 'varation', name: "varation" },
+                { data: 'continent', name: 'continent' },
+                { data: 'variation', name: 'variation' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             "lengthChange": false,
             "searching": true,
             "ordering": true,
+            "width": true,
             "info": true,
             "deferLoading": 57,
             "autoWidth": false,
