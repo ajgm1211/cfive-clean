@@ -15,6 +15,7 @@ class ProcessLogo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $id;
+    protected $filepath;
     protected $name;
     protected $type;
     /**
@@ -22,10 +23,11 @@ class ProcessLogo implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($id,$name,$type)
+    public function __construct($id,$filepath,$name,$type)
     {
         $this->id  = $id;
         $this->name = $name;
+        $this->filepath = $filepath;
         $this->type = $type;
     }
 
@@ -36,21 +38,11 @@ class ProcessLogo implements ShouldQueue
      */
     public function handle()
     {
-        if($this->type==1){
-            $user = User::find($this->id);
-            $file  =$user->companyUser->logo;
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = $this->name;
+        $file = $this->name;
+        $s3 = \Storage::disk('s3_upload');
+        $filePath = $this->filepath;
 
-            $file = \Storage::disk('logos')->get($file);
-            $s3->put($filePath, $file, 'public');
-        }else{
-            $file = $this->name;
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = $this->name;
-
-            $file = \Storage::disk('logos')->get($file);
-            $s3->put($filePath, $file, 'public');
-        }
+        $file = \Storage::disk('logos')->get($file);
+        $s3->put($filePath, $file, 'public');
     }
 }
