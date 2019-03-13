@@ -99,7 +99,8 @@
                                 <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
                             </label>
                             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                            <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{{route('testExcelImportation')}}" class="btn btn-primary">example &nbsp;<span class="la la-refresh"></span></a>
                             <br>
 
                         </div>

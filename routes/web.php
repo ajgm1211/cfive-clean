@@ -228,6 +228,8 @@ Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
   Route::get('lcl/rates/{id}/{bo}','ImportationLclController@FailedRatesView')->name('Failed.Rates.lcl.view');
   Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
   Route::resource('ImportationLCL','ImportationLclController');
+  Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
+
 });
 
 Route::middleware(['auth'])->prefix('Exportation')->group(function () {
@@ -238,6 +240,12 @@ Route::middleware(['auth'])->prefix('Harbors')->group(function () {
   Route::resource('UploadFile','FileHarborsPortsController');
   Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
   Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+});
+
+Route::middleware(['auth'])->prefix('Countries')->group(function () {
+  Route::resource('Countries','CountryController');
+  Route::get('/loadViewAdd','CountryController@loadviewAdd')->name('load.View.Add.country');
+  Route::get('/destroyharbor/{id}','CountryController@destroycountrie')->name('destroy.countrie');
 });
 
 Route::resource('contracts', 'ContractsController')->middleware('auth');

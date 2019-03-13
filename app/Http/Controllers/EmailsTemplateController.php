@@ -195,9 +195,7 @@ class EmailsTemplateController extends Controller
       $body = str_replace('{First Name}',$contact->first_name,$template->menssage);
       $body = str_replace('{Last Name}',$contact->last_name,$body);
       $body = str_replace('{Company Name}',$company->business_name,$body);
-      $body = str_replace('{Quote ID}',$quote_id,$body);
-
-
+      
       return response()->json(['id'=>$template->id,'subject'=>$template->subject,'message'=>$body]);
    }    
 

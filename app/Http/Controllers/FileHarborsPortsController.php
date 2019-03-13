@@ -49,7 +49,7 @@ class FileHarborsPortsController extends Controller
     {  
 
         foreach($request->variation as $variation){
-            $arreglo[] =  strtolower($variation);
+            $arreglo[] =  trim(strtolower($variation));
         }
         $type['type'] = $arreglo;
         $json = json_encode($type);
@@ -91,7 +91,7 @@ class FileHarborsPortsController extends Controller
     {
 
         foreach($request->variation as $variation){
-            $arreglo[] =  strtolower($variation);
+            $arreglo[] =  trim(strtolower($variation));
         }
 
         $type['type'] = $arreglo;

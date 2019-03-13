@@ -14,7 +14,6 @@ use App\Mail\RequestLclToUserMail;
 use App\Mail\NewRequestLclToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
-use EventIntercom;
 
 class NewContractRequestLclController extends Controller
 {
@@ -127,10 +126,6 @@ class NewContractRequestLclController extends Controller
                                                                             $Ncontract->toArray()));
         $userNotifique->notify(new N_general($user,$message));
       }
-
-      //evento Intercom 
-      $event = new  EventIntercom();
-      $event->event_newRequestLCL();
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.content', 'Your request was created');
