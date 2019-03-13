@@ -7,7 +7,7 @@
         <div class="row">
           <div class="col-lg-4">
             <label>
-              {!! Form::label('Type Route', 'Type Route') !!}
+              {!! Form::label('Type Route', 'Type of route') !!}
             </label>
             <div class="m-radio-inline">
               <label class="m-radio">
@@ -125,7 +125,6 @@
     </div>
   </div>  
   <br>
-  <br>
   <div class="m-portlet__foot m-portlet__foot--fit">
     <br>
     <div class="m-form__actions m-form__actions">
@@ -135,6 +134,7 @@
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
+    <br>
   </div>
   {!! Form::close() !!}
 </div>
@@ -142,10 +142,8 @@
 <script src="/js/globalcharges.js"></script>
 <script>
 
-
   $('.m-select2-general').select2({
     placeholder: "Select an option"
   });
-
 
 </script>
