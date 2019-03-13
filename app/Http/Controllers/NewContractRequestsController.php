@@ -144,7 +144,6 @@ class NewContractRequestsController extends Controller
       $request->session()->flash('message.nivel', 'error');
       $request->session()->flash('message.content', 'Your request was not created');
       return redirect()->route('contracts.index');
-
     }
   }
   //Para descargar el archivo
@@ -163,8 +162,6 @@ class NewContractRequestsController extends Controller
       return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
     }
   }
-
-
 
   public function edit($id)
   {

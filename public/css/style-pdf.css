@@ -158,6 +158,10 @@ table .no {
     background: #57B223;
 }
 
+table .footer {
+    background: #57B223 !important;
+}
+
 table .desc {
     text-align: left;
 }

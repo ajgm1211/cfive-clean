@@ -317,6 +317,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
   Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
   Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
   Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+  Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
   Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
   Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
   Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
