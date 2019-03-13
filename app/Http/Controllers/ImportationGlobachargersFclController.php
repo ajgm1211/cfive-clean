@@ -907,10 +907,10 @@ class ImportationGlobachargersFclController extends Controller
                     return $globalcharges->carrier;
                 })
                 ->editColumn('validitytolb', function ($globalcharges){ 
-                    return $globalcharges->validity;
+                    return $globalcharges->expire;
                 })
                 ->editColumn('validityfromlb', function ($globalcharges){ 
-                    return $globalcharges->expire;
+                    return $globalcharges->validity;
                 })
                 ->addColumn('action', function ( $globalcharges) {
                     return '<a href="#" class="" onclick="showModalsavetoglobalcharge('.$globalcharges->id.',2)"><i class="la la-edit"></i></a>

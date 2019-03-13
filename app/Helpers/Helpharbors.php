@@ -18,7 +18,7 @@ class Helpharbors {
       $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
 
-      $portResul = str_replace($caracteres,'',strtolower($sin_via[0]));
+      $portResul = str_replace($caracteres,'',trim(strtolower($sin_via[0])));
 
       if(empty($portResul) != true){
 
