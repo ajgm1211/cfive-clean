@@ -2580,6 +2580,15 @@ class QuoteAutomaticController extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
+    //$arreglo = $arreglo->orderBy();
+
+
+    $arreglo->setCollection(
+      collect(
+        collect($arreglo->items())->sortBy('totalQuoteSin')
+      )->values()
+    );
+
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
   }
 

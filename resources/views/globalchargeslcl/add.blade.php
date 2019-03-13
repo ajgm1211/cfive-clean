@@ -113,7 +113,7 @@
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::text('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the Ammount','class' => 'form-control m-input' ,'required' => 'true']) !!}
+          {!! Form::nummber('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the Ammount','class' => 'form-control m-input' ,'required' => 'true','min' => '0','step'=>'0.01']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
