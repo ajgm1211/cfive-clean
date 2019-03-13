@@ -85,8 +85,8 @@
                         <th title="Destination">
                             Destination
                         </th>
-                        <th title="Ammount">
-                            Ammount
+                        <th title="Amount">
+                            Amount
                         </th>
                         <th title="Markup">
                             Markup
