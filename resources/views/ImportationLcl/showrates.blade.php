@@ -100,8 +100,8 @@
                                         <strong id="strfail">{{$countfailrates}}</strong>
                                         <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
                                     </label>
-                                    <!--&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-<a href="{{route('Reprocesar.Rates',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>-->
+                                    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="{{route('Reprocesar.Rates.lcl',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
                                 </div>
                             </div>
                             <br>
@@ -274,7 +274,7 @@
 
 
 
-            
+
             function showModalsavetorate(id,operation){
 
                 if(operation == 1){
