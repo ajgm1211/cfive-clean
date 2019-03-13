@@ -9,6 +9,7 @@ use PrvRates;
 use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
+use App\Country;
 use App\FileTmp;
 use App\Company;
 use App\Contact;
@@ -25,6 +26,7 @@ use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
 use App\CalculationType;
+use App\LocalCharCountry;
 use App\LocalCharCarrier;
 use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
@@ -423,33 +425,40 @@ class ImportationController extends Controller
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
     public function UploadFileNewContract(Request $request){
         //dd($request->all());
-        $now = new \DateTime();
-        $now = $now->format('dmY_His');
-        $type           = $request->type;
-        $carrierVal     = $request->carrier;
-        $typedestinyVal = $request->typedestiny;
-        $destinyArr     = $request->destiny;
-        $originArr      = $request->origin;
-        $CompanyUserId  = $request->CompanyUserId;
-        $carrierBol     = false;
-        $destinyBol     = false;
-        $originBol      = false;
-        $typedestinyBol = false;
-        $fortynorBol    = false;
-        $fortyfiveBol   = false;
-        $filebool       = false;
-        $data           = collect([]);
-        $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        $harbor         = harbor::all()->pluck('display_name','id');
-        $carrier        = carrier::all()->pluck('name','id');
+        $now                = new \DateTime();
+        $now                = $now->format('dmY_His');
+        $type               = $request->type;
+        $carrierVal         = $request->carrier;
+        $typedestinyVal     = $request->typedestiny;
+        $destinyArr         = $request->destiny;
+        $originArr          = $request->origin;
+        $CompanyUserId      = $request->CompanyUserId;
+        $statustypecurren   = $request->valuesCurrency;
+        $statusPortCountry  = $request->valuesportcountry;
 
-        $file           = $request->file('file');
-        $ext            = strtolower($file->getClientOriginalExtension());
-        $validator      = \Validator::make(
+        $carrierBol         = false;
+        $destinyBol         = false;
+        $originBol          = false;
+        $typedestinyBol     = false;
+        $fortynorBol        = false;
+        $fortyfiveBol       = false;
+        $filebool           = false;
+
+        $data               = collect([]);
+        $typedestiny        = TypeDestiny::all()->pluck('description','id');
+        $harbor             = harbor::all()->pluck('display_name','id');
+        $carrier            = carrier::all()->pluck('name','id');
+        $Contract_id;
+
+        $file       = $request->file('file');
+        $ext        = strtolower($file->getClientOriginalExtension());
+
+        $validator  = \Validator::make(
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
-        $Contract_id;
+
+
         if ($validator->fails()) {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
@@ -482,7 +491,6 @@ class ImportationController extends Controller
             return redirect()->route('contracts.edit',$request->contract_id);
         }
 
-        $statustypecurren = $request->valuesCurrency;
         $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
 
         // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
@@ -503,6 +511,13 @@ class ImportationController extends Controller
             array_push($targetsArr,"45'");
         } else {
             $fortyfiveBol = true;
+        }
+
+        /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
+        , si es 1 el solo se mapean puertos        
+        */
+        if($statusPortCountry == 2){
+            array_push($targetsArr,"Differentiator");
         }
 
         /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
@@ -596,8 +611,9 @@ class ImportationController extends Controller
                                                              'targetsArr',
                                                              'coordenates',
                                                              'countTarges',
-                                                             'statustypecurren',
                                                              'CompanyUserId',
+                                                             'statustypecurren',
+                                                             'statusPortCountry',
                                                              'typedestiny'));
     }
 
@@ -605,7 +621,6 @@ class ImportationController extends Controller
     public function ProcessContractFcl(Request $request){
         //dd($request->all());
         $requestobj = $request->all();
-        //try{
         $errors = 0;
         Excel::selectSheetsByIndex(0)
             ->Load(\Storage::disk('UpLoadFile')
@@ -1051,19 +1066,6 @@ class ImportationController extends Controller
         $contract->status = 'publish';
         $contract->update();
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
-
-        /*} catch(\Illuminate\Database\QueryException $e){
-
-            Storage::delete($request->FileName);
-            FileTmp::where('contract_id','=',$requestobj['Contract_id'])->delete();
-            $contractobj = new Contract();
-            $contractobj = Contract::find($requestobj['Contract_id']);
-            $contractobj->delete();
-
-            $requestobj->session()->flash('message.nivel', 'danger');
-            $requestobj->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('importaion.fcl');
-        }*/
     }
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
@@ -1076,6 +1078,7 @@ class ImportationController extends Controller
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
+
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);

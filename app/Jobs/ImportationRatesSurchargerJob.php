@@ -7,36 +7,38 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+
+use Excel;
+use App\Rate;
+use App\User;
+use PrvHarbor;
+use App\Harbor;
 use App\Company;
-use App\ContractUserRestriction;
-use App\ContractCompanyRestriction;
-use Illuminate\Http\Request;
-use App\Contract;
 use App\Contact;
 use App\Country;
 use App\Carrier;
-use App\Harbor;
-use App\Rate;
-use PrvHarbor;
+use App\FileTmp;
+use App\Contract;
 use App\FailRate;
 use App\Currency;
-use App\CalculationType;
-use App\LocalCharge;
 use App\Surcharge;
-use App\LocalCharCarrier;
-use App\LocalCharPort;
-use App\User;
+use App\LocalCharge;
 use App\TypeDestiny;
+use App\LocalCharPort;
 use App\FailSurCharge;
+use App\CalculationType;
+use App\LocalCharCarrier;
+use App\LocalCharCountry;
+use Illuminate\Http\Request;
+use App\ContractUserRestriction;
+use App\Notifications\N_general;
+use App\ContractCompanyRestriction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Excel;
-use Illuminate\Support\Facades\Log;
-use App\Http\Requests\UploadFileRateRequest;
-use App\FileTmp;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use App\Http\Requests\UploadFileRateRequest;
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -91,10 +93,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $statustypecurren       = "statustypecurren";
                 $contractId             = "Contract_id";
                 $typedestiny            = "Type_Destiny";
+                $differentiator         = "Differentiator";
                 $chargeVal              = $requestobj['chargeVal'];
                 $contract_id            = $requestobj['Contract_id'];
                 $statusexistfortynor    = $requestobj['existfortynor'];
                 $statusexistfortyfive   = $requestobj['existfortyfive'];
+                $statusPortCountry      = $requestobj['statusPortCountry'];
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
@@ -142,6 +146,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $fortyhcVal          = '';
                     $fortynorVal         = '';
                     $fortyfiveVal        = '';
+                    $differentiatorVal   = '';
 
                     $originBol               = false;
                     $origExiBol              = false;
@@ -171,6 +176,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $fortyhcArrBol           = false;
                     $fortynorArrBol          = false;
                     $fortyfiveArrBol         = false;
+                    $differentiatorBol       = false;
                     $values                  = true;
 
                     //--------------------------------------------------------
@@ -211,6 +217,14 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             }
                         }
 
+                        //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
+                        if($statusPortCountry == 2){
+                            $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
+                            if(strnatcasecmp($differentiatorVal,'country') == 0){
+                                $differentiatorBol = true;
+                            } 
+                        }
+
                         //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
 
                         if($requestobj['existorigin'] == 1){
@@ -219,11 +233,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $randons = $requestobj[$origin];
                         } else {
                             $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                            $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-                            if($resultadoPortOri['boolean']){
-                                $origExiBol = true;    
+                            if($differentiatorBol == false){
+                                // El origen es  por puerto
+                                $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                                if($resultadoPortOri['boolean']){
+                                    $origExiBol = true;    
+                                }
+                                $originVal  = $resultadoPortOri['puerto'];
+                            } else if($differentiatorBol == true){
+                                // El origen es  por country
+                                $resultadocountrytOri = PrvHarbor::get_country($originVal);
+                                if($resultadocountrytOri['boolean']){
+                                    $origExiBol = true;    
+                                }
+                                $originVal  = $resultadocountrytOri['country'];
                             }
-                            $originVal  = $resultadoPortOri['puerto'];
 
                         }
                         //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
@@ -233,11 +257,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $randons = $requestobj[$destiny];
                         } else {
                             $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                            $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
-                            if($resultadoPortDes['boolean']){
-                                $destiExitBol = true;    
+                            if($differentiatorBol == false){
+                                // El origen es  por Harbors
+                                $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                                if($resultadoPortDes['boolean']){
+                                    $destiExitBol = true;    
+                                }
+                                $destinyVal  = $resultadoPortDes['puerto'];
+                            } else if($differentiatorBol == true){
+                                //El destino es por Country
+                                $resultadocountryDes = PrvHarbor::get_country($destinyVal);
+                                if($resultadocountryDes['boolean']){
+                                    $destiExitBol = true;    
+                                }
+                                $destinyVal  = $resultadocountryDes['country'];
                             }
-                            $destinyVal  = $resultadoPortDes['puerto'];
                         }
 
                         //---------------- CURRENCY VALUES ------------------------------------------------------
@@ -665,53 +699,58 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $surchargeVal = $read[$requestobj[$Charge]].'_E_E';
                         }
                         //////////////////////////////////////////////////////////////////////////////////////////////////////
-                        /*   $prueba = collect([]);
+                        /* $pruebas = collect([]);
+                        $prueba = collect([]);
 
-            $prueba = [
-              '$carriExitBol'           => $carriExitBol,
-              '$origExiBol'             => $origExiBol,
-              '$destiExitBol'           => $destiExitBol,
-              '$twentyExiBol'           => $twentyExiBol,
-              '$fortyExiBol'            => $fortyExiBol,
-              '$fortyhcExiBol'          => $fortyhcExiBol,
-              '$fortynorExiBol'         => $fortynorExiBol,
-              '$fortyfiveExiBol'        => $fortyfiveExiBol,
-              '$calculationtypeExiBol'  => $calculationtypeExiBol,
-              '$variantecurrency'       => $variantecurrency,
-              '$typeExiBol'             => $typeExiBol,
-              '$values'                 => $values,
-              '$carrierVal'             => $carrierVal,
-              '$originVal'              => $originVal,
-              '$destinyVal'             => $destinyVal,
-              '$currencyVal'            => $currencyVal,
-              '$currencyValtwen'        => $currencyValfor,
-              '$currencyValfor'         => $currencyValfor,
-              '$currencyValforHC'       => $currencyValforHC,
-              '$currencyValfornor'      => $currencyValfornor,
-              '$currencyValforfive'     => $currencyValforfive,
-              '$calculationtypeVal'     => $calculationtypeVal,
-              '$surchargeVal'           => $surchargeVal,
-              '$twentyArr'              => $twentyArr,
-              '$fortyArr'               => $fortyArr,
-              '$fortyhcArr'             => $fortyhcArr,                 
-              '$twentyVal'              => $twentyVal,
-              '$fortyVal'               => $fortyVal,
-              '$fortyhcVal'             => $fortyhcVal,
-              '$fortynorVal'            => $fortynorVal,
-              '$fortyfiveVal'           => $fortyfiveVal
-            ];
+                        $prueba = [
+                            '$carriExitBol'           => $carriExitBol,
+                            '$origExiBol'             => $origExiBol,
+                            '$destiExitBol'           => $destiExitBol,
+                            '$twentyExiBol'           => $twentyExiBol,
+                            '$fortyExiBol'            => $fortyExiBol,
+                            '$fortyhcExiBol'          => $fortyhcExiBol,
+                            '$fortynorExiBol'         => $fortynorExiBol,
+                            '$fortyfiveExiBol'        => $fortyfiveExiBol,
+                            '$calculationtypeExiBol'  => $calculationtypeExiBol,
+                            '$variantecurrency'       => $variantecurrency,
+                            '$typeExiBol'             => $typeExiBol,
+                            '$differentiatorBol'      => $differentiatorBol,
+                            '$values'                 => $values,
+                            '$carrierVal'             => $carrierVal,
+                            '$originVal'              => $originVal,
+                            '$destinyVal'             => $destinyVal,
+                            '$currencyVal'            => $currencyVal,
+                            '$currencyValtwen'        => $currencyValfor,
+                            '$currencyValfor'         => $currencyValfor,
+                            '$currencyValforHC'       => $currencyValforHC,
+                            '$currencyValfornor'      => $currencyValfornor,
+                            '$currencyValforfive'     => $currencyValforfive,
+                            '$calculationtypeVal'     => $calculationtypeVal,
+                            '$differentiatorVal'      => $differentiatorVal,
+                            '$surchargeVal'           => $surchargeVal,
+                            '$twentyArr'              => $twentyArr,
+                            '$fortyArr'               => $fortyArr,
+                            '$fortyhcArr'             => $fortyhcArr,                 
+                            '$twentyVal'              => $twentyVal,
+                            '$fortyVal'               => $fortyVal,
+                            '$fortyhcVal'             => $fortyhcVal,
+                            '$fortynorVal'            => $fortynorVal,
+                            '$fortyfiveVal'           => $fortyfiveVal
+                        ];
 
-            if($statusexistfortynor == 1){
-              $cargaNor = ['$fortynorArr' => $fortynorArr];
-              $prueba->push($cargaNor);
-            }
+                        if($statusexistfortynor == 1){
+                            $cargaNor = ['$fortynorArr' => $fortynorArr];
+                            $prueba->push($cargaNor);
+                        }
 
-            if($statusexistfortyfive == 1){
-              $cargaFive = ['$fortyfiveArr' => $fortyfiveArr];
-              $prueba->push($cargaFive);
-            }
+                        if($statusexistfortyfive == 1){
+                            $cargaFive = ['$fortyfiveArr' => $fortyfiveArr];
+                            $prueba->push($cargaFive);
+                        }
 
-            dd($prueba);*/
+                        $pruebas->push($prueba);
+
+                        //dd($prueba);*/
 
                         if($carriExitBol            == true
                            && $origExiBol           == true
@@ -743,7 +782,29 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             $currencyVal = $currencyValtwen;
                                         }
 
-                                        $ratesArre = Rate::create([
+                                        if($differentiatorBol == false){
+                                            $ratesArre = Rate::create([
+                                                'origin_port'    => $originVal,
+                                                'destiny_port'   => $destinyVal,
+                                                'carrier_id'     => $carrierVal,
+                                                'contract_id'    => $contractIdVal,
+                                                'twuenty'        => $twentyVal,
+                                                'forty'          => $fortyVal,
+                                                'fortyhc'        => $fortyhcVal,
+                                                'fortynor'       => $fortynorVal,
+                                                'fortyfive'      => $fortyfiveVal,
+                                                'currency_id'    => $currencyVal
+                                            ]);
+                                            //dd($ratesArre);
+                                        }
+                                    } 
+                                }else {
+                                    // fila por puerto, sin expecificar origen ni destino manualmente
+                                    if($requestobj[$statustypecurren] == 2){
+                                        $currencyVal = $currencyValtwen;
+                                    }
+                                    if($differentiatorBol == false){
+                                        $ratesArre =  Rate::create([
                                             'origin_port'    => $originVal,
                                             'destiny_port'   => $destinyVal,
                                             'carrier_id'     => $carrierVal,
@@ -755,28 +816,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             'fortyfive'      => $fortyfiveVal,
                                             'currency_id'    => $currencyVal
                                         ]);
+
                                         //dd($ratesArre);
-                                    } 
-                                }else {
-                                    // fila por puerto, sin expecificar origen ni destino manualmente
-                                    if($requestobj[$statustypecurren] == 2){
-                                        $currencyVal = $currencyValtwen;
                                     }
-
-                                    $ratesArre =  Rate::create([
-                                        'origin_port'    => $originVal,
-                                        'destiny_port'   => $destinyVal,
-                                        'carrier_id'     => $carrierVal,
-                                        'contract_id'    => $contractIdVal,
-                                        'twuenty'        => $twentyVal,
-                                        'forty'          => $fortyVal,
-                                        'fortyhc'        => $fortyhcVal,
-                                        'fortynor'       => $fortynorVal,
-                                        'fortyfive'      => $fortyfiveVal,
-                                        'currency_id'    => $currencyVal
-                                    ]);
-
-                                    //dd($ratesArre);
                                 }
 
 
@@ -835,22 +877,37 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
 
                                                     //---------------------------------- CAMBIAR POR ID -------------------------------
-
-                                                    $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargArreG->id
+                                                        ]);
+                                                    }
                                                     //---------------------------------------------------------------------------------
 
                                                 } 
                                             }else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports
-                                                    'port_orig'      => $originVal,
-                                                    'port_dest'      => $destinyVal,
-                                                    'localcharge_id' => $SurchargArreG->id
-                                                ]);
+                                                if($differentiatorBol){
+                                                    $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'localcharge_id'    => $SurchargArreG->id
+                                                    ]);
+                                                } else {
+                                                    $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargArreG->id
+                                                    ]);
+                                                }
                                             }
                                             //echo $i;
                                             //dd($SurchargArreG);
@@ -887,20 +944,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargTWArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargTWArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargTWArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargTWArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargTWArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargTWArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
                                             //---------------------- CARGA 40' ----------------------------------------------------
@@ -929,20 +1002,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
 
@@ -959,7 +1048,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ]);
 
                                                 $SurchargCarrFORHCArreG = LocalCharCarrier::create([ // tabla localcharcarriers
-                                                    'carrier_id'      => $carrierVal,
+                                                    'carrier_id'     => $carrierVal,
                                                     'localcharge_id' => $SurchargFORHCArreG->id
                                                 ]);
 
@@ -972,20 +1061,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORHCArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORHCArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORHCArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORHCArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORHCArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORHCArreG->id
+                                                        ]);
+                                                    }
                                                 }
 
                                                 //echo $i;
@@ -1018,20 +1123,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORNORArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORNORArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORNORArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORNORArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORNORArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORNORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORNORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORNORArreG->id
+                                                        ]);
+                                                    }
                                                 }
 
                                                 //echo $i;
@@ -1064,20 +1185,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORfiveArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORfiveArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORfiveArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORfiveArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    }
                                                 }
 
                                                 //echo $i;
@@ -1115,20 +1252,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargTWArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargTWArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargTWArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortTWArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargTWArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargTWArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargTWArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
 
@@ -1158,20 +1311,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
 
@@ -1201,20 +1370,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORHCArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORHCArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORHCArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORHCArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORHCArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORHCArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                                 //echo $i;
                                                 //dd($SurchargFORHCArreG);
@@ -1246,20 +1431,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORnorArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORnorArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORnorArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORnorArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORnorArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORnorArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORnorArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                                 //echo $i;
                                                 //dd($SurchargFORHCArreG);
@@ -1291,20 +1492,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $destinyVal = $rando;
                                                         }
 
-                                                        $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
-                                                            'port_orig'      => $originVal,
-                                                            'port_dest'      => $destinyVal,
-                                                            'localcharge_id' => $SurchargFORfiveArreG->id
-                                                        ]);
+                                                        if($differentiatorBol){
+                                                            $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'localcharge_id'    => $SurchargFORfiveArreG->id
+                                                            ]);
+                                                        } else {
+                                                            $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                                'port_orig'      => $originVal,
+                                                                'port_dest'      => $destinyVal,
+                                                                'localcharge_id' => $SurchargFORfiveArreG->id
+                                                            ]);
+                                                        }
                                                     } 
 
                                                 } else {
                                                     // fila por puerto, sin expecificar origen ni destino manualmente
-                                                    $SurchargPortFORfiveArreG = LocalCharPort::create([ // tabla localcharports
-                                                        'port_orig'      => $originVal,
-                                                        'port_dest'      => $destinyVal,
-                                                        'localcharge_id' => $SurchargFORfiveArreG->id
-                                                    ]);
+                                                    if($differentiatorBol){
+                                                        $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'localcharge_id'    => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    } else {
+                                                        $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                            'port_orig'      => $originVal,
+                                                            'port_dest'      => $destinyVal,
+                                                            'localcharge_id' => $SurchargFORfiveArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                                 //echo $i;
                                                 //dd($SurchargFORHCArreG);
@@ -1381,20 +1598,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $destinyVal = $rando;
                                                 }
 
-                                                $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                    'port_orig'      => $originVal,
-                                                    'port_dest'      => $destinyVal,
-                                                    'localcharge_id' => $SurchargPERArreG->id
-                                                ]);
+                                                if($differentiatorBol){
+                                                    $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'localcharge_id'    => $SurchargPERArreG->id
+                                                    ]);
+                                                } else {
+                                                    $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargPERArreG->id
+                                                    ]);
+                                                }
                                             } 
 
                                         } else {
                                             // fila por puerto, sin expecificar origen ni destino manualmente
-                                            $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                'port_orig'      => $originVal,
-                                                'port_dest'      => $destinyVal,
-                                                'localcharge_id' => $SurchargPERArreG->id
-                                            ]);
+                                            if($differentiatorBol){
+                                                $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'localcharge_id'    => $SurchargPERArreG->id
+                                                ]);
+                                            } else {
+                                                $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                    'port_orig'      => $originVal,
+                                                    'port_dest'      => $destinyVal,
+                                                    'localcharge_id' => $SurchargPERArreG->id
+                                                ]);
+                                            }
                                         }
                                     }
                                     // echo $i;
@@ -1466,20 +1699,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $destinyVal = $rando;
                                                 }
 
-                                                $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                    'port_orig'      => $originVal,
-                                                    'port_dest'      => $destinyVal,
-                                                    'localcharge_id' => $SurchargPERArreG->id
-                                                ]);
+                                                if($differentiatorBol){
+                                                    $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'localcharge_id'    => $SurchargPERArreG->id
+                                                    ]);
+                                                } else {
+                                                    $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargPERArreG->id
+                                                    ]);
+                                                }
                                             } 
 
                                         } else {
                                             // fila por puerto, sin expecificar origen ni destino manualmente
-                                            $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                'port_orig'      => $originVal,
-                                                'port_dest'      => $destinyVal,
-                                                'localcharge_id' => $SurchargPERArreG->id
-                                            ]);
+                                            if($differentiatorBol){
+                                                $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'localcharge_id'    => $SurchargPERArreG->id
+                                                ]);
+                                            } else {
+                                                $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                    'port_orig'      => $originVal,
+                                                    'port_dest'      => $destinyVal,
+                                                    'localcharge_id' => $SurchargPERArreG->id
+                                                ]);
+                                            }
                                         }
                                     }
                                     // echo $i;
@@ -1551,20 +1800,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $destinyVal = $rando;
                                                 }
 
-                                                $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                    'port_orig'      => $originVal,
-                                                    'port_dest'      => $destinyVal,
-                                                    'localcharge_id' => $SurchargPERArreG->id
-                                                ]);
+                                                if($differentiatorBol){
+                                                    $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'localcharge_id'    => $SurchargPERArreG->id
+                                                    ]);
+                                                } else {
+                                                    $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                        'port_orig'      => $originVal,
+                                                        'port_dest'      => $destinyVal,
+                                                        'localcharge_id' => $SurchargPERArreG->id
+                                                    ]);
+                                                }
                                             } 
 
                                         } else {
                                             // fila por puerto, sin expecificar origen ni destino manualmente
-                                            $SurchargPortFORHCArreG = LocalCharPort::create([ // tabla localcharports
-                                                'port_orig'      => $originVal,
-                                                'port_dest'      => $destinyVal,
-                                                'localcharge_id' => $SurchargPERArreG->id
-                                            ]);
+                                            if($differentiatorBol){
+                                                $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'localcharge_id'    => $SurchargPERArreG->id
+                                                ]);
+                                            } else {
+                                                $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                    'port_orig'      => $originVal,
+                                                    'port_dest'      => $destinyVal,
+                                                    'localcharge_id' => $SurchargPERArreG->id
+                                                ]);
+                                            }
                                         }
                                     }
                                     // echo $i;
@@ -1948,12 +2213,22 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                         } else {
                                             if($origExiBol == true){
-                                                $originExits = Harbor::find($originVal);
-                                                $originVal = $originExits->name;                                       
+                                                if($origExiBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
                                             }
-                                            if($destiExitBol == true){  
-                                                $destinyExits = Harbor::find($destinyVal);
-                                                $destinyVal = $destinyExits->name;
+                                            if($destiExitBol == true){ 
+                                                if($origExiBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
                                             }
 
                                             // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
@@ -2817,6 +3092,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 }
 
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
+                //dd($pruebas);
             });
 
         // dd($collection);
