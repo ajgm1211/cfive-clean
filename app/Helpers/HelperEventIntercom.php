@@ -250,6 +250,32 @@ class Intercom{
     }
   }
 
+  public static function event_newRequest(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "NEW REQUEST",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
+  }
+  public static function event_newRequestLCL(){
+    $obj  = self::$client;    
+    $obj->events->create([
+      "event_name" => "NEW REQUEST LCL",
+      "created_at" => strtotime("now"),
+      "email" =>  \Auth::user()->email,
+      "metadata" => [
+        "order_date" => strtotime("now")
+      ]
+    ]);
+  }
+
+
+
+
 
 
 }

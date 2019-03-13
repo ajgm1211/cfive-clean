@@ -112,7 +112,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Ammount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::text('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
+          {!! Form::number('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','min' => '0','step'=>'0.01']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>

@@ -14,6 +14,9 @@
       <div class="col-md-2 col-12" style="padding-bottom:10px;">
         <a href="{{route('quotes.pdf',setearRouteKey($quote->id))}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
       </div>
+      <!--<div class="col-md-2 col-12" style="padding-bottom:10px;">
+        <a href="{{route('quotes.pdf.2',setearRouteKey($quote->id))}}" target="_blank" class="btn btn-primary btn-block">PDF Example</a>
+      </div>-->
       <div class="col-md-2 col-12" style="padding-bottom:10px;">
         <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="btn btn-primary btn-block">Duplicate</a>
       </div>

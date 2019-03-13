@@ -564,7 +564,6 @@ class QuoteController extends Controller
                     if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
                         && isset($destination_ammount_currency[$key]) && isset($destination_ammount_price_per_unit[$key]) && isset($destination_total_ammount[$key])) {
 
-
                         $destination_ammount = new DestinationAmmount();
                         $destination_ammount->quote_id = $quote->id;
 
@@ -592,7 +591,6 @@ class QuoteController extends Controller
                         }
 
                         $destination_ammount->save();
-
                     }
                 }
             }
