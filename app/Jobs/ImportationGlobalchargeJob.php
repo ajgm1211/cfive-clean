@@ -688,7 +688,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                         }
 
                         //////////////////////////////////////////////////////////////////////////////////////////////////////
-                        /*
+                       /* 
 						$prueba = collect([]);
 
 						$prueba = [
@@ -737,8 +737,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
 							$prueba['$fortyfiveArr'] = $fortyfiveArr;
 						}
 
-						dd($prueba);*/
-
+						dd($prueba);
+*/
                         if($carriExitBol            	== true
                            && $origExiBol           	== true
                            && $destiExitBol         	== true
@@ -1802,16 +1802,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $twentyVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $twentyVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -1834,16 +1834,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $twentyVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $twentyVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
 
                                                 }
@@ -1863,16 +1863,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $fortyVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $fortyVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
 
                                                 }
@@ -1893,16 +1893,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $fortyhcVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $fortyhcVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
 
                                                 }
@@ -1922,16 +1922,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $fortynorVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $fortynorVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -1950,16 +1950,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'origin'          	=> $originVal,
                                                         'destiny'          	=> $destinyVal,
                                                         'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'		=> $calculationtypeValfail,  //////
-                                                        'ammount'            => $fortyfiveVal, //////
-                                                        'currency'		      => $currencyVal, //////
-                                                        'carrier'	         => $carrierVal,
-                                                        'validityto'	      => $validityfromVal,
-                                                        'validityfrom'       => $validityfromVal,
-                                                        'port'        			=> true,// por defecto
-                                                        'country'        		=> false,// por defecto
-                                                        'company_user_id'    => $companyUserIdVal,
-                                                        'account_id'         => $account_idVal
+                                                        'calculationtype'	=> $calculationtypeValfail,  //////
+                                                        'ammount'           => $fortyfiveVal, //////
+                                                        'currency'		    => $currencyVal, //////
+                                                        'carrier'	        => $carrierVal,
+                                                        'validityto'	    => $validitytoVal,
+                                                        'validityfrom'      => $validityfromVal,
+                                                        'port'        		=> true,// por defecto
+                                                        'country'        	=> false,// por defecto
+                                                        'company_user_id'   => $companyUserIdVal,
+                                                        'account_id'        => $account_idVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -2008,16 +2008,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $twentyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $twentyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2038,16 +2038,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $twentyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $twentyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2065,16 +2065,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
 
                                                 // $ratescollection->push($ree);
@@ -2094,16 +2094,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyhcVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyhcVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
 
                                                 //  $ratescollection->push($ree);
@@ -2122,16 +2122,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortynorVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortynorVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
 
                                                 //  $ratescollection->push($ree);
@@ -2151,16 +2151,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyfiveVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyfiveVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -2239,16 +2239,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $ammount, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $ammount, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);                    
                                             }
@@ -2276,16 +2276,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $twentyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $twentyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //  $ratescollection->push($ree);
                                         }
@@ -2363,16 +2363,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $ammount, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $ammount, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);                    
                                             }
@@ -2400,16 +2400,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $twentyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $twentyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //  $ratescollection->push($ree);
                                         }
@@ -2518,16 +2518,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $twentyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $twentyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
 
                                             //  $ratescollection->push($ree);
@@ -2587,16 +2587,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $twentyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $twentyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 // $ratescollection->push($ree);
                                             }
@@ -2616,16 +2616,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $twentyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $twentyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 // $ratescollection->push($ree);
                                             }
@@ -2643,16 +2643,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2671,16 +2671,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyhcVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyhcVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
 
                                                 //$ratescollection->push($ree);
@@ -2700,16 +2700,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortynorVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortynorVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2728,16 +2728,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'origin'          	=> $originVal,
                                                     'destiny'          	=> $destinyVal,
                                                     'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'		=> $calculationtypeValfail,  //////
-                                                    'ammount'            => $fortyfiveVal, //////
-                                                    'currency'		      => $currencyVal, //////
-                                                    'carrier'	         => $carrierVal,
-                                                    'validityto'	      => $validityfromVal,
-                                                    'validityfrom'       => $validityfromVal,
-                                                    'port'        			=> true,// por defecto
-                                                    'country'        		=> false,// por defecto
-                                                    'company_user_id'    => $companyUserIdVal,
-                                                    'account_id'         => $account_idVal
+                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                    'ammount'           => $fortyfiveVal, //////
+                                                    'currency'		    => $currencyVal, //////
+                                                    'carrier'	        => $carrierVal,
+                                                    'validityto'	    => $validitytoVal,
+                                                    'validityfrom'      => $validityfromVal,
+                                                    'port'        		=> true,// por defecto
+                                                    'country'        	=> false,// por defecto
+                                                    'company_user_id'   => $companyUserIdVal,
+                                                    'account_id'        => $account_idVal
                                                 ]);
 
                                                 //$ratescollection->push($ree);
@@ -2788,16 +2788,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $twentyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $twentyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -2819,16 +2819,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $twentyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $twentyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -2847,16 +2847,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $fortyVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $fortyVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -2875,16 +2875,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $fortyhcVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $fortyhcVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -2903,16 +2903,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $fortynorVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $fortynorVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -2931,16 +2931,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'origin'          	=> $originVal,
                                                 'destiny'          	=> $destinyVal,
                                                 'typedestiny'     	=> $typedestinyVal,
-                                                'calculationtype'		=> $calculationtypeValfail,  //////
-                                                'ammount'            => $fortyfiveVal, //////
-                                                'currency'		      => $currencyVal, //////
-                                                'carrier'	         => $carrierVal,
-                                                'validityto'	      => $validityfromVal,
-                                                'validityfrom'       => $validityfromVal,
-                                                'port'        			=> true,// por defecto
-                                                'country'        		=> false,// por defecto
-                                                'company_user_id'    => $companyUserIdVal,
-                                                'account_id'         => $account_idVal
+                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                'ammount'           => $fortyfiveVal, //////
+                                                'currency'		    => $currencyVal, //////
+                                                'carrier'	        => $carrierVal,
+                                                'validityto'	    => $validitytoVal,
+                                                'validityfrom'      => $validityfromVal,
+                                                'port'        		=> true,// por defecto
+                                                'country'        	=> false,// por defecto
+                                                'company_user_id'   => $companyUserIdVal,
+                                                'account_id'        => $account_idVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
