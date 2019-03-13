@@ -89,7 +89,7 @@
       <div class="col-lg-4">
         {!! Form::label('calculationt', 'Calculation Type') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('calculationtype_id[]', $calculationT,null,['id' => 'calculationtypeAdd','class'=>'m-select2-general form-control ','multiple' => 'multiple','style' => 'width:80%;']) }}
+          {{ Form::select('calculationtype_id[]', $calculationT,null,['id' => 'calculationtypeAdd','class'=>'m-select2-general form-control ','multiple' => 'multiple','style' => 'width:80%;','required'=>'true']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-map-marker"></i>
@@ -103,7 +103,7 @@
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::text('ammount', 0, ['id' => 'ammountAdd','placeholder' => 'Please enter amount','class' => 'form-control m-input']) !!}
+          {!! Form::text('ammount', 0, ['id' => 'ammountAdd','placeholder' => 'Please enter amount','class' => 'form-control m-input','min' => '0','step'=>'0.01']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
