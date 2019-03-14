@@ -108,7 +108,7 @@
                         </div>
                      </div>
                   </div>
-                  <table class="table tableData "   id="tableContracts" width="100%">
+                  <table class="table tableData text-center" id="tableContracts" width="100%">
                      <thead width="100%">
                         <tr >
                            <th title="Field #1">
@@ -192,7 +192,7 @@
                         </div>
                      </div>
                   </div><br><br>
-                  <table class="table tableData" id="tableRates" class="tableRates" width="100%">
+                  <table class="table tableData text-center" id="tableRates" class="tableRates" width="100%">
                      <thead class="tableRatesTH">
                         <tr>
                            <th title="Field #1">
@@ -322,9 +322,28 @@
                   columns: [0, 1, 2, 3]
                }
             }
-         ]
+         ],
+         initComplete: function () {
+            this.api().columns(12).every(function () {
+               var column = this;
+               $('#tableContracts .head .head_hide').html('');
 
+               var select = $('<select id="formfilter" class="filterdropdown"><option value="">' + $(column.header()).text() + '</option></select>')
+                       .appendTo($(column.header()).empty())
+                       .on('change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                                  $(this).val()
+                          );
+                          column
+                                  .search(val ? '^' + val + '$' : '', true, false)
+                                  .draw();
+                       });
 
+               column.data().unique().sort().each(function (d, j) {
+                  select.append('<option value="' + d + '">' + d + '</option>')
+               });
+            });
+         }
       });
       $('#tableContracts').DataTable({
          ajax:  "{{ route('contractlcl.tableG') }}",
@@ -335,8 +354,28 @@
             {data: 'expire', name: 'expire'},
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
-         ]
-         ,
+         ],
+         initComplete: function () {
+            this.api().columns(4).every(function () {
+               var column = this;
+               $('#tableContracts .head .head_hide').html('');
+
+               var select = $('<select id="formfilter" class="filterdropdown"><option value="">' + $(column.header()).text() + '</option></select>')
+                       .appendTo($(column.header()).empty())
+                       .on('change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                                  $(this).val()
+                          );
+                          column
+                                  .search(val ? '^' + val + '$' : '', true, false)
+                                  .draw();
+                       });
+
+               column.data().unique().sort().each(function (d, j) {
+                  select.append('<option value="' + d + '">' + d + '</option>')
+               });
+            });
+         },
          "lengthChange": false,
          "searching": true,
          "ordering": true,
