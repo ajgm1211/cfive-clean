@@ -110,7 +110,7 @@ $portRadio = false;
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
           {!! Form::number('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','min' => '0','step'=>'0.01']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -125,25 +125,21 @@ $portRadio = false;
         {!! Form::label('currencyl', 'Currency') !!}
         <div class="m-input-icon m-input-icon--right">
           {{ Form::select('currency_id', $currency,$localcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
-          <span class="m-input-icon__icon m-input-icon__icon--right">
-            <span>
-              <i class="la la-bookmark-o"></i>
-            </span>
-          </span>
         </div>
-
       </div>
     </div>
   </div>  
   <br>
-  <hr>
+  <br>
   <div class="m-portlet__foot m-portlet__foot--fit">
+    <br>
     <div class="m-form__actions m-form__actions">
      &nbsp;&nbsp; {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
+    <br>
   </div>
   {!! Form::close() !!}
 </div>
