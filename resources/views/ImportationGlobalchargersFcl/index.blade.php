@@ -116,6 +116,47 @@
                                 </div>
                             </div>
                             <hr>
+                            <div class="form-group m-form__group row"  id="divvaluesportscountries">
+                                <div class="col-lg-2">
+                                    <label class="col-form-label"><b>PLACES:</b></label>
+                                </div>
+
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" checked>
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Ports Only
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesportcountry" value="2" id="portcountrychk" type="radio" >
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Ports and Countries
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
@@ -123,7 +164,7 @@
                                 </div>
 
 
-                                <div class="col-3">
+                                <div class="col-3" id="divorigin">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
@@ -144,7 +185,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-3" id="divdestiny">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
