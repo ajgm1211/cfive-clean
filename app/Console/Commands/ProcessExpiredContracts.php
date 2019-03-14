@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Contract;
+use App\ContractLcl;
 use Illuminate\Console\Command;
 
 class ProcessExpiredContracts extends Command
@@ -41,6 +42,10 @@ class ProcessExpiredContracts extends Command
         $contracts=Contract::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
         foreach ($contracts as $contract){
             Contract::where('id',$contract->id)->update(['status' => 'expired']);
+        }
+        $contracts_lcl=ContractLcl::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
+        foreach ($contracts_lcl as $contract){
+            ContractLcl::where('id',$contract->id)->update(['status' => 'expired']);
         }
         $this->info('Command Process Expired Contracts executed successfully!');
     }
