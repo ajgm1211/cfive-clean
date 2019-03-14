@@ -145,6 +145,7 @@
                                 <input type="hidden" name="existtypedestiny" id="existtypedestiny" value="{{$value['existtypedestiny']}}" />
                                 <input type="hidden" name="existdatevalidity" id="existdatevalidity" value="{{$value['existdatevalidity']}}" />
                                 <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
+                                <input type="hidden" name="statusPortCountry" id="statusPortCountry" value="{{$statusPortCountry}}" />
 
                             </div>
                         </div>

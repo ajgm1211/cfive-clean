@@ -58,6 +58,33 @@ $('#datevaiditychk').on('click',function(){
     }
 });
 
+$('#portchk').on('click',function(){
+    if($('#portchk').prop('checked')){
+        $('#destinychk').removeAttr('disabled');
+        $('#divdestiny').removeAttr('disabled');
+        $('#destinychk').removeAttr('hidden');
+        $('#divdestiny').removeAttr('hidden');
+        $('#originchk').removeAttr('disabled');
+        $('#divorigin').removeAttr('disabled');
+        $('#originchk').removeAttr('hidden');
+        $('#divorigin').removeAttr('hidden');
+    }
+});
+
+$('#portcountrychk').on('click',function(){
+    if($('#portcountrychk').prop('checked')){
+        $('#destinychk').attr('disabled','true');
+        $('#divdestiny').attr('disabled','true');
+        $('#destinychk').attr('hidden','hidden');
+        $('#divdestiny').attr('hidden','hidden');
+        
+        $('#originchk').attr('disabled','true');
+        $('#divorigin').attr('disabled','true');
+        $('#originchk').attr('hidden','hidden');
+        $('#divorigin').attr('hidden','hidden');
+    }
+});
+
 jQuery(document).ready(function($){
     Dropzone.options.mss = {
         paramName: "file", // The name that will be used to transfer the file
