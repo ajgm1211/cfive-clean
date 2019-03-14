@@ -49,6 +49,6 @@ class SendQuotes extends Command
             $send_notification->status=1;
             $send_notification->update();
         }
-        $this->info('Command executed successfully!');
+        $this->info('Command Send Quotes executed successfully!');
     }
 }
