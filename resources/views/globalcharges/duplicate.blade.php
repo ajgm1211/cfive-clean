@@ -25,7 +25,7 @@ $portRadio = false;
         <div class="row">
           <div class="col-lg-4">
             <label>
-              {!! Form::label('Type Route', 'Type Route') !!}
+              {!! Form::label('Type Route', 'Type of route') !!}
             </label>
             <div class="m-radio-inline">
               <label class="m-radio">
@@ -144,17 +144,20 @@ $portRadio = false;
     </div>
   </div>  
   <br>
-  <hr>
   <div class="m-portlet__foot m-portlet__foot--fit">
+    <br>
     <div class="m-form__actions m-form__actions">
-      &nbsp;&nbsp; {!! Form::submit('Duplicate', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {!! Form::submit('Duplicate', ['class'=> 'btn btn-primary']) !!}
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
+    <br>
   </div>
   {!! Form::close() !!}
 </div>
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/globalcharges.js"></script>
 <script>
 
@@ -162,9 +165,4 @@ $portRadio = false;
   $('.m-select2-general').select2({
     placeholder: "Select an option"
   });
-
-
-
-
-
 </script>

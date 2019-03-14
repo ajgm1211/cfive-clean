@@ -64,6 +64,6 @@ class updateCurrenciesEur extends Command
             }
         }
 
-        $this->info('Command executed successfully!');
+        $this->info('Command Update EUR Currencies executed successfully!');
     }
 }
