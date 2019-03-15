@@ -20,6 +20,7 @@ class FailSurCharge extends Model
         'calculationtype_id',
         'ammount',
         'currency_id',
-        'carrier_id'
+        'carrier_id',
+        'differentiator'
     ];
 }

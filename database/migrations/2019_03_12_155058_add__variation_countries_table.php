@@ -26,7 +26,7 @@ class AddVariationCountriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('globalcharges', function($table) {
+        Schema::table('countries', function($table) {
             $table->dropColumn('variation');
 
         });
