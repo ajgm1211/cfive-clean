@@ -118,8 +118,9 @@ class ImportationGlobalchargeJob implements ShouldQueue
                     $calculationtypeVal  = '';
                     $surchargelist       = '';
                     $surchargeVal        = '';
-                    $validityfromVal		= '';
-                    $validitytoVal			= '';
+                    $validityfromVal	 = '';
+                    $validitytoVal		 = '';
+                    $differentiatorVal   = 1;
                     $account_idVal       = $account_id;
 
                     $calculationtypeValfail  = '';
@@ -247,6 +248,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                             $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
                             if(strnatcasecmp($differentiatorVal,'country') == 0){
                                 $differentiatorBol = true;
+                                $differentiatorVal = 2;
                             } 
                         }
 
@@ -2073,7 +2075,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -2105,7 +2108,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
 
                                                 }
@@ -2134,7 +2138,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
 
                                                 }
@@ -2164,7 +2169,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
 
                                                 }
@@ -2193,7 +2199,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -2221,7 +2228,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         'port'        		=> true,// por defecto
                                                         'country'        	=> false,// por defecto
                                                         'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal
+                                                        'account_id'        => $account_idVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                 }
                                                 //$ratescollection->push($ree);
@@ -2289,7 +2297,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2319,7 +2328,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2346,7 +2356,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
 
                                                 // $ratescollection->push($ree);
@@ -2375,7 +2386,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
 
                                                 //  $ratescollection->push($ree);
@@ -2403,7 +2415,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
 
                                                 //  $ratescollection->push($ree);
@@ -2432,7 +2445,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -2520,7 +2534,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);                    
                                             }
@@ -2567,7 +2582,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //  $ratescollection->push($ree);
                                         }
@@ -2654,7 +2670,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);                    
                                             }
@@ -2701,7 +2718,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //  $ratescollection->push($ree);
                                         }
@@ -2782,7 +2800,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $ammount, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);                    
                                             }
@@ -2829,7 +2848,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
 
                                             //  $ratescollection->push($ree);
@@ -2898,7 +2918,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 // $ratescollection->push($ree);
                                             }
@@ -2927,7 +2948,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 // $ratescollection->push($ree);
                                             }
@@ -2954,7 +2976,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -2982,7 +3005,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
 
                                                 //$ratescollection->push($ree);
@@ -3011,7 +3035,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3039,7 +3064,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     'port'        		=> true,// por defecto
                                                     'country'        	=> false,// por defecto
                                                     'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal
+                                                    'account_id'        => $account_idVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
 
                                                 //$ratescollection->push($ree);
@@ -3109,7 +3135,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -3140,7 +3167,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -3168,7 +3196,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -3196,7 +3225,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -3224,7 +3254,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
@@ -3252,7 +3283,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 'port'        		=> true,// por defecto
                                                 'country'        	=> false,// por defecto
                                                 'company_user_id'   => $companyUserIdVal,
-                                                'account_id'        => $account_idVal
+                                                'account_id'        => $account_idVal,
+                                                'differentiator'   => $differentiatorVal
                                             ]);
                                             //$ratescollection->push($ree);
                                         }
