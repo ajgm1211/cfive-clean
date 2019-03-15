@@ -126,6 +126,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $calculationtypeVal  = '';
                     $surchargelist       = '';
                     $surchargeVal        = '';
+                    $differentiatorVal   = 1;
                     $contractIdVal       = $requestobj['Contract_id'];
 
                     $calculationtypeValfail  = '';
@@ -222,6 +223,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
                             if(strnatcasecmp($differentiatorVal,'country') == 0){
                                 $differentiatorBol = true;
+                                $differentiatorVal = 2;
                             } 
                         }
 
@@ -2097,7 +2099,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $twentyVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     //$ratescollection->push($ree);
@@ -2122,7 +2125,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $twentyVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     // $ratescollection->push($ree);
@@ -2145,7 +2149,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $fortyVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     // $ratescollection->push($ree);
@@ -2168,7 +2173,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $fortyhcVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     //$ratescollection->push($ree);
@@ -2191,7 +2197,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $fortynorVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     //$ratescollection->push($ree);
@@ -2214,7 +2221,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'calculationtype_id' => $calculationtypeValfail,  //////
                                                             'ammount'            => $fortyfiveVal, //////
                                                             'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal
+                                                            'carrier_id'         => $carrierVal,
+                                                            'differentiator'   => $differentiatorVal
                                                         ]);
                                                     }
                                                     //$ratescollection->push($ree);
@@ -2277,7 +2285,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $twentyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -2302,7 +2311,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $twentyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -2324,7 +2334,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     // $ratescollection->push($ree);
                                                 }
@@ -2347,7 +2358,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyhcVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //  $ratescollection->push($ree);
                                                 }
@@ -2369,7 +2381,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortynorVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //  $ratescollection->push($ree);
                                                 }
@@ -2392,7 +2405,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyfiveVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //  $ratescollection->push($ree);
                                                 }
@@ -2475,7 +2489,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $ammount, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);                    
                                                 }
@@ -2517,7 +2532,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $twentyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -2598,7 +2614,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $ammount, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);                    
                                                 }
@@ -2640,7 +2657,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $twentyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -2721,7 +2739,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $ammount, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);                    
                                                 }
@@ -2763,7 +2782,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $twentyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
@@ -2826,7 +2846,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $twentyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     // $ratescollection->push($ree);
                                                 }
@@ -2850,7 +2871,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $twentyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     // $ratescollection->push($ree);
                                                 }
@@ -2872,7 +2894,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -2895,7 +2918,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyhcVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -2918,7 +2942,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortynorVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -2941,7 +2966,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'calculationtype_id' => $calculationtypeValfail,  //////
                                                         'ammount'            => $fortyfiveVal, //////
                                                         'currency_id'        => $currencyVal, //////
-                                                        'carrier_id'         => $carrierVal
+                                                        'carrier_id'         => $carrierVal,
+                                                        'differentiator'   => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);
                                                 }
@@ -3004,7 +3030,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $twentyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3030,7 +3057,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $twentyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3053,7 +3081,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $fortyVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3076,7 +3105,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $fortyhcVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3099,7 +3129,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $fortynorVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }
@@ -3122,7 +3153,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     'calculationtype_id' => $calculationtypeValfail,  //////
                                                     'ammount'            => $fortyfiveVal, //////
                                                     'currency_id'        => $currencyVal, //////
-                                                    'carrier_id'         => $carrierVal
+                                                    'carrier_id'         => $carrierVal,
+                                                    'differentiator'   => $differentiatorVal
                                                 ]);
                                                 //$ratescollection->push($ree);
                                             }

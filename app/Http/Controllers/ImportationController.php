@@ -13,7 +13,6 @@ use App\Country;
 use App\FileTmp;
 use App\Company;
 use App\Contact;
-use App\Country;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
@@ -4008,6 +4007,8 @@ class ImportationController extends Controller
         $objsurcharge       = new Surcharge();
         $objtypedestiny     = new TypeDestiny();
         $objCalculationType = new CalculationType();
+
+        $countries              = Country::pluck('name','id');
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
@@ -4015,7 +4016,8 @@ class ImportationController extends Controller
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
-        $failsurcharge = FailSurCharge::find($id);
+        $failsurcharge  = FailSurCharge::find($id);
+        $differentiator = $failsurcharge->differentiator;
 
         $classdorigin           =  'color:green';
         $classddestination      =  'color:green';
@@ -4035,8 +4037,15 @@ class ImportationController extends Controller
         $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
         // -------------- ORIGIN -------------------------------------------------------------
-        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-            ->first();
+
+        if($failsurcharge->differentiator == 1){
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        } else if($failsurcharge->differentiator == 2){
+            $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        }
+
         $originAIn = $originOb['id'];
         $originC   = count($originA);
         if($originC <= 1){
@@ -4047,8 +4056,15 @@ class ImportationController extends Controller
         }
 
         // -------------- DESTINATION --------------------------------------------------------
-        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-            ->first();
+
+        if($failsurcharge->differentiator == 1){
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        } else if($failsurcharge->differentiator == 2){
+            $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        }
+
         $destinationAIn = $destinationOb['id'];
         $destinationC   = count($destinationA);
         if($destinationC <= 1){
@@ -4157,22 +4173,23 @@ class ImportationController extends Controller
                                                                          'harbor',
                                                                          'carrierSelect',
                                                                          'currency',
+                                                                         'countries',
                                                                          'surchargeSelect',
                                                                          'typedestiny',
+                                                                         'differentiator',
                                                                          'calculationtypeselect'));
     }
     public function CreateSurchargers(Request $request, $id){
         //dd($request->all());
 
         $surchargeVar       = $request->surcharge_id;
-        $originVarArr       = $request->port_origlocal;
-        $destinationVarArr  = $request->port_destlocal;
         $typedestinyVar     = $request->changetype;
         $carrierVarArr      = $request->carrier_id;
         $calculationtypeVar = $request->calculationtype_id;
         $ammountVar         = (int)$request->ammount;
         $currencyVar        = $request->currency_id;
         $contractVar        = $request->contract_id;
+        $typerate           =  $request->typeroute;
 
         $failSurcharge = new FailSurCharge();
         $failSurcharge = FailSurCharge::find($id);
@@ -4184,15 +4201,34 @@ class ImportationController extends Controller
             'ammount'               => $ammountVar,
             'currency_id'           => $currencyVar
         ]);
-        foreach($originVarArr as $originVar){
-            foreach($destinationVarArr as $destinationVar){
-                LocalCharPort::create([
-                    'port_orig'         => $originVar,
-                    'port_dest'         => $destinationVar,
-                    'localcharge_id'    => $SurchargeId->id
-                ]);
+
+        if($typerate == 'port'){
+            $originVarArr          =  $request->port_origlocal;
+            $destinationVarArr     =  $request->port_destlocal;
+            foreach($originVarArr as $originVar){
+                foreach($destinationVarArr as $destinationVar){
+                    LocalCharPort::create([
+                        'port_orig'         => $originVar,
+                        'port_dest'         => $destinationVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
+            }
+        }elseif($typerate == 'country'){
+            $originVarCounArr      =  $request->country_orig;
+            $destinationCounVarArr =  $request->country_dest;
+
+            foreach($originVarCounArr as $originCounVar){
+                foreach($destinationCounVarArr as $destinationCounVar){
+                    LocalCharCountry::create([
+                        'country_orig'      => $originCounVar,
+                        'country_dest'      => $destinationCounVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
             }
         }
+
         foreach($carrierVarArr as $carrierVar){
             LocalCharCarrier::create([
                 'carrier_id'        => $carrierVar,
@@ -4240,9 +4276,6 @@ class ImportationController extends Controller
             ]); //
         }
 
-
-
-
         if($typerate == 'port'){
             $originVarArr          =  $request->port_origlocal;
             $destinationVarArr     =  $request->port_destlocal;
@@ -4269,12 +4302,6 @@ class ImportationController extends Controller
                 }
             }
         }
-
-
-
-
-
-
 
         $request->session()->flash('message.content', 'Surcharge Updated' );
         $request->session()->flash('message.nivel', 'success');
@@ -4489,8 +4516,13 @@ class ImportationController extends Controller
                 $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
                 // -------------- ORIGIN -------------------------------------------------------------
-                $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                    ->first();
+                if($failsurcharge->differentiator == 1){
+                    $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                } else if($failsurcharge->differentiator == 2){
+                    $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                }
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
                 if($originC <= 1){
@@ -4501,8 +4533,13 @@ class ImportationController extends Controller
                 }
 
                 // -------------- DESTINY ------------------------------------------------------------
-                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                    ->first();
+                if($failsurcharge->differentiator == 1){
+                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                } else if($failsurcharge->differentiator == 2){
+                    $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                }
                 $destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
                 if($destinationC <= 1){
