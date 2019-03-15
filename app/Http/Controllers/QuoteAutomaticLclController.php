@@ -1126,24 +1126,24 @@ class QuoteAutomaticLclController extends Controller
 
                 if($global->calculationtypelcl_id == '7'){
                   $subtotal_global =  $totalV * $global->ammount;
-                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalV;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalV;
                     $mont = number_format($mont, 2, '.', '');
 
                   }
                 }else{
                   $subtotal_global =  $totalW * $global->ammount;
-                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalW;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalW;
                     $mont = number_format($mont, 2, '.', '');
 
@@ -1173,24 +1173,24 @@ class QuoteAutomaticLclController extends Controller
 
                 if($global->calculationtypelcl_id == '7'){
                   $subtotal_global =  $totalV * $global->ammount;
-                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalV;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalV;
                     $mont = number_format($mont, 2, '.', '');
 
                   }
                 }else{
                   $subtotal_global =  $totalW * $global->ammount;
-                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalW;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalW;
                     $mont = number_format($mont, 2, '.', '');
 
@@ -1219,24 +1219,24 @@ class QuoteAutomaticLclController extends Controller
 
                 if($global->calculationtypelcl_id == '7'){
                   $subtotal_global =  $totalV * $global->ammount;
-                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalV;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalV;
                     $mont = number_format($mont, 2, '.', '');
 
                   }
                 }else{
                   $subtotal_global =  $totalW * $global->ammount;
-                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMount;
+                  $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                   $mont = $global->ammount;
                   $unidades = $totalW;
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
-                    $totalAmmount =    $subtotal_global / $rateMount ;
+                    $totalAmmount =    $subtotal_global / $rateMountG ;
                     $mont = $global->minimum / $totalW;
                     $mont = number_format($mont, 2, '.', '');
 

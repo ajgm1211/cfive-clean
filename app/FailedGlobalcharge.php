@@ -22,7 +22,8 @@ class FailedGlobalcharge extends Model
 								  'port',
 								  'country',
 								  'company_user_id',
-								  'account_id'
+								  'account_id',
+								  'differentiator'
 								 ];
 
 }
