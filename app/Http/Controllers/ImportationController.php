@@ -12,6 +12,7 @@ use App\Carrier;
 use App\FileTmp;
 use App\Company;
 use App\Contact;
+use App\Country;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
@@ -25,6 +26,7 @@ use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
 use App\CalculationType;
+use App\LocalCharCountry;
 use App\LocalCharCarrier;
 use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
@@ -3977,6 +3979,7 @@ class ImportationController extends Controller
         $objsurcharge       = new Surcharge();
         $objtypedestiny     = new TypeDestiny();
         $objCalculationType = new CalculationType();
+        $countries          = Country::pluck('name','id');
 
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
@@ -3985,14 +3988,15 @@ class ImportationController extends Controller
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
-        $goodsurcharges  = LocalCharge::with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest')->find($id);
+        $goodsurcharges  = LocalCharge::with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest','localcharcountries.countryOrig','localcharcountries.countryDest')->find($id);
         //dd($goodsurcharges);
-        return view('importation.Body-Modals.GoodEditSurcharge', compact('goodsurcharges',
-                                                                         'harbor',
-                                                                         'carrierSelect',
+        return view('importation.Body-Modals.GoodEditSurcharge', compact('harbor',
                                                                          'currency',
-                                                                         'surchargeSelect',
+                                                                         'countries',
                                                                          'typedestiny',
+                                                                         'carrierSelect',
+                                                                         'goodsurcharges',
+                                                                         'surchargeSelect',
                                                                          'calculationtypeselect'));
     }
     public function EditSurchargersFail($id){
@@ -4206,13 +4210,12 @@ class ImportationController extends Controller
 
         $surchargeVar          =  $request->surcharge_id; // id de la columna surchage_id
         $contractVar           =  $request->contract_id;
-        $originVarArr          =  $request->port_origlocal;
-        $destinationVarArr     =  $request->port_destlocal;
         $typedestinyVar        =  $request->changetype;
         $calculationtypeVar    =  $request->calculationtype_id;
         $ammountVar            =  $request->ammount;
         $currencyVar           =  $request->currency_id;
         $carrierVarArr         =  $request->carrier_id;
+        $typerate              =  $request->typeroute;
 
         $SurchargeId = new LocalCharge();
         $SurchargeId  = LocalCharge::find($id);
@@ -4223,16 +4226,10 @@ class ImportationController extends Controller
         $SurchargeId->ammount               = $ammountVar;
         $SurchargeId->currency_id           = $currencyVar;
         $SurchargeId->update();
+
         LocalCharPort::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
-        foreach($originVarArr as $originVar){
-            foreach($destinationVarArr as $destinationVar){
-                LocalCharPort::create([
-                    'port_orig'         => $originVar,
-                    'port_dest'         => $destinationVar,
-                    'localcharge_id'    => $SurchargeId->id
-                ]); //
-            }
-        }
+        LocalCharCountry::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
+
         LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
         foreach($carrierVarArr as $carrierVar){
             LocalCharCarrier::create([
@@ -4240,6 +4237,42 @@ class ImportationController extends Controller
                 'localcharge_id'    => $SurchargeId->id  
             ]); //
         }
+
+
+
+
+        if($typerate == 'port'){
+            $originVarArr          =  $request->port_origlocal;
+            $destinationVarArr     =  $request->port_destlocal;
+            foreach($originVarArr as $originVar){
+                foreach($destinationVarArr as $destinationVar){
+                    LocalCharPort::create([
+                        'port_orig'         => $originVar,
+                        'port_dest'         => $destinationVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
+            }
+        }elseif($typerate == 'country'){
+            $originVarCounArr      =  $request->country_orig;
+            $destinationCounVarArr =  $request->country_dest;
+
+            foreach($originVarCounArr as $originCounVar){
+                foreach($destinationCounVarArr as $destinationCounVar){
+                    LocalCharCountry::create([
+                        'country_orig'      => $originCounVar,
+                        'country_dest'      => $destinationCounVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
+            }
+        }
+
+
+
+
+
+
 
         $request->session()->flash('message.content', 'Surcharge Updated' );
         $request->session()->flash('message.nivel', 'success');
