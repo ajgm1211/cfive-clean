@@ -36,7 +36,7 @@ class ImportationGlobachargersFclController extends Controller
     // Reprocesamiento
     public function ReprocesarGlobalchargers(Request $request, $id){
         $countfailglobalchargers = FailedGlobalcharge::where('account_id','=',$id)->count();
-        if($countfailglobalchargers >= 150){
+        if($countfailglobalchargers <= 150){
             $failglobalchargers = FailedGlobalcharge::where('account_id','=',$id)->get();
             //dd($failglobalchargers);
             $account_idVal = $id;
@@ -96,18 +96,27 @@ class ImportationGlobachargersFclController extends Controller
                    && count($carrierEX) == 1){
 
                     // Origen Y Destino ------------------------------------------------------------------------
-
-                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($failglobalcharger->differentiator  == 1){
+                        $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                        $originV  = $resultadoPortOri['puerto'];
+                    } else if($failglobalcharger->differentiator  == 2){
+                        $resultadoPortOri = PrvHarbor::get_country($originEX[0]);
+                        $originV  = $resultadoPortOri['country'];
+                    }
                     if($resultadoPortOri['boolean']){
                         $originB = true;    
                     }
-                    $originV  = $resultadoPortOri['puerto'];
 
-                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($failglobalcharger->differentiator  == 1){
+                        $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['puerto'];
+                    } else if($failglobalcharger->differentiator  == 2){
+                        $resultadoPortDes = PrvHarbor::get_country($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['country'];
+                    }
                     if($resultadoPortDes['boolean']){
                         $destinyB = true;    
                     }
-                    $destinationV  = $resultadoPortDes['puerto'];
 
                     //  Surcharge ------------------------------------------------------------------------------
 
@@ -223,12 +232,20 @@ class ImportationGlobachargersFclController extends Controller
                             'globalcharge_id' => $globalChargeArreG->id
                         ]);
 
-                        GlobalCharPort::create([ // tabla GlobalCharPort
-                            'port_orig'      	=> $originV,
-                            'port_dest'      	=> $destinationV,
-                            'typedestiny_id' 	=> $typedestunyV,
-                            'globalcharge_id'   => $globalChargeArreG->id
-                        ]);
+                        if($failglobalcharger->differentiator  == 1){
+                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                'port_orig'      	=> $originV,
+                                'port_dest'      	=> $destinationV,
+                                'typedestiny_id' 	=> $typedestunyV,
+                                'globalcharge_id'   => $globalChargeArreG->id
+                            ]);
+                        } else if($failglobalcharger->differentiator  == 2){
+                            GlobalCharCountry::create([ // tabla GlobalCharPort
+                                'country_orig'      => $originV,
+                                'country_dest'      => $destinationV,
+                                'globalcharge_id'   => $globalChargeArreG->id                                                   
+                            ]);
+                        }
 
                         $failglobalcharger->delete();
                     }
@@ -538,8 +555,15 @@ class ImportationGlobachargersFclController extends Controller
         $validityfromA      =  explode("_",$failglobal['validityfrom']);
 
         // -------------- ORIGIN -------------------------------------------------------------
-        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-            ->first();
+
+        if($failglobal->differentiator == 1){
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        } else if($failglobal->differentiator == 2){
+            $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        }
+
         $originC   = count($originA);
         if($originC <= 1){
             $originAIn = [$originOb['id']];
@@ -549,8 +573,14 @@ class ImportationGlobachargersFclController extends Controller
         }
 
         // -------------- DESTINATION --------------------------------------------------------
-        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-            ->first();
+        if($failglobal->differentiator == 1){
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        } else if($failglobal->differentiator == 2){
+            $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        }
+
         $destinationC   = count($destinationA);
         if($destinationC <= 1){
             $destinationAIn = [$destinationOb->id];
@@ -752,8 +782,15 @@ class ImportationGlobachargersFclController extends Controller
 
                 // -------------- ORIGIN -------------------------------------------------------------
 
-                $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                    ->first();
+
+                if($failglobalcharge->differentiator == 1){
+                    $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                } else if($failglobalcharge->differentiator == 2){
+                    $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                }
+
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
                 if($originC <= 1){
@@ -764,8 +801,15 @@ class ImportationGlobachargersFclController extends Controller
                 }
 
                 // -------------- DESTINY ------------------------------------------------------------
-                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                    ->first();
+
+                if($failglobalcharge->differentiator == 1){
+                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                } else if($failglobalcharge->differentiator == 2){
+                    $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                }
+
                 $destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
                 if($destinationC <= 1){
