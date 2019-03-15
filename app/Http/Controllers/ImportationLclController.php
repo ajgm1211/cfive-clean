@@ -431,7 +431,7 @@ class ImportationLclController extends Controller
                             //---------------------------- CURRENCY  ---------------------------------------------------------
 
                             if($curreExitBol == true){
-                                $currencyVal = Currency::find($currencyValtwm);
+                                $currencyVal = Currency::find($currencyVal);
                                 $currencyVal = $currencyVal->id;
                             }  
 
