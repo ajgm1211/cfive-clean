@@ -52,7 +52,7 @@
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
-                            Quotes
+                            <b>Quotes</b>
                         </span>
                     </a>
                 </li>
@@ -61,7 +61,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Clients
+                                    <b>Clients</b>
                                 </span>
                             </span>
                         </span>
@@ -77,7 +77,7 @@
                                 <a  href="{{route('companies.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-business"></i>
                                     <span class="m-menu__link-text">
-                                        Companies
+                                        <b>Companies</b>
                                     </span>
                                 </a>
                             </li>
@@ -85,7 +85,7 @@
                                 <a  href="{{route('contacts.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-users"></i>
                                     <span class="m-menu__link-text">
-                                        Contacts
+                                        <b>Contacts</b>
                                     </span>
                                 </a>
                             </li>
@@ -97,7 +97,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Contracts
+                                    <b>Contracts</b>
                                 </span>
                             </span>
                         </span>
@@ -141,7 +141,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Global Charges
+                                    <b>Global Charges</b>
                                 </span>
                             </span>
                         </span>
@@ -175,7 +175,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Inland
+                                    <b>Inland</b>
                                 </span>
                             </span>
                         </span>
@@ -201,7 +201,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Settings
+                                    <b>Settings</b>
                                 </span>
                             </span>
                         </span>
@@ -347,7 +347,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    {{\Auth::user()->name}} {{\Auth::user()->lastname}} 
+                                    <b>{{\Auth::user()->name}} {{\Auth::user()->lastname}}</b>
                                 </span>
                             </span>
                         </span>
