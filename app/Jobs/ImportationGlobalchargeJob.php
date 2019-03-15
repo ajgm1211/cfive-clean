@@ -7,6 +7,7 @@ use App\User;
 use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
+use App\Country;
 use App\Currency;
 use Carbon\Carbon;
 use App\Surcharge;
@@ -15,6 +16,7 @@ use App\TypeDestiny;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\CalculationType;
+use App\GlobalCharCountry;
 use App\GlobalCharCarrier;
 use App\FailedGlobalcharge;
 use App\FileTmpGlobalcharge;
@@ -82,11 +84,13 @@ class ImportationGlobalchargeJob implements ShouldQueue
                 $typedestiny            = "Type_Destiny";
                 $validityfrom           = "Validity_From";
                 $validityto             = "Validity_To";
+                $differentiator         = "Differentiator";
 
                 $account_id                 = $requestobj['account_id'];
                 $statusexistfortynor        = $requestobj['existfortynor'];
                 $statusexistfortyfive       = $requestobj['existfortyfive'];
                 $statusexistdatevalidity    = $requestobj['existdatevalidity'];
+                $statusPortCountry          = $requestobj['statusPortCountry'];
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
@@ -167,6 +171,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                     $fortyfiveArrBol         = false;
                     $validityfromExiBol		 = false;
                     $validitytoExiBol		 = false;
+                    $differentiatorBol       = false;
                     $values                  = true;
 
                     //--------------------------------------------------------
@@ -236,6 +241,15 @@ class ImportationGlobalchargeJob implements ShouldQueue
                             }
                         }
 
+                        //--------------- DIFRENCIADOR HARBOR COUNTRY -------------------------------------------
+
+                        if($statusPortCountry == 2){
+                            $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
+                            if(strnatcasecmp($differentiatorVal,'country') == 0){
+                                $differentiatorBol = true;
+                            } 
+                        }
+
                         //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
 
                         if($requestobj['existorigin'] == 1){
@@ -244,25 +258,48 @@ class ImportationGlobalchargeJob implements ShouldQueue
                             $randons = $requestobj[$origin];
                         } else {
                             $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                            $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-                            if($resultadoPortOri['boolean']){
-                                $origExiBol = true;    
+                            if($differentiatorBol == false){
+                                // El origen es  por puerto
+                                $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                                if($resultadoPortOri['boolean']){
+                                    $origExiBol = true;    
+                                }
+                                $originVal  = $resultadoPortOri['puerto'];
+                            } else if($differentiatorBol == true){
+                                // El origen es  por country
+                                $resultadocountrytOri = PrvHarbor::get_country($originVal);
+                                if($resultadocountrytOri['boolean']){
+                                    $origExiBol = true;    
+                                }
+                                $originVal  = $resultadocountrytOri['country'];
                             }
-                            $originVal  = $resultadoPortOri['puerto'];
 
                         }
+
+
                         //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+
                         if($requestobj['existdestiny'] == 1){
                             $destinyBol = true;
                             $destiExitBol = true; //segundo boolean para verificar campos errados
                             $randons = $requestobj[$destiny];
                         } else {
                             $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                            $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
-                            if($resultadoPortDes['boolean']){
-                                $destiExitBol = true;    
+                            if($differentiatorBol == false){
+                                // El origen es  por Harbors
+                                $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                                if($resultadoPortDes['boolean']){
+                                    $destiExitBol = true;    
+                                }
+                                $destinyVal  = $resultadoPortDes['puerto'];
+                            } else if($differentiatorBol == true){
+                                //El destino es por Country
+                                $resultadocountryDes = PrvHarbor::get_country($destinyVal);
+                                if($resultadocountryDes['boolean']){
+                                    $destiExitBol = true;    
+                                }
+                                $destinyVal  = $resultadocountryDes['country'];
                             }
-                            $destinyVal  = $resultadoPortDes['puerto'];
                         }
 
                         //---------------- CURRENCY VALUES ------------------------------------------------------
@@ -688,7 +725,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                         }
 
                         //////////////////////////////////////////////////////////////////////////////////////////////////////
-                       /* 
+                        /* 
 						$prueba = collect([]);
 
 						$prueba = [
@@ -814,23 +851,40 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 //---------------------------------- CAMBIAR POR ID -------------------------------
 
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeArreG->id
+                                                    ]);
+                                                }
+
                                                 //---------------------------------------------------------------------------------
 
                                             } 
                                         }else {
                                             // fila por puerto, sin expecificar origen ni destino manualmente
-                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                'port_orig'      	=> $originVal,
-                                                'port_dest'      	=> $destinyVal,
-                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                'globalcharge_id' => $globalChargeArreG->id
-                                            ]);
+                                            if($differentiatorBol == false){
+                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                    'port_orig'      	=> $originVal,
+                                                    'port_dest'      	=> $destinyVal,
+                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                    'globalcharge_id'   => $globalChargeArreG->id
+                                                ]);
+                                            } else {
+                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'globalcharge_id'   => $globalChargeArreG->id
+                                                ]);
+                                            }
                                         }
                                         //echo $i;
                                         //dd($globalChargeArreG);
@@ -870,22 +924,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeTWArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeTWArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeTWArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeTWArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                    ]);
+                                                }
                                             }
                                         }
                                         //---------------------- CARGA 40' ----------------------------------------------------
@@ -917,23 +987,39 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORArreG->id
+                                                        ]);
+                                                    }
 
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                    ]);
+                                                }
 
                                             }
                                         }
@@ -968,22 +1054,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORHCArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORHCArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                    ]);
+                                                }
                                             }
 
                                             //echo $i;
@@ -1019,22 +1121,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                    ]);
+                                                }
                                             }
 
                                             //echo $i;
@@ -1071,22 +1189,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                    ]);
+                                                }
                                             }
 
                                             //echo $i;
@@ -1127,22 +1261,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeTWArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeTWArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeTWArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeTWArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                    ]);
+                                                }
                                             }
                                         }
 
@@ -1175,22 +1325,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                    ]);
+                                                }
                                             }
                                         }
 
@@ -1224,22 +1390,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORHCArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORHCArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                    ]);
+                                                }
                                             }
                                             //echo $i;
                                             //dd($globalChargeFORHCArreG);
@@ -1274,22 +1456,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                    ]);
+                                                }
                                             }
                                             //echo $i;
                                             //dd($globalChargeFORNORArreG);
@@ -1324,22 +1522,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $destinyVal = $rando;
                                                     }
 
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                    ]);
+                                                    if($differentiatorBol == false){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    } else {
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
-                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                    'port_orig'      	=> $originVal,
-                                                    'port_dest'      	=> $destinyVal,
-                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                    'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                ]);
+                                                if($differentiatorBol == false){
+                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                        'port_orig'      	=> $originVal,
+                                                        'port_dest'      	=> $destinyVal,
+                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                    ]);
+                                                } else {
+                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                        'country_orig'      => $originVal,
+                                                        'country_dest'      => $destinyVal,
+                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                    ]);
+                                                }
                                             }
                                             //echo $i;
                                             //dd($globalChargeFORfiveArreG);
@@ -1417,22 +1631,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 $destinyVal = $rando;
                                             }
 
-                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                'port_orig'      	=> $originVal,
-                                                'port_dest'      	=> $destinyVal,
-                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                'globalcharge_id' => $globalChargePERArreG->id
-                                            ]);
+                                            if($differentiatorBol == false){
+                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                    'port_orig'      	=> $originVal,
+                                                    'port_dest'      	=> $destinyVal,
+                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                    'globalcharge_id'   => $globalChargePERArreG->id
+                                                ]);
+                                            } else {
+                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'globalcharge_id'   => $globalChargePERArreG->id
+                                                ]);
+                                            }
                                         } 
 
                                     } else {
                                         // fila por puerto, sin expecificar origen ni destino manualmente
-                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                            'port_orig'      	=> $originVal,
-                                            'port_dest'      	=> $destinyVal,
-                                            'typedestiny_id' 	=> $typedestinyVal,
-                                            'globalcharge_id' => $globalChargePERArreG->id
-                                        ]);
+                                        if($differentiatorBol == false){
+                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                'port_orig'      	=> $originVal,
+                                                'port_dest'      	=> $destinyVal,
+                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                'globalcharge_id'   => $globalChargePERArreG->id
+                                            ]);
+                                        } else {
+                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                'country_orig'      => $originVal,
+                                                'country_dest'      => $destinyVal,
+                                                'globalcharge_id'   => $globalChargePERArreG->id
+                                            ]);
+                                        }
                                     }
                                 }
                                 // echo $i;
@@ -1505,22 +1735,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 $destinyVal = $rando;
                                             }
 
-                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                'port_orig'      	=> $originVal,
-                                                'port_dest'      	=> $destinyVal,
-                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                'globalcharge_id' => $globalChargeBLArreG->id
-                                            ]);
+                                            if($differentiatorBol == false){
+                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                    'port_orig'      	=> $originVal,
+                                                    'port_dest'      	=> $destinyVal,
+                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                    'globalcharge_id'   => $globalChargeBLArreG->id
+                                                ]);
+                                            } else {
+                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'globalcharge_id'   => $globalChargeBLArreG->id
+                                                ]);
+                                            }
                                         } 
 
                                     } else {
                                         // fila por puerto, sin expecificar origen ni destino manualmente
-                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                            'port_orig'      	=> $originVal,
-                                            'port_dest'      	=> $destinyVal,
-                                            'typedestiny_id' 	=> $typedestinyVal,
-                                            'globalcharge_id' => $globalChargeBLArreG->id
-                                        ]);
+                                        if($differentiatorBol == false){
+                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                'port_orig'      	=> $originVal,
+                                                'port_dest'      	=> $destinyVal,
+                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                'globalcharge_id'   => $globalChargeBLArreG->id
+                                            ]);
+                                        } else {
+                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                'country_orig'      => $originVal,
+                                                'country_dest'      => $destinyVal,
+                                                'globalcharge_id'   => $globalChargeBLArreG->id
+                                            ]);
+                                        }
                                     }
                                 }
                                 // echo $i;
@@ -1592,22 +1838,38 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 $destinyVal = $rando;
                                             }
 
-                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                'port_orig'      	=> $originVal,
-                                                'port_dest'      	=> $destinyVal,
-                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                'globalcharge_id' => $globalChargeTONArreG->id
-                                            ]);
+                                            if($differentiatorBol == false){
+                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                    'port_orig'      	=> $originVal,
+                                                    'port_dest'      	=> $destinyVal,
+                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                    'globalcharge_id'   => $globalChargeTONArreG->id
+                                                ]);
+                                            } else {
+                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'globalcharge_id'   => $globalChargeTONArreG->id
+                                                ]);
+                                            }
                                         } 
 
                                     } else {
                                         // fila por puerto, sin expecificar origen ni destino manualmente
-                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                            'port_orig'      	=> $originVal,
-                                            'port_dest'      	=> $destinyVal,
-                                            'typedestiny_id' 	=> $typedestinyVal,
-                                            'globalcharge_id' => $globalChargeTONArreG->id
-                                        ]);
+                                        if($differentiatorBol == false){
+                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                'port_orig'      	=> $originVal,
+                                                'port_dest'      	=> $destinyVal,
+                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                'globalcharge_id'   => $globalChargeTONArreG->id
+                                            ]);
+                                        } else {
+                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                'country_orig'      => $originVal,
+                                                'country_dest'      => $destinyVal,
+                                                'globalcharge_id'   => $globalChargeTONArreG->id
+                                            ]);
+                                        }
                                     }
                                 }
                                 // echo $i;
@@ -1968,12 +2230,22 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
                                     } else {
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
+                                            if($differentiatorBol == true){
+                                                $originExits = Country::find($originVal);
+                                                $originVal = $originExits['name'];     
+                                            } else {
+                                                $originExits = Harbor::find($originVal);
+                                                $originVal = $originExits->name;                                       
+                                            }
                                         }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
+                                        if($destiExitBol == true){ 
+                                            if($differentiatorBol == true){
+                                                $destinyExits = Country::find($destinyVal);
+                                                $destinyVal = $destinyExits['name'];
+                                            } else {
+                                                $destinyExits = Harbor::find($destinyVal);
+                                                $destinyVal = $destinyExits->name;
+                                            }
                                         }
 
                                         // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
@@ -2257,12 +2529,22 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     } else {
                                         // puertos leidos del excel
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
+                                            if($differentiatorBol == true){
+                                                $originExits = Country::find($originVal);
+                                                $originVal = $originExits['name'];     
+                                            } else {
+                                                $originExits = Harbor::find($originVal);
+                                                $originVal = $originExits->name;                                       
+                                            }
                                         }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
+                                        if($destiExitBol == true){ 
+                                            if($differentiatorBol == true){
+                                                $destinyExits = Country::find($destinyVal);
+                                                $destinyVal = $destinyExits['name'];
+                                            } else {
+                                                $destinyExits = Harbor::find($destinyVal);
+                                                $destinyVal = $destinyExits->name;
+                                            }
                                         }
 
                                         $calculationtypeValfail = 'Per Shipment';
@@ -2381,12 +2663,22 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     } else {
                                         // puertos leidos del excel
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
+                                            if($differentiatorBol == true){
+                                                $originExits = Country::find($originVal);
+                                                $originVal = $originExits['name'];     
+                                            } else {
+                                                $originExits = Harbor::find($originVal);
+                                                $originVal = $originExits->name;                                       
+                                            }
                                         }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
+                                        if($destiExitBol == true){ 
+                                            if($differentiatorBol == true){
+                                                $destinyExits = Country::find($destinyVal);
+                                                $destinyVal = $destinyExits['name'];
+                                            } else {
+                                                $destinyExits = Harbor::find($destinyVal);
+                                                $destinyVal = $destinyExits->name;
+                                            }
                                         }
 
                                         $calculationtypeValfail = 'Per BL';
@@ -2499,12 +2791,22 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     } else {
                                         // puertos leidos del excel
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
+                                            if($differentiatorBol == true){
+                                                $originExits = Country::find($originVal);
+                                                $originVal = $originExits['name'];     
+                                            } else {
+                                                $originExits = Harbor::find($originVal);
+                                                $originVal = $originExits->name;                                       
+                                            }
                                         }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
+                                        if($destiExitBol == true){ 
+                                            if($differentiatorBol == true){
+                                                $destinyExits = Country::find($destinyVal);
+                                                $destinyVal = $destinyExits['name'];
+                                            } else {
+                                                $destinyExits = Harbor::find($destinyVal);
+                                                $destinyVal = $destinyExits->name;
+                                            }
                                         }
 
                                         $calculationtypeValfail = 'Per TON';
@@ -2746,12 +3048,22 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     }
                                 } else {
                                     if($origExiBol == true){
-                                        $originExits = Harbor::find($originVal);
-                                        $originVal = $originExits->name;                                       
+                                        if($differentiatorBol == true){
+                                            $originExits = Country::find($originVal);
+                                            $originVal = $originExits['name'];     
+                                        } else {
+                                            $originExits = Harbor::find($originVal);
+                                            $originVal = $originExits->name;                                       
+                                        }
                                     }
-                                    if($destiExitBol == true){  
-                                        $destinyExits = Harbor::find($destinyVal);
-                                        $destinyVal = $destinyExits->name;
+                                    if($destiExitBol == true){ 
+                                        if($differentiatorBol == true){
+                                            $destinyExits = Country::find($destinyVal);
+                                            $destinyVal = $destinyExits['name'];
+                                        } else {
+                                            $destinyExits = Harbor::find($destinyVal);
+                                            $destinyVal = $destinyExits->name;
+                                        }
                                     }
 
                                     // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER

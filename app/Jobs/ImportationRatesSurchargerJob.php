@@ -2005,13 +2005,23 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
                                     } else {
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
-                                        }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
-                                        }
+                                                if($differentiatorBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
+                                            }
+                                            if($destiExitBol == true){ 
+                                                if($differentiatorBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
+                                            }
                                         FailRate::create([
                                             'origin_port'   => $originVal,
                                             'destiny_port'  => $destinyVal,
@@ -2213,7 +2223,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                         } else {
                                             if($origExiBol == true){
-                                                if($origExiBol == true){
+                                                if($differentiatorBol == true){
                                                     $originExits = Country::find($originVal);
                                                     $originVal = $originExits['name'];     
                                                 } else {
@@ -2222,7 +2232,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 }
                                             }
                                             if($destiExitBol == true){ 
-                                                if($origExiBol == true){
+                                                if($differentiatorBol == true){
                                                     $destinyExits = Country::find($destinyVal);
                                                     $destinyVal = $destinyExits['name'];
                                                 } else {
@@ -2474,12 +2484,22 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         } else {
                                             // puertos leidos del excel
                                             if($origExiBol == true){
-                                                $originExits = Harbor::find($originVal);
-                                                $originVal = $originExits->name;                                       
+                                                if($differentiatorBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
                                             }
-                                            if($destiExitBol == true){  
-                                                $destinyExits = Harbor::find($destinyVal);
-                                                $destinyVal = $destinyExits->name;
+                                            if($destiExitBol == true){ 
+                                                if($differentiatorBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
                                             }
 
                                             $calculationtypeValfail = 'Per Shipment';
@@ -2587,12 +2607,22 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         } else {
                                             // puertos leidos del excel
                                             if($origExiBol == true){
-                                                $originExits = Harbor::find($originVal);
-                                                $originVal = $originExits->name;                                       
+                                                if($differentiatorBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
                                             }
-                                            if($destiExitBol == true){  
-                                                $destinyExits = Harbor::find($destinyVal);
-                                                $destinyVal = $destinyExits->name;
+                                            if($destiExitBol == true){ 
+                                                if($differentiatorBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
                                             }
 
                                             $calculationtypeValfail = 'Per BL';
@@ -2700,12 +2730,22 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         } else {
                                             // puertos leidos del excel
                                             if($origExiBol == true){
-                                                $originExits = Harbor::find($originVal);
-                                                $originVal = $originExits->name;                                       
+                                                if($differentiatorBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
                                             }
-                                            if($destiExitBol == true){  
-                                                $destinyExits = Harbor::find($destinyVal);
-                                                $destinyVal = $destinyExits->name;
+                                            if($destiExitBol == true){ 
+                                                if($differentiatorBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
                                             }
 
                                             $calculationtypeValfail = 'Per TON';
@@ -2909,13 +2949,23 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
                                     } else {
                                         if($origExiBol == true){
-                                            $originExits = Harbor::find($originVal);
-                                            $originVal = $originExits->name;                                       
-                                        }
-                                        if($destiExitBol == true){  
-                                            $destinyExits = Harbor::find($destinyVal);
-                                            $destinyVal = $destinyExits->name;
-                                        }
+                                                if($differentiatorBol == true){
+                                                    $originExits = Country::find($originVal);
+                                                    $originVal = $originExits['name'];     
+                                                } else {
+                                                    $originExits = Harbor::find($originVal);
+                                                    $originVal = $originExits->name;                                       
+                                                }
+                                            }
+                                            if($destiExitBol == true){ 
+                                                if($differentiatorBol == true){
+                                                    $destinyExits = Country::find($destinyVal);
+                                                    $destinyVal = $destinyExits['name'];
+                                                } else {
+                                                    $destinyExits = Harbor::find($destinyVal);
+                                                    $destinyVal = $destinyExits->name;
+                                                }
+                                            }
 
                                         // verificamos si todos los valores son iguales para crear unos solo como PER_CONTAINER
 
