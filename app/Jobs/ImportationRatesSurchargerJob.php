@@ -68,7 +68,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $companyUserIdVal = $this->companyUserId;
         $errors = 0;
         $NameFile = $requestobj['FileName'];
-        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
+        $path = \Storage::disk('FclImport')->url($NameFile);
         //dd($path);
         //ini_set('memory_limit', '1024M');
         
@@ -147,7 +147,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     $fortyhcVal          = '';
                     $fortynorVal         = '';
                     $fortyfiveVal        = '';
-                    $differentiatorVal   = '';
 
                     $originBol               = false;
                     $origExiBol              = false;
