@@ -35,6 +35,7 @@ use Yajra\Datatables\Datatables;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationRatesSurchargerJob;
+use App\AccountImportationContractFcl as AccountFcl;
 
 class ImportationController extends Controller
 {
@@ -444,7 +445,9 @@ class ImportationController extends Controller
     public function UploadFileNewContract(Request $request){
         //dd($request->all());
         $now                = new \DateTime();
+        $now2               = $now;
         $now                = $now->format('dmY_His');
+        $now2               = $now2->format('Y-m-d');
         $type               = $request->type;
         $carrierVal         = $request->carrier;
         $typedestinyVal     = $request->typedestiny;
@@ -485,9 +488,18 @@ class ImportationController extends Controller
         //obtenemos el nombre del archivo
         $nombre     = $file->getClientOriginalName();
         $nombre     = $now.'_'.$nombre;
-        $filebool   = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $filebool   = \Storage::disk('FclImport')->put($nombre,\File::get($file));
 
         if($filebool){
+
+            \Storage::disk('FclAccount')->put($nombre,\File::get($file));
+            $account = new AccountFcl();
+            $account->name              = $request->name;
+            $account->date              = $now2;
+            $account->namefile          = $nombre;
+            $account->company_user_id   = $CompanyUserId;
+            $account->save();
+
             $contract   = new Contract();
             $contract->name             = $request->name;
             $contract->number           = $request->number;
@@ -496,6 +508,7 @@ class ImportationController extends Controller
             $contract->expire           = $validity[1];
             $contract->status           = 'incomplete';
             $contract->company_user_id  = $CompanyUserId;
+            $contract->account_id  = $account->id;
             $contract->save(); 
 
             $Contract_id = $contract->id;
@@ -586,7 +599,7 @@ class ImportationController extends Controller
         ini_set('memory_limit', '1024M');
 
         Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
+            ->Load(\Storage::disk('FclImport')
                    ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->takeRows(2);
                        $reader->noHeading = true;
@@ -4694,7 +4707,7 @@ class ImportationController extends Controller
         }
     }
 
-    // Companies
+    // Companies ------------------------------------------------------------------------
     public function UploadCompanies(Request $request){
         //dd($request->all());
         //dd($request->file('file'));
@@ -5005,7 +5018,7 @@ class ImportationController extends Controller
         }
     }
 
-    // Contacts
+    // Contacts -------------------------------------------------------------------------
 
     public function UploadContacts(Request $request){
         //dd($request->all());
@@ -5379,6 +5392,22 @@ class ImportationController extends Controller
     public function ValidateCompany($id){
         $company = CompanyUser::find($id);
         return response()->Json($company);
+    }
+
+    // Account Importation --------------------------------------------------------------
+
+    public function indexAccount(){
+        $account = AccountFcl::all();
+        return DataTables::of($account)
+            ->addColumn('status', function ( $account) {
+                return  '-------';
+            })
+            ->addColumn('action', function ( $account) {
+            return '<!--<a href="#" class="" onclick=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account" data-id-account="'.$account['id'].'" class=""><i class="la la-remove"></i></a>--> -----';
+        })
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     // Solo Para Testear ----------------------------------------------------------------

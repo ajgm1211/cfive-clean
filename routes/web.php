@@ -150,6 +150,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
   Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts');
   Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
+  Route::get('AccountCFCL/','ImportationController@indexAccount')->name('index.Account.import.fcl');
 
   // Rates
   Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts');
