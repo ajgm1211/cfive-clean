@@ -110,7 +110,7 @@ $portRadio = false;
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-        {!! Form::label('ammountL', 'Ammount') !!}
+        {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
           {!! Form::text('ammount', $localcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -136,14 +136,16 @@ $portRadio = false;
     </div>
   </div>  
   <br>
-  <hr>
+  <br>
   <div class="m-portlet__foot m-portlet__foot--fit">
+    <br>
     <div class="m-form__actions m-form__actions">
       &nbsp;&nbsp; {!! Form::submit('Duplicate', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
+    <br>
   </div>
   {!! Form::close() !!}
 </div>

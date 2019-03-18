@@ -108,7 +108,7 @@
                         </div>
                      </div>
                   </div>
-                  <table class="table tableData "   id="tableContracts" width="100%">
+                  <table class="table tableData text-center" id="tableContracts" width="100%">
                      <thead width="100%">
                         <tr >
                            <th title="Field #1">
@@ -182,7 +182,7 @@
                               <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                  <span>
                                     <span>
-                                       Add Contract LCl
+                                       Add Contract LCL
                                     </span>
                                     <i class="la la-plus"></i>
                                  </span>
@@ -192,7 +192,7 @@
                         </div>
                      </div>
                   </div><br><br>
-                  <table class="table tableData" id="tableRates" class="tableRates" width="100%">
+                  <table class="table tableData text-center" id="tableRates" class="tableRates" width="100%">
                      <thead class="tableRatesTH">
                         <tr>
                            <th title="Field #1">
@@ -322,9 +322,44 @@
                   columns: [0, 1, 2, 3]
                }
             }
-         ]
+         ],
+         initComplete: function () {
+            this.api().columns(12).every(function () {
+               var column = this;
+               $('#tableContracts .head .head_hide').html('');
 
+               var select = $('<select id="formfilter" class="filterdropdown search2"><option value="">' + $(column.header()).text() + '</option></select>')
+                       .prependTo($(column.header()).empty())
+                       .on('change', function () {
+                          var val = new Array();
+                          //set val to current element in the dropdown.
+                          val = $(this).val();
 
+                          if (val.length > 1){
+
+                             valString = val.toString();
+                             valPiped =  valString.replace(/,/g,"|")
+
+                             column
+                                     .search( valPiped ? '^'+valPiped+'$' : '', true, false ) //find this value in this column, if it matches, draw it into the table.
+                                     .draw();
+                          } else if (val.length == 1) {
+                             column
+                                     .search( val ? '^'+val+'$' : '', true, false ) //find this value in this column, if it matches, draw it into the table.
+                                     .draw();
+                          } else {
+                             column
+                                     .search('',true,false)
+                                     .draw();
+                          }
+                       });
+
+               column.data().unique().sort().each(function (d, j) {
+                  select.append('<option value="' + d + '">' + d + '</option>')
+               });
+            });
+            $('.search2').select2();
+         }
       });
       $('#tableContracts').DataTable({
          ajax:  "{{ route('contractlcl.tableG') }}",
@@ -335,8 +370,28 @@
             {data: 'expire', name: 'expire'},
             {data: 'status', name: 'status'},
             {data: 'options', name: 'options'}
-         ]
-         ,
+         ],
+         initComplete: function () {
+            this.api().columns([0,1,2,3,4]).every(function () {
+               var column = this;
+               $('#tableContracts .head .head_hide').html('');
+
+               var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select><br>')
+                       .prependTo($(column.header()))
+                       .on('change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                                  $(this).val()
+                          );
+                          column
+                                  .search(val ? '^' + val + '$' : '', true, false)
+                                  .draw();
+                       });
+
+               column.data().unique().sort().each(function (d, j) {
+                  select.append('<option value="' + d + '">' + d + '</option>')
+               });
+            });
+         },
          "lengthChange": false,
          "searching": true,
          "ordering": true,
