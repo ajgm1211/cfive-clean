@@ -477,7 +477,9 @@ class ContractsLclController extends Controller
         $calculationT = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny = TypeDestiny::all()->pluck('description','id');
         $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        return view('contractsLcl.addLocalCharge', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','id','countries'));
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg = Currency::find($company_user->currency_id);
+        return view('contractsLcl.addLocalCharge', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','id','countries','currency_cfg'));
 
     }
     public function storeLocalChar(Request $request,$id){
