@@ -304,6 +304,8 @@ class ContractsLclController extends Controller
         $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
         $company_restriction = ContractLclCompanyRestriction::where('contractlcl_id',$contracts->id)->first();
         $user_restriction = ContractLclUserRestriction::where('contractlcl_id',$contracts->id)->first();
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg = Currency::find($company_user->currency_id);
         if(!empty($company_restriction)){
             $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
         }
@@ -328,7 +330,7 @@ class ContractsLclController extends Controller
             $request->session()->flash('activeRLcl', 'active');
         }
 
-        return view('contractsLcl.edit', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
+        return view('contractsLcl.edit', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','currency_cfg'));
     }
 
     /**
