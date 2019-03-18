@@ -342,6 +342,12 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
 });
 Route::resource('quotes', 'QuoteController')->middleware('auth');
 
+//Quotes V2
+Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
+    Route::get('/', 'QuoteV2Controller@index')->name('quotes-v2.index');
+    Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
+});
+
 //Settings
 Route::middleware(['auth'])->prefix('settings')->group(function () {
 

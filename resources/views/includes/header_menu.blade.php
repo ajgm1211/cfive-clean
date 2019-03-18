@@ -56,6 +56,13 @@
                         </span>
                     </a>
                 </li>
+                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                        <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                        <span class="m-menu__link-text">
+                            <b>Quotes V2</b>
+                        </span>
+                        </a>
+                    </li>
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">

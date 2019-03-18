@@ -15,18 +15,18 @@ class CreateQuoteV2sTable extends Migration
     {
         Schema::create('quote_v2s', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('quote_id');
-            $table->integer('custom_quote_id');
+            $table->string('quote_id');
+            $table->string('custom_quote_id');
             $table->enum('type',['LCL','FCL']);
             $table->string('delivery_type');
-            $table->longText('equipment');
+            $table->json('equipment');
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->integer('contact_id')->unsigned();
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('price_id')->unsigned();
+            $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
             $table->integer('origin_port_id')->unsigned()->nullable();
             $table->foreign('origin_port_id')->references('id')->on('harbors');
@@ -37,6 +37,8 @@ class CreateQuoteV2sTable extends Migration
             $table->date('quote_validity');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
+            $table->integer('company_user_id')->unsigned();
+            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
         });
     }
