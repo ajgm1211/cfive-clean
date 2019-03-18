@@ -24,12 +24,13 @@ class CreateAutomaticQuotesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->integer('contact_id')->unsigned();
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
-            $table->integer('price_level_id')->unsigned();
-            $table->foreign('price_level_id')->references('id')->on('price_levels')->onDelete('cascade');
+            $table->integer('price_id')->unsigned();
+            $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
             $table->date('validity_start');
             $table->date('validity_end');
-            $table->integer('currency_id');
-            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade');
+            $table->integer('currency_id')->unsigned();
+            $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
