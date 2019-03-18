@@ -148,14 +148,17 @@ $portRadio = false;
     </div>
   </div>  
   <br>
-  <hr>
+  <br>
   <div class="m-portlet__foot m-portlet__foot--fit">
+    <br>
     <div class="m-form__actions m-form__actions">
-      &nbsp;&nbsp; {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
+    <br>
   </div>
   {!! Form::close() !!}
 </div>
