@@ -37,8 +37,11 @@ class CreateQuoteV2sTable extends Migration
             $table->date('quote_validity');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
+            $table->integer('incoterm_id')->unsigned();
+            $table->foreign('incoterm_id')->references('id')->on('incoterms')->onDelete('cascade');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
+            $table->enum('status',['Draft','Won','Sent']);
             $table->timestamps();
         });
     }

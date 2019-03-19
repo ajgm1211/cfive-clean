@@ -98,14 +98,14 @@ class QuoteV2Controller extends Controller
                      Options
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
-                     <a class="dropdown-item" href="/quotes/'.$colletion['idSet'].'">
+                     <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
                         <span>
                            <i class="la la-eye"></i>
                            &nbsp;
                            Show
                         </span>
                      </a>      
-                     <a href="/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
+                     <a href="/v2/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
                         <span>
                            <i class="la la-edit"></i>
                            &nbsp;
@@ -129,6 +129,15 @@ class QuoteV2Controller extends Controller
                   </div>';
             })
             ->editColumn('id', 'ID: {{$id}}')->make(true);
-        dd($colletions);
+    }
+
+    public function show($id)
+    {
+
+        $id = obtenerRouteKey($id);
+
+        $quote = QuoteV2::findOrFail($id);
+        //dd($quote);
+        return view('quotesv2/show', compact('quote'));
     }
 }
