@@ -3183,7 +3183,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $contractData->status = 'publish';
         $contractData->update();
 
-        Storage::Delete($NameFile);
+        Storage::disk('FclImport')->Delete($NameFile);
         $FileTmp = new FileTmp();
         $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
 
