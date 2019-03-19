@@ -151,7 +151,7 @@ Route::middleware(['auth'])->prefix('Importation')->group(function () {
     Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl');
     Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import');
 
-    // Account 
+    // Account FCL
     Route::get('AccountCFCL/','ImportationController@indexAccount')->name('index.Account.import.fcl');
     Route::get('DestroyAccountcfcl/{id}','ImportationController@DestroyAccount')->name('Destroy.account.cfcl');
     Route::get('DownloadAccountcfcl/{id}','ImportationController@Download')->name('Download.Account.cfcl');
@@ -223,6 +223,11 @@ Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
 
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
 
+    // Account FCL
+    Route::get('AccountCLCL/','ImportationLclController@indexAccount')->name('index.Account.import.lcl');
+    Route::get('DestroyAccountclcl/{id}','ImportationLclController@DestroyAccount')->name('Destroy.account.clcl');
+    Route::get('DownloadAccountclcl/{id}','ImportationLclController@Download')->name('Download.Account.clcl');
+    
     //Rates 
     Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
     Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
