@@ -159,7 +159,11 @@ class NewContractRequestsController extends Controller
         try{
             return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
-            return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+            try{
+                return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+            } catch(\Exception $e){
+                return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+            }
         }
     }
 

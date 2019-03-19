@@ -64,22 +64,43 @@ return [
 
         'FclAccount' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/AccountFcl'),
-            'url' => 'storage/app/public/AccountFcl',
+            'root' => storage_path('app/public/Account/Fcl'),
+            'url' => 'storage/app/public/Account/Fcl',
             'visibility' => 'public',
         ],
 
         'FclImport' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/ImportFcl'),
-            'url' => 'storage/app/public/ImportFcl',
+            'root' => storage_path('app/public/Import/Fcl'),
+            'url' => 'storage/app/public/Import/Fcl',
             'visibility' => 'public',
         ],
 
         'FclRequest' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/RequestFcl'),
-            'url' => 'storage/app/public/RequestFcl',
+            'root' => storage_path('app/public/Request/Fcl'),
+            'url' => 'storage/app/public/Request/Fcl',
+            'visibility' => 'public',
+        ],
+
+        'LclAccount' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Account/Lcl'),
+            'url' => 'storage/app/public/Account/Lcl',
+            'visibility' => 'public',
+        ],
+
+        'LclImport' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Import/Lcl'),
+            'url' => 'storage/app/public/Import/Lcl',
+            'visibility' => 'public',
+        ],
+
+        'LclRequest' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Request/Lcl'),
+            'url' => 'storage/app/public/Request/Lcl',
             'visibility' => 'public',
         ],
 
