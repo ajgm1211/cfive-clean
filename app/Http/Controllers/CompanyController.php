@@ -114,13 +114,14 @@ class CompanyController extends Controller
         }
         $company->save();
 
-        $update_company_url = Company::find($company->id);
-        $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
-        $update_company_url->update();
-
-        $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+        if($file != "") {
+            $update_company_url = Company::find($company->id);
+            $update_company_url->logo = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
+            $update_company_url->update();
+        }
 
         if($file != ""){
+            $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
             $name     = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name,file_get_contents($file));
             ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
