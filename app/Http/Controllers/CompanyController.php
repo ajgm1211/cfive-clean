@@ -94,7 +94,10 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
-        $filepath_tmp = 'Logos/Clients/'.$file->getClientOriginalName();
+        $filepath_tmp = '';
+        if($file != "") {
+            $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
+        }
 
         $company = new Company();
         $company->business_name = $request->business_name;
@@ -198,7 +201,10 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
-        $filepath = 'Logos/Clients/'.$id.'/'.$file->getClientOriginalName();
+        $filepath = '';
+        if($file != "") {
+            $filepath = 'Logos/Clients/'.$id.'/'. $file->getClientOriginalName();
+        }
         $company = Company::find($id);
 
         $company->business_name = $request->business_name;
