@@ -31355,6 +31355,20 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   }
 }
 
+#tableRates .td {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 10px;
+}
+
+#tableContracts .td {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 10px;
+}
+
 /**
 $m--root-font: (
     size: (

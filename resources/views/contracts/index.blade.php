@@ -28,7 +28,6 @@
             </div>
          @endif
          @if(Session::has('message.nivel'))
-
             <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
                <div class="m-alert__icon">
                   <i class="la la-warning"></i>
@@ -109,7 +108,7 @@
                            </div>
                         </div>
                      </div>
-                     <table class="table tableData text-center" id="tableContracts" width="100%">
+                     <table class="table tableData" id="tableContracts" width="100%">
                         <thead width="100%">
                         <tr >
                            <th title="Field #1">
@@ -221,7 +220,7 @@
                            </div>
                         </div>
                      </div><br><br>
-                     <table class="table tableData text-center" id="tableRates" class="tableRates" width="100%">
+                     <table class="table tableData" id="tableRates" class="tableRates" width="100%">
                         <thead class="tableRatesTH">
                         <tr>
                            <th title="Field #1">
@@ -300,14 +299,11 @@
                         </div>
                      </div>
                   </div>
-
                </div>
-
             </div>
          </div>
       </div>
    </div>
-
 @endsection
 
 @section('js')
