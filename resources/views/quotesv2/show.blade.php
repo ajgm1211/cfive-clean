@@ -9,13 +9,41 @@
 @section('title', 'Quotes')
 @section('content')
   <br>
+  <div class="m-content">
   <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-10 offset-md-1">
+      <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
+        <li class="nav-item m-tabs__item" >
+          <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            Send &nbsp;&nbsp;<i class="fa fa-envelope"></i>
+          </a>
+        </li>
+        <li class="nav-item m-tabs__item" >
+          <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            PDF
+          </a>
+        </li>
+        <li class="nav-item m-tabs__item" >
+          <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            Duplicate
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-10 offset-md-1">
       <div class="m-portlet">
         <div class="m-portlet__head">
           <div class="row" style="padding-top: 20px;">
             <h3 class="title-quote size-16px">Quote info</h3>
+          </div>
+          <div class="m-portlet__head-tools">
+            <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--right m-tabs-line-danger" role="tablist">
+              <li class="nav-item m-tabs__item" >
+                <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                  <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;Edit
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="m-portlet__body">
@@ -37,7 +65,7 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
-                {{$quote->status}}
+                <span class="Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
               </div>
               <div class="col-md-4">
                 <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
@@ -80,28 +108,19 @@
         </div>
       </div>
     </div>
-    <div class="col-md-1"></div>
-
   </div>
-
   <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-10 offset-md-1">
       <div class="m-portlet">
-
         <div class="m-portlet__body">
-
-
-
           <div class="tab-content">
-
 
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-1"></div>
 
+  </div>
   </div>
 
 @endsection

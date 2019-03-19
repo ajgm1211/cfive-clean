@@ -137,6 +137,18 @@ h3.m-subheader__title{
   border: 1px solid $color-dark-blue !important;
 }
 
+.btn-primary-v2{
+  background-color: $color-white !important;
+  border: 2px solid $primary-color !important;
+  color: $primary-color !important;
+}
+
+.btn-primary-v2:hover{
+  background-color: $color-dark-blue !important;
+  border: 2px solid $color-dark-blue !important;
+  color: $color-white !important;
+}
+
 .btn.btn-secondary{
   background-color: #1D3A6E !important;
   border-color: #1D3A6E !important;
