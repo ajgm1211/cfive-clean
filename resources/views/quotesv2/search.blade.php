@@ -10,33 +10,46 @@
 @section('content')
 <br>
 <div class="row">
+
   <div class="col-md-1"></div>
   <div class="col-md-10">
+    {!! Form::open(['route' => 'quote.processSearch','class' => 'form-group m-form__group']) !!}
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
           <div>
             <div class="row">
-              <div class="col-md-2">
-                <label>Quote Type</label>
-                {{ Form::select('modality',['1' => 'Export','2' => 'Import'],null,['class'=>'m-select2-general form-control']) }}
-              </div>
-              <div class="col-md-2">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm',$incoterm,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
-              </div>
 
               <div class="col-md-2">
+                <label>Quote Type</label>
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['class'=>'m-select2-general form-control']) }}
+              </div>
+              <div class="col-md-2">
                 <label>Equipment</label>
-                {{ Form::select('equipment',['1' => '20\'','2' => '40','3'=>'40HC','4'=>'45'],null,['class'=>'m-select2-general form-control','id'=>'equipment']) }}
+                {{ Form::select('equipment[]',['1' => '20\'','2' => '40','3'=>'40HC','4'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
               <div class="col-md-2">
                 <label>Company</label>
-                {{ Form::select('company_id_quote', $companies,null,['placeholder' => 'Please choose a option','class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
+
+                <div class="m-input-icon m-input-icon--right">
+                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select3-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
+                  <span class="m-input-icon__icon m-input-icon__icon--right">
+                    <span>
+                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                    </span>
+                  </span>
+                </div>
               </div>
               <div class="col-md-2">
                 <label>Contact</label>
-                {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                <div class="m-input-icon m-input-icon--right">
+                  {{ Form::select('contact_id',[],@$form['contact_id'],['class'=>'m-select2-general form-control','required'=>'true']) }}
+                  <span class="m-input-icon__icon m-input-icon__icon--right">
+                    <span>
+                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                    </span>
+                  </span>
+                </div>
               </div>
               <div class="col-md-2">
                 <label>Price level</label>
@@ -46,16 +59,16 @@
             <div class="row">
               <div class="col-md-2" id="origin_harbor_label">
                 <label>Origin port</label>
-                {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
               </div>
               <div class="col-md-2" id="destination_harbor_label">
                 <label>Destination port</label>
-                {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
               </div>
               <div class="col-md-2">
-                <label>Pick up date</label>
+                <label>Date</label>
                 <div class="input-group date">
-                  {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                  {!! Form::text('date', @$form['date'], ['id' => 'm_daterangepicker_1' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
                   {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
 
                   <div class="input-group-append">
@@ -80,19 +93,20 @@
 
             </div>
             <br>
-            <div class ="row">  <div class="col-md-12"> <center><button type="button" class="btn m-btn--pill    btn-info">Search</button></center> </div>  </div>
-
+            <div class ="row">  <div class="col-md-12"> <center><button type="submit" class="btn m-btn--pill    btn-info">Search</button></center> </div>  </div>
           </div>
-
         </div>      
       </div>
     </div>
+
+    {!! Form::close() !!}
   </div>
   <div class="col-md-1"></div>
 
-</div>
 
-<div class="row">
+</div>
+@if(!empty($arreglo))
+<div class="row" >
   <div class="col-md-1"></div>
   <div class="col-md-10">
     <div class="m-portlet">
@@ -121,10 +135,10 @@
                 </div>
               </div>
               <div class="col-md-6" align='right'><button  class="btn-large" disabled='true'> Quote
-               
+
                 </button></div>
             </div><br><br>
-            <div class="row">
+            <div class="row " >
               <div class="col-md-2">Carrier</div>
               <div class="col-md-2">Origin</div>
               <div class="col-md-1">Destination</div>
@@ -144,6 +158,7 @@
   <div class="col-md-1"></div>
 
 </div>
+@endif
 
 @endsection
 
@@ -191,6 +206,18 @@
     var date = $('#m_datepicker_2').val();
     $('#date_hidden').val(date);
   }
+
+
+  $('.m-select3-general').select2({
+    placeholder: '<i class="fa fa-sitemap"></i>',
+    escapeMarkup : function(markup) {
+      return markup;
+    }
+  });
+
+  $('.select2-selection__arrow').remove();
+
+
 
   function AbrirModal(action,id){
 

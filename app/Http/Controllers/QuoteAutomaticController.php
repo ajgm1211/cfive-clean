@@ -2546,6 +2546,7 @@ class QuoteAutomaticController extends Controller
       $totalFreight = $totalFreight." ".$typeCurrency;
       $totalOrigin = $totalOrigin." ".$typeCurrency;
       $totalDestiny = $totalDestiny." ".$typeCurrency;
+      $tot = $totalQuote;
       $totalQuoteSin = number_format($totalQuote, 2, ',', '');
       $totalQuote = $totalQuote." ".$typeCurrency;
       $quoteCurrency = $typeCurrency;
@@ -2570,6 +2571,7 @@ class QuoteAutomaticController extends Controller
       $data->setAttribute('totalInland',$totalInland);
       //Total quote atributes
       $data->setAttribute('totalQuoteSin',$totalQuoteSin);
+      $data->setAttribute('tot',$tot);
       $data->setAttribute('quoteCurrency',$quoteCurrency);
       $data->setAttribute('idCurrency',$idCurrency);
       // SCHEDULES
@@ -2585,9 +2587,10 @@ class QuoteAutomaticController extends Controller
 
     $arreglo->setCollection(
       collect(
-        collect($arreglo->items())->sortBy('totalQuoteSin')
+        collect($arreglo->items())->sortBy('tot')
       )->values()
     );
+
 
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
   }
