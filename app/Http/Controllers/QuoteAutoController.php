@@ -51,10 +51,10 @@ class QuoteAutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-  public function index()
+  public function search()
   {
 
-    $quotes = Quote::all();
+
     $company_user_id=\Auth::user()->company_user_id;
     $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
@@ -78,7 +78,92 @@ class QuoteAutoController extends Controller
       $currency_name = '';
     }
     $currencies = Currency::all()->pluck('alphacode','id');
-    return view('quotev2/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'prices'=>$prices,'company_user'=>$company_user,'currencies'=>$currencies,'currency_name'=>$currency_name,'incoterm' => $incoterm]);
+    return view('quotesv2/search',  compact('companies','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+
+
+  }
+
+  public function processSearch(Request $request){
+
+
+    //Variables del usuario conectado
+    $company_user_id=\Auth::user()->company_user_id;
+    $user_id =  \Auth::id();
+
+    //Variables de Formulario
+    $form  = $request->all();
+    $incoterm = Incoterm::pluck('name','id');
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
+
+    $harbors = Harbor::get()->pluck('display_name','id_complete');
+
+    $countries = Country::all()->pluck('name','id');
+
+
+    $prices = Price::all()->pluck('name','id');
+    $company_user = User::where('id',\Auth::id())->first();
+    if(count($company_user->companyUser)>0) {
+      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+    }else{
+      $currency_name = '';
+    }
+    $currencies = Currency::all()->pluck('alphacode','id');
+
+
+    //Settings de la compañia 
+    $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+    $typeCurrency =  $company->companyUser->currency->alphacode ;
+    $idCurrency = $company->companyUser->currency_id;
+
+    // Request Formulario
+
+    foreach($request->input('originport') as $origP){
+
+      $infoOrig = explode("-", $origP);
+      $origin_port[] = $infoOrig[0];
+      $origin_country[] = $infoOrig[1];
+    }
+    foreach($request->input('destinyport') as $destP){
+
+      $infoDest = explode("-", $destP);
+      $destiny_port[] = $infoDest[0];
+      $destiny_country[] = $infoDest[1];
+    }
+    $delivery_type = $request->input('delivery_type');
+    $price_id = $request->input('price_id');
+    $modality_inland = $request->modality;
+    $company_id = $request->input('company_id_quote');
+    // Fecha Contrato
+    $dateRange =  $request->input('date');
+    $dateRange = explode("/",$dateRange);
+    $dateSince = $dateRange[0];
+    $dateUntil = $dateRange[1];
+
+    // Consulta base de datos rates
+    $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+        {
+          $q->whereHas('contract_user_restriction', function($a) use($user_id){
+            $a->where('user_id', '=',$user_id);
+          })->orDoesntHave('contract_user_restriction');
+        })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+                     {
+                       $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                         $b->where('company_id', '=',$company_id);
+                       })->orDoesntHave('contract_company_restriction');
+                     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+    });
+    $arreglo = $arreglo->get();
+
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+
+
 
 
   }
