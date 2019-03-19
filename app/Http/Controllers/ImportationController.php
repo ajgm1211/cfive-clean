@@ -5397,17 +5397,51 @@ class ImportationController extends Controller
     // Account Importation --------------------------------------------------------------
 
     public function indexAccount(){
-        $account = AccountFcl::all();
+        $account = AccountFcl::with('contract','companyuser')->get();
         return DataTables::of($account)
             ->addColumn('status', function ( $account) {
-                return  '-------';
+                return  $account->contract->status;
+            })
+            ->addColumn('company_user_id', function ( $account) {
+                return  $account->companyuser->name;
             })
             ->addColumn('action', function ( $account) {
-            return '<!--<a href="#" class="" onclick=""><i class="la la-edit"></i></a>
+                return '
+                <a href="/Importation/fcl/rate/'.$account->contract['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
                 &nbsp;
-                <a href="#" id="delete-account" data-id-account="'.$account['id'].'" class=""><i class="la la-remove"></i></a>--> -----';
-        })
+                <a href="/Importation/fcl/surcharge/'.$account->contract['id'].'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
+                &nbsp;
+                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+            })
             ->editColumn('id', '{{$id}}')->toJson();
+    }
+
+    public function DestroyAccount($id){
+        try{
+            $account = AccountFcl::find($id);
+            Storage::disk('FclAccount')->delete($account->namefile);
+            $account->delete();
+            return 1;
+        } catch(Exception $e){
+            return 2;
+        }
+    }
+
+    public function Download($id){
+        $account  = AccountFcl::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($account->company_user_id);
+        $extObj     = new \SplFileInfo($account->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        try{
+            return Storage::disk('s3_upload')->download('contracts/'.$account->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('FclAccount')->download($account->namefile,$name);
+        }
     }
 
     // Solo Para Testear ----------------------------------------------------------------
