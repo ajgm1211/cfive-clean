@@ -296,7 +296,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->lower }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lowerforty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input ','disabled' => 'true']) !!}
+                            {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lo40'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input ','disabled' => 'true', 'onblur' => 'validateRange40(this.id,\'t40ELOW\')']) !!}
                           </div>
                         </td>
                         <td width="20%">
@@ -304,7 +304,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->upper }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'upperforty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up up40','disabled' => 'true','onblur' => 'validateRange40(this.id,\'t40\')','style' => 'width:100%']) !!}
+                            {!! Form::text('upperforty[]', $inlanddetails->upper, ['id' => 'up40'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up up40','disabled' => 'true','onblur' => 'validateRange40(this.id,\'t40EUP\')','style' => 'width:100%']) !!}
                           </div>
 
 
@@ -314,6 +314,8 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->ammount }} /
                             {{ $inlanddetails->currency->alphacode }}
                           </div>
+
+
                           <div class="in" hidden="    true">
                             <div class="input-group">
                               {!! Form::number('ammountforty[]', $inlanddetails->ammount, ['id' => 'ammountforty'.$loop->index ,'placeholder' => '50','class' => 'form-control m-input','disabled' => 'true','style'=>'width:50%']) !!}
@@ -349,10 +351,12 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                     </tbody>
                   </table>
 
+
                   <table hidden="true">
                     <tr id="fortyclone">
-                      <td  width="20%"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input ','style'=>'width:100%']) !!}</td>
-                      <td  width="20%">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => ' form-control m-input  ','style' => 'width:100%']) !!}</td>
+                      <td  width="20%"> {!! Form::text('lowerforty[]', null, ['placeholder' => '0','class' => 'form-control m-input  low
+                        cloLow40','style'=>'width:100%']) !!}</td>
+                      <td  width="20%">         {!! Form::text('upperforty[]', null, ['placeholder' => '50','class' => ' form-control m-input  up cloUp40','style' => 'width:100%']) !!}</td>
                       <td   width="30%">
                         <div class="input-group">
                           {!! Form::number('ammountforty[]', null, ['placeholder' => '50','class' => ' form-control m-input','style'=>'width:50%']) !!}
