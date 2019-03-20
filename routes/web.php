@@ -227,7 +227,7 @@ Route::middleware(['auth'])->prefix('ImportationLCL')->group(function () {
     Route::get('AccountCLCL/','ImportationLclController@indexAccount')->name('index.Account.import.lcl');
     Route::get('DestroyAccountclcl/{id}','ImportationLclController@DestroyAccount')->name('Destroy.account.clcl');
     Route::get('DownloadAccountclcl/{id}','ImportationLclController@Download')->name('Download.Account.clcl');
-    
+
     //Rates 
     Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
     Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
@@ -439,6 +439,10 @@ Route::middleware(['auth'])->prefix('ImportationGlobalchargesFcl')->group(functi
     Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
     Route::get('FailedGlobalchargers/{id}/{tab}','ImportationGlobachargersFclController@showviewfailedandgood')->name('showview.globalcharge.fcl');
     Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
+
+    //Account
+
+    Route::get('DownloadAccountgcfcl/{id}','ImportationGlobachargersFclController@Download')->name('Download.Account.gcfcl');
 
     //failed and good
     Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');

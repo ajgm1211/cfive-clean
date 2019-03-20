@@ -114,7 +114,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract->data            = $data;
             $Ncontract->save();
 
-            //ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile,'lcl' );
+            ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
 
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -157,12 +157,16 @@ class NewContractRequestLclController extends Controller
         $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-LCL.'.$ext;
 
         try{
-            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+            return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
             try{
-                return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
+                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
             } catch(\Exception $e){
-                return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+                try{
+                    return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
+                } catch(\Exception $e){
+                    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+                }
             }
         }
     }

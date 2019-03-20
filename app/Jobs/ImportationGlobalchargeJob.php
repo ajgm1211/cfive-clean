@@ -60,7 +60,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
         $companyUserIdVal = $this->companyUserId;
         $errors = 0;
         $NameFile = $requestobj['FileName'];
-        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
+        $path = \Storage::disk('GCImport')->url($NameFile);
 
         Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
@@ -3311,7 +3311,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
         $account->status = 'complete';
         $account->update();
         
-        Storage::Delete($NameFile);
+        Storage::disk('GCImport')->Delete($NameFile);
         $FileTmp = FileTmpGlobalcharge::where('name_file','=',$NameFile)->delete();
 
         $userNotifique = User::find($this->UserId);

@@ -104,6 +104,27 @@ return [
             'visibility' => 'public',
         ],
 
+        'GCRequest' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Request/GC'),
+            'url' => 'storage/app/public/Request/GC',
+            'visibility' => 'public',
+        ],
+
+        'GCAccount' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Account/GC'),
+            'url' => 'storage/app/public/Account/GC',
+            'visibility' => 'public',
+        ],
+
+        'GCImport' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Import/GC'),
+            'url' => 'storage/app/public/Import/GC',
+            'visibility' => 'public',
+        ],
+
         'DownLoadFile' => [
             'driver' => 'local',
             'root' => storage_path('app/files'),
