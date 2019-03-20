@@ -157,11 +157,14 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                       <tr id='tr_twuenty{{++$loop->index}}'>
                         <td  width="20%"  >
 
+
+
+
                           <div id="divlowertwuenty{{$loop->index}}" class="val">
                             {{ $inlanddetails->lower }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('lowertwuenty[]', $inlanddetails->lower, ['id' => 'lowertwuenty'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input','disabled' => 'true','style'=>'width:100%']) !!}
+                            {!! Form::text('lowertwuenty[]', $inlanddetails->lower, ['id' => 'lo20'.$loop->index ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input low20 cloLow20','disabled' => 'true','style'=>'width:100%' ,'onblur' => 'validateRange(this.id,\'t20ELOW\')']) !!}
                           </div>
                         </td>
                         <td width="20%" >
@@ -169,7 +172,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->upper }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('uppertwuenty[]', $inlanddetails->upper, ['id' => 'uppertwuenty'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input ','disabled' => 'true','style'=>'width:100%']) !!}
+                            {!! Form::text('uppertwuenty[]', $inlanddetails->upper, ['id' => 'up20'.$loop->index ,'placeholder' => '50','class' => ' col-lg-12 form-control m-input up20 cloUp20','disabled' => 'true','style'=>'width:100%','onblur' => 'validateRange(this.id,\'t20EUP\')']) !!}
                           </div>
 
 
