@@ -1,3 +1,4 @@
+
 function display_twuenty(id){
 
   $("#tr_twuenty"+id+" .val").attr('hidden','true');
@@ -169,8 +170,8 @@ function save_fortyhc(id,idval){
     type: 'GET',
     url: '../updateDetails/' + idval,
     data: {
-      'lower' : $("#lowerfortyhc"+id).val(),
-      'upper' : $("#upperfortyhc"+id).val(),
+      'lower' : $("#lo40H"+id).val(),
+      'upper' : $("#up40H"+id).val(),
       'ammount' : $("#ammountfortyhc"+id).val(),
       'currency_id' : $("#currencyfortyhc"+id).val()
     },
@@ -189,8 +190,8 @@ function save_fortyhc(id,idval){
       $("#tr_fortyhc"+id+" .in").attr('hidden','true');
       $("#tr_fortyhc"+id+" .in input , #tr_fortyhc"+id+" .in select ").prop('disabled', true);
 
-      $("#divlowerfortyhc"+id).html($("#lowerfortyhc"+id).val());
-      $("#divupperfortyhc"+id).html($("#upperfortyhc"+id).val());
+      $("#divlowerfortyhc"+id).html($("#lo40H"+id).val());
+      $("#divupperfortyhc"+id).html($("#up40H"+id).val());
 
       var ammount = $("#ammountfortyhc"+id).val()+"/"+$("#currencyfortyhc"+id+" option:selected").text();
       $("#divammountfortyhc"+id).html(ammount);
@@ -239,6 +240,7 @@ $("#newfortyhc").on("click", function() {
 
 
   $ids = $( ".low40H" ).length + 1;
+
 
   $myClone.find(".cloLow40H").removeAttr('id').attr('id', 'lo40H'+$ids).attr('onblur',"validateRange40hc(this.id,'t40cloneH')").attr('required', 'true').addClass('low40H');
 
@@ -391,7 +393,7 @@ function validateRange(id,tipo){
     if(up >= lowprox || up <= low){
       bool  ='true';
     }
-     if(bool == 'true'){
+    if(bool == 'true'){
       $('#msg20').show();
       $('#up20'+idval).val(0);
     }
@@ -437,8 +439,8 @@ function validateRange40(id,tipo){
       }
     });
   } 
-  
-  
+
+
   if(tipo == 't40ELOW'){
     $('#msg40').hide();
     var idval = id.substr(4);
@@ -469,7 +471,7 @@ function validateRange40(id,tipo){
     if(up >= lowprox || up <= low){
       bool  ='true';
     }
-     if(bool == 'true'){
+    if(bool == 'true'){
       $('#msg40').show();
       $('#up40'+idval).val(0);
     }
@@ -517,6 +519,44 @@ function validateRange40hc(id,tipo){
       }
     });
   } 
+  
+  if(tipo == 't40ELOWH'){
+    $('#msg40H').hide();
+    var idval = id.substr(4);
+    var bool = 'false';
+    var low = parseInt($('#lo40H'+idval).val());
+    var up =  parseInt($('#up40H'+idval).val());
+    if(low >= up){
+      bool  ='true';
+    }
+    if(bool == 'true'){
+      $('#msg40H').show();
+      $('#lo40H'+idval).val(0);
+    }
+  } 
+
+  if(tipo == 't40EUPH'){
+
+    $('#msg40H').hide();
+    var idval = id.substr(4);
+    var idprox = parseInt(idval) + 1;
+
+    var bool = 'false';
+
+    var up =  parseInt($('#up40H'+idval).val());
+    var low =  parseInt($('#lo40H'+idval).val());
+    var lowprox = parseInt($('#lo40H'+idprox).val());
+
+    if(up >= lowprox || up <= low){
+      bool  ='true';
+    }
+    if(bool == 'true'){
+      $('#msg40H').show();
+      $('#up40H'+idval).val(0);
+    }
+  } 
+
+  
 
   if(tipo == 't40cloneH'){
     var idval = id.substr(5);
