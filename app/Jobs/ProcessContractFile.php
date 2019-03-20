@@ -10,24 +10,26 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
+use App\AccountImportationContractFcl as AccountFcl;
+use App\AccountImportationContractLcl as AccountLcl;
+use App\AccountImportationGlobalcharge as AccountGc;
 
 class ProcessContractFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $id;
-    protected $name;
-    protected $type;
+    protected $id,$name,$type,$classification;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($id,$name,$type)
+    public function __construct($id,$name,$type,$classification)
     {
-        $this->id  = $id;
-        $this->name = $name;
-        $this->type = $type;
+        $this->id               = $id;
+        $this->name             = $name;
+        $this->type             = $type;
+        $this->classification   = $classification;
     }
 
     /**
@@ -37,27 +39,69 @@ class ProcessContractFile implements ShouldQueue
      */
     public function handle()
     {
-        if($this->type == 'fcl'){
-            $Ncontracts = NewContractRequest::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('Request/FCL/'.$filePath, $file, 'public');
-        }else if($this->type == 'gcfcl'){
-            $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
-        }else{
-            $Ncontracts = NewContractRequestLcl::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
-            $s3->put('Request/LCL/'.$filePath, $file, 'public');
+        $classification = $this->classification;
+            
+        if(strnatcasecmp($classification,'request') == 0){
+            
+            if(strnatcasecmp($this->type,'fcl') == 0){
+
+                $Ncontracts = NewContractRequest::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('FclRequest')->get($file); 
+                $s3->put('Request/FCL/'.$filePath, $file, 'public');
+
+            } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
+
+                $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('GCRequest')->get($file); 
+                $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
+
+            } elseif(strnatcasecmp($this->type,'lcl') == 0){
+
+                $Ncontracts = NewContractRequestLcl::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('LclRequest')->get($file); 
+                $s3->put('Request/LCL/'.$filePath, $file, 'public');
+
+            }
+        } elseif(strnatcasecmp($classification,'account') == 0){
+            
+            if(strnatcasecmp($this->type,'fcl') == 0){
+
+                $Ncontracts = AccountFcl::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('FclAccount')->get($file); 
+                $s3->put('Account/FCL/'.$filePath, $file, 'public');
+
+            } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
+
+                $Ncontracts = AccountGc::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('GCAccount')->get($file); 
+                $s3->put('Account/Global-charges/FCL/'.$filePath, $file, 'public');
+
+            } elseif(strnatcasecmp($this->type,'lcl') == 0){
+
+                $Ncontracts = AccountLcl::find($this->id);
+                $file       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = \Storage::disk('LclAccount')->get($file); 
+                $s3->put('Account/LCL/'.$filePath, $file, 'public');
+
+            }
         }
+
     }
 }

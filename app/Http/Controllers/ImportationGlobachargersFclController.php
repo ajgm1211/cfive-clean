@@ -332,11 +332,13 @@ class ImportationGlobachargersFclController extends Controller
         //obtenemos el nombre del archivo
         $nombre     = $file->getClientOriginalName();
         $nombre     = $now.'_'.$nombre;
-        $filebool   = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $filebool   = \Storage::disk('GCImport')->put($nombre,\File::get($file));
 
         if($filebool){
+            \Storage::disk('GCAccount')->put($nombre,\File::get($file));
             $account   = new AccountImportationGlobalcharge();
             $account->name             = $request->name;
+            $account->namefile         = $nombre;
             $account->date             = $request->date;
             $account->status           = 'incomplete';
             $account->company_user_id  = $CompanyUserId;
@@ -438,7 +440,7 @@ class ImportationGlobachargersFclController extends Controller
         ini_set('memory_limit', '1024M');
 
         Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
+            ->Load(\Storage::disk('GCImport')
                    ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->takeRows(2);
                        $reader->noHeading = true;
@@ -1208,5 +1210,20 @@ class ImportationGlobachargersFclController extends Controller
             return redirect()->route('indextwo.globalcharge.fcl');			
         }
 
+    }
+
+    public function Download($id){
+        $account    = AccountImportationGlobalcharge::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($account->company_user_id);
+        $extObj     = new \SplFileInfo($account->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $account->id.'-'.$company->name.'_'.$now.'-GCFLC.'.$ext;
+        try{
+            return Storage::disk('s3_upload')->download('contracts/'.$account->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('GCAccount')->download($account->namefile,$name);
+        }
     }
 }
