@@ -65,7 +65,7 @@
               <div class="row">
                 <div class="col-md-4">
                   <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
-                  <a href="#" id="status" class="editable Status_{{$quote->status}}" data-source="[{value: 'Draft', text: 'Draft'},{value: 'Won', text: 'Won'},{value: 'Sent', text: 'Sent'}]" data-value="{{$quote->status}}" data-type="select" data-pk="{{$quote->id}}" data-title="Select type" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></a>
+                  <a href="#" id="status" class="editable Status_{{$quote->status}}" data-source="[{value: 'Draft', text: 'Draft'},{value: 'Win', text: 'Win'},{value: 'Sent', text: 'Sent'}]" data-value="{{$quote->status}}" data-type="select" data-pk="{{$quote->id}}" data-title="Select type" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></a>
                 </div>
                 <div class="col-md-4">
                   <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
@@ -97,7 +97,7 @@
                 </div>
                 <div class="col-md-4">
                   <label class="title-quote"><b>Incoterm:&nbsp;&nbsp;</b></label>
-                  {{$quote->incoterm->name}}
+                  <a href="#" id="incoterm_id" class="editable" data-source="[{value: '1', text: 'EWX'},{value: '2', text: 'FAS'},{value: '3', text: 'FCA'},{value: '4', text: 'FOB'},{value: '5', text: 'CFR'},{value: '6', text: 'CIF'},{value: '7', text: 'CIP'},{value: '8', text: 'DAT'},{value: '9', text: 'DAP'},{value: '10', text: 'DDP'}]" data-type="select" data-value="{{$quote->incoterm_id}}" data-pk="{{$quote->id}}" data-title="Select delivery type"></a>
                 </div>
                 <div class="col-md-4">
                   <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
