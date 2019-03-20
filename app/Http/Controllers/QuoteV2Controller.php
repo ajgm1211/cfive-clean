@@ -140,4 +140,11 @@ class QuoteV2Controller extends Controller
         //dd($quote);
         return view('quotesv2/show', compact('quote'));
     }
+
+    public function updateQuoteDetails(Request $request)
+    {
+        QuoteV2::find($request->pk)->update([$request->name => $request->value]);
+
+        return response()->json(['success'=>'done']);
+    }
 }

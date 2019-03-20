@@ -48,18 +48,4 @@ class QuoteV2 extends Model
     {
         return $this->hasOne('App\Price','id','price_id');
     }
-
-    public function getDeliveryTypeAttribute()
-    {
-        if($this->attributes['delivery_type']==1){
-            $this->attributes['delivery_type']='Port to Port';
-        }else if($this->attributes['delivery_type']==2){
-            $this->attributes['delivery_type']='Port to Door';
-        }else if($this->attributes['delivery_type']==2) {
-            $this->attributes['delivery_type']='Door to Port';
-        }else{
-            $this->attributes['delivery_type']='Door to Door';
-        }
-        return $this->attributes['delivery_type'];
-    }
 }
