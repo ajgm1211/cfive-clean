@@ -13,6 +13,7 @@
   <script src="/assets/demo/default/custom/components/forms/validation/form-controls.js" type="text/javascript"></script>
 
   <script src="/assets/demo/default/custom/components/forms/wizard/wizard.min.js" type="text/javascript"></script>
+  <script src="{{ asset('js/jqueryui-editable.min.js') }}" type="text/javascript"></script>
   @if(Auth::check())
     <script>
       var userId = {{ Auth::user()->id }}
