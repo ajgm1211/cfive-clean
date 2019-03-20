@@ -1318,39 +1318,681 @@ $(document).on('click', '#create-quote', function (e) {
 
 });
 
-$( document ).ready(function() {
-  $('select[name="contact_id"]').prop("disabled",true);
-  $( "select[name='company_id']" ).on('change', function() {
-    var company_id = $(this).val();
-    if(company_id) {
-      $('select[name="contact_id"]').empty();
-      $('select[name="contact_id"]').prop("disabled",false);
-      $.ajax({
-        url: "/quotes/company/contact/id/"+company_id,
-        dataType: 'json',
-        success: function(data) {
-          $('select[name="client"]').empty();
-          $.each(data, function(key, value) {
-            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
+function precargar(){
+  var company_id = $("#m_select2_2_modal").val();
+  var contact_id =  $("#contact_id_num").val();
+  var selected = '';
+  if(company_id) {
+    $('select[name="contact_id"]').empty();
+    $('select[name="contact_id"]').prop("disabled",false);
+    $.ajax({
+      url: "/quotes/company/contact/id/"+company_id,
+      dataType: 'json',
+      success: function(data) {
+        $('select[name="client"]').empty();
+        $.each(data, function(key, value) {
+          if(key == contact_id){
+            selected = 'selected';
+          }else{
+            selected = '';
+          }
+          $('select[name="contact_id"]').append('<option '+selected+' value="'+ key +'">'+ value +'</option>');
+        });
+      }
+    });
+
+  }
+}
+  $( document ).ready(function() {
+
+    $( "select[name='company_id']" ).on('change', function() {
+      var company_id = $(this).val();
+      if(company_id) {
+        $('select[name="contact_id"]').empty();
+        $('select[name="contact_id"]').prop("disabled",false);
+        $.ajax({
+          url: "/quotes/company/contact/id/"+company_id,
+          dataType: 'json',
+          success: function(data) {
+            $('select[name="client"]').empty();
+            $.each(data, function(key, value) {
+              $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+          }
+        });
+        $.ajax({
+          url: "/quotes/company/price/id/"+company_id,
+          dataType: 'json',
+          success: function(data) {
+            $('select[name="price_id"]').empty();
+            $.each(data, function(key, value) {
+              $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+          }
+        });
+        $.ajax({
+          url: "/quotes/payments/"+company_id,
+          dataType: 'json',
+          success: function(data) {
+            tinymce.init({
+              selector: "#payment_conditions",
+              plugins: [
+                "advlist autolink lists link charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                "insertdatetime nonbreaking save table contextmenu directionality",
+                "emoticons paste textcolor colorpicker textpattern codesample",
+                "fullpage toc imagetools help"
+              ],
+              toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+              menubar: false,
+              toolbar_items_size: 'small',
+              paste_as_text: true,
+              browser_spellcheck: true,
+              statusbar: false,
+              height: 200,
+
+              style_formats: [{
+                title: 'Bold text',
+                inline: 'b'
+              }, ],
+
+            });
+            if(data.payment_conditions!=''){
+              $('#payment_conditions').val(data.payment_conditions).tinymce({
+                theme: "modern",
+              });
+            }
+          }
+        });
+      }else{
+        // $('select[name="contact_id"]').empty();
+        $('select[name="price_id"]').empty();
+      }
+    });
+
+    // CLEARING COMPANIES SELECT
+
+    $( "select[name='company_id_quote']" ).on('change', function() {
+      var company_id = $(this).val();
+      if(company_id) {
+        $('select[name="contact_id"]').empty();
+        $('select[name="contact_id"]').prop("disabled",false);
+        $.ajax({
+          url: "/quotes/company/contact/id/"+company_id,
+          dataType: 'json',
+          success: function(data) {
+            $('select[name="client"]').empty();
+            $.each(data, function(key, value) {
+              $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+          }
+        });
+        $.ajax({
+          url: "/quotes/company/price/id/"+company_id,
+          dataType: 'json',
+          success: function(data) {
+            $('select[name="price_id"]').empty();
+            $.each(data, function(key, value) {
+              $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+
+            // CLEARING PRICE SELECT
+            $("select[name='price_id']").val('');
+            $('#select2-price_id-n3-container').text('Please an option');
+          }
+        });
+      }else{
+        $('select[name="client"]').empty();
+        $('select[name="price_id"]').empty();
+      }
+    });
+  });
+
+  //Calculando origin ammounts
+  $(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var self = this;
+    var markup = 0;
+    var currency_cfg = $("#currency_id").val();
+    $(".origin_price_per_unit").each(function(){
+      $( this).each(function() {
+        var quantity = $(this).closest('tr').find('.origin_ammount_units').val();
+        var currency_id = $(self).closest('tr').find('.origin_ammount_currency').val();
+        if(quantity > 0) {
+          if ($(self).closest('tr').find('.origin_ammount_currency').val() != "") {
+            $.ajax({
+              url: '/api/currency/'+currency_id,
+              dataType: 'json',
+              success: function (json) {
+
+                //var value = $('.origin_exp_amount').val();
+                var amount = $(self).closest('tr').find('.origin_price_per_unit').val();
+                var quantity = $(self).closest('tr').find('.origin_ammount_units').val();
+                markup = $(self).closest('tr').find('.origin_ammount_markup').val();
+                var sub_total = amount * quantity;
+
+                if(currency_cfg+json.alphacode == json.api_code){
+                  total = sub_total / json.rates;
+                }else{
+                  total = sub_total / json.rates_eur;
+                }
+                total = total.toFixed(2);
+                if(markup > 0){
+                  var total_amount_m = Number(total)+ Number(markup);
+                  $(self).closest('tr').find('.origin_total_ammount_2').val(total_amount_m.toFixed(2));
+                  $(self).closest('tr').find('.origin_total_ammount_2').change();
+                }else{
+                  $(self).closest('tr').find('.origin_total_ammount_2').val(total);
+                  $(self).closest('tr').find('.origin_total_ammount_2').change();
+                }
+              }
+            });
+
+          }
+
+          total_amount = quantity * $(this).val();
+          total_amount = total_amount.toFixed(2);
+          $(this).closest('tr').find('.origin_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.origin_total_ammount').change();
+        }else{
+          total_amount = 0;
+          $(this).closest('tr').find('.origin_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.origin_total_ammount').change();
         }
       });
-      $.ajax({
-        url: "/quotes/company/price/id/"+company_id,
-        dataType: 'json',
-        success: function(data) {
-          $('select[name="price_id"]').empty();
-          $.each(data, function(key, value) {
-            $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
+    });
+  });
+
+
+  //Calculando freight ammounts
+  $(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var self = this;
+    var markup = 0;
+    var currency_cfg = $("#currency_id").val();
+    $(".freight_price_per_unit").each(function(){
+      $( this).each(function() {
+        var quantity = $(this).closest('tr').find('.freight_ammount_units').val();
+        var currency_id = $(self).closest('tr').find('.freight_ammount_currency').val();
+        if(quantity > 0) {
+          if ($(self).closest('tr').find('.freight_ammount_currency').val() != "") {
+            $.ajax({
+              url: '/api/currency/'+currency_id,
+              dataType: 'json',
+              success: function (json) {
+
+                //var value = $('.origin_exp_amount').val();
+                var amount = $(self).closest('tr').find('.freight_price_per_unit').val();
+                var quantity = $(self).closest('tr').find('.freight_ammount_units').val();
+                markup = $(self).closest('tr').find('.freight_ammount_markup').val();
+                var sub_total = amount * quantity;
+                if(currency_cfg+json.alphacode == json.api_code){
+                  total = sub_total / json.rates;
+                }else{
+                  total = sub_total / json.rates_eur;
+                }
+                total = total.toFixed(2);
+                if(markup > 0){
+                  var total_amount_m = Number(total)+ Number(markup);
+                  $(self).closest('tr').find('.freight_total_ammount_2').val(total_amount_m.toFixed(2));
+                  $(self).closest('tr').find('.freight_total_ammount_2').change();
+                }else{
+                  $(self).closest('tr').find('.freight_total_ammount_2').val(total);
+                  $(self).closest('tr').find('.freight_total_ammount_2').change();
+                }
+              }
+            });
+
+          }
+
+          total_amount = quantity * $(this).val();
+          $(this).closest('tr').find('.freight_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.freight_total_ammount').change();
+        }else{
+          total_amount = 0;
+          $(this).closest('tr').find('.freight_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.freight_total_ammount').change();
         }
       });
+    });
+  });
+
+  //Calculando destinations ammounts
+  $(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var markup = 0;
+    var total=0;
+    var self = this;
+    var currency_cfg = $("#currency_id").val();
+    $(".destination_price_per_unit").each(function(){
+      $( this).each(function() {
+        var quantity = $(this).closest('tr').find('.destination_ammount_units').val();
+        var currency_id = $(self).closest('tr').find('.destination_ammount_currency').val();
+
+        if(quantity > 0) {
+          if ($(self).closest('tr').find('.destination_ammount_currency').val() != "") {
+            $.ajax({
+              url: '/api/currency/'+currency_id,
+              dataType: 'json',
+              success: function (json) {
+                var amount = $(self).closest('tr').find('.destination_price_per_unit').val();
+                var quantity = $(self).closest('tr').find('.destination_ammount_units').val();
+                markup = $(self).closest('tr').find('.destination_ammount_markup').val();
+                var sub_total = amount * quantity;
+
+                if(currency_cfg+json.alphacode == json.api_code){
+                  total = sub_total / json.rates;
+                }else{
+                  total = sub_total / json.rates_eur;
+                }
+                total = total.toFixed(2);
+                if(markup > 0){
+                  var total_amount_m = Number(total)+ Number(markup);
+                  $(self).closest('tr').find('.destination_total_ammount_2').val(total_amount_m.toFixed(2));
+                  $(self).closest('tr').find('.destination_total_ammount_2').change();
+                }else{
+                  $(self).closest('tr').find('.destination_total_ammount_2').val(total);
+                  $(self).closest('tr').find('.destination_total_ammount_2').change();
+                }
+
+              }
+            });
+
+          }
+
+          total_amount = quantity * $(this).val();
+
+          $(this).closest('tr').find('.destination_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.destination_total_ammount').change();
+        }else{
+          total_amount = 0;
+          $(this).closest('tr').find('.destination_total_ammount').val(total_amount);
+          $(this).closest('tr').find('.destination_total_ammount').change();
+        }
+      });
+    });
+  });
+
+  //Calculando total origin
+  $(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
+    var sum = 0;
+    var total = 0;
+    var tot = 0;
+    $(".origin_total_ammount_2").each(function(){
+      total=$(this).closest('tr').find('.origin_total_ammount_2').val();
+      sum += +total;
+
+    });
+    $("#sub_total_origin").html(" "+sum);
+    $("#total_origin_ammount").val(sum);
+    $("#total_origin_ammount").change();
+  });
+
+  //Calculando total freight
+  $(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
+    var sum = 0;
+    var total = 0;
+    $(".freight_total_ammount_2").each(function(){
+      total=$(this).closest('tr').find('.freight_total_ammount_2').val();
+      sum += +total;
+    });
+    $("#sub_total_freight").html(" "+sum);
+    $("#total_freight_ammount").val(sum);
+    $("#total_freight_ammount").change();
+  });
+
+  //Calculando total destination
+  $(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
+    var sum = 0;
+    var total = 0;
+    $(".destination_total_ammount_2").each(function(){
+      total=$(this).closest('tr').find('.destination_total_ammount_2').val();
+      sum += +total;
+    });
+    $("#sub_total_destination").html(" "+sum);
+    $("#total_destination_ammount").val(sum);
+    $("#total_destination_ammount").change();
+  });
+
+  $(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
+    var sum = 0;
+    var total = 0;
+    $(".destination_price_per_unit").each(function(){
+      total=$(this).closest('tr').find('.destination_total_ammount_2').val();
+      sum += +total;
+    });
+    $("#sub_total_destination").html(" "+sum);
+    $("#total_destination_ammount").val(sum);
+    $("#total_destination_ammount").change();
+  });
+
+  $(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_ammount, #total_destination_ammount", function() {
+
+    var total_origin=$("#total_origin_ammount").val();
+    var total_freight=$("#total_freight_ammount").val();
+    var total_destination=$("#total_destination_ammount").val();
+    if(total_origin>0){
+      total_origin=parseFloat(total_origin);
+    }else{
+      total_origin=0;
+    }
+    if(total_freight>0){
+      total_freight=parseFloat(total_freight);
+    }else{
+      total_freight=0;
+    }
+    if(total_destination>0){
+      total_destination=parseFloat(total_destination);
+    }else{
+      total_destination=0;
+    }
+
+    sum = total_origin+total_freight+total_destination;
+
+    sum = parseFloat(sum);
+    sum = sum.toFixed(2);
+
+    $("#total").html(" "+sum);
+  });
+
+  //Calcular el volumen individual
+  $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
+    var sumAl = 0;
+    var sumAn = 0;
+    var sumLa = 0;
+    var sumQ = 0;
+    var result = 0;
+    var width = 0;
+    var length = 0;
+    var thickness = 0;
+    var quantity = 0;
+    var weight = 0;
+    var volume = 0;
+    $( ".width" ).each(function() {
+      $( this).each(function() {
+        width = $(this).val();
+        if (!isNaN(width)) {
+          width = parseInt(width);
+        }
+      });
+    });
+    $( ".height" ).each(function() {
+      $( this).each(function() {
+        thickness = $(this).val();
+        if (!isNaN(thickness)) {
+          thickness = parseInt(thickness);
+        }
+      });
+    });
+    $( ".quantity" ).each(function() {
+      $( this).each(function() {
+        quantity = $(this).val();
+        if (!isNaN(quantity)) {
+          quantity = parseInt(quantity);
+        }
+      });
+    });
+    $( ".weight" ).each(function() {
+      $(this).each(function() {
+        weight = $(this).val();
+        if (weight!='') {
+          weight = parseFloat(weight);
+        }
+      });
+    });
+
+    $( ".large" ).each(function() {
+      $( this).each(function() {
+        length = $(this).val();
+        if (!isNaN(length)) {
+          length = parseInt(length);
+        }
+      });
+      thickness = $(this).closest('.row').find('.height').val();
+      length = $(this).closest('.row').find('.large').val();
+      width = $(this).closest('.row').find('.width').val();
+      quantity = $(this).closest('.row').find('.quantity').val();
+      weight = $(this).closest('.row').find('.weight').val();
+
+      if(thickness > 0 || length > 0 || quantity > 0) {
+        volume = Math.round(thickness * length * width * quantity / 10000) / 100;
+        if (isNaN(volume)) {
+          volume = 0;
+        }
+      }
+      if($( this).val()!=''){
+        $(this).closest('.template').find('.volume').html(volume+" m<sup>3</sup>");
+        $(this).closest('.template').find('.volume_input').val(volume);
+      }
+      $(this).closest('.template').find('.quantity').html(" "+quantity+" un");
+      $(this).closest('.template').find('.weight').html(" "+weight*quantity+" kg");
+      $(this).closest('.template').find('.quantity_input').val(quantity);
+      $(this).closest('.template').find('.weight_input').val(weight*quantity);
+      $(this).closest('.template').find('.volume_input').change();
+      $(this).closest('.template').find('.quantity_input').change();
+      $(this).closest('.template').find('.weight_input').change();
+    });
+  });
+
+  $(document).on("change keydown keyup", ".quantity_input", function(){
+    var sum = 0;
+    //iterate through each textboxes and add the values
+    $(".quantity_input").each(function() {
+      //add only if the value is number
+      if ($(this).val()>0 && $(this).val()!='') {
+        sum += parseInt($(this).val());
+      }
+      else if ($(this).val().length != 0){
+        $(this).css("background-color", "red");
+      }
+    });
+    $("#total_quantity_pkg").html(sum + " un");
+    $("#total_quantity_pkg_input").val(sum);
+  });
+
+  $(document).on("change keydown keyup", ".volume_input", function(){
+    var sum = 0;
+    //iterate through each textboxes and add the values
+    $(".volume_input").each(function() {
+      //add only if the value is number
+      if ($(this).val()>0 && $(this).val()!='') {
+        sum += parseFloat($(this).val());
+      }
+      else if ($(this).val().length != 0){
+        $(this).css("background-color", "red");
+      }
+    });
+
+    $("#total_volume_pkg").html((sum) + " m3");
+    $("#total_volume_pkg_input").val(sum);
+  });
+
+  $(document).on("change keydown keyup", ".weight_input", function(){
+    var sum = 0;
+    var sum_vol = 0;
+
+    //iterate through each textboxes and add the values
+    $(".weight_input").each(function() {
+      //add only if the value is number
+      if ($(this).val()>0 && $(this).val()!='') {
+        sum += parseFloat($(this).val());
+      }
+    });
+    $("#total_weight_pkg").html(sum + " kg");
+    $("#total_weight_pkg_input").val(sum);
+
+    $(".volume_input").each(function() {
+      //add only if the value is number
+      if ($(this).val()>0 && $(this).val()!='') {
+        sum_vol += parseFloat($(this).val());
+      }
+      else if ($(this).val().length != 0){
+        $(this).css("background-color", "red");
+      }
+    });
+    var chargeable_weight= 0;
+    var weight=sum;
+    //Calculate chargeable weight
+    if($("input[name='type']:checked").val()==2){
+      total_vol_chargeable=sum_vol;
+      total_weight=weight/1000;
+      if(total_vol_chargeable>total_weight){
+        chargeable_weight=total_vol_chargeable;
+      }else{
+        chargeable_weight=total_weight;
+      }
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+    }else if($("input[name='type']:checked").val()==3){
+      total_vol_chargeable=sum_vol*166;
+      if(total_vol_chargeable>weight){
+        chargeable_weight=total_vol_chargeable;
+      }else{
+        chargeable_weight=weight;
+      }
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+    }
+
+
+    $("#chargeable_weight_pkg_input").val(chargeable_weight);
+  });
+
+  //Calculate chargeable weight by totals
+  $(document).on('change keyup keydown', '#total_volume, #total_weight', function () {
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+      total_volume=$('#total_volume').val();
+      total_weight=$('#total_weight').val();
+      if($("input[name='type']:checked").val()==2){
+        total_weight=total_weight/1000;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      }else if($("input[name='type']:checked").val()==3){
+        total_volume=total_volume*166;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+      }
+
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
+  });
+
+  $(document).on('click', '#send-pdf-quote', function () {
+    var id = $('#quote-id').val();
+    var email = $('#quote_email').val();
+    var to = $('#addresse').val();
+    var email_template_id = $('#email_template').val();
+    var email_subject = $('#email-subject').val();
+    var email_body = $('#email-body').val();
+
+    if(email_template_id!=''&&to!=''){
       $.ajax({
-        url: "/quotes/payments/"+company_id,
-        dataType: 'json',
+        type: 'POST',
+        url: '/quotes/send/pdf',
+        data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
+        beforeSend: function () {
+          $('#send-pdf-quote').hide();
+          $('#send-pdf-quote-sending').show();
+        },
         success: function(data) {
+          $('#spin').hide();
+          $('#send-pdf-quote').show();
+          $('#send-pdf-quote-sending').hide();
+          if(data.message=='Ok'){
+            $('#SendQuoteModal').modal('toggle');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('#subject-box').html('');
+            $('.editor').html('');
+            $('#textarea-box').hide();
+            swal(
+              'Done!',
+              'Your message has been sent.',
+              'success'
+            )
+          }else{
+            swal(
+              'Error!',
+              'Your message has not been sent.',
+              'error'
+            )
+          }
+        }
+      });
+    }else{
+      swal(
+        '',
+        'Please complete all fields',
+        'error'
+      )
+    }
+  });
+
+  //Change Status Quote
+  $(document).on('change', '#status_quote_id', function () {
+    var id = $('#quote-id').val();
+    var status_quote_id = $('#status_quote_id').val();
+    $.ajax({
+      type: 'POST',
+      url: '/quotes/update/status/'+id,
+      data:{"status_quote_id":status_quote_id},
+      success: function(data) {
+        $('#spin').hide();
+
+        if(data.message=='Ok'){
+          swal(
+            'Done!',
+            'Status updated.',
+            'success'
+          )
+        }else{
+          swal(
+            'Error!',
+            'Has ocurred an error.',
+            'error'
+          )
+        }
+      }
+    });
+  });
+
+  /** EMAIL TEMPLATES **/
+
+  //Select email template to send quote
+  $(document).on('change', '#email_template', function () {
+    var ed;
+    var id = $('#email_template').val();
+    var data = $('#emaildimanicdata').val();
+    if(id==''){
+      $('#subject-box').html('');
+      $('#textarea-box').hide();
+      $('.editor').html('');
+    }else{
+      $.ajax({
+        type: 'GET',
+        url: '/templates/preview',
+        data:{"id":id,data:data},
+        success: function(data) {
+          $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
+          $('#textarea-box').show();
+
+          ed = data.message;
           tinymce.init({
-            selector: "#payment_conditions",
+            selector: "#email-body",
             plugins: [
               "advlist autolink lists link charmap print preview hr anchor pagebreak",
               "searchreplace wordcount visualblocks visualchars code fullscreen",
@@ -1372,1299 +2014,681 @@ $( document ).ready(function() {
             }, ],
 
           });
-          if(data.payment_conditions!=''){
-            $('#payment_conditions').val(data.payment_conditions).tinymce({
-              theme: "modern",
-            });
+          $('.editor').html(data.message).tinymce({
+            theme: "modern",
+          });
+
+        }
+      });
+    }
+    $('#email-body').html(ed).tinymce({
+      theme: "modern",
+    });
+  });
+
+  $(document).on('click', '#show_email_templates', function () {
+    $('#email_templates_box').show();
+  });
+
+  //Select2 email template in quotes
+  $('#email_templte').select2({
+    placeholder: "Select an option"
+  });
+
+  /** CLIENTS **/
+
+  $(document).on('click', '#delete-contact', function () {
+    var id = $(this).attr('data-contact-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: '/contacts/delete/' + id,
+          success: function(data) {
+            if(data.message=='Ok'){
+              swal(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+              $(theElement).closest('tr').remove();
+            }else{
+              swal(
+                'Error!',
+                'Your can\'t delete this contact because have quotes related.',
+                'warning'
+              )
+              console.log(data.message);
+            }
           }
-        }
-      });
-    }else{
-      $('select[name="contact_id"]').empty();
-      $('select[name="price_id"]').empty();
-    }
+        });
+
+      }
+
+    });
   });
 
-  // CLEARING COMPANIES SELECT
- /* $("select[name='company_id_quote']").val('');
-  $('#select2-m_select2_2_modal-container').text('Please an option');*/
-  $( "select[name='company_id_quote']" ).on('change', function() {
-    var company_id = $(this).val();
-    if(company_id) {
-      $('select[name="contact_id"]').empty();
-      $('select[name="contact_id"]').prop("disabled",false);
-      $.ajax({
-        url: "/quotes/company/contact/id/"+company_id,
-        dataType: 'json',
-        success: function(data) {
-          $('select[name="client"]').empty();
-          $.each(data, function(key, value) {
-            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-        }
-      });
-      $.ajax({
-        url: "/quotes/company/price/id/"+company_id,
-        dataType: 'json',
-        success: function(data) {
-          $('select[name="price_id"]').empty();
-          $.each(data, function(key, value) {
-            $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
+  /** COMPANIES **/
 
-          // CLEARING PRICE SELECT
-          $("select[name='price_id']").val('');
-          $('#select2-price_id-n3-container').text('Please an option');
-        }
-      });
-    }else{
-      $('select[name="client"]').empty();
-      $('select[name="price_id"]').empty();
-    }
-  });
-});
-
-//Calculando origin ammounts
-$(document).on("change keyup keydown", ".origin_ammount_units, .origin_price_per_unit, .origin_ammount_currency, .origin_ammount_markup", function() {
-  var sum = 0;
-  var total_amount = 0;
-  var self = this;
-  var markup = 0;
-  var currency_cfg = $("#currency_id").val();
-  $(".origin_price_per_unit").each(function(){
-    $( this).each(function() {
-      var quantity = $(this).closest('tr').find('.origin_ammount_units').val();
-      var currency_id = $(self).closest('tr').find('.origin_ammount_currency').val();
-      if(quantity > 0) {
-        if ($(self).closest('tr').find('.origin_ammount_currency').val() != "") {
-          $.ajax({
-            url: '/api/currency/'+currency_id,
-            dataType: 'json',
-            success: function (json) {
-
-              //var value = $('.origin_exp_amount').val();
-              var amount = $(self).closest('tr').find('.origin_price_per_unit').val();
-              var quantity = $(self).closest('tr').find('.origin_ammount_units').val();
-              markup = $(self).closest('tr').find('.origin_ammount_markup').val();
-              var sub_total = amount * quantity;
-
-              if(currency_cfg+json.alphacode == json.api_code){
-                total = sub_total / json.rates;
-              }else{
-                total = sub_total / json.rates_eur;
-              }
-              total = total.toFixed(2);
-              if(markup > 0){
-                var total_amount_m = Number(total)+ Number(markup);
-                $(self).closest('tr').find('.origin_total_ammount_2').val(total_amount_m.toFixed(2));
-                $(self).closest('tr').find('.origin_total_ammount_2').change();
-              }else{
-                $(self).closest('tr').find('.origin_total_ammount_2').val(total);
-                $(self).closest('tr').find('.origin_total_ammount_2').change();
-              }
+  $(document).on('click', '#delete-company', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continue!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: '/companies/delete/' + id,
+          success: function(data) {
+            if(data.message>0){
+              swal({
+                title: 'Warning!',
+                text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!'
+              }).then(function(result) {
+                if (result.value) {
+                  $.ajax({
+                    type: 'get',
+                    url: '/companies/destroy/' + id,
+                    success: function(data) {
+                      if(data.message=='Ok'){
+                        swal(
+                          'Deleted!',
+                          'Your file has been deleted.',
+                          'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                      }else{
+                        swal(
+                          'Error!',
+                          'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                          'error'
+                        )
+                        console.log(data.message);
+                      }
+                    }
+                  });
+                }
+              });
+            }else{
+              $.ajax({
+                type: 'get',
+                url: '/companies/destroy/' + id,
+                success: function(data) {
+                  if(data.message=='Ok'){
+                    swal(
+                      'Deleted!',
+                      'Your file has been deleted.',
+                      'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                  }else{
+                    swal(
+                      'Error!',
+                      'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                      'warning'
+                    )
+                    console.log(data.message);
+                  }
+                }
+              });
             }
-          });
-
-        }
-
-        total_amount = quantity * $(this).val();
-        total_amount = total_amount.toFixed(2);
-        $(this).closest('tr').find('.origin_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.origin_total_ammount').change();
-      }else{
-        total_amount = 0;
-        $(this).closest('tr').find('.origin_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.origin_total_ammount').change();
+          }
+        });
       }
     });
   });
-});
 
-
-//Calculando freight ammounts
-$(document).on("change keyup keydown", ".freight_ammount_units, .freight_price_per_unit, .freight_ammount_currency, .freight_ammount_markup", function() {
-  var sum = 0;
-  var total_amount = 0;
-  var self = this;
-  var markup = 0;
-  var currency_cfg = $("#currency_id").val();
-  $(".freight_price_per_unit").each(function(){
-    $( this).each(function() {
-      var quantity = $(this).closest('tr').find('.freight_ammount_units').val();
-      var currency_id = $(self).closest('tr').find('.freight_ammount_currency').val();
-      if(quantity > 0) {
-        if ($(self).closest('tr').find('.freight_ammount_currency').val() != "") {
-          $.ajax({
-            url: '/api/currency/'+currency_id,
-            dataType: 'json',
-            success: function (json) {
-
-              //var value = $('.origin_exp_amount').val();
-              var amount = $(self).closest('tr').find('.freight_price_per_unit').val();
-              var quantity = $(self).closest('tr').find('.freight_ammount_units').val();
-              markup = $(self).closest('tr').find('.freight_ammount_markup').val();
-              var sub_total = amount * quantity;
-              if(currency_cfg+json.alphacode == json.api_code){
-                total = sub_total / json.rates;
-              }else{
-                total = sub_total / json.rates_eur;
-              }
-              total = total.toFixed(2);
-              if(markup > 0){
-                var total_amount_m = Number(total)+ Number(markup);
-                $(self).closest('tr').find('.freight_total_ammount_2').val(total_amount_m.toFixed(2));
-                $(self).closest('tr').find('.freight_total_ammount_2').change();
-              }else{
-                $(self).closest('tr').find('.freight_total_ammount_2').val(total);
-                $(self).closest('tr').find('.freight_total_ammount_2').change();
-              }
+  $(document).on('click', '#delete-company-show', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continue!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: '/companies/delete/' + id,
+          success: function(data) {
+            if(data.message>0){
+              swal({
+                title: 'Warning!',
+                text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!'
+              }).then(function(result) {
+                if (result.value) {
+                  $.ajax({
+                    type: 'get',
+                    url: '/companies/destroy/' + id,
+                    success: function(data) {
+                      if(data.message=='Ok'){
+                        swal(
+                          'Deleted!',
+                          'Your file has been deleted.',
+                          'success'
+                        )
+                        $(theElement).closest('tr').remove();
+                      }else{
+                        swal(
+                          'Error!',
+                          'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                          'error'
+                        )
+                        console.log(data.message);
+                      }
+                    }
+                  });
+                }
+              });
+            }else{
+              $.ajax({
+                type: 'get',
+                url: '/companies/destroy/' + id,
+                success: function(data) {
+                  if(data.message=='Ok'){
+                    swal(
+                      'Deleted!',
+                      'Your file has been deleted.',
+                      'success'
+                    )
+                    window.location.href = '/companies';
+                  }else{
+                    swal(
+                      'Error!',
+                      'This company has quotes associated. You can\'t deleted companies with quotes associated.',
+                      'warning'
+                    )
+                    console.log(data.message);
+                  }
+                }
+              });
             }
-          });
-
-        }
-
-        total_amount = quantity * $(this).val();
-        $(this).closest('tr').find('.freight_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.freight_total_ammount').change();
-      }else{
-        total_amount = 0;
-        $(this).closest('tr').find('.freight_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.freight_total_ammount').change();
+          }
+        });
       }
     });
   });
-});
 
-//Calculando destinations ammounts
-$(document).on("change keyup keydown", ".destination_ammount_units, .destination_price_per_unit, .destination_ammount_currency, .destination_ammount_markup", function() {
-  var sum = 0;
-  var total_amount = 0;
-  var markup = 0;
-  var total=0;
-  var self = this;
-  var currency_cfg = $("#currency_id").val();
-  $(".destination_price_per_unit").each(function(){
-    $( this).each(function() {
-      var quantity = $(this).closest('tr').find('.destination_ammount_units').val();
-      var currency_id = $(self).closest('tr').find('.destination_ammount_currency').val();
+  $(document).on('click', '#delete-company-user', function () {
+    var id = $(this).attr('data-company-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "This action will delete all data associated to this company. You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continue!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: 'delete/company/' + id,
+          success: function(data) {
+            if(data.message=='Ok'){
+              swal(
+                'Deleted!',
+                'The company and all associated data has been deleted.',
+                'success'
+              )
+              $(theElement).closest('tr').remove();
+            }
+          }
+        });
+      }
+    });
+  });
 
-      if(quantity > 0) {
-        if ($(self).closest('tr').find('.destination_ammount_currency').val() != "") {
-          $.ajax({
-            url: '/api/currency/'+currency_id,
-            dataType: 'json',
-            success: function (json) {
-              var amount = $(self).closest('tr').find('.destination_price_per_unit').val();
-              var quantity = $(self).closest('tr').find('.destination_ammount_units').val();
-              markup = $(self).closest('tr').find('.destination_ammount_markup').val();
-              var sub_total = amount * quantity;
+  // Pricing
+  $(document).on('click', '#delete-pricing', function () {
+    var id = $(this).attr('data-pricing-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Continue!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: 'prices/destroy/' + id,
+          success: function(data) {
+            if(data.message == "fail"){
+              swal({
+                title: 'Warning!',
+                text: "There are  quotes assoociated with this pricing.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'I understand'
+              });
+            }else if(data.message == "Ok"){
 
-              if(currency_cfg+json.alphacode == json.api_code){
-                total = sub_total / json.rates;
-              }else{
-                total = sub_total / json.rates_eur;
-              }
-              total = total.toFixed(2);
-              if(markup > 0){
-                var total_amount_m = Number(total)+ Number(markup);
-                $(self).closest('tr').find('.destination_total_ammount_2').val(total_amount_m.toFixed(2));
-                $(self).closest('tr').find('.destination_total_ammount_2').change();
-              }else{
-                $(self).closest('tr').find('.destination_total_ammount_2').val(total);
-                $(self).closest('tr').find('.destination_total_ammount_2').change();
-              }
+              swal(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+              $(theElement).closest('tr').remove();
 
             }
-          });
 
-        }
+          },
+          error: function (request, status, error) {
+            alert(request.responseText);
+          }
 
-        total_amount = quantity * $(this).val();
-
-        $(this).closest('tr').find('.destination_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.destination_total_ammount').change();
-      }else{
-        total_amount = 0;
-        $(this).closest('tr').find('.destination_total_ammount').val(total_amount);
-        $(this).closest('tr').find('.destination_total_ammount').change();
-      }
-    });
-  });
-});
-
-//Calculando total origin
-$(document).on("change keyup keydown", ".origin_total_ammount_2", function() {
-  var sum = 0;
-  var total = 0;
-  var tot = 0;
-  $(".origin_total_ammount_2").each(function(){
-    total=$(this).closest('tr').find('.origin_total_ammount_2').val();
-    sum += +total;
-
-  });
-  $("#sub_total_origin").html(" "+sum);
-  $("#total_origin_ammount").val(sum);
-  $("#total_origin_ammount").change();
-});
-
-//Calculando total freight
-$(document).on("change keyup keydown", ".freight_total_ammount_2", function() {
-  var sum = 0;
-  var total = 0;
-  $(".freight_total_ammount_2").each(function(){
-    total=$(this).closest('tr').find('.freight_total_ammount_2').val();
-    sum += +total;
-  });
-  $("#sub_total_freight").html(" "+sum);
-  $("#total_freight_ammount").val(sum);
-  $("#total_freight_ammount").change();
-});
-
-//Calculando total destination
-$(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
-  var sum = 0;
-  var total = 0;
-  $(".destination_total_ammount_2").each(function(){
-    total=$(this).closest('tr').find('.destination_total_ammount_2').val();
-    sum += +total;
-  });
-  $("#sub_total_destination").html(" "+sum);
-  $("#total_destination_ammount").val(sum);
-  $("#total_destination_ammount").change();
-});
-
-$(document).on("change keyup keydown", ".destination_total_ammount_2", function() {
-  var sum = 0;
-  var total = 0;
-  $(".destination_price_per_unit").each(function(){
-    total=$(this).closest('tr').find('.destination_total_ammount_2').val();
-    sum += +total;
-  });
-  $("#sub_total_destination").html(" "+sum);
-  $("#total_destination_ammount").val(sum);
-  $("#total_destination_ammount").change();
-});
-
-$(document).on("change keyup keydown", "#total_freight_ammount, #total_origin_ammount, #total_destination_ammount", function() {
-
-  var total_origin=$("#total_origin_ammount").val();
-  var total_freight=$("#total_freight_ammount").val();
-  var total_destination=$("#total_destination_ammount").val();
-  if(total_origin>0){
-    total_origin=parseFloat(total_origin);
-  }else{
-    total_origin=0;
-  }
-  if(total_freight>0){
-    total_freight=parseFloat(total_freight);
-  }else{
-    total_freight=0;
-  }
-  if(total_destination>0){
-    total_destination=parseFloat(total_destination);
-  }else{
-    total_destination=0;
-  }
-
-  sum = total_origin+total_freight+total_destination;
-
-  sum = parseFloat(sum);
-  sum = sum.toFixed(2);
-
-  $("#total").html(" "+sum);
-});
-
-//Calcular el volumen individual
-$(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
-  var sumAl = 0;
-  var sumAn = 0;
-  var sumLa = 0;
-  var sumQ = 0;
-  var result = 0;
-  var width = 0;
-  var length = 0;
-  var thickness = 0;
-  var quantity = 0;
-  var weight = 0;
-  var volume = 0;
-  $( ".width" ).each(function() {
-    $( this).each(function() {
-      width = $(this).val();
-      if (!isNaN(width)) {
-        width = parseInt(width);
-      }
-    });
-  });
-  $( ".height" ).each(function() {
-    $( this).each(function() {
-      thickness = $(this).val();
-      if (!isNaN(thickness)) {
-        thickness = parseInt(thickness);
-      }
-    });
-  });
-  $( ".quantity" ).each(function() {
-    $( this).each(function() {
-      quantity = $(this).val();
-      if (!isNaN(quantity)) {
-        quantity = parseInt(quantity);
-      }
-    });
-  });
-  $( ".weight" ).each(function() {
-    $(this).each(function() {
-      weight = $(this).val();
-      if (weight!='') {
-        weight = parseFloat(weight);
+        });
       }
     });
   });
 
-  $( ".large" ).each(function() {
-    $( this).each(function() {
-      length = $(this).val();
-      if (!isNaN(length)) {
-        length = parseInt(length);
+  //SaleTerms
+
+  $(document).on('click', '#delete-saleterm', function () {
+    var id = $(this).attr('data-saleterm-id');
+    var theElement = $(this);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then(function(result) {
+      if (result.value) {
+        $.ajax({
+          type: 'get',
+          url: 'saleterms/delete/' + id,
+          success: function(data) {
+            if(data.message=='Ok'){
+              swal(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+              $(theElement).closest('tr').remove();
+            }else{
+              swal(
+                'Error!',
+                'Your can\'t delete this contact because have quotes related.',
+                'warning'
+              )
+              console.log(data.message);
+            }
+          }
+        });
       }
     });
-    thickness = $(this).closest('.row').find('.height').val();
-    length = $(this).closest('.row').find('.large').val();
-    width = $(this).closest('.row').find('.width').val();
-    quantity = $(this).closest('.row').find('.quantity').val();
-    weight = $(this).closest('.row').find('.weight').val();
-
-    if(thickness > 0 || length > 0 || quantity > 0) {
-      volume = Math.round(thickness * length * width * quantity / 10000) / 100;
-      if (isNaN(volume)) {
-        volume = 0;
-      }
-    }
-    if($( this).val()!=''){
-      $(this).closest('.template').find('.volume').html(volume+" m<sup>3</sup>");
-      $(this).closest('.template').find('.volume_input').val(volume);
-    }
-    $(this).closest('.template').find('.quantity').html(" "+quantity+" un");
-    $(this).closest('.template').find('.weight').html(" "+weight*quantity+" kg");
-    $(this).closest('.template').find('.quantity_input').val(quantity);
-    $(this).closest('.template').find('.weight_input').val(weight*quantity);
-    $(this).closest('.template').find('.volume_input').change();
-    $(this).closest('.template').find('.quantity_input').change();
-    $(this).closest('.template').find('.weight_input').change();
-  });
-});
-
-$(document).on("change keydown keyup", ".quantity_input", function(){
-  var sum = 0;
-  //iterate through each textboxes and add the values
-  $(".quantity_input").each(function() {
-    //add only if the value is number
-    if ($(this).val()>0 && $(this).val()!='') {
-      sum += parseInt($(this).val());
-    }
-    else if ($(this).val().length != 0){
-      $(this).css("background-color", "red");
-    }
-  });
-  $("#total_quantity_pkg").html(sum + " un");
-  $("#total_quantity_pkg_input").val(sum);
-});
-
-$(document).on("change keydown keyup", ".volume_input", function(){
-  var sum = 0;
-  //iterate through each textboxes and add the values
-  $(".volume_input").each(function() {
-    //add only if the value is number
-    if ($(this).val()>0 && $(this).val()!='') {
-      sum += parseFloat($(this).val());
-    }
-    else if ($(this).val().length != 0){
-      $(this).css("background-color", "red");
-    }
   });
 
-  $("#total_volume_pkg").html((sum) + " m3");
-  $("#total_volume_pkg_input").val(sum);
-});
-
-$(document).on("change keydown keyup", ".weight_input", function(){
-  var sum = 0;
-  var sum_vol = 0;
-
-  //iterate through each textboxes and add the values
-  $(".weight_input").each(function() {
-    //add only if the value is number
-    if ($(this).val()>0 && $(this).val()!='') {
-      sum += parseFloat($(this).val());
-    }
+  $('#m_select2-edit-company').select2({
+    placeholder: "Select an option"
   });
-  $("#total_weight_pkg").html(sum + " kg");
-  $("#total_weight_pkg_input").val(sum);
 
-  $(".volume_input").each(function() {
-    //add only if the value is number
-    if ($(this).val()>0 && $(this).val()!='') {
-      sum_vol += parseFloat($(this).val());
-    }
-    else if ($(this).val().length != 0){
-      $(this).css("background-color", "red");
-    }
+  $('#price_level_company').select2({
+    placeholder: "Select an option"
   });
-  var chargeable_weight= 0;
-  var weight=sum;
-  //Calculate chargeable weight
-  if($("input[name='type']:checked").val()==2){
-    total_vol_chargeable=sum_vol;
-    total_weight=weight/1000;
-    if(total_vol_chargeable>total_weight){
-      chargeable_weight=total_vol_chargeable;
-    }else{
-      chargeable_weight=total_weight;
-    }
-    $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-  }else if($("input[name='type']:checked").val()==3){
-    total_vol_chargeable=sum_vol*166;
-    if(total_vol_chargeable>weight){
-      chargeable_weight=total_vol_chargeable;
-    }else{
-      chargeable_weight=weight;
-    }
-    $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
-  }
+  $('#users_company').select2({
+    placeholder: "Select an option"
+  });
+  $('#users_company_2').select2({
+    placeholder: "Select an option"
+  });
 
 
-  $("#chargeable_weight_pkg_input").val(chargeable_weight);
-});
+  // companies
 
-//Calculate chargeable weight by totals
-$(document).on('change keyup keydown', '#total_volume, #total_weight', function () {
-  var chargeable_weight=0;
-  var volume=0;
-  var total_volume=0;
-  var total_weight=0;
+  $(document).on('click', '#savecompany', function () {
 
-  if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
-    total_volume=$('#total_volume').val();
-    total_weight=$('#total_weight').val();
-    if($("input[name='type']:checked").val()==2){
-      total_weight=total_weight/1000;
-      if(total_volume>total_weight){
-        chargeable_weight=total_volume;
-      }else{
-        chargeable_weight=total_weight;
-      }
-      $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-    }else if($("input[name='type']:checked").val()==3){
-      total_volume=total_volume*166;
-      if(total_volume>total_weight){
-        chargeable_weight=total_volume;
-      }else{
-        chargeable_weight=total_weight;
-      }
-      $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
-    }
-
-    $("#chargeable_weight_pkg_input").val(chargeable_weight);
-  }
-});
-
-$(document).on('click', '#send-pdf-quote', function () {
-  var id = $('#quote-id').val();
-  var email = $('#quote_email').val();
-  var to = $('#addresse').val();
-  var email_template_id = $('#email_template').val();
-  var email_subject = $('#email-subject').val();
-  var email_body = $('#email-body').val();
-
-  if(email_template_id!=''&&to!=''){
+    var $element = $('#addContactModal');
     $.ajax({
       type: 'POST',
-      url: '/quotes/send/pdf',
-      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
-      beforeSend: function () {
-        $('#send-pdf-quote').hide();
-        $('#send-pdf-quote-sending').show();
+      url: '/companies',
+      data: {
+        'business_name' : $('.business_name_input').val(),
+        'phone' : $('.phone_input').val(),
+        'address' : $('.address_input').val(),
+        'email' : $('.email_input').val(),
+
       },
       success: function(data) {
-        $('#spin').hide();
-        $('#send-pdf-quote').show();
-        $('#send-pdf-quote-sending').hide();
-        if(data.message=='Ok'){
-          $('#SendQuoteModal').modal('toggle');
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-          $('#subject-box').html('');
-          $('.editor').html('');
-          $('#textarea-box').hide();
-          swal(
-            'Done!',
-            'Your message has been sent.',
-            'success'
-          )
-        }else{
-          swal(
-            'Error!',
-            'Your message has not been sent.',
-            'error'
-          )
-        }
+        $.ajax({
+          url: "company/companies",
+          dataType: 'json',
+          success: function(dataC) {
+            $('select[name="company_id_quote"]').empty();
+            $.each(dataC, function(key, value) {
+              $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+            $('select[name="company_id"]').empty();
+            $.each(dataC, function(key, value) {
+              $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+            $('#companyModal').modal('hide');
+            $("select[name='company_id_quote']").val('');
+            $("select[name='company_id']").val('');
+            $('#select2-m_select2_2_modal-container').text('Please an option');
+
+            swal(
+              'Done!',
+              'Register completed',
+              'success'
+            )
+          },
+          error: function (request, status, error) {
+            alert(request.responseText);
+          }
+        });
+      },
+      error: function (request, status, error) {
+        alert(request.responseText);
       }
     });
-  }else{
-    swal(
-      '',
-      'Please complete all fields',
-      'error'
-    )
-  }
-});
-
-//Change Status Quote
-$(document).on('change', '#status_quote_id', function () {
-  var id = $('#quote-id').val();
-  var status_quote_id = $('#status_quote_id').val();
-  $.ajax({
-    type: 'POST',
-    url: '/quotes/update/status/'+id,
-    data:{"status_quote_id":status_quote_id},
-    success: function(data) {
-      $('#spin').hide();
-
-      if(data.message=='Ok'){
-        swal(
-          'Done!',
-          'Status updated.',
-          'success'
-        )
-      }else{
-        swal(
-          'Error!',
-          'Has ocurred an error.',
-          'error'
-        )
-      }
-    }
   });
-});
 
-/** EMAIL TEMPLATES **/
 
-//Select email template to send quote
-$(document).on('change', '#email_template', function () {
-  var ed;
-  var id = $('#email_template').val();
-  var data = $('#emaildimanicdata').val();
-  if(id==''){
-    $('#subject-box').html('');
-    $('#textarea-box').hide();
-    $('.editor').html('');
-  }else{
+
+  $(document).on('click', '#savecontact', function () {
+
+    var $element = $('#contactModal');
+
     $.ajax({
-      type: 'GET',
-      url: '/templates/preview',
-      data:{"id":id,data:data},
+      type: 'POST',
+      url: '/contacts',
+      data: {
+        'first_name' : $('.first_namec_input').val(),
+        'last_name' : $('.last_namec_input').val(),
+        'email' : $('.emailc_input').val(),
+        'phone' : $('.phonec_input').val(),
+        'company_id' : $('.companyc_input').val(),
+
+      },
       success: function(data) {
-        $('#subject-box').html('<b>Subject:</b> </br></br><input type="text" name="subject" id="email-subject" class="form-control" value="'+data.subject+'"/><hr>');
-        $('#textarea-box').show();
+        var company_id = $("select[name='company_id_quote']").val();
+        $.ajax({
+          url: "contacts/contact/"+company_id,
+          dataType: 'json',
+          success: function(dataC) {
+            $('select[name="contact_id"]').empty();
+            $.each(dataC, function(key, value) {
+              $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+            $('#contactModal').modal('hide');
 
-        ed = data.message;
-        tinymce.init({
-          selector: "#email-body",
-          plugins: [
-            "advlist autolink lists link charmap print preview hr anchor pagebreak",
-            "searchreplace wordcount visualblocks visualchars code fullscreen",
-            "insertdatetime nonbreaking save table contextmenu directionality",
-            "emoticons paste textcolor colorpicker textpattern codesample",
-            "fullpage toc imagetools help"
-          ],
-          toolbar1: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-          menubar: false,
-          toolbar_items_size: 'small',
-          paste_as_text: true,
-          browser_spellcheck: true,
-          statusbar: false,
-          height: 200,
-
-          style_formats: [{
-            title: 'Bold text',
-            inline: 'b'
-          }, ],
-
+            swal(
+              'Done!',
+              'Register completed',
+              'success'
+            )
+          },
+          error: function (request, status, error) {
+            alert(request.responseText);
+          }
         });
-        $('.editor').html(data.message).tinymce({
-          theme: "modern",
-        });
+      },
+      error: function (request, status, error) {
+        alert(request.responseText);
+      }
 
+    });
+  });
+
+  $(document).on('click', '#savecontactmanualquote', function () {
+
+    var $element = $('#contactModal');
+
+    $.ajax({
+      type: 'POST',
+      url: '/contacts',
+      data: {
+        'first_name' : $('.first_namec_input').val(),
+        'last_name' : $('.last_namec_input').val(),
+        'email' : $('.emailc_input').val(),
+        'phone' : $('.phonec_input').val(),
+        'company_id' : $('.companyc_input').val(),
+
+      },
+      success: function(data) {
+        var company_id = $("select[name='company_id']").val();
+        $.ajax({
+          url: "contacts/contact/"+company_id,
+          dataType: 'json',
+          success: function(dataC) {
+            $('select[name="contact_id"]').empty();
+            $.each(dataC, function(key, value) {
+              $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+            });
+            $('#contactModal').modal('hide');
+            swal(
+              'Done!',
+              'Register completed',
+              'success'
+            )
+          },
+          error: function (request, status, error) {
+            alert(request.responseText);
+          }
+        });
+      },
+      error: function (request, status, error) {
+        alert(request.responseText);
+      }
+
+    });
+  });
+
+  /** SELECT2 **/
+
+  $('#sale_term_id').select2({
+    placeholder: "Select an option"
+  });
+
+  $('#airline_id').select2({
+    placeholder: "Select an option"
+  });
+
+  $('#carrier_id').select2({
+    placeholder: "Select an option"
+  });
+
+  $('.m-select2-general').select2({
+    placeholder: "Select an option"
+  });
+
+  $('#origin_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+      url: '/quotes/airports/find',
+      dataType: 'json',
+      data: function (params) {
+        return {
+          q: $.trim(params.term)
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data
+        };
+      },
+    }
+  });
+
+  $('#destination_airport').select2({
+    placeholder: "Select an option",
+    minimumInputLength: 2,
+    ajax: {
+      url: '/quotes/airports/find',
+      dataType: 'json',
+      data: function (params) {
+        return {
+          q: $.trim(params.term)
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data
+        };
+      },
+    }
+  });
+
+  $('.select2-company_id').select2({
+    placeholder: "Select an option"
+  });
+
+  /** SCHEDULES **/
+
+  $(document).on('click', '#select-schedule', function () {
+
+    var schevalues = new Array();
+    var n = jQuery(".sche:checked").length;
+    if (n > 0){
+      jQuery(".sche:checked").each(function(){
+        $valor =  $(this).val();
+        var $obj = jQuery.parseJSON($valor);
+        $('#schetable > tbody:last-child').append("<tr><td>"+$obj['vessel']+"</td><td>"+$obj['etd']+"</td><td> <div class='col-md-4 offset-md-4'> "+$obj['days']+" Days<div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> "+$obj['type']+"</div></td><td>"+$obj['eta']+"</td></tr>");
+
+        schevalues.push($valor);
+      });
+
+
+      //  alert(schevalues);
+      $("#infoschedule").removeAttr('hidden');
+      $(".removesche").removeAttr('hidden');
+      $("#schedule").val(schevalues);
+    }
+
+  });
+
+  $(document).on('click', '.removesche', function () {
+    $("#infoschedule").attr('hidden','true');
+    $(".removesche").attr('hidden','true');
+    $("#scheduleBody").text('');
+    $("#schedule").val('');
+  });
+
+  $(document).on('click', '#filter_data', function () {
+    $.ajax({
+      type: 'POST',
+      url: '/dashboard/filter/',
+      data: {
+        'user': $("#user").val(),
+        'pick_up_date': $("#m_daterangepicker_1").val(),
+      },
+      success: function(data) {
+        alert(data);
       }
     });
-  }
-  $('#email-body').html(ed).tinymce({
-    theme: "modern",
   });
-});
 
-$(document).on('click', '#show_email_templates', function () {
-  $('#email_templates_box').show();
-});
+  /** PDF **/
 
-//Select2 email template in quotes
-$('#email_templte').select2({
-  placeholder: "Select an option"
-});
-
-/** CLIENTS **/
-
-$(document).on('click', '#delete-contact', function () {
-  var id = $(this).attr('data-contact-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: '/contacts/delete/' + id,
-        success: function(data) {
-          if(data.message=='Ok'){
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
-            $(theElement).closest('tr').remove();
-          }else{
-            swal(
-              'Error!',
-              'Your can\'t delete this contact because have quotes related.',
-              'warning'
-            )
-            console.log(data.message);
-          }
-        }
-      });
-
-    }
-
-  });
-});
-
-/** COMPANIES **/
-
-$(document).on('click', '#delete-company', function () {
-  var id = $(this).attr('data-company-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Continue!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: '/companies/delete/' + id,
-        success: function(data) {
-          if(data.message>0){
-            swal({
-              title: 'Warning!',
-              text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, delete it!'
-            }).then(function(result) {
-              if (result.value) {
-                $.ajax({
-                  type: 'get',
-                  url: '/companies/destroy/' + id,
-                  success: function(data) {
-                    if(data.message=='Ok'){
-                      swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                      )
-                      $(theElement).closest('tr').remove();
-                    }else{
-                      swal(
-                        'Error!',
-                        'This company has quotes associated. You can\'t deleted companies with quotes associated.',
-                        'error'
-                      )
-                      console.log(data.message);
-                    }
-                  }
-                });
-              }
-            });
-          }else{
-            $.ajax({
-              type: 'get',
-              url: '/companies/destroy/' + id,
-              success: function(data) {
-                if(data.message=='Ok'){
-                  swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                  )
-                  $(theElement).closest('tr').remove();
-                }else{
-                  swal(
-                    'Error!',
-                    'This company has quotes associated. You can\'t deleted companies with quotes associated.',
-                    'warning'
-                  )
-                  console.log(data.message);
-                }
-              }
-            });
-          }
-        }
-      });
-    }
-  });
-});
-
-$(document).on('click', '#delete-company-show', function () {
-  var id = $(this).attr('data-company-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Continue!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: '/companies/delete/' + id,
-        success: function(data) {
-          if(data.message>0){
-            swal({
-              title: 'Warning!',
-              text: "There are "+data.message+" clients associated with this company. If you delete it, those contacts will be deleted.",
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, delete it!'
-            }).then(function(result) {
-              if (result.value) {
-                $.ajax({
-                  type: 'get',
-                  url: '/companies/destroy/' + id,
-                  success: function(data) {
-                    if(data.message=='Ok'){
-                      swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                      )
-                      $(theElement).closest('tr').remove();
-                    }else{
-                      swal(
-                        'Error!',
-                        'This company has quotes associated. You can\'t deleted companies with quotes associated.',
-                        'error'
-                      )
-                      console.log(data.message);
-                    }
-                  }
-                });
-              }
-            });
-          }else{
-            $.ajax({
-              type: 'get',
-              url: '/companies/destroy/' + id,
-              success: function(data) {
-                if(data.message=='Ok'){
-                  swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                  )
-                  window.location.href = '/companies';
-                }else{
-                  swal(
-                    'Error!',
-                    'This company has quotes associated. You can\'t deleted companies with quotes associated.',
-                    'warning'
-                  )
-                  console.log(data.message);
-                }
-              }
-            });
-          }
-        }
-      });
-    }
-  });
-});
-
-$(document).on('click', '#delete-company-user', function () {
-  var id = $(this).attr('data-company-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "This action will delete all data associated to this company. You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Continue!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: 'delete/company/' + id,
-        success: function(data) {
-          if(data.message=='Ok'){
-            swal(
-              'Deleted!',
-              'The company and all associated data has been deleted.',
-              'success'
-            )
-            $(theElement).closest('tr').remove();
-          }
-        }
-      });
-    }
-  });
-});
-
-// Pricing
-$(document).on('click', '#delete-pricing', function () {
-  var id = $(this).attr('data-pricing-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Continue!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: 'prices/destroy/' + id,
-        success: function(data) {
-          if(data.message == "fail"){
-            swal({
-              title: 'Warning!',
-              text: "There are  quotes assoociated with this pricing.",
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'I understand'
-            });
-          }else if(data.message == "Ok"){
-
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
-            $(theElement).closest('tr').remove();
-
-          }
-
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-
-      });
-    }
-  });
-});
-
-//SaleTerms
-
-$(document).on('click', '#delete-saleterm', function () {
-  var id = $(this).attr('data-saleterm-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!'
-  }).then(function(result) {
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: 'saleterms/delete/' + id,
-        success: function(data) {
-          if(data.message=='Ok'){
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
-            $(theElement).closest('tr').remove();
-          }else{
-            swal(
-              'Error!',
-              'Your can\'t delete this contact because have quotes related.',
-              'warning'
-            )
-            console.log(data.message);
-          }
-        }
-      });
-    }
-  });
-});
-
-$('#m_select2-edit-company').select2({
-  placeholder: "Select an option"
-});
-
-$('#price_level_company').select2({
-  placeholder: "Select an option"
-});
-$('#users_company').select2({
-  placeholder: "Select an option"
-});
-$('#users_company_2').select2({
-  placeholder: "Select an option"
-});
-
-
-// companies
-
-$(document).on('click', '#savecompany', function () {
-
-  var $element = $('#addContactModal');
-  $.ajax({
-    type: 'POST',
-    url: '/companies',
-    data: {
-      'business_name' : $('.business_name_input').val(),
-      'phone' : $('.phone_input').val(),
-      'address' : $('.address_input').val(),
-      'email' : $('.email_input').val(),
-
-    },
-    success: function(data) {
-      $.ajax({
-        url: "company/companies",
-        dataType: 'json',
-        success: function(dataC) {
-          $('select[name="company_id_quote"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-          $('select[name="company_id"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-          $('#companyModal').modal('hide');
-          $("select[name='company_id_quote']").val('');
-          $("select[name='company_id']").val('');
-          $('#select2-m_select2_2_modal-container').text('Please an option');
-
-          swal(
-            'Done!',
-            'Register completed',
-            'success'
-          )
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseText);
-    }
-  });
-});
-
-
-
-$(document).on('click', '#savecontact', function () {
-
-  var $element = $('#contactModal');
-
-  $.ajax({
-    type: 'POST',
-    url: '/contacts',
-    data: {
-      'first_name' : $('.first_namec_input').val(),
-      'last_name' : $('.last_namec_input').val(),
-      'email' : $('.emailc_input').val(),
-      'phone' : $('.phonec_input').val(),
-      'company_id' : $('.companyc_input').val(),
-
-    },
-    success: function(data) {
-      var company_id = $("select[name='company_id_quote']").val();
-      $.ajax({
-        url: "contacts/contact/"+company_id,
-        dataType: 'json',
-        success: function(dataC) {
-          $('select[name="contact_id"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-          $('#contactModal').modal('hide');
-
-          swal(
-            'Done!',
-            'Register completed',
-            'success'
-          )
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseText);
-    }
-
-  });
-});
-
-$(document).on('click', '#savecontactmanualquote', function () {
-
-  var $element = $('#contactModal');
-
-  $.ajax({
-    type: 'POST',
-    url: '/contacts',
-    data: {
-      'first_name' : $('.first_namec_input').val(),
-      'last_name' : $('.last_namec_input').val(),
-      'email' : $('.emailc_input').val(),
-      'phone' : $('.phonec_input').val(),
-      'company_id' : $('.companyc_input').val(),
-
-    },
-    success: function(data) {
-      var company_id = $("select[name='company_id']").val();
-      $.ajax({
-        url: "contacts/contact/"+company_id,
-        dataType: 'json',
-        success: function(dataC) {
-          $('select[name="contact_id"]').empty();
-          $.each(dataC, function(key, value) {
-            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
-          });
-          $('#contactModal').modal('hide');
-          swal(
-            'Done!',
-            'Register completed',
-            'success'
-          )
-        },
-        error: function (request, status, error) {
-          alert(request.responseText);
-        }
-      });
-    },
-    error: function (request, status, error) {
-      alert(request.responseText);
-    }
-
-  });
-});
-
-/** SELECT2 **/
-
-$('#sale_term_id').select2({
-  placeholder: "Select an option"
-});
-
-$('#airline_id').select2({
-  placeholder: "Select an option"
-});
-
-$('#carrier_id').select2({
-  placeholder: "Select an option"
-});
-
-$('.m-select2-general').select2({
-  placeholder: "Select an option"
-});
-
-$('#origin_airport').select2({
-  placeholder: "Select an option",
-  minimumInputLength: 2,
-  ajax: {
-    url: '/quotes/airports/find',
-    dataType: 'json',
-    data: function (params) {
-      return {
-        q: $.trim(params.term)
-      };
-    },
-    processResults: function (data) {
-      return {
-        results: data
-      };
-    },
-  }
-});
-
-$('#destination_airport').select2({
-  placeholder: "Select an option",
-  minimumInputLength: 2,
-  ajax: {
-    url: '/quotes/airports/find',
-    dataType: 'json',
-    data: function (params) {
-      return {
-        q: $.trim(params.term)
-      };
-    },
-    processResults: function (data) {
-      return {
-        results: data
-      };
-    },
-  }
-});
-
-$('.select2-company_id').select2({
-  placeholder: "Select an option"
-});
-
-/** SCHEDULES **/
-
-$(document).on('click', '#select-schedule', function () {
-
-  var schevalues = new Array();
-  var n = jQuery(".sche:checked").length;
-  if (n > 0){
-    jQuery(".sche:checked").each(function(){
-      $valor =  $(this).val();
-      var $obj = jQuery.parseJSON($valor);
-      $('#schetable > tbody:last-child').append("<tr><td>"+$obj['vessel']+"</td><td>"+$obj['etd']+"</td><td> <div class='col-md-4 offset-md-4'> "+$obj['days']+" Days<div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div> </div> "+$obj['type']+"</div></td><td>"+$obj['eta']+"</td></tr>");
-
-      schevalues.push($valor);
+  $(document).on('change', '#pdf_language', function () {
+    var type=$("#pdf_language").val();
+    var quote_id=$("#quote-id").val();
+    $.ajax({
+      type: 'POST',
+      url: '/settings/update/pdf/language',
+      data: {
+        'pdf_language': $("#pdf_language").val(),
+        'quote_id': $("#quote-id").val()
+      },
+      success: function(data) {
+        //
+      }
     });
+  });
+
+  $(document).on('change', '#pdf_type', function () {
+    var type=$("#pdf_type").val();
+    $.ajax({
+      type: 'POST',
+      url: '/settings/update/pdf/type',
+      data: {
+        'pdf_type': $("#pdf_type").val()
+      },
+      success: function(data) {
+        //
+      }
+    });
+  });
+
+  $(document).on('change', '#pdf_ammounts', function () {
+    var type=$("#pdf_ammounts").val();
+    $.ajax({
+      type: 'POST',
+      url: '/settings/update/pdf/ammounts',
+      data: {
+        'pdf_ammounts': $("#pdf_ammounts").val()
+      },
+      success: function(data) {
+        //
+      }
+    });
+  });
 
 
-    //  alert(schevalues);
-    $("#infoschedule").removeAttr('hidden');
-    $(".removesche").removeAttr('hidden');
-    $("#schedule").val(schevalues);
+  /** FUNCTIONS **/
+
+  function msg(message){
+
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-bottom-center",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "0",
+      "hideDuration": "0",
+      "timeOut": "0",
+      "extendedTimeOut": "0",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+    toastr.error(message,'IMPORTANT MESSAGE!');
   }
 
-});
+  function change_tab(tab){
+    if(tab==2){
+      $("#total_quantity").val('');
+      $("#total_weight").val('');
+      $("#total_volume").val('');
+      $("#chargeable_weight_pkg_input").val('');
+      $("#chargeable_weight_total").html('');
 
-$(document).on('click', '.removesche', function () {
-  $("#infoschedule").attr('hidden','true');
-  $(".removesche").attr('hidden','true');
-  $("#scheduleBody").text('');
-  $("#schedule").val('');
-});
-
-$(document).on('click', '#filter_data', function () {
-  $.ajax({
-    type: 'POST',
-    url: '/dashboard/filter/',
-    data: {
-      'user': $("#user").val(),
-      'pick_up_date': $("#m_daterangepicker_1").val(),
-    },
-    success: function(data) {
-      alert(data);
+    }else{
+      $('#lcl_air_load').find('.quantity').val('');
+      $('#lcl_air_load').find('.height').val('');
+      $('#lcl_air_load').find('.width').val('');
+      $('#lcl_air_load').find('.large').val('');
+      $('#lcl_air_load').find('.weight').val('');
+      $('#lcl_air_load').find('.volume').val('');
+      $("#chargeable_weight_pkg_input").val('');
+      $("#chargeable_weight_pkg").html('');
     }
-  });
-});
-
-/** PDF **/
-
-$(document).on('change', '#pdf_language', function () {
-  var type=$("#pdf_language").val();
-  var quote_id=$("#quote-id").val();
-  $.ajax({
-    type: 'POST',
-    url: '/settings/update/pdf/language',
-    data: {
-      'pdf_language': $("#pdf_language").val(),
-      'quote_id': $("#quote-id").val()
-    },
-    success: function(data) {
-      //
-    }
-  });
-});
-
-$(document).on('change', '#pdf_type', function () {
-  var type=$("#pdf_type").val();
-  $.ajax({
-    type: 'POST',
-    url: '/settings/update/pdf/type',
-    data: {
-      'pdf_type': $("#pdf_type").val()
-    },
-    success: function(data) {
-      //
-    }
-  });
-});
-
-$(document).on('change', '#pdf_ammounts', function () {
-  var type=$("#pdf_ammounts").val();
-  $.ajax({
-    type: 'POST',
-    url: '/settings/update/pdf/ammounts',
-    data: {
-      'pdf_ammounts': $("#pdf_ammounts").val()
-    },
-    success: function(data) {
-      //
-    }
-  });
-});
-
-
-/** FUNCTIONS **/
-
-function msg(message){
-
-  toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": false,
-    "positionClass": "toast-bottom-center",
-    "preventDuplicates": true,
-    "onclick": null,
-    "showDuration": "0",
-    "hideDuration": "0",
-    "timeOut": "0",
-    "extendedTimeOut": "0",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-  };
-  toastr.error(message,'IMPORTANT MESSAGE!');
-}
-
-function change_tab(tab){
-  if(tab==2){
-    $("#total_quantity").val('');
-    $("#total_weight").val('');
-    $("#total_volume").val('');
-    $("#chargeable_weight_pkg_input").val('');
-    $("#chargeable_weight_total").html('');
-
-  }else{
-    $('#lcl_air_load').find('.quantity').val('');
-    $('#lcl_air_load').find('.height').val('');
-    $('#lcl_air_load').find('.width').val('');
-    $('#lcl_air_load').find('.large').val('');
-    $('#lcl_air_load').find('.weight').val('');
-    $('#lcl_air_load').find('.volume').val('');
-    $("#chargeable_weight_pkg_input").val('');
-    $("#chargeable_weight_pkg").html('');
   }
-}
