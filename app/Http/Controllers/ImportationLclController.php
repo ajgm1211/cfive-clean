@@ -16,6 +16,7 @@ use App\ContractLcl;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocesarRatesLclJob;
 use Illuminate\Support\Facades\Storage;
 use App\AccountImportationContractLcl as AccountLcl;
@@ -231,6 +232,8 @@ class ImportationLclController extends Controller
             $account->company_user_id   = $CompanyUserId;
             $account->save();
 
+            ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account');
+            
             $contract     = new ContractLcl();
             $contract->name             = $request->name;
             $contract->number           = $request->number;

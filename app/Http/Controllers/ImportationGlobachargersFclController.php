@@ -23,6 +23,7 @@ use App\FileTmpGlobalcharge;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
@@ -343,7 +344,9 @@ class ImportationGlobachargersFclController extends Controller
             $account->status           = 'incomplete';
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
-
+            
+            ProcessContractFile::dispatch($account->id,$account->namefile,'gcfcl','account');
+            
             $account_id = $account->id;
             $fileTmp    = new FileTmpGlobalcharge();
             $fileTmp->account_id = $account_id;
