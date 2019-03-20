@@ -32,7 +32,7 @@
                 <label>Company</label>
 
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select3-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
+                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
                       <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
@@ -43,7 +43,8 @@
               <div class="col-md-2">
                 <label>Contact</label>
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('contact_id',[],@$form['contact_id'],['class'=>'m-select2-general form-control','required'=>'true']) }}
+                  {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
                       <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
@@ -164,7 +165,24 @@
 
 @section('js')
 @parent
+
+
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+@if(empty($arreglo))
+<script>
+
+  $('select[name="contact_id"]').prop("disabled",true);
+  $("select[name='company_id_quote']").val('');
+  $('#select2-m_select2_2_modal-container').text('Please an option');
+</script>
+@else
+
+<script>
+precargar()
+</script>
+
+
+@endif
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
@@ -208,12 +226,7 @@
   }
 
 
-  $('.m-select3-general').select2({
-    placeholder: '<i class="fa fa-sitemap"></i>',
-    escapeMarkup : function(markup) {
-      return markup;
-    }
-  });
+  $('.m-select3-general').select2();
 
   $('.select2-selection__arrow').remove();
 

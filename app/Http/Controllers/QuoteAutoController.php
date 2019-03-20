@@ -160,6 +160,8 @@ class QuoteAutoController extends Controller
       $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
     });
     $arreglo = $arreglo->get();
+    
+ //   dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
 
