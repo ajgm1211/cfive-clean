@@ -32,6 +32,7 @@ use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationRatesSurchargerJob;
@@ -499,6 +500,8 @@ class ImportationController extends Controller
             $account->namefile          = $nombre;
             $account->company_user_id   = $CompanyUserId;
             $account->save();
+            
+            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
 
             $contract   = new Contract();
             $contract->name             = $request->name;
