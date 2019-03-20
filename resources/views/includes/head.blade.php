@@ -26,6 +26,7 @@
   <link rel="shortcut icon" href="/favicon.png" />
   <!--<link href="{{ asset('css/custom.css') }}" rel="stylesheet" />-->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
+  <link href="{{ asset('css/jqueryui-editable.css') }}" rel="stylesheet" />
   <!--<link href="{{ asset('css/header.css') }}" rel="stylesheet" />-->
 
   @show

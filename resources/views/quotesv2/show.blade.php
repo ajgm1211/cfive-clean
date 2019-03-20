@@ -51,11 +51,19 @@
             <div class="row">
               <div class="col-md-4">
                 <label class="title-quote"><b>Quotation ID:&nbsp;&nbsp;</b></label>
-                {{$quote->quote_id}}
+                <span id="quote_id_span" onclick="display_quote_id()" >{{$quote->quote_id}}</span>
+                <input type="text" class="" id="quote_id_input" value="{{$quote->quote_id}}" hidden>
+                <a  id='save_quote_id' onclick="save_quote_id({{$quote->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Save" hidden="true">
+                  <i class="la la-save"></i>
+                </a>
+                <a  id='cancel_quote_id' onclick="cancel_quote_id()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" hidden="true">
+                  <i  class="la la-reply"></i>
+                </a>
               </div>
               <div class="col-md-4">
                 <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
-                {{$quote->type}}
+                <a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Select status"></a>
+
               </div>
               <div class="col-md-4">
                 <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
@@ -128,6 +136,7 @@
 @section('js')
   @parent
   <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
   <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
   <script src="/js/quote.js"></script>
   <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
