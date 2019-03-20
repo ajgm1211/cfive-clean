@@ -948,8 +948,8 @@ class QuoteAutomaticController extends Controller
       });
     } */ 
 
-
-    $arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
+    //$arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
+    $arreglo = $arreglo->get();
 
     // Fin condiciones del cero
     $formulario = $request;
