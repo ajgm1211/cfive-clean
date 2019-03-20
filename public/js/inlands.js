@@ -100,8 +100,8 @@ function save_forty(id,idval){
     type: 'GET',
     url: '../updateDetails/' + idval,
     data: {
-      'lower' : $("#lowerforty"+id).val(),
-      'upper' : $("#upperforty"+id).val(),
+      'lower' : $("#lo40"+id).val(),
+      'upper' : $("#up40"+id).val(),
       'ammount' : $("#ammountforty"+id).val(),
       'currency_id' : $("#currencyforty"+id).val()
     },
@@ -120,8 +120,8 @@ function save_forty(id,idval){
       $("#tr_forty"+id+" .in").attr('hidden','true');
       $("#tr_forty"+id+" .in input , #tr_forty"+id+" .in select ").prop('disabled', true);
 
-      $("#divlowerforty"+id).html($("#lowerforty"+id).val());
-      $("#divupperforty"+id).html($("#upperforty"+id).val());
+      $("#divlowerforty"+id).html($("#lo40"+id).val());
+      $("#divupperforty"+id).html($("#up40"+id).val());
 
       var ammount = $("#ammountforty"+id).val()+"/"+$("#currencyforty"+id+" option:selected").text();
       $("#divammountforty"+id).html(ammount);
@@ -437,6 +437,44 @@ function validateRange40(id,tipo){
       }
     });
   } 
+  
+  
+  if(tipo == 't40ELOW'){
+    $('#msg40').hide();
+    var idval = id.substr(4);
+    var bool = 'false';
+    var low = parseInt($('#lo40'+idval).val());
+    var up =  parseInt($('#up40'+idval).val());
+    if(low >= up){
+      bool  ='true';
+    }
+    if(bool == 'true'){
+      $('#msg40').show();
+      $('#lo40'+idval).val(0);
+    }
+  } 
+
+  if(tipo == 't40EUP'){
+
+    $('#msg40').hide();
+    var idval = id.substr(4);
+    var idprox = parseInt(idval) + 1;
+
+    var bool = 'false';
+
+    var up =  parseInt($('#up40'+idval).val());
+    var low =  parseInt($('#lo40'+idval).val());
+    var lowprox = parseInt($('#lo40'+idprox).val());
+
+    if(up >= lowprox || up <= low){
+      bool  ='true';
+    }
+     if(bool == 'true'){
+      $('#msg40').show();
+      $('#up40'+idval).val(0);
+    }
+  } 
+
 
   if(tipo == 't40clone'){
     var idval = id.substr(4);
