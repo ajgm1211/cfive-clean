@@ -16764,3 +16764,10 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); }
 }
+
+.truncate {
+  white-space: nowrap !important;
+  text-overflow:ellipsis !important;
+  overflow: hidden !important;
+  max-width:50px !important;
+}
