@@ -28,6 +28,7 @@
                     <label style="letter-spacing: 0.7px"><b>Email template</b></label>
                     {{ Form::select('email_template_id',$email_templates,null,['placeholder' => 'Please choose a template','class'=>'custom-select form-control','id' => 'email_template']) }}
                 </div>
+               <input type="hidden" id="emaildimanicdata" value="{{@$emaildimanicdata}}"/>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Preview:</b></label>
                     <div class="jumbotron">

@@ -43,7 +43,7 @@
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
 
-                        New import request for new contract
+                        New import request for new contract FCL
                         <!--<small>
 new registration
 </small>-->
@@ -97,7 +97,7 @@ new registration
                             </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
-                           <!-- <hr> -->
+                            <!-- <hr> -->
                             <div class="form-group m-form__group row" style='display:none;'>
 
                                 <div class="col-lg-2">
@@ -179,7 +179,7 @@ new registration
                                     </label>
                                 </div>
                             </div>
-                        <!--    <hr> -->
+                            <!--    <hr> -->
                             <div class="form-group m-form__group row"style='display:none;'>
 
                                 <div class="col-lg-2">
@@ -279,7 +279,63 @@ new registration
         <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
+    <!--  begin modal editar rate -->
 
+    <div class="modal fade bd-example-modal-lg" id="modaledit"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Load Request
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div id="edit-modal-body" class="modal-body">
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center">
+                            <div class="col-xl-12 order-2 order-xl-1 conten_load">
+                                <center>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <h2 id="mjsH"> Please Wait...</h2>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <img src="{{asset('images/ship.gif')}}" style="height:170px">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-8">
+                                        <div class="percent">0%</div> Complete
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <h7>Do not leave this window, we will redirect you Thank you.</h7>
+                    </center>
+                </div>
+            </div>
+
+            <!--  end modal editar rate -->
+
+
+        </div>
+    </div>
 
 
 </div>
@@ -289,5 +345,55 @@ new registration
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
+ <script src="http://malsup.github.com/jquery.form.js"></script>
+
+        <script>
+
+            function validate(formData, jqForm, options) {
+                var form = jqForm[0];
+                if (!form.file.value) {
+                    alert('File not found');
+                    return false;
+                }
+            }
+
+            $(function() {
+
+                var bar = $('.progress-bar');
+                var percent = $('.percent');
+                var status = $('#status');
+
+                $('form').ajaxForm({
+                    beforeSubmit: validate,
+                    beforeSend: function() {
+                        $('#modaledit').modal('show');
+                        status.empty();
+                        var percentVal = '0%';
+                        var posterValue = $('input[name=file]').fieldValue();
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        var percentVal = percentComplete + '%';
+                        bar.width(percentVal);
+                        percent.html(percentVal);
+                    },
+                    success: function() {
+                        var percentVal = 'Wait, Saving';
+                        bar.width(percentVal)
+                        $('#mjsH').text('OK');
+                        percent.html(percentVal);
+                    },
+                    complete: function(xhr) {
+                        status.html(xhr.responseText);
+                        $('#mjsH').text('Bye');
+                        $('#modaledit').modal('hide');
+                        window.location.href = "{{route('contracts.index')}}";
+                    }
+                });
+
+            })();
+
+        </script>
 
 @stop

@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\CompanyPrice;
 use App\Contact;
+use App\Jobs\ProcessLogo;
 use App\Quote;
 use App\Price;
 use App\User;
 use App\GroupUserCompany;
+use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Intervention\Image\Facades\Image;
+use EventIntercom;
+
 
 class CompanyController extends Controller
 {
@@ -51,7 +55,7 @@ class CompanyController extends Controller
     public function addOwner(){
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
 
-        return view('companies.addOwner', compact('users'));   
+        return view('companies.addOwner', compact('users'));
     }
 
     public function addWithModal()
@@ -90,6 +94,10 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
+        $filepath_tmp = '';
+        if($file != "") {
+            $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
+        }
 
         $company = new Company();
         $company->business_name = $request->business_name;
@@ -102,23 +110,23 @@ class CompanyController extends Controller
         $company->pdf_language = $request->pdf_language;
         $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
-            $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            $company->logo = $filepath_tmp;
         }
         $company->save();
 
         if($file != ""){
-            //Creamos una instancia de la libreria instalada   
-            $image = Image::make(Input::file('logo'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            // Cambiar de tamaño
-            //$image->resize(300,500);
-            // Guardar
-            $image->save($path.$file->getClientOriginalName());
+            $update_company_url = Company::find($company->id);
+            $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+            $update_company_url->update();
+            $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,file_get_contents($file),'public');
+            //$s3 = \Storage::disk('s3_upload');
+            //$s3->put($filepath, file_get_contents($file), 'public');
+            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
         }
-
         if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
-            foreach ($input['price_id'] as $key => $item) {            
+            foreach ($input['price_id'] as $key => $item) {
                 $company_price = new CompanyPrice();
                 $company_price->company_id=$company->id;
                 $company_price->price_id=$input['price_id'][$key];
@@ -126,7 +134,7 @@ class CompanyController extends Controller
             }
         }
         if ((isset($input['users'])) && (count($input['users']) > 0)) {
-            foreach ($input['users'] as $key => $item) {            
+            foreach ($input['users'] as $key => $item) {
                 $userCompany_group = new GroupUserCompany();
                 $userCompany_group->user_id= $input['users'][$key];
                 $userCompany_group->company()->associate($company);
@@ -137,7 +145,9 @@ class CompanyController extends Controller
         if($request->ajax()) {
             return response()->json('Company created successfully!');
         }
-
+        // EVENTO INTERCOM
+        $event = new  EventIntercom();
+        $event->event_companies();
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register completed successfully!');
@@ -151,7 +161,7 @@ class CompanyController extends Controller
         $company = Company::find($input['company_id']);
 
         if ((isset($input['users'])) && (count($input['users']) > 0)) {
-            foreach ($input['users'] as $key => $item) {            
+            foreach ($input['users'] as $key => $item) {
                 $userCompany_group = new GroupUserCompany();
                 $userCompany_group->user_id= $input['users'][$key];
                 $userCompany_group->company()->associate($company);
@@ -164,7 +174,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Owner added successfully!');
         return redirect()->back();
 
-    }    
+    }
 
     public function deleteOwner(Request $request,$user_id){
 
@@ -191,6 +201,10 @@ class CompanyController extends Controller
     {
         $input = Input::all();
         $file = Input::file('logo');
+        $filepath = '';
+        if($file != "") {
+            $filepath = 'Logos/Clients/'.$id.'/'. $file->getClientOriginalName();
+        }
         $company = Company::find($id);
 
         $company->business_name = $request->business_name;
@@ -201,35 +215,30 @@ class CompanyController extends Controller
         $company->pdf_language = $request->pdf_language;
         $company->payment_conditions = $request->payment_conditions;
         if($file != ""){
-            $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+            $company->logo = $filepath;
         }
         $company->update();
 
         if($file != ""){
-            //Creamos una instancia de la libreria instalada   
-            $image = Image::make(Input::file('logo'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            // Cambiar de tamaño
-            //$image->resize(300,500);
-            // Guardar
-            $image->save($path.$file->getClientOriginalName());
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,file_get_contents($file),'public');
+            //$s3 = \Storage::disk('s3_upload');
+            //$s3->put($filepath, file_get_contents($file), 'public');
+            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
         }
-
-
         if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
-            $company_price = CompanyPrice::where('company_id',$company->id)->delete();
-            foreach ($input['price_id'] as $key => $item) {            
+            CompanyPrice::where('company_id',$company->id)->delete();
+            foreach ($input['price_id'] as $key => $item) {
                 $company_price = new CompanyPrice();
                 $company_price->company_id=$company->id;
                 $company_price->price_id=$input['price_id'][$key];
                 $company_price->save();
             }
         }
-        $company_price = GroupUserCompany::where('company_id',$company->id)->delete();
+        GroupUserCompany::where('company_id',$company->id)->delete();
         if ((isset($input['users'])) && ($input['users'][0] != null)) {
 
-            foreach ($input['users'] as $key => $item) {            
+            foreach ($input['users'] as $key => $item) {
                 $userCompany_group = new GroupUserCompany();
                 $userCompany_group->user_id= $input['users'][$key];
                 $userCompany_group->company_id=$company->id;
@@ -278,7 +287,7 @@ class CompanyController extends Controller
         $contacts = Contact::where('company_id',$id)->pluck('first_name','id');
 
         return $contacts;
-    }    
+    }
 
     public function updatePaymentConditions(Request $request){
 

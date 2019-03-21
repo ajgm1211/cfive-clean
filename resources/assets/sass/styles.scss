@@ -3272,6 +3272,18 @@ select.selectpicker {
   width: 100%;
   float: none; }
 
+//Hide arrows in inputs type number
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+  -moz-appearance:textfield; /* Firefox */
+}
+
 /*# sourceMappingURL=bootstrap-select.css.map */
 .select2-container {
   box-sizing: border-box;
@@ -3280,6 +3292,11 @@ select.selectpicker {
   position: relative;
   vertical-align: middle;
   width: 100% !important;
+  min-width: 100px !important;
+}
+
+.select-2-width{
+  min-width: 100px !important;
 }
 
 .select2-container .select2-selection--single {
@@ -16746,4 +16763,11 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg); }
+}
+
+.truncate {
+  white-space: nowrap !important;
+  text-overflow:ellipsis !important;
+  overflow: hidden !important;
+  max-width:50px !important;
 }

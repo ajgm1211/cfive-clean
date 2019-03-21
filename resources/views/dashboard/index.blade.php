@@ -5,6 +5,7 @@
  * Date: 29/05/2018
  * Time: 10:50 PM
  */
+
 ?>
 @extends('layouts.app')
 @section('title', 'Dashboard')

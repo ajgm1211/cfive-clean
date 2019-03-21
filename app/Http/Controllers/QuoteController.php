@@ -50,10 +50,19 @@ use App\Mail\SendQuotePdf;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use Yajra\Datatables\Datatables;
-
+use EventIntercom;
+use App\Repositories\Schedules;
+use Carbon\Carbon;
 
 class QuoteController extends Controller
 {
+
+    protected $schedules;
+
+    public function __construct(Schedules $schedules)
+    {
+        $this->schedules = $schedules;
+    }
 
     public function index(Request $request){
         $company_user_id = \Auth::user()->company_user_id;
@@ -66,11 +75,9 @@ class QuoteController extends Controller
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->get();
         }
-
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
         $countries = Country::pluck('name','id');
-
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
@@ -79,7 +86,6 @@ class QuoteController extends Controller
             $currency_cfg = '';
         }
         if($request->ajax()){
-
             $collection = Collection::make($quotes);
             $collection->transform(function ($quote, $key) {
                 $quote['client_company'] = $quote->company;
@@ -102,7 +108,6 @@ class QuoteController extends Controller
                 if($quote['destination_airport_id']!=''){
                     $quote['destination_airport_name'] = $quote->destination_airport->display_name;
                 }
-
                 if ($quote['pdf_language'] == 1) {
                     $quote['pdf_language'] = 'English';
                 } elseif ($quote['pdf_language'] == 2) {
@@ -112,7 +117,6 @@ class QuoteController extends Controller
                 } else {
                     $quote['pdf_language'] = 'English';
                 }
-
                 if ($quote['type_cargo'] == 1) {
                     $quote['type_cargo'] = 'FCL';
                 } elseif ($quote['type_cargo'] == 2) {
@@ -120,37 +124,25 @@ class QuoteController extends Controller
                 } else {
                     $quote['type_cargo'] = 'AIR';
                 }
-
                 if ($quote['delivery_type'] == 1) {
                     $quote['delivery_type'] = 'Port to Port';
                 } elseif ($quote['delivery_type'] == 2) {
                     $quote['delivery_type'] = 'Port to Door';
                 } elseif ($quote['delivery_type'] == 3) {
                     $quote['delivery_type'] = 'Door to Port';
-                } elseif ($quote['delivery_type'] == 4) {
-                    $quote['delivery_type'] = 'Door to Door';
-                } elseif ($quote['delivery_type'] == 5) {
-                    $quote['delivery_type'] = 'Airport to Airport';
-                } elseif ($quote['delivery_type'] == 6) {
-                    $quote['delivery_type'] = 'Airport to Door';
-                } elseif ($quote['delivery_type'] == 7) {
-                    $quote['delivery_type'] = 'Door to Airport';
-                } elseif ($quote['delivery_type'] == 8) {
+                } else {
                     $quote['delivery_type'] = 'Door to Door';
                 }
-
                 if ($quote['carrier_id'] != '') {
                     $quote['carrier_name'] = $quote->carrier->name;
                 } else {
                     $quote['carrier_name'] = '';
                 }
-
                 if ($quote['modality'] == 1) {
                     $quote['modality'] = 'Export';
                 } else {
                     $quote['modality'] = 'Import';
                 }
-
                 if ($quote['incoterm'] == 1) {
                     $quote['incoterm'] = 'EWX';
                 } elseif ($quote['incoterm'] == 2) {
@@ -190,10 +182,8 @@ class QuoteController extends Controller
                 unset($quote['destination_airport']);
                 unset($quote['packages']);
                 unset($quote['user']);
-
                 return $quote;
             });
-
             return $collection;
         }
         return view('quotes/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
@@ -404,14 +394,20 @@ class QuoteController extends Controller
         }
         $incoterm = Incoterm::pluck('name','id');
 
+        $emaildimanicdata = json_encode([
+            'quote_bool'   => 'true',
+            'company_id'   => '',
+            'contact_id'   => '',
+            'quote_id'     => $quote->id
+        ]);
+
         return view('quotes/edit', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
-            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all]);
+            'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'exchange'=>$exchange,'incoterm'=>$incoterm,'saleterms'=>$saleterms,'email_templates'=>$email_templates,'carriers'=>$carriers,'airports'=>$airports,'airlines'=>$airlines,'user'=>$user,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'emaildimanicdata' => $emaildimanicdata]);
 
     }
 
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $rules = array(
             'pick_up_date' => 'required',
             'company_id' => 'required',
@@ -552,6 +548,7 @@ class QuoteController extends Controller
                     }
                 }
             }
+
             if($input['destination_ammount_charge']!=[null]) {
                 $destination_ammount_charge = array_values( array_filter($input['destination_ammount_charge']) );
                 $destination_ammount_detail = array_values( array_filter($input['destination_ammount_detail']) );
@@ -561,6 +558,7 @@ class QuoteController extends Controller
                 $destination_ammount_markup = array_values( array_filter($input['destination_ammount_markup']) );
                 $destination_total_ammount = array_values( array_filter($input['destination_total_ammount']) );
                 $destination_total_ammount_2 = array_values( array_filter($input['destination_total_ammount_2']) );
+
                 foreach ($destination_ammount_charge as $key => $item) {
 
                     if (isset($destination_ammount_charge[$key]) && isset($destination_ammount_detail[$key]) && isset($destination_ammount_units[$key])
@@ -591,8 +589,8 @@ class QuoteController extends Controller
                         if ((isset($destination_total_ammount_2[$key])) && (!empty($destination_total_ammount_2[$key]))) {
                             $destination_ammount->total_ammount_2 = $destination_total_ammount_2[$key];
                         }
-                        $destination_ammount->save();
 
+                        $destination_ammount->save();
                     }
                 }
             }
@@ -601,12 +599,12 @@ class QuoteController extends Controller
                     $schedules = json_decode($input['schedule']);
                     foreach( $schedules as $schedule){
                         $sche = json_decode($schedule);
-                        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                        $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                         $saveSchedule  = new Schedule();
-                        $saveSchedule->vessel = $sche->VesselName;
-                        $saveSchedule->etd = $sche->Etd;
+                        $saveSchedule->vessel = $sche->vessel;
+                        $saveSchedule->etd = $sche->etd;
                         $saveSchedule->transit_time =  $dias;
-                        $saveSchedule->eta = $sche->Eta;
+                        $saveSchedule->eta = $sche->eta;
                         $saveSchedule->type = 'direct';
                         $saveSchedule->quotes()->associate($quote);
                         $saveSchedule->save();
@@ -620,23 +618,37 @@ class QuoteController extends Controller
                     // dd($sche);
                     $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
                     $saveSchedule  = new Schedule();
-                    $saveSchedule->vessel = $sche->VesselName;
-                    $saveSchedule->etd = $sche->Etd;
+                    $saveSchedule->vessel = $sche->vessel;
+                    $saveSchedule->etd = $sche->etd;
                     $saveSchedule->transit_time =  $dias;
-                    $saveSchedule->eta = $sche->Eta;
+                    $saveSchedule->eta = $sche->eta;
                     $saveSchedule->type = 'direct';
                     $saveSchedule->quotes()->associate($quote);
                     $saveSchedule->save();
                 }
             }
 
-            $quantity = array_values( array_filter($input['quantity']) );
-            $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-            $height = array_values( array_filter($input['height']) );
-            $width = array_values( array_filter($input['width']) );
-            $large = array_values( array_filter($input['large']) );
-            $weight = array_values( array_filter($input['weight']) );
-            $volume = array_values( array_filter($input['volume']) );
+
+            if(isset($input['lclAuto'])){
+                $quantity = array_values(array_filter(json_decode($input['quantity'])));
+                $type_cargo = array_values(array_filter(json_decode($input['type_load_cargo'])));
+                $height = array_values(array_filter(json_decode($input['height'])));
+                $width = array_values(array_filter(json_decode($input['width'])));
+                $large = array_values(array_filter(json_decode($input['large'])));
+                $weight = array_values(array_filter(json_decode($input['weight'])));
+                $volume = array_values(array_filter(json_decode($input['volume'])));
+
+
+            }else{
+                $quantity = array_values( array_filter($input['quantity']) );
+                $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+                $height = array_values( array_filter($input['height']) );
+                $width = array_values( array_filter($input['width']) );
+                $large = array_values( array_filter($input['large']) );
+                $weight = array_values( array_filter($input['weight']) );
+                $volume = array_values( array_filter($input['volume']) );
+            }
+
 
             if(count($quantity)>0){
                 foreach($type_cargo as $key=>$item){
@@ -656,6 +668,34 @@ class QuoteController extends Controller
             if(isset($input['btnsubmit']) && $input['btnsubmit'] == 'submit-pdf'){
                 return redirect()->route('quotes.show', ['quote_id' => setearRouteKey($quote->id)])->with('pdf','true');
             }
+            // REGISTRAR EVENTOS QUOTE EN INTERCOM
+            if(isset($input['quot_auto'])){
+                $event = new  EventIntercom();
+                if($input['type'] == '1'){
+                    // Intercom QUOTE AUTOMATIC FCL
+                    $event->event_quoteAutomaticFcl();
+                }
+                if($input['type'] == '2'){
+                    // Intercom QUOTE AUTOMATIC LCL
+                    $event->event_quoteAutomaticLcl();
+                }
+            }else{
+                $event = new  EventIntercom();
+                if($input['type'] == '1'){
+                    // Intercom QUOTE AUTOMATIC FCL
+                    $event->event_quoteManualFcl();
+                }
+                if($input['type'] == '2'){
+                    // Intercom QUOTE AUTOMATIC LCL
+                    $event->event_quoteManualLcl();
+                }
+                if($input['type'] == '3'){
+                    // Intercom QUOTE AUTOMATIC LCL
+                    $event->event_quoteManualAir();
+                }
+            }
+            // FIN EVENTOS INTERCOM
+
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'Register completed successfully!');
@@ -664,12 +704,10 @@ class QuoteController extends Controller
         }
     }
 
-
     public function storeWithEmail(Request $request)
     {
         $rules = array(
             'pick_up_date' => 'required',
-            'validity_date' => 'required',
             'company_id' => 'required',
             'contact_id' => 'required',
             'type' => 'required',
@@ -832,12 +870,12 @@ class QuoteController extends Controller
                     $schedules = json_decode($input['schedule']);
                     foreach( $schedules as $schedule){
                         $sche = json_decode($schedule);
-                        $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                        $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                         $saveSchedule  = new Schedule();
-                        $saveSchedule->vessel = $sche->VesselName;
-                        $saveSchedule->etd = $sche->Etd;
+                        $saveSchedule->vessel = $sche->vessel;
+                        $saveSchedule->etd = $sche->etd;
                         $saveSchedule->transit_time =  $dias;
-                        $saveSchedule->eta = $sche->Eta;
+                        $saveSchedule->eta = $sche->eta;
                         $saveSchedule->type = 'direct';
                         $saveSchedule->quotes()->associate($quote);
                         $saveSchedule->save();
@@ -849,25 +887,36 @@ class QuoteController extends Controller
                 if($input['schedule_manual'] != 'null'){
                     $sche = json_decode($input['schedule_manual']);
                     // dd($sche);
-                    $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                    $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                     $saveSchedule  = new Schedule();
-                    $saveSchedule->vessel = $sche->VesselName;
-                    $saveSchedule->etd = $sche->Etd;
+                    $saveSchedule->vessel = $sche->vessel;
+                    $saveSchedule->etd = $sche->etd;
                     $saveSchedule->transit_time =  $dias;
-                    $saveSchedule->eta = $sche->Eta;
+                    $saveSchedule->eta = $sche->eta;
                     $saveSchedule->type = 'direct';
                     $saveSchedule->quotes()->associate($quote);
                     $saveSchedule->save();
                 }
             }
-            $quantity = array_values( array_filter($input['quantity']) );
-            $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-            $height = array_values( array_filter($input['height']) );
-            $width = array_values( array_filter($input['width']) );
-            $large = array_values( array_filter($input['large']) );
-            $weight = array_values( array_filter($input['weight']) );
-            $volume = array_values( array_filter($input['volume']) );
+            if(isset($input['lclAuto'])){
+                $quantity = array_values(array_filter(json_decode($input['quantity'])));
+                $type_cargo = array_values(array_filter(json_decode($input['type_load_cargo'])));
+                $height = array_values(array_filter(json_decode($input['height'])));
+                $width = array_values(array_filter(json_decode($input['width'])));
+                $large = array_values(array_filter(json_decode($input['large'])));
+                $weight = array_values(array_filter(json_decode($input['weight'])));
+                $volume = array_values(array_filter(json_decode($input['volume'])));
 
+
+            }else{
+                $quantity = array_values( array_filter($input['quantity']) );
+                $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+                $height = array_values( array_filter($input['height']) );
+                $width = array_values( array_filter($input['width']) );
+                $large = array_values( array_filter($input['large']) );
+                $weight = array_values( array_filter($input['weight']) );
+                $volume = array_values( array_filter($input['volume']) );
+            }
             if(count($quantity)>0){
                 foreach($type_cargo as $key=>$item){
                     $package_load = new PackageLoad();
@@ -949,7 +998,7 @@ class QuoteController extends Controller
                 $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
                 $explode=explode(';',$to);
                 foreach($explode as $item) {
-                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote));
+                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($subject,$body,$quote,\Auth::user()->email));
                 }
             }else{
                 $request->session()->flash('message.nivel', 'danger');
@@ -1069,9 +1118,15 @@ class QuoteController extends Controller
             }
         }
 
+        $emaildimanicdata = json_encode([
+            'quote_bool'   => 'true',
+            'company_id'   => '',
+            'contact_id'   => '',
+            'quote_id'     => $quote->id
+        ]);
         return view('quotes/show', ['companies' => $companies,'quote'=>$quote,'harbors'=>$harbors,
             'prices'=>$prices,'contacts'=>$contacts,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,
-            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all]);
+            'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'currencies'=>$currencies,'currency_cfg'=>$currency_cfg,'user'=>$user,'status_quotes'=>$status_quotes,'exchange'=>$exchange,'email_templates'=>$email_templates,'package_loads'=>$package_loads,'terms_all'=>$terms_all,'emaildimanicdata' => $emaildimanicdata]);
     }
 
     public function update(Request $request, $id)
@@ -1088,8 +1143,11 @@ class QuoteController extends Controller
         $validation = explode('/',$request->validity_date);
         $since = $validation[0];
         $until = $validation[1];
-        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until]);
-
+        $custom_id='';
+        if($request->custom_id!='' && $request->custom_id!==$quote->company_quote){
+            $custom_id=$request->custom_id;
+        }
+        $request->request->add(['total_markup_origin'=>$sum_markup_origin,'total_markup_freight'=>$sum_markup_freight,'total_markup_destination'=>$sum_markup_destination,'since_validity'=>$since,'validity'=>$until,'custom_id'=>$custom_id]);
         $quote->update($request->all());
 
         OriginAmmount::where('quote_id',$quote->id)->delete();
@@ -1222,13 +1280,26 @@ class QuoteController extends Controller
             $quote->update();
         }
 
-        $quantity = array_values( array_filter($input['quantity']) );
-        $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-        $height = array_values( array_filter($input['height']) );
-        $width = array_values( array_filter($input['width']) );
-        $large = array_values( array_filter($input['large']) );
-        $weight = array_values( array_filter($input['weight']) );
-        $volume = array_values( array_filter($input['volume']) );
+        if(isset($input['lclAuto'])){
+            $quantity = array_values(json_decode($input['quantity']));
+            $type_cargo = array_values(json_decode($input['type_load_cargo']));
+            $height = array_values(json_decode($input['height']));
+            $width = array_values(json_decode($input['width']));
+            $large = array_values(json_decode($input['large']));
+            $weight = array_values(json_decode($input['weight']));
+            $volume = array_values(json_decode($input['volume']));
+
+
+        }else{
+            $quantity = array_values( array_filter($input['quantity']) );
+            $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+            $height = array_values( array_filter($input['height']) );
+            $width = array_values( array_filter($input['width']) );
+            $large = array_values( array_filter($input['large']) );
+            $weight = array_values( array_filter($input['weight']) );
+            $volume = array_values( array_filter($input['volume']) );
+        }
+
 
         //dd($quantity);
         if(count($quantity)>0){
@@ -1246,6 +1317,43 @@ class QuoteController extends Controller
                 $package_load->save();
             }
         }
+        //Deleting previous schedules
+        Schedule::where('quote_id',$quote->id)->delete();
+
+        if(isset($input['schedule'])){
+            if($input['schedule'] != 'null'){
+                $schedules = json_decode($input['schedule']);
+                foreach( $schedules as $schedule){
+                    $sche = json_decode($schedule);
+                    $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
+                    $saveSchedule  = new Schedule();
+                    $saveSchedule->vessel = $sche->vessel;
+                    $saveSchedule->etd = $sche->etd;
+                    $saveSchedule->transit_time =  $dias;
+                    $saveSchedule->eta = $sche->eta;
+                    $saveSchedule->type = 'direct';
+                    $saveSchedule->quotes()->associate($quote);
+                    $saveSchedule->save();
+                }
+            }
+        }
+        // Schedule manual
+        if(isset($input['schedule_manual'])){
+            if($input['schedule_manual'] != 'null'){
+                $sche = json_decode($input['schedule_manual']);
+                // dd($sche);
+                $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
+                $saveSchedule  = new Schedule();
+                $saveSchedule->vessel = $sche->vessel;
+                $saveSchedule->etd = $sche->etd;
+                $saveSchedule->transit_time =  $dias;
+                $saveSchedule->eta = $sche->eta;
+                $saveSchedule->type = 'direct';
+                $saveSchedule->quotes()->associate($quote);
+                $saveSchedule->save();
+            }
+        }
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Quote updated successfully!');
@@ -1530,44 +1638,48 @@ class QuoteController extends Controller
         $status_quotes=StatusQuote::pluck('name','id');
         return view('quotes.changeStatus',compact('quote','status_quotes'));
     }
-    public function scheduleManual($orig_port,$dest_port,$date_pick)
+
+    public function scheduleManual($carrier,$orig_port,$dest_port,$date_pick)
     {
         $code_orig = $this->getHarborName($orig_port);
         $code_dest = $this->getHarborName($dest_port);
-        $date  = $date_pick;
-        $carrier = 'maersk';
-        // Armar los schedules
-        try{
-            $url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
-            $client = new Client();
-            $res = $client->request('GET', $url, [
-            ]);
-            $schedules = Collection::make(json_decode($res->getBody()));
-            //  $schedules= $schedules->where($schedules->schedules->Etd,'2018-07-16');
-            $schedulesArr = new Collection();
-            $schedulesFin = new Collection();
-            if(!$schedules->isEmpty()){
-                foreach($schedules['schedules'] as $schedules){
-                    $collectS = Collection::make($schedules);
-                    $days =  $this->dias_transcurridos($schedules->Eta,$schedules->Etd);
-                    $collectS->put('days',$days);
-                    if($schedules->Transfer > 1){
-                        $collectS->put('type','Scale');
-                    }else{
-                        $collectS->put('type','Direct');
-                    }
-                    $schedulesArr->push($collectS);
+        $date = strtotime($date_pick);
+        $carrier_name = Carrier::find($carrier);
+//dd($date);
+        //$url = "http://schedules.cargofive.com/schedule/".$carrier."/".$code_orig->code."/".$code_dest->code;
+        $access_token = $this->schedules->authentication();
+        $data = $this->schedules->getSchedules($access_token->access_token,$carrier_name->name,$code_orig->code,$code_dest->code,$date);
+
+        $schedules = Collection::make($data);
+
+        $schedulesArr = new Collection();
+        $schedulesFin = new Collection();
+        if(!$schedules->isEmpty()){
+            foreach($schedules['data'] as $schedules){
+
+                $collectS = Collection::make($schedules);
+
+                $days =  $this->dias_transcurridos($schedules->eta,$schedules->etd);
+
+                $collectS->put('days',$days);
+                if($schedules->route_type > 1){
+                    $collectS->put('type','Scale');
+                }else{
+                    $collectS->put('type','Direct');
                 }
-                //'2018-07-24'
-                $dateSchedule = strtotime($date);
-                $dateSchedule =  date('Y-m-d',$dateSchedule);
-                if(!$schedulesArr->isEmpty()){
-                    $schedulesArr =  $schedulesArr->where('Etd','>=', $dateSchedule)->first();
-                    $schedulesFin->push($schedulesArr);
-                }
+                $schedulesArr->push($collectS);
+
             }
-        }catch (\Guzzle\Http\Exception\ConnectException $e) {
+            $dateSchedule = strtotime($date);
+            $dateSchedule =  date('Y-m-d',$dateSchedule);
+
+            if(!$schedulesArr->isEmpty()){
+
+                $schedulesArr =  $schedulesArr->where('etd','>=', $dateSchedule)->first();
+                $schedulesFin->push($schedulesArr);
+            }
         }
+
         return view('quotes.scheduleInfo',compact('code_orig','code_dest','schedulesFin'));
     }
 
@@ -1718,12 +1830,12 @@ class QuoteController extends Controller
                 $schedules = json_decode($input['schedule']);
                 foreach( $schedules as $schedule){
                     $sche = json_decode($schedule);
-                    $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                    $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                     $saveSchedule  = new Schedule();
-                    $saveSchedule->vessel = $sche->VesselName;
-                    $saveSchedule->etd = $sche->Etd;
+                    $saveSchedule->vessel = $sche->vessel;
+                    $saveSchedule->etd = $sche->etd;
                     $saveSchedule->transit_time =  $dias;
-                    $saveSchedule->eta = $sche->Eta;
+                    $saveSchedule->eta = $sche->eta;
                     $saveSchedule->type = 'direct';
                     $saveSchedule->quotes()->associate($quote);
                     $saveSchedule->save();
@@ -1735,25 +1847,38 @@ class QuoteController extends Controller
             if($input['schedule_manual'] != 'null'){
                 $sche = json_decode($input['schedule_manual']);
                 // dd($sche);
-                $dias = $this->dias_transcurridos($sche->Eta,$sche->Etd);
+                $dias = $this->dias_transcurridos($sche->eta,$sche->etd);
                 $saveSchedule  = new Schedule();
-                $saveSchedule->vessel = $sche->VesselName;
-                $saveSchedule->etd = $sche->Etd;
+                $saveSchedule->vessel = $sche->vessel;
+                $saveSchedule->etd = $sche->etd;
                 $saveSchedule->transit_time =  $dias;
-                $saveSchedule->eta = $sche->Eta;
+                $saveSchedule->eta = $sche->eta;
                 $saveSchedule->type = 'direct';
                 $saveSchedule->quotes()->associate($quote);
                 $saveSchedule->save();
             }
         }
 
-        $quantity = array_values( array_filter($input['quantity']) );
-        $type_cargo = array_values( array_filter($input['type_load_cargo']) );
-        $height = array_values( array_filter($input['height']) );
-        $width = array_values( array_filter($input['width']) );
-        $large = array_values( array_filter($input['large']) );
-        $weight = array_values( array_filter($input['weight']) );
-        $volume = array_values( array_filter($input['volume']) );
+        if(isset($input['lclAuto'])){
+            $quantity = array_values(json_decode($input['quantity']));
+            $type_cargo = array_values(json_decode($input['type_load_cargo']));
+            $height = array_values(json_decode($input['height']));
+            $width = array_values(json_decode($input['width']));
+            $large = array_values(json_decode($input['large']));
+            $weight = array_values(json_decode($input['weight']));
+            $volume = array_values(json_decode($input['volume']));
+
+
+        }else{
+            $quantity = array_values( array_filter($input['quantity']) );
+            $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+            $height = array_values( array_filter($input['height']) );
+            $width = array_values( array_filter($input['width']) );
+            $large = array_values( array_filter($input['large']) );
+            $weight = array_values( array_filter($input['weight']) );
+            $volume = array_values( array_filter($input['volume']) );
+        }
+
 
         if(count($quantity)>0){
             foreach($type_cargo as $key=>$item){
@@ -1920,34 +2045,25 @@ class QuoteController extends Controller
 
     public function searchAirports(Request $request){
         $term = trim($request->q);
-
         if (empty($term)) {
             return \Response::json([]);
         }
-
-        $airports = Airport::where('name','like','%' . $term. '%')->limit(10)->get();
-
+        $airports = Airport::where('name','like','%' . $term. '%')
+            ->orWhere('code','like','%' . $term. '%')->get();
         $formatted_airports = [];
-
         foreach ($airports as $airport) {
             $formatted_airports[] = ['id' => $airport->id, 'text' => $airport->display_name];
         }
-
         return \Response::json($formatted_airports);
     }
-
     public function updateCarrierVisibility(Request $request){
         $quote=Quote::find($request->quote_id);
         $quote->hide_carrier = $request->carrier_visibility;
         $quote->update();
-
         return response()->json(['message' => 'Ok']);
     }
-
     public function downloadQuotes(){
-
         //return Excel::download(new QuotesExport, 'quotes.xlsx');
-
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
             $quotes = Quote::where('owner',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
@@ -1969,9 +2085,7 @@ class QuoteController extends Controller
                     $cells->setFontColor('#ffffff');
                     $cells->setValignment('center');
                 });
-
                 //$sheet->setBorder('A1:AO1', 'thin');
-
                 $sheet->row(1, array(
                     'Id',
                     'Owner',
@@ -2024,7 +2138,6 @@ class QuoteController extends Controller
                     } else {
                         $origin = $quote->origin_address;
                     }
-
                     if ($quote->destination_harbor) {
                         $destination = $quote->destination_harbor->display_name;
                     } elseif ($quote->destination_airport) {
@@ -2032,7 +2145,6 @@ class QuoteController extends Controller
                     } else {
                         $destination = $quote->destination_address;
                     }
-
                     if ($quote->pdf_language == 1) {
                         $pdf_language = 'English';
                     } elseif ($quote->pdf_language == 2) {
@@ -2042,7 +2154,6 @@ class QuoteController extends Controller
                     } else {
                         $pdf_language = 'English';
                     }
-
                     if ($quote->type_cargo == 1) {
                         $cargo_type = 'FCL';
                     } elseif ($quote->type_cargo == 2) {
@@ -2050,37 +2161,25 @@ class QuoteController extends Controller
                     } else {
                         $cargo_type = 'AIR';
                     }
-
                     if ($quote->delivery_type == 1) {
                         $delivery_type = 'Port to Port';
                     } elseif ($quote->delivery_type == 2) {
                         $delivery_type = 'Port to Door';
                     } elseif ($quote->delivery_type == 3) {
                         $delivery_type = 'Door to Port';
-                    } elseif ($quote->delivery_type == 4) {
-                        $delivery_type = 'Door to Door';
-                    } elseif ($quote->delivery_type == 5) {
-                        $delivery_type = 'Airport to Airport';
-                    } elseif ($quote['delivery_type'] == 6) {
-                        $delivery_type = 'Airport to Door';
-                    } elseif ($quote->delivery_type == 7) {
-                        $delivery_type = 'Door to Airport';
-                    } elseif ($quote->delivery_type == 8) {
+                    } else {
                         $delivery_type = 'Door to Door';
                     }
-
                     if ($quote->carrier_id != '') {
                         $carrier = $quote->carrier->name;
                     } else {
                         $carrier = '';
                     }
-
                     if ($quote->modality == 1) {
                         $modality = 'Export';
                     } else {
                         $modality = 'Import';
                     }
-
                     if ($quote->incoterm == 1) {
                         $incoterm = 'EWX';
                     } elseif ($quote->incoterm == 2) {
@@ -2102,7 +2201,6 @@ class QuoteController extends Controller
                     } elseif ($quote->incoterm == 10) {
                         $incoterm = 'DDP';
                     }
-
                     $sheet->row($i, array(
                         "Id" => $quote->id,
                         "Owner" => $quote->user->name.' '.$quote->user->lastname,
@@ -2147,20 +2245,15 @@ class QuoteController extends Controller
                         "Created at" => $quote->created_at,
                     ));
                     $sheet->setBorder('A1:I' . $i, 'thin');
-
                     $sheet->cells('C' . $i, function ($cells) {
                         $cells->setAlignment('center');
                     });
-
                     $sheet->cells('I' . $i, function ($cells) {
                         $cells->setAlignment('center');
                     });
-
                     $i++;
                 }
-
             })->download('xlsx');
-
         });
     }
 }

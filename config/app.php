@@ -173,9 +173,12 @@ return [
         App\Providers\HarborsServiceProvider::class,
         App\Providers\RatesServiceProvider::class,
         App\Providers\SurchargersServiceProvider::class,
-       // App\Providers\SurchargersExportServiceProvider::class,
-	Laravel\Passport\PassportServiceProvider::class,
-
+        App\Providers\RatesLclServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
+        App\Providers\EventIntercomServiceProvider::class,
+        UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
 
     ],
@@ -236,8 +239,10 @@ return [
         'PrvHarbor' => App\Helpers\Helpharbors::class,
         'PrvRates' => App\Helpers\Rates\HelperRates::class,
         'PrvSurchargers' => App\Helpers\Surchargers\HelperSurchargers::class,
-        //'PrvSurchargersExport' => App\Helpers\Surchargers\HelperSurchargersExport::class,
-
+        'PrvRatesLcl' => App\Helpers\Rates\HelperRatesLcl::class,
+        'EventIntercom' => App\Helpers\Intercom::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];
