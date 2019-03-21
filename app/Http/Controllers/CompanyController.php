@@ -137,9 +137,9 @@ class CompanyController extends Controller
                 $filepath = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
                 $name = $file->getClientOriginalName();
                 \Storage::disk('logos')->put($name, file_get_contents($file), 'public');
-                $s3 = \Storage::disk('s3_upload');
-                $s3->put($filepath, file_get_contents($file), 'public');
-                //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
+                //$s3 = \Storage::disk('s3_upload');
+                //$s3->put($filepath, file_get_contents($file), 'public');
+                ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
             }
             if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
                 foreach ($input['price_id'] as $key => $item) {
@@ -254,9 +254,9 @@ class CompanyController extends Controller
             if ($file != "") {
                 $name = $file->getClientOriginalName();
                 \Storage::disk('logos')->put($name, file_get_contents($file), 'public');
-                $s3 = \Storage::disk('s3_upload');
-                $s3->put($filepath, file_get_contents($file), 'public');
-                //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
+                //$s3 = \Storage::disk('s3_upload');
+                //$s3->put($filepath, file_get_contents($file), 'public');
+                ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
             }
             if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
                 CompanyPrice::where('company_id', $company->id)->delete();
