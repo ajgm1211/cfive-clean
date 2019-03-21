@@ -521,14 +521,16 @@ function validateRange40hc(id,tipo){
   } 
   
   if(tipo == 't40ELOWH'){
+
     $('#msg40H').hide();
-    var idval = id.substr(4);
+    var idval = id.substr(5);
     var bool = 'false';
     var low = parseInt($('#lo40H'+idval).val());
     var up =  parseInt($('#up40H'+idval).val());
     if(low >= up){
       bool  ='true';
     }
+
     if(bool == 'true'){
       $('#msg40H').show();
       $('#lo40H'+idval).val(0);
@@ -538,7 +540,7 @@ function validateRange40hc(id,tipo){
   if(tipo == 't40EUPH'){
 
     $('#msg40H').hide();
-    var idval = id.substr(4);
+    var idval = id.substr(5);
     var idprox = parseInt(idval) + 1;
 
     var bool = 'false';

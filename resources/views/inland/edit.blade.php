@@ -300,7 +300,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->lower }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lo40'.$contforty ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input ','disabled' => 'true', 'onblur' => 'validateRange40(this.id,\'t40ELOW\')']) !!}
+                            {!! Form::text('lowerforty[]', $inlanddetails->lower, ['id' => 'lo40'.$contforty ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input low40','disabled' => 'true', 'onblur' => 'validateRange40(this.id,\'t40ELOW\')']) !!}
                           </div>
                         </td>
                         <td width="20%">
@@ -437,7 +437,7 @@ $validation_expire = $inland->validity ." / ". $inland->expire ;
                             {{ $inlanddetails->lower }}
                           </div>
                           <div class="in" hidden="    true">
-                            {!! Form::text('lowerfortyhc[]', $inlanddetails->lower, ['id' => 'lo40H'.$contfortyH ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input ','disabled' => 'true','style'=>'width:100%','onblur' => 'validateRange40hc(this.id,\'t40ELOWH\')']) !!}
+                            {!! Form::text('lowerfortyhc[]', $inlanddetails->lower, ['id' => 'lo40H'.$contfortyH ,'placeholder' => '0','class' => 'col-lg-12 form-control m-input low40H','disabled' => 'true','style'=>'width:100%','onblur' => 'validateRange40hc(this.id,\'t40ELOWH\')']) !!}
                           </div>
                         </td>
 
