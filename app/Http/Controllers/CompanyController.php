@@ -94,7 +94,6 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'business_name' => 'required',
             'logo' => 'max:1000',
         );
 
@@ -104,7 +103,7 @@ class CompanyController extends Controller
 
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', 'Error!');
-            $request->session()->flash('message.content', 'Name is empty or image size is too big');
+            $request->session()->flash('message.content', 'Image size can not be bigger than 1 mb');
             return redirect()->route('companies.index');
 
         }else {
@@ -218,7 +217,6 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $rules = array(
-            'business_name' => 'required',
             'logo' => 'max:1000',
         );
 
@@ -228,7 +226,7 @@ class CompanyController extends Controller
 
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', 'Error!');
-            $request->session()->flash('message.content', 'Name is empty or image size is too big');
+            $request->session()->flash('message.content', 'Image size can not be bigger than 1 mb');
             return redirect()->back();
 
         }else {
