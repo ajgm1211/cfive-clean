@@ -150,6 +150,54 @@
               <div class="col-md-1">40NOR'</div>
               <div class="col-md-1">45'</div>
             </div>
+            <div class="row">
+              <div class="col-md-12"><br><br></div>
+            </div>
+            @foreach($arreglo as $arr)
+            <div class="row " >
+              <div class="col-md-2">            
+                <div class="m-widget5">
+                  <div class="m-widget5__item">
+                    <div class="m-widget5__pic"> 
+                      <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
+                    <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="progress m-progress--sm">
+                      <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div><br>
+                    Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
+                  </div>
+                  <div class="col-md-4">
+                    <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
+                    <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
+                  </div>
+                </div>
+                <br>
+                <span class="workblue">Detail Cost</span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+                <i  class="la la-angle-down blue"></i>
+                </a>
+
+              </div>
+
+              <div class="col-md-2">
+                <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
+              </div>
+              <div class="col-md-1">  <span class="portcss"> {{$arr->twuenty  }}</span></div>
+              <div class="col-md-1">  <span class="portcss"> {{$arr->forty  }} </span></div>
+              <div class="col-md-1">  <span class="portcss"> {{$arr->fortyhc  }}</span></div>
+              <div class="col-md-1">  <span class="portcss"> {{$arr->fortynor  }}</span></div>
+              <div class="col-md-1">  <span class="portcss"> {{$arr->fortyfive  }}</span></div>
+            </div>
+            @endforeach       
           </div>
 
         </div>      
@@ -178,7 +226,7 @@
 @else
 
 <script>
-precargar()
+  precargar()
 </script>
 
 

@@ -165,11 +165,9 @@
             {!! Form::open(['route' => ['quotes.test'] ,'name' => 'info','method' => 'post','class' => 'form-group m-form__group']) !!}
             <table  class="table m-table m-table--head-separator-primary" border="0" id="sample_editable">
               <tbody>
-
                 <input type="hidden" name="info" value="{{ json_encode($arr) }}">
                 <input type="hidden" name="form" value="{{ json_encode($form) }}">
                 <tr id="principal{{$loop->iteration}}">
-
                   <td width = '20%'>
                     <div class="m-widget5">
                       <div class="m-widget5__item">
@@ -204,11 +202,8 @@
                     <i  class="la la-angle-down blue"></i>
                     </a>
                   </td>
-
                   <td width = '20%'>
-
                     <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>                  
-
                   </td>
                   <td width = '20%'>     
                     <div class="m-widget5" style="float:right;">
@@ -226,7 +221,6 @@
 
                     </div>
                   </td>
-
                 </tr>
                 @if((!$arr->globalOrig->isEmpty()) || (!$arr->localOrig->isEmpty()))
                 <tr id="origin{{$loop->iteration}}" hidden="true"  >
