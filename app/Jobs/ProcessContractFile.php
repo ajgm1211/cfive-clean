@@ -10,6 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessContractFile implements ShouldQueue
 {
@@ -39,24 +41,27 @@ class ProcessContractFile implements ShouldQueue
     {
         if($this->type == 'fcl'){
             $Ncontracts = NewContractRequest::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
+            $name  =$Ncontracts->namefile;
+            $s3 = Storage::disk('s3_upload');
             $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
+            //$file = Storage::disk('UpLoadFile')->get($file);
+            $file=File::get(storage_path('app/public/'.$name));
             $s3->put('Request/FCL/'.$filePath, $file, 'public');
         }else if($this->type == 'gcfcl'){
             $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
+            $name  =$Ncontracts->namefile;
+            $s3 = Storage::disk('s3_upload');
             $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
+            //$file = Storage::disk('UpLoadFile')->get($file);
+            $file=File::get(storage_path('app/public/'.$name));
             $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
         }else{
             $Ncontracts = NewContractRequestLcl::find($this->id);
-            $file  =$Ncontracts->namefile;
-            $s3 = \Storage::disk('s3_upload');
+            $name  =$Ncontracts->namefile;
+            $s3 = Storage::disk('s3_upload');
             $filePath = $this->name;
-            $file = \Storage::disk('UpLoadFile')->get($file); 
+            //$file = Storage::disk('UpLoadFile')->get($file);
+            $file=File::get(storage_path('app/public/'.$name));
             $s3->put('Request/LCL/'.$filePath, $file, 'public');
         }
     }
