@@ -626,9 +626,15 @@ class QuoteAutomaticController extends Controller
                 }
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
+                  $inlandDetails = Collection::make($inlandDetails);
                   $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia, "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $inlandsValue->inlandadditionalkms->currency->alphacode ,'idCurrency' => $inlandsValue->currency_id );
 
-                  $arregloInland['inlandDetails'] = $inlandDetails;
+                  $arregloInland['inlandDetails'] = $inlandDetails->groupBy('currency')->map(function($item){
+                    $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
+
+                    return $minimoDetails;
+                  });
+
                   $data[] =$arregloInland;
                 }
               }
@@ -869,21 +875,29 @@ class QuoteAutomaticController extends Controller
 
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
+                  $inlandDetailsOrig = Collection::make($inlandDetailsOrig);
+
                   $arregloInland = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia , "monto" => $monto ,'type' => 'Origin Port To Door','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
 
-                  $arregloInland['inlandDetails'] = $inlandDetailsOrig;
+                  $arregloInland['inlandDetails'] = $inlandDetailsOrig->groupBy('currency')->map(function($item){
+
+                    $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
+
+                    return $minimoDetails;
+                  });
                   $dataOrig[] = $arregloInland;
                 }
-              }
+              }//antes de esto 
             }
           } // if ports
         }// foreach ports
       }//foreach inlands
       if(!empty($dataOrig)){
         $collectionOrig = Collection::make($dataOrig);
-        // dd($collection); //  completo
+        //dd($collectionOrig); //  completo
         $inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
+
           return $test;
         });
         //dd($inlandOrigin); // filtraor por el minimo
@@ -934,8 +948,8 @@ class QuoteAutomaticController extends Controller
       });
     } */ 
 
-
-    $arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
+    //$arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
+    $arreglo = $arreglo->get();
 
     // Fin condiciones del cero
     $formulario = $request;
@@ -2546,6 +2560,7 @@ class QuoteAutomaticController extends Controller
       $totalFreight = $totalFreight." ".$typeCurrency;
       $totalOrigin = $totalOrigin." ".$typeCurrency;
       $totalDestiny = $totalDestiny." ".$typeCurrency;
+      $tot = $totalQuote;
       $totalQuoteSin = number_format($totalQuote, 2, ',', '');
       $totalQuote = $totalQuote." ".$typeCurrency;
       $quoteCurrency = $typeCurrency;
@@ -2570,6 +2585,7 @@ class QuoteAutomaticController extends Controller
       $data->setAttribute('totalInland',$totalInland);
       //Total quote atributes
       $data->setAttribute('totalQuoteSin',$totalQuoteSin);
+      $data->setAttribute('tot',$tot);
       $data->setAttribute('quoteCurrency',$quoteCurrency);
       $data->setAttribute('idCurrency',$idCurrency);
       // SCHEDULES
@@ -2585,7 +2601,7 @@ class QuoteAutomaticController extends Controller
 
     $arreglo->setCollection(
       collect(
-        collect($arreglo->items())->sortBy('totalQuoteSin')
+        collect($arreglo->items())->sortBy('tot')
       )->values()
     );
 

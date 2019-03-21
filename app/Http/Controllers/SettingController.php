@@ -58,8 +58,9 @@ class SettingController extends Controller
 
     public function store(Request $request){
         $file = Input::file('image');
-        $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
+        $filepath = '';
         if($file != ""){
+            $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
             $name     = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name,file_get_contents($file));
             ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
