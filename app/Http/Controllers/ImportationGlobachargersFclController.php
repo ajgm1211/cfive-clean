@@ -344,9 +344,9 @@ class ImportationGlobachargersFclController extends Controller
             $account->status           = 'incomplete';
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
-            
+
             ProcessContractFile::dispatch($account->id,$account->namefile,'gcfcl','account');
-            
+
             $account_id = $account->id;
             $fileTmp    = new FileTmpGlobalcharge();
             $fileTmp->account_id = $account_id;
@@ -1215,7 +1215,7 @@ class ImportationGlobachargersFclController extends Controller
 
     }
 
-    public function Download($id){
+    public function Download(Request $request,$id){
         $account    = AccountImportationGlobalcharge::find($id);
         $time       = new \DateTime();
         $now        = $time->format('d-m-y');
@@ -1223,10 +1223,16 @@ class ImportationGlobachargersFclController extends Controller
         $extObj     = new \SplFileInfo($account->namefile);
         $ext        = $extObj->getExtension();
         $name       = $account->id.'-'.$company->name.'_'.$now.'-GCFLC.'.$ext;
-        try{
-            return Storage::disk('s3_upload')->download('Account/Global-charges/FCL/'.$account->namefile,$name);
-        } catch(\Exception $e){
-            return Storage::disk('GCAccount')->download($account->namefile,$name);
+        if(empty($account->namefile) != true){
+            try{
+                return Storage::disk('s3_upload')->download('Account/Global-charges/FCL/'.$account->namefile,$name);
+            } catch(\Exception $e){
+                return Storage::disk('GCAccount')->download($account->namefile,$name);
+            }
+        } else {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'The Global Charge File not exists');
+            return redirect()->route('RequestsGlobalchargersFcl.index');
         }
     }
 }
