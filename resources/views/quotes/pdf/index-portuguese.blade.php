@@ -9,10 +9,12 @@
     <body style="background-color: white; font-size: 11px;">
         <header class="clearfix">
             <div id="logo">
-                <img src="{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:25px">
+                @if($user->companyUser->logo!='')
+                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                @endif
             </div>
             <div id="company">
-                <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->company_quote}}</b></span></div>
+                <div><span class="color-title"><b>Numero de cotação:</b></span> <span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</b></span></div>
                 <div><span class="color-title"><b>Data de emissão:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
                 @if($quote->validity!=''&&$quote->since_validity!='')
                 <div><span class="color-title"><b>Validade: </b></span> {{\Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</div>
@@ -35,7 +37,9 @@
                 <div class="company text-right" style="float: right; width: 350px;">
                     <p><b>Para:</b></p>
                     <span id="destination_input" style="line-height: 0.5">
-                        <!--<img src="{{$quote->company->logo}}" class="img img-responsive" width="110" height="auto" style="margin-bottom:20px">-->
+                        @if($quote->company->logo!='')
+                            <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px"/>
+                        @endif
                         <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                         <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
                         <p>{{$quote->company->address}}</p>

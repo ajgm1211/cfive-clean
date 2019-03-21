@@ -72,7 +72,6 @@
                </div>
             </div>
             <style>
-
                button.quote-options {
                   background: #fafafa !important;
                   color: #041A4E !important;
@@ -81,13 +80,10 @@
                   box-shadow: none !important;
                   border:1px solid #041A4E !important;
                }
-
                .quote-options:hover {
                   color: #041A4E;
-
                }
             </style>
-
             <table class="table tableData" id="tablequote" width="100%">
                <thead >
                <tr class="title-quote">
@@ -112,8 +108,8 @@
                   <th title="Destination">
                      Destination
                   </th>
-                  <th title="Ammount">
-                     Ammount
+                  <th title="Amount">
+                     Amount
                   </th>
                   <th title="Markup">
                      Markup

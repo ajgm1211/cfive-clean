@@ -14,6 +14,9 @@
       <div class="col-md-2 col-12" style="padding-bottom:10px;">
         <a href="{{route('quotes.pdf',setearRouteKey($quote->id))}}" target="_blank" class="btn btn-primary btn-block">PDF</a>
       </div>
+      <!--<div class="col-md-2 col-12" style="padding-bottom:10px;">
+        <a href="{{route('quotes.pdf.2',setearRouteKey($quote->id))}}" target="_blank" class="btn btn-primary btn-block">PDF Example</a>
+      </div>-->
       <div class="col-md-2 col-12" style="padding-bottom:10px;">
         <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="btn btn-primary btn-block">Duplicate</a>
       </div>
@@ -55,15 +58,15 @@
                   <div class="col-md-12" style="margin-top: 20px;">
                     @if($user->companyUser->logo!='')
                       <div class="pull-left text-left" style="line-height: .5;">
-                        <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                        <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
                       </div>
                     @endif
                     <div class="pull-right text-right" style="line-height: .5">
-                      <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
+                      <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->custom_id == '' ? $quote->company_quote:$quote->custom_id}}</span></b></p>
                       <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                       @if($quote->validity!=''&&$quote->since_validity!='')
                         <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
-                       <p><b>Contract Ref: <span style="color: #CFAC6C">#{{$quote->contract_number}}</span></b></p>
+                        <p><b>Contract Ref: <span style="color: #CFAC6C">#{{$quote->contract_number}}</span></b></p>
                       @endif
                     </div>
                   </div>
@@ -90,7 +93,7 @@
                     <div class="pull-right text-right" style="line-height: .5">
                       <p><b>To:</b></p>
                       @if($quote->company->logo!='')
-                        <img src="/{{$quote->company->logo}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
+                        <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="120" height="auto" style="margin-bottom:20px">
                       @endif
                       <p class="name size-12px">{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
                       <p><b>{{$quote->company->business_name}}</b></p>
@@ -316,7 +319,7 @@
         @if(count($origin_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Origin ammounts</h5>
+              <h5 class="title-quote size-14px">Origin amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -362,7 +365,7 @@
         @if(count($freight_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Freight ammounts</h5>
+              <h5 class="title-quote size-14px">Freight amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -408,7 +411,7 @@
         @if(count($destination_ammounts)>0)
           <div class="row">
             <div class="col-md-12">
-              <h5 class="title-quote size-14px">Destination ammounts</h5>
+              <h5 class="title-quote size-14px">Destination amounts</h5>
               <hr>
             </div>
             <div class="col-md-12">
@@ -507,6 +510,49 @@
             </div>
           </div>
         @endif
+        <br>
+        @if(!$quote->schedules->isEmpty())
+          <div id="infoschedule" class="row">
+            <div class="col-lg-12">
+              <label class="size-14px">
+                <b>Schedules</b>
+              </label>
+              <hr>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="" style="margin-bottom:40px;">
+                <table id="schetable" class="table table-bordered color-blue text-center">
+                  <thead class="title-quote header-table">
+                  <tr>
+                    <td><b>Vessel</b></td>
+                    <td><b>ETD</b></td>
+                    <td><b>Transit time</b></td>
+                    <td><b>ETA</b></td>
+                  </tr>
+                  </thead>
+                  <tbody id="scheduleBody">
+                  @forelse($quote->schedules as $item)
+                    <tr>
+                      <td>{{$item->vessel}}</td>
+                      <td>{{$item->etd}}</td>
+                      <td><div class='col-md-4 offset-md-4'>{{$item->transit_time}} days <div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div></div> {{$item->type}}</div></td>
+                      <td>{{$item->eta}}</td>
+                    </tr>
+                  @empty
+                    <tr>
+                      <td colspan="5">
+                        There are not schedules
+                      </td>
+                    </tr>
+                  @endforelse
+                  </tbody>
+                </table>
+                <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+              </div>
+            </div>
+          </div>
+        @endif
       </div>
       <div class="col-lg-2 col-md-2 col-sm-2">
         <h3 class="title-quote size-16px">Settings</h3>
@@ -524,8 +570,8 @@
         <label class="title-quote title-quote size-14px">PDF type</label>
         {!! Form::select('pdf_type', [1=>'All in',2=>'Detailed'],$user->companyUser->type_pdf, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_type']) !!}
         <hr>
-        <label class="title-quote title-quote size-14px">PDF ammounts</label>
-        {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
+        <label class="title-quote title-quote size-14px">PDF amounts</label>
+        {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original amounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','required' => 'required','id'=>'pdf_ammounts']) !!}
         <hr>
         <label class="title-quote title-quote size-14px">Carrier visibility</label>
         {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],$quote->hide_carrier, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}

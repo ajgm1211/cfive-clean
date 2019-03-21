@@ -47,7 +47,7 @@
                                     <div class="m-portlet__body text-center">
                                         @if($company->logo!='')
                                             <div class="" style="line-height: .5;">
-                                                <img src="/{{$company->logo}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+                                                <img src="{{Storage::disk('s3_upload')->url($company->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
                                             </div>
                                             <br>
                                         @endif

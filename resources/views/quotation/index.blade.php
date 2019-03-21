@@ -192,7 +192,6 @@
                           <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div><br>
                         Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
-        
                       </div>
                       <div class="col-md-4">
                         <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
@@ -402,45 +401,59 @@
                         <th><span class="portalphacode">Type</span></th>
                         <th><span class="portalphacode">Distance</span>  </th>
                         <th><span class="portalphacode">Port Name</span></th>
+                        <th><span class="portalphacode">Amount</span></th>
                         <th><span class="portalphacode">Markup</span></th>
                         <th><span class="portalphacode">Total Ammount</span></th>
                       </tr>
                       @if(!empty($inlandDestiny))
+                      <tr>
+                        <th colspan="6"> <span  class=" portalphacode darkblue px12" >Destination </span></th>
+                      </tr>
                       @foreach($inlandDestiny as $inlandDest)
                       @if($inlandDest['port_id'] == $arr->port_destiny->id )
+                      @foreach($inlandDest['inlandDetails'] as $details)
                       <tr>
                         <th>{{ $inlandDest['provider'] }}</th>
-                        <th>{{ $inlandDest['type'] }}</th>
+                        <th>{{ $details['des_in'] }}</th>
                         <th>{{ $inlandDest['km'] }} KM</th>
                         <th>{{ $inlandDest['port_name'] }}</th>
-                        <th>{{ $inlandDest['markup'] }} {{ $inlandDest['typemarkup'] }}</th>
-                        <th>{{ $inlandDest['monto'] }} {{  $inlandDest['type_currency'] }}</th>
+                        <th>{{ $details['amount'] }} {{ $details['currency'] }}</th>
+                        <th>{{ $details['markup'] }} {{ $details['typemarkup'] }}</th>
+                        <th>{{ $details['sub_in'] }} {{  $inlandDest['type_currency'] }}</th>
                       </tr>
+                      @endforeach
                       @endif
                       @endforeach
                       @endif
+
                       @if(!empty($inlandOrigin))
+                      <tr>
+                        <td colspan="6"> <span  class="darkblue px12" >Origin </span></td>
+                      </tr>
                       @foreach($inlandOrigin as $inlandOrig)
                       @if($inlandOrig['port_id'] == $arr->port_origin->id )
+                      @foreach($inlandOrig['inlandDetails'] as $detailsOrig)
                       <tr>
                         <th>{{ $inlandOrig['provider'] }}</th>
-                        <th>{{ $inlandOrig['type'] }}</th>
+                        <th>{{ $detailsOrig['des_in'] }}</th>
                         <th>{{ $inlandOrig['km'] }} KM</th>
                         <th>{{ $inlandOrig['port_name'] }}</th>
-                        <th>{{ $inlandOrig['markup'] }} {{ $inlandOrig['typemarkup'] }}</th>
-                        <th>{{ $inlandOrig['monto'] }} {{  $inlandOrig['type_currency'] }}</th>
+                        <th>{{ $detailsOrig['amount'] }} {{ $detailsOrig['currency'] }}</th>
+                        <th>{{ $detailsOrig['markup'] }} {{ $detailsOrig['typemarkup'] }}</th>
+                        <th>{{ $detailsOrig['sub_in'] }} {{  $inlandOrig['type_currency'] }}</th>
                       </tr>
+                      @endforeach
                       @endif
                       @endforeach
                       @endif
                       <tr>
-                        <td colspan="4"></td>
+                        <td colspan="5"></td>
                         <td > <span  class="darkblue px12" >SUBTOTAL:</span></td>
                         <td> <span  class="darkblue px12" > {{ $arr->totalInland }} {{ $arr->quoteCurrency }}</span>  </td>
                       </tr>
                     </table>
                   </td>
-                </tr>
+                </tr>                
                 @endif
                 @if(!$arr->schedulesFin->isEmpty())
                 <tr id="schedules{{$loop->iteration}}" hidden="true"   >
@@ -460,8 +473,8 @@
                       @foreach($arr->schedulesFin as $schedule)
 
                       <tr>
-                        <td width='15%'>{{ $schedule['VesselName'] }}</td>
-                        <td width='15%'>{{ $schedule['Etd'] }}</td>
+                        <td width='15%'>{{ $schedule['vessel'] }}</td>
+                        <td width='15%'>{{ $schedule['etd'] }}</td>
                         <td width='45%'>
                           <div class="row">
                             <div class="col-md-4">
@@ -481,7 +494,7 @@
                             </div>
                           </div>                        
                         </td>
-                        <td width='15%'>{{ $schedule['Eta'] }}</td>
+                        <td width='15%'>{{ $schedule['eta'] }}</td>
                         <td width='10%'>      
                           <label class="m-checkbox m-checkbox--state-brand">
                             <input name="schedules[]" type="checkbox" value="{{ json_encode($schedule) }}"> 
@@ -607,6 +620,7 @@
     @endif
   </div>
 </div>
+
 @endsection
 @section('js')
 @parent

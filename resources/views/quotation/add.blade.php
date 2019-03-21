@@ -61,7 +61,9 @@ $subtotalDestiny = 0;
                 <div class="m-portlet__head-tools">
                   <div class="col-md-12" style="margin-top: 20px;">
                     <div class="pull-left text-left" style="line-height: .5;">
-                      <img src="/{{$user->companyUser->logo}}" class="img img-responsive" width="225px" height="auto" margin-bottom="25px">
+                      @if($user->companyUser->logo!='')
+                      <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                      @endif
                     </div>
                     <div class="pull-right text-right" style="line-height: .5">                                
 
@@ -175,12 +177,77 @@ $subtotalDestiny = 0;
                         @if($form->fortyfive > 0)
                         <p id="cargo_details_45_hc_p" ><span id="cargo_details_45_hc"></span> {{ $form->fortyfive }} x 45' HC Containers</p> 
                         @endif
-
-
-
-
                       </div>
                     </div>
+                    @if($form->total_quantity != null)
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div id="cargo_details_cargo_type_p" ><b>Cargo type:</b> <span id="cargo_details_cargo_type">{{ $form->type_cargo == 1  ? 'Pallets' : 'Packages' }}</span></div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="cargo_details_total_quantity_p">  <b>Total quantity:</b> {{ $form->total_quantity }} <span id="cargo_details_total_quantity"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="cargo_details_total_weight_p" ><b>Total weight: </b>  {{ $form->total_weight }} <span id="cargo_details_total_weight"></span> KG</div>
+                      </div>
+                      <div class="col-md-3">
+                        <p id="cargo_details_total_volume_p" ><b>Total volume: </b> {{ $form->total_volume }} <span id="cargo_details_total_volume"></span> m<sup>3</sup></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div id="chargeable_weight_div" >  <b>Chargeable weight:</b>
+                          <span id="chargeable_weight_span"> {{ $form->chargeable_weight }}</span> kg
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    @if($form->total_quantity_pkg != null)
+                    <div class="row">
+                      <table class="table table-bordered color-blue text-center">
+                        <tbody>
+                          <tr>
+                            <th width="75" class="header-table title-quote">Quantity</th>
+                            <th width="75" class="header-table title-quote">Height</th>
+                            <th width="75" class="header-table title-quote">Width</th>
+                            <th width="75" class="header-table title-quote">Large</th>
+                            <th width="75" class="header-table title-quote">Weight</th>
+                            <th width="75" class="header-table title-quote">Total Weight</th>
+                            <th width="75" class="header-table title-quote">Volume</th>
+                          </tr>
+                          @foreach($form->quantity as $key => $value)
+                          @if($value != null)
+                          <tr>
+                            <td width="75" >{{ $form->quantity[$key] }}</td>
+                            <td width="75" >{{ $form->height[$key]  }}</td>
+                            <td width="75" >{{ $form->width[$key]  }} </td>
+                            <td width="75" >{{ $form->large[$key]  }}</td>
+                            <td width="75" >{{ $form->weight[$key]  }} &nbsp; kg</td>
+                            <td width="75" >{{ $form->quantity[$key] * $form->weight[$key]  }} &nbsp; kg</td>
+                            <td width="75" >{{  $form->volume[$key] }} m<sup>3</sup>&nbsp;</td>
+                          </tr>
+                          @endif
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="row pull-right">
+                      <div class="col-md-12">
+                        <div id="cargo_details_total_pkg_p" >  <b>Total:</b> 
+                          <span id="cargo_details_total_quantity_pkg">{{ $form->total_quantity_pkg }}</span> un&nbsp;
+                          <span id="cargo_details_total_volume_pkg">{{ $form->total_volume_pkg }}</span> m<sup>3</sup>&nbsp;
+                          <span id="cargo_details_total_weight_pkg">{{ $form->total_weight_pkg }}</span> km
+                        </div>
+                        <br>
+                        <div id="chargeable_weight_div" >  <b>Chargeable weight:</b>
+                          <span id="chargeable_weight_span"> {{ $form->chargeable_weight }}</span> kg
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+
+                    <br><br><br>
                     <div class="row">
                       <div class="col-md-3">
                         <h5 class="title-quote size-14px">Origin ammounts</h5>
@@ -212,24 +279,26 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->origin->calculation_name }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidadT }}"/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" step="0.01" value="{{ $origin->origin->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.00000001" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->origin->monto }}">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->origin->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,$origin->origin->idCurrency,['class'=>'form-control origin_ammount_currency']) }}
+
+                                        {{ Form::select('origin_ammount_currency[]',$currency,$origin->origin->idCurrency,['class'=>' m-select2-general form-control origin_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step="0.00000001" type="number" min="0" value="{{ $origin->origin->subtotal_local }}"/>
+                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_local }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" step="0.00000001" min="0" value="{{ $origin->origin->markupConvert }}"/>
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" step=".01" min="0" value="{{ $origin->origin->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -256,24 +325,26 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->origin->calculation_name }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="{{ $origin->origin->cantidadT }}"/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" step="0.01" value="{{ $origin->origin->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.00000001" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->origin->monto }}">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->origin->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,$origin->origin->idCurrency,['class'=>'form-control origin_ammount_currency']) }}
+
+                                        {{ Form::select('origin_ammount_currency[]',$currency,$origin->origin->idCurrency,['class'=>'m-select2-general form-control origin_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step="0.00000001" type="number" min="0" value="{{ $origin->origin->subtotal_global }}"/>
+                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $origin->origin->subtotal_global }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" step="0.00000001" min="0" value="{{ $origin->origin->markupConvert }}"/>
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" type="number" step=".01" min="0" value="{{ $origin->origin->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -289,6 +360,7 @@ $subtotalDestiny = 0;
                               @endforeach
 
                               @foreach($info->inlandOrigin as $origin)
+                              @foreach($origin->inlandDetails as $detailsOrig)
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" id="origin_ammount_charge" name="origin_ammount_charge[]" value="{{ $origin->provider }} " />
@@ -297,29 +369,29 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" class="form-control" type="text" value="{{ $origin->type }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="number" min="0" value="1" readonly/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" class="form-control origin_ammount_units" type="text" min="0" value="{{ $origin->km }} " readonly/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="1" step="0.00000001" class="origin_price_per_unit form-control" aria-label="..." value="{{ $origin->monto }}">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="..." value="{{ $detailsOrig->price_unit }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,$info->idCurrency,['class'=>'form-control origin_ammount_currency']) }}              
+                                        {{ Form::select('origin_ammount_currency[]',$currency,$info->idCurrency,['class'=>'m-select2-general form-control origin_ammount_currency']) }}              
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step="0.00000001" type="number" min="0" value="{{ $origin->monto  }}"/>
+                                  <input id="origin_total_ammount" name="origin_total_ammount[]" class="form-control origin_total_ammount" step=".01" type="number" min="0" value="{{ $detailsOrig->sub_in  }}"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.00000001"  type="number" min="0" value="{{ $origin->markupConvert }}"/>
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" class="form-control origin_ammount_markup" step="0.01"  type="number" min="0" value="{{ $detailsOrig->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $origin->monto }}">
+                                      <input type="text" name="origin_total_ammount_2[]"  class="form-control origin_total_ammount_2" aria-label="..." value="{{ $detailsOrig->sub_in }}">
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -328,8 +400,9 @@ $subtotalDestiny = 0;
                                 </td>
                               </tr>
                               @endforeach
+                              @endforeach
 
-                              @if((empty($info->localOrig)) && (empty($info->globalOrig)))
+                              @if((empty($info->localOrig)) && (empty($info->globalOrig)) && (empty($info->inlandOrigin)))
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
@@ -338,24 +411,26 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.00000001" class="origin_price_per_unit form-control" aria-label="...">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,null,['class'=>'form-control origin_ammount_currency']) }}
+
+                                        {{ Form::select('origin_ammount_currency[]',$currency,null,['class'=>'m-select2-general form-control origin_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
+                                  <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" />
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" step="0.00000001" type="number" min="0"/> 
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" step=".01" type="number" min="0"/> 
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -375,14 +450,14 @@ $subtotalDestiny = 0;
                                   <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0"/>
+                                  <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.01"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.00000001" class="origin_price_per_unit form-control" aria-label="...">
+                                    <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="0" step="0.01" class="origin_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('origin_ammount_currency[]',$currency,null,['class'=>'form-control origin_ammount_currency']) }}              
+                                        {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
@@ -392,7 +467,7 @@ $subtotalDestiny = 0;
                                   <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0"/>
                                 </td>
                                 <td>
-                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" step="0.00000001" type="number" min="0"/> 
+                                  <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" step=".01" type="number" min="0"/> 
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -458,14 +533,16 @@ $subtotalDestiny = 0;
                                   <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->detail }}"  readonly='true' />
                                 </td>
                                 <td>
-                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="text" value="{{ $freight->cantidad }}" data-container="body" data-toggle="m-popover" data-placement="bottom" data-content="Im sorry " data-original-title=""  readonly='true'/>
+                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" step="0.01" max="99" type="text" value="{{ $freight->cantidad }}" data-container="body" data-toggle="m-popover" data-placement="bottom" data-content="Im sorry " data-original-title=""  readonly='true'/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.00000001" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->price }}">
+                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="0" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->price }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}
+
+                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->idCurrency,['class'=>'m-select2-general form-control freight_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
@@ -475,12 +552,12 @@ $subtotalDestiny = 0;
                                   <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->subtotal }}">
                                 </td>
                                 <td>
-                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step="0.00000001" min="0" type="number" value="{{ $freight->markupConvert }}"/>
+                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step="0.01" min="0" type="number" value="{{ $freight->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.00000001"  min="0" type="number" value="{{ $total[0] }}"/>
+                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -502,14 +579,16 @@ $subtotalDestiny = 0;
                                   <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->freight->calculation_name }}" />
                                 </td>
                                 <td>
-                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
+                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" step="0.01" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.00000001" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
+                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="0" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}
+
+                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'m-select2-general form-control freight_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
@@ -518,12 +597,12 @@ $subtotalDestiny = 0;
                                   <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->freight->subtotal_local  }}">
                                 </td>
                                 <td>
-                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" step="0.00000001" type="number" value="{{ $freight->freight->markupConvert }}"/>
+                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" min="0" step=".01" type="number" value="{{ $freight->freight->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.00000001"  min="0" type="number" value="{{ $total[0] }}"/>
+                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -545,14 +624,14 @@ $subtotalDestiny = 0;
                                   <input id="freight_ammount_detail" name="freight_ammount_detail[]" class="form-control" type="text" value="{{ $freight->freight->calculation_name }}" />
                                 </td>
                                 <td>
-                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
+                                  <input  name="freight_ammount_units[]" class="form-control freight_ammount_units" min="0" step="0.01" max="99" type="number" value="{{ $freight->freight->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="1" step="0.00000001" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
+                                    <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" min="0" step="0.01" class="form-control freight_price_per_unit" aria-label="..." value="{{ $freight->freight->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'form-control freight_ammount_currency']) }}              
+                                        {{ Form::select('freight_ammount_currency[]',$currency,$freight->freight->idCurrency,['class'=>'m-select2-general form-control freight_ammount_currency']) }}              
                                       </div>
                                     </div>
                                   </div>
@@ -562,12 +641,12 @@ $subtotalDestiny = 0;
                                   <input type="text" name="freight_total_ammount[]"  class="form-control freight_total_ammount"  aria-label="..." value="{{ $freight->freight->subtotal_global  }}">
                                 </td>
                                 <td>
-                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step="0.00000001" min="0" type="number" value="{{ $freight->freight->markupConvert }}"/>
+                                  <input id="freight_ammount_markup" name="freight_ammount_markup[]" class="form-control freight_ammount_markup" step=".01" min="0" type="number" value="{{ $freight->freight->markupConvert }}"/>
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.00000001"  min="0" type="number" value="{{ $total[0] }}"/>
+                                      <input id="freight_total_ammount_2" name="freight_total_ammount_2[]" class="form-control freight_total_ammount_2"  step="0.01"  min="0" type="number" value="{{ $total[0] }}"/>
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -585,14 +664,14 @@ $subtotalDestiny = 0;
                                   <input name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                 </td>
                                 <td>
-                                  <input  name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0"/>
+                                  <input  name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.01"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number"  name="freight_price_per_unit[]" value="" min="1" step="0.00000001" class="freight_price_per_unit form-control" aria-label="...">
+                                    <input type="number"  name="freight_price_per_unit[]" value="" min="0" step="0.01" class="freight_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('freight_ammount_currency[]',$currency,null,['class'=>'form-control freight_ammount_currency']) }}
+                                        {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
@@ -602,7 +681,7 @@ $subtotalDestiny = 0;
                                   <input  name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"/>
                                 </td>
                                 <td>
-                                  <input  name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" step="0.00000001" type="number" min="0"/> 
+                                  <input  name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" step=".01" type="number" min="0"/> 
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -663,24 +742,26 @@ $subtotalDestiny = 0;
                                   <input name="destination_ammount_detail[]" id="destination_ammount_detail"  class="form-control" type="text" value="{{ $destiny->destiny->calculation_name }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidadT }}"/>
+                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" step="0.01" value="{{ $destiny->destiny->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" name="destination_price_per_unit[]" min="1" step="0.00000001" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->destiny->monto }}">
+                                    <input type="number" name="destination_price_per_unit[]" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->destiny->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('destination_ammount_currency[]',$currency,$destiny->destiny->idCurrency,['class'=>'form-control destination_ammount_currency']) }}
+
+                                        {{ Form::select('destination_ammount_currency[]',$currency,$destiny->destiny->idCurrency,['class'=>'m-select2-general form-control destination_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step="0.00000001" min="0" value="{{ $destiny->destiny->subtotal_local }}"/>
+                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{ $destiny->destiny->subtotal_local }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" step="0.00000001" min="0" value="{{ $destiny->destiny->markupConvert }}" />
+                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" step="0.01" min="0" value="{{ $destiny->destiny->markupConvert }}" />
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -707,24 +788,26 @@ $subtotalDestiny = 0;
                                   <input name="destination_ammount_detail[]" id="destination_ammount_detail"  class="form-control" type="text" value="{{ $destiny->destiny->calculation_name }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="{{ $destiny->destiny->cantidadT }}"/>
+                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" step="0.01" value="{{ $destiny->destiny->cantidadT }}"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" name="destination_price_per_unit[]" min="1" step="0.00000001" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->destiny->monto }}">
+                                    <input type="number" name="destination_price_per_unit[]" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->destiny->monto }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('destination_ammount_currency[]',$currency,$destiny->destiny->idCurrency,['class'=>'form-control destination_ammount_currency']) }}
+
+                                        {{ Form::select('destination_ammount_currency[]',$currency,$destiny->destiny->idCurrency,['class'=>'m-select2-general form-control destination_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step="0.00000001" min="0" value="{{ $destiny->destiny->subtotal_global }}"/>
+                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{ $destiny->destiny->subtotal_global }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" step="0.00000001" min="0" value="{{ $destiny->destiny->markupConvert }}" />
+                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" type="number" step="0.01" min="0" value="{{ $destiny->destiny->markupConvert }}" />
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -740,6 +823,7 @@ $subtotalDestiny = 0;
                               @endforeach
 
                               @foreach($info->inlandDestiny as $destiny)
+                              @foreach($destiny->inlandDetails  as $detailsDest)
                               <tr>
                                 <td>
                                   <input type="text" class="form-control" name="destination_ammount_charge[]"  value="{{ $destiny->provider }} " />
@@ -748,29 +832,31 @@ $subtotalDestiny = 0;
                                   <input name="destination_ammount_detail[]" class="form-control" type="text" value="{{ $destiny->type }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="number" min="0" value="1" readonly='true'/>
+                                  <input name="destination_ammount_units[]" class="form-control destination_ammount_units" type="text" step="0.01" value="{{  $destiny->km }}" readonly='true'/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" name="destination_price_per_unit[]" min="1" step="0.00000001" class="destination_price_per_unit form-control" aria-label="..." value="{{ $destiny->monto }}">
+                                    <input type="number" name="destination_price_per_unit[]" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="..." value="{{ $detailsDest->price_unit }}">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('destination_ammount_currency[]',$currency,$info->idCurrency,['class'=>'form-control destination_ammount_currency']) }}
+
+                                        {{ Form::select('destination_ammount_currency[]',$currency,$info->idCurrency,['class'=>'m-select2-general form-control destination_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
                                 </td>
 
                                 <td>
-                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step="0.00000001" min="0" value="{{  $destiny->monto }}"/>
+                                  <input name="destination_total_ammount[]" class="form-control destination_total_ammount" type="number"  step=".01" min="0" value="{{  $detailsDest->amount }}"/>
                                 </td>
                                 <td>
-                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" step="0.00000001" type="number" min="0" value="{{ $destiny->markupConvert }}" />
+                                  <input name="destination_ammount_markup[]" class="form-control destination_ammount_markup" step=".01" type="number" min="0" value="{{ $detailsDest->markupConvert }}" />
                                 </td>
                                 <td>
                                   <div class="form-group">
                                     <div class="input-group">
-                                      <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $destiny->monto }}">
+                                      <input type="text" name="destination_total_ammount_2[]"  class="form-control destination_total_ammount_2" aria-label="..." value="{{ $detailsDest->sub_in }}">
                                       <a class="btn removeButton">
                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
                                       </a>
@@ -778,6 +864,7 @@ $subtotalDestiny = 0;
                                   </div>
                                 </td>
                               </tr>
+                              @endforeach
                               @endforeach
                               @if(empty($info->localDest) && (empty($info->globalDest )) && (empty($info->inlandDestiny)))
                               <tr>
@@ -788,14 +875,16 @@ $subtotalDestiny = 0;
                                   <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                 </td>
                                 <td>
-                                  <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                  <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.01"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.00000001" class="destination_price_per_unit form-control" aria-label="...">
+                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('destination_ammount_currency[]',$currency,null,['class'=>'form-control destination_ammount_currency']) }}
+
+                                        {{ Form::select('destination_ammount_currency[]',$currency,null,['class'=>'m-select2-general form-control destination_ammount_currency']) }}
+
                                       </div>
                                     </div>
                                   </div>
@@ -805,7 +894,7 @@ $subtotalDestiny = 0;
                                   <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
                                 </td>
                                 <td>
-                                  <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" step="0.00000001" type="number" min="0"/> 
+                                  <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" step=".01" type="number" min="0"/> 
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -826,14 +915,14 @@ $subtotalDestiny = 0;
                                   <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                 </td>
                                 <td>
-                                  <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0"/>
+                                  <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.01"/>
                                 </td>
                                 <td>
                                   <div class="input-group">
-                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.00000001" class="destination_price_per_unit form-control" aria-label="...">
+                                    <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="0" step="0.01" class="destination_price_per_unit form-control" aria-label="...">
                                     <div class="input-group-btn">
                                       <div class="btn-group">
-                                        {{ Form::select('destination_ammount_currency[]',$currency,null,['class'=>'form-control destination_ammount_currency']) }}
+                                        {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select-2-width']) }}
                                       </div>
                                     </div>
                                   </div>
@@ -843,7 +932,7 @@ $subtotalDestiny = 0;
                                   <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0"/>
                                 </td>
                                 <td>
-                                  <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" step="0.00000001" type="number" min="0"/> 
+                                  <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" step=".01" type="number" min="0"/> 
                                 </td>
                                 <td>
                                   <div class="form-group">
@@ -1023,7 +1112,7 @@ $subtotalDestiny = 0;
         {!! Form::select('pdf_ammounts', [1=>'Main Currency',2=>'Original ammounts'],$user->companyUser->pdf_ammounts, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'pdf_ammounts']) !!}
         <hr>
         <label class="title-quote title-quote size-14px">Carrier visibility</label>
-        {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],null, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
+        {!! Form::select('hide_carrier', [true=>'Hide',false=>'Show'],true, ['placeholder' => 'Please choose a option','class' => 'form-control','id'=>'hide_carrier']) !!}
       </div>
     </div>
 
@@ -1059,17 +1148,28 @@ $subtotalDestiny = 0;
     <input type="hidden" class="form-control" id="schedule" name="schedule" value="{{ json_encode($schedules) }}">
     <input type="hidden" class="form-control" id="carrier_id" name="carrier_id" value="{{$info->carrier->id}}">
 
-    <input type="hidden" class="form-control" id="quantity" name="quantity[]" >
-    <input type="hidden" class="form-control" id="height" name="height[]">
-    <input type="hidden" class="form-control" id="width" name="width[]">
-    <input type="hidden" class="form-control" id="large" name="large[]">
-    <input type="hidden" class="form-control" id="weight" name="weight[]">
-    <input type="hidden" class="form-control" id="volume" name="volume[]">
+    <input type="hidden" class="form-control" id="lclAuto" name="lclAuto" value="true" >
+    <input type="hidden" class="form-control" id="quot_auto" name="quot_auto" value="true" >
+    <input type="hidden" class="form-control" id="quantity" name="quantity" value="{{json_encode($form->quantity) }}" >
+    <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo" value="{{json_encode($form->type_load_cargo) }}">
+    <input type="hidden" class="form-control" id="height" name="height" value="{{json_encode($form->height) }}">
+    <input type="hidden" class="form-control" id="width" name="width" value="{{json_encode($form->width) }}" >
+    <input type="hidden" class="form-control" id="large" name="large" value="{{json_encode($form->large) }}" >
+    <input type="hidden" class="form-control" id="weight" name="weight" value="{{json_encode($form->weight) }}" >
+    <input type="hidden" class="form-control" id="volume" name="volume" value="{{json_encode($form->volume) }}" >
 
-    <input type="hidden" class="form-control" id="type_load_cargo" name="type_load_cargo[]">
+    <input type="hidden" class="form-control" id="total_quantity" name="total_quantity" value="{{ $form->total_quantity }}">
+    <input type="hidden" class="form-control" id="total_weight" name="total_weight" value="{{ $form->total_weight }}">
+    <input type="hidden" class="form-control" id="total_volume" name="total_volume" value="{{ $form->total_volume }}">
+    <input type="hidden" class="form-control" id="type_cargo" name="type_cargo" value="{{ $form->type_cargo }}">
+
+    <input type="hidden" class="form-control" id="chargeable_weight" name="chargeable_weight" value="{{ $form->chargeable_weight }}">
+
+
+
 
     <input type="hidden" class="form-control" id="contract_number" name="contract_number" value="{{$info->contract->name}} / {{ $info->contract->number }}">
-
+    <input type="hidden" id="emaildimanicdata" value="{{$emaildimanicdata}}"/>
 
     @if($email_templates)
     @include('quotes.partials.submitQuoteEmailModal')
@@ -1083,7 +1183,11 @@ $subtotalDestiny = 0;
 @section('js')
 @parent
 
-
+<script>
+  $('.m-select2-general').select2({
+    placeholder: "Select an option"
+  });
+</script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/js/quote.js"></script>

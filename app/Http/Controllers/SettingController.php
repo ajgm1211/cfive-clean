@@ -27,13 +27,16 @@ use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use App\Jobs\ProcessLogo;
+use Intercom\IntercomClient;
 
 class SettingController extends Controller
 {
     public function index()
     {
+
         $company = User::where('id',\Auth::id())->with('companyUser')->first();
         $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
+
         return view('settings/index',compact('company','currencies'));
     }
 
@@ -54,38 +57,16 @@ class SettingController extends Controller
     }
 
     public function store(Request $request){
-
         $file = Input::file('image');
-
+        $filepath = '';
         if($file != ""){
-            //Creamos una instancia de la libreria instalada
-            $image = Image::make(Input::file('image'));
-            //Ruta donde queremos guardar las imagenes
-            $path = public_path().'/uploads/logos/';
-            // Guardar Original
-            //$image->save($path.$file->getClientOriginalName());
-            // Cambiar de tamaño
-            //$image->resize(300,500);
-            // Guardar
-            /*
-            $name = $file->getClientOriginalName();
-            $s3 = \Storage::disk('s3_upload');
-            $filePath = '/logos/' . $name;
-            $s3->put($filePath, file_get_contents($file), 'public');
-
-            */
-            $image->save($path.$file->getClientOriginalName());
-
-            ProcessLogo::dispatch(auth()->user()->id,$file->getClientOriginalName());
-
-
-
+            $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
+            $name     = $file->getClientOriginalName();
+            \Storage::disk('logos')->put($name,file_get_contents($file));
+            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
-
         if(!$request->company_id){
-
             //$company=CompanyUser::create($request->all());
-
             $company = new CompanyUser();
             $company->name = $request->name;
             $company->address = $request->address;
@@ -96,12 +77,10 @@ class SettingController extends Controller
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
             if($file != ""){
-                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = $filepath;
             }
             $company->save();
-
             User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
-
         }else{
             $company=CompanyUser::findOrFail($request->company_id);
             $company->name=$request->name;
@@ -110,15 +89,12 @@ class SettingController extends Controller
             $company->currency_id=$request->currency_id;
             $company->pdf_language = $request->pdf_language;
             if($file != ""){
-                $company->logo = 'uploads/logos/'.$file->getClientOriginalName();
+                $company->logo = $filepath;
             }
             $company->update();
         }
-
-
         return response()->json(['message' => 'Ok']);
     }
-
 
     public function update_pdf_type(Request $request)
     {

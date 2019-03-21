@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contracts')
+@section('title', 'Harbors')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -52,21 +52,23 @@
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
                     <a href="#" class="btn btn-primary " onclick="showModal(1,0)" > Add <span class="la la-plus"></span></a>
-                    <table class="table m-table m-table--head-separator-primary"  id="myatest" >
-                        <thead >
-                            <tr>
-                                <th style="width:3%">ID</th>
-                                <th style="width:7%">Name</th>
-                                <th style="width:7%">Code</th>
-                                <th style="width:8%">Display Name</th>
-                                <th style="width:10%">coordinates</th>
-                                <th style="width:6%">Country ID</th>
-                                <th style="width:40%">Variation</th>
-                                <th style="width:5%">Options</th>
-                            </tr>
-                        </thead>
+                    <div class="col-md-12">
+                        <table class="table m-table m-table--head-separator-primary"  id="myatest" >
+                            <thead >
+                                <tr>
+                                    <th style="width:3%">ID</th>
+                                    <th style="width:7%">Name</th>
+                                    <th style="width:7%">Code</th>
+                                    <th style="width:8%">Display Name</th>
+                                    <th style="width:10%">coordinates</th>
+                                    <th style="width:6%">Country ID</th>
+                                    <th style="width:40%">Variation</th>
+                                    <th style="width:5%">Options</th>
+                                </tr>
+                            </thead>
 
-                    </table>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -79,7 +81,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                             Harbors
+                            Harbors
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -137,49 +139,49 @@
             });
         }
     }
-    
+
     $(document).on('click','.BorrarHarbor', function(e){
         var elemento = $(this);
         var id = $(elemento).attr('data-id-remove');
-         swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then(function(result){
-                    if (result.value) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
 
-                        url='{!! route("destroy.harbor",":id") !!}';
-                        url = url.replace(':id', id);
-                        // $(this).closest('tr').remove();
-                        $.ajax({
-                            url:url,
-                            method:'get',
-                            success: function(data){
-                                if(data == 1){
-                                    swal(
-                                        'Deleted!',
-                                        'Your rate has been deleted.',
-                                        'success'
-                                    )
-                                    $(elemento).closest('tr').remove();
-                                  
-                                }else if(data == 2){
-                                    swal("Error!", "an internal error occurred!", "error");
-                                }
-                            }
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        swal(
-                            'Cancelled',
-                            'Your rate is safe :)',
-                            'error'
-                        )
+                url='{!! route("destroy.harbor",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your rate has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+
+                        }else if(data == 2){
+                            swal("Error!", "an internal error occurred!", "error");
+                        }
                     }
                 });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
     });
 
     $(function() {

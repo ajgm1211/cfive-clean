@@ -8,7 +8,7 @@ class GlobalCharPort extends Model
 {
 
     protected $table    = "globalcharport";
-    protected $fillable =   ['id','port','typedestiny_id','globalcharge_id'];
+    protected $fillable =   ['id','port_orig','port_dest','typedestiny_id','globalcharge_id'];
     public $timestamps = false;
     public function globalcharge()
     {

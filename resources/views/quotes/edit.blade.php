@@ -260,7 +260,7 @@
                                         </label>
                                         <div class="m-bootstrap-touchspin-brand">
                                           <div class="input-group">
-                                            <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" value="{{$quote->total_quantity}}" placeholder="" aria-label="...">
+                                            <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0000001" class="total_quantity form-control" value="{{$quote->total_quantity}}" placeholder="" aria-label="...">
                                             <div class="input-group-btn">
                                               <select class="form-control" id="type_cargo" name="type_cargo">
                                                 <option value="1">Pallets</option>
@@ -276,7 +276,7 @@
                                         </label>
                                         <div class="m-bootstrap-touchspin-brand">
                                           <div class="input-group">
-                                            <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" value="{{$quote->total_weight}}" aria-label="...">
+                                            <input type="number" id="total_weight" name="total_weight" min="0" step="0.0000001" class="total_weight form-control" placeholder="" value="{{$quote->total_weight}}" aria-label="...">
                                             <div class="input-group-btn">
                                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                                               <ul class="dropdown-menu dropdown-menu-right">
@@ -291,7 +291,7 @@
                                         </label>
                                         <div class="m-bootstrap-touchspin-brand">
                                           <div class="input-group">
-                                            <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" value="{{$quote->total_volume}}" aria-label="...">
+                                            <input type="number" id="total_volume" name="total_volume" min="0" step="0.0000001" class="total_volume form-control" placeholder="" value="{{$quote->total_volume}}" aria-label="...">
                                             <div class="input-group-btn">
                                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">CM <span class="caret"></span></button>
                                               <ul class="dropdown-menu dropdown-menu-right">
@@ -360,7 +360,7 @@
                                           </div>
                                           <div class="col-md-2">
                                             <div class="input-group">
-                                              <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" value="{{$item->weight}}" aria-label="...">
+                                              <input type="number" id="weight" name="weight[]" min="0" step="0.0000001" class="weight form-control size-12px" placeholder="Weight" value="{{$item->weight}}" aria-label="...">
                                             </div><!-- /input-group -->
                                           </div>
                                           <div class="col-md-1">
@@ -419,7 +419,7 @@
                                         </div>
                                         <div class="col-md-2">
                                           <div class="input-group">
-                                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                                            <input type="number" id="weight" name="weight[]" min="0" step="0.0000001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
                                           </div><!-- /input-group -->
                                         </div>
                                         <div class="col-md-1">
@@ -471,7 +471,7 @@
                                       </div>
                                       <div class="col-md-2">
                                         <div class="input-group">
-                                          <input type="number" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                                          <input type="number" name="weight[]" min="0" step="0.0000001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
                                         </div><!-- /input-group -->
                                       </div>
                                       <div class="col-md-1">
@@ -535,17 +535,14 @@
                                     <label>Incoterm</label>
                                     {{ Form::select('incoterm',$incoterm,$quote->incoterm,['class'=>'m-select2-general form-control']) }}
                                   </div>
-                                  @if($quote->delivery_type==1 || $quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4)
-                                    <div class="col-md-5" id="delivery_type_label">
-                                      <label>Delivery type</label>
-                                      {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
-                                    </div>
-                                  @else
-                                    <div class="col-md-5" id="delivery_type_air_label">
-                                      <label>Delivery type</label>
-                                      {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
-                                    </div>
-                                  @endif
+                                  <div class="col-md-5" id="delivery_type_label" {{$quote->delivery_type>4 ? 'style=display:none;':''}}>
+                                    <label>Delivery type</label>
+                                    {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type',$quote->delivery_type>4 ? 'disabled':'']) }}
+                                  </div>
+                                  <div class="col-md-5" id="delivery_type_air_label" {{$quote->delivery_type<5 ? 'style=display:none;':''}}>
+                                    <label>Delivery type</label>
+                                    {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air',$quote->delivery_type<5 ? 'disabled':'']) }}
+                                  </div>
                                   <div class="col-md-3">
                                     <label>Pick up date</label>
                                     <div class="input-group date">
@@ -663,10 +660,12 @@
                             <div style="min-height: 100px;">
                               <div style="margin-top: 20px;">
                                 <div class="pull-left text-left" style="line-height: .5;">
-                                  <img src="/{{$user->companyUser->logo}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                                  @if($user->companyUser->logo!='')
+                                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-responsive" style="width: 100px; height: auto; margin-bottom:35px">
+                                  @endif
                                 </div>
                                 <div class="pull-right text-right" style="line-height: .5">
-                                  <p><b>Quotation ID: <span style="color: #CFAC6C">#{{$quote->company_quote}}</span></b></p>
+                                  <p><b>Quotation ID: <span style="color: #CFAC6C"><br><br>@if($quote->custom_id!='') {!! Form::text('custom_id', $quote->custom_id, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @else {!! Form::text('custom_id', $quote->company_quote, ['placeholder' => 'Quotation id','class' => 'form-control m-input']) !!} @endif</span></b></p>
                                   <p><b>Date of issue:</b> {{date_format($quote->created_at, 'M d, Y H:i')}}</p>
                                   @if($quote->validity!=''&&$quote->since_validity!='')
                                     <p><b>Validity:</b>  {{   \Carbon\Carbon::parse( $quote->since_validity)->format('d M Y') }} -  {{   \Carbon\Carbon::parse( $quote->validity)->format('d M Y') }}</p>
@@ -791,7 +790,7 @@
                             <br>
                             <div class="row">
                               <div class="col-md-12">
-                                <h5 class="title-quote size-14px">Origin ammounts</h5>
+                                <h5 class="title-quote size-14px">Origin amounts</h5>
                                 <hr>
                               </div>
                               <div class="col-md-12">
@@ -822,11 +821,11 @@
                                             <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="{{$origin_ammount->detail}}" class="form-control" type="text"/>
                                           </td>
                                           <td>
-                                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
+                                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="{{$origin_ammount->units}}" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
                                             <div class="input-group">
-                                              <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
+                                              <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="{{$origin_ammount->price_per_unit}}" min="1" step="0.0000001" class="origin_price_per_unit form-control" aria-label="...">
                                               <div class="input-group-btn">
                                                 <div class="btn-group">
                                                   {{ Form::select('origin_ammount_currency[]',$currencies,$origin_ammount->currency_id,['class'=>'origin_ammount_currency form-control select2-origin']) }}
@@ -835,10 +834,10 @@
                                             </div>
                                           </td>
                                           <td>
-                                            <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
+                                            <input id="origin_total_ammount" name="origin_total_ammount[]" value="{{$origin_ammount->total_ammount}}" class="form-control origin_total_ammount" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
-                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
+                                            <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="{{$origin_ammount->markup}}" class="form-control origin_ammount_markup" type="number" min="0" step="0.0000001" />
                                           </td>
                                           <td>
                                             <div class="form-group">
@@ -863,23 +862,23 @@
                                           <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0000001" class="origin_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'origin_ammount_currency form-control']) }}
+                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'origin_ammount_currency form-control']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" step="0.0001" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" step="0.0000001" class="form-control origin_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
+                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0000001" />
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -903,23 +902,23 @@
                                           <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0000001" class="origin_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency select2-origin']) }}
+                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select2-origin']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001" />
+                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0000001" />
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -938,23 +937,23 @@
                                           <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0001" class="origin_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="origin_price_per_unit" name="origin_price_per_unit[]" value="" min="1" step="0.0000001" class="origin_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('origin_ammount_currency[]',$currencies,null,['class'=>'form-control origin_ammount_currency']) }}
+                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_total_ammount" name="origin_total_ammount[]" value="" class="form-control origin_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0001"/>
+                                          <input id="origin_ammount_markup" name="origin_ammount_markup[]" value="" class="form-control origin_ammount_markup" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -987,7 +986,7 @@
 
                             <div class="row">
                               <div class="col-md-12">
-                                <h5 class="title-quote size-14px">Freight ammounts</h5>
+                                <h5 class="title-quote size-14px">Freight amounts</h5>
                                 <hr>
                               </div>
                               <div class="col-md-12">
@@ -1018,11 +1017,11 @@
                                             <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="{{$freight_ammount->detail}}" class="form-control" type="text"/>
                                           </td>
                                           <td>
-                                            <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
+                                            <input id="freight_ammount_units" name="freight_ammount_units[]" value="{{$freight_ammount->units}}" class="form-control freight_ammount_units" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
                                             <div class="input-group">
-                                              <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
+                                              <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="{{$freight_ammount->price_per_unit}}" min="1" step="0.0000001" class="freight_price_per_unit form-control" aria-label="...">
                                               <div class="input-group-btn">
                                                 <div class="btn-group">
                                                   {{ Form::select('freight_ammount_currency[]',$currencies,$freight_ammount->currency_id,['class'=>'freight_ammount_currency form-control select2-freight']) }}
@@ -1031,10 +1030,10 @@
                                             </div>
                                           </td>
                                           <td>
-                                            <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
+                                            <input id="freight_total_ammount" name="freight_total_ammount[]" value="{{$freight_ammount->total_ammount}}" class="form-control freight_total_ammount" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
-                                            <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001" />
+                                            <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="{{$freight_ammount->markup}}" class="form-control freight_ammount_markup" type="number" min="0" step="0.0000001" />
                                           </td>
                                           <td>
                                             <div class="form-group">
@@ -1060,23 +1059,23 @@
                                           <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0000001" class="freight_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'freight_ammount_currency form-control']) }}
+                                                {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'freight_ammount_currency form-control']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001" />
+                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0000001" />
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1101,23 +1100,25 @@
                                           <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text" required/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001" required/>
+                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0000001" required/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="..." required>
+                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0000001" class="freight_price_per_unit form-control" aria-label="..." required>
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency select2-freight','required'=>true]) }}
+                                                <div class="btn-group">
+                                                  {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency select2-freight','required'=>true]) }}
+                                                </div>
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.0001" required/>
+                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0"   step="0.0000001" required/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0001"  required/>
+                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" min="0" step="0.0000001" />
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1127,7 +1128,6 @@
                                           </div>
                                         </td>
                                       </tr>
-
                                       <tr class="hide"  id="freight_ammounts">
                                         <td>
                                           <input type="text" class="form-control" id="freight_ammount_charge" value="" name="freight_ammount_charge[]"/>
@@ -1136,23 +1136,23 @@
                                           <input id="freight_ammount_detail" name="freight_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="freight_ammount_units" name="freight_ammount_units[]" value="" class="form-control freight_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0001" class="freight_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="freight_price_per_unit" name="freight_price_per_unit[]" value="" min="1" step="0.0000001" class="freight_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('freight_ammount_currency[]',$currencies,null,['class'=>'form-control freight_ammount_currency']) }}
+                                                {{ Form::select('freight_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control freight_ammount_currency']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="freight_total_ammount" name="freight_total_ammount[]" value="" class="form-control freight_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step="0.0001"  min="0"/>
+                                          <input id="freight_ammount_markup" name="freight_ammount_markup[]" value="" class="form-control freight_ammount_markup" type="number" step="0.0000001"  min="0"/>
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1186,7 +1186,7 @@
 
                             <div class="row">
                               <div class="col-md-12">
-                                <h5 class="title-quote size-14px">Destination ammounts</h5>
+                                <h5 class="title-quote size-14px">Destination amounts</h5>
                                 <hr>
                               </div>
                               <div class="col-md-12">
@@ -1217,11 +1217,12 @@
                                             <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="{{$destination_ammount->detail}}" class="form-control" type="text"/>
                                           </td>
                                           <td>
-                                            <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
+                                            <input id="destination_ammount_units" name="destination_ammount_units[]" value="{{$destination_ammount->units}}" class="form-control destination_ammount_units" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
                                             <div class="input-group">
-                                              <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
+                                              <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="{{$destination_ammount->price_per_unit}}" min="1" step="0.0000001" class="destination_price_per_unit form-control" aria-label="...">
+
                                               <div class="input-group-btn">
                                                 <div class="btn-group">
                                                   {{ Form::select('destination_ammount_currency[]',$currencies,$destination_ammount->currency_id,['class'=>'destination_ammount_currency form-control select2-destination']) }}
@@ -1230,10 +1231,10 @@
                                             </div>
                                           </td>
                                           <td>
-                                            <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
+                                            <input id="destination_total_ammount" name="destination_total_ammount[]" value="{{$destination_ammount->total_ammount}}" class="form-control destination_total_ammount" type="number" min="0" step="0.0000001"/>
                                           </td>
                                           <td>
-                                            <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
+                                            <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="{{$destination_ammount->markup}}" class="form-control destination_ammount_markup" type="number" step="0.0000001"  min="0"/>
                                           </td>
                                           <td>
                                             <div class="form-group">
@@ -1258,23 +1259,23 @@
                                           <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0000001" class="destination_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'destination_ammount_currency form-control']) }}
+                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'destination_ammount_currency form-control']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
+                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0000001"  min="0"/>
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1298,23 +1299,23 @@
                                           <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0000001" class="destination_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency select2-destination']) }}
+                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select2-destination']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
+                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0000001"  min="0"/>
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1333,23 +1334,23 @@
                                           <input id="destination_ammount_detail" name="destination_ammount_detail[]" value="" class="form-control" type="text"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_ammount_units" name="destination_ammount_units[]" value="" class="form-control destination_ammount_units" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
                                           <div class="input-group">
-                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0001" class="destination_price_per_unit form-control" aria-label="...">
+                                            <input type="number" id="destination_price_per_unit" name="destination_price_per_unit[]" value="" min="1" step="0.0000001" class="destination_price_per_unit form-control" aria-label="...">
                                             <div class="input-group-btn">
                                               <div class="btn-group">
-                                                {{ Form::select('destination_ammount_currency[]',$currencies,null,['class'=>'form-control destination_ammount_currency']) }}
+                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency']) }}
                                               </div>
                                             </div>
                                           </div>
                                         </td>
                                         <td>
-                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0001"/>
+                                          <input id="destination_total_ammount" name="destination_total_ammount[]" value="" class="form-control destination_total_ammount" type="number" min="0" step="0.0000001"/>
                                         </td>
                                         <td>
-                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0001"  min="0"/>
+                                          <input id="destination_ammount_markup" name="destination_ammount_markup[]" value="" class="form-control destination_ammount_markup" type="number" step="0.0000001"  min="0"/>
                                         </td>
                                         <td>
                                           <div class="form-group">
@@ -1407,6 +1408,74 @@
                                 </div>
                               </div>
                             </div>
+                            <hr>
+                            <div id="infoschedule" class="row">
+                              <div class="col-lg-12">
+                                <label class="size-14px">
+                                  <b>Schedules</b>
+                                </label>
+                              </div>
+                              <div class="col-lg-12">
+                                <br>
+                                <div class="" style="margin-bottom:40px;">
+                                  <table id="schetable" class="table table-bordered color-blue text-center">
+                                    <thead class="title-quote header-table">
+                                    <tr>
+                                      <td><b>Vessel</b></td>
+                                      <td><b>ETD</b></td>
+                                      <td><b>Transit time</b></td>
+                                      <td><b>ETA</b></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="scheduleBody">
+                                    @forelse($quote->schedules as $item)
+                                      <tr>
+                                        <td>{{$item->vessel}}</td>
+                                        <td>{{$item->etd}}</td>
+                                        <td><div class='col-md-4 offset-md-4'>{{$item->transit_time}} days <div class='progress m-progress--sm'> <div class='progress-bar bg-success' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'></div></div> {{$item->type}}</div></td>
+                                        <td>{{$item->eta}}</td>
+                                      </tr>
+                                    @empty
+                                      <tr>
+                                        <td colspan="5">
+                                          There are not schedules
+                                        </td>
+                                      </tr>
+                                    @endforelse
+                                    </tbody>
+                                  </table>
+                                  <input type="hidden" class="form-control" id="schedule" name="schedule_manual" value="">
+                                </div>
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col-md-2">
+                                <a class="btn btn-primary btn-sm m-btn m-btn--icon" onclick="AbrirModal('add')">
+                                  <span style="color: white;">
+                                    <i class="la la-plus"></i>
+                                    <span>Schedules </span>
+                                  </span>
+                                </a>
+                                <br>
+                                <br>
+                                @if(!$quote->schedules->isEmpty())
+                                  <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche">
+                                  <span>
+                                    <i class="la la-remove"></i>
+                                    <span>Remove</span>
+                                  </span>
+                                  </a>
+                                @else
+                                  <a class="btn btn-outline-danger btn-sm m-btn m-btn--icon removesche" hidden="true">
+                                  <span>
+                                    <i class="la la-remove"></i>
+                                    <span>Remove</span>
+                                  </span>
+                                  </a>
+                                @endif
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1448,6 +1517,7 @@
   </div>
 
   @include('quotes.partials.sendQuoteModal');
+  @include('quotes.partials.schedulesModal');
 
 @endsection
 
@@ -1536,6 +1606,50 @@
           alert('Geocode was not successful for the following reason: ' + status);
         }
       });
+    }
+    function AbrirModal(action) {
+      if (action == "add") {
+        var carrier = $('#carrier_id').val();
+        var orig_p = $('#origin_harbor').val();
+        var dest_p = $('#destination_harbor').val();
+        var date_p = $('.pick_up_date').val();
+        if (carrier == "") {
+          msg('Sorry the carrier is empty');
+          return;
+        }
+        if (orig_p == "") {
+          msg('Sorry the origin port is empty');
+          return;
+        }
+        if (dest_p == "") {
+          msg('Sorry the destination port is empty');
+          return;
+        }
+        if (date_p == "") {
+          msg('Sorry the date is empty');
+          return;
+        }
+        var url = '{{ route("quotes.schedule", "carrier/orig_port/dest_port/date_p") }}';
+        url = url.replace('orig_port', orig_p).replace('dest_port', dest_p).replace('date_p', date_p).replace('carrier', carrier);
+        $('#spinner').show();
+        $('#scheduleModal').modal({show: true});
+        $('.modal-body').load(url, function (response, status, xhr) {
+          $('#scheduleModal').modal({show: true});
+          $('#spinner').hide();
+        });
+      }
+      if (action == "addCompany") {
+        var url = '{{ route("companies.addM") }}';
+        $('#modal-body').load(url, function () {
+          $('#companyModal').modal({show: true});
+        });
+      }
+      if (action == "addContact") {
+        var url = '{{ route("contacts.addCMMQ") }}';
+        $('.modal-body').load(url, function () {
+          $('#contactModal').modal({show: true});
+        });
+      }
     }
   </script>
 @stop
