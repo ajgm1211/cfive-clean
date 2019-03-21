@@ -1077,7 +1077,7 @@ class ImportationLclController extends Controller
         $ext        = $extObj->getExtension();
         $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
         try{
-            return Storage::disk('s3_upload')->download('contracts/'.$account->namefile,$name);
+            return Storage::disk('s3_upload')->download('Account/LCL/'.$account->namefile,$name);
         } catch(\Exception $e){
             return Storage::disk('LclAccount')->download($account->namefile,$name);
         }

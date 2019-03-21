@@ -1224,7 +1224,7 @@ class ImportationGlobachargersFclController extends Controller
         $ext        = $extObj->getExtension();
         $name       = $account->id.'-'.$company->name.'_'.$now.'-GCFLC.'.$ext;
         try{
-            return Storage::disk('s3_upload')->download('contracts/'.$account->namefile,$name);
+            return Storage::disk('s3_upload')->download('Account/Global-charges/FCL/'.$account->namefile,$name);
         } catch(\Exception $e){
             return Storage::disk('GCAccount')->download($account->namefile,$name);
         }
