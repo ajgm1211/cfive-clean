@@ -8,6 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\User;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
 
@@ -38,11 +39,11 @@ class ProcessLogo implements ShouldQueue
      */
     public function handle()
     {
-        $file = $this->name;
-        $s3 = \Storage::disk('s3_upload');
+        $name = $this->name;
+        $file=File::get(storage_path('app/logos/'.$name));
         $filePath = $this->filepath;
-
-        $file = \Storage::disk('logos')->get($file);
+        //$file = \Storage::disk('logos')->get($name);
+        $s3 = \Storage::disk('s3_upload');
         $s3->put($filePath, $file, 'public');
     }
 }
