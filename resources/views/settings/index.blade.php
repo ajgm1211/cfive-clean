@@ -59,8 +59,9 @@
                                 </div>                                
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
-                                        <label for="currency_id">Logo</label>
-                                        <input type="file" class="form-control-file" name="image">
+                                        <label for="currency_id">Logo (Max size 1 mb)</label>
+                                        <input type="file" id="logo" class="form-control-file" name="image">
+                                        <div id="logo-error" class="hide"><b>Image size can not be bigger than 1 mb</b></div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -106,8 +107,9 @@
                                 </div>                               
                                 <div class="col-md-12">
                                     <div class="form-group m-form__group">
-                                        <label for="currency_id">Logo</label>
-                                        <input type="file" class="form-control-file" name="image">
+                                        <label for="currency_id">Logo (Max size 1 mb)</label>
+                                        <input type="file" id="logo" class="form-control-file" name="image">
+                                        <div id="logo-error" class="hide"><b>Image size can not be bigger than 1 mb</b></div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -137,6 +139,7 @@
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+<script src="{{asset('js/settings.js')}}" type="text/javascript"></script>
 <script>
     $('#currency_id').select2({
         placeholder: "Select an option"
