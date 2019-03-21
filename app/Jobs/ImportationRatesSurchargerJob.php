@@ -100,7 +100,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $statusexistfortyfive   = $requestobj['existfortyfive'];
                 $statusPortCountry      = $requestobj['statusPortCountry'];
 
-                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':','1','2','3','4','5','6','7','8','9','0'];
 
                 $ratescollection         = collect([]);
                 $ratesFailcollection     = collect([]);
