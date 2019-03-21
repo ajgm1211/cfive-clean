@@ -13,6 +13,7 @@ use App\GroupUserCompany;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use EventIntercom;
 
@@ -92,66 +93,82 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        $input = Input::all();
-        $file = Input::file('logo');
-        $filepath_tmp = '';
-        if($file != "") {
-            $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
-        }
+        $rules = array(
+            'logo' => 'max:1000',
+        );
 
-        $company = new Company();
-        $company->business_name = $request->business_name;
-        $company->phone = $request->phone;
-        $company->address = $request->address;
-        $company->email = $request->email;
-        $company->tax_number = $request->tax_number;
-        $company->company_user_id = \Auth::user()->company_user_id;
-        $company->owner = \Auth::user()->id;
-        $company->pdf_language = $request->pdf_language;
-        $company->payment_conditions = $request->payment_conditions;
-        if($file != ""){
-            $company->logo = $filepath_tmp;
-        }
-        $company->save();
+        $validator = Validator::make(Input::all(), $rules);
 
-        if($file != ""){
-            $update_company_url = Company::find($company->id);
-            $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
-            $update_company_url->update();
-            $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
-            $name     = $file->getClientOriginalName();
-            \Storage::disk('logos')->put($name,file_get_contents($file),'public');
-            //$s3 = \Storage::disk('s3_upload');
-            //$s3->put($filepath, file_get_contents($file), 'public');
-            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
-        }
-        if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
-            foreach ($input['price_id'] as $key => $item) {
-                $company_price = new CompanyPrice();
-                $company_price->company_id=$company->id;
-                $company_price->price_id=$input['price_id'][$key];
-                $company_price->save();
+        if ($validator->fails()) {
+
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            $request->session()->flash('message.content', 'Image size can not be bigger than 1 mb');
+            return redirect()->route('companies.index');
+
+        }else {
+
+            $input = Input::all();
+            $file = Input::file('logo');
+            $filepath_tmp = '';
+            if ($file != "") {
+                $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
             }
-        }
-        if ((isset($input['users'])) && (count($input['users']) > 0)) {
-            foreach ($input['users'] as $key => $item) {
-                $userCompany_group = new GroupUserCompany();
-                $userCompany_group->user_id= $input['users'][$key];
-                $userCompany_group->company()->associate($company);
-                $userCompany_group->save();
-            }
-        }
 
-        if($request->ajax()) {
-            return response()->json('Company created successfully!');
+            $company = new Company();
+            $company->business_name = $request->business_name;
+            $company->phone = $request->phone;
+            $company->address = $request->address;
+            $company->email = $request->email;
+            $company->tax_number = $request->tax_number;
+            $company->company_user_id = \Auth::user()->company_user_id;
+            $company->owner = \Auth::user()->id;
+            $company->pdf_language = $request->pdf_language;
+            $company->payment_conditions = $request->payment_conditions;
+            if ($file != "") {
+                $company->logo = $filepath_tmp;
+            }
+            $company->save();
+
+            if ($file != "") {
+                $update_company_url = Company::find($company->id);
+                $update_company_url->logo = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
+                $update_company_url->update();
+                $filepath = 'Logos/Clients/' . $company->id . '/' . $file->getClientOriginalName();
+                $name = $file->getClientOriginalName();
+                \Storage::disk('logos')->put($name, file_get_contents($file), 'public');
+                $s3 = \Storage::disk('s3_upload');
+                $s3->put($filepath, file_get_contents($file), 'public');
+                //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
+            }
+            if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
+                foreach ($input['price_id'] as $key => $item) {
+                    $company_price = new CompanyPrice();
+                    $company_price->company_id = $company->id;
+                    $company_price->price_id = $input['price_id'][$key];
+                    $company_price->save();
+                }
+            }
+            if ((isset($input['users'])) && (count($input['users']) > 0)) {
+                foreach ($input['users'] as $key => $item) {
+                    $userCompany_group = new GroupUserCompany();
+                    $userCompany_group->user_id = $input['users'][$key];
+                    $userCompany_group->company()->associate($company);
+                    $userCompany_group->save();
+                }
+            }
+
+            if ($request->ajax()) {
+                return response()->json('Company created successfully!');
+            }
+            // EVENTO INTERCOM
+            $event = new  EventIntercom();
+            $event->event_companies();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Register completed successfully!');
+            return redirect()->route('companies.index');
         }
-        // EVENTO INTERCOM
-        $event = new  EventIntercom();
-        $event->event_companies();
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register completed successfully!');
-        return redirect()->route('companies.index');
     }
 
     public function storeOwner(Request $request){
@@ -199,56 +216,72 @@ class CompanyController extends Controller
 
     public function update(Request $request, $id)
     {
-        $input = Input::all();
-        $file = Input::file('logo');
-        $filepath = '';
-        if($file != "") {
-            $filepath = 'Logos/Clients/'.$id.'/'. $file->getClientOriginalName();
-        }
-        $company = Company::find($id);
+        $rules = array(
+            'logo' => 'max:1000',
+        );
 
-        $company->business_name = $request->business_name;
-        $company->phone = $request->phone;
-        $company->address = $request->address;
-        $company->email = $request->email;
-        $company->tax_number = $request->tax_number;
-        $company->pdf_language = $request->pdf_language;
-        $company->payment_conditions = $request->payment_conditions;
-        if($file != ""){
-            $company->logo = $filepath;
-        }
-        $company->update();
+        $validator = Validator::make(Input::all(), $rules);
 
-        if($file != ""){
-            $name     = $file->getClientOriginalName();
-            \Storage::disk('logos')->put($name,file_get_contents($file),'public');
-            //$s3 = \Storage::disk('s3_upload');
-            //$s3->put($filepath, file_get_contents($file), 'public');
-            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
-        }
-        if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
-            CompanyPrice::where('company_id',$company->id)->delete();
-            foreach ($input['price_id'] as $key => $item) {
-                $company_price = new CompanyPrice();
-                $company_price->company_id=$company->id;
-                $company_price->price_id=$input['price_id'][$key];
-                $company_price->save();
+        if ($validator->fails()) {
+
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            $request->session()->flash('message.content', 'Image size can not be bigger than 1 mb');
+            return redirect()->back();
+
+        }else {
+
+            $input = Input::all();
+            $file = Input::file('logo');
+            $filepath = '';
+            if ($file != "") {
+                $filepath = 'Logos/Clients/' . $id . '/' . $file->getClientOriginalName();
             }
-        }
-        GroupUserCompany::where('company_id',$company->id)->delete();
-        if ((isset($input['users'])) && ($input['users'][0] != null)) {
+            $company = Company::find($id);
 
-            foreach ($input['users'] as $key => $item) {
-                $userCompany_group = new GroupUserCompany();
-                $userCompany_group->user_id= $input['users'][$key];
-                $userCompany_group->company_id=$company->id;
-                $userCompany_group->save();
+            $company->business_name = $request->business_name;
+            $company->phone = $request->phone;
+            $company->address = $request->address;
+            $company->email = $request->email;
+            $company->tax_number = $request->tax_number;
+            $company->pdf_language = $request->pdf_language;
+            $company->payment_conditions = $request->payment_conditions;
+            if ($file != "") {
+                $company->logo = $filepath;
             }
+            $company->update();
+
+            if ($file != "") {
+                $name = $file->getClientOriginalName();
+                \Storage::disk('logos')->put($name, file_get_contents($file), 'public');
+                $s3 = \Storage::disk('s3_upload');
+                $s3->put($filepath, file_get_contents($file), 'public');
+                //ProcessLogo::dispatch(auth()->user()->id, $filepath, $name, 2);
+            }
+            if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
+                CompanyPrice::where('company_id', $company->id)->delete();
+                foreach ($input['price_id'] as $key => $item) {
+                    $company_price = new CompanyPrice();
+                    $company_price->company_id = $company->id;
+                    $company_price->price_id = $input['price_id'][$key];
+                    $company_price->save();
+                }
+            }
+            GroupUserCompany::where('company_id', $company->id)->delete();
+            if ((isset($input['users'])) && ($input['users'][0] != null)) {
+
+                foreach ($input['users'] as $key => $item) {
+                    $userCompany_group = new GroupUserCompany();
+                    $userCompany_group->user_id = $input['users'][$key];
+                    $userCompany_group->company_id = $company->id;
+                    $userCompany_group->save();
+                }
+            }
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Register updated successfully!');
+            return redirect()->back();
         }
-        $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Register updated successfully!');
-        return redirect()->back();
     }
 
     public function delete($id)

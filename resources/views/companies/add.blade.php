@@ -22,8 +22,10 @@
             {{ Form::select('users[]',$users,null,['class'=>'custom-select form-control','id' => 'users_company','multiple'=>'true']) }}
         </div>
         <div class="form-group m-form__group">
-            {!! Form::label('logo', 'Logo') !!}
-            {!! Form::file('logo', null, ['placeholder' => 'Please upload a logo','class' => 'form-control m-input logo_input','required' => 'required']) !!}
+            {!! Form::label('logo', 'Logo (Max size 1 mb)') !!}
+            <br>
+            {!! Form::file('logo', null, ['placeholder' => 'Please upload a logo','class' => 'form-control m-input logo_input','required' => 'required','id'=>'logo']) !!}
+            <div id="logo-error" class="hide"><b>Image size can not be bigger than 1 mb</b></div>
         </div>        
     </div>
 </div>
@@ -49,4 +51,5 @@
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
+<script src="{{asset('js/companies.js')}}"></script>
 
