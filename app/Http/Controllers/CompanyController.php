@@ -94,9 +94,11 @@ class CompanyController extends Controller
   {
     $input = Input::all();
     $file = Input::file('logo');
-    if($file != ""){
-      $filepath_tmp = 'Logos/Clients/'.$file->getClientOriginalName();
+    $filepath_tmp = '';
+    if($file != "") {
+      $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
     }
+
     $company = new Company();
     $company->business_name = $request->business_name;
     $company->phone = $request->phone;
@@ -111,18 +113,16 @@ class CompanyController extends Controller
       $company->logo = $filepath_tmp;
     }
     $company->save();
+
     if($file != ""){
       $update_company_url = Company::find($company->id);
       $update_company_url->logo = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
       $update_company_url->update();
       $filepath = 'Logos/Clients/'.$company->id.'/'.$file->getClientOriginalName();
-
-    }
-
-
-    if($file != ""){
       $name     = $file->getClientOriginalName();
-      \Storage::disk('logos')->put($name,file_get_contents($file));
+      \Storage::disk('logos')->put($name,file_get_contents($file),'public');
+      //$s3 = \Storage::disk('s3_upload');
+      //$s3->put($filepath, file_get_contents($file), 'public');
       ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
     }
     if ((isset($input['price_id'])) && (count($input['price_id']) > 0)) {
@@ -201,7 +201,10 @@ class CompanyController extends Controller
   {
     $input = Input::all();
     $file = Input::file('logo');
-    $filepath = 'Logos/Clients/'.$id.'/'.$file->getClientOriginalName();
+    $filepath = '';
+    if($file != "") {
+      $filepath = 'Logos/Clients/'.$id.'/'. $file->getClientOriginalName();
+    }
     $company = Company::find($id);
 
     $company->business_name = $request->business_name;
@@ -218,11 +221,13 @@ class CompanyController extends Controller
 
     if($file != ""){
       $name     = $file->getClientOriginalName();
-      \Storage::disk('logos')->put($name,file_get_contents($file));
+      \Storage::disk('logos')->put($name,file_get_contents($file),'public');
+      //$s3 = \Storage::disk('s3_upload');
+      //$s3->put($filepath, file_get_contents($file), 'public');
       ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,2);
     }
     if ((isset($input['price_id'])) && ($input['price_id'][0] != null)) {
-      $company_price = CompanyPrice::where('company_id',$company->id)->delete();
+      CompanyPrice::where('company_id',$company->id)->delete();
       foreach ($input['price_id'] as $key => $item) {
         $company_price = new CompanyPrice();
         $company_price->company_id=$company->id;
@@ -230,7 +235,7 @@ class CompanyController extends Controller
         $company_price->save();
       }
     }
-    $company_price = GroupUserCompany::where('company_id',$company->id)->delete();
+    GroupUserCompany::where('company_id',$company->id)->delete();
     if ((isset($input['users'])) && ($input['users'][0] != null)) {
 
       foreach ($input['users'] as $key => $item) {
