@@ -86,7 +86,7 @@ return [
        'logos' => [
            'driver' => 'local',
            'root' => storage_path('app/logos'),
-           'url' => '/storage',
+           'url' => '/storage/app/logos',
            'visibility' => 'public',
        ],
 
