@@ -284,6 +284,9 @@
          serverSide: true,
          order: [[ 3, "asc" ],[ 4, "asc" ]],
          ajax:  "{{ route('contractlcl.table') }}",
+         "columnDefs": [
+            { className: "truncate", "targets": [ 0,1] }
+         ],
          columns: [
 
             {data: 'name', name: 'name'},
@@ -363,6 +366,9 @@
       });
       $('#tableContracts').DataTable({
          ajax:  "{{ route('contractlcl.tableG') }}",
+         "columnDefs": [
+            { className: "truncate", "targets": [ 0,1] }
+         ],
          columns: [        
             {data: 'name', name: 'name'},
             {data: 'number', name: 'number'},
