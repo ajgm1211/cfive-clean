@@ -63,11 +63,6 @@ class CountryController extends Controller
 
     public function edit($id)
     {
-        $airports = Airport::all();
-        foreach($airports as $airport){
-            $airport->display_name = $airport->code.', '.$airport->name;
-            $airport->update();
-        }
 
     }
 
