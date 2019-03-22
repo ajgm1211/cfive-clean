@@ -51,6 +51,46 @@ class QuoteAutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+  public function hideContainer($equipmentForm){
+
+    $equipment = new Collection();
+    $hidden20 = 'hidden';
+    $hidden40 = 'hidden';
+    $hidden40hc = 'hidden';
+    $hidden40nor = 'hidden';
+    $hidden45 = 'hidden';
+
+    foreach($equipmentForm as $val){
+
+      if($val == '20'){
+        $hidden20 = '';
+      }
+      if($val == '40'){
+        $hidden40 = '';
+      }
+      if($val == '40hc'){
+        $hidden40hc = '';
+      }
+      if($val == '40nor'){
+        $hidden40nor = '';
+      }
+      if($val == '45'){
+        $hidden45 = '';
+      }
+    }
+    $equipment->put('20',$hidden20);
+    $equipment->put('40',$hidden40);
+    $equipment->put('40hc',$hidden40hc);
+    $equipment->put('40nor',$hidden40nor);
+    $equipment->put('45',$hidden45);
+
+    return($equipment);
+
+
+  }
+
+
   public function search()
   {
 
@@ -123,6 +163,9 @@ class QuoteAutoController extends Controller
 
     // Request Formulario
 
+    //Collection Equipment Dinamico
+    $equipmentHides = $this->hideContainer($request->input('equipment'));
+
     foreach($request->input('originport') as $origP){
 
       $infoOrig = explode("-", $origP);
@@ -160,10 +203,10 @@ class QuoteAutoController extends Controller
       $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
     });
     $arreglo = $arreglo->get();
-    
- //   dd($arreglo);
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+    //   dd($arreglo);
+
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
 
 

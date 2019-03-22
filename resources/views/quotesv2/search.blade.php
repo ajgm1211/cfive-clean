@@ -26,7 +26,7 @@
               </div>
               <div class="col-md-2">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',['1' => '20\'','2' => '40','3'=>'40HC','4'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
+                {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40hc'=>'40HC','40nor'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
               <div class="col-md-2">
                 <label>Company</label>
@@ -144,11 +144,11 @@
               <div class="col-md-2">Origin</div>
               <div class="col-md-1">Destination</div>
               <div class="col-md-2">Validity</div>
-              <div class="col-md-1">20'</div>
-              <div class="col-md-1">40</div>
-              <div class="col-md-1">40HC'</div>
-              <div class="col-md-1">40NOR'</div>
-              <div class="col-md-1">45'</div>
+              <div class="col-md-1" {{ $equipmentHides['20'] }} >20'</div>
+              <div class="col-md-1" {{ $equipmentHides['40'] }} >40</div>
+              <div class="col-md-1" {{ $equipmentHides['40hc'] }} >40HC'</div>
+              <div class="col-md-1" {{ $equipmentHides['40nor'] }} >40NOR'</div>
+              <div class="col-md-1" {{ $equipmentHides['45'] }} >45'</div>
             </div>
             <div class="row">
               <div class="col-md-12"><br><br></div>
@@ -215,7 +215,7 @@
 @parent
 
 
-<script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+<script src="{{asset('js/quotes.js')}}" type="text/javascript"></script>
 @if(empty($arreglo))
 <script>
 
