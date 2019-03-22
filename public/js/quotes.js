@@ -5,6 +5,10 @@ $.ajaxSetup({
 });
 
 
+$('#price_id').select2({
+  placeholder: "Select an lala",
+  enable : false
+});
 
 $(document).on('click', '#default-currency-submit', function () {
   var id = $('#company_id').val();
@@ -228,7 +232,10 @@ function precargar(){
   var company_id = $("#m_select2_2_modal").val();
   var contact_id =  $("#contact_id_num").val();
   var price_id =  $("#price_id_num").val();
+
+
   var selected = '';
+  var selected_price = '';
   if(company_id) {
     $('select[name="contact_id"]').empty();
     $('select[name="contact_id"]').prop("disabled",false);
@@ -258,32 +265,36 @@ function precargar(){
         $('select[name="price_id"]').empty();
         $.each(data, function(key, value) {
           if(key == price_id){
-            selected = 'selected';
+            selected_price = 'selected';
           }else{
-            selected = '';
+            selected_price = '';
           }
-          $('select[name="price_id"]').append('<option '+selected+' value="'+ key +'">'+ value +'</option>');
+          $('select[name="price_id"]').append('<option '+selected_price+' value="'+ key +'">'+ value +'</option>');
         });
       }
     });
 
+
+
+
   }
 }
 $( document ).ready(function() {
+  $('.select2-selection__rendered').removeAttr('title');
+  $('#select2-price_id-container').text('Please an option');
 
- 
 
   // CLEARING COMPANIES SELECT
 
   $( "select[name='company_id_quote']" ).on('change', function() {
     var company_id = $(this).val();
-      $("#contact_id").val('');
-    
+    $("#contact_id").val('');
+
     $('#select2-contact_id-container').text('Please an option');
     if(company_id) {
       $('select[name="contact_id"]').empty();
       $('select[name="contact_id"]').prop("disabled",false);
-   
+
       $.ajax({
         url: "/quotes/company/contact/id/"+company_id,
         dataType: 'json',
@@ -294,7 +305,7 @@ $( document ).ready(function() {
           });
         }
       });
-    
+
       $.ajax({
         url: "/quotes/company/price/id/"+company_id,
         dataType: 'json',
@@ -767,6 +778,9 @@ $('#destination_airport').select2({
 $('.select2-company_id').select2({
   placeholder: "Select an option"
 });
+
+
+
 
 /** SCHEDULES **/
 
