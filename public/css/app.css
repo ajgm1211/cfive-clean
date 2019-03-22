@@ -31355,6 +31355,17 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   }
 }
 
+.truncate {
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  max-width: 50px !important;
+}
+
+#logo-error {
+  color: red !important;
+}
+
 /**
 $m--root-font: (
     size: (

@@ -84,7 +84,7 @@
                                 <a  href="{{route('companies.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-business"></i>
                                     <span class="m-menu__link-text">
-                                        <b>Companies</b>
+                                        Companies
                                     </span>
                                 </a>
                             </li>
@@ -92,7 +92,7 @@
                                 <a  href="{{route('contacts.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-users"></i>
                                     <span class="m-menu__link-text">
-                                        <b>Contacts</b>
+                                        Contacts
                                     </span>
                                 </a>
                             </li>

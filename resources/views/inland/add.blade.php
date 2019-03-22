@@ -27,7 +27,7 @@ $validation_expire = 'Please enter valididity date';
     </div>
     @endif
     <div class="m-portlet__body col-md-12">
-      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'm_form']) !!}
+      {!! Form::open(['route' => 'inlands.store','class' => 'form-group m-form__group' , 'id' => 'inland']) !!}
 
       @include('inland.partials.form_inlands')
 
@@ -332,9 +332,8 @@ $validation_expire = 'Please enter valididity date';
       <div class="m-portlet__foot m-portlet__foot--fit">
         <br>
         <div class="m-form__actions">
-          <button type="button"  data-wizard-action="submit" class="btn btn-primary">
-            Submit
-          </button>
+          <input type="submit"  class="btn btn-primary" value="Submit">
+          
           <button type="reset" class="btn btn-danger">
             Cancel
           </button>
@@ -349,15 +348,8 @@ $validation_expire = 'Please enter valididity date';
 
 @section('js')
 @parent
-
-
-
-
-
-
 <script src="/js/inlands.js"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-contracts.js" type="text/javascript"></script>
-
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 @stop
