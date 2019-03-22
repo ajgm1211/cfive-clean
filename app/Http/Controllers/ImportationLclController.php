@@ -233,7 +233,7 @@ class ImportationLclController extends Controller
             $account->save();
 
             ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account');
-            
+
             $contract     = new ContractLcl();
             $contract->name             = $request->name;
             $contract->number           = $request->number;
@@ -1039,7 +1039,11 @@ class ImportationLclController extends Controller
         //dd($account);
         return DataTables::of($account)
             ->addColumn('status', function ( $account) {
-                return  $account->contractlcl->status;
+                if(empty($account->contractlcl->status)!=true){
+                    return  $account->contractlcl->status;
+                }else{
+                    return  'Contract erased';
+                }
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;

@@ -283,10 +283,11 @@ class ImportationGlobachargersFclController extends Controller
     public function index()
     {
         $harbor         = Harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.index',compact('harbor','carrier','companysUser','typedestiny'));
+        return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -299,6 +300,8 @@ class ImportationGlobachargersFclController extends Controller
         $validitydateVal    = $request->validitydate;
         $destinyArr         = $request->destiny;
         $originArr          = $request->origin;
+        $originCountArr     = $request->originCount;
+        $destinyCountArr    = $request->destinyCount;
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
@@ -315,6 +318,7 @@ class ImportationGlobachargersFclController extends Controller
         $data           = collect([]);
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         $harbor         = harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
 
 
@@ -461,11 +465,12 @@ class ImportationGlobachargersFclController extends Controller
             'origin'            => $originArr,
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
+            'originCount'       => $originCountArr,
+            'destinyCount'      => $destinyCountArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
             'typedestiny'       => $typedestinyVal,
-
             'existdatevalidity' => $datevalidityBol,
             'validitydate'      => $validitydateVal,
 
@@ -484,6 +489,7 @@ class ImportationGlobachargersFclController extends Controller
         //dd($data);
 
         return view('ImportationGlobalchargersFcl.show',compact('harbor',
+                                                                'country',
                                                                 'data',
                                                                 'carrier',
                                                                 'targetsArr',
@@ -502,6 +508,13 @@ class ImportationGlobachargersFclController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         //dd($request->all());
+
+
+        $requestobj = $request;
+        $companyUserIdVal = $companyUserId;
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = \Storage::disk('GCImport')->url($NameFile);
 
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];

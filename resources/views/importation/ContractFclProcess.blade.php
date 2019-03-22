@@ -124,11 +124,11 @@ new registration
 
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="destiny" class=" ">Destiny</label>
+                                    <label for="destiny" class=" ">Ports</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 <div class="col-2 col-form-label">
-                                    <label for="destiny" class=" ">Destiny</label>
+                                    <label for="destiny" class=" ">Countries</label>
                                     {!! Form::select('destinyCount[]',$country,$value['destinyCount'],['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}  
                                 </div>
                                 @endif
