@@ -509,13 +509,6 @@ class ImportationGlobachargersFclController extends Controller
         $UserId =\Auth::user()->id;
         //dd($request->all());
 
-
-        $requestobj = $request;
-        $companyUserIdVal = $companyUserId;
-        $errors = 0;
-        $NameFile = $requestobj['FileName'];
-        $path = \Storage::disk('GCImport')->url($NameFile);
-
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];
         return redirect()->route('ImportationGlobalchargeFcl.show',$id);

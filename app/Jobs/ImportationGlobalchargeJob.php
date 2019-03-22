@@ -77,6 +77,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                 $originExc              = "Origin";
                 $destiny                = "destiny";
                 $destinyExc             = "Destiny";
+                $originCountry          = "originCount";//arreglo de multiples country
+                $destinycountry         = "destinyCount";//arreglo de multiples country
                 $carrier                = "Carrier";
                 $CalculationType        = "Calculation_Type";
                 $Charge                 = "Charge";
@@ -2052,13 +2054,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 foreach($randons as  $rando){
                                                     //insert por arreglo de puerto
                                                     if($originBol == true ){
-                                                        $originerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $originerr = Country::find($rando);
+                                                        } else {
+                                                            $originerr = Harbor::find($rando);
+                                                        }
                                                         $originVal = $originerr['name'];
                                                         if($destiExitBol == true){    
                                                             $destinyVal = $read[$requestobj[$destinyExc]];
                                                         }
                                                     } else {
-                                                        $destinyerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $destinyerr = Country::find($rando);
+                                                        } else {
+                                                            $destinyerr = Harbor::find($rando);
+                                                        }
                                                         $destinyVal = $destinyerr['name'];
                                                         if($origExiBol == true){
                                                             $originVal = $read[$requestobj[$originExc]];                                      
@@ -2495,13 +2505,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 foreach($randons as  $rando){
                                                     //insert por arreglo de puerto
                                                     if($originBol == true ){
-                                                        $originerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $originerr = Country::find($rando);
+                                                        } else {
+                                                            $originerr = Harbor::find($rando);
+                                                        }
                                                         $originVal = $originerr['name'];
                                                         if($destiExitBol == true){    
                                                             $destinyVal = $read[$requestobj[$destinyExc]];
                                                         }
                                                     } else {
-                                                        $destinyerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $destinyerr = Country::find($rando);
+                                                        } else {
+                                                            $destinyerr = Harbor::find($rando);
+                                                        }
                                                         $destinyVal = $destinyerr['name'];
                                                         if($origExiBol == true){
                                                             $originVal = $read[$requestobj[$originExc]];                                      
@@ -2630,13 +2648,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 foreach($randons as  $rando){
                                                     //insert por arreglo de puerto
                                                     if($originBol == true ){
-                                                        $originerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $originerr = Country::find($rando);
+                                                        } else {
+                                                            $originerr = Harbor::find($rando);
+                                                        }
                                                         $originVal = $originerr['name'];
                                                         if($destiExitBol == true){    
                                                             $destinyVal = $read[$requestobj[$destinyExc]];
                                                         }
                                                     } else {
-                                                        $destinyerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $destinyerr = Country::find($rando);
+                                                        } else {
+                                                            $destinyerr = Harbor::find($rando);
+                                                        }
                                                         $destinyVal = $destinyerr['name'];
                                                         if($origExiBol == true){
                                                             $originVal = $read[$requestobj[$originExc]];                                      
@@ -2766,13 +2792,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 foreach($randons as  $rando){
                                                     //insert por arreglo de puerto
                                                     if($originBol == true ){
-                                                        $originerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $originerr = Country::find($rando);
+                                                        } else {
+                                                            $originerr = Harbor::find($rando);
+                                                        }
                                                         $originVal = $originerr['name'];
                                                         if($destiExitBol == true){    
                                                             $destinyVal = $read[$requestobj[$destinyExc]];
                                                         }
                                                     } else {
-                                                        $destinyerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $destinyerr = Country::find($rando);
+                                                        } else {
+                                                            $destinyerr = Harbor::find($rando);
+                                                        }
                                                         $destinyVal = $destinyerr['name'];
                                                         if($origExiBol == true){
                                                             $originVal = $read[$requestobj[$originExc]];                                      
@@ -2896,13 +2930,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             foreach($randons as  $rando){
                                                 //insert por arreglo de puerto
                                                 if($originBol == true ){
-                                                    $originerr = Harbor::find($rando);
+                                                    if($differentiatorBol){
+                                                        $originerr = Country::find($rando);
+                                                    } else {
+                                                        $originerr = Harbor::find($rando);
+                                                    }
                                                     $originVal = $originerr['name'];
                                                     if($destiExitBol == true){    
                                                         $destinyVal = $read[$requestobj[$destinyExc]];
                                                     }
                                                 } else {
-                                                    $destinyerr = Harbor::find($rando);
+                                                    if($differentiatorBol){
+                                                        $destinyerr = Country::find($rando);
+                                                    } else {
+                                                        $destinyerr = Harbor::find($rando);
+                                                    }
                                                     $destinyVal = $destinyerr['name'];
                                                     if($origExiBol == true){
                                                         $originVal = $read[$requestobj[$originExc]];                                      
@@ -3339,11 +3381,11 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
-        
+
         $account = AccountImportationGlobalcharge::find($requestobj['account_id']);
         $account->status = 'complete';
         $account->update();
-        
+
         Storage::disk('GCImport')->Delete($NameFile);
         $FileTmp = FileTmpGlobalcharge::where('name_file','=',$NameFile)->delete();
 
