@@ -191,11 +191,11 @@
               <div class="col-md-2">
                 <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
               </div>
-              <div class="col-md-1">  {{$arr->twuenty  }}</div>
-              <div class="col-md-1">  {{$arr->forty  }} </div>
-              <div class="col-md-1">   {{$arr->fortyhc  }}</div>
-              <div class="col-md-1">   {{$arr->fortynor  }}</div>
-              <div class="col-md-1">   {{$arr->fortyfive  }}</div>
+              <div class="col-md-1" {{ $equipmentHides['20'] }} >  {{$arr->twuenty  }}</div>
+              <div class="col-md-1" {{ $equipmentHides['40'] }}>  {{$arr->forty  }} </div>
+              <div class="col-md-1" {{ $equipmentHides['40hc'] }}>   {{$arr->fortyhc  }}</div>
+              <div class="col-md-1" {{ $equipmentHides['40nor'] }}>   {{$arr->fortynor  }}</div>
+              <div class="col-md-1" {{ $equipmentHides['45'] }}>   {{$arr->fortyfive  }}</div>
             </div>
             @endforeach       
           </div>
