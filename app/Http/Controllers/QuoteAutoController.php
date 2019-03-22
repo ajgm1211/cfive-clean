@@ -69,8 +69,8 @@ class QuoteAutoController extends Controller
     $countEquipment = 5 - $countEquipment;
 
     if($countEquipment == 1 ){
-    $originClass = 'col-md-2';
-    $destinyClass = 'col-md-2';
+    $originClass = 'col-md-3';
+    $destinyClass = 'col-md-1';
     $dataOrigDest = 'col-md-4';
       
     }

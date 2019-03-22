@@ -43,8 +43,8 @@
               <div class="col-md-2">
                 <label>Contact</label>
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('contact_id',[],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
-
+                  {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control','required'=>'true']) }}
+                  {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
                       <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
@@ -54,7 +54,8 @@
               </div>
               <div class="col-md-2">
                 <label>Price level</label>
-                {{ Form::select('price_id',[],null,['class'=>'m-select2-general form-control']) }}
+                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'m-select2-general form-control']) }}
+                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
             </div><br>
             <div class="row">
