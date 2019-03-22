@@ -2086,13 +2086,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     foreach($randons as  $rando){
                                                         //insert por arreglo de puerto
                                                         if($originBol == true ){
-                                                            $originerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $originerr = Country::find($rando);
+                                                            } else {
+                                                                $originerr = Harbor::find($rando);
+                                                            }
                                                             $originVal = $originerr['name'];
                                                             if($destiExitBol == true){    
                                                                 $destinyVal = $read[$requestobj[$destinyExc]];
                                                             }
                                                         } else {
-                                                            $destinyerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $destinyerr = Country::find($rando);
+                                                            } else {
+                                                                $destinyerr = Harbor::find($rando);
+                                                            }
                                                             $destinyVal = $destinyerr['name'];
                                                             if($origExiBol == true){
                                                                 $originVal = $read[$requestobj[$originExc]];                                      
@@ -2458,13 +2466,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     foreach($randons as  $rando){
                                                         //insert por arreglo de puerto
                                                         if($originBol == true ){
-                                                            $originerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $originerr = Country::find($rando);
+                                                            } else {
+                                                                $originerr = Harbor::find($rando);
+                                                            }
                                                             $originVal = $originerr['name'];
                                                             if($destiExitBol == true){    
                                                                 $destinyVal = $read[$requestobj[$destinyExc]];
                                                             }
                                                         } else {
-                                                            $destinyerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $destinyerr = Country::find($rando);
+                                                            } else {
+                                                                $destinyerr = Harbor::find($rando);
+                                                            }
                                                             $destinyVal = $destinyerr['name'];
                                                             if($origExiBol == true){
                                                                 $originVal = $read[$requestobj[$originExc]];                                      
@@ -2583,13 +2599,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     foreach($randons as  $rando){
                                                         //insert por arreglo de puerto
                                                         if($originBol == true ){
-                                                            $originerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $originerr = Country::find($rando);
+                                                            } else {
+                                                                $originerr = Harbor::find($rando);
+                                                            }
                                                             $originVal = $originerr['name'];
                                                             if($destiExitBol == true){    
                                                                 $destinyVal = $read[$requestobj[$destinyExc]];
                                                             }
                                                         } else {
-                                                            $destinyerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $destinyerr = Country::find($rando);
+                                                            } else {
+                                                                $destinyerr = Harbor::find($rando);
+                                                            }
                                                             $destinyVal = $destinyerr['name'];
                                                             if($origExiBol == true){
                                                                 $originVal = $read[$requestobj[$originExc]];                                      
@@ -2708,13 +2732,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     foreach($randons as  $rando){
                                                         //insert por arreglo de puerto
                                                         if($originBol == true ){
-                                                            $originerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $originerr = Country::find($rando);
+                                                            } else {
+                                                                $originerr = Harbor::find($rando);
+                                                            }
                                                             $originVal = $originerr['name'];
                                                             if($destiExitBol == true){    
                                                                 $destinyVal = $read[$requestobj[$destinyExc]];
                                                             }
                                                         } else {
-                                                            $destinyerr = Harbor::find($rando);
+                                                            if($differentiatorBol){
+                                                                $destinyerr = Country::find($rando);
+                                                            } else {
+                                                                $destinyerr = Harbor::find($rando);
+                                                            }
                                                             $destinyVal = $destinyerr['name'];
                                                             if($origExiBol == true){
                                                                 $originVal = $read[$requestobj[$originExc]];                                      
@@ -2832,13 +2864,21 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 foreach($randons as  $rando){
                                                     //insert por arreglo de puerto
                                                     if($originBol == true ){
-                                                        $originerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $originerr = Country::find($rando);
+                                                        } else {
+                                                            $originerr = Harbor::find($rando);
+                                                        }
                                                         $originVal = $originerr['name'];
                                                         if($destiExitBol == true){    
                                                             $destinyVal = $read[$requestobj[$destinyExc]];
                                                         }
                                                     } else {
-                                                        $destinyerr = Harbor::find($rando);
+                                                        if($differentiatorBol){
+                                                            $destinyerr = Country::find($rando);
+                                                        } else {
+                                                            $destinyerr = Harbor::find($rando);
+                                                        }
                                                         $destinyVal = $destinyerr['name'];
                                                         if($origExiBol == true){
                                                             $originVal = $read[$requestobj[$originExc]];                                      
