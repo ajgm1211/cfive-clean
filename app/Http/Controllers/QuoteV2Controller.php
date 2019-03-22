@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use App\CompanyUser;
+use App\Contact;
 use App\Country;
 use App\Currency;
 use App\Harbor;
 use App\Incoterm;
+use App\Price;
 use App\Quote;
 use App\QuoteV2;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Contracts\DataTable;
@@ -139,9 +142,12 @@ class QuoteV2Controller extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
         $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
+        $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
         $incoterms = Incoterm::pluck('name','id');
-        //dd($quote);
-        return view('quotesv2/show', compact('quote','companies','incoterms'));
+        $users = User::where('company_user_id',$company_user_id)->pluck('name','id');
+        $prices = Price::where('company_user_id',$company_user_id)->pluck('name','id');
+
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts'));
     }
 
     public function updateQuoteDetails(Request $request)
@@ -149,5 +155,22 @@ class QuoteV2Controller extends Controller
         QuoteV2::find($request->pk)->update([$request->name => $request->value]);
 
         return response()->json(['success'=>'done']);
+    }
+
+    public function update(Request $request,$id)
+    {
+        $quote=QuoteV2::find($id);
+        $quote->quote_id=$request->quote_id;
+        $quote->type=$request->type;
+        $quote->company_id=$request->company_id;
+        $quote->contact_id=$request->contact_id;
+        $quote->delivery_type=$request->delivery_type;
+        $quote->date_issued=$request->date_issued;
+        $quote->incoterm_id=$request->incoterm_id;
+        $quote->user_id=$request->user_id;
+        $quote->status=$request->status;
+        $quote->update();
+
+        return response()->json(['message'=>'Ok','quote'=>$quote]);
     }
 }

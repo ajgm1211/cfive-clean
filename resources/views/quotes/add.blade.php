@@ -534,9 +534,9 @@
                                   <div class="input-group date">
                                     {!! Form::text('validity_date', null, ['placeholder' => 'Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']) !!}
                                     <div class="input-group-append">
-                                  <span class="input-group-text">
-                                    <i class="la la-calendar-check-o"></i>
-                                  </span>
+                                    <span class="input-group-text">
+                                      <i class="la la-calendar-check-o"></i>
+                                    </span>
                                     </div>
                                   </div>
                                 </div>
