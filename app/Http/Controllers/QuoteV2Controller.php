@@ -7,6 +7,7 @@ use App\CompanyUser;
 use App\Country;
 use App\Currency;
 use App\Harbor;
+use App\Incoterm;
 use App\Quote;
 use App\QuoteV2;
 use Illuminate\Database\Eloquent\Collection;
@@ -135,10 +136,12 @@ class QuoteV2Controller extends Controller
     {
 
         $id = obtenerRouteKey($id);
-
+        $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
+        $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
+        $incoterms = Incoterm::pluck('name','id');
         //dd($quote);
-        return view('quotesv2/show', compact('quote'));
+        return view('quotesv2/show', compact('quote','companies','incoterms'));
     }
 
     public function updateQuoteDetails(Request $request)
