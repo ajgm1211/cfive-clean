@@ -54,7 +54,7 @@
               </div>
               <div class="col-md-2">
                 <label>Price level</label>
-                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'m-select2-general form-control']) }}
+                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control']) }}
                  {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
             </div><br>
