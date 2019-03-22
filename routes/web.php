@@ -346,6 +346,7 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('/', 'QuoteV2Controller@index')->name('quotes-v2.index');
     Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
+    Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
     Route::post('/update/details', 'QuoteV2Controller@updateQuoteDetails')->name('quotes-v2.update.details');
     Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
 });
