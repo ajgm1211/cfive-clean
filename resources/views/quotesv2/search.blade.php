@@ -104,18 +104,14 @@
   </div>
   <div class="col-md-1"></div>
 
-
+  
 </div>
 @if(!empty($arreglo))
 <div class="row" >
   <div class="col-md-1"></div>
   <div class="col-md-10">
     <div class="m-portlet">
-
       <div class="m-portlet__body">
-
-
-
         <div class="tab-content">
           <div>
             <div class="row">
@@ -140,9 +136,13 @@
                 </button></div>
             </div><br><br>
             <div class="row " >
-              <div class="col-md-2">Carrier</div>
-              <div class="col-md-2">Origin</div>
-              <div class="col-md-1">Destination</div>
+
+
+
+
+              <div class="col-md-2" >Carrier</div>
+              <div class="{{ $equipmentHides['originClass']  }}">Origin</div>
+              <div class="{{ $equipmentHides['destinyClass']  }}">Destination</div>
               <div class="col-md-2">Validity</div>
               <div class="col-md-1" {{ $equipmentHides['20'] }} >20'</div>
               <div class="col-md-1" {{ $equipmentHides['40'] }} >40</div>
@@ -164,7 +164,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="{{ $equipmentHides['dataOrigDest']  }}">
                 <div class="row">
                   <div class="col-md-4">
                     <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
@@ -197,6 +197,7 @@
               <div class="col-md-1" {{ $equipmentHides['40nor'] }}>   {{$arr->fortynor  }}</div>
               <div class="col-md-1" {{ $equipmentHides['45'] }}>   {{$arr->fortyfive  }}</div>
             </div>
+            <br><br><br>
             @endforeach       
           </div>
 

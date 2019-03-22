@@ -60,6 +60,40 @@ class QuoteAutoController extends Controller
     $hidden40hc = 'hidden';
     $hidden40nor = 'hidden';
     $hidden45 = 'hidden';
+    
+    // Clases para reordenamiento de la tabla y ajuste 
+    $originClass = 'col-md-2';
+    $destinyClass = 'col-md-1';
+    $dataOrigDest = 'col-md-3';
+    $countEquipment = count($equipmentForm);
+    $countEquipment = 5 - $countEquipment;
+
+    if($countEquipment == 1 ){
+    $originClass = 'col-md-2';
+    $destinyClass = 'col-md-2';
+    $dataOrigDest = 'col-md-4';
+      
+    }
+
+    if($countEquipment == 2 ){
+
+      $originClass = 'col-md-3';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-5';
+    }
+    if($countEquipment == 3){
+
+      $originClass = 'col-md-4';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-6';
+    }
+    if($countEquipment == 4){
+
+      $originClass = 'col-md-5';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-7';
+    }
+
 
     foreach($equipmentForm as $val){
 
@@ -79,6 +113,11 @@ class QuoteAutoController extends Controller
         $hidden45 = '';
       }
     }
+
+
+    $equipment->put('originClass',$originClass);
+    $equipment->put('destinyClass',$destinyClass);
+    $equipment->put('dataOrigDest',$dataOrigDest);
     $equipment->put('20',$hidden20);
     $equipment->put('40',$hidden40);
     $equipment->put('40hc',$hidden40hc);
