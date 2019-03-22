@@ -237,13 +237,16 @@ new registration
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Origin Port Not Included
+                                                    Origin Port or Country Not Included
                                                 </span>
                                             </span>
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
                                         {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="origininpCount" hidden="hidden" >
+                                        {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -265,6 +268,9 @@ new registration
                                     </label>
                                     <div class="col-form-label" id="destinyinp" hidden="hidden" >
                                         {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
+                                        {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">

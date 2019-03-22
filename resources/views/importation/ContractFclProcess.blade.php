@@ -114,6 +114,10 @@ new registration
                                     <label for="origin" class=" ">Origin</label>
                                     {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
+                                <div class="col-2 col-form-label">
+                                    <label for="origin" class=" ">Origin</label>
+                                    {!! Form::select('originCount[]',$country,$value['originCount'],['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}                           
+                                </div>
                                 @endif
 
                                 <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
@@ -122,6 +126,10 @@ new registration
                                 <div class="col-2 col-form-label">
                                     <label for="destiny" class=" ">Destiny</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                </div>
+                                <div class="col-2 col-form-label">
+                                    <label for="destiny" class=" ">Destiny</label>
+                                    {!! Form::select('destinyCount[]',$country,$value['destinyCount'],['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}  
                                 </div>
                                 @endif
 
