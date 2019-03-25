@@ -378,7 +378,7 @@
             {data: 'options', name: 'options'}
          ],
          initComplete: function () {
-            this.api().columns([0,1,2,3,4]).every(function () {
+            this.api().columns([4]).every(function () {
                var column = this;
                $('#tableContracts .head .head_hide').html('');
 
