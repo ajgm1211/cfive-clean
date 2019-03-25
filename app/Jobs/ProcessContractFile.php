@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
+use Illuminate\Support\Facades\File;
 use App\AccountImportationContractFcl as AccountFcl;
 use App\AccountImportationContractLcl as AccountLcl;
 use App\AccountImportationGlobalcharge as AccountGc;
@@ -46,28 +47,31 @@ class ProcessContractFile implements ShouldQueue
             if(strnatcasecmp($this->type,'fcl') == 0){
 
                 $Ncontracts = NewContractRequest::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('FclRequest')->get($file); 
+                //$file       = \Storage::disk('FclRequest')->get($file);
+                $file       = File::get(storage_path('app/public/Request/Fcl/'.$name));
                 $s3->put('Request/FCL/'.$filePath, $file, 'public');
 
             } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
 
                 $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('GCRequest')->get($file); 
+                //$file       = \Storage::disk('GCRequest')->get($file); 
+                $file       = File::get(storage_path('app/public/Request/GC/'.$name));                
                 $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
 
             } elseif(strnatcasecmp($this->type,'lcl') == 0){
 
                 $Ncontracts = NewContractRequestLcl::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('LclRequest')->get($file); 
+                //$file       = \Storage::disk('LclRequest')->get($file); 
+                $file       = File::get(storage_path('app/public/Request/Lcl/'.$name));                
                 $s3->put('Request/LCL/'.$filePath, $file, 'public');
 
             }
@@ -76,28 +80,31 @@ class ProcessContractFile implements ShouldQueue
             if(strnatcasecmp($this->type,'fcl') == 0){
 
                 $Ncontracts = AccountFcl::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('FclAccount')->get($file); 
+                //$file       = \Storage::disk('FclAccount')->get($file); 
+                $file       = File::get(storage_path('app/public/Account/Fcl/'.$name));                
                 $s3->put('Account/FCL/'.$filePath, $file, 'public');
 
             } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
 
                 $Ncontracts = AccountGc::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('GCAccount')->get($file); 
+                //$file       = \Storage::disk('GCAccount')->get($file); 
+                $file       = File::get(storage_path('app/public/Account/GC/'.$name));                
                 $s3->put('Account/Global-charges/FCL/'.$filePath, $file, 'public');
 
             } elseif(strnatcasecmp($this->type,'lcl') == 0){
 
                 $Ncontracts = AccountLcl::find($this->id);
-                $file       = $Ncontracts->namefile;
+                $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
-                $file       = \Storage::disk('LclAccount')->get($file); 
+                //$file       = \Storage::disk('LclAccount')->get($file); 
+                $file       = File::get(storage_path('app/public/Account/Lcl/'.$name));                
                 $s3->put('Account/LCL/'.$filePath, $file, 'public');
 
             }
