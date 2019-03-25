@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddVariationCountriesTable extends Migration
+class AddColumnAccountGccl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddVariationCountriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('countries', function (Blueprint $table){
-            $table->json('variation')->nullable()->after('continent');
-            
+        Schema::table('account_importation_globalcharge', function (Blueprint $table){
+            $table->string('namefile')->nullable()->after('company_user_id');
         });
     }
 
@@ -26,8 +25,8 @@ class AddVariationCountriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('countries', function($table) {
-            $table->dropColumn('variation');
+        Schema::table('account_importation_globalcharge', function($table) {
+            $table->dropColumn('namefile');
 
         });
     }

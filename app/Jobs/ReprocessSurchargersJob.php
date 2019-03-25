@@ -14,6 +14,7 @@ use App\LocalCharPort;
 use App\FailSurCharge;
 use App\CalculationType;
 use App\LocalCharCarrier;
+use App\LocalCharCountry;
 use App\Notifications\N_general;
 
 use Illuminate\Bus\Queueable;
@@ -93,20 +94,28 @@ class ReprocessSurchargersJob implements ShouldQueue
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                 // Origen Y Destino ------------------------------------------------------------------------
+                    
+                if($FailSurchager->differentiator  == 1){
+                        $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                        $originV  = $resultadoPortOri['puerto'];
+                    } else if($FailSurchager->differentiator  == 2){
+                        $resultadoPortOri = PrvHarbor::get_country($originEX[0]);
+                        $originV  = $resultadoPortOri['country'];
+                    }
+                    if($resultadoPortOri['boolean']){
+                        $originB = true;    
+                    }
 
-
-                $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
-                if($resultadoPortOri['boolean']){
-                    $originB = true;    
-                }
-                $originV  = $resultadoPortOri['puerto'];
-
-                $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
-                if($resultadoPortDes['boolean']){
-                    $destinyB = true;    
-                }
-                $destinationV  = $resultadoPortDes['puerto'];
-
+                    if($FailSurchager->differentiator  == 1){
+                        $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['puerto'];
+                    } else if($FailSurchager->differentiator  == 2){
+                        $resultadoPortDes = PrvHarbor::get_country($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['country'];
+                    }
+                    if($resultadoPortDes['boolean']){
+                        $destinyB = true;    
+                    }
 
                 //  Surcharge ------------------------------------------------------------------------------
 
@@ -187,11 +196,19 @@ class ReprocessSurchargersJob implements ShouldQueue
                         'localcharge_id' => $LocalchargeId
                     ]);
 
-                    LocalCharPort::create([
-                        'port_orig'         => $originV,
-                        'port_dest'         => $destinationV,
-                        'localcharge_id'    => $LocalchargeId                
-                    ]);
+                    if($FailSurchager->differentiator  == 1){
+                        LocalCharPort::create([
+                            'port_orig'         => $originV,
+                            'port_dest'         => $destinationV,
+                            'localcharge_id'    => $LocalchargeId                
+                        ]);      
+                    } else if($FailSurchager->differentiator  == 2){
+                        LocalCharCountry::create([
+                            'country_orig'      => $originV,
+                            'country_dest'      => $destinationV,
+                            'localcharge_id'    => $LocalchargeId                
+                        ]);
+                    }
                     $FailSurchager->forceDelete();
                 }
             }

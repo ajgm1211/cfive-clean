@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Country;
+use App\Airport;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
@@ -62,16 +63,6 @@ class CountryController extends Controller
 
     public function edit($id)
     {
-        $countries = Country::all();
-        foreach($countries as $country){
-            $arreglo = "";
-            $arreglo = [trim(strtolower($country->name))];
-            $type['type'] = $arreglo;
-            $json = json_encode($type);
-            $country->variation = $json;
-            //dd($json);
-            $country->update();
-        }
 
     }
 
