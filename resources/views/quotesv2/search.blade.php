@@ -109,7 +109,7 @@
 </div>
 @if(!empty($arreglo))
 <div class="row" >
-  <div class="col-md-1"></div>
+  <div class="col-sm-1"></div>
   <div class="col-md-10">
     <div class="m-portlet">
       <div class="m-portlet__body">
@@ -142,15 +142,15 @@
             <br><br>
 
             <div class="row"  >
-              <div class="col-md-2" >Carrier</div>
-              <div class="{{ $equipmentHides['originClass']  }}">Origin</div>
-              <div class="{{ $equipmentHides['destinyClass']  }}">Destination</div>
-              <div class="col-md-2">Validity</div>
-              <div class="col-md-1" {{ $equipmentHides['20'] }} >20'</div>
-              <div class="col-md-1" {{ $equipmentHides['40'] }} >40</div>
-              <div class="col-md-1" {{ $equipmentHides['40hc'] }} >40HC'</div>
-              <div class="col-md-1" {{ $equipmentHides['40nor'] }} >40NOR'</div>
-              <div class="col-md-1" {{ $equipmentHides['45'] }} >45'</div>
+              <div class="col-md-2" >  <span class="portcss"> Carrier</span></div>
+              <div class="{{ $equipmentHides['originClass']  }}"><span class="portcss">Origin</span></div>
+              <div class="{{ $equipmentHides['destinyClass']  }}"><span class="portcss">Destination</span></div>
+              <div class="col-md-2"><span class="portcss">Validity</span></div>
+              <div class="col-md-1" {{ $equipmentHides['20'] }} ><span class="portcss">20'</span></div>
+              <div class="col-md-1" {{ $equipmentHides['40'] }} ><span class="portcss">40</span></div>
+              <div class="col-md-1" {{ $equipmentHides['40hc'] }} ><span class="portcss">40HC'</span></div>
+              <div class="col-md-1" {{ $equipmentHides['40nor'] }} ><span class="portcss">40NOR'</span></div>
+              <div class="col-md-1" {{ $equipmentHides['45'] }} ><span class="portcss">45'</span></div>
             </div>
             <div class="row">
               <div class="col-md-12"><br><br></div>
@@ -191,13 +191,13 @@
               </div>
 
               <div class="col-md-2">
-                <span class="darkblue validate">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
+                <span class="portcss">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
               </div>
-              <div class="col-md-1" {{ $equipmentHides['20'] }} >  {{$arr->twuenty  }}</div>
-              <div class="col-md-1" {{ $equipmentHides['40'] }}>  {{$arr->forty  }} </div>
-              <div class="col-md-1" {{ $equipmentHides['40hc'] }}>   {{$arr->fortyhc  }}</div>
-              <div class="col-md-1" {{ $equipmentHides['40nor'] }}>   {{$arr->fortynor  }}</div>
-              <div class="col-md-1" {{ $equipmentHides['45'] }}>   {{$arr->fortyfive  }}</div>
+              <div class="col-md-1" {{ $equipmentHides['20'] }} ><span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->twuenty  }}</span></div>
+              <div class="col-md-1" {{ $equipmentHides['40'] }}> <span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->forty  }}</span> </div>
+              <div class="col-md-1" {{ $equipmentHides['40hc'] }}> <span class="currency">$USD</span> <span class="darkblue validate">  {{$arr->fortyhc  }} </span></div>
+              <div class="col-md-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->fortynor  }} </span></div>
+              <div class="col-md-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->fortyfive  }} </span></div>
             </div>
             <!-- Gastos Freight-->
             <div class="row" id='freight{{$loop->iteration}}'  >
@@ -247,7 +247,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-1"></div>
+  <div class="col-sm-1"></div>
 
 </div>
 @endif
