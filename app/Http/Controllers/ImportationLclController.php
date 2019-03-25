@@ -1049,7 +1049,8 @@ class ImportationLclController extends Controller
                 return  $account->companyuser->name;
             })
             ->addColumn('action', function ( $account) {
-                return '
+                if(empty($account->contractlcl->status)!=true){
+                    return '
                 <a href="/ImportationLCL/lcl/rates/'.$account->contractlcl['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
                 <!--&nbsp;
                 <a href="" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>-->
@@ -1057,6 +1058,12 @@ class ImportationLclController extends Controller
                 <a href="/ImportationLCL/DownloadAccountclcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
                 &nbsp;
                 <a href="#" id="delete-account-clcl" data-id-account-clcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }else{
+                    return '
+                <a href="/ImportationLCL/DownloadAccountclcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-clcl" data-id-account-clcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }
             })
             ->editColumn('id', '{{$id}}')->toJson();
     }
