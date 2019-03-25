@@ -145,12 +145,13 @@
               <div class="col-md-2" >  <span class="portcss"> Carrier</span></div>
               <div class="{{ $equipmentHides['originClass']  }}"><span class="portcss">Origin</span></div>
               <div class="{{ $equipmentHides['destinyClass']  }}"><span class="portcss">Destination</span></div>
-              <div class="col-md-2"><span class="portcss">Validity</span></div>
+              <div class="col-md-1"><span class="portcss">Validity</span></div>
               <div class="col-md-1" {{ $equipmentHides['20'] }} ><span class="portcss">20'</span></div>
               <div class="col-md-1" {{ $equipmentHides['40'] }} ><span class="portcss">40</span></div>
               <div class="col-md-1" {{ $equipmentHides['40hc'] }} ><span class="portcss">40HC'</span></div>
               <div class="col-md-1" {{ $equipmentHides['40nor'] }} ><span class="portcss">40NOR'</span></div>
               <div class="col-md-1" {{ $equipmentHides['45'] }} ><span class="portcss">45'</span></div>
+              <div class="col-md-1" ></div>
             </div>
             <div class="row">
               <div class="col-md-12"><br><br></div>
@@ -190,7 +191,7 @@
 
               </div>
 
-              <div class="col-md-2">
+              <div class="col-md-1">
                 <span class="portcss">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
               </div>
               <div class="col-md-1" {{ $equipmentHides['20'] }} ><span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->twuenty  }}</span></div>
@@ -198,6 +199,9 @@
               <div class="col-md-1" {{ $equipmentHides['40hc'] }}> <span class="currency">$USD</span> <span class="darkblue validate">  {{$arr->fortyhc  }} </span></div>
               <div class="col-md-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->fortynor  }} </span></div>
               <div class="col-md-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->fortyfive  }} </span></div>
+              <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-default btn-bold btn-upper">Select</button>
+              </div>
             </div>
             <!-- Gastos Freight-->
             <div class="row" id='freight{{$loop->iteration}}'  >
