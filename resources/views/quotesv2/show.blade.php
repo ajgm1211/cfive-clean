@@ -11,7 +11,7 @@
   <br>
   <div class="m-content">
     <div class="row">
-      <div class="col-md-10 offset-md-1">
+      <div class="col-md-12">
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
           <li class="nav-item m-tabs__item" >
             <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
@@ -30,7 +30,7 @@
           </li>
         </ul>
       </div>
-      <div class="col-md-10 offset-md-1">
+      <div class="col-md-12">
         <div class="m-portlet">
           <div class="m-portlet__head">
             <div class="row" style="padding-top: 20px;">
@@ -59,7 +59,7 @@
                 <div class="col-md-4">
                   <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
                   <input type="text" value="{{$quote->quote_id}}" class="form-control" hidden >
-                  {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL'],$quote->type,['class'=>'form-control type select2','hidden']) }}
+                  {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
                   <span class="type_span">{{$quote->type}}</span>
                 <!--<a href="#" id="type" class="editable" data-source="[{value: 'FCL', text: 'FCL'},{value: 'LCL', text: 'LCL'}]" data-type="select" data-value="{{$quote->type}}" data-pk="{{$quote->id}}" data-title="Select type"></a>-->
                 </div>
@@ -116,7 +116,12 @@
                 <div class="col-md-4">
                   <br>
                   <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
-
+                  <span class="equipment_span">
+                    @foreach($quote->equipment as $item)
+                      {{$item}}@unless($loop->last),@endunless
+                    @endforeach
+                  </span>
+                  {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$quote->equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
                 </div>
                 <div class="col-md-4">
                   <br>
@@ -129,9 +134,9 @@
                 <div class="col-md-4">
                   <br>
                   <label class="title-quote"><b>Validity:&nbsp;&nbsp;</b></label>
-                  <span class="validity_span">{{$quote->validity_since}} / {{$quote->validity_until}}</span>
+                  <span class="validity_span">{{$quote->validity_start}} / {{$quote->validity_end}}</span>
                   @php
-                    $validity = $quote->validity_since ." / ". $quote->validity_until;
+                    $validity = $quote->validity_start ." / ". $quote->validity_end;
                   @endphp
                   {!! Form::text('validity_date', $validity, ['placeholder' => 'Validity','class' => 'form-control m-input validity','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required','hidden']) !!}
                 </div>
@@ -168,11 +173,88 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-10 offset-md-1">
+      <div class="col-md-12">
         <div class="m-portlet">
           <div class="m-portlet__body">
             <div class="tab-content">
-
+              <div class="flex-list">
+                <ul >
+                  <li style="max-height: 20px;"><img class="img img-fluid" src="{{asset('imgcarrier/maersk.png')}}" width="80" style="margin-top: -15px;"></li>
+                  <li class="size-14px">{{$quote->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                  <li class="size-14px">{{$quote->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                  <li class="size-14px">Contract: Spot rate - CA-134</li>
+                </ul>
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <h5 class="title-quote size-14px">Freight charges</h5>
+                </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered color-blue">
+                      <thead class="title-quote text-center header-table">
+                      <tr>
+                        <td >Charge</td>
+                        <td >Detail</td>
+                        <td >20'</td>
+                        <td >40'</td>
+                        <td >40HC'</td>
+                        <td >Currency</td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select2-origin select-2-width']) }}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-md-12">
+                  <h5 class="title-quote pull-right">
+                    <a class="btn addButtonOrigin" style="vertical-align: middle">
+                      <b>Add freight charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                    </a>
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
         </div>
