@@ -107,7 +107,6 @@ class ProcessContractFile implements ShouldQueue
                 //$file       = \Storage::disk('LclAccount')->get($file); 
                 $file       = File::get(storage_path('app/public/Account/Lcl/'.$name));                
                 $s3->put('Account/LCL/'.$filePath, $file, 'public');
-
             }
         }
 
