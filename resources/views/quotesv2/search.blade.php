@@ -55,7 +55,7 @@
               <div class="col-md-2">
                 <label>Price level</label>
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control']) }}
-                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
+                {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
             </div><br>
             <div class="row">
@@ -105,7 +105,7 @@
   </div>
   <div class="col-md-1"></div>
 
-  
+
 </div>
 @if(!empty($arreglo))
 <div class="row" >
@@ -135,12 +135,13 @@
               <div class="col-md-6" align='right'><button  class="btn-large" disabled='true'> Quote
 
                 </button></div>
-            </div><br><br>
-            <div class="row " >
+            </div>
+            <div class="row">
+              <div class="col-md-12"><hr></div>
+            </div>
+            <br><br>
 
-
-
-
+            <div class="row"  >
               <div class="col-md-2" >Carrier</div>
               <div class="{{ $equipmentHides['originClass']  }}">Origin</div>
               <div class="{{ $equipmentHides['destinyClass']  }}">Destination</div>
@@ -155,7 +156,7 @@
               <div class="col-md-12"><br><br></div>
             </div>
             @foreach($arreglo as $arr)
-            <div class="row " >
+            <div class="row" id='principal{{$loop->iteration}}' >
               <div class="col-md-2">            
                 <div class="m-widget5">
                   <div class="m-widget5__item">
@@ -198,7 +199,47 @@
               <div class="col-md-1" {{ $equipmentHides['40nor'] }}>   {{$arr->fortynor  }}</div>
               <div class="col-md-1" {{ $equipmentHides['45'] }}>   {{$arr->fortyfive  }}</div>
             </div>
-            <br><br><br>
+            <!-- Gastos Freight-->
+            <div class="row" id='freight{{$loop->iteration}}'  >
+              <div class="col-md-12">
+                <div class="row">
+                  <span class="darkblue cabezeras">Freight</span><br><br>
+                </div>
+                <div class="row bg-light">
+                  <div class="col-md-2"><span class="portalphacode">Charge</span></div>
+                  <div class="col-md-3"><span class="portalphacode">Detail</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                  <div class="col-md-1"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                  <div class="col-md-2" ><span class="portalphacode">Currency</span></div>
+                </div><br>
+                <div class="row">
+                  <div class="col-md-2">Charge</div>
+                  <div class="col-md-3">Detail</div>
+                  <div class="col-md-1" {{ $equipmentHides['20'] }}>20'</div>
+                  <div class="col-md-1" {{ $equipmentHides['40'] }}>40'</div>
+                  <div class="col-md-1" {{ $equipmentHides['40hc'] }}>40HC'</div>
+                  <div class="col-md-1" {{ $equipmentHides['40nor'] }}>40NOR'</div>
+                  <div class="col-md-1" {{ $equipmentHides['45'] }}>45</div>
+                  <div class="col-md-2" >Currency</div>
+                </div><br>
+                <div class="row bg-light">
+                  <div class="col-md-5 col-md-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-md-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-md-2" ><span class="portalphacode">EUR</span></div>
+                </div>
+
+              </div>
+            </div>
+            <br><br>
+            <div class="row"><div class="col-md-12"><hr></div></div>
+            <br><br>
             @endforeach       
           </div>
 
@@ -234,7 +275,6 @@
 
 @endif
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-<script src="/js/quote.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>

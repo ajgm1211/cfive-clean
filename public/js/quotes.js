@@ -873,3 +873,53 @@ function change_tab(tab){
     $("#chargeable_weight_pkg").html('');
   }
 }
+
+function display(id){
+ // var elemento = $("#detail"+id);
+  var freight = $("#freight"+id);
+  /*var destination = $("#destination"+id);
+  var global = $("#global"+id);
+  var inlands = $("#inlands"+id);
+  var schedule = $("#schedules"+id);*/
+
+  /*if(elemento.attr('hidden')){
+
+    $("#detail"+id).removeAttr('hidden');
+    schedule.attr('hidden','true');
+
+  }else{
+    $("#detail"+id).attr('hidden','true');
+  }
+*/
+
+  if(freight.attr('hidden')){
+
+    $("#freight"+id).removeAttr('hidden');
+
+  }else{
+    $("#freight"+id).attr('hidden','true');
+  }
+/*
+  if(destination.attr('hidden')){
+
+    $("#destination"+id).removeAttr('hidden');
+
+  }else{
+    $("#destination"+id).attr('hidden','true');
+  }
+  if(global.attr('hidden')){
+
+    $("#global"+id).removeAttr('hidden');
+
+  }else{
+    $("#global"+id).attr('hidden','true');
+  }
+  if(inlands.attr('hidden')){
+
+    $("#inlands"+id).removeAttr('hidden');
+
+  }else{
+    $("#inlands"+id).attr('hidden','true');
+  }*/
+
+}
