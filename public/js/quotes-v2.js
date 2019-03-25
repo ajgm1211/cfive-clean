@@ -51,6 +51,7 @@ $(document).on('click', '#edit-quote', function () {
     $(".validity_span").attr('hidden','true');
     $(".user_id_span").attr('hidden','true');
     $(".date_issued_span").attr('hidden','true');
+    $(".equipment_span").attr('hidden','true');
     $(".quote_id").removeAttr('hidden');
     $(".company_id").removeAttr('hidden');
     $(".type").removeAttr('hidden');
@@ -61,6 +62,7 @@ $(document).on('click', '#edit-quote', function () {
     $(".contact_id").prop('disabled',false);
     $(".validity").removeAttr('hidden');
     $(".user_id").removeAttr('hidden');
+    $(".equipment").removeAttr('hidden');
     $(".date_issued").removeAttr('hidden');
     $(".price_id").removeAttr('hidden');
     $("#update_buttons").removeAttr('hidden');
@@ -73,6 +75,7 @@ $(document).on('click', '#edit-quote', function () {
     $(".contact_id").select2();
     $(".user_id").select2();
     $(".price_id").select2();
+    $(".equipment").select2();
 });
 
 $(document).on('click', '#cancel', function () {
@@ -87,6 +90,7 @@ $(document).on('click', '#cancel', function () {
     $(".validity_span").removeAttr('hidden');
     $(".user_id_span").removeAttr('hidden');
     $(".date_issued_span").removeAttr('hidden');
+    $(".equipment_span").removeAttr('hidden');
     $(".quote_id").attr('hidden','true');
     $(".company_id").attr('hidden','true');
     $(".type").attr('hidden','true');
@@ -97,6 +101,7 @@ $(document).on('click', '#cancel', function () {
     $(".validity").attr('hidden','true');
     $(".user_id").attr('hidden','true');
     $(".date_issued").attr('hidden','true');
+    $(".equipment").attr('hidden','true');
     $(".price_id").attr('hidden','true');
     $("#update_buttons").attr('hidden','true');
     $("#edit_li").removeAttr('hidden');
@@ -108,6 +113,7 @@ $(document).on('click', '#cancel', function () {
     $(".contact_id").select2('destroy');
     $(".user_id").select2('destroy');
     $(".price_id").select2('destroy');
+    $(".equipment").select2('destroy');
 });
 
 $(document).on('click', '#update', function () {
@@ -120,6 +126,7 @@ $(document).on('click', '#update', function () {
     var incoterm_id=$(".incoterm_id").val();
     var contact_id=$(".contact_id").val();
     var validity=$(".validity").val();
+    var equipment=$(".equipment").val();
     var user_id=$(".user_id").val();
     var date_issued=$(".date_issued").val();
     var price_id=$(".price_id").val();
@@ -136,6 +143,7 @@ $(document).on('click', '#update', function () {
             'incoterm_id': incoterm_id,
             'contact_id': contact_id,
             'validity': validity,
+            'equipment': equipment,
             'user_id': user_id,
             'date_issued': date_issued,
             'price_id': price_id,
@@ -147,8 +155,40 @@ $(document).on('click', '#update', function () {
                     'Your quote has been updated.',
                     'success'
                 )
+                var incoterm = data.quote['incoterm_id'];
+                var delivery_type = data.quote['delivery_type'];
 
+                if(incoterm==1){
+                    incoterm='EWX';
+                }else if(incoterm==2){
+                    incoterm='FAS';
+                }else if(incoterm==3){
+                    incoterm='FCA';
+                }else if(incoterm==4){
+                    incoterm='FOB';
+                }else if(incoterm==5){
+                    incoterm='CFR';
+                }else if(incoterm==6){
+                    incoterm='CIF';
+                }else if(incoterm==7){
+                    incoterm='CIP';
+                }else if(incoterm==8){
+                    incoterm='DAT';
+                }else if(incoterm==9){
+                    incoterm='DAP';
+                }else{
+                    incoterm='DDP';
+                }
 
+                if(delivery_type==1){
+                    delivery_type='Port to Port';
+                }else if(delivery_type==2){
+                    delivery_type='Port to Door';
+                }else if(delivery_type==3){
+                    delivery_type='Door to Port';
+                }else{
+                    delivery_type='Door to Door'
+                }
                 $(".type").val(data.quote['type']);
                 $(".type_span").html(data.quote['type']);
                 $(".quote_id").val(data.quote['quote_id']);
@@ -159,17 +199,31 @@ $(document).on('click', '#update', function () {
                 $(".status_span").html(data.quote['status']+' <i class="fa fa-check"></i>');
                 $(".status_span").addClass('Status_'+data.quote['status']);
                 $(".delivery_type").val(data.quote['delivery_type']);
-                $(".delivery_type_span").html(data.quote['delivery_type']);
+                $(".delivery_type_span").html(delivery_type);
                 $(".incoterm_id").val(data.quote['incoterm_id']);
-                $(".incoterm_id_span").html(data.quote['incoterm_id']);
+                $(".incoterm_id_span").html(incoterm);
+                $(".equipment").val(data.quote['equipment']);
+                $(".equipment_span").empty();
+                var length = data.quote['equipment'].length;
+                $.each( data.quote['equipment'], function( index, value ){
+
+                    if (index === (length-1)) {
+                        $(".equipment_span").append(value);
+                    }else{
+                        $(".equipment_span").append(value + ', ');
+                    }
+                });
+
                 $(".contact_id").val(data.quote['contact_id']);
-                $(".contact_id_span").html(data.quote['contact_id']);
+                $(".contact_id_span").html(data.contact_name);
                 $(".user_id").val(data.quote['user_id']);
                 $(".user_id_span").val(data.quote['user_id']);
                 $(".date_issued").val(data.quote['date_issued']);
                 $(".date_issued_span").html(data.quote['date_issued']);
                 $(".price_id").val(data.quote['price_id']);
                 $(".price_level_span").val(data.quote['price_id']);
+                $(".validity").val(data.quote['validity_start']+'/'+data.quote['validity_end']);
+                $(".validity_span").html(data.quote['validity_start']+'/'+data.quote['validity_end']);
 
                 $(".quote_id_span").removeAttr('hidden');
                 $(".company_span").removeAttr('hidden');
@@ -182,6 +236,7 @@ $(document).on('click', '#update', function () {
                 $(".validity_span").removeAttr('hidden');
                 $(".user_id_span").removeAttr('hidden');
                 $(".date_issued_span").removeAttr('hidden');
+                $(".equipment_span").removeAttr('hidden');
                 $(".quote_id").attr('hidden','true');
                 $(".company_id").attr('hidden','true');
                 $(".type").attr('hidden','true');
@@ -193,6 +248,7 @@ $(document).on('click', '#update', function () {
                 $(".user_id").attr('hidden','true');
                 $(".date_issued").attr('hidden','true');
                 $(".price_id").attr('hidden','true');
+                $(".equipment").attr('hidden','true');
                 $("#update_buttons").attr('hidden','true');
                 $("#edit_li").removeAttr('hidden');
                 $(".type").select2('destroy');
@@ -203,6 +259,7 @@ $(document).on('click', '#update', function () {
                 $(".contact_id").select2('destroy');
                 $(".user_id").select2('destroy');
                 $(".price_id").select2('destroy');
+                $(".equipment").select2('destroy');
             }
         }
     });

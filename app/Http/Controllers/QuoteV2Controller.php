@@ -146,8 +146,11 @@ class QuoteV2Controller extends Controller
         $incoterms = Incoterm::pluck('name','id');
         $users = User::where('company_user_id',$company_user_id)->pluck('name','id');
         $prices = Price::where('company_user_id',$company_user_id)->pluck('name','id');
+        $currencies = Currency::pluck('alphacode','id');
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg = Currency::find($company_user->currency_id);
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg'));
     }
 
     public function updateQuoteDetails(Request $request)
@@ -159,6 +162,11 @@ class QuoteV2Controller extends Controller
 
     public function update(Request $request,$id)
     {
+
+        $validation = explode('/',$request->validity);
+        $validity_start = $validation[0];
+        $validity_end = $validation[1];
+
         $quote=QuoteV2::find($id);
         $quote->quote_id=$request->quote_id;
         $quote->type=$request->type;
@@ -167,10 +175,15 @@ class QuoteV2Controller extends Controller
         $quote->delivery_type=$request->delivery_type;
         $quote->date_issued=$request->date_issued;
         $quote->incoterm_id=$request->incoterm_id;
+        $quote->equipment=$request->equipment;
+        $quote->validity_start=$validity_start;
+        $quote->validity_end=$validity_end;
         $quote->user_id=$request->user_id;
         $quote->status=$request->status;
         $quote->update();
 
-        return response()->json(['message'=>'Ok','quote'=>$quote]);
+        $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
+
+        return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name]);
     }
 }

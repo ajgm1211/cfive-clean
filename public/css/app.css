@@ -31366,6 +31366,55 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   color: red !important;
 }
 
+.flex-list {
+  position: relative;
+  margin: 1em;
+  overflow: hidden;
+}
+
+.flex-list ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-left: -65px;
+}
+
+.flex-list li {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+  text-align: center;
+  background-color: #fff;
+  list-style-type: none;
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 17.5px;
+  border-left: 2px solid #eee;
+  color: #031B4E;
+  font-weight: bold;
+}
+
+blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #eee;
+}
+
 /**
 $m--root-font: (
     size: (

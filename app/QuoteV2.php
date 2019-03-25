@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuoteV2 extends Model
 {
+    protected $casts = [
+        'equipment' => 'array',
+    ];
 
     protected $fillable = ['quote_id','company_user_id','custom_quote_id','type','quote_validity','origin_address','destination_address','company_id','origin_port_id','destination_port_id','price_id','contact_id','delivery_type','currency_id','user_id','equipment','incoterm_id','status','date_issued'];
 

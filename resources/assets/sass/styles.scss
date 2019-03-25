@@ -16775,3 +16775,38 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
 #logo-error{
   color: red !important;
 }
+
+.flex-list {
+  position: relative;
+  margin: 1em;
+  overflow: hidden;
+}
+.flex-list ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-left: -65px;
+
+}
+.flex-list li {
+  flex-grow: 1;
+  flex-basis: auto;
+  text-align: center;
+  background-color: #fff;
+  list-style-type: none;
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  align-items: center;
+  font-size: 17.5px;
+  border-left: 2px solid #eee;
+  color: $color-dark-blue;
+  font-weight:bold;
+}
+
+blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #eee;
+}
