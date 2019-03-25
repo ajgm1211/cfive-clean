@@ -116,6 +116,47 @@
                                 </div>
                             </div>
                             <hr>
+                            <div class="form-group m-form__group row"  id="divvaluesportscountries">
+                                <div class="col-lg-2">
+                                    <label class="col-form-label"><b>PLACES:</b></label>
+                                </div>
+
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesportcountry" value="1" id="portchk" type="radio" checked>
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Ports Only
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-radio m-radio--brand m-radio--check-bold">
+                                                <input name="valuesportcountry" value="2" id="portcountrychk" type="radio" >
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Ports and Countries
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
@@ -123,7 +164,7 @@
                                 </div>
 
 
-                                <div class="col-3">
+                                <div class="col-3" id="divorigin">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
@@ -134,17 +175,22 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Origin Port Not Included
+                                                    Origin Port or Country Not Included
                                                 </span>
                                             </span>
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
+                                        <label for="destiny" class=" ">Ports</label>
                                         {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="origininpCount" hidden="hidden" >
+                                        <label for="destiny" class=" ">Countries</label>
+                                        {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-3" id="divdestiny">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
@@ -155,13 +201,18 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Destiny Port Not Included
+                                                    Destiny Port or Country Not Included
                                                 </span>
                                             </span>
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="destinyinp" hidden="hidden" >
+                                        <label for="destiny" class=" ">Ports</label>
                                         {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
+                                    <label for="destiny" class=" ">Countries</label>
+                                        {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">
