@@ -5442,13 +5442,14 @@ class ImportationController extends Controller
                 }else{
                     return  'Contract erased';
                 }
-                
+
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
             })
             ->addColumn('action', function ( $account) {
-                return '
+                if(empty($account->contract->status)!=true){
+                    return '
                 <a href="/Importation/fcl/rate/'.$account->contract['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
                 &nbsp;
                 <a href="/Importation/fcl/surcharge/'.$account->contract['id'].'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
@@ -5456,6 +5457,12 @@ class ImportationController extends Controller
                 <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
                 &nbsp;
                 <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }else{
+                    return '
+                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }
             })
             ->editColumn('id', '{{$id}}')->toJson();
     }
