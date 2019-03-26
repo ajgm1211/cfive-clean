@@ -267,3 +267,57 @@ $(document).on('click', '#update', function () {
 
 $('.date_issued').datetimepicker();
 
+$('.select2-freight').select2();
+
+$('.select2-origin').select2();
+
+$('.select2-destination').select2();
+
+$(document).on('click', '.addFreightCharge', function (e) {
+    var $template = $('#freight_charges'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
+    $clone.find("select").select2({
+        placeholder: "Currency"
+    });
+});
+
+$(document).on('click', '.addOriginCharge', function (e) {
+    var $template = $('#origin_charges'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
+    $clone.find("select").select2({
+        placeholder: "Currency"
+    });
+});
+
+$(document).on('click', '.addDestinationCharge', function (e) {
+    var $template = $('#destination_charges'),
+        $clone = $template
+            .clone()
+            .removeClass('hide')
+            .removeAttr('id')
+            .insertAfter($template)
+    $clone.find("select").select2({
+        placeholder: "Currency"
+    });
+});
+
+$(document).on('click', '.removeFreightCharge', function (e) {
+    $(this).closest('tr').remove();
+});
+
+$(document).on('click', '.removeOriginCharge', function (e) {
+    $(this).closest('tr').remove();
+});
+
+$(document).on('click', '.removeDestinationCharge', function (e) {
+    $(this).closest('tr').remove();
+});
+
