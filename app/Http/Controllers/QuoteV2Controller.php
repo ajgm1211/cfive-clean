@@ -186,4 +186,72 @@ class QuoteV2Controller extends Controller
 
         return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name]);
     }
+
+    public function duplicate(Request $request, $id){
+
+        $id = obtenerRouteKey($id);
+        $quote=QuoteV2::find($id);
+        $quote_duplicate = new QuoteV2();
+        $quote_duplicate->user_id=\Auth::id();
+        $quote_duplicate->company_user_id=\Auth::user()->company_user_id;
+        $quote_duplicate->quote_id=$this->idPersonalizado();
+        $quote_duplicate->incoterm_id=$quote->incoterm_id;
+        $quote_duplicate->type=$quote->type;
+        $quote_duplicate->delivery_type=$quote->delivery_type;
+        $quote_duplicate->currency_id=$quote->currency_id;
+        $quote_duplicate->contact_id=$quote->contact_id;
+        $quote_duplicate->company_id=$quote->company_id;
+        $quote_duplicate->validity_start=$quote->validity_start;
+        $quote_duplicate->validity_end=$quote->validity_end;
+        $quote_duplicate->equipment=$quote->equipment;
+        $quote_duplicate->status=$quote->status;
+        $quote_duplicate->date_issued=$quote->date_issued;
+        if($quote->origin_address){
+            $quote_duplicate->origin_address=$quote->origin_address;
+        }
+        if($quote->destination_address){
+            $quote_duplicate->destination_address=$quote->destination_address;
+        }
+        if($quote->origin_port_id){
+            $quote_duplicate->origin_port_id=$quote->origin_port_id;
+        }
+        if($quote->destination_port_id){
+            $quote_duplicate->destination_port_id=$quote->destination_port_id;
+        }
+        if($quote->price_id){
+            $quote_duplicate->price_id=$quote->price_id;
+        }
+        if($quote->custom_quote_id){
+            $quote_duplicate->custom_quote_id=$quote->custom_quote_id;
+        }
+
+        $quote_duplicate->save();
+
+        if($request->ajax()){
+            return response()->json(['message' => 'Ok']);
+        }else{
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Quote duplicated successfully!');
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
+        }
+    }
+
+    public function idPersonalizado(){
+        $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
+        $iniciales =  strtoupper(substr($user_company->name,0, 2));
+        $quote = QuoteV2::where('company_user_id',$user_company->id)->orderBy('created_at', 'desc')->first();
+
+        if($quote == null){
+            $iniciales = $iniciales."-1";
+        }else{
+
+            $numeroFinal = explode('-',$quote->quote_id);
+
+            $numeroFinal = $numeroFinal[1] +1;
+
+            $iniciales = $iniciales."-".$numeroFinal;
+        }
+        return $iniciales;
+    }
 }

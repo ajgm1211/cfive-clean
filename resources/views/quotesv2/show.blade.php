@@ -10,21 +10,40 @@
 @section('content')
   <br>
   <div class="m-content">
+    @if(Session::has('message.nivel'))
+      <div class="col-md-12">
+        <br>
+        <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+          <div class="m-alert__icon">
+            <i class="la la-warning"></i>
+          </div>
+          <div class="m-alert__text">
+            <strong>
+              {{ session('message.title') }}
+            </strong>
+            {{ session('message.content') }}
+          </div>
+          <div class="m-alert__close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    @endif
     <div class="row">
       <div class="col-md-12">
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
           <li class="nav-item m-tabs__item" >
-            <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            <a class="btn btn-primary-v2" href="#">
               Send &nbsp;&nbsp;<i class="fa fa-envelope"></i>
             </a>
           </li>
           <li class="nav-item m-tabs__item" >
-            <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            <a class="btn btn-primary-v2" href="#">
               PDF
             </a>
           </li>
           <li class="nav-item m-tabs__item" >
-            <a class="btn btn-primary-v2" id="create-quote-back" data-toggle="tab" href="#" role="tab">
+            <a class="btn btn-primary-v2" href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}">
               Duplicate
             </a>
           </li>
