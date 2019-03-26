@@ -110,8 +110,8 @@
                     $date = date_create($quote->date_issued);
                   @endphp
                   <span class="date_issued_span">{{date_format($date, 'M d, Y H:i')}}</span>
-                  {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
-                  <!--<a href="#" id="created_at" data-type="date" data-pk="{{$quote->id}}" data-title="Select date">{{date_format($quote->created_at, 'd M Y')}}</a>-->
+                {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
+                <!--<a href="#" id="created_at" data-type="date" data-pk="{{$quote->id}}" data-title="Select date">{{date_format($quote->created_at, 'd M Y')}}</a>-->
                 </div>
                 <div class="col-md-4">
                   <br>
@@ -180,8 +180,8 @@
               <div class="flex-list">
                 <ul >
                   <li style="max-height: 20px;"><img class="img img-fluid" src="{{asset('imgcarrier/maersk.png')}}" width="80" style="margin-top: -15px;"></li>
-                  <li class="size-14px">{{$quote->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
-                  <li class="size-14px">{{$quote->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                  <li class="size-14px">POL: {{$quote->origin_port->name}}, {{$quote->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                  <li class="size-14px">POD: {{$quote->destination_port->name}}, {{$quote->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
                   <li class="size-14px">Contract: Spot rate - CA-134</li>
                 </ul>
               </div>
@@ -205,37 +205,126 @@
                       <tbody>
                       <tr>
                         <td>
-                          <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                          <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="freight_amount_charge[]" style="width: 120px;"/>
                         </td>
                         <td>
-                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control" type="text"/>
+                          <input id="freight_amount_detail" name="freight_amount_detail[]" value="" class="form-control-sm" type="text"/>
                         </td>
                         <td>
-                          <div class="input-group">
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
                           </div>
                         </td>
                         <td>
                           <div class="input-group">
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                            <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="input-group">
-                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                          <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
                           </div>
                         </td>
                         <td>
                           <div class="input-group">
                             <div class="input-group-btn">
                               <div class="btn-group">
-                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select2-origin select-2-width']) }}
+                                {{ Form::select('freight_amount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm freight_amount_currency select2-freight select-2-width']) }}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hide" id="freight_charges">
+                        <td>
+                          <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control-sm" type="text"/>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                <a class="btn removeFreightCharge">
+                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                </a>
                               </div>
                             </div>
                           </div>
@@ -249,8 +338,326 @@
               <div class='row'>
                 <div class="col-md-12">
                   <h5 class="title-quote pull-right">
-                    <a class="btn addButtonOrigin" style="vertical-align: middle">
+                    <a class="btn addFreightCharge" style="vertical-align: middle">
                       <b>Add freight charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                    </a>
+                  </h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <h5 class="title-quote size-14px">Origin charges</h5>
+                </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered color-blue">
+                      <thead class="title-quote text-center header-table">
+                      <tr>
+                        <td >Charge</td>
+                        <td >Detail</td>
+                        <td >20'</td>
+                        <td >40'</td>
+                        <td >40HC'</td>
+                        <td >Currency</td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control-sm" type="text"/>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hide" id="origin_charges">
+                        <td>
+                          <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control-sm" type="text"/>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                <a class="btn removeOriginCharge">
+                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-md-12">
+                  <h5 class="title-quote pull-right">
+                    <a class="btn addOriginCharge" style="vertical-align: middle">
+                      <b>Add origin charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                    </a>
+                  </h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <h5 class="title-quote size-14px">Destination charges</h5>
+                </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-bordered color-blue">
+                      <thead class="title-quote text-center header-table">
+                      <tr>
+                        <td >Charge</td>
+                        <td >Detail</td>
+                        <td >20'</td>
+                        <td >40'</td>
+                        <td >40HC'</td>
+                        <td >Currency</td>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control-sm" type="text"/>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hide" id="destination_charges">
+                        <td>
+                          <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                        </td>
+                        <td>
+                          <input id="origin_ammount_detail" name="origin_ammount_detail[]" value="" class="form-control-sm" type="text"/>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                              <div class="col-md-4">
+                                <input id="origin_ammount_units" name="origin_ammount_units[]" value="" class="form-control-sm origin_ammount_units" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <div class="input-group-btn">
+                              <div class="btn-group">
+                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                <a class="btn removeDestinationCharge">
+                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-md-12">
+                  <h5 class="title-quote pull-right">
+                    <a class="btn addDestinationCharge" style="vertical-align: middle">
+                      <b>Add destination charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
                     </a>
                   </h5>
                 </div>
@@ -259,7 +666,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
