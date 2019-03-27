@@ -240,7 +240,7 @@ class QuoteAutoController extends Controller
     //Collection Equipment Dinamico
     $equipmentHides = $this->hideContainer($equipment);
     //Colecciones 
-    $collectionRate = new Collection();
+
     //Markups Freight
     $freighPercentage = 0;
     $freighAmmount = 0;
@@ -289,7 +289,7 @@ class QuoteAutoController extends Controller
     $arreglo = $arreglo->get();
 
     foreach($arreglo as $data){
-
+      $collectionRate = new Collection();
       $totalFreight = 0;
       $totalRates = 0;
       $totalT = 0;
@@ -315,6 +315,30 @@ class QuoteAutoController extends Controller
           $arregloRate = array_merge($array40,$arregloRate); 
 
         }
+        if($containers == '40hc'){
+          $markup40hc = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortyhc,$typeCurrency,$containers);
+          $array40hcDetail = array('price40hc' => $data->fortyhc, 'currency40hc' => $data->currency->alphacode ,'idCurrency40hc' => $data->currency_id);
+          $totalT += $markup40hc['monto40hc'];
+          $array40hc = array_merge($array40hcDetail,$markup40hc);
+          $arregloRate = array_merge($array40hc,$arregloRate); 
+
+        }
+        if($containers == '40nor'){
+          $markup40nor = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortynor,$typeCurrency,$containers);
+          $array40norDetail = array('price40nor' => $data->fortynor, 'currency40nor' => $data->currency->alphacode ,'idCurrency40nor' => $data->currency_id);
+          $totalT += $markup40nor['monto40nor'];
+          $array40nor = array_merge($array40norDetail,$markup40nor);
+          $arregloRate = array_merge($array40nor,$arregloRate); 
+
+        }
+        if($containers == '45'){
+          $markup45 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortyfive,$typeCurrency,$containers);
+          $array45Detail = array('price45' => $data->fortyfive, 'currency45' => $data->currency->alphacode ,'idCurrency45' => $data->currency_id);
+          $totalT += $markup45['monto45'];
+          $array45 = array_merge($array45Detail,$markup45);
+          $arregloRate = array_merge($array45,$arregloRate); 
+
+        }
       }
       $totalT =  number_format($totalT, 2, '.', '');
       $totalFreight += $totalT;
@@ -322,10 +346,9 @@ class QuoteAutoController extends Controller
       $array = array('type'=>'Ocean Freight','detail'=>'Per Container','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id,'currency_rate' => $data->currency->alphacode );
       $array = array_merge($array,$arregloRate);
       $collectionRate->push($array);
+      $data->setAttribute('rates',$collectionRate);
     }
 
-    $data->setAttribute('rates',$collectionRate);
-    
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
   }

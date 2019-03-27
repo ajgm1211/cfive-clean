@@ -211,35 +211,35 @@
                   <span class="darkblue cabezeras">Freight</span><br><br>
                 </div>
                 <div class="row bg-light">
-                  <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
+                  <div class="col-lg-3"><span class="portalphacode">Charge</span></div>
                   <div class="col-lg-3"><span class="portalphacode">Detail</span></div>
-                  <div class="col-lg-2" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                  <div class="col-lg-2" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
                   <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
                   <div class="col-lg-1"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
                   <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
-                  <div class="col-lg-2" ><span class="portalphacode">Currency</span></div>
+                  <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                 </div><br>
                 @foreach($arr->rates as $rates)
                 <div class="row">
-                  <div class="col-lg-2">{{ $rates['type'] }}</div>
+                  <div class="col-lg-3">{{ $rates['type'] }}</div>
                   <div class="col-lg-3">{{ $rates['detail'] }}</div>
-                  <div class="col-lg-2" {{ $equipmentHides['20'] }}>{{ $rates['price20'] }} + {{ $rates['markup20'] }} <i class="la la-angle-left"></i> {{  $rates['monto20'] }}  </div>
-                  <div class="col-lg-2" {{ $equipmentHides['40'] }}>{{ $rates['price40'] }} + {{ $rates['markup40'] }} <i class="la la-angle-left"></i> {{  $rates['monto40'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>{{ $rates['price20'] }} + {{ $rates['markup20'] }} <i class="la la-angle-left"></i> {{  $rates['monto20'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>{{ $rates['price20'] }} + {{ $rates['markup20'] }} <i class="la la-angle-left"></i> {{  $rates['monto20'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}>{{ @$rates['price20'] }} + {{ @$rates['markup20'] }} <i class="la la-angle-left"></i> {{  @$rates['monto20'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}>{{ @$rates['price40'] }} + {{ @$rates['markup40'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>{{ @$rates['price40hc'] }} + {{ @$rates['markup40hc'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40hc'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>{{ @$rates['price40nor'] }} + {{ @$rates['markup40nor'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40nor'] }}  </div>
                   <div class="col-lg-1" {{ $equipmentHides['45'] }}>{{ @$rates['price45'] }} + {{ @$rates['markup45'] }} <i class="la la-angle-left"></i> {{  @$rates['monto45'] }}  </div>
-                  <div class="col-lg-2" >{{$rates['currency_rate']}}</div>
+                  <div class="col-lg-1" >{{$rates['currency_rate']}}</div>
                 </div><br>
                 @endforeach
                 <div class="row bg-light">
-                  <div class="col-lg-5 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                  <div class="col-lg-2" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-2" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
                   <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
                   <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
                   <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-2" ><span class="portalphacode">EUR</span></div>
+                  <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
 
               </div>
