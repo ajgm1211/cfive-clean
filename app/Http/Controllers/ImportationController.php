@@ -9,10 +9,10 @@ use PrvRates;
 use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
+use App\Country;
 use App\FileTmp;
 use App\Company;
 use App\Contact;
-use App\Country;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
@@ -32,9 +32,11 @@ use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationRatesSurchargerJob;
+use App\AccountImportationContractFcl as AccountFcl;
 
 class ImportationController extends Controller
 {
@@ -284,18 +286,27 @@ class ImportationController extends Controller
 
                     // Origen Y Destino ------------------------------------------------------------------------
 
-
-                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($FailSurchager->differentiator  == 1){
+                        $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                        $originV  = $resultadoPortOri['puerto'];
+                    } else if($FailSurchager->differentiator  == 2){
+                        $resultadoPortOri = PrvHarbor::get_country($originEX[0]);
+                        $originV  = $resultadoPortOri['country'];
+                    }
                     if($resultadoPortOri['boolean']){
                         $originB = true;    
                     }
-                    $originV  = $resultadoPortOri['puerto'];
 
-                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($FailSurchager->differentiator  == 1){
+                        $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['puerto'];
+                    } else if($FailSurchager->differentiator  == 2){
+                        $resultadoPortDes = PrvHarbor::get_country($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['country'];
+                    }
                     if($resultadoPortDes['boolean']){
                         $destinyB = true;    
                     }
-                    $destinationV  = $resultadoPortDes['puerto'];
 
                     //  Surcharge ------------------------------------------------------------------------------
 
@@ -377,11 +388,20 @@ class ImportationController extends Controller
                             'localcharge_id' => $LocalchargeId
                         ]);
 
-                        LocalCharPort::create([
-                            'port_orig'         => $originV,
-                            'port_dest'         => $destinationV,
-                            'localcharge_id'    => $LocalchargeId                
-                        ]);
+                        if($FailSurchager->differentiator  == 1){
+                            LocalCharPort::create([
+                                'port_orig'         => $originV,
+                                'port_dest'         => $destinationV,
+                                'localcharge_id'    => $LocalchargeId                
+                            ]);      
+                        } else if($FailSurchager->differentiator  == 2){
+                            LocalCharCountry::create([
+                                'country_orig'      => $originV,
+                                'country_dest'      => $destinationV,
+                                'localcharge_id'    => $LocalchargeId                
+                            ]);
+                        }
+
                         $FailSurchager->forceDelete();
                     }
                 }
@@ -416,42 +436,55 @@ class ImportationController extends Controller
     // precarga la vista para importar rates o rates mas surchargers
     public function LoadViewImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImporContractFcl',compact('harbor','carrier','companysUser','typedestiny'));
+        return view('importation.ImporContractFcl',compact('harbor','country','carrier','companysUser','typedestiny'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
     public function UploadFileNewContract(Request $request){
         //dd($request->all());
-        $now = new \DateTime();
-        $now = $now->format('dmY_His');
-        $type           = $request->type;
-        $carrierVal     = $request->carrier;
-        $typedestinyVal = $request->typedestiny;
-        $destinyArr     = $request->destiny;
-        $originArr      = $request->origin;
-        $CompanyUserId  = $request->CompanyUserId;
-        $carrierBol     = false;
-        $destinyBol     = false;
-        $originBol      = false;
-        $typedestinyBol = false;
-        $fortynorBol    = false;
-        $fortyfiveBol   = false;
-        $filebool       = false;
-        $data           = collect([]);
-        $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        $harbor         = harbor::all()->pluck('display_name','id');
-        $carrier        = carrier::all()->pluck('name','id');
+        $now                = new \DateTime();
+        $now2               = $now;
+        $now                = $now->format('dmY_His');
+        $now2               = $now2->format('Y-m-d');
+        $type               = $request->type;
+        $carrierVal         = $request->carrier;
+        $typedestinyVal     = $request->typedestiny;
+        $originArr          = $request->origin;
+        $originCountArr     = $request->originCount;
+        $destinyArr         = $request->destiny;
+        $destinyCountArr    = $request->destinyCount;
+        $CompanyUserId      = $request->CompanyUserId;
+        $statustypecurren   = $request->valuesCurrency;
+        $statusPortCountry  = $request->valuesportcountry;
 
-        $file           = $request->file('file');
-        $ext            = strtolower($file->getClientOriginalExtension());
-        $validator      = \Validator::make(
+        $carrierBol         = false;
+        $destinyBol         = false;
+        $originBol          = false;
+        $typedestinyBol     = false;
+        $fortynorBol        = false;
+        $fortyfiveBol       = false;
+        $filebool           = false;
+
+        $data               = collect([]);
+        $typedestiny        = TypeDestiny::all()->pluck('description','id');
+        $harbor             = harbor::all()->pluck('display_name','id');
+        $country            = Country::all()->pluck('name','id');
+        $carrier            = carrier::all()->pluck('name','id');
+        $Contract_id;
+
+        $file       = $request->file('file');
+        $ext        = strtolower($file->getClientOriginalExtension());
+
+        $validator  = \Validator::make(
             array('ext' => $ext),
             array('ext' => 'in:xls,xlsx,csv')
         );
-        $Contract_id;
+
+
         if ($validator->fails()) {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
@@ -460,9 +493,20 @@ class ImportationController extends Controller
         //obtenemos el nombre del archivo
         $nombre     = $file->getClientOriginalName();
         $nombre     = $now.'_'.$nombre;
-        $filebool   = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $filebool   = \Storage::disk('FclImport')->put($nombre,\File::get($file));
 
         if($filebool){
+
+            \Storage::disk('FclAccount')->put($nombre,\File::get($file));
+            $account = new AccountFcl();
+            $account->name              = $request->name;
+            $account->date              = $now2;
+            $account->namefile          = $nombre;
+            $account->company_user_id   = $CompanyUserId;
+            $account->save();
+
+            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
+
             $contract   = new Contract();
             $contract->name             = $request->name;
             $contract->number           = $request->number;
@@ -471,6 +515,7 @@ class ImportationController extends Controller
             $contract->expire           = $validity[1];
             $contract->status           = 'incomplete';
             $contract->company_user_id  = $CompanyUserId;
+            $contract->account_id  = $account->id;
             $contract->save(); 
 
             $Contract_id = $contract->id;
@@ -484,7 +529,6 @@ class ImportationController extends Controller
             return redirect()->route('contracts.edit',$request->contract_id);
         }
 
-        $statustypecurren = $request->valuesCurrency;
         $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
 
         // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
@@ -505,6 +549,13 @@ class ImportationController extends Controller
             array_push($targetsArr,"45'");
         } else {
             $fortyfiveBol = true;
+        }
+
+        /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
+        , si es 1 el solo se mapean puertos        
+        */
+        if($statusPortCountry == 2){
+            array_push($targetsArr,"Differentiator");
         }
 
         /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
@@ -555,7 +606,7 @@ class ImportationController extends Controller
         ini_set('memory_limit', '1024M');
 
         Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
+            ->Load(\Storage::disk('FclImport')
                    ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->takeRows(2);
                        $reader->noHeading = true;
@@ -571,8 +622,10 @@ class ImportationController extends Controller
         $boxdinamy = [
             'existorigin'       => $originBol,
             'origin'            => $originArr,
+            'originCount'       => $originCountArr,
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
+            'destinyCount'      => $destinyCountArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
@@ -592,14 +645,16 @@ class ImportationController extends Controller
         //dd($data);
 
         return view('importation.ContractFclProcess',compact('harbor',
+                                                             'country',
                                                              'data',
                                                              'type',
                                                              'carrier',
                                                              'targetsArr',
                                                              'coordenates',
                                                              'countTarges',
-                                                             'statustypecurren',
                                                              'CompanyUserId',
+                                                             'statustypecurren',
+                                                             'statusPortCountry',
                                                              'typedestiny'));
     }
 
@@ -607,10 +662,9 @@ class ImportationController extends Controller
     public function ProcessContractFcl(Request $request){
         //dd($request->all());
         $requestobj = $request->all();
-        //try{
         $errors = 0;
         Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
+            ->Load(\Storage::disk('FclImport')
                    ->url($requestobj['FileName']),function($reader) use($requestobj,$request,$errors) {
                        $reader->noHeading = true;
                        //$reader->ignoreEmpty();
@@ -629,7 +683,7 @@ class ImportationController extends Controller
                        $statusexistfortynor     = "existfortynor";
                        $statusexistfortyfive    = "existfortyfive";
 
-                       $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+                       $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':','1','2','3','4','5','6','7','8','9','0'];
 
                        $i = 1;
                        foreach($reader->get() as $read){
@@ -662,288 +716,313 @@ class ImportationController extends Controller
                            $fortyfiveExiBol = false;
                            $carriBol        = false;
                            $values          = true;
+
+                           //$originMultps      = [];
+                           // $destinyMultps     = [];
+
                            if($i != 1){
-                               // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
-                               //--------------- CARRIER -----------------------------------------------------------------
-                               if($requestobj['existcarrier'] == 1){
-                                   $carriExitBol = true;
-                                   $carriBol     = true;
-                                   $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
-                               } else {
-                                   $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                                   $carrierResul = str_replace($caracteres,'',$carrierVal);
-                                   $carrier = Carrier::where('name','=',$carrierResul)->first();
-                                   if(empty($carrier->id) != true){
-                                       $carriExitBol = true;
-                                       $carrierVal = $carrier->id;
-                                   }else{
-                                       $carrierVal = $carrierVal.'_E_E';
-                                   }
-                               }
-                               //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+
+                               //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
+                               //--- ORIGIN ------------------------------------------------------
                                if($requestobj['existorigin'] == true){
-                                   $originBol = true;
-                                   $origExiBol = true; //segundo boolean para verificar campos errados
-                                   $randons = $requestobj[$origin];
+                                   $originMultps = [0];
                                } else {
-                                   // dd($read[$requestobj->$originExc]);
-                                   $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                                   $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-                                   if($resultadoPortOri['boolean']){
-                                       $origExiBol = true;    
-                                   }
-                                   $originVal  = $resultadoPortOri['puerto'];
-
-
+                                   $originMultps = explode('|',$read[$requestobj[$originExc]]);
                                }
-                               //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                               //--- DESTINY -----------------------------------------------------
+
                                if($requestobj['existdestiny'] == true){
-                                   $destinyBol = true;
-                                   $destiExitBol = true; //segundo boolean para verificar campos errados
-                                   $randons = $requestobj[$destiny];
+                                   $destinyMultps = [0];
                                } else {
-                                   $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                                   $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
-                                   if($resultadoPortDes['boolean']){
-                                       $destiExitBol = true;    
-                                   }
-                                   $destinyVal  = $resultadoPortDes['puerto'];
+                                   $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
                                }
 
-                               $twentyArr    = explode(' ',$read[$requestobj[$twenty]]);
-                               $fortyArr     = explode(' ',$read[$requestobj[$forty]]);
-                               $fortyhcArr   = explode(' ',$read[$requestobj[$fortyhc]]);
-                               if($requestobj[$statusexistfortynor] == 1){
-                                   $fortynorArr  = explode(' ',$read[$requestobj[$fortynor]]);
-                               }
-                               if($requestobj[$statusexistfortyfive] == 1){
-                                   $fortyfiveArr = explode(' ',$read[$requestobj[$fortyfive]]);
-                               }
 
-                               //---------------- CURRENCY ---------------------------------------------------------------
-                               $arraycarga = [];
-                               if($requestobj[$statustypecurren] == 2){
-                                   if(count($twentyArr) > 1 ){
-                                       array_push($arraycarga,$twentyArr[1]);
-                                   } 
+                               foreach($originMultps as $originMult){
+                                   foreach($destinyMultps as $destinyMult){
 
-                                   if(count($fortyArr) > 1 ){
-                                       array_push($arraycarga,$fortyArr[1]);
-                                   }
 
-                                   if(count($fortyhcArr) > 1 ){
-                                       array_push($arraycarga,$fortyhcArr[1]);
-                                   }
-
-                                   if($requestobj[$statusexistfortynor] == 1){
-                                       if(count($fortynorArr) > 1 ){
-                                           array_push($arraycarga,$fortynorArr[1]);
+                                       // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
+                                       //--------------- CARRIER -----------------------------------------------------------------
+                                       if($requestobj['existcarrier'] == 1){
+                                           $carriExitBol = true;
+                                           $carriBol     = true;
+                                           $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
+                                       } else {
+                                           $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
+                                           $carrierResul = str_replace($caracteres,'',$carrierVal);
+                                           $carrier = Carrier::where('name','=',$carrierResul)->first();
+                                           if(empty($carrier->id) != true){
+                                               $carriExitBol = true;
+                                               $carrierVal = $carrier->id;
+                                           }else{
+                                               $carrierVal = $carrierVal.'_E_E';
+                                           }
                                        }
-                                   }
+                                       //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+                                       if($requestobj['existorigin'] == true){
+                                           $originBol = true;
+                                           $origExiBol = true; //segundo boolean para verificar campos errados
+                                           $randons = $requestobj[$origin];
+                                       } else {
+                                           // dd($read[$requestobj->$originExc]);
+                                           //$originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
+                                           $originVal = trim($originMult);// hacer validacion de puerto en DB
+                                           $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                                           if($resultadoPortOri['boolean']){
+                                               $origExiBol = true;    
+                                           }
+                                           $originVal  = $resultadoPortOri['puerto'];
 
-                                   if($requestobj[$statusexistfortyfive] == 1){
-                                       if(count($fortyfiveArr) > 1 ){
-                                           array_push($arraycarga,$fortyfiveArr[1]);
+
                                        }
-                                   }
+                                       //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                                       if($requestobj['existdestiny'] == true){
+                                           $destinyBol = true;
+                                           $destiExitBol = true; //segundo boolean para verificar campos errados
+                                           $randons = $requestobj[$destiny];
+                                       } else {
+                                           //$destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
+                                           $destinyVal = trim($destinyMult);// hacer validacion de puerto en DB
+                                           $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                                           if($resultadoPortDes['boolean']){
+                                               $destiExitBol = true;    
+                                           }
+                                           $destinyVal  = $resultadoPortDes['puerto'];
+                                       }
 
-                                   if(count($arraycarga) > 0){
-                                       foreach($arraycarga as $true){
-                                           $currencyVal = str_replace($caracteres,'',$true);
-                                           $currenctwen = Currency::where('alphacode','=',$currencyVal)->first();
-                                           if(empty($currenctwen->id) != true){
+                                       $twentyArr    = explode(' ',$read[$requestobj[$twenty]]);
+                                       $fortyArr     = explode(' ',$read[$requestobj[$forty]]);
+                                       $fortyhcArr   = explode(' ',$read[$requestobj[$fortyhc]]);
+                                       if($requestobj[$statusexistfortynor] == 1){
+                                           $fortynorArr  = explode(' ',$read[$requestobj[$fortynor]]);
+                                       }
+                                       if($requestobj[$statusexistfortyfive] == 1){
+                                           $fortyfiveArr = explode(' ',$read[$requestobj[$fortyfive]]);
+                                       }
+
+                                       //---------------- CURRENCY ---------------------------------------------------------------
+                                       $arraycarga = [];
+                                       if($requestobj[$statustypecurren] == 2){
+                                           if(count($twentyArr) > 1 ){
+                                               array_push($arraycarga,$twentyArr[1]);
+                                           } 
+
+                                           if(count($fortyArr) > 1 ){
+                                               array_push($arraycarga,$fortyArr[1]);
+                                           }
+
+                                           if(count($fortyhcArr) > 1 ){
+                                               array_push($arraycarga,$fortyhcArr[1]);
+                                           }
+
+                                           if($requestobj[$statusexistfortynor] == 1){
+                                               if(count($fortynorArr) > 1 ){
+                                                   array_push($arraycarga,$fortynorArr[1]);
+                                               }
+                                           }
+
+                                           if($requestobj[$statusexistfortyfive] == 1){
+                                               if(count($fortyfiveArr) > 1 ){
+                                                   array_push($arraycarga,$fortyfiveArr[1]);
+                                               }
+                                           }
+
+                                           if(count($arraycarga) > 0){
+                                               foreach($arraycarga as $true){
+                                                   $currencyVal = str_replace($caracteres,'',$true);
+                                                   $currenctwen = Currency::where('alphacode','=',$currencyVal)->first();
+                                                   if(empty($currenctwen->id) != true){
+                                                       $curreExiBol = true;
+                                                       $currencyVal = $currenctwen->id;
+                                                       break;
+                                                   }else {
+                                                       $curreExiBol = false;
+                                                       $currencyVal = $currencyVal.'_E_E';
+                                                   }
+                                               }
+                                           }  else{
+                                               if(count($twentyArr) > 1){
+                                                   $currencyVal = $twentyArr[1].'_E_E';
+                                               } else{
+                                                   $currencyVal = '_E_E';
+                                               }
+                                           }
+
+                                       } else { 
+                                           $currencResul = str_replace($caracteres,'',$read[$requestobj[$currency]]);
+                                           $currenc = Currency::where('alphacode','=',$currencResul)->first();
+                                           if(empty($currenc->id) != true){
                                                $curreExiBol = true;
-                                               $currencyVal = $currenctwen->id;
-                                               break;
+                                               $currencyVal =  $currenc->id;
+                                           }
+                                           else{
+                                               $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                           }
+                                       }
+                                       //dd($currencyVal);
+
+                                       //---------------- 20' ---------------------------------------------------------------
+                                       if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == '0'){
+                                           $twentyExiBol = true;
+                                           $twentyVal = (int)$twentyArr[0];
+                                       }
+                                       else{
+                                           $twentyVal = $read[$requestobj[$twenty]].'_E_E';
+                                       }
+                                       //---------------- 40' ---------------------------------------------------------------
+                                       if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
+                                           $fortyExiBol = true;
+                                           $fortyVal = (int)$fortyArr[0];
+                                       }
+                                       else{
+                                           $fortyVal = $read[$requestobj[$forty]].'_E_E';
+                                       }
+                                       //---------------- 40'HC -------------------------------------------------------------
+                                       if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
+                                           $fortyhcExiBol = true;
+                                           $fortyhcVal = (int)$fortyhcArr[0];
+                                       }
+                                       else{
+                                           $fortyhcVal = $read[$requestobj[$fortyhc]].'_E_E';
+                                       }
+                                       if($requestobj[$statusexistfortynor] == 1){
+                                           //---------------- 40'NOR -------------------------------------------------------------
+                                           if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
+                                               $fortynorExiBol = true;
+                                               $fortynorVal = (int)$fortynorArr[0];
+                                           }
+                                           else{
+                                               $fortynorVal = $read[$requestobj[$fortyhc]].'_E_E';
+                                           }
+
+                                       } else {
+                                           $fortynorVal = 0;
+                                           $fortynorExiBol = true;
+                                       }
+
+                                       if($requestobj[$statusexistfortyfive] == 1){
+                                           //---------------- 45' ----------------------------------------------------------------
+                                           if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == '0'){
+                                               $fortyfiveExiBol = true;
+                                               $fortyfiveVal = (int)$fortyfiveArr[0];
+                                           }
+                                           else{
+                                               $fortyfiveVal = $read[$requestobj[$fortyfive]].'_E_E';
+                                           }
+                                       } else {
+                                           $fortyfiveVal = 0;
+                                           $fortyfiveExiBol = true;
+                                       }
+
+                                       if($twentyVal == 0
+                                          && $fortyVal == 0
+                                          && $fortyhcVal == 0
+                                          && $fortynorVal == 0
+                                          && $fortyfiveVal == 0){
+                                           $values = false;
+                                       }
+
+                                       if( $origExiBol == true 
+                                          && $destiExitBol  == true
+                                          && $carriExitBol  == true 
+                                          && $curreExiBol   == true 
+                                          && $twentyExiBol  == true 
+                                          && $fortyExiBol   == true 
+                                          && $twentyExiBol  == true 
+                                          && $fortynorExiBol == true
+                                          && $fortyfiveExiBol == true
+                                          && $values == true ){
+                                           //good rates
+
+                                           if($originBol == true || $destinyBol == true){
+
+                                               foreach($randons as  $rando){
+                                                   //insert por arreglo de puerto
+                                                   if($originBol == true ){
+                                                       $originVal = $rando;
+                                                   } else {
+                                                       $destinyVal = $rando;
+                                                   }
+
+                                                   Rate::create([
+                                                       'origin_port'   => $originVal,
+                                                       'destiny_port'  => $destinyVal,
+                                                       'carrier_id'    => $carrierVal,
+                                                       'contract_id'   => $requestobj['Contract_id'],
+                                                       'twuenty'       => $twentyVal,
+                                                       'forty'         => $fortyVal,
+                                                       'fortyhc'       => $fortyhcVal,
+                                                       'fortynor'      => $fortynorVal,
+                                                       'fortyfive'     => $fortyfiveVal,
+                                                       'currency_id'   => $currencyVal
+                                                   ]);
+                                               }
                                            }else {
-                                               $curreExiBol = false;
-                                               $currencyVal = $currencyVal.'_E_E';
+                                               // fila por puerto, sin expecificar origen ni destino manualmente
+                                               Rate::create([
+                                                   'origin_port'   => $originVal,
+                                                   'destiny_port'  => $destinyVal,
+                                                   'carrier_id'    => $carrierVal,
+                                                   'contract_id'   => $requestobj['Contract_id'],
+                                                   'twuenty'       => $twentyVal,
+                                                   'forty'         => $fortyVal,
+                                                   'fortyhc'       => $fortyhcVal,
+                                                   'fortynor'      => $fortynorVal,
+                                                   'fortyfive'     => $fortyfiveVal,
+                                                   'currency_id'   => $currencyVal
+                                               ]);
                                            }
-                                       }
-                                   }  else{
-                                       if(count($twentyArr) > 1){
-                                           $currencyVal = $twentyArr[1].'_E_E';
-                                       } else{
-                                           $currencyVal = '_E_E';
-                                       }
-                                   }
-
-                               } else { 
-                                   $currencResul = str_replace($caracteres,'',$read[$requestobj[$currency]]);
-                                   $currenc = Currency::where('alphacode','=',$currencResul)->first();
-                                   if(empty($currenc->id) != true){
-                                       $curreExiBol = true;
-                                       $currencyVal =  $currenc->id;
-                                   }
-                                   else{
-                                       $currencyVal = $read[$requestobj[$currency]].'_E_E';
-                                   }
-                               }
-                               //dd($currencyVal);
-
-
-
-                               //---------------- 20' ---------------------------------------------------------------
-                               if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == '0'){
-                                   $twentyExiBol = true;
-                                   $twentyVal = (int)$twentyArr[0];
-                               }
-                               else{
-                                   $twentyVal = $read[$requestobj[$twenty]].'_E_E';
-                               }
-                               //---------------- 40' ---------------------------------------------------------------
-                               if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
-                                   $fortyExiBol = true;
-                                   $fortyVal = (int)$fortyArr[0];
-                               }
-                               else{
-                                   $fortyVal = $read[$requestobj[$forty]].'_E_E';
-                               }
-                               //---------------- 40'HC -------------------------------------------------------------
-                               if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
-                                   $fortyhcExiBol = true;
-                                   $fortyhcVal = (int)$fortyhcArr[0];
-                               }
-                               else{
-                                   $fortyhcVal = $read[$requestobj[$fortyhc]].'_E_E';
-                               }
-                               if($requestobj[$statusexistfortynor] == 1){
-                                   //---------------- 40'NOR -------------------------------------------------------------
-                                   if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
-                                       $fortynorExiBol = true;
-                                       $fortynorVal = (int)$fortynorArr[0];
-                                   }
-                                   else{
-                                       $fortynorVal = $read[$requestobj[$fortyhc]].'_E_E';
-                                   }
-
-                               } else {
-                                   $fortynorVal = 0;
-                                   $fortynorExiBol = true;
-                               }
-
-                               if($requestobj[$statusexistfortyfive] == 1){
-                                   //---------------- 45' ----------------------------------------------------------------
-                                   if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == '0'){
-                                       $fortyfiveExiBol = true;
-                                       $fortyfiveVal = (int)$fortyfiveArr[0];
-                                   }
-                                   else{
-                                       $fortyfiveVal = $read[$requestobj[$fortyfive]].'_E_E';
-                                   }
-                               } else {
-                                   $fortyfiveVal = 0;
-                                   $fortyfiveExiBol = true;
-                               }
-
-                               if($twentyVal == 0
-                                  && $fortyVal == 0
-                                  && $fortyhcVal == 0
-                                  && $fortynorVal == 0
-                                  && $fortyfiveVal == 0){
-                                   $values = false;
-                               }
-
-                               if( $origExiBol == true 
-                                  && $destiExitBol  == true
-                                  && $carriExitBol  == true 
-                                  && $curreExiBol   == true 
-                                  && $twentyExiBol  == true 
-                                  && $fortyExiBol   == true 
-                                  && $twentyExiBol  == true 
-                                  && $fortynorExiBol == true
-                                  && $fortyfiveExiBol == true
-                                  && $values == true ){
-                                   //good rates
-
-                                   if($originBol == true || $destinyBol == true){
-
-                                       foreach($randons as  $rando){
-                                           //insert por arreglo de puerto
-                                           if($originBol == true ){
-                                               $originVal = $rando;
-                                           } else {
-                                               $destinyVal = $rando;
+                                       } else {
+                                           // fail rates
+                                           if($carriExitBol == true){
+                                               if($carriBol == true){
+                                                   $carrier = Carrier::find($requestobj['carrier']); 
+                                                   $carrierVal = $carrier['name'];  
+                                               }else{
+                                                   $carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
+                                                   $carrierVal = $carrier['name']; 
+                                               }
                                            }
-
-                                           Rate::create([
-                                               'origin_port'   => $originVal,
-                                               'destiny_port'  => $destinyVal,
-                                               'carrier_id'    => $carrierVal,
-                                               'contract_id'   => $requestobj['Contract_id'],
-                                               'twuenty'       => $twentyVal,
-                                               'forty'         => $fortyVal,
-                                               'fortyhc'       => $fortyhcVal,
-                                               'fortynor'      => $fortynorVal,
-                                               'fortyfive'     => $fortyfiveVal,
-                                               'currency_id'   => $currencyVal
-                                           ]);
-                                       }
-                                   }else {
-                                       // fila por puerto, sin expecificar origen ni destino manualmente
-                                       Rate::create([
-                                           'origin_port'   => $originVal,
-                                           'destiny_port'  => $destinyVal,
-                                           'carrier_id'    => $carrierVal,
-                                           'contract_id'   => $requestobj['Contract_id'],
-                                           'twuenty'       => $twentyVal,
-                                           'forty'         => $fortyVal,
-                                           'fortyhc'       => $fortyhcVal,
-                                           'fortynor'      => $fortynorVal,
-                                           'fortyfive'     => $fortyfiveVal,
-                                           'currency_id'   => $currencyVal
-                                       ]);
-                                   }
-                               } else {
-                                   // fail rates
-                                   if($carriExitBol == true){
-                                       if($carriBol == true){
-                                           $carrier = Carrier::find($requestobj['carrier']); 
-                                           $carrierVal = $carrier['name'];  
-                                       }else{
-                                           $carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
-                                           $carrierVal = $carrier['name']; 
-                                       }
-                                   }
-                                   /* if($curreExiBol == true){
+                                           /* if($curreExiBol == true){
                                            $currencyVal = $read[$requestobj[$currency]];
                                        }*/
 
-                                   if( $twentyExiBol == true){
-                                       if(empty($read[$requestobj[$twenty]]) == true){
-                                           $twentyVal = 0;
-                                       } else{
-                                           //  $twentyVal = $read[$requestobj[$twenty]];
-                                       }
-                                   }
+                                           if( $twentyExiBol == true){
+                                               if(empty($read[$requestobj[$twenty]]) == true){
+                                                   $twentyVal = 0;
+                                               } else{
+                                                   //  $twentyVal = $read[$requestobj[$twenty]];
+                                               }
+                                           }
 
-                                   //---------------------------------------------------
-                                   if( $fortyExiBol == true){
-                                       if(empty($read[$requestobj[$forty]]) == true){
-                                           $fortyVal = 0;
-                                       } 
-                                   }
-                                   //---------------------------------------------------
-                                   if( $fortyhcExiBol == true){
-                                       if(empty($read[$requestobj[$fortyhc]]) == true){
-                                           $fortyhcVal = 0;
-                                       } else{
-                                           //$fortyhcVal = $read[$requestobj[$fortyhc]];
-                                       }
-                                   }
-                                   //---------------------------------------------------
-                                   if( $fortynorExiBol == true){
-                                       if(empty($fortynorVal) == true){
-                                           $fortynorVal = 0;
-                                       } 
-                                   }
-                                   //---------------------------------------------------
-                                   if( $fortyfiveExiBol == true){
-                                       if(empty($fortyfiveVal) == true){
-                                           $fortyfiveVal = 0;
-                                       } 
-                                   }
-                                   /*        $prue = collect([]);
+                                           //---------------------------------------------------
+                                           if( $fortyExiBol == true){
+                                               if(empty($read[$requestobj[$forty]]) == true){
+                                                   $fortyVal = 0;
+                                               } 
+                                           }
+                                           //---------------------------------------------------
+                                           if( $fortyhcExiBol == true){
+                                               if(empty($read[$requestobj[$fortyhc]]) == true){
+                                                   $fortyhcVal = 0;
+                                               } else{
+                                                   //$fortyhcVal = $read[$requestobj[$fortyhc]];
+                                               }
+                                           }
+                                           //---------------------------------------------------
+                                           if( $fortynorExiBol == true){
+                                               if(empty($fortynorVal) == true){
+                                                   $fortynorVal = 0;
+                                               } 
+                                           }
+                                           //---------------------------------------------------
+                                           if( $fortyfiveExiBol == true){
+                                               if(empty($fortyfiveVal) == true){
+                                                   $fortyfiveVal = 0;
+                                               } 
+                                           }
+                                           /*        $prue = collect([]);
                                        $prue = [
                                            '$origExiBol'  =>  $origExiBol, 
                                            '$destiExitBol'=>  $destiExitBol,
@@ -968,70 +1047,72 @@ class ImportationController extends Controller
                                            '$fortyfiveExiBol' => $fortyfiveExiBol,
                                        ];
                                        dd($prue); */
-                                   if($values == true){
-                                       // dd('$prue');
+                                           if($values == true){
+                                               // dd('$prue');
 
-                                       if($originBol == true || $destinyBol == true){
-                                           foreach($randons as  $rando){
-                                               //insert por arreglo de puerto
-                                               if($originBol == true ){
-                                                   $originerr = Harbor::find($rando);
-                                                   $originVal = $originerr['name'];
-                                                   if($destiExitBol == true){    
-                                                       $destinyVal = $read[$requestobj[$destinyExc]];
+                                               if($originBol == true || $destinyBol == true){
+                                                   foreach($randons as  $rando){
+                                                       //insert por arreglo de puerto
+                                                       if($originBol == true ){
+                                                           $originerr = Harbor::find($rando);
+                                                           $originVal = $originerr['name'];
+                                                           if($destiExitBol == true){    
+                                                               $destinyVal = $read[$requestobj[$destinyExc]];
+                                                           }
+                                                       } else {
+                                                           $destinyerr = Harbor::find($rando);
+                                                           $destinyVal = $destinyerr['name'];
+                                                           if($origExiBol == true){
+                                                               $originVal = $read[$requestobj[$originExc]];                                      
+                                                           }
+                                                       }
+                                                       FailRate::create([
+                                                           'origin_port'   => $originVal,
+                                                           'destiny_port'  => $destinyVal,
+                                                           'carrier_id'    => $carrierVal,
+                                                           'contract_id'   => $requestobj['Contract_id'],
+                                                           'twuenty'       => $twentyVal,
+                                                           'forty'         => $fortyVal,
+                                                           'fortyhc'       => $fortyhcVal,
+                                                           'fortynor'      => $fortynorVal,
+                                                           'fortyfive'     => $fortyfiveVal,
+                                                           'currency_id'   => $currencyVal
+                                                       ]);
                                                    }
                                                } else {
-                                                   $destinyerr = Harbor::find($rando);
-                                                   $destinyVal = $destinyerr['name'];
                                                    if($origExiBol == true){
-                                                       $originVal = $read[$requestobj[$originExc]];                                      
+                                                       $originExits = Harbor::find($originVal);
+                                                       $originVal = $originExits->name;                                       
                                                    }
+                                                   if($destiExitBol == true){  
+                                                       $destinyExits = Harbor::find($destinyVal);
+                                                       $destinyVal = $destinyExits->name;
+                                                   }
+                                                   FailRate::create([
+                                                       'origin_port'   => $originVal,
+                                                       'destiny_port'  => $destinyVal,
+                                                       'carrier_id'    => $carrierVal,
+                                                       'contract_id'   => $requestobj['Contract_id'],
+                                                       'twuenty'       => $twentyVal,
+                                                       'forty'         => $fortyVal,
+                                                       'fortyhc'       => $fortyhcVal,
+                                                       'fortynor'      => $fortynorVal,
+                                                       'fortyfive'     => $fortyfiveVal,
+                                                       'currency_id'   => $currencyVal
+                                                   ]); //*/
+                                                   $errors++;
                                                }
-                                               FailRate::create([
-                                                   'origin_port'   => $originVal,
-                                                   'destiny_port'  => $destinyVal,
-                                                   'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $requestobj['Contract_id'],
-                                                   'twuenty'       => $twentyVal,
-                                                   'forty'         => $fortyVal,
-                                                   'fortyhc'       => $fortyhcVal,
-                                                   'fortynor'      => $fortynorVal,
-                                                   'fortyfive'     => $fortyfiveVal,
-                                                   'currency_id'   => $currencyVal
-                                               ]);
                                            }
-                                       } else {
-                                           if($origExiBol == true){
-                                               $originExits = Harbor::find($originVal);
-                                               $originVal = $originExits->name;                                       
-                                           }
-                                           if($destiExitBol == true){  
-                                               $destinyExits = Harbor::find($destinyVal);
-                                               $destinyVal = $destinyExits->name;
-                                           }
-                                           FailRate::create([
-                                               'origin_port'   => $originVal,
-                                               'destiny_port'  => $destinyVal,
-                                               'carrier_id'    => $carrierVal,
-                                               'contract_id'   => $requestobj['Contract_id'],
-                                               'twuenty'       => $twentyVal,
-                                               'forty'         => $fortyVal,
-                                               'fortyhc'       => $fortyhcVal,
-                                               'fortynor'      => $fortynorVal,
-                                               'fortyfive'     => $fortyfiveVal,
-                                               'currency_id'   => $currencyVal
-                                           ]); //*/
-                                           $errors++;
+                                           //*/
+                                           //dd('para');
                                        }
                                    }
-                                   //*/
-                                   //dd('para');
                                }
                            }
                            $i++;
                        }
 
-                       Storage::delete($requestobj['FileName']);
+                       Storage::disk('FclImport')->delete($requestobj['FileName']);
                        FileTmp::where('contract_id','=',$requestobj['Contract_id'])->delete();
                        if($errors > 0){
                            $request->session()->flash('message.content', 'You successfully added the rate ');
@@ -1053,19 +1134,6 @@ class ImportationController extends Controller
         $contract->status = 'publish';
         $contract->update();
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
-
-        /*} catch(\Illuminate\Database\QueryException $e){
-
-            Storage::delete($request->FileName);
-            FileTmp::where('contract_id','=',$requestobj['Contract_id'])->delete();
-            $contractobj = new Contract();
-            $contractobj = Contract::find($requestobj['Contract_id']);
-            $contractobj->delete();
-
-            $requestobj->session()->flash('message.nivel', 'danger');
-            $requestobj->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('importaion.fcl');
-        }*/
     }
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
@@ -1078,6 +1146,7 @@ class ImportationController extends Controller
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
+
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
@@ -1109,11 +1178,11 @@ class ImportationController extends Controller
             //obtenemos el nombre del archivo
             $nombre = $file->getClientOriginalName();
             $nombre = $now.'_'.$nombre;
-            $dd = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+            $dd = \Storage::disk('FclImport')->put($nombre,\File::get($file));
             //dd(\Storage::disk('UpLoadFile')->url($nombre));
             $contract = $requestobj->contract_id;
             $errors=0;
-            Excel::Load(\Storage::disk('UpLoadFile')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
+            Excel::Load(\Storage::disk('FclImport')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
 
                 $originResul  = '';
                 $destinResul  = '';
@@ -1620,7 +1689,7 @@ class ImportationController extends Controller
         $now = $now->format('dmY_His');  
         $nombre = $file->getClientOriginalName();
         $fileName = $now.'_'.$nombre;
-        $fileputtmp = \Storage::disk('UpLoadFile')->put($fileName,\File::get($file));
+        $fileputtmp = \Storage::disk('FclImport')->put($fileName,\File::get($file));
 
         $targetsArr =[ 
             0 => "20'",
@@ -1674,7 +1743,7 @@ class ImportationController extends Controller
         $coordenates = collect([]);
         //ini_set('max_execution_time', 300);
 
-        $path = public_path(\Storage::disk('UpLoadFile')->url($fileName));
+        $path =Storage::disk('FclImport')->url($fileName);
         Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($request,$coordenates) {
                 $reader->noHeading = true;
@@ -1722,7 +1791,7 @@ class ImportationController extends Controller
 
         $contract_id = $requestobj['contractId'];
 
-        $path = public_path(\Storage::disk('UpLoadFile')->url($fileName));
+        $path = \Storage::disk('FclImport')->url($fileName);
         Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($requestobj,$contract_id) { 
                 $reader->noHeading = true;
@@ -3960,7 +4029,7 @@ class ImportationController extends Controller
                 FailSurCharge::onlyTrashed()->where('contract_id','=',$contract_id)
                     ->forceDelete();
             });
-        Storage::delete($fileName);
+        Storage::disk('FclImport')->delete($fileName);
         return redirect()->route('contracts.edit', setearRouteKey($contract_id));
     }
 
@@ -4006,6 +4075,8 @@ class ImportationController extends Controller
         $objsurcharge       = new Surcharge();
         $objtypedestiny     = new TypeDestiny();
         $objCalculationType = new CalculationType();
+
+        $countries              = Country::pluck('name','id');
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
         $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
@@ -4013,7 +4084,8 @@ class ImportationController extends Controller
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
-        $failsurcharge = FailSurCharge::find($id);
+        $failsurcharge  = FailSurCharge::find($id);
+        $differentiator = $failsurcharge->differentiator;
 
         $classdorigin           =  'color:green';
         $classddestination      =  'color:green';
@@ -4033,8 +4105,15 @@ class ImportationController extends Controller
         $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
         // -------------- ORIGIN -------------------------------------------------------------
-        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-            ->first();
+
+        if($failsurcharge->differentiator == 1){
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        } else if($failsurcharge->differentiator == 2){
+            $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        }
+
         $originAIn = $originOb['id'];
         $originC   = count($originA);
         if($originC <= 1){
@@ -4045,8 +4124,15 @@ class ImportationController extends Controller
         }
 
         // -------------- DESTINATION --------------------------------------------------------
-        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-            ->first();
+
+        if($failsurcharge->differentiator == 1){
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        } else if($failsurcharge->differentiator == 2){
+            $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        }
+
         $destinationAIn = $destinationOb['id'];
         $destinationC   = count($destinationA);
         if($destinationC <= 1){
@@ -4155,22 +4241,23 @@ class ImportationController extends Controller
                                                                          'harbor',
                                                                          'carrierSelect',
                                                                          'currency',
+                                                                         'countries',
                                                                          'surchargeSelect',
                                                                          'typedestiny',
+                                                                         'differentiator',
                                                                          'calculationtypeselect'));
     }
     public function CreateSurchargers(Request $request, $id){
         //dd($request->all());
 
         $surchargeVar       = $request->surcharge_id;
-        $originVarArr       = $request->port_origlocal;
-        $destinationVarArr  = $request->port_destlocal;
         $typedestinyVar     = $request->changetype;
         $carrierVarArr      = $request->carrier_id;
         $calculationtypeVar = $request->calculationtype_id;
         $ammountVar         = (int)$request->ammount;
         $currencyVar        = $request->currency_id;
         $contractVar        = $request->contract_id;
+        $typerate           =  $request->typeroute;
 
         $failSurcharge = new FailSurCharge();
         $failSurcharge = FailSurCharge::find($id);
@@ -4182,15 +4269,34 @@ class ImportationController extends Controller
             'ammount'               => $ammountVar,
             'currency_id'           => $currencyVar
         ]);
-        foreach($originVarArr as $originVar){
-            foreach($destinationVarArr as $destinationVar){
-                LocalCharPort::create([
-                    'port_orig'         => $originVar,
-                    'port_dest'         => $destinationVar,
-                    'localcharge_id'    => $SurchargeId->id
-                ]);
+
+        if($typerate == 'port'){
+            $originVarArr          =  $request->port_origlocal;
+            $destinationVarArr     =  $request->port_destlocal;
+            foreach($originVarArr as $originVar){
+                foreach($destinationVarArr as $destinationVar){
+                    LocalCharPort::create([
+                        'port_orig'         => $originVar,
+                        'port_dest'         => $destinationVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
+            }
+        }elseif($typerate == 'country'){
+            $originVarCounArr      =  $request->country_orig;
+            $destinationCounVarArr =  $request->country_dest;
+
+            foreach($originVarCounArr as $originCounVar){
+                foreach($destinationCounVarArr as $destinationCounVar){
+                    LocalCharCountry::create([
+                        'country_orig'      => $originCounVar,
+                        'country_dest'      => $destinationCounVar,
+                        'localcharge_id'    => $SurchargeId->id
+                    ]); //
+                }
             }
         }
+
         foreach($carrierVarArr as $carrierVar){
             LocalCharCarrier::create([
                 'carrier_id'        => $carrierVar,
@@ -4238,9 +4344,6 @@ class ImportationController extends Controller
             ]); //
         }
 
-
-
-
         if($typerate == 'port'){
             $originVarArr          =  $request->port_origlocal;
             $destinationVarArr     =  $request->port_destlocal;
@@ -4267,12 +4370,6 @@ class ImportationController extends Controller
                 }
             }
         }
-
-
-
-
-
-
 
         $request->session()->flash('message.content', 'Surcharge Updated' );
         $request->session()->flash('message.nivel', 'success');
@@ -4487,8 +4584,13 @@ class ImportationController extends Controller
                 $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
 
                 // -------------- ORIGIN -------------------------------------------------------------
-                $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                    ->first();
+                if($failsurcharge->differentiator == 1){
+                    $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                } else if($failsurcharge->differentiator == 2){
+                    $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                }
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
                 if($originC <= 1){
@@ -4499,8 +4601,13 @@ class ImportationController extends Controller
                 }
 
                 // -------------- DESTINY ------------------------------------------------------------
-                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                    ->first();
+                if($failsurcharge->differentiator == 1){
+                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                } else if($failsurcharge->differentiator == 2){
+                    $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                }
                 $destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
                 if($destinationC <= 1){
@@ -4637,7 +4744,7 @@ class ImportationController extends Controller
         }
     }
 
-    // Companies
+    // Companies ------------------------------------------------------------------------
     public function UploadCompanies(Request $request){
         //dd($request->all());
         //dd($request->file('file'));
@@ -4948,7 +5055,7 @@ class ImportationController extends Controller
         }
     }
 
-    // Contacts
+    // Contacts -------------------------------------------------------------------------
 
     public function UploadContacts(Request $request){
         //dd($request->all());
@@ -5324,12 +5431,78 @@ class ImportationController extends Controller
         return response()->Json($company);
     }
 
+    // Account Importation --------------------------------------------------------------
+
+    public function indexAccount(){
+        $account = AccountFcl::with('contract','companyuser')->get();
+        return DataTables::of($account)
+            ->addColumn('status', function ( $account) {
+                if(empty($account->contract->status)!=true){
+                    return  $account->contract->status;
+                }else{
+                    return  'Contract erased';
+                }
+
+            })
+            ->addColumn('company_user_id', function ( $account) {
+                return  $account->companyuser->name;
+            })
+            ->addColumn('action', function ( $account) {
+                if(empty($account->contract->status)!=true){
+                    return '
+                <a href="/Importation/fcl/rate/'.$account->contract['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
+                &nbsp;
+                <a href="/Importation/fcl/surcharge/'.$account->contract['id'].'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
+                &nbsp;
+                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }else{
+                    return '
+                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }
+            })
+            ->editColumn('id', '{{$id}}')->toJson();
+    }
+
+    public function DestroyAccount($id){
+        try{
+            $account = AccountFcl::find($id);
+            Storage::disk('FclAccount')->delete($account->namefile);
+            $account->delete();
+            return 1;
+        } catch(Exception $e){
+            return 2;
+        }
+    }
+
+    public function Download($id){
+        $account  = AccountFcl::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($account->company_user_id);
+        $extObj     = new \SplFileInfo($account->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        try{
+            return Storage::disk('s3_upload')->download('Account/FCL/'.$account->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('FclAccount')->download($account->namefile,$name);
+        }
+    }
+
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        $failsurchargers = FailSurCharge::find(115);
+        /*$failsurchargers = FailSurCharge::find(115);
         $destinyEX          = explode('_',$failsurchargers['port_dest']);
-        $resultadoPortOri = PrvHarbor::get_harbor($destinyEX[0]);
-        dd($resultadoPortOri);
+        $resultadoPortOri = PrvHarbor::get_harbor($destinyEX[0]);*/
+
+        //$originMult = explode('|','valparaiso | durres | lisbon');
+        $originMult = explode('|','valparaiso ');
+
+        dd($originMult);
     }
 
 }
