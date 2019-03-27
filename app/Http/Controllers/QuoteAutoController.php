@@ -60,7 +60,7 @@ class QuoteAutoController extends Controller
     $hidden40hc = 'hidden';
     $hidden40nor = 'hidden';
     $hidden45 = 'hidden';
-    
+
     // Clases para reordenamiento de la tabla y ajuste 
     $originClass = 'col-md-2';
     $destinyClass = 'col-md-1';
@@ -69,10 +69,10 @@ class QuoteAutoController extends Controller
     $countEquipment = 5 - $countEquipment;
 
     if($countEquipment == 1 ){
-    $originClass = 'col-md-3';
-    $destinyClass = 'col-md-1';
-    $dataOrigDest = 'col-md-4';
-      
+      $originClass = 'col-md-3';
+      $destinyClass = 'col-md-1';
+      $dataOrigDest = 'col-md-4';
+
     }
 
     if($countEquipment == 2 ){
@@ -129,7 +129,22 @@ class QuoteAutoController extends Controller
 
   }
 
-
+  public function skipPluck($pluck)
+  {
+    $skips = ["[","]","\""];
+    return str_replace($skips, '',$pluck);
+  }
+  public function ratesCurrency($id,$typeCurrency){
+    $rates = Currency::where('id','=',$id)->get();
+    foreach($rates as $rate){
+      if($typeCurrency == "USD"){
+        $rateC = $rate->rates;
+      }else{
+        $rateC = $rate->rates_eur;
+      }
+    }
+    return $rateC;
+  }
   public function search()
   {
 
@@ -169,7 +184,7 @@ class QuoteAutoController extends Controller
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
 
-    //Variables de Formulario
+    //Variables para cargar el  Formulario
     $form  = $request->all();
     $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
@@ -181,12 +196,10 @@ class QuoteAutoController extends Controller
     }
 
     $harbors = Harbor::get()->pluck('display_name','id_complete');
-
     $countries = Country::all()->pluck('name','id');
-
-
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
+
     if(count($company_user->companyUser)>0) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
     }else{
@@ -201,10 +214,6 @@ class QuoteAutoController extends Controller
     $idCurrency = $company->companyUser->currency_id;
 
     // Request Formulario
-
-    //Collection Equipment Dinamico
-    $equipmentHides = $this->hideContainer($request->input('equipment'));
-
     foreach($request->input('originport') as $origP){
 
       $infoOrig = explode("-", $origP);
@@ -217,6 +226,7 @@ class QuoteAutoController extends Controller
       $destiny_port[] = $infoDest[0];
       $destiny_country[] = $infoDest[1];
     }
+    $equipment = $request->input('equipment');
     $delivery_type = $request->input('delivery_type');
     $price_id = $request->input('price_id');
     $modality_inland = $request->modality;
@@ -226,6 +236,41 @@ class QuoteAutoController extends Controller
     $dateRange = explode("/",$dateRange);
     $dateSince = $dateRange[0];
     $dateUntil = $dateRange[1];
+
+    //Collection Equipment Dinamico
+    $equipmentHides = $this->hideContainer($equipment);
+    //Colecciones 
+    $collectionRate = new Collection();
+    //Markups Freight
+    $freighPercentage = 0;
+    $freighAmmount = 0;
+    $freighMarkup= 0;
+    // Markups
+    $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
+      $q->where('price_id', '=',$price_id);
+    })->with('freight_markup','local_markup','inland_markup')->get();
+
+    foreach($fclMarkup as $freight){
+      // Freight
+      $fclFreight = $freight->freight_markup->where('price_type_id','=',1);
+      // Valor de porcentaje
+      $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
+      // markup currency
+      $markupFreightCurre =  $this->skipPluck($fclFreight->pluck('currency'));
+      // markup con el monto segun la moneda
+      $freighMarkup = $this->ratesCurrency($markupFreightCurre,$typeCurrency);
+      // Objeto con las propiedades del currency
+      $markupFreightCurre = Currency::find($markupFreightCurre);
+      $markupFreightCurre = $markupFreightCurre->alphacode;
+      // Monto original
+      $freighAmmount =  $this->skipPluck($fclFreight->pluck('fixed_markup'));
+      // monto aplicado al currency
+      $freighMarkup = $freighAmmount / $freighMarkup;
+      $freighMarkup = number_format($freighMarkup, 2, '.', '');
+
+    }
+
+    // Fin Markups
 
     // Consulta base de datos rates
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
@@ -243,78 +288,66 @@ class QuoteAutoController extends Controller
     });
     $arreglo = $arreglo->get();
 
-    //   dd($arreglo);
+    foreach($arreglo as $data){
 
+      $totalFreight = 0;
+      $totalRates = 0;
+      $totalT = 0;
+      $rateDetail = new collection();
+      $arregloRate =  array();
+
+      // Rates 
+      foreach($equipment as $containers){
+        //Calculo para los diferentes tipos de contenedores
+        if($containers == '20'){
+          $markup20 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers);
+          $array20Detail = array('price20' => $data->twuenty, 'currency20' => $data->currency->alphacode ,'idCurrency20' => $data->currency_id);
+          $totalT += $markup20['monto20'];
+          $array20 = array_merge($array20Detail,$markup20);
+          $arregloRate = array_merge($array20,$arregloRate);
+
+        }
+        if($containers == '40'){
+          $markup40 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->forty,$typeCurrency,$containers);
+          $array40Detail = array('price40' => $data->forty, 'currency40' => $data->currency->alphacode ,'idCurrency40' => $data->currency_id);
+          $totalT += $markup40['monto40'];
+          $array40 = array_merge($array40Detail,$markup40);
+          $arregloRate = array_merge($array40,$arregloRate); 
+
+        }
+      }
+      $totalT =  number_format($totalT, 2, '.', '');
+      $totalFreight += $totalT;
+      $totalRates += $totalT;
+      $array = array('type'=>'Freight','detail'=>'Ocean Freight','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id );
+      $array = array_merge($array,$arregloRate);
+      $collectionRate->push($array);
+    }
+
+    $data->setAttribute('rates',$collectionRate);
+    dd($arreglo);
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
-
-
-
   }
 
-  /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-  public function create()
-  {
-    //
-  }
+  public function freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$monto,$typeCurrency,$type){
 
-  /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-  public function store(Request $request)
-  {
-    //
-  }
+    if($freighPercentage != 0){
+      $freighPercentage = intval($freighPercentage);
+      $markup = ( $monto *  $freighPercentage ) / 100 ;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $markup ;
+      number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)",'totalFreight', "monto".$type => $monto) ;
+    }else{
 
-  /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-  public function show($id)
-  {
-    //
-  }
+      $markup =trim($freighAmmount);
+      $monto += $freighMarkup;
+      $monto = number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $freighMarkup, "typemarkup".$type => $typeCurrency,"monto".$type => $monto) ;
+    }
 
-  /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-  public function edit($id)
-  {
-    //
-  }
+    return $arraymarkup;
 
-  /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-  public function update(Request $request, $id)
-  {
-    //
-  }
-
-  /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-  public function destroy($id)
-  {
-    //
   }
 }
