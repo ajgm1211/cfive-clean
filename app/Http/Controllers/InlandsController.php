@@ -150,10 +150,11 @@ class InlandsController extends Controller
     $event->event_inlands();
 
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this Inland.');
-    return redirect()->action('InlandsController@index');
+    // $request->session()->flash('message.nivel', 'success');
+    //$request->session()->flash('message.title', 'Well done!');
+    //$request->session()->flash('message.content', 'You successfully add this Inland.');
+    return redirect()->route('inlands.edit', [setearRouteKey($inland->id)]);
+
   }
 
   /**
@@ -180,8 +181,8 @@ class InlandsController extends Controller
     $inland = Inland::with('inlandports.ports','inlanddetails.currency','inland_company_restriction')->get()->find($id);
     $objcurrency = new Currency();
     $currency = $objcurrency->all()->pluck('alphacode','id');
-    
-   // dd($inland);
+
+    // dd($inland);
 
     $company_user_id=\Auth::user()->company_user_id;
     if(\Auth::user()->hasRole('subuser')){
@@ -191,7 +192,7 @@ class InlandsController extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-  //  $company_restriction = InlandCompanyRestriction::where('inland_id',$inland->id);
+    //  $company_restriction = InlandCompanyRestriction::where('inland_id',$inland->id);
     $company = array();
     /*if(!empty($company_restriction)){
       $company = Company::where('id',$company_restriction->company_id)->select('id')->first();

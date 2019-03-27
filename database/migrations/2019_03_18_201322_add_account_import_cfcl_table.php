@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmailTemplatesTable extends Migration
+class AddAccountImportCfclTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_templates', function (Blueprint $table) {
+        Schema::create('accounts_import_cfcl', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('subject');
-            $table->longText('message');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->date('date');
+            $table->string('namefile');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->timestamps();
@@ -33,6 +31,6 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_templates');
+        Schema::dropIfExists('accounts_import_cfcl');
     }
 }

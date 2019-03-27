@@ -9,7 +9,7 @@ class ContractLcl extends Model implements Auditable
 {
   use \OwenIt\Auditing\Auditable;
   protected $table    = "contracts_lcl";
-  protected $fillable = ['id', 'name','number','company_user_id','validity','expire','status'];
+  protected $fillable = ['id', 'name','number','company_user_id','account_id','validity','expire','status'];
 
   public function companyUser()
   {

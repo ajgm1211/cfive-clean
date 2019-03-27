@@ -8,10 +8,16 @@ $('#originchk').on('click',function(){
         $('#origininp').removeAttr('hidden');
         $('#origin').attr('required','required');
         $('#destinychk').attr('disabled','true');
+        if($('#portcountrychk').prop('checked')){
+            $('#origininpCount').removeAttr('hidden');
+            $('#originCountry').attr('required','required');
+        }
     } else{
         $('#origininp').attr('hidden','hidden');
         $('#origin').removeAttr('required');
         $('#destinychk').removeAttr('disabled');
+        $('#origininpCount').attr('hidden','hidden');
+        $('#originCountry').removeAttr('required');
     }
 }); 
 
@@ -20,11 +26,18 @@ $('#destinychk').on('click',function(){
         $('#destinyinp').removeAttr('hidden');
         $('#destiny').attr('required','required');
         $('#originchk').attr('disabled','true');
+        if($('#portcountrychk').prop('checked')){
+            $('#destinyinpCount').removeAttr('hidden');
+            $('#destinyCountry').attr('required','required');
+        }
     } else{
         $('#destinyinp').attr('hidden','hidden');
         $('#destiny').removeAttr('required');
         $('#originchk').removeAttr('disabled');
-    }
+
+        $('#destinyinpCount').attr('hidden','hidden');
+        $('#destinyCountry').removeAttr('required');
+    }    
 });
 
 $('#carrierchk').on('click',function(){
@@ -47,8 +60,11 @@ $('#typedestinychk').on('click',function(){
     }
 });
 
+
+
+
 $(document).ready(function(){
-     if($('#rdRateSurcharge').prop('checked') != true){
+    if($('#rdRateSurcharge').prop('checked') != true){
         $('#typedestinychk').attr('disabled','disabled');
         $('#divtyped').attr('hidden','hidden');
     } else {
@@ -72,6 +88,60 @@ $('#rdRateSurcharge').on('click',function(){
 });
 
 
+$('#portchk').on('click',function(){
+    if($('#portchk').prop('checked')){
+        if($('#originchk').prop('checked')){
+            $('#origininpCount').attr('hidden','hidden');
+            $('#originCountry').removeAttr('required');
+        }
+        if($('#destinychk').prop('checked')){
+            $('#destinyinpCount').attr('hidden','hidden');
+            $('#destinyCountry').removeAttr('required');
+        }
+    }
+});
+
+$('#portcountrychk').on('click',function(){
+    if($('#portcountrychk').prop('checked')){
+        if($('#originchk').prop('checked')){
+            $('#origininpCount').removeAttr('hidden');
+            $('#originCountry').attr('required','required');
+        }
+        if($('#destinychk').prop('checked')){
+            $('#destinyinpCount').removeAttr('hidden');
+            $('#destinyCountry').attr('required','required');
+        }
+    }
+});
+
+/*
+$('#portchk').on('click',function(){
+    if($('#portchk').prop('checked')){
+        $('#destinychk').removeAttr('disabled');
+        $('#divdestiny').removeAttr('disabled');
+        $('#destinychk').removeAttr('hidden');
+        $('#divdestiny').removeAttr('hidden');
+        $('#originchk').removeAttr('disabled');
+        $('#divorigin').removeAttr('disabled');
+        $('#originchk').removeAttr('hidden');
+        $('#divorigin').removeAttr('hidden');
+    }
+});
+
+$('#portcountrychk').on('click',function(){
+    if($('#portcountrychk').prop('checked')){
+        $('#destinychk').attr('disabled','true');
+        $('#divdestiny').attr('disabled','true');
+        $('#destinychk').attr('hidden','hidden');
+        $('#divdestiny').attr('hidden','hidden');
+
+        $('#originchk').attr('disabled','true');
+        $('#divorigin').attr('disabled','true');
+        $('#originchk').attr('hidden','hidden');
+        $('#divorigin').attr('hidden','hidden');
+    }
+});
+*/
 jQuery(document).ready(function($){
     Dropzone.options.mss = {
         paramName: "file", // The name that will be used to transfer the file
