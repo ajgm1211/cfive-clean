@@ -319,13 +319,13 @@ class QuoteAutoController extends Controller
       $totalT =  number_format($totalT, 2, '.', '');
       $totalFreight += $totalT;
       $totalRates += $totalT;
-      $array = array('type'=>'Freight','detail'=>'Ocean Freight','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id );
+      $array = array('type'=>'Ocean Freight','detail'=>'Per Container','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id,'currency_rate' => $data->currency->alphacode );
       $array = array_merge($array,$arregloRate);
       $collectionRate->push($array);
     }
 
     $data->setAttribute('rates',$collectionRate);
-    dd($arreglo);
+    
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
   }
@@ -338,7 +338,7 @@ class QuoteAutoController extends Controller
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
       number_format($monto, 2, '.', '');
-      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)",'totalFreight', "monto".$type => $monto) ;
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto) ;
     }else{
 
       $markup =trim($freighAmmount);
