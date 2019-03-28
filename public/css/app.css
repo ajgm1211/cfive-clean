@@ -31362,6 +31362,10 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   max-width: 50px !important;
 }
 
+#logo-error {
+  color: red !important;
+}
+
 /**
 $m--root-font: (
     size: (

@@ -11,6 +11,7 @@ use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\AccountImportationContractFcl as AccountFcl;
 use App\AccountImportationContractLcl as AccountLcl;
 use App\AccountImportationGlobalcharge as AccountGc;
