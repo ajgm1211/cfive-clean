@@ -62,7 +62,7 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestImportation.store','method'=>'POST','files'=>true])!!}
+        {!! Form::open(['route'=>'RequestImportation.store2','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
