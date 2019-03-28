@@ -195,11 +195,11 @@
               <div class="col-lg-1">
                 <span class="portcss">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
               </div>
-              <div class="col-lg-1" {{ $equipmentHides['20'] }} ><span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->twuenty  }}</span></div>
-              <div class="col-lg-1" {{ $equipmentHides['40'] }}> <span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->forty  }}</span> </div>
-              <div class="col-lg-1" {{ $equipmentHides['40hc'] }}> <span class="currency">$USD</span> <span class="darkblue validate">  {{$arr->fortyhc  }} </span></div>
-              <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->fortynor  }} </span></div>
-              <div class="col-lg-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->fortyfive  }} </span></div>
+              <div class="col-lg-1" {{ $equipmentHides['20'] }} ><span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->total20  }}</span></div>
+              <div class="col-lg-1" {{ $equipmentHides['40'] }}> <span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->total40  }}</span> </div>
+              <div class="col-lg-1" {{ $equipmentHides['40hc'] }}> <span class="currency">$USD</span> <span class="darkblue validate">  {{$arr->total40hc  }} </span></div>
+              <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->total40nor  }} </span></div>
+              <div class="col-lg-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->total45  }} </span></div>
               <div class="col-lg-1">
                 <button type="button" class="btn btn-sm btn-default btn-bold btn-upper">Select</button>
               </div>
@@ -224,11 +224,11 @@
                 <div class="row">
                   <div class="col-lg-3">{{ $rates['type'] }}</div>
                   <div class="col-lg-3">{{ $rates['detail'] }}</div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}>{{ @$rates['price20'] }} + {{ @$rates['markup20'] }} <i class="la la-angle-left"></i> {{  @$rates['monto20'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}>{{ @$rates['price40'] }} + {{ @$rates['markup40'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>{{ @$rates['price40hc'] }} + {{ @$rates['markup40hc'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40hc'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>{{ @$rates['price40nor'] }} + {{ @$rates['markup40nor'] }} <i class="la la-angle-left"></i> {{  @$rates['monto40nor'] }}  </div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}>{{ @$rates['price45'] }} + {{ @$rates['markup45'] }} <i class="la la-angle-left"></i> {{  @$rates['monto45'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}>{{ @$rates['price20'] }} + {{ @$rates['markup20'] }} <i class="la la-caret-right"></i> {{  @$rates['monto20'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}>{{ @$rates['price40'] }} + {{ @$rates['markup40'] }} <i class="la la-caret-right"></i> {{  @$rates['monto40'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>{{ @$rates['price40hc'] }} + {{ @$rates['markup40hc'] }} <i class="la la-caret-right"></i> {{  @$rates['monto40hc'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>{{ @$rates['price40nor'] }} + {{ @$rates['markup40nor'] }} <i class="la la-caret-right"></i> {{  @$rates['monto40nor'] }}  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}>{{ @$rates['price45'] }} + {{ @$rates['markup45'] }} <i class="la la-caret-right"></i> {{  @$rates['monto45'] }}  </div>
                   <div class="col-lg-1" >{{$rates['currency_rate']}}</div>
                 </div><br>
                 @endforeach

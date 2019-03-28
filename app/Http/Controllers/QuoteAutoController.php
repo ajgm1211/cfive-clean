@@ -292,9 +292,16 @@ class QuoteAutoController extends Controller
       $collectionRate = new Collection();
       $totalFreight = 0;
       $totalRates = 0;
-      $totalT = 0;
+      $totalT20 = 0;
+      $totalT40 = 0;
+      $totalT40hc = 0;
+      $totalT40nor = 0;
+      $totalT45 = 0;
+      $totalT  = 0 ;
       $rateDetail = new collection();
       $arregloRate =  array();
+
+      $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
 
       // Rates 
       foreach($equipment as $containers){
@@ -302,7 +309,7 @@ class QuoteAutoController extends Controller
         if($containers == '20'){
           $markup20 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers);
           $array20Detail = array('price20' => $data->twuenty, 'currency20' => $data->currency->alphacode ,'idCurrency20' => $data->currency_id);
-          $totalT += $markup20['monto20'];
+          $totalT20 += $markup20['monto20'] / $rateC;
           $array20 = array_merge($array20Detail,$markup20);
           $arregloRate = array_merge($array20,$arregloRate);
 
@@ -310,7 +317,7 @@ class QuoteAutoController extends Controller
         if($containers == '40'){
           $markup40 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->forty,$typeCurrency,$containers);
           $array40Detail = array('price40' => $data->forty, 'currency40' => $data->currency->alphacode ,'idCurrency40' => $data->currency_id);
-          $totalT += $markup40['monto40'];
+          $totalT40 += $markup40['monto40']  / $rateC;
           $array40 = array_merge($array40Detail,$markup40);
           $arregloRate = array_merge($array40,$arregloRate); 
 
@@ -318,7 +325,7 @@ class QuoteAutoController extends Controller
         if($containers == '40hc'){
           $markup40hc = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortyhc,$typeCurrency,$containers);
           $array40hcDetail = array('price40hc' => $data->fortyhc, 'currency40hc' => $data->currency->alphacode ,'idCurrency40hc' => $data->currency_id);
-          $totalT += $markup40hc['monto40hc'];
+          $totalT40hc += $markup40hc['monto40hc'] / $rateC;
           $array40hc = array_merge($array40hcDetail,$markup40hc);
           $arregloRate = array_merge($array40hc,$arregloRate); 
 
@@ -326,7 +333,7 @@ class QuoteAutoController extends Controller
         if($containers == '40nor'){
           $markup40nor = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortynor,$typeCurrency,$containers);
           $array40norDetail = array('price40nor' => $data->fortynor, 'currency40nor' => $data->currency->alphacode ,'idCurrency40nor' => $data->currency_id);
-          $totalT += $markup40nor['monto40nor'];
+          $totalT40nor += $markup40nor['monto40nor'] / $rateC;
           $array40nor = array_merge($array40norDetail,$markup40nor);
           $arregloRate = array_merge($array40nor,$arregloRate); 
 
@@ -334,7 +341,7 @@ class QuoteAutoController extends Controller
         if($containers == '45'){
           $markup45 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->fortyfive,$typeCurrency,$containers);
           $array45Detail = array('price45' => $data->fortyfive, 'currency45' => $data->currency->alphacode ,'idCurrency45' => $data->currency_id);
-          $totalT += $markup45['monto45'];
+          $totalT45 += $markup45['monto45'] / $rateC;
           $array45 = array_merge($array45Detail,$markup45);
           $arregloRate = array_merge($array45,$arregloRate); 
 
@@ -347,7 +354,18 @@ class QuoteAutoController extends Controller
       $array = array_merge($array,$arregloRate);
       $collectionRate->push($array);
       $data->setAttribute('rates',$collectionRate);
+      // Valores totales por contenedor
+      $data->setAttribute('total20', number_format($totalT20, 2, '.', ''));
+      $data->setAttribute('total40', number_format($totalT40, 2, '.', ''));
+      $data->setAttribute('total40hc', number_format($totalT40hc, 2, '.', ''));
+      $data->setAttribute('total40nor', number_format($totalT40nor, 2, '.', ''));
+      $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
+
     }
+
+
+
+  //  dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
