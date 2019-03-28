@@ -319,3 +319,12 @@ function save_price_level(id){
 
     });
 }
+
+//binds to onchange event of your input field
+$(document).on('change', '#logo', function (e) {
+    if(this.files[0].size>1000000){
+        $("#logo-error").removeClass('hide');
+    }else{
+        $("#logo-error").addClass('hide');
+    }
+});

@@ -948,7 +948,7 @@ class QuoteAutomaticController extends Controller
       });
     } */ 
 
-    //$arreglo = $arreglo->paginate(10)->setPath(route('quotes.listRate'));
+   
     $arreglo = $arreglo->get();
 
     // Fin condiciones del cero
@@ -2596,14 +2596,13 @@ class QuoteAutomaticController extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-    //$arreglo = $arreglo->orderBy();
-
-
-    $arreglo->setCollection(
+    $arreglo  =  $arreglo->sortBy('tot');
+    
+    /*    $arreglo->setCollection(
       collect(
         collect($arreglo->items())->sortBy('tot')
       )->values()
-    );
+    );*/
 
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
   }
