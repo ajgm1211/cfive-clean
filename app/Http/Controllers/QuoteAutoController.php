@@ -288,6 +288,18 @@ class QuoteAutoController extends Controller
     });
     $arreglo = $arreglo->get();
 
+    $formulario = $request;
+    $array20 = array('2','4','5'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
+    $array40 =  array('1','4','5'); // id  calculation type 2 = per 40 
+    $array40Hc= array('3','4','5'); // id  calculation type 3 = per 40HC 
+    $array40Nor = array('7','4','5');  // id  calculation type 7 = per 40NOR
+    $array45 = array('8','4','5');  // id  calculation type 8 = per 45
+
+    $arrarContainers =  array('1','2','3','4','7','8'); 
+
+
+
+
     foreach($arreglo as $data){
       $collectionRate = new Collection();
       $totalFreight = 0;
@@ -298,6 +310,9 @@ class QuoteAutoController extends Controller
       $totalT40nor = 0;
       $totalT45 = 0;
       $totalT  = 0 ;
+      $carrier[] = $data->carrier_id;
+      $orig_port = array($data->origin_port);
+      $dest_port = array($data->destiny_port);
       $rateDetail = new collection();
       $arregloRate =  array();
 
@@ -347,8 +362,84 @@ class QuoteAutoController extends Controller
 
         }
       }
-      $totalT =  number_format($totalT, 2, '.', '');
-      $totalFreight += $totalT;
+
+
+      // id de los port  ALL
+      array_push($orig_port,1485);
+      array_push($dest_port,1485);
+      // id de los carrier ALL 
+      $carrier_all = 26;
+      array_push($carrier,$carrier_all);
+      // Id de los paises 
+      array_push($origin_country,250);
+      array_push($destiny_country,250);
+
+      // ################### Calculos local  Charges #############################
+
+
+
+      $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
+        $q->whereIn('carrier_id', $carrier);
+      })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
+        $query->whereHas('localcharports', function($q) use($orig_port,$dest_port) {
+          $q->whereIn('port_orig', $orig_port)->whereIn('port_dest',$dest_port);
+        })->orwhereHas('localcharcountries', function($q) use($origin_country,$destiny_country) {
+          $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+        });
+      })->with('localcharports.portOrig','localcharcarriers.carrier','currency','surcharge.saleterm')->get();
+
+      foreach($localChar as $local){
+        $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
+        // Condicion para enviar los terminos de venta o compra
+        if(isset($local->surcharge->saleterm->name)){
+          $terminos = $local->surcharge->saleterm->name;
+        }else{
+          $terminos = $local->surcharge->name;
+        }
+        
+        if(in_array($local->calculationtype_id, $array20)){
+          foreach($local->localcharcarriers as $localCarrier){
+            if($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id ==  $carrier_all ){
+              if($local->typedestiny_id == '1'){
+
+              }
+              if($local->typedestiny_id == '2'){
+
+              }
+              if($local->typedestiny_id == '3'){
+                   $subtotal_local = $formulario->twuenty *  $local->ammount;
+                  $totalAmmount = ($formulario->twuenty *  $local->ammount) / $rateMount ;
+                  // MARKUP
+                  if($localPercentage != 0){
+                    $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
+                    $markup = number_format($markup, 2, '.', '');
+                    $totalAmmount += $markup ;
+                    $arraymarkupT = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
+                  }else{
+                    $markup =$localAmmount;
+                    $markup = number_format($markup, 2, '.', '');
+                    $totalAmmount += $localMarkup;
+                    $arraymarkupT = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
+                  }
+                  $totalOrigin += $totalAmmount ;
+                  $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $arregloOrig = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $formulario->twuenty , 'monto' => $local->ammount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency , 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'20\'  Local ' , 'subtotal_local' => $subtotal_local , 'cantidadT' => $formulario->twuenty , 'idCurrency' => $local->currency->id);
+                  $arregloOrig = array_merge($arregloOrig,$arraymarkupT);
+                  $origTwuenty["origin"] = $arregloOrig;
+                  $collectionOrig->push($origTwuenty);
+
+              }
+            }
+          }
+
+        }
+
+      }
+
+
+      // ################## Fin local Charges        #############################
+
       $totalRates += $totalT;
       $array = array('type'=>'Ocean Freight','detail'=>'Per Container','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id,'currency_rate' => $data->currency->alphacode );
       $array = array_merge($array,$arregloRate);
@@ -365,7 +456,7 @@ class QuoteAutoController extends Controller
 
 
 
-  //  dd($arreglo);
+    //  dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
