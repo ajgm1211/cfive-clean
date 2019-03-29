@@ -149,8 +149,9 @@ class QuoteV2Controller extends Controller
         $currencies = Currency::pluck('alphacode','id');
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
+        $equipmentHides = $this->hideContainer($quote->equipment);
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides'));
     }
 
     public function updateQuoteDetails(Request $request)
@@ -253,5 +254,66 @@ class QuoteV2Controller extends Controller
             $iniciales = $iniciales."-".$numeroFinal;
         }
         return $iniciales;
+    }
+
+    public function hideContainer($equipmentForm){
+        $equipment = new Collection();
+        $hidden20 = 'hidden';
+        $hidden40 = 'hidden';
+        $hidden40hc = 'hidden';
+        $hidden40nor = 'hidden';
+        $hidden45 = 'hidden';
+        // Clases para reordenamiento de la tabla y ajuste
+        $originClass = 'col-md-2';
+        $destinyClass = 'col-md-1';
+        $dataOrigDest = 'col-md-3';
+        $countEquipment = count($equipmentForm);
+        $countEquipment = 5 - $countEquipment;
+        if($countEquipment == 1 ){
+            $originClass = 'col-md-3';
+            $destinyClass = 'col-md-1';
+            $dataOrigDest = 'col-md-4';
+        }
+        if($countEquipment == 2 ){
+            $originClass = 'col-md-3';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-5';
+        }
+        if($countEquipment == 3){
+            $originClass = 'col-md-4';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-6';
+        }
+        if($countEquipment == 4){
+            $originClass = 'col-md-5';
+            $destinyClass = 'col-md-2';
+            $dataOrigDest = 'col-md-7';
+        }
+        foreach($equipmentForm as $val){
+            if($val == '20'){
+                $hidden20 = '';
+            }
+            if($val == '40'){
+                $hidden40 = '';
+            }
+            if($val == '40HC'){
+                $hidden40hc = '';
+            }
+            if($val == '40NOR'){
+                $hidden40nor = '';
+            }
+            if($val == '45'){
+                $hidden45 = '';
+            }
+        }
+        $equipment->put('originClass',$originClass);
+        $equipment->put('destinyClass',$destinyClass);
+        $equipment->put('dataOrigDest',$dataOrigDest);
+        $equipment->put('20',$hidden20);
+        $equipment->put('40',$hidden40);
+        $equipment->put('40hc',$hidden40hc);
+        $equipment->put('40nor',$hidden40nor);
+        $equipment->put('45',$hidden45);
+        return($equipment);
     }
 }

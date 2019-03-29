@@ -31415,6 +31415,10 @@ blockquote {
   border-left: 5px solid #eee;
 }
 
+.form-control-sm {
+  border: 1px solid #b5b6cc !important;
+}
+
 /**
 $m--root-font: (
     size: (
