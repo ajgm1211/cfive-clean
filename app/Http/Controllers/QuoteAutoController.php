@@ -435,15 +435,42 @@ class QuoteAutoController extends Controller
           }
         }
       }
-      $monto =0;
-      $result = $collectionFreight->groupBy([
+
+      $collectionFreight = $collectionFreight->groupBy([
         'type',
-        function ($item) use($monto) {
-         
+        function ($item)  {
+
           return $item['surcharge_name'];
         },
       ], $preserveKeys = true);
-      dd($result);
+
+
+
+      $collect = new collection();
+      $monto = 0;
+      foreach($collectionFreight as $test){
+        $total = count($test);
+        foreach($test as $otro){
+
+          if($total == 2 ){
+            foreach($otro as $locura){
+              $monto += $locura['monto']; 
+            }
+            $collect->push($monto);
+            $monto = 0;
+          }else{
+            foreach($otro as $locura){
+              $collect->push($locura['monto']); 
+              $monto = 0;
+            }
+          }
+        }
+      }
+
+
+
+      dd($collect);
+
 
       // ################## Fin local Charges        #############################
 
