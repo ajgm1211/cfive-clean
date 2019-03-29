@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 @section('title', 'Quotes')
 @section('css')
@@ -146,10 +147,11 @@
 @section('js')
    @parent
 
-   <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
-   <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
-   <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
+   <script type="text/javascript" charset="utf8" src="{{ asset('/assets/datatable/jquery.dataTables.js')}}"></script>
+   <script src="{{ asset('/assets/demo/default/custom/components/datatables/base/html-table-quotes.js')}}" type="text/javascript"></script>
+   <script src="{{ asset('/assets/demo/default/custom/components/forms/widgets/select2.js')}}" type="text/javascript"></script>
    <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
+   
    <script>
       function AbrirModal(action,id){
          if(action == "edit"){

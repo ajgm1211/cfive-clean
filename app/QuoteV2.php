@@ -51,4 +51,19 @@ class QuoteV2 extends Model
     {
         return $this->hasOne('App\Price','id','price_id');
     }
+
+    public function payment()
+    {
+        return $this->hasMany('App\PaymentCondition','id','quote_id');
+    }
+
+    public function terms()
+    {
+        return $this->hasMany('App\TermsAndCondition','id','quote_id');
+    }
+
+    public function rate()
+    {
+        return $this->hasOne('App\AutomaticRate','quote_id','id');
+    }
 }

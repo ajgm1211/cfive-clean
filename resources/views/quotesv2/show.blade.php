@@ -195,683 +195,742 @@
             <div class="col-md-12">
                 <div class="m-portlet">
                     <div class="m-portlet__body">
-                        <div class="tab-content">
-                            <div class="flex-list">
-                                <ul >
-                                    <li style="max-height: 20px;"><img class="img img-fluid" src="{{asset('imgcarrier/maersk.png')}}" width="80" style="margin-top: -15px;"></li>
-                                    <li class="size-14px">POL: {{$quote->origin_port->name}}, {{$quote->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
-                                    <li class="size-14px">POD: {{$quote->destination_port->name}}, {{$quote->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
-                                    <li class="size-14px">Contract: Spot rate - CA-134</li>
-                                    <li class="size-14px"><button type="button" class="btn btn-default pull-right" data-toggle="collapse" data-target=".amount_details"><i class="la la-angle-down"></i></button></li>
-                                </ul>
-                            </div>
+                        @foreach($rates as $rate)
+                            <div class="tab-content">
+                                <div class="flex-list">
+                                    <ul >
+                                        <li style="max-height: 20px;">
+                                            @if(isset($rate->carrier->image) && $rate->carrier->image!='')
+                                                <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="100" height="auto" style="margin-top: -20px;" />
+                                            @endif
+                                        </li>
+                                        <li class="size-14px">POL: {{$rate->origin_port->name}}, {{$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                                        <li class="size-14px">POD: {{$rate->destination_port->name}}, {{$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                                        <li class="size-14px">Contract: {{$rate->contract}}</li>
+                                        <li class="size-14px"><button type="button" class="btn btn-default pull-right" data-toggle="collapse" data-target=".details"><i class="la la-angle-down"></i></button></li>
+                                    </ul>
+                                </div>
+                                <div class="details">
+                                    <!-- Freight charges -->
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5 class="title-quote size-14px">Freight charges</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-sm color-blue text-center">
+                                                    <thead class="title-quote text-center header-table">
+                                                    <tr>
+                                                        <td >Charge</td>
+                                                        <td >Detail</td>
+                                                        <td {{ $equipmentHides['20'] }}>20'</td>
+                                                        <td {{ $equipmentHides['40'] }}>40'</td>
+                                                        <td {{ $equipmentHides['40hc'] }}>40HC'</td>
+                                                        <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
+                                                        <td {{ $equipmentHides['45'] }}>45'</td>
+                                                        <td >Currency</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php
+                                                        $i=0;
+                                                    @endphp
+                                                    @forelse($freight_charges as $item)
+                                                        @php
+                                                            $freight_amounts = json_decode($item->amount,true);
+                                                            $freight_markups = json_decode($item->markups,true);
+                                                            $freight_total = json_decode($item->total,true);
+                                                        @endphp
+                                                        <tr >
+                                                            <td>
+                                                                <input type="text" class="form-control-sm" id="surcharge_id" value="{{$item->surcharge->name}}" name="surcharge_id[]" />
+                                                            </td>
+                                                            <td>
+                                                                {{ Form::select('calculation_type_id[]',$calculation_types,$item->calculation_type_id,['class'=>'form-control-sm calculation_type_id select2-freight select-2-width','required'=>true]) }}
+                                                            </td>
+                                                            <td {{ $equipmentHides['20'] }}>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_amount_20" name="freight_amount[]" value="{{@$freight_amounts[$i]['20']}}" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_markup_20" name="freight_markup[]" value="{{@$freight_markups[$i]['20']}}" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total_20" name="freight_total[]" value="{{@$freight_total[$i]['20']}}" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amounts[$i]['40']}}" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['40']}}" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['40']}}" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40hc'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amount[0]['40hc']}}" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['40hc']}}" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['40hc']}}" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40nor'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amounts[$i]['40nor']}}" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['40nor']}}" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['40nor']}}" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['45'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amounts[$i]['45']}}" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['45']}}" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['45']}}" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn-group">
+                                                                            {{ Form::select('freight_amount_currency[]',$currencies,$item->currency_id,['class'=>'form-control-sm freight_amount_currency select2-freight select-2-width']) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        @php
+                                                            $i++;
+                                                        @endphp
+                                                    @empty
+                                                        <b>No data records</b>
+                                                    @endforelse
 
-                            <div class="amount_details collapse">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="title-quote size-14px">Freight charges</h5>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered color-blue">
-                                                <thead class="title-quote text-center header-table">
-                                                <tr>
-                                                    <td >Charge</td>
-                                                    <td >Detail</td>
-                                                    <td {{ $equipmentHides['20'] }}>20'</td>
-                                                    <td {{ $equipmentHides['40'] }}>40'</td>
-                                                    <td {{ $equipmentHides['40hc'] }}>40HC'</td>
-                                                    <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
-                                                    <td {{ $equipmentHides['45'] }}>45'</td>
-                                                    <td >Currency</td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="freight_amount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                    <!-- Hide Freight -->
+
+                                                    <tr class="hide" id="freight_charges">
+                                                        <td>
+                                                            <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" />
+                                                        </td>
+                                                        <td>
+                                                            {{ Form::select('freight_ammount_currency[]',$calculation_types,null,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
+                                                        </td>
+                                                        <td {{ $equipmentHides['20'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                        </td>
+                                                        <td {{ $equipmentHides['40'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                        </td>
+                                                        <td {{ $equipmentHides['40hc'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('freight_amount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm freight_amount_currency select2-freight select-2-width']) }}
+                                                        </td>
+                                                        <td {{ $equipmentHides['40nor'] }}>
+                                                            <div class="input-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr class="hide" id="freight_charges">
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                        </td>
+                                                        <td {{ $equipmentHides['45'] }}>
+                                                            <div class="input-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group">
+                                                                        {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                                                        <a class="btn removeFreightCharge">
+                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
-                                                                    <a class="btn removeFreightCharge">
-                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-md-12">
-                                        <h5 class="title-quote pull-right">
-                                            <a class="btn addFreightCharge" style="vertical-align: middle">
-                                                <b>Add freight charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                            </a>
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="title-quote size-14px">Origin charges</h5>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered color-blue">
-                                                <thead class="title-quote text-center header-table">
-                                                <tr>
-                                                    <td >Charge</td>
-                                                    <td >Detail</td>
-                                                    <td {{ $equipmentHides['20'] }}>20'</td>
-                                                    <td {{ $equipmentHides['40'] }}>40'</td>
-                                                    <td {{ $equipmentHides['40hc'] }}>40HC'</td>
-                                                    <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
-                                                    <td {{ $equipmentHides['45'] }}>45'</td>
-                                                    <td >Currency</td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr class="hide" id="origin_charges">
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
-                                                                    <a class="btn removeOriginCharge">
-                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                    <div class='row'>
+                                        <div class="col-md-12">
+                                            <h5 class="title-quote pull-right">
+                                                <a class="btn addFreightCharge" style="vertical-align: middle">
+                                                    <b>Add freight charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                </a>
+                                            </h5>
                                         </div>
                                     </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-md-12">
-                                        <h5 class="title-quote pull-right">
-                                            <a class="btn addOriginCharge" style="vertical-align: middle">
-                                                <b>Add origin charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                            </a>
-                                        </h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="title-quote size-14px">Destination charges</h5>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered color-blue">
-                                                <thead class="title-quote text-center header-table">
-                                                <tr>
-                                                    <td >Charge</td>
-                                                    <td >Detail</td>
-                                                    <td {{ $equipmentHides['20'] }}>20'</td>
-                                                    <td {{ $equipmentHides['40'] }}>40'</td>
-                                                    <td {{ $equipmentHides['40hc'] }}>40HC'</td>
-                                                    <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
-                                                    <td {{ $equipmentHides['45'] }}>45'</td>
-                                                    <td >Currency</td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+
+                                    <!-- Origin charges -->
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5 class="title-quote size-14px">Origin charges</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered color-blue">
+                                                    <thead class="title-quote text-center header-table">
+                                                    <tr>
+                                                        <td >Charge</td>
+                                                        <td >Detail</td>
+                                                        <td {{ $equipmentHides['20'] }}>20'</td>
+                                                        <td {{ $equipmentHides['40'] }}>40'</td>
+                                                        <td {{ $equipmentHides['40hc'] }}>40HC'</td>
+                                                        <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
+                                                        <td {{ $equipmentHides['45'] }}>45'</td>
+                                                        <td >Currency</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php
+                                                        $a=0;
+                                                    @endphp
+                                                    @foreach($origin_charges as $item)
+                                                        @php
+                                                            $origin_amounts = json_decode($item->amount,true);
+                                                            $origin_markups = json_decode($item->markups,true);
+                                                            $origin_total = json_decode($item->total,true);
+                                                        @endphp
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
+                                                            </td>
+                                                            <td>
+                                                                {{ Form::select('freight_ammount_currency[]',$calculation_types,null,['class'=>'form-control-sm freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
+                                                            </td>
+                                                            <td {{ $equipmentHides['20'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40hc'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40nor'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['45'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn-group">
+                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            @php
+                                                                $a++;
+                                                            @endphp
+                                                            @endforeach
+                                                        </tr>
+
+                                                        <!-- Hide origin charges-->
+
+                                                        <tr class="hide" id="origin_charges">
+                                                            <td>
+                                                                <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]"/>
+                                                            </td>
+                                                            <td>
+                                                                {{ Form::select('freight_ammount_currency[]',$calculation_types,5,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
+                                                            </td>
+                                                            <td {{ $equipmentHides['20'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40hc'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40nor'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td {{ $equipmentHides['45'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn-group">
+                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                                                            <a class="btn removeOriginCharge">
+                                                                                <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr class="hide" id="destination_charges">
-                                                    <td>
-                                                        <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]" style="width: 120px;"/>
-                                                    </td>
-                                                    <td>
-                                                        {{ Form::select('freight_ammount_currency[]',[1=>'PER CONTAINER'],1,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
-                                                    </td>
-                                                    <td {{ $equipmentHides['20'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40hc'] }}>
-                                                        <div class="">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['40nor'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td {{ $equipmentHides['45'] }}>
-                                                        <div class="input-group">
-                                                            <div class="row">
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="input-group">
-                                                            <div class="input-group-btn">
-                                                                <div class="btn-group">
-                                                                    {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
-                                                                    <a class="btn removeDestinationCharge">
-                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-md-12">
-                                        <h5 class="title-quote pull-right">
-                                            <a class="btn addDestinationCharge" style="vertical-align: middle">
-                                                <b>Add destination charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                                            </a>
-                                        </h5>
+
+                                    <!-- Destination charges -->
+
+                                    <div class='row'>
+                                        <div class="col-md-12">
+                                            <h5 class="title-quote pull-right">
+                                                <a class="btn addOriginCharge" style="vertical-align: middle">
+                                                    <b>Add origin charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                </a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5 class="title-quote size-14px">Destination charges</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered color-blue">
+                                                    <thead class="title-quote text-center header-table">
+                                                    <tr>
+                                                        <td >Charge</td>
+                                                        <td >Detail</td>
+                                                        <td {{ $equipmentHides['20'] }}>20'</td>
+                                                        <td {{ $equipmentHides['40'] }}>40'</td>
+                                                        <td {{ $equipmentHides['40hc'] }}>40HC'</td>
+                                                        <td {{ $equipmentHides['40nor'] }}>40NOR'</td>
+                                                        <td {{ $equipmentHides['45'] }}>45'</td>
+                                                        <td >Currency</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @php
+                                                        $b=0;
+                                                    @endphp
+                                                    @foreach($destination_charges as $item)
+                                                        @php
+                                                            $destination_amounts = json_decode($item->amount,true);
+                                                            $destination_markups = json_decode($item->markups,true);
+                                                            $destination_total = json_decode($item->total,true);
+                                                        @endphp
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control-sm" id="origin_ammount_charge" value="" name="origin_ammount_charge[]" />
+                                                            </td>
+                                                            <td>
+                                                                {{ Form::select('freight_ammount_currency[]',$calculation_types,5,['class'=>'form-control-sm freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
+                                                            </td>
+                                                            <td {{ $equipmentHides['20'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40hc'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40nor'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['45'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn-group">
+                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select2-origin select-2-width']) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        @php
+                                                            $b++;
+                                                        @endphp
+                                                    @endforeach
+                                                    <!-- Hide destination charges -->
+
+                                                    <tr class="hide" id="destination_charges">
+                                                        <td>
+                                                            <input type="text" class="form-control-sm" id="freight_amount_charge" value="" name="origin_ammount_charge[]"/>
+                                                        </td>
+                                                        <td>
+                                                            {{ Form::select('freight_ammount_currency[]',$calculation_types,5,['class'=>'form-control-sm freight_ammount_currency','required'=>true]) }}
+                                                        </td>
+                                                        <td {{ $equipmentHides['20'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="origin_ammount_units" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td {{ $equipmentHides['40'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td {{ $equipmentHides['40hc'] }}>
+                                                            <div class="">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td {{ $equipmentHides['40nor'] }}>
+                                                            <div class="input-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td {{ $equipmentHides['45'] }}>
+                                                            <div class="input-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_rate" name="freight_rate[]" value="" class="form-control-sm freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control-sm freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control-sm freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group">
+                                                                        {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control-sm origin_ammount_currency select-2-width']) }}
+                                                                        <a class="btn removeDestinationCharge">
+                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="col-md-12">
+                                            <h5 class="title-quote pull-right">
+                                                <a class="btn addDestinationCharge" style="vertical-align: middle">
+                                                    <b>Add destination charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                </a>
+                                            </h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -886,8 +945,9 @@
                     </div>
                     <div class="m-portlet__body">
                         <div class="card card-body bg-light">
-                            <li>Cash</li>
-                            <li>Bank transfer</li>
+                            @foreach($quote->payment as $item)
+                                {!! $item->content !!}
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -903,8 +963,9 @@
                     </div>
                     <div class="m-portlet__body">
                         <div class="card card-body bg-light">
-                            Cargofive is an online solution that empowers freight forwarders to be part of the digital era. 
-With our technology freight forwarders can manage contracts, automate the quotation process, reduce operational costs and have access to actionable data to increase sales.
+                            @foreach($quote->terms as $item)
+                                {!! $item->content !!}
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -924,9 +985,9 @@ With our technology freight forwarders can manage contracts, automate the quotat
     <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-  $(".show-hide").click(function(){
-    $(this).closest("row").toggle();
-  });
-});
+            $(".show-hide").click(function(){
+                $(this).closest("row").toggle();
+            });
+        });
     </script>
 @stop
