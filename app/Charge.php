@@ -25,11 +25,11 @@ class Charge extends Model
 
     public function surcharge()
     {
-        return $this->hasOne('App\Surcharge');
+        return $this->hasOne('App\Surcharge','id','surcharge_id');
     }
 
     public function calculation_type()
     {
-        return $this->hasOne('App\CalculationType');
+        return $this->hasOne('App\CalculationType','id','calculation_type_id');
     }
 }

@@ -15,12 +15,12 @@ class AutomaticRate extends Model
 
     public function currency()
     {
-        return $this->belongsTo('App\Currency');
+        return $this->hasOne('App\Currency');
     }
 
     public function carrier()
     {
-        return $this->belongsTo('App\Currency');
+        return $this->hasOne('App\Carrier','id','carrier_id');
     }
 
     public function origin_port()

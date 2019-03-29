@@ -2668,3 +2668,4 @@ function change_tab(tab){
     $("#chargeable_weight_pkg").html('');
   }
 }
+

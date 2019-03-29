@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\AutomaticRate;
+use App\CalculationType;
+use App\Charge;
 use App\Company;
 use App\CompanyUser;
 use App\Contact;
@@ -101,7 +104,7 @@ class QuoteV2Controller extends Controller
                     '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                      Options
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -136px, 0px); top: 0px; left: 0px; will-change: transform;">
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                      <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
                         <span>
                            <i class="la la-eye"></i>
@@ -141,6 +144,10 @@ class QuoteV2Controller extends Controller
         $id = obtenerRouteKey($id);
         $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
+        $rates = AutomaticRate::where('quote_id',$quote->id)->get();
+        $origin_charges = Charge::where(['automatic_rate_id'=>$quote->rate->id,'type_id'=>1])->get();
+        $destination_charges = Charge::where(['automatic_rate_id'=>$quote->rate->id,'type_id'=>2])->get();
+        $freight_charges = Charge::where(['automatic_rate_id'=>$quote->rate->id,'type_id'=>3])->get();
         $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
         $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
         $incoterms = Incoterm::pluck('name','id');
@@ -150,8 +157,9 @@ class QuoteV2Controller extends Controller
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
         $equipmentHides = $this->hideContainer($quote->equipment);
+        $calculation_types = CalculationType::pluck('name','id');
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates'));
     }
 
     public function updateQuoteDetails(Request $request)
