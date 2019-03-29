@@ -236,6 +236,42 @@ class QuoteV2Controller extends Controller
 
         $quote_duplicate->save();
 
+        $rates = AutomaticRate::where('quote_id',$quote->id)->get();
+
+        foreach ($rates as $rate){
+
+            $rate_duplicate = new AutomaticRate();
+            $rate_duplicate->quote_id=$quote_duplicate->id;
+            $rate_duplicate->contract=$rate->contract;
+            $rate_duplicate->validity_start=$rate->validity_start;
+            $rate_duplicate->validity_end=$rate->validity_end;
+            $rate_duplicate->origin_port_id=$rate->origin_port_id;
+            $rate_duplicate->destination_port_id=$rate->destination_port_id;
+            $rate_duplicate->carrier_id=$rate->carrier_id;
+            $rate_duplicate->rates=$rate->rates;
+            $rate_duplicate->markups=$rate->markups;
+            $rate_duplicate->total=$rate->total;
+            $rate_duplicate->currency_id=$rate->currency_id;
+            $rate_duplicate->save();
+            
+            $charges=Charge::where('automatic_rate_id',$rate->id)->get();
+
+
+            foreach ($charges as $charge){
+                $charge_duplicate = new Charge();
+                $charge_duplicate->automatic_rate_id=$rate_duplicate->id;
+                $charge_duplicate->type_id=$charge->type_id;
+                $charge_duplicate->surcharge_id=$charge->surcharge_id;
+                $charge_duplicate->calculation_type_id=$charge->calculation_type_id;
+                $charge_duplicate->amount=$charge->amount;
+                $charge_duplicate->markups=$charge->markups;
+                $charge_duplicate->total=$charge->total;
+                $charge_duplicate->currency_id=$charge->currency_id;
+                $charge_duplicate->save();
+            }
+
+        }
+
         if($request->ajax()){
             return response()->json(['message' => 'Ok']);
         }else{
