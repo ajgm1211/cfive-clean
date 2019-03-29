@@ -148,6 +148,10 @@ Route::prefix('Requests')->group(function () {
 
 Route::prefix('Importation')->group(function () {
 
+    //Importar desde request
+    Route::get('RequestProccessFCL/{id}','ImportationController@requestProccess')->name('process.request.fcl')
+        ->middleware(['auth','role:administrator']);
+    
     // Importar Contracto
     Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
         ->middleware(['auth','role:administrator']);
@@ -263,6 +267,10 @@ Route::prefix('RequestsLcl')->group(function () {
 // Importation LCL 
 Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->group(function () {
 
+    //Importar desde request
+    Route::get('RequestProccessLCL/{id}','ImportationLclController@indexRequest')->name('process.request.lcl')
+        ->middleware(['auth','role:administrator']);
+    
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
 
     // Account FCL
@@ -496,6 +504,11 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
 // IMPORTATION GLOBALCHARGE FCL
 Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalchargesFcl')->group(function () {
+    
+    //Importar desde request
+    Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
+        ->middleware(['auth','role:administrator']);
+    
     Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
     Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
     Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');

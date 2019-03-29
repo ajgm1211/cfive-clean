@@ -19,6 +19,7 @@ use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocesarRatesLclJob;
 use Illuminate\Support\Facades\Storage;
+use App\NewContractRequestLcl as RequestLCL;
 use App\AccountImportationContractLcl as AccountLcl;
 
 class ImportationLclController extends Controller
@@ -180,6 +181,16 @@ class ImportationLclController extends Controller
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
+    }
+
+    public function indexRequest($id)
+    {
+        $requestlcl     = RequestLCL::find($id);
+        //dd($requestlcl);
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        return view('ImportationLcl.indexRequest',compact('harbor','carrier','companysUser','requestlcl'));
     }
 
     // --------------- Rates ---------------------------------------------

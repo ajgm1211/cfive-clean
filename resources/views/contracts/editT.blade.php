@@ -100,13 +100,13 @@
                 </a>
 
                 @role('administrator')
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile">
+                <!--<button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfile-off">
                   Upload Rates
                   <i class="fa flaticon-tool-1"></i>
-                </button>
-                <a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-info">
+                </button>-->
+                <a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-danger">
                   Failed Rates
-                  <i class="fa flaticon-tool-1"></i>
+                  <i class="la la-arrows-alt"></i>
                 </a>
 
                 @endrole
@@ -167,16 +167,16 @@
                   </button>
                 </a>
 
-                <a>
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge">
+                <!--<a>
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadfileSubcharge--off">
                     Upload Surcharge
                     <i class="fa flaticon-tool-1"></i>
                   </button>
-                </a>
+                </a>-->
                 @role('administrator')
-                <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-info">
+                <a href="{{route('Failed.Surcharge.F.C.D',[$id,1])}}" class="btn btn-danger">
                   Failed Surcharge
-                  <i class="fa flaticon-tool-1"></i>
+                  <i class="la 	la-arrows-alt"></i>
                 </a>
                 @endrole
                 <a href="#" onclick="exportjs({{$id}})" class="btn btn-info">

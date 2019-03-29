@@ -29,6 +29,7 @@ use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationGlobalchargeJob;
 use App\Jobs\ReprocessGlobalChargersJob;
+use App\NewGlobalchargeRequestFcl as RequestGC;
 
 
 class ImportationGlobachargersFclController extends Controller
@@ -288,6 +289,18 @@ class ImportationGlobachargersFclController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
+    }
+    
+    public function indexRequest($id)
+    {
+        $requestgc      = RequestGC::find($id);
+        //dd($requestgc);
+        $harbor         = Harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
+        $carrier        = Carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestgc'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
