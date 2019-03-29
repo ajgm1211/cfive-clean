@@ -35,6 +35,7 @@ use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
+use App\NewContractRequest as RequestFcl;
 use App\Jobs\ImportationRatesSurchargerJob;
 use App\AccountImportationContractFcl as AccountFcl;
 
@@ -441,6 +442,18 @@ class ImportationController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         return view('importation.ImporContractFcl',compact('harbor','country','carrier','companysUser','typedestiny'));
+    }
+    
+    // precarga la vista para importar rates o rates mas surchargers desde Request
+    public function requestProccess($id){
+        $requestfcl     = RequestFcl::find($id);
+        //dd($requestfcl);
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        return view('importation.ImportContractFCLRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestfcl'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:

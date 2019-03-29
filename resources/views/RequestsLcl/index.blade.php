@@ -181,6 +181,10 @@
                                                     <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
                                                 </td>
                                                 <td>
+                                                    <a href="{{route('process.request.lcl',$Ncontract->id)}}" title="Proccess LCL Request">
+                                                        <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
+                                                    </a>
+                                                    &nbsp; &nbsp;
                                                     <a href="{{route('RequestImportationLcl.show',$Ncontract->id)}}" title="Download File">
                                                         <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                                                     </a>

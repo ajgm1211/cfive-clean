@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contracts')
+@section('title', 'GlobalCharge')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
@@ -159,6 +159,10 @@
                                                     <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
                                                 </td>
                                                 <td>
+                                                    <a href="{{route('process.request.gc',$Ncontract->id)}}" title="Proccess GC Request">
+                                                        <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
+                                                    </a>
+                                                    &nbsp; &nbsp;
                                                     <a href="{{route('RequestsGlobalchargersFcl.show',$Ncontract->id)}}" title="Download File">
                                                         <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                                                     </a>

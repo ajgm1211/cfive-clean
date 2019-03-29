@@ -170,6 +170,10 @@
                                                     <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
                                                 </td>
                                                 <td>
+                                                    <a href="{{route('process.request.fcl',$Ncontract->id)}}" title="Proccess FCL Request">
+                                                        <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
+                                                    </a>
+                                                    &nbsp; &nbsp;
                                                     <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
                                                         <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                                                     </a>
@@ -363,53 +367,53 @@
             });
 
         });
-        
-        $(document).on('click','#delete-account-cfcl',function(){
-                var id = $(this).attr('data-id-account-cfcl');
-                var elemento = $(this);
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then(function(result){
-                    if (result.value) {
 
-                        url='{!! route("Destroy.account.cfcl",":id") !!}';
-                        url = url.replace(':id', id);
-                        // $(this).closest('tr').remove();
-                        $.ajax({
-                            url:url,
-                            method:'get',
-                            success: function(data){
-                                if(data == 1){
-                                    swal(
-                                        'Deleted!',
-                                        'Your Account FCL has been deleted.',
-                                        'success'
-                                    )
-                                    $(elemento).closest('tr').remove();
-                                    var a = $('#strfailinput').val();
-                                    a--;
-                                    $('#strfail').text(a);
-                                    $('#strfailinput').attr('value',a);
-                                }else if(data == 2){
-                                    swal("Error!", "An internal error occurred!", "error");
-                                }
+        $(document).on('click','#delete-account-cfcl',function(){
+            var id = $(this).attr('data-id-account-cfcl');
+            var elemento = $(this);
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then(function(result){
+                if (result.value) {
+
+                    url='{!! route("Destroy.account.cfcl",":id") !!}';
+                    url = url.replace(':id', id);
+                    // $(this).closest('tr').remove();
+                    $.ajax({
+                        url:url,
+                        method:'get',
+                        success: function(data){
+                            if(data == 1){
+                                swal(
+                                    'Deleted!',
+                                    'Your Account FCL has been deleted.',
+                                    'success'
+                                )
+                                $(elemento).closest('tr').remove();
+                                var a = $('#strfailinput').val();
+                                a--;
+                                $('#strfail').text(a);
+                                $('#strfailinput').attr('value',a);
+                            }else if(data == 2){
+                                swal("Error!", "An internal error occurred!", "error");
                             }
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        swal(
-                            'Cancelled',
-                            'Your Account FCL is safe :)',
-                            'error'
-                        )
-                    }
-                });
+                        }
+                    });
+                } else if (result.dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'Your Account FCL is safe :)',
+                        'error'
+                    )
+                }
             });
+        });
     </script>
 
     @stop
