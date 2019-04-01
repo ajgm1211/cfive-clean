@@ -245,7 +245,15 @@ class QuoteAutoController extends Controller
     $freighPercentage = 0;
     $freighAmmount = 0;
     $freighMarkup= 0;
+    // Markups Local
+    $localPercentage = 0;
+    $localAmmount = 0;
+    $localMarkup = 0;
+    $markupLocalCurre = 0;
+
     // Markups
+
+
     $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
       $q->where('price_id', '=',$price_id);
     })->with('freight_markup','local_markup','inland_markup')->get();
@@ -267,6 +275,40 @@ class QuoteAutoController extends Controller
       // monto aplicado al currency
       $freighMarkup = $freighAmmount / $freighMarkup;
       $freighMarkup = number_format($freighMarkup, 2, '.', '');
+
+      // Local y global
+      $fclLocal = $freight->local_markup->where('price_type_id','=',1);
+      // markup currency
+
+      if($request->modality == "1"){
+        $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_export'));
+        // valor de la conversion segun la moneda
+        $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
+        // Objeto con las propiedades del currency por monto fijo
+        $markupLocalCurre = Currency::find($markupLocalCurre);
+        $markupLocalCurre = $markupLocalCurre->alphacode;
+        // En caso de ser Porcentaje
+        $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
+        // Monto original
+        $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
+        // monto aplicado al currency
+        $localMarkup = $localAmmount / $localMarkup;
+        $localMarkup = number_format($localMarkup, 2, '.', '');
+      }else{
+        $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_import'));
+        // valor de la conversion segun la moneda
+        $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
+        // Objeto con las propiedades del currency por monto fijo
+        $markupLocalCurre = Currency::find($markupLocalCurre);
+        $markupLocalCurre = $markupLocalCurre->alphacode;
+        // en caso de ser porcentake
+        $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
+        // monto original
+        $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
+        // monto aplicado al currency
+        $localMarkup = $localAmmount / $localMarkup;
+        $localMarkup = number_format($localMarkup, 2, '.', '');
+      }
 
     }
 
@@ -297,9 +339,6 @@ class QuoteAutoController extends Controller
 
     $arrarContainers =  array('1','2','3','4','7','8'); 
 
-
-
-
     foreach($arreglo as $data){
       $collectionRate = new Collection();
       $totalFreight = 0;
@@ -317,8 +356,6 @@ class QuoteAutoController extends Controller
       $collectionFreight = new collection();
       $arregloRate =  array();
       $arregloFreight =  array();
-
-
 
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
 
@@ -380,8 +417,6 @@ class QuoteAutoController extends Controller
 
       // ################### Calculos local  Charges #############################
 
-
-
       $localChar = LocalCharge::where('contract_id','=',$data->contract_id)->whereHas('localcharcarriers', function($q) use($carrier) {
         $q->whereIn('carrier_id', $carrier);
       })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
@@ -398,13 +433,14 @@ class QuoteAutoController extends Controller
       foreach($localChar as $local){
 
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
+
         // Condicion para enviar los terminos de venta o compra
         if(isset($local->surcharge->saleterm->name)){
           $terminos = $local->surcharge->saleterm->name;
         }else{
           $terminos = $local->surcharge->name;
         }
-     
+
         foreach($local->localcharcarriers as $localCarrier){
           if($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id ==  $carrier_all ){
             if($local->typedestiny_id == '1'){
@@ -413,22 +449,41 @@ class QuoteAutoController extends Controller
             }
             if($local->typedestiny_id == '3'){
               if(in_array($local->calculationtype_id, $array20)){
-                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $local->ammount, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
-                $freighTwuenty["freight"] = $arregloFreight;
+
+                $monto =   $local->ammount  / $rateMount ;
+
+                $monto = number_format($monto, 2, '.', '');
+                $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
+                $arregloFreight = array_merge($arregloFreight,$markup20);
                 $collectionFreight->push($arregloFreight);
               }
               if(in_array($local->calculationtype_id, $array40)){
-                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $local->ammount, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
-                $freighTwuenty["freight"] = $arregloFreight;
+                $monto =   $local->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
+                $arregloFreight = array_merge($arregloFreight,$markup40);
                 $collectionFreight->push($arregloFreight);
               }
+
             }
+            $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' );
+
+            $collectionFreight->push($arregloFreight);
           }
         }
+
       }
+
+
+
       // Coleccion del Freight
+
       $collectionFreight = $this->OrdenarCollection($collectionFreight);
 
+      // dd($collectionFreight);
+      //S dd($collectionFreight);
       // ################## Fin local Charges        #############################
 
       $totalRates += $totalT;
@@ -437,7 +492,7 @@ class QuoteAutoController extends Controller
       $collectionRate->push($array);
       // Valores
       $data->setAttribute('rates',$collectionRate);
-      $data->setAttribute('freight',$collectionFreight);
+      $data->setAttribute('localfreight',$collectionFreight);
       // Valores totales por contenedor
       $data->setAttribute('total20', number_format($totalT20, 2, '.', ''));
       $data->setAttribute('total40', number_format($totalT40, 2, '.', ''));
@@ -445,7 +500,10 @@ class QuoteAutoController extends Controller
       $data->setAttribute('total40nor', number_format($totalT40nor, 2, '.', ''));
       $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
 
+
     }
+
+
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
@@ -472,33 +530,69 @@ class QuoteAutoController extends Controller
 
   }
 
+  public function localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre){
+
+    if($localPercentage != 0){
+      $markup = ( $monto *  $localPercentage ) / 100 ;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $markup;
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto) ;
+
+    }else{
+      $markup =$localAmmount;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $localMarkup;
+      $monto = number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre,'montoMarkup' => $monto) ;
+
+    }
+
+
+    return $arraymarkup;
+
+  }
+
   public function OrdenarCollection($collection){
 
     $collection = $collection->groupBy([
-      'type',
+      'surcharge_name',
       function ($item)  {
-        return $item['surcharge_name'];
+        return $item['type'];
       },
     ], $preserveKeys = true);
 
     // Se Ordena y unen la collection
     $collect = new collection();
     $monto = 0;
+    $montoMarkup = 0;
+    $totalMarkup = 0;
     foreach($collection as $item){
       $total = count($item);
       foreach($item as $items){
         if($total > 1 ){
           foreach($items as $itemsDetail){
+
             $monto += $itemsDetail['monto']; 
+            $montoMarkup += $itemsDetail['montoMarkup']; 
+            $totalMarkup += $itemsDetail['markup']; 
           }
-          $itemsDetail['monto'] = $monto; 
+          $itemsDetail['monto'] = number_format($monto, 2, '.', '');
+          $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
+          $itemsDetail['markup'] = $totalMarkup;
+
 
           $collect->push($itemsDetail);
+
           $monto = 0;
+          $montoMarkup = 0;
+          $totalMarkup = 0;
+
         }else{
           foreach($items as $itemsDetail){
             $collect->push($itemsDetail); 
             $monto = 0;
+            $montoMarkup = 0;
+            $totalMarkup = 0;
           }
         }
       }
@@ -506,10 +600,13 @@ class QuoteAutoController extends Controller
 
     $collect = $collect->groupBy([
       'surcharge_name',
-      function ($item)  {
+      function ($item) use($collect) {
+        $collect->put('x','surcharge_name');
         return $item['type'];
       },
     ], $preserveKeys = true);
+
+
 
     return $collect;
 
