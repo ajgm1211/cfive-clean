@@ -448,6 +448,8 @@ class QuoteAutoController extends Controller
             if($local->typedestiny_id == '2'){
             }
             if($local->typedestiny_id == '3'){
+
+
               if(in_array($local->calculationtype_id, $array20)){
 
                 $monto =   $local->ammount  / $rateMount ;
@@ -464,6 +466,30 @@ class QuoteAutoController extends Controller
                 $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
                 $arregloFreight = array_merge($arregloFreight,$markup40);
+                $collectionFreight->push($arregloFreight);
+              }
+              if(in_array($local->calculationtype_id, $array40Hc)){
+                $monto =   $local->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' );
+                $arregloFreight = array_merge($arregloFreight,$markup40hc);
+                $collectionFreight->push($arregloFreight);
+              }
+              if(in_array($local->calculationtype_id, $array40Nor)){
+                $monto =   $local->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor' );
+                $arregloFreight = array_merge($arregloFreight,$markup40nor);
+                $collectionFreight->push($arregloFreight);
+              }
+              if(in_array($local->calculationtype_id, $array45)){
+                $monto =   $local->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45' );
+                $arregloFreight = array_merge($arregloFreight,$markup45);
                 $collectionFreight->push($arregloFreight);
               }
 
