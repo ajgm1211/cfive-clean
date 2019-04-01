@@ -401,7 +401,11 @@
                {data: 'options', name: 'options'}
             ],
             initComplete: function () {
+<<<<<<< HEAD
                this.api().columns([4]).every(function () {
+=======
+               this.api().columns(4).every(function () {
+>>>>>>> desarrollo
                   var column = this;
                   $('#tableContracts .head .head_hide').html('');
 
