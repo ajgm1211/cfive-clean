@@ -620,11 +620,7 @@
     @endif
   </div>
 </div>
-<div class="row">
-{!! $arreglo->appends(Request::capture()->except('page'))->render() !!}
 
-
-</div>
 @endsection
 @section('js')
 @parent

@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title', 'Global Chargers')
+@section('title', 'GlobalChargers')
 @section('content')
 
 <div class="m-content">

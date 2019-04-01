@@ -50,7 +50,7 @@ class ReprocessGlobalChargersJob implements ShouldQueue
     public function handle()
     {
         $id = $this->id;
-        
+
         $failglobalchargers = FailedGlobalcharge::where('account_id','=',$id)->get();
         //dd($failglobalchargers);
         $account_idVal = $id;
@@ -111,17 +111,27 @@ class ReprocessGlobalChargersJob implements ShouldQueue
 
                 // Origen Y Destino ------------------------------------------------------------------------
 
-                $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                if($failglobalcharger->differentiator  == 1){
+                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    $originV  = $resultadoPortOri['puerto'];
+                } else if($failglobalcharger->differentiator  == 2){
+                    $resultadoPortOri = PrvHarbor::get_country($originEX[0]);
+                    $originV  = $resultadoPortOri['country'];
+                }
                 if($resultadoPortOri['boolean']){
                     $originB = true;    
                 }
-                $originV  = $resultadoPortOri['puerto'];
 
-                $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                if($failglobalcharger->differentiator  == 1){
+                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    $destinationV  = $resultadoPortDes['puerto'];
+                } else if($failglobalcharger->differentiator  == 2){
+                    $resultadoPortDes = PrvHarbor::get_country($destinyEX[0]);
+                    $destinationV  = $resultadoPortDes['country'];
+                }
                 if($resultadoPortDes['boolean']){
                     $destinyB = true;    
                 }
-                $destinationV  = $resultadoPortDes['puerto'];
 
                 //  Surcharge ------------------------------------------------------------------------------
 
@@ -237,12 +247,20 @@ class ReprocessGlobalChargersJob implements ShouldQueue
                         'globalcharge_id' => $globalChargeArreG->id
                     ]);
 
-                    GlobalCharPort::create([ // tabla GlobalCharPort
-                        'port_orig'      	=> $originV,
-                        'port_dest'      	=> $destinationV,
-                        'typedestiny_id' 	=> $typedestunyV,
-                        'globalcharge_id'   => $globalChargeArreG->id
-                    ]);
+                    if($failglobalcharger->differentiator  == 1){
+                        GlobalCharPort::create([ // tabla GlobalCharPort
+                            'port_orig'      	=> $originV,
+                            'port_dest'      	=> $destinationV,
+                            'typedestiny_id' 	=> $typedestunyV,
+                            'globalcharge_id'   => $globalChargeArreG->id
+                        ]);
+                    } else if($failglobalcharger->differentiator  == 2){
+                        GlobalCharCountry::create([ // tabla GlobalCharPort
+                            'country_orig'      => $originV,
+                            'country_dest'      => $destinationV,
+                            'globalcharge_id'   => $globalChargeArreG->id                                                   
+                        ]);
+                    }
 
                     $failglobalcharger->delete();
                 }

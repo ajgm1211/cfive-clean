@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
-@section('title', 'Global Charge')
+@section('title', 'GlobalCharge')
 @section('content')
 
 <div class="m-content">
