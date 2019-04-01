@@ -196,6 +196,26 @@ class QuoteV2Controller extends Controller
         return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name]);
     }
 
+    public function updatePaymentConditions(Request $request,$id)
+    {
+        $quote=QuoteV2::find($id);
+
+        $quote->payment_conditions=$request->payments;
+        $quote->update();
+
+        return response()->json(['message'=>'Ok','quote'=>$quote]);
+    }
+
+    public function updateTerms(Request $request,$id)
+    {
+        $quote=QuoteV2::find($id);
+
+        $quote->terms_and_conditions=$request->terms;
+        $quote->update();
+
+        return response()->json(['message'=>'Ok','quote'=>$quote]);
+    }
+
     public function duplicate(Request $request, $id){
 
         $id = obtenerRouteKey($id);
@@ -253,7 +273,7 @@ class QuoteV2Controller extends Controller
             $rate_duplicate->total=$rate->total;
             $rate_duplicate->currency_id=$rate->currency_id;
             $rate_duplicate->save();
-            
+
             $charges=Charge::where('automatic_rate_id',$rate->id)->get();
 
 
