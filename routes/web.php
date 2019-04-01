@@ -151,7 +151,7 @@ Route::prefix('Importation')->group(function () {
     //Importar desde request
     Route::get('RequestProccessFCL/{id}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator']);
-    
+
     // Importar Contracto
     Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
         ->middleware(['auth','role:administrator']);
@@ -270,7 +270,7 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->grou
     //Importar desde request
     Route::get('RequestProccessLCL/{id}','ImportationLclController@indexRequest')->name('process.request.lcl')
         ->middleware(['auth','role:administrator']);
-    
+
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
 
     // Account FCL
@@ -504,11 +504,11 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
 // IMPORTATION GLOBALCHARGE FCL
 Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalchargesFcl')->group(function () {
-    
+
     //Importar desde request
     Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
         ->middleware(['auth','role:administrator']);
-    
+
     Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
     Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
     Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
@@ -542,6 +542,12 @@ Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
     Route::get('duplicateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge-lcl']);
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('Region')->group(function () {
+    Route::resource('Region','RegionController');
+    Route::get('/LoadViewRegion','RegionController@LoadViewAdd')->name('load.View.add.region');
+});
+
 Route::resource('search', 'SearchController')->middleware('auth');
 Auth::routes();
 
