@@ -404,24 +404,16 @@ class QuoteAutoController extends Controller
         }else{
           $terminos = $local->surcharge->name;
         }
-
-        $cont = 0;
+     
         foreach($local->localcharcarriers as $localCarrier){
-
           if($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id ==  $carrier_all ){
-
             if($local->typedestiny_id == '1'){
-
             }
             if($local->typedestiny_id == '2'){
-
             }
             if($local->typedestiny_id == '3'){
-
               if(in_array($local->calculationtype_id, $array20)){
-
                 $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $local->ammount, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
-
                 $freighTwuenty["freight"] = $arregloFreight;
                 $collectionFreight->push($arregloFreight);
               }
@@ -430,47 +422,12 @@ class QuoteAutoController extends Controller
                 $freighTwuenty["freight"] = $arregloFreight;
                 $collectionFreight->push($arregloFreight);
               }
-
             }
           }
         }
       }
-
-      $collectionFreight = $collectionFreight->groupBy([
-        'type',
-        function ($item)  {
-
-          return $item['surcharge_name'];
-        },
-      ], $preserveKeys = true);
-
-
-
-      $collect = new collection();
-      $monto = 0;
-      foreach($collectionFreight as $test){
-        $total = count($test);
-        foreach($test as $otro){
-
-          if($total == 2 ){
-            foreach($otro as $locura){
-              $monto += $locura['monto']; 
-            }
-            $collect->push($monto);
-            $monto = 0;
-          }else{
-            foreach($otro as $locura){
-              $collect->push($locura['monto']); 
-              $monto = 0;
-            }
-          }
-        }
-      }
-
-
-
-      dd($collect);
-
+      // Coleccion del Freight
+      $collectionFreight = $this->OrdenarCollection($collectionFreight);
 
       // ################## Fin local Charges        #############################
 
@@ -478,7 +435,9 @@ class QuoteAutoController extends Controller
       $array = array('type'=>'Ocean Freight','detail'=>'Per Container','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id,'currency_rate' => $data->currency->alphacode );
       $array = array_merge($array,$arregloRate);
       $collectionRate->push($array);
+      // Valores
       $data->setAttribute('rates',$collectionRate);
+      $data->setAttribute('freight',$collectionFreight);
       // Valores totales por contenedor
       $data->setAttribute('total20', number_format($totalT20, 2, '.', ''));
       $data->setAttribute('total40', number_format($totalT40, 2, '.', ''));
@@ -487,7 +446,6 @@ class QuoteAutoController extends Controller
       $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
 
     }
-    //  dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
@@ -513,4 +471,48 @@ class QuoteAutoController extends Controller
     return $arraymarkup;
 
   }
+
+  public function OrdenarCollection($collection){
+
+    $collection = $collection->groupBy([
+      'type',
+      function ($item)  {
+        return $item['surcharge_name'];
+      },
+    ], $preserveKeys = true);
+
+    // Se Ordena y unen la collection
+    $collect = new collection();
+    $monto = 0;
+    foreach($collection as $item){
+      $total = count($item);
+      foreach($item as $items){
+        if($total > 1 ){
+          foreach($items as $itemsDetail){
+            $monto += $itemsDetail['monto']; 
+          }
+          $itemsDetail['monto'] = $monto; 
+
+          $collect->push($itemsDetail);
+          $monto = 0;
+        }else{
+          foreach($items as $itemsDetail){
+            $collect->push($itemsDetail); 
+            $monto = 0;
+          }
+        }
+      }
+    }
+
+    $collect = $collect->groupBy([
+      'surcharge_name',
+      function ($item)  {
+        return $item['type'];
+      },
+    ], $preserveKeys = true);
+
+    return $collect;
+
+  }
+
 }
