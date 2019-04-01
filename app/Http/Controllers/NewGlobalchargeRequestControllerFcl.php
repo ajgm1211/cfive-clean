@@ -48,7 +48,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
-        $fileBoll = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $fileBoll = \Storage::disk('GCRequest')->put($nombre,\File::get($file));
 
         $typeVal = 1;
         $arreglotype = '';
@@ -106,7 +106,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->data            = $data;
             $Ncontract->save();
 
-            ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile ,'gcfcl');
+            ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gcfcl','request');
 
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -144,10 +144,19 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         $ext        = $extObj->getExtension();
         $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
         try{
-            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+            return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
-            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+            try{
+                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+            } catch(\Exception $e){
+                try{
+                    return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
+                } catch(\Exception $e){
+                    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+                }
+            }
         }
+
     }
 
 
@@ -224,7 +233,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
     {
         try{
             $Ncontract = NewGlobalchargeRequestFcl::find($id);
-            Storage::disk('UpLoadFile')->delete($Ncontract->namefile);
+            Storage::disk('GCRequest')->delete($Ncontract->namefile);
             $Ncontract->delete();
             return 1;
         } catch(\Exception $e){

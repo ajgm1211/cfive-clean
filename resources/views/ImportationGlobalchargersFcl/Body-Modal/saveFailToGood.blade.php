@@ -1,4 +1,4 @@
-@if($failglobal['port'] == true)
+@if($failglobal['differentiator'] == 1)
   @php
   $portRadio = true; 
   $countryRadio = false; 
@@ -7,7 +7,7 @@
     activarCountry('divport');
   </script>
 @endif
-@if($failglobal['country'] == true)
+@if($failglobal['differentiator'] == 2)
   @php
   $countryRadio = true; 
   $portRadio = false; 
@@ -57,7 +57,7 @@
         <div class="divcountry" hidden="true">
 
           {!! Form::label('origC', 'Origin Country',['style'=>$arre['classorigin']]) !!}
-          {{ Form::select('country_orig[]', $countries,[''],['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
+          {{ Form::select('country_orig[]', $countries,$arre['origin_port'],['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
         </div>
       </div>
@@ -75,7 +75,7 @@
         </div>
         <div class="divcountry" hidden="true" >
           {!! Form::label('destC', 'Destination Country',['style'=>$arre['classdestiny']]) !!}
-          {{ Form::select('country_dest[]',$countries,[''],[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
+          {{ Form::select('country_dest[]',$countries,$arre['destiny_port'],[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
       </div>
     </div>

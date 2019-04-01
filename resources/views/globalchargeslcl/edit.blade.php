@@ -53,7 +53,7 @@ $portRadio = false;
         <div class="divport" >
           {!! Form::label('orig', 'Origin Port') !!}
           {{ Form::select('port_orig[]', $harbor,
-          $globalcharges->globalcharportlcl->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
+          $globalcharges->globalcharportlcl->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true']) }}
         </div>
         <div class="divcountry" hidden="true">
 
@@ -68,7 +68,7 @@ $portRadio = false;
           {!! Form::label('dest', 'Destination Port') !!}
           <div class="m-input-icon m-input-icon--right">
             {{ Form::select('port_dest[]', $harbor,
-            $globalcharges->globalcharportlcl->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
+            $globalcharges->globalcharportlcl->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true']) }}
             <span class="m-input-icon__icon m-input-icon__icon--right">
               <span>
                 <i class="la la-info-circle"></i>
@@ -85,7 +85,7 @@ $portRadio = false;
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
         {!! Form::label('typed', 'Destination type') !!}
-        {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control']) }}
+        {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control', 'required' =>'true']) }}
       </div>
       <div class="col-lg-4">
         {!! Form::label('validation_expire', 'Validation') !!}
@@ -96,7 +96,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('calculationt', 'Calculation Type') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtypelcl_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ']) }}
+          {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtypelcl_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ' , 'required' =>'true']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-map-marker"></i>
@@ -122,7 +122,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Ammount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::number('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','min' => '0','step'=>'0.01']) !!}
+          {!! Form::number('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','class' => 'form-control m-input','min' => '0','step'=>'0.01', 'required' =>'true']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -135,7 +135,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('minimum', 'Minimum') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::text('minimum', $globalcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the Minimum','class' => 'form-control m-input']) !!}
+          {!! Form::text('minimum', $globalcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the Minimum','class' => 'form-control m-input' , 'required' =>'true']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
@@ -149,7 +149,7 @@ $portRadio = false;
       <div class="col-lg-4">
         {!! Form::label('currencyl', 'Currency') !!}
         <div class="m-input-icon m-input-icon--right">
-          {{ Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ]) }}
+          {{ Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' , 'required' =>'true' ]) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>

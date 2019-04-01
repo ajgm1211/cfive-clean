@@ -23,11 +23,13 @@ use App\FileTmpGlobalcharge;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationGlobalchargeJob;
 use App\Jobs\ReprocessGlobalChargersJob;
+use App\NewGlobalchargeRequestFcl as RequestGC;
 
 
 class ImportationGlobachargersFclController extends Controller
@@ -36,7 +38,7 @@ class ImportationGlobachargersFclController extends Controller
     // Reprocesamiento
     public function ReprocesarGlobalchargers(Request $request, $id){
         $countfailglobalchargers = FailedGlobalcharge::where('account_id','=',$id)->count();
-        if($countfailglobalchargers >= 150){
+        if($countfailglobalchargers <= 150){
             $failglobalchargers = FailedGlobalcharge::where('account_id','=',$id)->get();
             //dd($failglobalchargers);
             $account_idVal = $id;
@@ -96,18 +98,27 @@ class ImportationGlobachargersFclController extends Controller
                    && count($carrierEX) == 1){
 
                     // Origen Y Destino ------------------------------------------------------------------------
-
-                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                    if($failglobalcharger->differentiator  == 1){
+                        $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+                        $originV  = $resultadoPortOri['puerto'];
+                    } else if($failglobalcharger->differentiator  == 2){
+                        $resultadoPortOri = PrvHarbor::get_country($originEX[0]);
+                        $originV  = $resultadoPortOri['country'];
+                    }
                     if($resultadoPortOri['boolean']){
                         $originB = true;    
                     }
-                    $originV  = $resultadoPortOri['puerto'];
 
-                    $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                    if($failglobalcharger->differentiator  == 1){
+                        $resultadoPortDes = PrvHarbor::get_harbor($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['puerto'];
+                    } else if($failglobalcharger->differentiator  == 2){
+                        $resultadoPortDes = PrvHarbor::get_country($destinyEX[0]);
+                        $destinationV  = $resultadoPortDes['country'];
+                    }
                     if($resultadoPortDes['boolean']){
                         $destinyB = true;    
                     }
-                    $destinationV  = $resultadoPortDes['puerto'];
 
                     //  Surcharge ------------------------------------------------------------------------------
 
@@ -223,12 +234,20 @@ class ImportationGlobachargersFclController extends Controller
                             'globalcharge_id' => $globalChargeArreG->id
                         ]);
 
-                        GlobalCharPort::create([ // tabla GlobalCharPort
-                            'port_orig'      	=> $originV,
-                            'port_dest'      	=> $destinationV,
-                            'typedestiny_id' 	=> $typedestunyV,
-                            'globalcharge_id'   => $globalChargeArreG->id
-                        ]);
+                        if($failglobalcharger->differentiator  == 1){
+                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                'port_orig'      	=> $originV,
+                                'port_dest'      	=> $destinationV,
+                                'typedestiny_id' 	=> $typedestunyV,
+                                'globalcharge_id'   => $globalChargeArreG->id
+                            ]);
+                        } else if($failglobalcharger->differentiator  == 2){
+                            GlobalCharCountry::create([ // tabla GlobalCharPort
+                                'country_orig'      => $originV,
+                                'country_dest'      => $destinationV,
+                                'globalcharge_id'   => $globalChargeArreG->id                                                   
+                            ]);
+                        }
 
                         $failglobalcharger->delete();
                     }
@@ -265,10 +284,23 @@ class ImportationGlobachargersFclController extends Controller
     public function index()
     {
         $harbor         = Harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.index',compact('harbor','carrier','companysUser','typedestiny'));
+        return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
+    }
+    
+    public function indexRequest($id)
+    {
+        $requestgc      = RequestGC::find($id);
+        //dd($requestgc);
+        $harbor         = Harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
+        $carrier        = Carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestgc'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -281,7 +313,12 @@ class ImportationGlobachargersFclController extends Controller
         $validitydateVal    = $request->validitydate;
         $destinyArr         = $request->destiny;
         $originArr          = $request->origin;
+        $originCountArr     = $request->originCount;
+        $destinyCountArr    = $request->destinyCount;
         $CompanyUserId      = $request->CompanyUserId;
+        $statustypecurren   = $request->valuesCurrency;
+        $statusPortCountry  = $request->valuesportcountry;
+
         $carrierBol         = false;
         $destinyBol         = false;
         $originBol          = false;
@@ -294,7 +331,9 @@ class ImportationGlobachargersFclController extends Controller
         $data           = collect([]);
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         $harbor         = harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
+
 
         $file           = $request->file('file');
         $ext            = strtolower($file->getClientOriginalExtension());
@@ -311,15 +350,19 @@ class ImportationGlobachargersFclController extends Controller
         //obtenemos el nombre del archivo
         $nombre     = $file->getClientOriginalName();
         $nombre     = $now.'_'.$nombre;
-        $filebool   = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
+        $filebool   = \Storage::disk('GCImport')->put($nombre,\File::get($file));
 
         if($filebool){
+            \Storage::disk('GCAccount')->put($nombre,\File::get($file));
             $account   = new AccountImportationGlobalcharge();
             $account->name             = $request->name;
+            $account->namefile         = $nombre;
             $account->date             = $request->date;
             $account->status           = 'incomplete';
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
+
+            ProcessContractFile::dispatch($account->id,$account->namefile,'gcfcl','account');
 
             $account_id = $account->id;
             $fileTmp    = new FileTmpGlobalcharge();
@@ -355,11 +398,16 @@ class ImportationGlobachargersFclController extends Controller
             $fortyfiveBol = true;
         }
 
+        /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
+        , si es 1 el solo se mapean puertos        
+        */
+        if($statusPortCountry == 2){
+            array_push($targetsArr,"Differentiator");
+        }
+
         /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
         con los valores, si es uno el currency viene en una colmna aparte        
         */
-
-        $statustypecurren = $request->valuesCurrency;
 
         if($statustypecurren == 1){
             array_push($targetsArr,"Currency");
@@ -412,7 +460,7 @@ class ImportationGlobachargersFclController extends Controller
         ini_set('memory_limit', '1024M');
 
         Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
+            ->Load(\Storage::disk('GCImport')
                    ->url($nombre),function($reader) use($request,$coordenates) {
                        $reader->takeRows(2);
                        $reader->noHeading = true;
@@ -430,11 +478,12 @@ class ImportationGlobachargersFclController extends Controller
             'origin'            => $originArr,
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
+            'originCount'       => $originCountArr,
+            'destinyCount'      => $destinyCountArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
             'typedestiny'       => $typedestinyVal,
-
             'existdatevalidity' => $datevalidityBol,
             'validitydate'      => $validitydateVal,
 
@@ -453,6 +502,7 @@ class ImportationGlobachargersFclController extends Controller
         //dd($data);
 
         return view('ImportationGlobalchargersFcl.show',compact('harbor',
+                                                                'country',
                                                                 'data',
                                                                 'carrier',
                                                                 'targetsArr',
@@ -461,6 +511,7 @@ class ImportationGlobachargersFclController extends Controller
                                                                 'countTarges',
                                                                 'CompanyUserId',
                                                                 'statustypecurren',
+                                                                'statusPortCountry',
                                                                 'typedestiny'));
     }
 
@@ -470,6 +521,7 @@ class ImportationGlobachargersFclController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         //dd($request->all());
+
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];
         return redirect()->route('ImportationGlobalchargeFcl.show',$id);
@@ -527,8 +579,15 @@ class ImportationGlobachargersFclController extends Controller
         $validityfromA      =  explode("_",$failglobal['validityfrom']);
 
         // -------------- ORIGIN -------------------------------------------------------------
-        $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-            ->first();
+
+        if($failglobal->differentiator == 1){
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        } else if($failglobal->differentiator == 2){
+            $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+        }
+
         $originC   = count($originA);
         if($originC <= 1){
             $originAIn = [$originOb['id']];
@@ -538,8 +597,14 @@ class ImportationGlobachargersFclController extends Controller
         }
 
         // -------------- DESTINATION --------------------------------------------------------
-        $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-            ->first();
+        if($failglobal->differentiator == 1){
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        } else if($failglobal->differentiator == 2){
+            $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+        }
+
         $destinationC   = count($destinationA);
         if($destinationC <= 1){
             $destinationAIn = [$destinationOb->id];
@@ -741,8 +806,15 @@ class ImportationGlobachargersFclController extends Controller
 
                 // -------------- ORIGIN -------------------------------------------------------------
 
-                $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                    ->first();
+
+                if($failglobalcharge->differentiator == 1){
+                    $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                } else if($failglobalcharge->differentiator == 2){
+                    $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
+                        ->first();
+                }
+
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
                 if($originC <= 1){
@@ -753,8 +825,15 @@ class ImportationGlobachargersFclController extends Controller
                 }
 
                 // -------------- DESTINY ------------------------------------------------------------
-                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                    ->first();
+
+                if($failglobalcharge->differentiator == 1){
+                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                } else if($failglobalcharge->differentiator == 2){
+                    $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                }
+
                 $destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
                 if($destinationC <= 1){
@@ -1153,5 +1232,26 @@ class ImportationGlobachargersFclController extends Controller
             return redirect()->route('indextwo.globalcharge.fcl');			
         }
 
+    }
+
+    public function Download(Request $request,$id){
+        $account    = AccountImportationGlobalcharge::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($account->company_user_id);
+        $extObj     = new \SplFileInfo($account->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $account->id.'-'.$company->name.'_'.$now.'-GCFLC.'.$ext;
+        if(empty($account->namefile) != true){
+            try{
+                return Storage::disk('s3_upload')->download('Account/Global-charges/FCL/'.$account->namefile,$name);
+            } catch(\Exception $e){
+                return Storage::disk('GCAccount')->download($account->namefile,$name);
+            }
+        } else {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'The Global Charge File not exists');
+            return redirect()->route('RequestsGlobalchargersFcl.index');
+        }
     }
 }

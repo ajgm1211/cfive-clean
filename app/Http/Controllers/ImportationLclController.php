@@ -16,8 +16,11 @@ use App\ContractLcl;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocesarRatesLclJob;
 use Illuminate\Support\Facades\Storage;
+use App\NewContractRequestLcl as RequestLCL;
+use App\AccountImportationContractLcl as AccountLcl;
 
 class ImportationLclController extends Controller
 {
@@ -180,7 +183,172 @@ class ImportationLclController extends Controller
         return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
     }
 
+    public function indexRequest($id)
+    {
+        $requestlcl     = RequestLCL::find($id);
+        //dd($requestlcl);
+        $harbor         = harbor::all()->pluck('display_name','id');
+        $carrier        = carrier::all()->pluck('name','id');
+        $companysUser   = CompanyUser::all()->pluck('name','id');
+        return view('ImportationLcl.indexRequest',compact('harbor','carrier','companysUser','requestlcl'));
+    }
+
     // --------------- Rates ---------------------------------------------
+
+    // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
+    public function UploadFileNewContract(Request $request)
+    {
+
+        //dd($request->all());
+        $now = new \DateTime();
+        $now2           = $now;
+        $now2           = $now2->format('Y-m-d');
+        $now            = $now->format('dmY_His');
+        $type           = $request->type;
+        $carrierVal     = $request->carrier;
+        $destinyArr     = $request->destiny;
+        $originArr      = $request->origin;
+        $CompanyUserId  = $request->CompanyUserId;
+        $carrierBol     = false;
+        $destinyBol     = false;
+        $originBol      = false;
+        $data= collect([]);
+        $harbor  = harbor::all()->pluck('display_name','id');
+        $carrier = carrier::all()->pluck('name','id');
+        // try {
+        $file = $request->file('file');
+        $ext = strtolower($file->getClientOriginalExtension());
+        $validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv')
+        );
+        $Contract_id;
+        if ($validator->fails()) {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+            return redirect()->route('ImportationLCL.index');
+        }
+        //obtenemos el nombre del archivo
+        $nombre = $file->getClientOriginalName();
+        $nombre = $now.'_'.$nombre;
+        $validatefile = \Storage::disk('LclImport')->put($nombre,\File::get($file));
+
+        if($validatefile){
+            \Storage::disk('LclAccount')->put($nombre,\File::get($file));
+
+            $account = new AccountLcl();
+            $account->name              = $request->name;
+            $account->date              = $now2;
+            $account->namefile          = $nombre;
+            $account->company_user_id   = $CompanyUserId;
+            $account->save();
+
+            ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account');
+
+            $contract     = new ContractLcl();
+            $contract->name             = $request->name;
+            $contract->number           = $request->number;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->status           = 'incomplete';
+            $contract->comments         = $request->comments;
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->account_id       = $account->id;
+            $contract->save(); 
+            $Contract_id = $contract->id;
+            /* $fileTmp = new FileTmp();
+            $fileTmp->contract_id = $Contract_id;
+            $fileTmp->name_file   = $nombre;
+            $fileTmp->save(); //*/
+        }
+
+        $statustypecurren = $request->valuesCurrency;
+        $targetsArr =[ 0 => "W/M", 1 => "Minimun"];
+
+        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
+
+        if($type == 2){
+            array_push($targetsArr,"Calculation Type","Charge");
+        }
+
+        // DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
+
+
+
+        /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
+        con los valores, si es uno el currency viene en una colmna aparte        
+        */
+
+        if($statustypecurren == 1){
+            array_push($targetsArr,"Currency");
+        }
+
+        if($request->DatOri == false){
+            array_push($targetsArr,'Origin');
+        }
+        else{
+            $originBol = true;
+            $originArr;
+        }
+        if($request->DatDes == false){
+            array_push($targetsArr,'Destiny');
+        } else {
+            $destinyArr;
+            $destinyBol = true;
+        }
+        if($request->DatCar == false){
+            array_push($targetsArr,'Carrier');
+        } else {
+            $carrierVal;
+            $carrierBol = true;
+        }
+        //dd($targetsArr);
+        //  dd($data);
+        $coordenates = collect([]);
+        //ini_set('max_execution_time', 300);
+        Excel::selectSheetsByIndex(0)
+            ->Load(\Storage::disk('LclImport')
+                   ->url($nombre),function($reader) use($request,$coordenates) {
+                       $reader->noHeading = true;
+                       $reader->ignoreEmpty();
+                       $reader->takeRows(2);
+                       // foreach($reader->first() as $read){
+                       $read = $reader->first();
+                       $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
+                       for($i=0;$i<count($reader->first());$i++){
+                           $coordenates->push($columna[$i].' '.$read[$i]);
+                       }
+                       /*break;
+                       }*/
+
+                   });
+        $boxdinamy = [
+            'existorigin'     => $originBol,
+            'origin'          => $originArr,
+            'existdestiny'    => $destinyBol,
+            'destiny'         => $destinyArr,
+            'existcarrier'    => $carrierBol,
+            'carrier'         => $carrierVal,
+            'Contract_id'     => $Contract_id,
+            'number'          => $request->number,
+            'name'            => $request->name,
+            'fileName'        => $nombre,
+            'validatiion'     => $request->validation_expire,
+            'comments'        => $request->comments,
+        ];
+        $data->push($boxdinamy);
+        $countTarges = count($targetsArr);
+        //dd($data);
+
+        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
+        /*}catch(\Exception $e){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'Error with the archive');
+            return redirect()->route('importaion.fcl');
+        }//*/
+
+    }
 
     // Importador de Rates LCL 
     public function create(Request $request)
@@ -188,7 +356,7 @@ class ImportationLclController extends Controller
         //dd($request->all());
         $requestobj = $request->all();
         $NameFile           = $requestobj['FileName'];
-        $path = public_path(\Storage::disk('UpLoadFile')->url($NameFile));
+        $path = \Storage::disk('LclImport')->url($NameFile);
         $companyUserIdVal       = $requestobj['CompanyUserId'];
         //dd($path);
         $errors = 0;
@@ -511,7 +679,7 @@ class ImportationLclController extends Controller
                     $i =$i + 1;
                 }
 
-                Storage::delete($requestobj['FileName']);
+                \Storage::disk('LclImport')->delete($requestobj['FileName']);
             });
 
         $contract = ContractLcl::find($request['Contract_id']);
@@ -875,146 +1043,68 @@ class ImportationLclController extends Controller
         }
     }
 
-    // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
-    public function UploadFileNewContract(Request $request)
-    {
+    // Account Importation --------------------------------------------------------------
 
-        //dd($request->all());
-        $now = new \DateTime();
-        $now = $now->format('dmY_His');
-        $type       = $request->type;
-        $carrierVal     = $request->carrier;
-        $destinyArr     = $request->destiny;
-        $originArr      = $request->origin;
-        $CompanyUserId  = $request->CompanyUserId;
-        $carrierBol     = false;
-        $destinyBol     = false;
-        $originBol      = false;
-        $data= collect([]);
-        $harbor  = harbor::all()->pluck('display_name','id');
-        $carrier = carrier::all()->pluck('name','id');
-        // try {
-        $file = $request->file('file');
-        $ext = strtolower($file->getClientOriginalExtension());
-        $validator = \Validator::make(
-            array('ext' => $ext),
-            array('ext' => 'in:xls,xlsx,csv')
-        );
-        $Contract_id;
-        if ($validator->fails()) {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-            return redirect()->route('ImportationLCL.index');
-        }
-        //obtenemos el nombre del archivo
-        $nombre = $file->getClientOriginalName();
-        $nombre = $now.'_'.$nombre;
-        $validatefile = \Storage::disk('UpLoadFile')->put($nombre,\File::get($file));
-
-        if($validatefile){
-            $contract     = new ContractLcl();
-            $contract->name             = $request->name;
-            $contract->number           = $request->number;
-            $validity                   = explode('/',$request->validation_expire);
-            $contract->validity         = $validity[0];
-            $contract->expire           = $validity[1];
-            $contract->status           = 'incomplete';
-            $contract->comments         = $request->comments;
-            $contract->company_user_id  = $CompanyUserId;
-            $contract->save(); 
-            $Contract_id = $contract->id;
-            /* $fileTmp = new FileTmp();
-            $fileTmp->contract_id = $Contract_id;
-            $fileTmp->name_file   = $nombre;
-            $fileTmp->save(); //*/
-        }
-
-        $statustypecurren = $request->valuesCurrency;
-        $targetsArr =[ 0 => "W/M", 1 => "Minimun"];
-
-        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
-
-        if($type == 2){
-            array_push($targetsArr,"Calculation Type","Charge");
-        }
-
-        // DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
-
-
-
-        /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
-        con los valores, si es uno el currency viene en una colmna aparte        
-        */
-
-        if($statustypecurren == 1){
-            array_push($targetsArr,"Currency");
-        }
-
-        if($request->DatOri == false){
-            array_push($targetsArr,'Origin');
-        }
-        else{
-            $originBol = true;
-            $originArr;
-        }
-        if($request->DatDes == false){
-            array_push($targetsArr,'Destiny');
-        } else {
-            $destinyArr;
-            $destinyBol = true;
-        }
-        if($request->DatCar == false){
-            array_push($targetsArr,'Carrier');
-        } else {
-            $carrierVal;
-            $carrierBol = true;
-        }
-        //dd($targetsArr);
-        //  dd($data);
-        $coordenates = collect([]);
-        //ini_set('max_execution_time', 300);
-        Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
-                   ->url($nombre),function($reader) use($request,$coordenates) {
-                       $reader->noHeading = true;
-                       $reader->ignoreEmpty();
-                       $reader->takeRows(2);
-                       // foreach($reader->first() as $read){
-                       $read = $reader->first();
-                       $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
-                       for($i=0;$i<count($reader->first());$i++){
-                           $coordenates->push($columna[$i].' '.$read[$i]);
-                       }
-                       /*break;
-                       }*/
-
-                   });
-        $boxdinamy = [
-            'existorigin'     => $originBol,
-            'origin'          => $originArr,
-            'existdestiny'    => $destinyBol,
-            'destiny'         => $destinyArr,
-            'existcarrier'    => $carrierBol,
-            'carrier'         => $carrierVal,
-            'Contract_id'     => $Contract_id,
-            'number'          => $request->number,
-            'name'            => $request->name,
-            'fileName'        => $nombre,
-            'validatiion'     => $request->validation_expire,
-            'comments'        => $request->comments,
-        ];
-        $data->push($boxdinamy);
-        $countTarges = count($targetsArr);
-        //dd($data);
-
-        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
-        /*}catch(\Exception $e){
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'Error with the archive');
-            return redirect()->route('importaion.fcl');
-        }//*/
-
+    public function indexAccount(){
+        $account = AccountLcl::with('contractlcl','companyuser')->get();
+        //dd($account);
+        return DataTables::of($account)
+            ->addColumn('status', function ( $account) {
+                if(empty($account->contractlcl->status)!=true){
+                    return  $account->contractlcl->status;
+                }else{
+                    return  'Contract erased';
+                }
+            })
+            ->addColumn('company_user_id', function ( $account) {
+                return  $account->companyuser->name;
+            })
+            ->addColumn('action', function ( $account) {
+                if(empty($account->contractlcl->status)!=true){
+                    return '
+                <a href="/ImportationLCL/lcl/rates/'.$account->contractlcl['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
+                <!--&nbsp;
+                <a href="" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>-->
+                &nbsp;
+                <a href="/ImportationLCL/DownloadAccountclcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-clcl" data-id-account-clcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }else{
+                    return '
+                <a href="/ImportationLCL/DownloadAccountclcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                &nbsp;
+                <a href="#" id="delete-account-clcl" data-id-account-clcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                }
+            })
+            ->editColumn('id', '{{$id}}')->toJson();
     }
+
+    public function DestroyAccount($id){
+        try{
+            $account = AccountLcl::find($id);
+            Storage::disk('LclAccount')->delete($account->namefile);
+            $account->delete();
+            return 1;
+        } catch(Exception $e){
+            return 2;
+        }
+    }
+
+    public function Download($id){
+        $account    = AccountLcl::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($account->company_user_id);
+        $extObj     = new \SplFileInfo($account->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        try{
+            return Storage::disk('s3_upload')->download('Account/LCL/'.$account->namefile,$name);
+        } catch(\Exception $e){
+            return Storage::disk('LclAccount')->download($account->namefile,$name);
+        }
+    }
+
 
     //********************************************************************
     public function store(Request $request)

@@ -63,7 +63,9 @@ class SettingController extends Controller
             $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
             $name     = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name,file_get_contents($file));
-            ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
+            $s3 = \Storage::disk('s3_upload');
+            $s3->put($filepath, file_get_contents($file), 'public');
+            //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
         if(!$request->company_id){
             //$company=CompanyUser::create($request->all());
