@@ -38,6 +38,82 @@ $(document).ready(function() {
         }
     });
 });
+ 
+$(document).on('click', '#edit-payments', function () {
+    $(".payment_conditions_span").attr('hidden','true');
+    $(".payment_conditions_textarea").removeAttr('hidden');
+    $("#update_payments").removeAttr('hidden');
+});
+
+$(document).on('click', '#cancel-payments', function () {
+    $(".payment_conditions_span").removeAttr('hidden');
+    $(".payment_conditions_textarea").attr('hidden','true');
+    $("#update_payments").attr('hidden','true');
+});
+
+$(document).on('click', '#update-payments', function () {
+    var id=$(".id").val();
+    var payments = tinymce.get("payment_conditions").getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/payments/'+id,
+        data: {
+            'payments': payments,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The payment conditions has been updated.',
+                    'success'
+                )
+
+                $(".payment_conditions_span").html(data.quote['payment_conditions']);
+                $(".payment_conditions_span").removeAttr('hidden');
+                $(".payment_conditions_textarea").attr('hidden','true');
+                $("#update_payments").attr('hidden','true');
+            }
+        }
+    });
+});
+
+$(document).on('click', '#edit-terms', function () {
+    $(".terms_and_conditions_span").attr('hidden','true');
+    $(".terms_and_conditions_textarea").removeAttr('hidden');
+    $("#update_terms").removeAttr('hidden');
+});
+
+$(document).on('click', '#cancel-terms', function () {
+    $(".terms_and_conditions_span").removeAttr('hidden');
+    $(".terms_and_conditions_textarea").attr('hidden','true');
+    $("#update_terms").attr('hidden','true');
+});
+
+$(document).on('click', '#update-terms', function () {
+    var id=$(".id").val();
+    var terms = tinymce.get("terms_and_conditions").getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/terms/'+id,
+        data: {
+            'terms': terms,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The terms and conditions has been updated.',
+                    'success'
+                )
+
+                $(".terms_and_conditions_span").html(data.quote['terms_and_conditions']);
+                $(".terms_and_conditions_span").removeAttr('hidden');
+                $(".terms_and_conditions_textarea").attr('hidden','true');
+                $("#update_terms").attr('hidden','true');
+            }
+        }
+    });
+});
 
 $(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden','true');

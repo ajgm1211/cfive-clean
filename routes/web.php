@@ -348,6 +348,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
     Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
     Route::post('/update/details', 'QuoteV2Controller@updateQuoteDetails')->name('quotes-v2.update.details');
+    Route::post('/update/payments/{id}', 'QuoteV2Controller@updatePaymentConditions')->name('quotes-v2.update.payments');
+    Route::post('/update/terms/{id}', 'QuoteV2Controller@updateTerms')->name('quotes-v2.update.terms');
     Route::get('/duplicate/{id}', 'QuoteV2Controller@duplicate')->name('quotes-v2.duplicate');
     Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
 });

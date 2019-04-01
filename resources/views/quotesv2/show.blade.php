@@ -59,7 +59,7 @@
                             <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
                                 <li class="nav-item m-tabs__item" id="edit_li">
                                     <a class="btn btn-primary-v2" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
-                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;Edit
+                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit
                                     </a>
                                 </li>
                             </ul>
@@ -102,7 +102,7 @@
                                     <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
                                     <span class="delivery_type_span">
-                    @if($quote->delivery_type==1)
+                                        @if($quote->delivery_type==1)
                                             Port to Port
                                         @elseif($quote->delivery_type==2)
                                             Port to Door
@@ -111,7 +111,7 @@
                                         @else
                                             Door to Door
                                         @endif
-                  </span>
+                                    </span>
                                 <!--<a href="#" id="delivery_type" class="editable" data-source="[{value: '1', text: 'Port to Port'},{value: '2', text: 'Port to Door'},{value: '3', text: 'Door to Port'},{value: '4', text: 'Door to Door'}]" data-type="select" data-value="{{$quote->delivery_type}}" data-pk="{{$quote->id}}" data-title="Select delivery type"></a>-->
                                 </div>
                                 <div class="col-md-4">
@@ -136,10 +136,10 @@
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
-                    @foreach($quote->equipment as $item)
+                                        @foreach($quote->equipment as $item)
                                             {{$item}}@unless($loop->last),@endunless
                                         @endforeach
-                  </span>
+                                      </span>
                                     {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$quote->equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
                                 </div>
                                 <div class="col-md-4">
@@ -940,14 +940,36 @@
                 <div class="m-portlet">
                     <div class="m-portlet__head">
                         <div class="row" style="padding-top: 20px;">
-                            <h3 class="title-quote size-14px">Payments conditions</h3>
+                            <h3 class="title-quote size-14px">Payment conditions</h3>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                            <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                                <li class="nav-item m-tabs__item" id="edit_li">
+                                    <a class="btn btn-primary-v2" id="edit-payments" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div class="m-portlet__body">
                         <div class="card card-body bg-light">
-                            @foreach($quote->payment as $item)
-                                {!! $item->content !!}
-                            @endforeach
+                            <span class="payment_conditions_span">{!! $quote->payment_conditions !!}</span>
+                            <div class="payment_conditions_textarea" hidden>
+                                <textarea name="payment_conditions" class="form-control payment_conditions editor" id="payment_conditions">{!!$quote->payment_conditions!!}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center" id="update_payments" hidden>
+                                    <br>
+                                    <a class="btn btn-danger" id="cancel-payments" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-close"></i>&nbsp;&nbsp;&nbsp;Cancel
+                                    </a>
+                                    <a class="btn btn-primary" id="update-payments" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;Update
+                                    </a>
+                                    <br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -960,12 +982,34 @@
                         <div class="row" style="padding-top: 20px;">
                             <h3 class="title-quote size-14px">Terms & conditions</h3>
                         </div>
-                    </div>
+                        <div class="m-portlet__head-tools">
+                            <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                                <li class="nav-item m-tabs__item" id="edit_li">
+                                    <a class="btn btn-primary-v2" id="edit-terms" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>                    
                     <div class="m-portlet__body">
                         <div class="card card-body bg-light">
-                            @foreach($quote->terms as $item)
-                                {!! $item->content !!}
-                            @endforeach
+                            <span class="terms_and_conditions_span">{!! $quote->terms_and_conditions !!}</span>
+                            <div class="terms_and_conditions_textarea" hidden>
+                                <textarea name="terms_and_conditions" class="form-control terms_and_conditions editor" id="terms_and_conditions">{!!$quote->terms_and_conditions!!}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center" id="update_terms" hidden>
+                                    <br>
+                                    <a class="btn btn-danger" id="cancel-terms" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-close"></i>&nbsp;&nbsp;&nbsp;Cancel
+                                    </a>
+                                    <a class="btn btn-primary" id="update-terms" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                        <i class="fa fa-pencil"></i>&nbsp;&nbsp;&nbsp;Update
+                                    </a>
+                                    <br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -983,11 +1027,50 @@
     <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
     <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+    <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
+    <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $(".show-hide").click(function(){
                 $(this).closest("row").toggle();
             });
         });
+            var editor_config = {
+      path_absolute : "/",
+      selector: "textarea.editor",
+      plugins: ["template"],
+      toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+      external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
+      nanospell_server:"php",
+      browser_spellcheck: true,
+      relative_urls: false,
+      remove_script_host: false,
+      file_browser_callback : function(field_name, url, type, win) {
+        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+
+        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+        if (type == 'image') {
+          cmsURL = cmsURL + "&type=Images";
+        } else {
+          cmsURL = cmsURL + "&type=Files";
+        }
+
+        tinymce.activeEditor.windowManager.open({
+          file: '<?= route('elfinder.tinymce4') ?>',// use an absolute path!
+          title: 'File manager',
+          width: 900,
+          height: 450,
+          resizable: 'yes'
+        }, {
+          setUrl: function (url) {
+            win.document.getElementById(field_name).value = url;
+          }
+        });
+      }
+    };
+
+    tinymce.init(editor_config);
+
     </script>
 @stop
