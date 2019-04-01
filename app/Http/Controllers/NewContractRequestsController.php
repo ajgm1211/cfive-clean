@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-
 use App\User;
 use App\Harbor;
 use App\Carrier;
+use EventIntercom;
+use \Carbon\Carbon;
 use App\CompanyUser;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
+use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
 use App\Mail\NewRequestToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
-use App\Jobs\ProcessContractFile;
-use EventIntercom;
+
 
 class NewContractRequestsController extends Controller
 {
@@ -31,7 +33,56 @@ class NewContractRequestsController extends Controller
 
     public function create()
     {
-        //
+        $Ncontracts = NewContractRequest::with('user','companyuser')->orderBy('id', 'desc')->get();
+        //dd($Ncontracts[0]['companyuser']['name']);
+
+        return Datatables::of($Ncontracts)
+            ->addColumn('Company', function ($Ncontracts) {
+                return $Ncontracts->companyuser->name;
+            })
+            ->addColumn('name', function ($Ncontracts) {
+                return $Ncontracts->namecontract;
+            })
+            ->addColumn('number', function ($Ncontracts) {
+                return $Ncontracts->numbercontract;
+            })
+            ->addColumn('validation', function ($Ncontracts) {
+                return $Ncontracts->validation;
+            })
+            ->addColumn('date', function ($Ncontracts) {
+                return $Ncontracts->created;
+            })
+            ->addColumn('updated', function ($Ncontracts) {
+                if(empty($Ncontract->updated) != true){
+                    return Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s');
+                } else {
+                    return '00-00-0000 00:00:00';
+                }
+            })
+            ->addColumn('user', function ($Ncontracts) {
+                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+            })
+            ->addColumn('status', function ($Ncontracts) {
+                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="color:#031B4E">'.$Ncontracts->status.'</a>
+                &nbsp;
+                <samp class="la la-pencil-square-o" for="" style="font-size:15px"></samp>';
+            })
+            ->addColumn('action', function ($Ncontracts) {
+                return '
+                <a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'" title="Proccess FCL Request">
+                    <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
+                </a>
+                &nbsp;&nbsp;
+                <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>
+                &nbsp;&nbsp;
+                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
+                    <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a>';
+            })
+
+            ->make();
     }
 
     public function store(Request $request)
@@ -146,7 +197,7 @@ class NewContractRequestsController extends Controller
             return redirect()->route('contracts.index');
         }
     }
-    
+
     public function store2(Request $request)
     {
         //dd($request->all());
@@ -283,7 +334,12 @@ class NewContractRequestsController extends Controller
             }
         }
     }
-
+    
+    public function showStatus($id){
+        $requests = NewContractRequest::find($id);
+        //dd($requests);
+        return view('Requests.Body-Modals.edit',compact('requests'));
+    }
     public function edit($id)
     {
         $Ncontracts = NewContractRequest::with('companyuser','user')->find($id);

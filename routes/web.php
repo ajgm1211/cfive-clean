@@ -137,6 +137,8 @@ Route::prefix('Requests')->group(function () {
 
     Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
         ->middleware(['auth','role:administrator|company|subuser']);
+    Route::get('StatusRquestFCL/{id}','NewContractRequestsController@showStatus')->name('show.status.Request')
+        ->middleware(['auth','role:administrator']);
     Route::POST('RequestImportation/two','NewContractRequestsController@store2')->name('RequestImportation.store2')
         ->middleware(['auth','role:administrator|company|subuser']);
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
