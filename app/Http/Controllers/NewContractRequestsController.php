@@ -25,9 +25,9 @@ class NewContractRequestsController extends Controller
 
     public function index()
     {
-        $Ncontracts = NewContractRequest::with('user','companyuser')->orderBy('id', 'desc')->get();
+        
         //dd($Ncontracts);
-        return view('Requests.index',compact('Ncontracts'));
+        return view('Requests.index');
     }
 
 
@@ -63,9 +63,19 @@ class NewContractRequestsController extends Controller
                 return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
             })
             ->addColumn('status', function ($Ncontracts) {
-                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="color:#031B4E">'.$Ncontracts->status.'</a>
+                $color='';
+                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                    //$color = 'color:#031B4E';
+                    $color = 'color:#f81538';
+                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
+                    $color = 'color:#5527f0';
+                } else {
+                    $color = 'color:#04950f';
+                }
+
+                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'">'.$Ncontracts->status.'</a>
                 &nbsp;
-                <samp class="la la-pencil-square-o" for="" style="font-size:15px"></samp>';
+                <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) {
                 return '
@@ -334,7 +344,7 @@ class NewContractRequestsController extends Controller
             }
         }
     }
-    
+
     public function showStatus($id){
         $requests = NewContractRequest::find($id);
         //dd($requests);

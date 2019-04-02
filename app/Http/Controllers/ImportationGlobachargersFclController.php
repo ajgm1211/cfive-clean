@@ -290,7 +290,7 @@ class ImportationGlobachargersFclController extends Controller
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
     }
-    
+
     public function indexRequest($id)
     {
         $requestgc      = RequestGC::find($id);
@@ -1253,5 +1253,32 @@ class ImportationGlobachargersFclController extends Controller
             $request->session()->flash('message.content', 'The Global Charge File not exists');
             return redirect()->route('RequestsGlobalchargersFcl.index');
         }
+    }
+
+    public function indexAccount(){
+        $account = AccountImportationGlobalcharge::with('companyuser')->get();
+        return DataTables::of($account)
+            ->addColumn('status', function ( $account) {
+                return  $account->status;
+
+            })
+            ->addColumn('company_user_id', function ( $account) {
+                return  $account->companyuser->name;
+            })
+            ->addColumn('action', function ( $account) {
+                return '<a href="/ImportationGlobalchargesFcl/FailedGlobalchargers/'.$account->id.'/1" class="show"  title="Failed-Good" >
+                            <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
+                        </a>
+                        &nbsp;
+                        &nbsp;
+                        <a href="/ImportationGlobalchargesFcl/DownloadAccountgcfcl/'.$account->id.'" class="">
+                            <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
+                        </a>
+                        &nbsp; &nbsp; 
+                        <a href="/ImportationGlobalchargesFcl/DeleteAccountsGlobalchargesFcl/'.$account->id.'/2" class="eliminarrequest"  title="Delete" >
+                            <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                        </a>';
+            })
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 }

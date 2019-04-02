@@ -255,6 +255,8 @@ Route::prefix('Importation')->group(function () {
 Route::prefix('RequestsLcl')->group(function () {
     Route::resource('RequestImportationLcl','NewContractRequestLclController')->middleware(['auth','role:administrator']);
 
+    Route::get('StatusRquestLCL/{id}','NewContractRequestLclController@showStatus')->name('show.status.Request.lcl')
+        ->middleware(['auth','role:administrator']);    
     Route::POST('RequestImportationLcl/two','NewContractRequestLclController@store2')->name('RequestImportationLcl.store2')
         ->middleware(['auth','role:administrator|company|subuser']);
     Route::get('Requestimporlcl','NewContractRequestLclController@LoadViewRequestImporContractLcl')->name('Request.importaion.lcl')
@@ -482,8 +484,14 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
     //Route::resource('RequestsGlobalchargersFcl','NewGlobalchargeRequestControllerFcl')->middleware(['auth','role:administrator']);
 
+    Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
+        ->middleware(['auth','role:administrator']);    
+    
     Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
         ->middleware(['auth','role:administrator|company|subuser']);
+    
+    Route::get('RequestsGlobalchargersFcl/create2/','NewGlobalchargeRequestControllerFcl@create2')->name('RequestsGlobalchargersFcl.create2')
+        ->middleware(['auth','role:administrator']);
 
     Route::POST('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@store')->name('RequestsGlobalchargersFcl.store')
         ->middleware(['auth','role:administrator|company|subuser']);
@@ -507,6 +515,7 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 // IMPORTATION GLOBALCHARGE FCL
 Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalchargesFcl')->group(function () {
 
+    Route::get('AccountGC/','ImportationGlobachargersFclController@indexAccount')->name('index.Account.import.gc');
     //Importar desde request
     Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
         ->middleware(['auth','role:administrator']);
