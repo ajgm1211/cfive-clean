@@ -204,6 +204,67 @@
                 <button type="button" class="btn btn-sm btn-default btn-bold btn-upper">Select</button>
               </div>
             </div>
+            <!-- Gastos Origen-->
+            @if(!$arr->localorigin->isEmpty())
+            <div class="row" id='origin{{$loop->iteration}}'  >
+              <div class="col-lg-12">
+                <div class="row">
+                  <span class="darkblue cabezeras">Destination</span><br><br>
+                </div>
+                <div class="row bg-light">
+                  <div class="col-lg-3"><span class="portalphacode">Charge</span></div>
+                  <div class="col-lg-3"><span class="portalphacode">Detail</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                  <div class="col-lg-1"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                  <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
+                </div><br>
+                @foreach($arr->localorigin as $localorigin)
+
+                <div class="row">
+                  <div class="col-lg-3">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}</div>
+                  <div class="col-lg-3">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}</div>
+                  <div class="col-lg-1">
+                    {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}  + {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}          
+                  </div>      
+                  <div class="col-lg-1">
+                    {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}                  
+                  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>  
+                    {{ isset($localorigin['40hc']) ?  str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('montoMarkup')) : '0.00' }}     
+                  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>  
+                    {{ isset($localorigin['40nor']) ?  str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('montoMarkup')) : '0.00' }}     
+                  </div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}>     
+                    {{ isset($localorigin['45']) ?  str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('montoMarkup')) : '0.00' }}     
+                  </div>
+                  <div class="col-lg-1" ><span class="">USD</span></div>
+                  <div class="col-lg-1" ></div>
+                </div><br>
+                @endforeach
+                <br>
+
+                <div class="row bg-light">
+                  <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                </div>
+
+
+                <br><br>
+                <div class="row"><div class="col-lg-12"><hr></div></div>
+                <br><br>
+
+              </div>
+            </div>
+            @endif
             <!-- Gastos Freight-->
             <div class="row" id='freight{{$loop->iteration}}'  >
               <div class="col-lg-12">
@@ -271,6 +332,7 @@
               </div>
             </div>
             <br><br>
+            <!-- Gastos Destino-->
             @if(!$arr->localdestiny->isEmpty())
             <div class="row" id='destiny{{$loop->iteration}}'  >
               <div class="col-lg-12">
@@ -327,7 +389,7 @@
                 <br><br>
                 <div class="row"><div class="col-lg-12"><hr></div></div>
                 <br><br>
-            
+
               </div>
             </div>
             @endif
