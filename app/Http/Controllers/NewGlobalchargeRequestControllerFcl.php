@@ -8,6 +8,7 @@ use App\Carrier;
 use App\CompanyUser;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
+use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\NewGlobalchargeRequestFcl;
 use App\AccountImportationGlobalcharge;
@@ -21,10 +22,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
     public function index()
     {
-        $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
-        //dd($Ncontracts);
         $accounts = AccountImportationGlobalcharge::with('companyuser')->orderBy('id','desc')->get();
-        return view('RequestGlobalChargeFcl.index',compact('Ncontracts','accounts'));
+        return view('RequestGlobalChargeFcl.index',compact('accounts'));
     }
 
     public function create()
@@ -35,6 +34,71 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         return view('RequestGlobalChargeFcl.NewRequest',compact('harbor','carrier','user'));
     }
 
+    public function create2(){
+        $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
+        //dd($Ncontracts[0]['companyuser']['name']);
+
+        return Datatables::of($Ncontracts)
+            ->addColumn('Company', function ($Ncontracts) {
+                return $Ncontracts->companyuser->name;
+            })
+            ->addColumn('name', function ($Ncontracts) {
+                return $Ncontracts->name;
+            })
+            ->addColumn('validation', function ($Ncontracts) {
+                return $Ncontracts->validation;
+            })
+            ->addColumn('date', function ($Ncontracts) {
+                return $Ncontracts->created;
+            })
+            ->addColumn('updated', function ($Ncontracts) {
+                if(empty($Ncontract->updated) != true){
+                    return Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s');
+                } else {
+                    return '00-00-0000 00:00:00';
+                }
+            })
+            ->addColumn('user', function ($Ncontracts) {
+                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+            })
+            ->addColumn('status', function ($Ncontracts) {
+                $color='';
+                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                    //$color = 'color:#031B4E';
+                    $color = 'color:#f81538';
+                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
+                    $color = 'color:#5527f0';
+                } else {
+                    $color = 'color:#04950f';
+                }
+
+                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'">'.$Ncontracts->status.'</a>
+                &nbsp;
+                <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
+            })
+            ->addColumn('action', function ($Ncontracts) {
+                return '
+                <a href="/ImportationGlobalchargesFcl/RequestProccessGC/'.$Ncontracts->id.'" title="Proccess GC Request">
+                    <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
+                </a>
+                &nbsp;&nbsp;
+                <a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>
+                &nbsp;&nbsp;
+                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
+                    <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a>';
+            })
+
+            ->make();
+    }
+
+    public function showStatus($id){
+        $requests = NewGlobalchargeRequestFcl::find($id);
+        //dd($requests);
+        return view('RequestGlobalChargeFcl.Body-Modals.edit',compact('requests'));
+    }
 
     public function store(Request $request)
     {

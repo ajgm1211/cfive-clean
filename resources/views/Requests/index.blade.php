@@ -90,105 +90,23 @@
                                     </div>
 
                                     <br />
-                                    <table class="table tableData"  id="html_table" >
+                                    <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                                         <thead >
                                             <tr>
-                                                <th width="1%" >
-                                                    Id
-                                                </th>
-                                                <th width="3%" >
-                                                    Company
-                                                </th>
-                                                <th width="4%" >
-                                                    Contract Name
-                                                </th>
-                                                <th width="3%" >
-                                                    Contract Number
-                                                </th>
-                                                <th width="4%" >
-                                                    Contract Validation
-                                                </th>
-                                                <th width="5%" >
-                                                    Date
-                                                </th>
-                                                <th width="3%" >
-                                                    Last Management
-                                                </th>
-                                                <th width="5%" >
-                                                    User
-                                                </th>
-                                                <th width="5%" >
-                                                    Username Load
-                                                </th>
-                                                <th width="5%" >
-                                                    Status
-                                                </th>
-                                                <th width="5%" >
-                                                    Options
-                                                </th>
+                                                <th >ID</th>
+                                                <th >Company</th>
+                                                <th >Contract Name</th>
+                                                <th >Contract Number</th>
+                                                <th >Contract Validation</th>
+                                                <th >Date</th>
+                                                <th >Last Management</th>
+                                                <th >User</th>
+                                                <th >Username Load</th>
+                                                <th >Status</th>
+                                                <th >Options</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach($Ncontracts as $Ncontract)
-                                            <tr>
-                                                <td>
-                                                    {{$Ncontract->id}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->companyuser->name}}
-                                                </td>
-                                                <td id="{{'thnamec'.$loop->iteration}}">
-                                                    {{$Ncontract->namecontract}}
-                                                </td>
-                                                <td id="{{'thnumc'.$loop->iteration}}">
-                                                    {{$Ncontract->numbercontract}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->validation}}
-                                                </td>
-                                                <td>
-                                                    {{\Carbon\Carbon::parse($Ncontract->created_at)->format('d-m-Y h:i:s')}}
-                                                </td>
-                                                @if(empty($Ncontract->updated) != true)
-                                                <td>
-                                                    {{\Carbon\Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s')}}
-                                                </td>
-                                                @else
-                                                <td>
-                                                    00-00-0000 00:00:00
-                                                </td>
-                                                @endif
-                                                <td>
-                                                    {{$Ncontract->user->name.' '.$Ncontract->user->lastname}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->username_load}}
-                                                </td>
-                                                <td>
-                                                    <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
-                                                    &nbsp;
-                                                    <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
-                                                </td>
-                                                <td>
-                                                    <a href="{{route('process.request.fcl',$Ncontract->id)}}" title="Proccess FCL Request">
-                                                        <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                    &nbsp; &nbsp;
-                                                    <a href="{{route('RequestImportation.show',$Ncontract->id)}}" title="Download File">
-                                                        <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                    &nbsp; &nbsp;  <!--
-<a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
-<samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
-</a> -->
 
-                                                    <a href="#" class="eliminarrequest" data-id-request="{{$Ncontract->id}}" data-info="{{'id: '.$Ncontract->id.' Number Contract: '.$Ncontract->numbercontract}}"  title="Delete" >
-                                                        <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -238,12 +156,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="Loadstatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" role="document">
+    <div class="modal fade bd-example-modal-lg" id="changeStatus" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
-                        Status of the request
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Status Of The Request
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -251,31 +169,8 @@
                         </span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label id="NameCon" class="form-control-label">
-                                Name Contract:
-                            </label>
+                <div id="modal-body" class="modal-body">
 
-                        </div>
-                        <div class="form-group">
-                            <label id="NumCon" class="form-control-label">
-                                Number Contract:
-                            </label>
-
-                        </div>
-                        <input type="hidden" id="idContract" value="0"/>
-                        <input type="hidden" id="posicionval" value="0"/>
-                        <div class="form-group">
-                            <label class="form-control-label" for="statusSelectMD">Status: </label>
-                            <select class="form-control" id="statusSelectMD">
-                                <option value="Pending" id="Pending">Pending</option>
-                                <option value="Processing" id="Processing">Processing</option>
-                                <option value="Done" id="Done">Done</option>
-                            </select>
-                        </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
@@ -322,6 +217,49 @@
                 //"scrollX": true,
             });
         });
+
+        $(function() {
+            $('#requesttable').DataTable({
+                processing: true,
+                //serverSide: true,
+                ajax: '{!! route("RequestImportation.create") !!}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'Company', name: 'Company' },
+                    { data: 'name', name: 'name' },
+                    { data: 'number', name: 'number' },
+                    { data: 'validation', name: 'validation' },
+                    { data: 'date', name: 'date' },
+                    { data: 'updated', name: 'updated' },
+                    { data: 'user', name: 'user' },
+                    { data: 'username_load', name: 'username_load' },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                ],
+                "order": [[1, 'des']],
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "width": true,
+                "info": true,
+                "deferLoading": 57,
+                "autoWidth": false,
+                "processing": true,
+                "dom": 'Bfrtip',
+                "paging": true
+            });
+
+        });
+
+        function showModal(id){
+
+            var url = '{{ route("show.status.Request",":id") }}';
+            url = url.replace(':id',id);
+            $('#modal-body').load(url,function(){
+                $('#changeStatus').modal();
+            });
+
+        }
 
         $(document).on('click','.eliminarrequest',function(e){
             var id = $(this).attr('data-id-request');
