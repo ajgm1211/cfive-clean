@@ -140,8 +140,10 @@ class QuoteV2Controller extends Controller
 
     public function show($id)
     {
-
+        //Setting id
         $id = obtenerRouteKey($id);
+
+        //Retrieving all data
         $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
         $rates = AutomaticRate::where('quote_id',$quote->id)->get();
@@ -159,6 +161,16 @@ class QuoteV2Controller extends Controller
         $equipmentHides = $this->hideContainer($quote->equipment);
         $calculation_types = CalculationType::pluck('name','id');
 
+        //Adding country codes to collection
+        foreach ($rates as $item) {
+            $origin_country=Country::find($item->origin_port->country_id);
+            $destination_country=Country::find($item->destination_port->country_id);
+            $rates = $rates->map(function ($item) use($origin_country,$destination_country) {
+                $item['origin_country_code'] = strtolower($origin_country->code);
+                $item['destination_country_code'] = strtolower($destination_country->code);
+                return $item;
+            });
+        }
         return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates'));
     }
 
