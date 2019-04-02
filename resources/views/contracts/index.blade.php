@@ -401,16 +401,12 @@
                {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-<<<<<<< HEAD
-               this.api().columns([4]).every(function () {
-=======
-               this.api().columns(4).every(function () {
->>>>>>> desarrollo
+               this.api().columns([0,1,2,3,4]).every(function () {
                   var column = this;
                   $('#tableContracts .head .head_hide').html('');
 
-                  var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select>')
-                          .prependTo($(column.header()).empty())
+                  var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select><br>')
+                          .prependTo($(column.header()))
                           .on('change', function () {
                              var val = new Array();
                              //set val to current element in the dropdown.
@@ -475,7 +471,6 @@
       });
    </script>
 @stop
-
 
 
 

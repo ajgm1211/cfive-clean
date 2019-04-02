@@ -32,4 +32,9 @@ class AutomaticRate extends Model
     {
         return $this->hasOne('App\Harbor','id','destination_port_id');
     }
+
+    public function country_code()
+    {
+        return $this->hasManyThrough('App\Country','App\Harbor','country_id','id');
+    }
 }

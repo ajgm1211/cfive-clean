@@ -204,8 +204,8 @@
                                                 <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="100" height="auto" style="margin-top: -20px;" />
                                             @endif
                                         </li>
-                                        <li class="size-14px">POL: {{$rate->origin_port->name}}, {{$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
-                                        <li class="size-14px">POD: {{$rate->destination_port->name}}, {{$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/ae.svg"/></li>
+                                        <li class="size-14px">POL: {{$rate->origin_port->name}}, {{$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
+                                        <li class="size-14px">POD: {{$rate->destination_port->name}}, {{$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
                                         <li class="size-14px">Contract: {{$rate->contract}}</li>
                                         <li class="size-14px"><button type="button" class="btn btn-default pull-right" data-toggle="collapse" data-target=".details"><i class="la la-angle-down"></i></button></li>
                                     </ul>
@@ -218,7 +218,7 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-sm color-blue text-center">
+                                                <table class="table table-bordered table color-blue text-center">
                                                     <thead class="title-quote text-center header-table">
                                                     <tr>
                                                         <td >Charge</td>
@@ -243,21 +243,27 @@
                                                         @endphp
                                                         <tr >
                                                             <td>
-                                                                <input type="text" class="form-control" id="surcharge_id" value="{{$item->surcharge->name}}" name="surcharge_id[]" />
+                                                                <span class="surcharge_name">{{$item->surcharge->name}}</span>
+                                                                <input type="text" class="form-control hide" id="surcharge_id" value="{{$item->surcharge->name}}" name="surcharge_id[]" />
                                                             </td>
                                                             <td>
-                                                                {{ Form::select('calculation_type_id[]',$calculation_types,$item->calculation_type_id,['class'=>'form-control calculation_type_id select2-freight select-2-width','required'=>true]) }}
+                                                                <span class="calculation_type">{{$item->calculation_type->name}}</span>
+                                                                {{ Form::select('calculation_type_id[]',$calculation_types,$item->calculation_type_id,['class'=>'form-control calculation_type_id hide','required'=>true]) }}
                                                             </td>
                                                             <td {{ $equipmentHides['20'] }}>
                                                                 <div class="row">
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_amount_20" name="freight_amount[]" value="{{@$freight_amounts[$i]['20']}}" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <span class="freight_rate_20">{{@$freight_amounts[$i]['20']}}</span>
+                                                                        <input id="freight_amount_20" name="freight_rate[]" value="{{@$freight_amounts[$i]['20']}}" class="form-control freight_rate hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_markup_20" name="freight_markup[]" value="{{@$freight_markups[$i]['20']}}" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <span class="freight_markup_20">{{@$freight_markups[$i]['20']}}</span>
+                                                                        <input id="freight_markup_20" name="freight_markup[]" value="{{@$freight_markups[$i]['20']}}" class="form-control freight_surcharge hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total_20" name="freight_total[]" value="{{@$freight_total[$i]['20']}}" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <span class="freight_total_20">{{@$freight_total[$i]['20']}}</span>
+                                                                        <input id="freight_total_20" name="freight_total[]" value="{{@$freight_total[$i]['20']}}" class="form-control freight_total hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -265,13 +271,16 @@
                                                                 <div class="">
                                                                     <div class="row">
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amounts[$i]['40']}}" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <span class="freight_rate_40">{{@$freight_total[$i]['40']}}</span>
+                                                                            <input id="freight_rate" name="freight_rate[]" value="{{@$freight_amounts[$i]['40']}}" class="form-control freight_rate hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['40']}}" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <span class="freight_markups_40">{{@$freight_markups[$i]['40']}}</span>
+                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="{{@$freight_markups[$i]['40']}}" class="form-control freight_surcharge hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['40']}}" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <span class="freight_total_40">{{@$freight_total[$i]['40']}}</span>
+                                                                            <input id="freight_total" name="freight_total[]" value="{{@$freight_total[$i]['40']}}" class="form-control freight_total hide" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -322,13 +331,12 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="input-group">
-                                                                    <div class="input-group-btn">
-                                                                        <div class="btn-group">
-                                                                            {{ Form::select('freight_amount_currency[]',$currencies,$item->currency_id,['class'=>'form-control freight_amount_currency select2-freight select-2-width']) }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                <span>{{$item->currency->alphacode}}</span>
+                                                                {{ Form::select('freight_amount_currency[]',$currencies,$item->currency_id,['class'=>'form-control freight_amount_currency hide']) }}
+                                                                &nbsp;&nbsp;&nbsp;
+                                                                <a  id='edit_business_name' onclick="display_business_name()" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right edit_freight_charge" title="Edit">
+                                                                                <i class="la la-edit"></i>
+                                                                            </a>
                                                             </td>
                                                         </tr>
                                                         @php
