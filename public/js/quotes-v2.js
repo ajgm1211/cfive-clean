@@ -39,6 +39,7 @@ $(document).ready(function() {
     });
 });
  
+//Edit payments
 $(document).on('click', '#edit-payments', function () {
     $(".payment_conditions_span").attr('hidden','true');
     $(".payment_conditions_textarea").removeAttr('hidden');
@@ -77,6 +78,7 @@ $(document).on('click', '#update-payments', function () {
     });
 });
 
+//Edit terms
 $(document).on('click', '#edit-terms', function () {
     $(".terms_and_conditions_span").attr('hidden','true');
     $(".terms_and_conditions_textarea").removeAttr('hidden');
@@ -115,6 +117,7 @@ $(document).on('click', '#update-terms', function () {
     });
 });
 
+//Edit main quotes details
 $(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden','true');
     $(".company_span").attr('hidden','true');
@@ -341,6 +344,7 @@ $(document).on('click', '#update', function () {
     });
 });
 
+//Charges 
 $('.date_issued').datetimepicker();
 
 $('.select2-freight').select2();
@@ -397,3 +401,10 @@ $(document).on('click', '.removeDestinationCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
+function show_hide_element($element){
+    if($('.'+$element).hasClass('hide')){
+        $('.'+$element).removeClass('hide');
+    }else{
+        $('.'+$element).addClass('hide');
+    }
+}
