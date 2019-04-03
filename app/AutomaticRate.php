@@ -37,4 +37,9 @@ class AutomaticRate extends Model
     {
         return $this->hasManyThrough('App\Country','App\Harbor','country_id','id');
     }
+
+    public function charge()
+    {
+        return $this->hasMany('App\Charge','automatic_rate_id');
+    }
 }

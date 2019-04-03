@@ -66,4 +66,9 @@ class QuoteV2 extends Model
     {
         return $this->hasOne('App\AutomaticRate','quote_id','id');
     }
+
+    public function charge()
+    {
+        return $this->hasManyThrough('App\Charge','App\AutomaticRate','quote_id','automatic_rate_id');
+    }
 }
