@@ -33,9 +33,9 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
                     <li class="nav-item m-tabs__item" >
-                        <a class="btn btn-primary-v2" href="#">
+                        <button class="btn btn-primary-v2" data-toggle="modal" data-target="#SendQuoteModal">
                             Send &nbsp;&nbsp;<i class="fa fa-envelope"></i>
-                        </a>
+                        </button>
                     </li>
                     <li class="nav-item m-tabs__item" >
                         <a class="btn btn-primary-v2" href="#">
@@ -73,20 +73,17 @@
                                     <label class="title-quote"><b>Quotation ID:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->quote_id}}" class="form-control quote_id" hidden >
                                     <span class="quote_id_span">{{$quote->quote_id}}</span>
-                                <!--<a href="#" id="quote_id" class="editable" data-tpl="<input type='text' style='width:100px;'>" data-type="text" data-value="{{$quote->quote_id}}" data-pk="{{$quote->id}}" data-title="Quote id">{{$quote->quote_id}}</a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->quote_id}}" class="form-control" hidden >
                                     {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
                                     <span class="type_span">{{$quote->type}}</span>
-                                <!--<a href="#" id="type" class="editable" data-source="[{value: 'FCL', text: 'FCL'},{value: 'LCL', text: 'LCL'}]" data-type="select" data-value="{{$quote->type}}" data-pk="{{$quote->id}}" data-title="Select type"></a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden']) }}
                                     <span class="company_span">{{$quote->company->business_name}}</span>
-                                <!--<a href="#" id="company" class="editable" data-type="select" data-value="{{$quote->company_id}}" data-pk="{{$quote->id}}" data-title="Select type"></a>-->
                                 </div>
                             </div>
                             <div class="row">
@@ -95,7 +92,6 @@
                                     <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
                                     <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
-                                <!--<a href="#" id="status" class="editable Status_{{$quote->status}}" data-source="[{value: 'Draft', text: 'Draft'},{value: 'Win', text: 'Win'},{value: 'Sent', text: 'Sent'}]" data-value="{{$quote->status}}" data-type="select" data-pk="{{$quote->id}}" data-title="Select type" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -112,7 +108,6 @@
                                             Door to Door
                                         @endif
                                     </span>
-                                <!--<a href="#" id="delivery_type" class="editable" data-source="[{value: '1', text: 'Port to Port'},{value: '2', text: 'Port to Door'},{value: '3', text: 'Door to Port'},{value: '4', text: 'Door to Door'}]" data-type="select" data-value="{{$quote->delivery_type}}" data-pk="{{$quote->id}}" data-title="Select delivery type"></a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -130,7 +125,6 @@
                                     @endphp
                                     <span class="date_issued_span">{{date_format($date, 'M d, Y H:i')}}</span>
                                 {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
-                                <!--<a href="#" id="created_at" data-type="date" data-pk="{{$quote->id}}" data-title="Select date">{{date_format($quote->created_at, 'd M Y')}}</a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -164,7 +158,6 @@
                                     <label class="title-quote"><b>Incoterm:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('incoterm_id',$incoterms,$quote->incoterm_id,['class'=>'form-control incoterm_id select2','hidden','']) }}
                                     <span class="incoterm_id_span">{{$quote->incoterm->name}}</span>
-                                <!--<a href="#" id="incoterm_id" class="editable" data-source="[{value: '1', text: 'EWX'},{value: '2', text: 'FAS'},{value: '3', text: 'FCA'},{value: '4', text: 'FOB'},{value: '5', text: 'CFR'},{value: '6', text: 'CIF'},{value: '7', text: 'CIP'},{value: '8', text: 'DAT'},{value: '9', text: 'DAP'},{value: '10', text: 'DDP'}]" data-type="select" data-value="{{$quote->incoterm_id}}" data-pk="{{$quote->id}}" data-title="Select delivery type"></a>-->
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -210,8 +203,9 @@
                                         <li class="size-14px">POL: {{$rate->origin_port->name}}, {{$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
                                         <li class="size-14px">POD: {{$rate->destination_port->name}}, {{$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
                                         <li class="size-14px">Contract: {{$rate->contract}}</li>
-                                        <li class="size-14px"><button type="button" class="btn btn-default pull-right" onclick="
-                                        show_hide_element('details_{{$v}}')"><i class="la la-angle-down"></i></button></li>
+                                        <li class="size-14px">
+                                            <div onclick="show_hide_element('details_{{$v}}')"><i class="down"></i></div>
+                                        </li>
                                     </ul>
                                 </div>
                                 <hr>
@@ -335,12 +329,105 @@
                                                         @php
                                                             $i++;
                                                         @endphp
+                                                        @else
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
+                                                            </td>
+                                                            <td>
+                                                                {{ Form::select('freight_ammount_currency[]',$calculation_types,null,['class'=>'form-control freight_ammount_currency select2-freight select-2-width','required'=>true]) }}
+                                                            </td>
+                                                            <td {{ $equipmentHides['20'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40hc'] }}>
+                                                                <div class="">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['40nor'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td {{ $equipmentHides['45'] }}>
+                                                                <div class="input-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-btn">
+                                                                        <div class="btn-group">
+                                                                            {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select2-origin select-2-width']) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                         @endif
                                                     @endforeach
 
                                                     <!-- Hide Freight -->
 
-                                                    <tr class="hide" id="freight_charges">
+                                                    <tr class="hide" id="freight_charges_{{$i}}">
                                                         <td>
                                                             <input type="text" class="form-control" id="freight_amount_charge" value="" name="origin_ammount_charge[]" />
                                                         </td>
@@ -351,13 +438,13 @@
                                                             <div class="">
                                                                 <div class="row">
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -369,10 +456,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -384,10 +471,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -399,10 +486,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -414,10 +501,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -427,10 +514,10 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
-                                                                        <a class="btn removeFreightCharge">
-                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                        </a>
                                                                     </div>
+                                                                    <a class="btn btn-xs btn-primary-plus removeFreightCharge">
+                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> 
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -443,8 +530,8 @@
                                     <div class='row'>
                                         <div class="col-md-12">
                                             <h5 class="title-quote pull-right">
-                                                <a class="btn addFreightCharge" style="vertical-align: middle">
-                                                    <b>Add freight charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                <b>Add freight charge</b><a class="btn" onclick="addFreightCharge({{$i}})" style="vertical-align: middle">
+                                                    <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                                 </a>
                                             </h5>
                                         </div>
@@ -472,7 +559,7 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    @if(count($rate->charge)>0)
+                                                    
                                                     @php
                                                         $a=0;
                                                     @endphp
@@ -570,9 +657,8 @@
                                                         @php
                                                             $a++;
                                                         @endphp
-                                                        @endif
-                                                    @endforeach
-                                                    @else
+
+                                                        @else
                                                         <tr>
                                                             <td>
                                                                 <input type="text" class="form-control" id="origin_ammount_charge" value="" name="origin_ammount_charge[]"/>
@@ -602,10 +688,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -632,10 +718,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -647,10 +733,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -665,12 +751,14 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endif
+                                                        @endif
+                                                        @endforeach
+                                                    
                                                         <!-- Hide origin charges-->
 
-                                                        <tr class="hide" id="origin_charges">
+                                                        <tr class="hide" id="origin_charges_{{$i}}">
                                                             <td>
-                                                                <input type="text" class="form-control" id="freight_amount_charge" value="" name="origin_ammount_charge[]"/>
+                                                                <input type="text" class="form-control" value="" name="origin_ammount_charge[]"/>
                                                             </td>
                                                             <td>
                                                                 {{ Form::select('freight_ammount_currency[]',$calculation_types,5,['class'=>'form-control freight_ammount_currency','required'=>true]) }}
@@ -679,13 +767,13 @@
                                                                 <div class="">
                                                                     <div class="row">
                                                                         <div class="col-md-4">
-                                                                            <input  name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input  name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input  name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -697,10 +785,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -712,10 +800,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -727,10 +815,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -742,10 +830,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -755,10 +843,10 @@
                                                                     <div class="input-group-btn">
                                                                         <div class="btn-group">
                                                                             {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
-                                                                            <a class="btn removeOriginCharge">
-                                                                                <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                            </a>
                                                                         </div>
+                                                                        <a class="btn btn-xs btn-primary-plus removeOriginCharge">
+                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                        </a>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -774,8 +862,9 @@
                                     <div class='row'>
                                         <div class="col-md-12">
                                             <h5 class="title-quote pull-right">
-                                                <a class="btn addOriginCharge" style="vertical-align: middle">
-                                                    <b>Add origin charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                <b>Add origin charge</b>
+                                                <a class="btn" onclick="addOriginCharge({{$i}})" style="vertical-align: middle">
+                                                    <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                                 </a>
                                             </h5>
                                         </div>
@@ -800,11 +889,12 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    @if(count($destination_charges)>0)
+                                                    
                                                     @php
                                                         $a=0;
                                                     @endphp
-                                                    @foreach($destination_charges as $item)
+                                                    @foreach($rate->charge as $item)
+                                                        @if($item->type_id==2)
                                                         @php
                                                             $destination_amounts = json_decode($item->amount,true);
                                                             $destination_markups = json_decode($item->markups,true);
@@ -897,8 +987,7 @@
                                                         @php
                                                             $a++;
                                                         @endphp
-                                                    @endforeach
-                                                    @else
+                                                        @else
                                                         <tr>
                                                             <td>
                                                                 <input type="text" class="form-control" id="destination_ammount_charge" value="" name="destination_ammount_charge[]"/>
@@ -928,10 +1017,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -958,10 +1047,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -973,10 +1062,10 @@
                                                                             <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                         <div class="col-md-4">
-                                                                            <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -992,11 +1081,13 @@
                                                             </td>
                                                         </tr>
                                                     @endif
+                                                    @endforeach
+
                                                     <!-- Hide destination charges -->
 
-                                                    <tr class="hide" id="destination_charges">
+                                                    <tr class="hide" id="destination_charges_{{$i}}">
                                                         <td>
-                                                            <input type="text" class="form-control" id="freight_amount_charge" value="" name="destination_ammount_charge[]"/>
+                                                            <input type="text" class="form-control" value="" name="destination_ammount_charge[]"/>
                                                         </td>
                                                         <td>
                                                             {{ Form::select('freight_ammount_currency[]',$calculation_types,5,['class'=>'form-control freight_ammount_currency','required'=>true]) }}
@@ -1005,13 +1096,13 @@
                                                             <div class="">
                                                                 <div class="row">
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input  name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1023,10 +1114,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1038,10 +1129,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1053,10 +1144,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1068,10 +1159,10 @@
                                                                         <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_surcharge" name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input id="freight_total" name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                        <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1081,10 +1172,10 @@
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
                                                                         {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control destination_ammount_currency select-2-width']) }}
-                                                                        <a class="btn removeDestinationCharge">
-                                                                            <span class="fa fa-trash" role="presentation" aria-hidden="true"></span> &nbsp;
-                                                                        </a>
                                                                     </div>
+                                                                    <a class="btn btn-xs btn-primary-plus removeDestinationCharge">
+                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1097,8 +1188,9 @@
                                     <div class='row'>
                                         <div class="col-md-12">
                                             <h5 class="title-quote pull-right">
-                                                <a class="btn addDestinationCharge" style="vertical-align: middle">
-                                                    <b>Add destination charge</b> &nbsp;<span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                                                <b>Add destination charge</b>
+                                                <a class="btn" onclick="addDestinationCharge({{$i}})" style="vertical-align: middle">
+                                                    <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                                 </a>
                                             </h5>
                                         </div>
@@ -1196,7 +1288,7 @@
             </div>
         </div>
     </div>
-
+  @include('quotes.partials.sendQuoteModal')
 @endsection
 
 @section('js')

@@ -339,6 +339,9 @@ $(document).on('click', '#update', function () {
                 $(".user_id").select2('destroy');
                 $(".price_id").select2('destroy');
                 $(".equipment").select2('destroy');
+
+                //Refresh page after 5 seconds
+                setTimeout(location.reload.bind(location), 5000);
             }
         }
     });
@@ -353,8 +356,8 @@ $('.select2-origin').select2();
 
 $('.select2-destination').select2();
 
-$(document).on('click', '.addFreightCharge', function (e) {
-    var $template = $('#freight_charges'),
+function addFreightCharge($value){
+    var $template = $('#freight_charges_'+$value),
         $clone = $template
             .clone()
             .removeClass('hide')
@@ -363,10 +366,10 @@ $(document).on('click', '.addFreightCharge', function (e) {
     $clone.find("select").select2({
         placeholder: "Currency"
     });
-});
+}
 
-$(document).on('click', '.addOriginCharge', function (e) {
-    var $template = $('#origin_charges'),
+function addOriginCharge($value){
+    var $template = $('#origin_charges_'+$value),
         $clone = $template
             .clone()
             .removeClass('hide')
@@ -375,10 +378,10 @@ $(document).on('click', '.addOriginCharge', function (e) {
     $clone.find("select").select2({
         placeholder: "Currency"
     });
-});
+}
 
-$(document).on('click', '.addDestinationCharge', function (e) {
-    var $template = $('#destination_charges'),
+function addDestinationCharge($value){
+    var $template = $('#destination_charges_'+$value),
         $clone = $template
             .clone()
             .removeClass('hide')
@@ -387,7 +390,7 @@ $(document).on('click', '.addDestinationCharge', function (e) {
     $clone.find("select").select2({
         placeholder: "Currency"
     });
-});
+}
 
 $(document).on('click', '.removeFreightCharge', function (e) {
     $(this).closest('tr').remove();
@@ -401,7 +404,7 @@ $(document).on('click', '.removeDestinationCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
-function show_hide_element($element){
+function show_hide_element($element,$button){
     if($('.'+$element).hasClass('hide')){
         $('.'+$element).removeClass('hide');
     }else{
