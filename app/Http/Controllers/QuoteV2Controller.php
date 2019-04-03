@@ -10,6 +10,7 @@ use App\CompanyUser;
 use App\Contact;
 use App\Country;
 use App\Currency;
+use App\EmailTemplate;
 use App\Harbor;
 use App\Incoterm;
 use App\Price;
@@ -147,26 +148,22 @@ class QuoteV2Controller extends Controller
         $origin_charges = new Collection();
         $freight_charges = new Collection();
         $destination_charges = new Collection();
+
         //Retrieving all data
         $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
-        
         $rates = AutomaticRate::where('quote_id',$quote->id)->get();
-        
-        foreach ($quote->charge as $item) {
-            if($item->type_id==1){
-                $origin_charges->push($item);
-            }else if($item->type_id==2){
-                $destination_charges->push($item);
-            }else{
-                $freight_charges->push($item);
+        foreach ($rates as $rate) {
+            foreach ($rate->charge as $item) {
+                if($item->type_id==1){
+                    $origin_charges->push($item);
+                }else if($item->type_id==2){
+                    $destination_charges->push($item);
+                }else{
+                    $freight_charges->push($item);
+                }
             }
         }
-        
-            /*$origin_charges = Charge::where('automatic_rate_id',$rate->id)->where('type_id',1)->get();
-            $destination_charges = Charge::where('automatic_rate_id',$rate->id)->where('type_id',2)->get();
-            $freight_charges = Charge::where('automatic_rate_id',$rate->id)->where('type_id',3)->get();*/
-        
         
         $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
         $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
@@ -177,8 +174,9 @@ class QuoteV2Controller extends Controller
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
         $equipmentHides = $this->hideContainer($quote->equipment);
-        $calculation_types = CalculationType::pluck('name','id');
+        $calculation_types = CalculationType::where('name','Per Container')->pluck('name','id');
         $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+        $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
         //Adding country codes to collection
         foreach ($rates as $item) {
@@ -189,7 +187,7 @@ class QuoteV2Controller extends Controller
             });
         }
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates'));
     }
 
     public function updateQuoteDetails(Request $request)
