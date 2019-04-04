@@ -6,6 +6,7 @@ use Excel;
 use App\User;
 use PrvHarbor;
 use App\Harbor;
+use App\Region;
 use App\Carrier;
 use App\Country;
 use App\Currency;
@@ -286,9 +287,10 @@ class ImportationGlobachargersFclController extends Controller
         $harbor         = Harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
+        return view('ImportationGlobalchargersFcl.index',compact('harbor','region','country','carrier','companysUser','typedestiny'));
     }
 
     public function indexRequest($id)
@@ -314,7 +316,9 @@ class ImportationGlobachargersFclController extends Controller
         $destinyArr         = $request->destiny;
         $originArr          = $request->origin;
         $originCountArr     = $request->originCount;
+        $originRegionArr    = $request->originRegion;
         $destinyCountArr    = $request->destinyCount;
+        $destinyRegionArr   = $request->destinyRegion;
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
@@ -332,6 +336,7 @@ class ImportationGlobachargersFclController extends Controller
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
 
 
@@ -479,14 +484,15 @@ class ImportationGlobachargersFclController extends Controller
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
             'originCount'       => $originCountArr,
+            'originRegion'      => $originRegionArr,
             'destinyCount'      => $destinyCountArr,
+            'destinyRegion'     => $destinyRegionArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
             'typedestiny'       => $typedestinyVal,
             'existdatevalidity' => $datevalidityBol,
             'validitydate'      => $validitydateVal,
-
             'account_id'        => $account_id,
             'date'              => $request->date,
             'name'              => $request->name,
@@ -502,6 +508,7 @@ class ImportationGlobachargersFclController extends Controller
         //dd($data);
 
         return view('ImportationGlobalchargersFcl.show',compact('harbor',
+                                                                'region',
                                                                 'country',
                                                                 'data',
                                                                 'carrier',

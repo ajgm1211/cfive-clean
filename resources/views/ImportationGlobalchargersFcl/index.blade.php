@@ -188,6 +188,10 @@
                                         <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
                                     </div>
+                                    <div class="col-form-label" id="origininpRegion" hidden="hidden" >
+                                        <label for="originRegion" class=" ">Regions</label>
+                                        {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
+                                    </div>
                                 </div>
 
                                 <div class="col-3" id="divdestiny">
@@ -213,6 +217,10 @@
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
                                     <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
+                                        <label for="destinyRegion" class=" ">Regions</label>
+                                        {!! Form::select('destinyRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'destinyRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">
