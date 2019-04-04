@@ -211,7 +211,7 @@ new registration
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Ports and Countries
+                                                    Ports and Countries or Region
                                                 </span>
                                             </span>
                                         </span>
