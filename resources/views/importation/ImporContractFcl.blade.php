@@ -243,12 +243,16 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        <label for="destiny" class=" ">Ports</label>
+                                        <label for="origin" class=" ">Ports</label>
                                         {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="origininpCount" hidden="hidden" >
-                                        <label for="destiny" class=" ">Countries</label>
+                                        <label for="originCountry" class=" ">Countries</label>
                                         {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="origininpRegion" hidden="hidden" >
+                                        <label for="originRegion" class=" ">Regions</label>
+                                        {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -275,6 +279,10 @@ new registration
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
                                         <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
+                                        <label for="destinyRegion" class=" ">Regions</label>
+                                        {!! Form::select('destinyRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'destinyRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">

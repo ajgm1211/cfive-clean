@@ -12,6 +12,7 @@ use Excel;
 use App\Rate;
 use App\User;
 use PrvHarbor;
+use App\Region;
 use App\Harbor;
 use App\Company;
 use App\Contact;
@@ -85,9 +86,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $fortyfive              = "45'";
                 $origin                 = "origin";//arreglo de multiples puertos
                 $originCountry          = "originCount";//arreglo de multiples country
+                $originRegion           = "originRegion";//arreglo de multiples Region
                 $originExc              = "Origin";// lectura de excel
                 $destiny                = "destiny";//arreglo de multiples puertos
                 $destinycountry         = "destinyCount";//arreglo de multiples country
+                $destinyRegion          = "destinyRegion";//arreglo de multiples Region
                 $destinyExc             = "Destiny";// lectura de excel
                 $carrier                = "Carrier";
                 $CalculationType        = "Calculation_Type";
@@ -118,22 +121,75 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                     //--------------------------------------------------------
                     if($i != 1){
 
-
+                        $differentiatorVal = $read[$requestobj[$differentiator]];
                         //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
                         //--- ORIGIN ------------------------------------------------------
+                        $oricount = 0;
                         if($requestobj['existorigin'] == true){
-                            $originMultps = [0];
+                                $originMultps = [0]; 
                         } else {
                             $originMultps = explode('|',$read[$requestobj[$originExc]]);
+                            foreach($originMultps as $originMultCompact){
+                                if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                    $regionsOR = Region::where('name','like','%'.$originMultCompact.'%')->with('CountriesRegions.country')->get();
+                                    if(count($regionsOR) == 1){
+                                        // region add
+                                        foreach($regionsOR as $regionor){   
+                                            if($oricount == 0){
+                                                $originMultps = $regionor->CountriesRegions->pluck('country')->pluck('name')->toArray();
+                                            } else {
+                                                foreach($regionor->CountriesRegions->pluck('country')->pluck('name')->toArray() as $oricountriesarray){
+                                                    array_push($originMultps,$oricountriesarray);
+                                                }
+                                            }
+                                        }
+                                    } elseif(count($regionsOR) == 0) {
+                                        // pais add
+                                        if($oricount == 0){
+                                            $originMultps =[$originMultCompact];
+                                        } else {
+                                            array_push($originMultps,$originMultCompact);
+                                        }
+                                    }
+                                }
+                                $oricount++;
+                            }
                         }
                         //--- DESTINY -----------------------------------------------------
-
+                        $descount = 0;
                         if($requestobj['existdestiny'] == true){
-                            $destinyMultps = [0];
+                                $destinyMultps = [0];
                         } else {
                             $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
-                        }
+                            foreach($destinyMultps as $destinyMultCompact){
+                                if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                    $regionsDES = Region::where('name','like','%'.$destinyMultCompact.'%')->with('CountriesRegions.country')->get();
+                                    if(count($regionsDES) == 1){
+                                        // region add
+                                        foreach($regionsDES as $regiondes){                                            
+                                            if($descount == 0){
+                                                $destinyMultps = $regiondes->CountriesRegions->pluck('country')->pluck('name')->toArray();
+                                            } else {
+                                                foreach($regiondes->CountriesRegions->pluck('country')->pluck('name')->toArray() as $descountriesarray){
+                                                    array_push($destinyMultps,$descountriesarray);
+                                                }
+                                            }
+                                        }
+                                    } elseif(count($regionsDES) == 0) {
+                                        // pais add
+                                        if($descount == 0){
+                                            $destinyMultps =[$destinyMultCompact];
+                                        } else {
+                                            array_push($destinyMultps,$destinyMultCompact);
+                                        }
 
+                                    }
+                                }
+                                $descount++;
+                            }
+                        }
+                        //dd($originMultps);
+                        //dd($destinyMultps);
 
                         foreach($originMultps as $originMult){
                             foreach($destinyMultps as $destinyMult){
@@ -244,7 +300,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
                                 if($statusPortCountry == 2){
                                     $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
-                                    if(strnatcasecmp($differentiatorVal,'country') == 0){
+                                    if(strnatcasecmp($differentiatorVal,'country') == 0 || strnatcasecmp($differentiatorVal,'region') == 0){
                                         $differentiatorBol = true;
                                         $differentiatorVal = 2;
                                     } else {
@@ -260,7 +316,17 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     if($differentiatorBol == false){
                                         $randons = $requestobj[$origin];
                                     } else if($differentiatorBol == true){
-                                        $randons = $requestobj[$originCountry];
+                                        if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                            $randons = $requestobj[$originCountry];
+                                        } else{
+                                            $randons = [];
+                                            foreach($requestobj[$originRegion] as $randosoriR){
+                                                $regionsORIrans = Region::with('CountriesRegions.country')->find($randosoriR);
+                                                foreach($regionsORIrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsORIran){
+                                                    array_push($randons,$regionsORIran);
+                                                }
+                                            }
+                                        }
                                     }
                                 } else {
                                     //$originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
@@ -289,7 +355,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     if($differentiatorBol == false){
                                         $randons = $requestobj[$destiny];
                                     } else if($differentiatorBol == true){
-                                        $randons = $requestobj[$destinycountry];
+                                        if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                            $randons = $requestobj[$destinycountry];
+                                        } else{
+                                            $randons = $requestobj[$destinyRegion];
+
+                                            $randons = [];
+                                            foreach($requestobj[$destinyRegion] as $randosdesR){
+                                                $regionsDEsrans = Region::with('CountriesRegions.country')->find($randosdesR);
+                                                foreach($regionsDEsrans->CountriesRegions->pluck('country')->pluck('id')->toArray() as $regionsDESran){
+                                                    array_push($randons,$regionsDESran);
+                                                }
+                                            }
+                                        }
                                     }
                                 } else {
                                     //$destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
@@ -310,6 +388,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         $destinyVal  = $resultadocountryDes['country'];
                                     }
                                 }
+
+                                //dd($randons);
+                                //dd($destinyVal);
+                                //dd($originVal);
 
                                 //---------------- CURRENCY VALUES ------------------------------------------------------
 
