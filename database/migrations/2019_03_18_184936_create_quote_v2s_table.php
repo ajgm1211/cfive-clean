@@ -44,6 +44,8 @@ class CreateQuoteV2sTable extends Migration
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->enum('status',['Draft','Won','Sent']);
+            $table->string('payment_conditions',5000)->nullable();
+            $table->string('terms_and_conditions',5000)->nullable();
             $table->timestamps();
         });
     }

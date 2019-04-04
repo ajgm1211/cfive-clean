@@ -190,9 +190,9 @@ class QuoteV2Controller extends Controller
         return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates'));
     }
 
-    public function updateQuoteDetails(Request $request)
+    public function updateQuoteCharges(Request $request)
     {
-        QuoteV2::find($request->pk)->update([$request->name => $request->value]);
+        Charge::find($request->pk)->update([$request->name => $request->value]);
 
         return response()->json(['success'=>'done']);
     }
@@ -263,6 +263,8 @@ class QuoteV2Controller extends Controller
         $quote_duplicate->equipment=$quote->equipment;
         $quote_duplicate->status=$quote->status;
         $quote_duplicate->date_issued=$quote->date_issued;
+        $quote_duplicate->terms_and_conditions=$quote->terms_and_conditions;
+        $quote_duplicate->payment_conditions=$quote->payment_conditions;
         if($quote->origin_address){
             $quote_duplicate->origin_address=$quote->origin_address;
         }

@@ -31403,7 +31403,7 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
       -ms-flex-align: center;
           align-items: center;
   font-size: 17.5px;
-  border-left: 2px solid #eee;
+  border-left: 1px solid #eee;
   color: #031B4E;
   font-weight: bold;
 }
@@ -79390,7 +79390,6 @@ h3.m-subheader__title {
 
 .down:hover {
   border-width: 0 4px 4px 0;
-  border: solid #031B4E;
 }
 
 .modal .modal-content .modal-body {
