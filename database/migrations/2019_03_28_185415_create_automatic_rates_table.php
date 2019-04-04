@@ -26,11 +26,11 @@ class CreateAutomaticRatesTable extends Migration
             $table->foreign('destination_port_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->integer('carrier_id')->unsigned();
             $table->foreign('carrier_id')->references('id')->on('carriers')->onDelete('cascade');
-            $table->longText('rates');
-            $table->longText('markups');
+            $table->json('rates');
+            $table->json('markups');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency')->onDelete('cascade');
-            $table->longText('total');
+            $table->json('total');
             $table->timestamps();
         });
     }

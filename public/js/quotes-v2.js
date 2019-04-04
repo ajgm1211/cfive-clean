@@ -9,7 +9,7 @@ $(document).ready(function() {
     });
 
     $('.editable').editable({
-        url:'/v2/quotes/update/details',
+        url:'/v2/quotes/charges/update',
         success: function(response, newValue) {
             if(!response) {
                 return "Unknown error!";
