@@ -18,7 +18,7 @@ use App\Quote;
 use App\QuoteV2;
 use App\Surcharge;
 use App\User;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Contracts\DataTable;
@@ -192,8 +192,11 @@ class QuoteV2Controller extends Controller
 
     public function updateQuoteCharges(Request $request)
     {
-        Charge::find($request->pk)->update([$request->name => $request->value]);
-
+        //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
+        DB::table('charges')
+            ->where('id', $request->pk)
+            ->update([$request->name => $request->value]);
+            
         return response()->json(['success'=>'done']);
     }
 
