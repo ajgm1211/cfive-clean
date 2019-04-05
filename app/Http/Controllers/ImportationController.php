@@ -1173,7 +1173,7 @@ class ImportationController extends Controller
         $errors = 0;
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('FclImport')->url($NameFile);*/
-        
+
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
@@ -5522,14 +5522,27 @@ class ImportationController extends Controller
 
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        /*$failsurchargers = FailSurCharge::find(115);
-        $destinyEX          = explode('_',$failsurchargers['port_dest']);
-        $resultadoPortOri = PrvHarbor::get_harbor($destinyEX[0]);*/
 
-        //$originMult = explode('|','valparaiso | durres | lisbon');
-        $originMult = explode('|','valparaiso ');
+        $nopalicaHs = Harbor::where('name','No Aplica')->get();
+        $nopalicaCs = Country::where('name','No Aplica')->get();
+        foreach($nopalicaHs as $nopalicaH){
+            $nopalicaH = $nopalicaH['id'];
+        }
+        foreach($nopalicaCs as $nopalicaC){
+            $nopalicaC = $nopalicaC['id'];
+        }
 
-        dd($originMult);
+        $failsurchargeS = FailSurCharge::where('contract_id','=',47)->where('port_orig','LIKE','%No Aplica%')->delete();
+        $failsurchargeS = FailSurCharge::where('contract_id','=',47)->where('port_dest','LIKE','%No Aplica%')->delete();
+
+        $surchargecollection = LocalCharge::where('contract_id',47)
+            ->whereHas('localcharcountries',function($query) use($nopalicaC){
+                $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            })
+            ->orWhereHas('localcharports',function($q) use($nopalicaH){
+                $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            })->forceDelete();
+
     }
 
 }

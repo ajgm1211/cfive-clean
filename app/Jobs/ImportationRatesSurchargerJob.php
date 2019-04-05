@@ -126,7 +126,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         //--- ORIGIN ------------------------------------------------------
                         $oricount = 0;
                         if($requestobj['existorigin'] == true){
-                                $originMultps = [0]; 
+                            $originMultps = [0]; 
                         } else {
                             $originMultps = explode('|',$read[$requestobj[$originExc]]);
                             foreach($originMultps as $originMultCompact){
@@ -159,7 +159,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         //--- DESTINY -----------------------------------------------------
                         $descount = 0;
                         if($requestobj['existdestiny'] == true){
-                                $destinyMultps = [0];
+                            $destinyMultps = [0];
                         } else {
                             $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
                             foreach($destinyMultps as $destinyMultCompact){
@@ -361,7 +361,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         if(strnatcasecmp($differentiatorValTw,'country') == 0){
                                             $randons = $requestobj[$destinycountry];
                                         } else{
-                                            
+
                                             $randons = $requestobj[$destinyRegion];
 
                                             $randons = [];
@@ -3339,6 +3339,26 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
                 //dd($pruebas);
             });
+
+        $nopalicaHs = Harbor::where('name','No Aplica')->get();
+        $nopalicaCs = Country::where('name','No Aplica')->get();
+        foreach($nopalicaHs as $nopalicaH){
+            $nopalicaH = $nopalicaH['id'];
+        }
+        foreach($nopalicaCs as $nopalicaC){
+            $nopalicaC = $nopalicaC['id'];
+        }
+
+        $failsurchargeS = FailSurCharge::where('contract_id','=',$requestobj['Contract_id'])->where('port_orig','LIKE','%No Aplica%')->delete();
+        $failsurchargeS = FailSurCharge::where('contract_id','=',$requestobj['Contract_id'])->where('port_dest','LIKE','%No Aplica%')->delete();
+
+        $surchargecollection = LocalCharge::where('contract_id',$requestobj['Contract_id'])
+            ->whereHas('localcharcountries',function($query) use($nopalicaC){
+                $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            })
+            ->orWhereHas('localcharports',function($q) use($nopalicaH){
+                $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            })->forceDelete();
 
         // dd($collection);
         //no borrar
