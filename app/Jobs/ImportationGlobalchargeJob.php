@@ -121,6 +121,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                             $originMultps = explode('|',$read[$requestobj[$originExc]]);
                             foreach($originMultps as $originMultCompact){
                                 if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                    $originMultCompact = trim($originMultCompact);
                                     $regionsOR = Region::where('name','like','%'.$originMultCompact.'%')->with('CountriesRegions.country')->get();
                                     if(count($regionsOR) == 1){
                                         // region add
@@ -153,6 +154,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                             $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
                             foreach($destinyMultps as $destinyMultCompact){
                                 if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                    $destinyMultCompact = trim($destinyMultCompact);
                                     $regionsDES = Region::where('name','like','%'.$destinyMultCompact.'%')->with('CountriesRegions.country')->get();
                                     if(count($regionsDES) == 1){
                                         // region add
@@ -270,7 +272,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                 //--------------- DIFRENCIADOR HARBOR COUNTRY -------------------------------------------
 
                                 if($statusPortCountry == 2){
-                                    $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country 
+                                    $differentiatorVal = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country
+                                    $differentiatorValTw = $read[$requestobj[$differentiator]];// hacer validacion de puerto o country
                                     if(strnatcasecmp($differentiatorVal,'country') == 0 || strnatcasecmp($differentiatorVal,'region') == 0){
                                         $differentiatorBol = true;
                                         $differentiatorVal = 2;
@@ -287,7 +290,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     if($differentiatorBol == false){
                                         $randons = $requestobj[$origin];
                                     } else if($differentiatorBol == true){
-                                        if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                        if(strnatcasecmp($differentiatorValTw,'country') == 0){
                                             $randons = $requestobj[$originCountry];
                                         } else{
                                             $randons = [];
@@ -328,7 +331,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     if($differentiatorBol == false){
                                         $randons = $requestobj[$destiny];
                                     } else if($differentiatorBol == true){
-                                        if(strnatcasecmp($differentiatorVal,'region') == 0){
+                                        if(strnatcasecmp($differentiatorValTw,'country') == 0){
                                             $randons = $requestobj[$destinycountry];
                                         } else{
                                             $randons = $requestobj[$destinyRegion];

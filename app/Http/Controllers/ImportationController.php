@@ -1168,6 +1168,12 @@ class ImportationController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
 
+        /*$requestobj = $request;
+        $companyUserIdVal = $companyUserId;
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = \Storage::disk('FclImport')->url($NameFile);*/
+        
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
