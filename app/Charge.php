@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Charge extends Model
 {
+    protected $casts = [
+        'amount' => 'array',
+        'markups' => 'array',
+        'total' => 'array',
+    ];
+
     protected $fillable = ['automatic_rate_id','type_id','surcharge_id','calculation_type_id','amount','markups','currency_id','total'];
 
     public function automatic_rate()

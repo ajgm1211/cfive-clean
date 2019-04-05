@@ -20,6 +20,7 @@ $(document).ready(function() {
             }
         }
     });
+    
     $('#created_at').editable({
         format: 'yyyy-mm-dd',
         viewformat: 'dd/mm/yyyy',
