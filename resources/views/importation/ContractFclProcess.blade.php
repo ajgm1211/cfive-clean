@@ -111,15 +111,15 @@ new registration
                                 </div>
                                 @if($value['existorigin'] == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="origin" class=" ">Ports O.</label>
+                                    <label for="origin" class=" ">Origin Ports</label>
                                     {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
                                 <div class="col-2 col-form-label">
-                                    <label for="originCountry" class=" ">Countries O.</label>
+                                    <label for="originCountry" class=" ">Origin Countries</label>
                                     {!! Form::select('originCount[]',$country,$value['originCount'],['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}                           
                                 </div>
                                 <div class="col-2 col-form-label">
-                                    <label for="originRegion" class=" ">Origin R.</label>
+                                    <label for="originRegion" class=" ">Origin Regions</label>
                                     {!! Form::select('originRegion[]',$region,$value['originRegion'],['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}                           
                                 </div>
                                 @endif
@@ -128,15 +128,15 @@ new registration
 
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="destiny" class=" ">Ports D.</label>
+                                    <label for="destiny" class=" ">Destiny Ports</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
                                 <div class="col-2 col-form-label">
-                                    <label for="destinyCountry" class=" ">Countries D.</label>
+                                    <label for="destinyCountry" class=" ">Destiny Countries</label>
                                     {!! Form::select('destinyCount[]',$country,$value['destinyCount'],['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}  
                                 </div>
                                 <div class="col-form-label" id="destinyinpRegion">
-                                        <label for="destinyRegion" class=" ">Regions D.</label>
+                                        <label for="destinyRegion" class=" ">Destiny Regions</label>
                                         {!! Form::select('destinyRegion[]',$region,$value['destinyRegion'],['class'=>'m-select2-general form-control','id'=>'destinyRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 @endif
