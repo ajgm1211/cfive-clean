@@ -3466,6 +3466,27 @@ class ImportationGlobalchargeJob implements ShouldQueue
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
 
+
+        $nopalicaHs = Harbor::where('name','No Aplica')->get();
+        $nopalicaCs = Country::where('name','No Aplica')->get();
+        foreach($nopalicaHs as $nopalicaH){
+            $nopalicaH = $nopalicaH['id'];
+        }
+        foreach($nopalicaCs as $nopalicaC){
+            $nopalicaC = $nopalicaC['id'];
+        }
+
+        FailedGlobalcharge::where('account_id','=',$requestobj['account_id'])->where('origin','LIKE','%No Aplica%')->delete();
+        FailedGlobalcharge::where('account_id','=',$requestobj['account_id'])->where('destiny','LIKE','%No Aplica%')->delete();
+
+        GlobalCharge::where('account_importation_globalcharge_id',$requestobj['account_id'])
+            ->whereHas('globalcharport',function($query) use($nopalicaH){
+                $query->where('port_dest',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            })
+            ->orWhereHas('globalcharcountry',function($query) use($nopalicaC){
+                $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            })->Delete();
+
         $account = AccountImportationGlobalcharge::find($requestobj['account_id']);
         $account->status = 'complete';
         $account->update();

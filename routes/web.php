@@ -541,6 +541,8 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 
     // Reprocesar
     Route::get('/ReprocesarGlobalchargers/{id}','ImportationGlobachargersFclController@ReprocesarGlobalchargers')->name('Reprocesar.globalcharge.fcl');
+    
+    Route::get('/testExcelImportation','ImportationGlobachargersFclController@testExcelImportation')->name('testExcelImportation.GC')->middleware(['auth','role:administrator']);
 
 });
 // GLOBAL CHARGES LCL 

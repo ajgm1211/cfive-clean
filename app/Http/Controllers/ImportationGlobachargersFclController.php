@@ -1288,4 +1288,31 @@ class ImportationGlobachargersFclController extends Controller
             })
             ->editColumn('id', '{{$id}}')->toJson();
     }
+
+
+    public function testExcelImportation(){
+
+        $nopalicaHs = Harbor::where('name','No Aplica')->get();
+        $nopalicaCs = Country::where('name','No Aplica')->get();
+        foreach($nopalicaHs as $nopalicaH){
+            $nopalicaH = $nopalicaH['id'];
+        }
+        foreach($nopalicaCs as $nopalicaC){
+            $nopalicaC = $nopalicaC['id'];
+        }
+        
+        FailedGlobalcharge::where('account_id','=',30)->where('origin','LIKE','%No Aplica%')->delete();
+        FailedGlobalcharge::where('account_id','=',30)->where('destiny','LIKE','%No Aplica%')->delete();
+
+        GlobalCharge::where('account_importation_globalcharge_id',30)
+            ->whereHas('globalcharport',function($query) use($nopalicaH){
+               $query->where('port_dest',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            })
+            ->orWhereHas('globalcharcountry',function($query) use($nopalicaC){
+               $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            })->Delete();
+
+    }
+
+
 }
