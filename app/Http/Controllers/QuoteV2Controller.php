@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AutomaticRate;
+use App\AutomaticInland;
 use App\CalculationType;
 use App\Charge;
 use App\Company;
@@ -100,45 +101,45 @@ class QuoteV2Controller extends Controller
             $colletions->push($data);
         }
         return DataTables::of($colletions)
-            ->addColumn('type', function ($colletion) {
-                return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-            })->addColumn('action',function($colletion){
-                return
-                    '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Options
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                     <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
-                        <span>
-                           <i class="la la-eye"></i>
-                           &nbsp;
-                           Show
-                        </span>
-                     </a>      
-                     <a href="/v2/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
-                        <span>
-                           <i class="la la-edit"></i>
-                           &nbsp;
-                           Edit
-                        </span>
-                     </a>
-                     <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
-                        <span>
-                           <i class="la la-plus"></i>
-                           &nbsp;
-                           Duplicate
-                        </span>
-                     </a>
-                     <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
-                        <span>
-                           <i class="la la-eraser"></i>
-                           &nbsp;
-                           Delete
-                        </span>
-                     </a>
-                  </div>';
-            })
-            ->editColumn('id', 'ID: {{$id}}')->make(true);
+        ->addColumn('type', function ($colletion) {
+            return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+        })->addColumn('action',function($colletion){
+            return
+            '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Options
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+            <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
+            <span>
+            <i class="la la-eye"></i>
+            &nbsp;
+            Show
+            </span>
+            </a>      
+            <a href="/v2/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
+            <span>
+            <i class="la la-edit"></i>
+            &nbsp;
+            Edit
+            </span>
+            </a>
+            <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+            <span>
+            <i class="la la-plus"></i>
+            &nbsp;
+            Duplicate
+            </span>
+            </a>
+            <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+            <span>
+            <i class="la la-eraser"></i>
+            &nbsp;
+            Delete
+            </span>
+            </a>
+            </div>';
+        })
+        ->editColumn('id', 'ID: {{$id}}')->make(true);
     }
 
     public function show($id)
@@ -152,6 +153,7 @@ class QuoteV2Controller extends Controller
         //Retrieving all data
         $company_user_id = \Auth::user()->company_user_id;
         $quote = QuoteV2::findOrFail($id);
+        $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
         $rates = AutomaticRate::where('quote_id',$quote->id)->get();
         foreach ($rates as $rate) {
             foreach ($rate->charge as $item) {
@@ -178,7 +180,7 @@ class QuoteV2Controller extends Controller
         $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
         $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
-        //Adding country codes to collection
+        //Adding country codes to rates collection
         foreach ($rates as $item) {
             $rates->map(function ($item) {
                 $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
@@ -187,16 +189,24 @@ class QuoteV2Controller extends Controller
             });
         }
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates'));
+        //Adding country codes to inlands collection
+        foreach ($inlands as $item) {
+            $inlands->map(function ($item) {
+                $item['country_code'] = strtolower(substr($item->port->code, 0, 2));
+                return $item;
+            });
+        }
+
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands'));
     }
 
     public function updateQuoteCharges(Request $request)
     {
         //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
         DB::table('charges')
-            ->where('id', $request->pk)
-            ->update([$request->name => $request->value]);
-            
+        ->where('id', $request->pk)
+        ->update([$request->name => $request->value]);
+
         return response()->json(['success'=>'done']);
     }
 
