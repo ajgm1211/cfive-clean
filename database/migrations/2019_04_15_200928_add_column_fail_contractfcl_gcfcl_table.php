@@ -15,11 +15,9 @@ class AddColumnFailContractfclGcfclTable extends Migration
     {
         Schema::table('failes_surcharges', function (Blueprint $table){
             $table->integer('differentiator')->nullable()->after('carrier_id');
-            
         });
         Schema::table('failed_globalchargers', function (Blueprint $table){
             $table->integer('differentiator')->nullable()->after('account_id');
-            
         });
     }
 
