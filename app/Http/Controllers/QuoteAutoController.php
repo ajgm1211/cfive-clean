@@ -362,6 +362,10 @@ class QuoteAutoController extends Controller
       $arregloOrigin =  array();
       $arregloFreight =  array();
       $arregloDestiny =  array();
+      // globales
+      $arregloOriginG =  array();
+      $arregloFreightG =  array();
+      $arregloDestinyG =  array();
 
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
 
@@ -607,17 +611,205 @@ class QuoteAutoController extends Controller
 
       }
 
-      // Ordenar las colecciones
+     
+
+
+      // ################## Fin local Charges        #############################
+
+      //################## Calculos Global Charges #################################
+
+      $globalChar = GlobalCharge::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function($q) use($carrier) {
+        $q->whereIn('carrier_id', $carrier);
+      })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
+        $query->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
+          $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+        })->orwhereHas('globalcharcountry', function($q) use($origin_country,$destiny_country) {
+          $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+        });
+      })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+
+
+      foreach($globalChar as $global){
+
+        $rateMount = $this->ratesCurrency($global->currency->id,$typeCurrency);
+
+        // Condicion para enviar los terminos de venta o compra
+        if(isset($global->surcharge->saleterm->name)){
+          $terminos = $global->surcharge->saleterm->name;
+        }else{
+          $terminos = $global->surcharge->name;
+        }
+
+        foreach($global->globalcharcarrier as $globalCarrier){
+          if($globalCarrier->carrier_id == $data->carrier_id || $globalCarrier->carrier_id ==  $carrier_all ){
+            //Origin
+            if($global->typedestiny_id == '1'){
+
+              if(in_array($global->calculationtype_id, $array20)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
+                $arregloOriginG = array_merge($arregloOriginG,$markup20);
+                $collectionOrigin->push($arregloOriginG);
+              }
+              if(in_array($global->calculationtype_id, $array40)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
+                $arregloOriginG = array_merge($arregloOriginG,$markup40);
+                $collectionOrigin->push($arregloOriginG);
+              }
+              if(in_array($global->calculationtype_id, $array40Hc)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' );
+                $arregloOriginG = array_merge($arregloOriginG,$markup40hc);
+                $collectionOrigin->push($arregloOriginG);
+              }
+              if(in_array($global->calculationtype_id, $array40Nor)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor' );
+                $arregloOriginG = array_merge($arregloOriginG,$markup40nor);
+                $collectionOrigin->push($arregloOriginG);
+              }
+              if(in_array($global->calculationtype_id, $array45)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45' );
+                $arregloOriginG = array_merge($arregloOriginG,$markup45);
+                $collectionOrigin->push($arregloOriginG);
+              }
+
+              $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' );
+              $collectionOrigin->push($arregloOriginG);
+            }
+            //Destiny
+            if($global->typedestiny_id == '2'){
+
+              if(in_array($global->calculationtype_id, $array20)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
+                $arregloDestinyG = array_merge($arregloDestinyG,$markup20);
+                $collectionDestiny->push($arregloDestinyG);
+              }
+              if(in_array($global->calculationtype_id, $array40)){
+
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
+                $arregloDestinyG = array_merge($arregloDestinyG,$markup40);
+                $collectionDestiny->push($arregloDestinyG);
+              }
+              if(in_array($global->calculationtype_id, $array40Hc)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' );
+                $arregloDestinyG = array_merge($arregloDestinyG,$markup40hc);
+                $collectionDestiny->push($arregloDestinyG);
+              }
+              if(in_array($global->calculationtype_id, $array40Nor)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor' );
+                $arregloDestinyG = array_merge($arregloDestinyG,$markup40nor);
+                $collectionDestiny->push($arregloDestinyG);
+              }
+              if(in_array($global->calculationtype_id, $array45)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45' );
+                $arregloDestinyG = array_merge($arregloDestinyG,$markup45);
+                $collectionDestiny->push($arregloDestinyG);
+              }
+
+              $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' );
+              $collectionDestiny->push($arregloDestinyG);
+            }
+            //Freight
+            if($global->typedestiny_id == '3'){
+
+              if(in_array($global->calculationtype_id, $array20)){
+
+                $monto =   $global->ammount  / $rateMount ;
+
+                $monto = number_format($monto, 2, '.', '');
+                $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' );
+                $arregloFreightG = array_merge($arregloFreightG,$markup20);
+                $collectionFreight->push($arregloFreightG);
+              }
+              if(in_array($global->calculationtype_id, $array40)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' );
+                $arregloFreightG = array_merge($arregloFreightG,$markup40);
+                $collectionFreight->push($arregloFreightG);
+              }
+              if(in_array($global->calculationtype_id, $array40Hc)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' );
+                $arregloFreightG = array_merge($arregloFreightG,$markup40hc);
+                $collectionFreight->push($arregloFreightG);
+              }
+              if(in_array($global->calculationtype_id, $array40Nor)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor' );
+                $arregloFreightG = array_merge($arregloFreightG,$markup40nor);
+                $collectionFreight->push($arregloFreightG);
+              }
+              if(in_array($global->calculationtype_id, $array45)){
+                $monto =   $global->ammount  / $rateMount ;
+                $monto = number_format($monto, 2, '.', '');
+                $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45' );
+                $arregloFreightG = array_merge($arregloFreightG,$markup45);
+                $collectionFreight->push($arregloFreightG);
+              }
+
+              $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' );
+
+              $collectionFreight->push($arregloFreightG);
+
+            }
+
+          }
+        }
+      }
+
+      // ############################ Fin global charges ######################
+
+       // Ordenar las colecciones
       if(!empty($collectionFreight))
         $collectionFreight = $this->OrdenarCollection($collectionFreight);
       if(!empty($collectionDestiny))
         $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
       if(!empty($collectionOrigin))
         $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
-
-
-      // ################## Fin local Charges        #############################
-
+      
+      
       $totalRates += $totalT;
       $array = array('type'=>'Ocean Freight','detail'=>'Per Container','subtotal'=>$totalRates, 'total' =>$totalRates." ". $typeCurrency , 'idCurrency' => $data->currency_id,'currency_rate' => $data->currency->alphacode );
       $array = array_merge($array,$arregloRate);
@@ -635,9 +827,8 @@ class QuoteAutoController extends Controller
       $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
 
 
+     
     }
-
-
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
