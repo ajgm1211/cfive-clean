@@ -11,6 +11,111 @@ $(document).ready(function() {
     $('.editable').editable({
         url:'/v2/quotes/charges/update',
         success: function(response, newValue) {
+            alert(newValue);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-amount-20').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
+            $(this).closest('tr').find('.total_20').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-markup-20').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
+            $(this).closest('tr').find('.total_20').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-amount-40').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
+            $(this).closest('tr').find('.total_40').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-markup-40').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
+            $(this).closest('tr').find('.total_40').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-amount-40hc').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+            $(this).closest('tr').find('.total_40hc').html(total);
+
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-markup-40hc').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
+            $(this).closest('tr').find('.total_40hc').html(total);
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -21,6 +126,74 @@ $(document).ready(function() {
         }
     });
     
+    $('.editable-amount-40nor').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
+            $(this).closest('tr').find('.total_40nor').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-markup-40nor').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
+            $(this).closest('tr').find('.total_40nor').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-amount-45').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
+            $(this).closest('tr').find('.total_45').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-markup-45').editable({
+        url:'/v2/quotes/charges/update',
+        success: function(response, newValue) {
+
+            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
+            $(this).closest('tr').find('.total_45').html(total);
+
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
     $('#created_at').editable({
         format: 'yyyy-mm-dd',
         viewformat: 'dd/mm/yyyy',
@@ -39,7 +212,7 @@ $(document).ready(function() {
         }
     });
 });
- 
+
 //Edit payments
 $(document).on('click', '#edit-payments', function () {
     $(".payment_conditions_span").attr('hidden','true');
@@ -68,7 +241,7 @@ $(document).on('click', '#update-payments', function () {
                     'Updated!',
                     'The payment conditions has been updated.',
                     'success'
-                )
+                    )
 
                 $(".payment_conditions_span").html(data.quote['payment_conditions']);
                 $(".payment_conditions_span").removeAttr('hidden');
@@ -107,7 +280,7 @@ $(document).on('click', '#update-terms', function () {
                     'Updated!',
                     'The terms and conditions has been updated.',
                     'success'
-                )
+                    )
 
                 $(".terms_and_conditions_span").html(data.quote['terms_and_conditions']);
                 $(".terms_and_conditions_span").removeAttr('hidden');
@@ -234,7 +407,7 @@ $(document).on('click', '#update', function () {
                     'Updated!',
                     'Your quote has been updated.',
                     'success'
-                )
+                    )
                 var incoterm = data.quote['incoterm_id'];
                 var delivery_type = data.quote['delivery_type'];
 
@@ -359,11 +532,11 @@ $('.select2-destination').select2();
 
 function addFreightCharge($value){
     var $template = $('#freight_charges_'+$value),
-        $clone = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .insertAfter($template)
+    $clone = $template
+    .clone()
+    .removeClass('hide')
+    .removeAttr('id')
+    .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -371,11 +544,11 @@ function addFreightCharge($value){
 
 function addOriginCharge($value){
     var $template = $('#origin_charges_'+$value),
-        $clone = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .insertAfter($template)
+    $clone = $template
+    .clone()
+    .removeClass('hide')
+    .removeAttr('id')
+    .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -383,11 +556,11 @@ function addOriginCharge($value){
 
 function addDestinationCharge($value){
     var $template = $('#destination_charges_'+$value),
-        $clone = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .insertAfter($template)
+    $clone = $template
+    .clone()
+    .removeClass('hide')
+    .removeAttr('id')
+    .insertAfter($template)
     $clone.find("select").select2({
         placeholder: "Currency"
     });
@@ -412,3 +585,19 @@ function show_hide_element($element,$button){
         $('.'+$element).addClass('hide');
     }
 }
+
+//Calculando freight ammounts
+$(document).on("change keyup keydown", ".freight_amount_20, .freight_markup_20", function() {
+    var amount = 0;
+    var markup = 0;
+    var total = 0;
+    var self = this;
+    var currency_cfg = $("#currency_id").val();
+    $(".freight_amount_20").each(function(){
+        alert($(this).closest('tr').find('.freight_amount_20').attr('data-value'));
+        $( this).each(function() {
+            total =  $(this).closest('tr').find('.freight_amount_20').val() + $(this).closest('tr').find('.freight_markup_20').val();
+            $(this).closest('tr').find('.freight_total_20').html(total);
+        });
+    });
+});
