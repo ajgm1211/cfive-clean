@@ -341,7 +341,7 @@ class ImportationLclController extends Controller
         $countTarges = count($targetsArr);
         //dd($data);
 
-        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','CompanyUserId'));
+        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','contract','CompanyUserId'));
         /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
@@ -714,7 +714,8 @@ class ImportationLclController extends Controller
         //$id se refiere al id del contracto
         $countrates = RateLcl::with('carrier','contract')->where('contractlcl_id','=',$id)->count();
         $countfailrates = FailRateLcl::where('contractlcl_id','=',$id)->count();
-        return view('ImportationLcl.showrates',compact('countfailrates','countrates','id','tab'));
+        $contract = ContractLcl::find($id);
+        return view('ImportationLcl.showrates',compact('countfailrates','countrates','contract','id','tab'));
     }
 
     // Datatable de Rates

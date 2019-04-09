@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'GlobalCharge')
+@section('title', 'Requests GlobalCharge')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
