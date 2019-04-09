@@ -99,6 +99,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $contractId             = "Contract_id";
                 $typedestiny            = "Type_Destiny";
                 $differentiator         = "Differentiator";
+                $statusPortCountryTW    = $requestobj['statusPortCountry'];
                 $chargeVal              = $requestobj['chargeVal'];
                 $contract_id            = $requestobj['Contract_id'];
                 $statusexistfortynor    = $requestobj['existfortynor'];
@@ -120,8 +121,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                     //--------------------------------------------------------
                     if($i != 1){
-
-                        $differentiatorVal = $read[$requestobj[$differentiator]];
+                        if($statusPortCountryTW == 2){
+                            $differentiatorVal = $read[$requestobj[$differentiator]];
+                        } else {
+                            $differentiatorVal = 'port';
+                        }
+                        
                         //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
                         //--- ORIGIN ------------------------------------------------------
                         $oricount = 0;
