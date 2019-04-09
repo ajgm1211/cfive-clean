@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title', 'Globalchargers')
+@section('title', 'Importation GC '.$account['id'].' - '.$account['name'])
 @section('content')
 
 <div class="m-content">

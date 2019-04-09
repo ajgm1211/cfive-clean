@@ -514,6 +514,7 @@ class ImportationGlobachargersFclController extends Controller
                                                                 'carrier',
                                                                 'targetsArr',
                                                                 'account_id',
+                                                                'account',
                                                                 'coordenates',
                                                                 'countTarges',
                                                                 'CompanyUserId',
@@ -549,7 +550,8 @@ class ImportationGlobachargersFclController extends Controller
     // view de informacion despues de despachar el job
     public function show($id)
     {
-        return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id'));
+        $accounts = AccountImportationGlobalcharge::find($id);
+        return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id','accounts'));
     }
 
     public function edit($id){
@@ -746,8 +748,9 @@ class ImportationGlobachargersFclController extends Controller
     {
         $countfailglobal = FailedGlobalcharge::where('account_id','=',$id)->count();
         $countgoodglobal = GlobalCharge::where('account_importation_globalcharge_id','=',$id)->count();
+        $accounts = AccountImportationGlobalcharge::find($id);
         //dd('fallidos'.$countfailglobal);
-        return view('ImportationGlobalchargersFcl.showview',compact('id','tab','countfailglobal','countgoodglobal'));
+        return view('ImportationGlobalchargersFcl.showview',compact('id','tab','countfailglobal','accounts','countgoodglobal'));
     }
 
     // LLena los datatables

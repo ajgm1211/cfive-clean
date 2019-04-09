@@ -667,6 +667,7 @@ class ImportationController extends Controller
         return view('importation.ContractFclProcess',compact('harbor',
                                                              'country',
                                                              'data',
+                                                             'contract',
                                                              'type',
                                                              'region',
                                                              'carrier',
@@ -1158,9 +1159,10 @@ class ImportationController extends Controller
     }
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
-        $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
+        $countrates     = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
-        return view('importation.TestFailRates2',compact('countfailrates','countrates','id','tab'));
+        $contract       = Contract::find($id);
+        return view('importation.TestFailRates2',compact('countfailrates','countrates','contract','id','tab'));
     }
 
     // * proccesa solo cuando es Surchargers, Se envia a cola de trabajos 2do. plano
@@ -1179,7 +1181,8 @@ class ImportationController extends Controller
         return redirect()->route('redirect.Processed.Information',$id);
     }
     public function redirectProcessedInformation($id){
-        return view('importation.ProcessedInformation',compact('id'));
+        $contract       = Contract::find($id);
+        return view('importation.ProcessedInformation',compact('id','contract'));
     }
 
     // Rates ----------------------------------------------------------------------------
@@ -4064,7 +4067,8 @@ class ImportationController extends Controller
         //$id se refiere al id del contracto
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
         $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
-        return view('importation.SurchargersFailOF',compact('countfailsurcharge','countgoodsurcharge','id','tab'));
+        $contract       = Contract::find($id);
+        return view('importation.SurchargersFailOF',compact('countfailsurcharge','contract','countgoodsurcharge','id','tab'));
 
     }
 
