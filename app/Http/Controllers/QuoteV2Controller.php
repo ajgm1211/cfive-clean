@@ -189,14 +189,6 @@ class QuoteV2Controller extends Controller
             });
         }
 
-        //Adding country codes to inlands collection
-        foreach ($inlands as $item) {
-            $inlands->map(function ($item) {
-                $item['country_code'] = strtolower(substr($item->port->code, 0, 2));
-                return $item;
-            });
-        }
-
         return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands'));
     }
 
