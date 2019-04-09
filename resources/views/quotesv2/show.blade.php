@@ -50,7 +50,7 @@
             </ul>
         </div>
         <div class="col-md-12">
-            <div class="m-portlet" style="border-radius: 10px; background-color: #FCFCFC;">
+            <div class="m-portlet custom-portlet">
                 <div class="m-portlet__head">
                     <div class="row" style="padding-top: 20px;">
                         <h3 class="title-quote size-14px">Quote info</h3>
@@ -187,7 +187,7 @@
     <!-- Charges -->
     <div class="row">
         <div class="col-md-12">
-            <div class="m-portlet" style="border-radius: 10px; background-color: #FCFCFC;">
+            <div class="m-portlet custom-portlet">
                 <div class="m-portlet__body">
                     @php
                     $v=0;
@@ -786,7 +786,7 @@
     <!-- Inlands -->
     <div class="row">
         <div class="col-md-12">
-            <div class="m-portlet" style="border-radius: 10px; background-color: #FCFCFC;">
+            <div class="m-portlet custom-portlet">
                 <div class="m-portlet__body">
                     @php
                     $x=0;
