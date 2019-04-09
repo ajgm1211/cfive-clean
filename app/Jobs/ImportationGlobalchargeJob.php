@@ -91,6 +91,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                 $validityto             = "Validity_To";
                 $differentiator         = "Differentiator";
 
+                $statusPortCountryTW        = $requestobj['statusPortCountry'];
                 $account_id                 = $requestobj['account_id'];
                 $statusexistfortynor        = $requestobj['existfortynor'];
                 $statusexistfortyfive       = $requestobj['existfortyfive'];
@@ -111,7 +112,11 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                     //--------------------------------------------------------
                     if($i != 1){
-                        $differentiatorVal = $read[$requestobj[$differentiator]];
+                        if($statusPortCountryTW == 2){
+                            $differentiatorVal = $read[$requestobj[$differentiator]];
+                        } else {
+                            $differentiatorVal = 'port';
+                        }
                         //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
                         //--- ORIGIN ------------------------------------------------------
                         $oricount = 0;
