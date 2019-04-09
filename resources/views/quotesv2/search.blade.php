@@ -209,7 +209,7 @@
             <div class="row" id='origin{{$loop->iteration}}'  >
               <div class="col-lg-12">
                 <div class="row">
-                  <span class="darkblue cabezeras">Destination</span><br><br>
+                  <span class="darkblue cabezeras">Origin</span><br><br>
                 </div>
                 <div class="row bg-light">
                   <div class="col-lg-3"><span class="portalphacode">Charge</span></div>
