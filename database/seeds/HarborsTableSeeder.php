@@ -12897,6 +12897,18 @@ class HarborsTableSeeder extends Seeder
                 'created_at' => '2019-04-09 03:21:14',
                 'updated_at' => '2019-04-09 03:21:54',
             ),
+            73 => 
+            array (
+                'id' => 1842,
+                'name' => 'No Aplica',
+                'code' => 'NoAp',
+                'display_name' => 'NoAp, No Aplica',
+                'coordinates' => NULL,
+                'country_id' => 251,
+                'varation' => '{"type": ["no aplica", "noap, no aplica"]}',
+                'created_at' => '2019-04-10 15:11:11',
+                'updated_at' => '2019-04-10 15:11:11',
+            ),
         ));
         
         

@@ -2517,6 +2517,16 @@ class CountriesTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => '2019-03-19 16:40:30',
             ),
+            250 => 
+            array (
+                'id' => 251,
+                'code' => 'No Aplica',
+                'name' => 'No Aplica',
+                'continent' => 'No aplica',
+                'variation' => '{"type": ["no aplica"]}',
+                'created_at' => '2019-04-10 15:10:24',
+                'updated_at' => '2019-04-10 15:10:24',
+            ),
         ));
         
         
