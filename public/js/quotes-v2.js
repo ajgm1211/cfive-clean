@@ -8,10 +8,69 @@ $(document).ready(function() {
         }
     });
 
+    //Show total amounts for freight
+    var sum_freight=0;
+    $(".total_freight_20").each(function(){
+        sum_freight = sum_freight + parseFloat($(this).html());
+    });
+    $(".total_freight_40").each(function(){
+        sum_freight = sum_freight + parseFloat($(this).html());
+    });
+    $(".total_freight_40hc").each(function(){
+        sum_freight = sum_freight + parseFloat($(this).html());
+    });
+    $(".total_freight_40nor").each(function(){
+        sum_freight = sum_freight + parseFloat($(this).html());
+    });
+    $(".total_freight_45").each(function(){
+        sum_freight = sum_freight + parseFloat($(this).html());
+    });
+    $("#sub_total_freight").html(sum_freight + " USD");
+
+    //Show total amounts for origin
+    var sum_origin=0;
+    $(".total_origin_20").each(function(){
+        sum_origin = sum_origin + parseFloat($(this).html());
+    });
+    $(".total_origin_40").each(function(){
+        sum_origin = sum_origin + parseFloat($(this).html());
+    });
+    $(".total_origin_40hc").each(function(){
+        sum_origin = sum_origin + parseFloat($(this).html());
+    });
+    $(".total_origin_40nor").each(function(){
+        sum_origin = sum_origin + parseFloat($(this).html());
+    });
+    $(".total_origin_45").each(function(){
+        sum_origin = sum_origin + parseFloat($(this).html());
+    });
+    $("#sub_total_origin").html(sum_origin + " USD");
+
+    //Show total amounts for origin
+    var sum_destination=0;
+    $(".total_destination_20").each(function(){
+        sum_destination = sum_destination + parseFloat($(this).html());
+    });
+    $(".total_destination_40").each(function(){
+        sum_destination = sum_destination + parseFloat($(this).html());
+    });
+    $(".total_destination_40hc").each(function(){
+        sum_destination = sum_destination + parseFloat($(this).html());
+    });
+    $(".total_destination_40nor").each(function(){
+        sum_destination = sum_destination + parseFloat($(this).html());
+    });
+    $(".total_destination_45").each(function(){
+        sum_destination = sum_destination + parseFloat($(this).html());
+    });
+    $("#sub_total_destination").html(sum_destination + " USD");
+
+    $("#total").html(sum_origin+sum_destination+sum_freight+" USD");   
+
+
     $('.editable').editable({
         url:'/v2/quotes/charges/update',
         success: function(response, newValue) {
-            alert(newValue);
 
             if(!response) {
                 return "Unknown error!";
@@ -29,7 +88,7 @@ $(document).ready(function() {
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
-
+            
             if(!response) {
                 return "Unknown error!";
             }
@@ -578,6 +637,60 @@ $(document).on('click', '.removeDestinationCharge', function (e) {
     $(this).closest('tr').remove();
 });
 
+//Sending quotes
+$(document).on('click', '#send-pdf-quotev2', function () {
+  var id = $('#quote-id').val();
+  var email = $('#quote_email').val();
+  var to = $('#addresse').val();
+  var email_template_id = $('#email_template').val();
+  var email_subject = $('#email-subject').val();
+  var email_body = $('#email-body').val();
+
+  if(email_template_id!=''&&to!=''){
+    $.ajax({
+      type: 'POST',
+      url: '/v2/quotes/send',
+      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
+      beforeSend: function () {
+        $('#send-pdf-quotev2').hide();
+        $('#send-pdf-quote-sending').show();
+    },
+    success: function(data) {
+        $('#spin').hide();
+        $('#send-pdf-quotev2').show();
+        $('#send-pdf-quote-sending').hide();
+        if(data.message=='Ok'){
+          $('#SendQuoteModal').modal('toggle');
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+          $('#subject-box').html('');
+          $('.editor').html('');
+          $('#textarea-box').hide();
+          swal(
+            'Done!',
+            'Your message has been sent.',
+            'success'
+            )
+      }else{
+          swal(
+            'Error!',
+            'Your message has not been sent.',
+            'error'
+            )
+      }
+  }
+});
+}else{
+    swal(
+      '',
+      'Please complete all fields',
+      'error'
+      )
+}
+});
+
+//Custom functions
+
 function show_hide_element($element,$button){
     if($('.'+$element).hasClass('hide')){
         $('.'+$element).removeClass('hide');
@@ -585,19 +698,3 @@ function show_hide_element($element,$button){
         $('.'+$element).addClass('hide');
     }
 }
-
-//Calculando freight ammounts
-$(document).on("change keyup keydown", ".freight_amount_20, .freight_markup_20", function() {
-    var amount = 0;
-    var markup = 0;
-    var total = 0;
-    var self = this;
-    var currency_cfg = $("#currency_id").val();
-    $(".freight_amount_20").each(function(){
-        alert($(this).closest('tr').find('.freight_amount_20').attr('data-value'));
-        $( this).each(function() {
-            total =  $(this).closest('tr').find('.freight_amount_20').val() + $(this).closest('tr').find('.freight_markup_20').val();
-            $(this).closest('tr').find('.freight_total_20').html(total);
-        });
-    });
-});

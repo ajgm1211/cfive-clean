@@ -19,6 +19,9 @@ use App\Quote;
 use App\QuoteV2;
 use App\Surcharge;
 use App\User;
+use EventIntercom;
+use App\Jobs\SendQuotes;
+use App\SendQuote;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -189,7 +192,14 @@ class QuoteV2Controller extends Controller
             });
         }
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands'));
+        $emaildimanicdata = json_encode([
+            'quote_bool'   => 'true',
+            'company_id'   => '',
+            'contact_id'   => '',
+            'quote_id'     => $quote->id
+        ]);
+
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands','emaildimanicdata'));
     }
 
     public function updateQuoteCharges(Request $request)
@@ -414,5 +424,62 @@ class QuoteV2Controller extends Controller
         $equipment->put('40nor',$hidden40nor);
         $equipment->put('45',$hidden45);
         return($equipment);
+    }
+
+    public function send_pdf_quote(Request $request)
+    {
+        $quote = QuoteV2::findOrFail($request->id);
+        $contact_email = Contact::find($quote->contact_id);
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
+            $currency_cfg = Currency::find($company_user->currency_id);
+        }
+
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
+
+        // EVENTO INTERCOM 
+        $event = new  EventIntercom();
+        $event->event_quoteEmail();
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+        $subject = $request->subject;
+        $body = $request->body;
+        $to = $request->to;
+
+        if($to!=''){
+            $explode=explode(';',$to);
+            foreach($explode as $item) {
+                $send_quote = new SendQuote();
+                $send_quote->to = trim($item);
+                $send_quote->from = \Auth::user()->email;
+                $send_quote->subject = $subject;
+                $send_quote->body = $body;
+                $send_quote->quote_id = $quote->id;
+                $send_quote->status = 0;
+                $send_quote->save();
+            }
+        }else{
+            $send_quote = new SendQuote();
+            $send_quote->to = $contact_email->email;
+            $send_quote->from = \Auth::user()->email;
+            $send_quote->subject = $subject;
+            $send_quote->body = $body;
+            $send_quote->quote_id = $quote->id;
+            $send_quote->status = 0;
+            $send_quote->save();
+        }
+        //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+
+        $quote->status='Sent';
+        $quote->update();
+        return response()->json(['message' => 'Ok']);
     }
 }
