@@ -452,10 +452,11 @@ class ImportationController extends Controller
         //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImportContractFCLRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestfcl'));
+        return view('importation.ImportContractFCLRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestfcl'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:

@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title','Importation FCL R. '.$requestfcl['id'].' - '.$requestfcl['numbercontract'].'/'.$requestfcl['namecontract'])
+@section('title', 'Importation FCL R. '.$requestfcl['id'].' - '.$requestfcl['numbercontract'].'/'.$requestfcl['namecontract'])
 @section('content')
 
 <div class="m-content">
@@ -80,7 +80,7 @@ new registration
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-3">
+                                 <div class="col-lg-3">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="{{$requestfcl['validation']}}">
                                 </div>
@@ -211,7 +211,7 @@ new registration
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Ports and Countries
+                                                    Ports and Countries or Region
                                                 </span>
                                             </span>
                                         </span>
@@ -243,12 +243,16 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        <label for="destiny" class=" ">Ports</label>
+                                        <label for="origin" class=" ">Ports</label>
                                         {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="origininpCount" hidden="hidden" >
-                                        <label for="destiny" class=" ">Countries</label>
+                                        <label for="originCountry" class=" ">Countries</label>
                                         {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="origininpRegion" hidden="hidden" >
+                                        <label for="originRegion" class=" ">Regions</label>
+                                        {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -275,6 +279,10 @@ new registration
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
                                         <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
+                                        <label for="destinyRegion" class=" ">Regions</label>
+                                        {!! Form::select('destinyRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'destinyRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">
