@@ -300,9 +300,10 @@ class ImportationGlobachargersFclController extends Controller
         $harbor         = Harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestgc'));
+        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestgc'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:

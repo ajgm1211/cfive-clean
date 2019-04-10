@@ -149,7 +149,7 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Ports and Countries
+                                                    Ports and Countries or Regions
                                                 </span>
                                             </span>
                                         </span>
@@ -175,7 +175,7 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Origin Port or Country Not Included
+                                                    Origin Port, Country or Regions Not Included
                                                 </span>
                                             </span>
                                         </span>
