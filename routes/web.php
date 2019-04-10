@@ -412,6 +412,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('/update/terms/{id}', 'QuoteV2Controller@updateTerms')->name('quotes-v2.update.terms');
     Route::get('/duplicate/{id}', 'QuoteV2Controller@duplicate')->name('quotes-v2.duplicate');
     Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
+    Route::post('send', 'QuoteV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
 });
 
 //Settings
