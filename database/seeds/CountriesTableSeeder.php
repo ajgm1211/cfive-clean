@@ -23,9 +23,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'AD',
                 'name' => 'Andorra',
                 'continent' => 'EU',
-                'variation' => '{"type": ["andorra"]}',
+                'variation' => '{"type": ["andorra", "andorra ad"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:42:18',
             ),
             1 => 
             array (
@@ -33,9 +33,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'AE',
                 'name' => 'United Arab Emirates',
                 'continent' => 'AS',
-                'variation' => '{"type": ["united arab emirates"]}',
+                'variation' => '{"type": ["united arab emirates", "united arab emirates uae"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-04-03 08:31:58',
             ),
             2 => 
             array (
@@ -45,7 +45,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["afghanistan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             3 => 
             array (
@@ -55,7 +55,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["antigua and barbuda"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             4 => 
             array (
@@ -63,9 +63,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'AI',
                 'name' => 'Anguilla',
                 'continent' => 'NA',
-                'variation' => '{"type": ["anguilla"]}',
+                'variation' => '{"type": ["anguilla", "anguilla uk"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-04-03 08:21:42',
             ),
             5 => 
             array (
@@ -75,7 +75,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["albania"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             6 => 
             array (
@@ -85,7 +85,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["armenia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             7 => 
             array (
@@ -95,7 +95,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["angola"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             8 => 
             array (
@@ -105,7 +105,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AN',
                 'variation' => '{"type": ["antarctica"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             9 => 
             array (
@@ -115,7 +115,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["argentina"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             10 => 
             array (
@@ -125,7 +125,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["american samoa"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             11 => 
             array (
@@ -135,7 +135,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["austria"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             12 => 
             array (
@@ -145,7 +145,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["australia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             13 => 
             array (
@@ -153,9 +153,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'AW',
                 'name' => 'Aruba',
                 'continent' => 'NA',
-                'variation' => '{"type": ["aruba"]}',
+                'variation' => '{"type": ["aruba", "aruba netherlands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-04-03 08:19:42',
             ),
             14 => 
             array (
@@ -165,7 +165,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["azerbaijan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             15 => 
             array (
@@ -175,7 +175,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["bosnia and herzegovina"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             16 => 
             array (
@@ -185,7 +185,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["barbados"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             17 => 
             array (
@@ -195,7 +195,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["bangladesh"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             18 => 
             array (
@@ -205,7 +205,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["belgium"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             19 => 
             array (
@@ -215,7 +215,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["burkina faso"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             20 => 
             array (
@@ -223,9 +223,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'BG',
                 'name' => 'Bulgaria',
                 'continent' => 'EU',
-                'variation' => '{"type": ["bulgaria"]}',
+                'variation' => '{"type": ["bulgaria", "bulgary"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-04-02 08:40:30',
             ),
             21 => 
             array (
@@ -235,7 +235,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["bahrain"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             22 => 
             array (
@@ -245,7 +245,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["burundi"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:01',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             23 => 
             array (
@@ -253,9 +253,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'BJ',
                 'name' => 'Benin',
                 'continent' => 'AF',
-                'variation' => '{"type": ["benin"]}',
+                'variation' => '{"type": ["benin", "benín"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-04-03 08:22:58',
             ),
             24 => 
             array (
@@ -263,9 +263,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'BL',
                 'name' => 'Saint Barthélemy',
                 'continent' => 'NA',
-                'variation' => '{"type": ["saint barthélemy"]}',
+                'variation' => '{"type": ["saint barthélemy", "saint barthélemy france"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-04-03 08:28:31',
             ),
             25 => 
             array (
@@ -275,7 +275,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["bermuda"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             26 => 
             array (
@@ -285,7 +285,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["brunei"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             27 => 
             array (
@@ -295,7 +295,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["bolivia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             28 => 
             array (
@@ -303,9 +303,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'BQ',
                 'name' => 'Caribbean Netherlands',
                 'continent' => 'NA',
-                'variation' => '{"type": ["caribbean netherlands"]}',
+                'variation' => '{"type": ["caribbean netherlands", "caribbean netherlandsnetherlands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-04-03 08:29:25',
             ),
             29 => 
             array (
@@ -315,7 +315,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["brazil"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             30 => 
             array (
@@ -325,7 +325,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["bahamas"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             31 => 
             array (
@@ -335,7 +335,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["bhutan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             32 => 
             array (
@@ -343,9 +343,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'BW',
                 'name' => 'Botswana',
                 'continent' => 'AF',
-                'variation' => '{"type": ["botswana"]}',
+                'variation' => '{"type": ["botswana", "botsuana"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-04-03 08:27:28',
             ),
             33 => 
             array (
@@ -355,7 +355,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["belarus"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             34 => 
             array (
@@ -365,7 +365,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["belize"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             35 => 
             array (
@@ -375,7 +375,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["canada"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             36 => 
             array (
@@ -385,7 +385,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
             'variation' => '{"type": ["cocos (keeling) islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             37 => 
             array (
@@ -395,7 +395,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
             'variation' => '{"type": ["congo (kinshasa)"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             38 => 
             array (
@@ -405,7 +405,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["central african republic"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             39 => 
             array (
@@ -415,7 +415,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
             'variation' => '{"type": ["congo (brazzaville)"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             40 => 
             array (
@@ -425,7 +425,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["switzerland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             41 => 
             array (
@@ -433,9 +433,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'CI',
                 'name' => 'Côte d\'Ivoire',
                 'continent' => 'AF',
-                'variation' => '{"type": ["côte d\'ivoire"]}',
+                'variation' => '{"type": ["côte d\'ivoire", "costa de marfil"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-04-03 08:23:37',
             ),
             42 => 
             array (
@@ -445,7 +445,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["cook islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             43 => 
             array (
@@ -455,7 +455,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["chile"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             44 => 
             array (
@@ -465,7 +465,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["cameroon"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:02',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             45 => 
             array (
@@ -475,7 +475,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["china"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             46 => 
             array (
@@ -485,7 +485,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["colombia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             47 => 
             array (
@@ -495,7 +495,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["costa rica"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             48 => 
             array (
@@ -505,7 +505,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["cuba"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             49 => 
             array (
@@ -513,9 +513,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'CV',
                 'name' => 'Cape Verde',
                 'continent' => 'AF',
-                'variation' => '{"type": ["cape verde"]}',
+                'variation' => '{"type": ["cape verde", "cabo verde"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:23:17',
             ),
             50 => 
             array (
@@ -523,9 +523,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'CW',
                 'name' => 'Curaçao',
                 'continent' => 'NA',
-                'variation' => '{"type": ["curaçao"]}',
+                'variation' => '{"type": ["curaçao", "curaçao netherlands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:19:28',
             ),
             51 => 
             array (
@@ -535,7 +535,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["christmas island"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             52 => 
             array (
@@ -545,7 +545,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["cyprus"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             53 => 
             array (
@@ -555,7 +555,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["czechia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             54 => 
             array (
@@ -565,7 +565,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["germany"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             55 => 
             array (
@@ -573,9 +573,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'DJ',
                 'name' => 'Djibouti',
                 'continent' => 'AF',
-                'variation' => '{"type": ["djibouti"]}',
+                'variation' => '{"type": ["djibouti", "yibuti"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:29:03',
             ),
             56 => 
             array (
@@ -585,7 +585,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["denmark"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             57 => 
             array (
@@ -595,7 +595,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["dominica"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             58 => 
             array (
@@ -605,7 +605,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["dominican republic"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             59 => 
             array (
@@ -613,9 +613,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'DZ',
                 'name' => 'Algeria',
                 'continent' => 'AF',
-                'variation' => '{"type": ["algeria"]}',
+                'variation' => '{"type": ["algeria", "algiers", "argelia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-02 08:41:29',
             ),
             60 => 
             array (
@@ -625,7 +625,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["ecuador"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             61 => 
             array (
@@ -635,7 +635,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["estonia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             62 => 
             array (
@@ -643,9 +643,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'EG',
                 'name' => 'Egypt',
                 'continent' => 'AF',
-                'variation' => '{"type": ["egypt"]}',
+                'variation' => '{"type": ["egypt", "egipto"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:22:43',
             ),
             63 => 
             array (
@@ -655,7 +655,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["western sahara"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             64 => 
             array (
@@ -665,7 +665,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["eritrea"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             65 => 
             array (
@@ -675,7 +675,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["spain"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             66 => 
             array (
@@ -683,9 +683,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'ET',
                 'name' => 'Ethiopia',
                 'continent' => 'AF',
-                'variation' => '{"type": ["ethiopia"]}',
+                'variation' => '{"type": ["ethiopia", "etiopía"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:28:47',
             ),
             67 => 
             array (
@@ -695,7 +695,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["finland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             68 => 
             array (
@@ -705,7 +705,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["fiji"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             69 => 
             array (
@@ -715,7 +715,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["falkland islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             70 => 
             array (
@@ -723,9 +723,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'FM',
                 'name' => 'Micronesia',
                 'continent' => 'OC',
-                'variation' => '{"type": ["micronesia"]}',
+                'variation' => '{"type": ["micronesia", "micronesia,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-04-03 08:32:59',
             ),
             71 => 
             array (
@@ -735,7 +735,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["faroe islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:03',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             72 => 
             array (
@@ -745,7 +745,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["france"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             73 => 
             array (
@@ -755,7 +755,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["gabon"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             74 => 
             array (
@@ -765,7 +765,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["united kingdom"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             75 => 
             array (
@@ -775,7 +775,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["grenada"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             76 => 
             array (
@@ -785,7 +785,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["georgia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             77 => 
             array (
@@ -795,7 +795,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["french guiana"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             78 => 
             array (
@@ -805,7 +805,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["guernsey"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             79 => 
             array (
@@ -815,7 +815,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["ghana"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             80 => 
             array (
@@ -825,7 +825,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["gibraltar"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             81 => 
             array (
@@ -835,7 +835,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["greenland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             82 => 
             array (
@@ -845,7 +845,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["gambia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             83 => 
             array (
@@ -855,7 +855,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["guinea"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             84 => 
             array (
@@ -863,9 +863,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'GP',
                 'name' => 'Guadeloupe',
                 'continent' => 'NA',
-                'variation' => '{"type": ["guadeloupe"]}',
+                'variation' => '{"type": ["guadeloupe", "guadeloupe france"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-04-03 08:20:34',
             ),
             85 => 
             array (
@@ -875,7 +875,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["equatorial guinea"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             86 => 
             array (
@@ -885,7 +885,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["greece"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             87 => 
             array (
@@ -895,7 +895,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AN',
                 'variation' => '{"type": ["south georgia and the south sandwich islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             88 => 
             array (
@@ -905,7 +905,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["guatemala"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             89 => 
             array (
@@ -915,7 +915,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["guam"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             90 => 
             array (
@@ -923,9 +923,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'GW',
                 'name' => 'Guinea-Bissau',
                 'continent' => 'AF',
-                'variation' => '{"type": ["guinea-bissau"]}',
+                'variation' => '{"type": ["guinea-bissau", "guinea-bisáu"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-04-03 08:23:54',
             ),
             91 => 
             array (
@@ -935,7 +935,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["guyana"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             92 => 
             array (
@@ -945,7 +945,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["hong kong"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:04',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             93 => 
             array (
@@ -955,7 +955,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["honduras"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             94 => 
             array (
@@ -963,9 +963,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'HR',
                 'name' => 'Croatia',
                 'continent' => 'EU',
-                'variation' => '{"type": ["croatia"]}',
+                'variation' => '{"type": ["croatia", "croacia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-04-02 08:40:41',
             ),
             95 => 
             array (
@@ -975,7 +975,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["haiti"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             96 => 
             array (
@@ -985,7 +985,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["hungary"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             97 => 
             array (
@@ -995,7 +995,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["indonesia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             98 => 
             array (
@@ -1005,7 +1005,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["ireland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             99 => 
             array (
@@ -1015,7 +1015,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["israel"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             100 => 
             array (
@@ -1025,7 +1025,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["isle of man"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             101 => 
             array (
@@ -1035,7 +1035,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["india"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             102 => 
             array (
@@ -1045,7 +1045,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["british indian ocean territory"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             103 => 
             array (
@@ -1055,7 +1055,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["iraq"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             104 => 
             array (
@@ -1065,7 +1065,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["iran"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             105 => 
             array (
@@ -1075,7 +1075,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["iceland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             106 => 
             array (
@@ -1085,7 +1085,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["italy"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             107 => 
             array (
@@ -1095,7 +1095,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["jersey"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             108 => 
             array (
@@ -1105,7 +1105,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["jamaica"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             109 => 
             array (
@@ -1115,7 +1115,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["jordan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             110 => 
             array (
@@ -1125,7 +1125,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["japan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             111 => 
             array (
@@ -1133,9 +1133,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'KE',
                 'name' => 'Kenya',
                 'continent' => 'AF',
-                'variation' => '{"type": ["kenya"]}',
+                'variation' => '{"type": ["kenya", "kenia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-04-03 08:30:53',
             ),
             112 => 
             array (
@@ -1145,7 +1145,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["kyrgyzstan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             113 => 
             array (
@@ -1155,7 +1155,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["cambodia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             114 => 
             array (
@@ -1165,7 +1165,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["kiribati"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             115 => 
             array (
@@ -1173,9 +1173,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'KM',
                 'name' => 'Comoros',
                 'continent' => 'AF',
-                'variation' => '{"type": ["comoros"]}',
+                'variation' => '{"type": ["comoros", "comoras"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-04-03 08:30:09',
             ),
             116 => 
             array (
@@ -1185,7 +1185,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint kitts and nevis"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:05',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             117 => 
             array (
@@ -1193,9 +1193,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'KP',
                 'name' => 'North Korea',
                 'continent' => 'AS',
-                'variation' => '{"type": ["north korea"]}',
+                'variation' => '{"type": ["north korea", "korea democratin"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-02 06:09:52',
             ),
             118 => 
             array (
@@ -1203,9 +1203,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'KR',
                 'name' => 'South Korea',
                 'continent' => 'AS',
-                'variation' => '{"type": ["south korea"]}',
+                'variation' => '{"type": ["south korea", "korea republic"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-02 06:10:15',
             ),
             119 => 
             array (
@@ -1215,7 +1215,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["kuwait"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             120 => 
             array (
@@ -1223,9 +1223,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'KY',
                 'name' => 'Cayman Islands',
                 'continent' => 'NA',
-                'variation' => '{"type": ["cayman islands"]}',
+                'variation' => '{"type": ["cayman islands", "cayman islands uk"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-03 08:20:47',
             ),
             121 => 
             array (
@@ -1235,7 +1235,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["kazakhstan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             122 => 
             array (
@@ -1245,7 +1245,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["laos"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             123 => 
             array (
@@ -1255,7 +1255,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["lebanon"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             124 => 
             array (
@@ -1265,7 +1265,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint lucia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             125 => 
             array (
@@ -1275,7 +1275,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["liechtenstein"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             126 => 
             array (
@@ -1285,7 +1285,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["sri lanka"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             127 => 
             array (
@@ -1295,7 +1295,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["liberia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             128 => 
             array (
@@ -1303,9 +1303,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'LS',
                 'name' => 'Lesotho',
                 'continent' => 'AF',
-                'variation' => '{"type": ["lesotho"]}',
+                'variation' => '{"type": ["lesotho", "lesoto"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-03 08:27:59',
             ),
             129 => 
             array (
@@ -1315,7 +1315,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["lithuania"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             130 => 
             array (
@@ -1325,7 +1325,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["luxembourg"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             131 => 
             array (
@@ -1335,7 +1335,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["latvia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             132 => 
             array (
@@ -1343,9 +1343,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'LY',
                 'name' => 'Libya',
                 'continent' => 'AF',
-                'variation' => '{"type": ["libya"]}',
+                'variation' => '{"type": ["libya", "libia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-03 08:22:06',
             ),
             133 => 
             array (
@@ -1353,9 +1353,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MA',
                 'name' => 'Morocco',
                 'continent' => 'AF',
-                'variation' => '{"type": ["morocco"]}',
+                'variation' => '{"type": ["morocco", "marruecos"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-02 06:07:19',
             ),
             134 => 
             array (
@@ -1365,7 +1365,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["monaco"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             135 => 
             array (
@@ -1373,9 +1373,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MD',
                 'name' => 'Moldova',
                 'continent' => 'EU',
-                'variation' => '{"type": ["moldova"]}',
+                'variation' => '{"type": ["moldova", "moldova,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-03 08:32:46',
             ),
             136 => 
             array (
@@ -1385,7 +1385,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["montenegro"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             137 => 
             array (
@@ -1393,9 +1393,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MF',
                 'name' => 'Saint Martin',
                 'continent' => 'NA',
-                'variation' => '{"type": ["saint martin"]}',
+                'variation' => '{"type": ["saint martin", "saint martin france"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-04-03 08:27:48',
             ),
             138 => 
             array (
@@ -1405,7 +1405,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["madagascar"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:06',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             139 => 
             array (
@@ -1415,7 +1415,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["marshall islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             140 => 
             array (
@@ -1423,9 +1423,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MK',
                 'name' => 'Macedonia',
                 'continent' => 'EU',
-                'variation' => '{"type": ["macedonia"]}',
+                'variation' => '{"type": ["macedonia", "macedonia,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-02 06:10:27',
             ),
             141 => 
             array (
@@ -1435,7 +1435,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["mali"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             142 => 
             array (
@@ -1445,7 +1445,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["burma"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             143 => 
             array (
@@ -1455,7 +1455,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["mongolia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             144 => 
             array (
@@ -1463,9 +1463,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MO',
                 'name' => 'Macau',
                 'continent' => 'AS',
-                'variation' => '{"type": ["macau"]}',
+                'variation' => '{"type": ["macau", "macao"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-02 06:08:03',
             ),
             145 => 
             array (
@@ -1475,7 +1475,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["northern mariana islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             146 => 
             array (
@@ -1483,9 +1483,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MQ',
                 'name' => 'Martinique',
                 'continent' => 'NA',
-                'variation' => '{"type": ["martinique"]}',
+                'variation' => '{"type": ["martinique", "martinique france"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-03 08:19:11',
             ),
             147 => 
             array (
@@ -1495,7 +1495,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["mauritania"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             148 => 
             array (
@@ -1503,9 +1503,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MS',
                 'name' => 'Montserrat',
                 'continent' => 'NA',
-                'variation' => '{"type": ["montserrat"]}',
+                'variation' => '{"type": ["montserrat", "montserrat uk"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-03 08:21:56',
             ),
             149 => 
             array (
@@ -1515,7 +1515,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["malta"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             150 => 
             array (
@@ -1523,9 +1523,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MU',
                 'name' => 'Mauritius',
                 'continent' => 'AF',
-                'variation' => '{"type": ["mauritius"]}',
+                'variation' => '{"type": ["mauritius", "mauricio"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-03 08:29:57',
             ),
             151 => 
             array (
@@ -1535,7 +1535,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["maldives"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:29',
             ),
             152 => 
             array (
@@ -1543,9 +1543,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MW',
                 'name' => 'Malawi',
                 'continent' => 'AF',
-                'variation' => '{"type": ["malawi"]}',
+                'variation' => '{"type": ["malawi", "malaui"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-04-03 08:31:27',
             ),
             153 => 
             array (
@@ -1555,7 +1555,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["mexico"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             154 => 
             array (
@@ -1565,7 +1565,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["malaysia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             155 => 
             array (
@@ -1575,7 +1575,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["mozambique"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             156 => 
             array (
@@ -1585,7 +1585,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["namibia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             157 => 
             array (
@@ -1595,7 +1595,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["new caledonia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             158 => 
             array (
@@ -1605,7 +1605,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["niger"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             159 => 
             array (
@@ -1615,7 +1615,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["norfolk island"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             160 => 
             array (
@@ -1625,7 +1625,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["nigeria"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             161 => 
             array (
@@ -1635,7 +1635,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["nicaragua"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:07',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             162 => 
             array (
@@ -1643,9 +1643,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'NL',
                 'name' => 'Netherlands',
                 'continent' => 'EU',
-                'variation' => '{"type": ["netherlands"]}',
+                'variation' => '{"type": ["netherlands", "nederland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-04-02 08:42:20',
             ),
             163 => 
             array (
@@ -1655,7 +1655,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["norway"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             164 => 
             array (
@@ -1665,7 +1665,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["nepal"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             165 => 
             array (
@@ -1675,7 +1675,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["nauru"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             166 => 
             array (
@@ -1685,7 +1685,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["niue"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             167 => 
             array (
@@ -1695,7 +1695,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["new zealand"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             168 => 
             array (
@@ -1705,7 +1705,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["oman"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             169 => 
             array (
@@ -1715,7 +1715,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["panama"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             170 => 
             array (
@@ -1723,9 +1723,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'PE',
                 'name' => 'Perú',
                 'continent' => 'SA',
-                'variation' => '{"type": ["perú"]}',
+                'variation' => '{"type": ["perú", "peru"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-04-02 06:07:51',
             ),
             171 => 
             array (
@@ -1735,7 +1735,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["french polynesia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             172 => 
             array (
@@ -1745,7 +1745,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["papua new guinea"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             173 => 
             array (
@@ -1755,7 +1755,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["philippines"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             174 => 
             array (
@@ -1765,7 +1765,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["pakistan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             175 => 
             array (
@@ -1775,7 +1775,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["poland"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             176 => 
             array (
@@ -1785,7 +1785,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint pierre and miquelon"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             177 => 
             array (
@@ -1795,7 +1795,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["pitcairn"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             178 => 
             array (
@@ -1803,9 +1803,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'PR',
                 'name' => 'Puerto Rico',
                 'continent' => 'NA',
-                'variation' => '{"type": ["puerto rico"]}',
+                'variation' => '{"type": ["puerto rico", "puerto rico us"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-04-03 08:18:55',
             ),
             179 => 
             array (
@@ -1813,9 +1813,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'PS',
                 'name' => 'Palestinian Territory',
                 'continent' => 'AS',
-                'variation' => '{"type": ["palestinian territory"]}',
+                'variation' => '{"type": ["palestinian territory", "palestine", "palestine,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-04-03 08:33:14',
             ),
             180 => 
             array (
@@ -1825,7 +1825,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["portugal"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             181 => 
             array (
@@ -1835,7 +1835,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["palau"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             182 => 
             array (
@@ -1845,7 +1845,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["paraguay"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             183 => 
             array (
@@ -1855,7 +1855,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["qatar"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             184 => 
             array (
@@ -1865,7 +1865,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["réunion"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             185 => 
             array (
@@ -1875,7 +1875,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["romania"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             186 => 
             array (
@@ -1885,7 +1885,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["serbia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:08',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             187 => 
             array (
@@ -1893,9 +1893,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'RU',
                 'name' => 'Russia',
                 'continent' => 'EU',
-                'variation' => '{"type": ["russia"]}',
+                'variation' => '{"type": ["russia", "russian"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-02 06:10:45',
             ),
             188 => 
             array (
@@ -1903,9 +1903,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'RW',
                 'name' => 'Rwanda',
                 'continent' => 'AF',
-                'variation' => '{"type": ["rwanda"]}',
+                'variation' => '{"type": ["rwanda", "ruanda"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-03 08:30:43',
             ),
             189 => 
             array (
@@ -1915,7 +1915,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["saudi arabia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             190 => 
             array (
@@ -1925,7 +1925,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["solomon islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             191 => 
             array (
@@ -1935,7 +1935,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["seychelles"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             192 => 
             array (
@@ -1943,9 +1943,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SD',
                 'name' => 'Sudan',
                 'continent' => 'AF',
-                'variation' => '{"type": ["sudan"]}',
+                'variation' => '{"type": ["sudan", "sudán"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-02 08:41:59',
             ),
             193 => 
             array (
@@ -1955,7 +1955,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["sweden"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             194 => 
             array (
@@ -1965,7 +1965,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["singapore"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             195 => 
             array (
@@ -1975,7 +1975,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["saint helena"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             196 => 
             array (
@@ -1983,9 +1983,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SI',
                 'name' => 'Slovenia',
                 'continent' => 'EU',
-                'variation' => '{"type": ["slovenia"]}',
+                'variation' => '{"type": ["slovenia", "eslovenia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-02 08:40:16',
             ),
             197 => 
             array (
@@ -1995,7 +1995,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["slovakia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             198 => 
             array (
@@ -2003,9 +2003,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SL',
                 'name' => 'Sierra Leone',
                 'continent' => 'AF',
-                'variation' => '{"type": ["sierra leone"]}',
+                'variation' => '{"type": ["sierra leone", "sierra leona"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-03 08:24:05',
             ),
             199 => 
             array (
@@ -2015,7 +2015,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["san marino"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             200 => 
             array (
@@ -2025,7 +2025,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["senegal"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             201 => 
             array (
@@ -2035,7 +2035,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["somalia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             202 => 
             array (
@@ -2045,7 +2045,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["suriname"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             203 => 
             array (
@@ -2053,9 +2053,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SS',
                 'name' => 'South Sudan',
                 'continent' => 'AF',
-                'variation' => '{"type": ["south sudan"]}',
+                'variation' => '{"type": ["south sudan", "sudán del sur"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-03 08:31:11',
             ),
             204 => 
             array (
@@ -2063,9 +2063,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'ST',
                 'name' => 'São Tomé and Principe',
                 'continent' => 'AF',
-                'variation' => '{"type": ["são tomé and principe"]}',
+                'variation' => '{"type": ["são tomé and principe", "sao tome and principe"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-02 06:11:06',
             ),
             205 => 
             array (
@@ -2075,7 +2075,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["el salvador"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             206 => 
             array (
@@ -2083,9 +2083,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SX',
                 'name' => 'Sint Maarten',
                 'continent' => 'NA',
-                'variation' => '{"type": ["sint maarten"]}',
+                'variation' => '{"type": ["sint maarten", "saint maritn", "sint maarten netherlands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-03 08:21:02',
             ),
             207 => 
             array (
@@ -2095,7 +2095,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["syria"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             208 => 
             array (
@@ -2103,9 +2103,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'SZ',
                 'name' => 'Swaziland',
                 'continent' => 'AF',
-                'variation' => '{"type": ["swaziland"]}',
+                'variation' => '{"type": ["swaziland", "suazilandia", "eswatini"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:09',
+                'updated_at' => '2019-04-03 08:33:48',
             ),
             209 => 
             array (
@@ -2113,9 +2113,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'TC',
                 'name' => 'Turks and Caicos Islands',
                 'continent' => 'NA',
-                'variation' => '{"type": ["turks and caicos islands"]}',
+                'variation' => '{"type": ["turks and caicos islands", "turks and caicos islands uk"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-04-03 08:21:27',
             ),
             210 => 
             array (
@@ -2125,7 +2125,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["chad"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             211 => 
             array (
@@ -2135,7 +2135,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AN',
                 'variation' => '{"type": ["french southern territories"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             212 => 
             array (
@@ -2145,7 +2145,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["togo"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             213 => 
             array (
@@ -2155,7 +2155,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["thailand"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             214 => 
             array (
@@ -2165,7 +2165,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["tajikistan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             215 => 
             array (
@@ -2175,7 +2175,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["tokelau"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             216 => 
             array (
@@ -2185,7 +2185,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["timor-leste"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             217 => 
             array (
@@ -2195,7 +2195,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["turkmenistan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             218 => 
             array (
@@ -2203,9 +2203,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'TN',
                 'name' => 'Tunisia',
                 'continent' => 'AF',
-                'variation' => '{"type": ["tunisia"]}',
+                'variation' => '{"type": ["tunisia", "tunez", "túnez"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-04-02 08:41:43',
             ),
             219 => 
             array (
@@ -2215,7 +2215,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["tonga"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             220 => 
             array (
@@ -2225,7 +2225,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["turkey"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             221 => 
             array (
@@ -2233,9 +2233,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'TT',
                 'name' => 'Trinidad and Tobago',
                 'continent' => 'NA',
-                'variation' => '{"type": ["trinidad and tobago"]}',
+                'variation' => '{"type": ["trinidad and tobago", "trinidad y tobago"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-04-02 06:08:37',
             ),
             222 => 
             array (
@@ -2245,7 +2245,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["tuvalu"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             223 => 
             array (
@@ -2253,9 +2253,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'TW',
                 'name' => 'Taiwan',
                 'continent' => 'AS',
-                'variation' => '{"type": ["taiwan"]}',
+                'variation' => '{"type": ["taiwan", "taiwan,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-04-02 06:08:56',
             ),
             224 => 
             array (
@@ -2263,9 +2263,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'TZ',
                 'name' => 'Tanzania',
                 'continent' => 'AF',
-                'variation' => '{"type": ["tanzania"]}',
+                'variation' => '{"type": ["tanzania", "tanzania,"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:10',
+                'updated_at' => '2019-04-02 06:08:47',
             ),
             225 => 
             array (
@@ -2275,7 +2275,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["ukraine"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             226 => 
             array (
@@ -2285,7 +2285,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["uganda"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             227 => 
             array (
@@ -2295,7 +2295,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["united states minor outlying islands"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             228 => 
             array (
@@ -2305,7 +2305,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["united states"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             229 => 
             array (
@@ -2315,7 +2315,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["uruguay"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             230 => 
             array (
@@ -2325,7 +2325,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["uzbekistan"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             231 => 
             array (
@@ -2335,7 +2335,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["vatican city"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             232 => 
             array (
@@ -2345,7 +2345,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'NA',
                 'variation' => '{"type": ["saint vincent and the grenadines"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             233 => 
             array (
@@ -2355,7 +2355,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'SA',
                 'variation' => '{"type": ["venezuela"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             234 => 
             array (
@@ -2363,9 +2363,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'VG',
                 'name' => 'British Virgin Islands',
                 'continent' => 'NA',
-                'variation' => '{"type": ["british virgin islands"]}',
+                'variation' => '{"type": ["british virgin islands", "virgin island british", "british virgin islands uk"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-04-03 08:22:29',
             ),
             235 => 
             array (
@@ -2373,9 +2373,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'VI',
                 'name' => 'U.S. Virgin Islands',
                 'continent' => 'NA',
-                'variation' => '{"type": ["u.s. virgin islands"]}',
+                'variation' => '{"type": ["u.s. virgin islands", "virgin island us", "united states virgin islandsus"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-04-03 08:20:08',
             ),
             236 => 
             array (
@@ -2385,7 +2385,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["vietnam"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             237 => 
             array (
@@ -2395,7 +2395,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["vanuatu"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             238 => 
             array (
@@ -2405,7 +2405,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["wallis and futuna"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             239 => 
             array (
@@ -2415,7 +2415,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'OC',
                 'variation' => '{"type": ["samoa"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             240 => 
             array (
@@ -2425,7 +2425,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'EU',
                 'variation' => '{"type": ["kosovo"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             241 => 
             array (
@@ -2435,7 +2435,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AS',
                 'variation' => '{"type": ["yemen"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             242 => 
             array (
@@ -2445,7 +2445,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["mayotte"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             243 => 
             array (
@@ -2455,7 +2455,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["south africa"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:11',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             244 => 
             array (
@@ -2465,7 +2465,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["zambia"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             245 => 
             array (
@@ -2473,9 +2473,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'ZW',
                 'name' => 'Zimbabwe',
                 'continent' => 'AF',
-                'variation' => '{"type": ["zimbabwe"]}',
+                'variation' => '{"type": ["zimbabwe", "zimbabue"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
+                'updated_at' => '2019-04-03 08:31:42',
             ),
             246 => 
             array (
@@ -2485,7 +2485,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'AF',
                 'variation' => '{"type": ["unknown or unassigned country"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             247 => 
             array (
@@ -2495,7 +2495,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'N/A',
                 'variation' => '{"type": ["no existe"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
             248 => 
             array (
@@ -2503,9 +2503,9 @@ class CountriesTableSeeder extends Seeder
                 'code' => 'MM',
                 'name' => 'Myanmar',
                 'continent' => 'Asia',
-                'variation' => '{"type": ["myanmar"]}',
+                'variation' => '{"type": ["myanmar", "myanmar formerly burma"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
+                'updated_at' => '2019-04-03 08:32:14',
             ),
             249 => 
             array (
@@ -2515,17 +2515,7 @@ class CountriesTableSeeder extends Seeder
                 'continent' => 'ALL',
                 'variation' => '{"type": ["all"]}',
                 'created_at' => NULL,
-                'updated_at' => '2019-03-14 13:20:12',
-            ),
-            250 => 
-            array (
-                'id' => 251,
-                'code' => 'No Aplica',
-                'name' => 'No Aplica',
-                'continent' => 'No aplica',
-                'variation' => '{"type": ["no aplica"]}',
-                'created_at' => '2019-04-09 13:27:30',
-                'updated_at' => '2019-04-09 13:27:30',
+                'updated_at' => '2019-03-19 16:40:30',
             ),
         ));
         
